@@ -1,0 +1,2 @@
+async_property==0.2.1
+typing_extensions>=0.4.0
