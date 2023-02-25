@@ -4,7 +4,7 @@ with open("requirements.txt", "r") as f:
     requirements = list(map(str.strip, f.read().split("\n")))[:-1]
 
 setup(
-    name='a-sync',
+    name='ez-a-sync',
     packages=find_packages(),
     use_scm_version={
         "root": ".",
