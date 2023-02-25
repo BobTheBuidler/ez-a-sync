@@ -21,8 +21,9 @@ def a_sync(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: ignore
     @functools.wraps(coro_fn)
     def bound_a_sync_wrap(self, *args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore
         from a_sync.base import ASyncBase
-        if not isinstance(self, ASyncBase):
-            raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncBase")
+        from a_sync._meta import ASyncMeta
+        if not isinstance(self, ASyncBase) and not isinstance(self.__class__, ASyncMeta):
+            raise RuntimeError(f"{self} must be an instance of a class that eiher inherits from ASyncBase or specifies ASyncMeta as its metaclass.")
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding kwarg was passed into the function call.
         retval_or_coro = wrapped_coro_fn(self, *args, **kwargs)
@@ -46,12 +47,13 @@ def a_sync_property(async_property):
         raise TypeError(f"{async_property} must be one of: AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor")
     
     from a_sync.base import ASyncBase
+    from a_sync._meta import ASyncMeta
 
     @property
     @functools.wraps(async_property)
     def a_sync_property_wrap(self) -> T:
-        if not isinstance(self, ASyncBase):
-            raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncBase")
+        if not isinstance(self, ASyncBase) and not isinstance(self.__class__, ASyncMeta):
+            raise RuntimeError(f"{self} must be an instance of a class that eiher inherits from ASyncBase or specifies ASyncMeta as its metaclass.")
         awaitable: Awaitable[T] = async_property.__get__(self, async_property)
         return _helpers._await_if_sync(awaitable, self._should_await({}))  # type: ignore
     return a_sync_property_wrap
