@@ -1,13 +1,11 @@
 
 import functools
 from inspect import isawaitable
-from typing import Any, Callable, TypeVar, Union, overload, Awaitable
+from typing import Callable, TypeVar, overload, Awaitable
 
-from async_property.base import AsyncPropertyDescriptor
-from async_property.cached import AsyncCachedPropertyDescriptor
 from typing_extensions import ParamSpec  # type: ignore
 
-from a_sync import _helpers
+from a_sync import _helpers, _descriptors
 from a_sync.decorator import a_sync as unbound_a_sync
 
 P = ParamSpec("P")
@@ -37,23 +35,29 @@ def a_sync(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: ignore
 
 
 @overload
-def a_sync_property(async_property: AsyncPropertyDescriptor) -> AsyncPropertyDescriptor:
+def a_sync_property(async_property: _descriptors.AsyncPropertyDescriptor) -> _descriptors.AsyncPropertyDescriptor:
     ...
 @overload
-def a_sync_property(async_property: AsyncCachedPropertyDescriptor) -> AsyncCachedPropertyDescriptor:  # type: ignore
+def a_sync_property(async_property: _descriptors.AsyncCachedPropertyDescriptor) -> _descriptors.AsyncCachedPropertyDescriptor:  # type: ignore
     ...
-def a_sync_property(async_property):
-    if not isinstance(async_property, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
+def a_sync_property(async_property) -> tuple:
+    if not isinstance(async_property, (_descriptors.AsyncPropertyDescriptor, _descriptors.AsyncCachedPropertyDescriptor)):
         raise TypeError(f"{async_property} must be one of: AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor")
-    
+
     from a_sync.base import ASyncBase
     from a_sync._meta import ASyncMeta
 
-    @property
+    async_property.hidden_method_name = f"__{async_property.field_name}"
+
     @functools.wraps(async_property)
-    def a_sync_property_wrap(self) -> T:
+    def a_sync_method(self, **kwargs):
         if not isinstance(self, ASyncBase) and not isinstance(self.__class__, ASyncMeta):
             raise RuntimeError(f"{self} must be an instance of a class that eiher inherits from ASyncBase or specifies ASyncMeta as its metaclass.")
         awaitable: Awaitable[T] = async_property.__get__(self, async_property)
-        return _helpers._await_if_sync(awaitable, self._should_await({}))  # type: ignore
-    return a_sync_property_wrap
+        return _helpers._await_if_sync(awaitable, self._should_await(kwargs))  # type: ignore
+    @property
+    @functools.wraps(async_property)
+    def a_sync_property(self) -> T:
+        a_sync_method = getattr(self, async_property.hidden_method_name)
+        return _helpers._await_if_sync(a_sync_method(sync=False), self._should_await({}))
+    return a_sync_property, a_sync_method
