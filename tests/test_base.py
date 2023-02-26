@@ -1,31 +1,43 @@
 
 import asyncio
-import inspect
+import pytest
+import time
 
 from tests.fixtures import TestClass
 from a_sync._meta import ASyncMeta
 
-def _await(coro):
-    return asyncio.get_event_loop().run_until_complete(coro)
 
-def test_base_sync():
-    sync_instance = TestClass(True)
+@pytest.mark.parametrize('i', range(10))
+def test_base_sync(i: int):
+    sync_instance = TestClass(i, True)
     assert isinstance(sync_instance.__class__, ASyncMeta)
 
-    assert sync_instance.test_fn() == 2
-    assert sync_instance.test_property == 4
-    assert sync_instance.test_cached_property == 6
+    assert sync_instance.test_fn() == i
+    assert sync_instance.test_property == i * 2
+    start = time.time()
+    assert sync_instance.test_cached_property == i * 3
+    assert isinstance(sync_instance.test_cached_property, int)
+    duration = time.time() - start
+    assert duration < 3, "There is a 2 second sleep in 'test_cached_property' but it should only run once."
 
     # Can we override with kwargs?
-    assert inspect.isawaitable(sync_instance.test_fn(sync=False))
+    val = asyncio.get_event_loop().run_until_complete(sync_instance.test_fn(sync=False))
+    assert isinstance(val, int)
 
-def test_base_async():
-    async_instance = TestClass(False)
+@pytest.mark.asyncio
+@pytest.mark.parametrize('i', list(range(10)))
+async def test_base_async(i: int):
+    async_instance = TestClass(i, False)
     assert isinstance(async_instance.__class__, ASyncMeta)
 
-    assert _await(async_instance.test_fn()) == 2
-    assert _await(async_instance.test_property) == 4
-    assert _await(async_instance.test_cached_property) == 6
+    assert await async_instance.test_fn() == i
+    assert await async_instance.test_property == i * 2
+    start = time.time()
+    assert await async_instance.test_cached_property == i * 3
+    assert isinstance(await async_instance.test_cached_property, int)
+    duration = time.time() - start
+    assert duration < 3, "There is a 2 second sleep in 'test_cached_property' but it should only run once."
 
     # Can we override with kwargs?
-    assert isinstance(async_instance.test_fn(sync=True), int)
+    with pytest.raises(RuntimeError):
+        async_instance.test_fn(sync=True)

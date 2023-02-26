@@ -19,6 +19,7 @@ class ASyncBase(metaclass=ASyncMeta):
                     if flag == 'asynchronous':
                         # must invert
                         return not sync
+                    return sync
         
         # No flag found in kwargs, check for a flag attribute.
         for flag in flags:
