@@ -16,7 +16,7 @@ def a_sync(default: Optional[Literal['sync','async']] = None) -> Callable[[Calla
     """
     if default not in ['async', 'sync', None]:
         if callable(default):
-            return a_sync()(default)
+            return a_sync(default=None)(default)
         raise ValueError(f"'default' must be either 'sync', 'async', or None. You passed {default}.")
     
     def a_sync_deco(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: ignore
