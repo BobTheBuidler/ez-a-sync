@@ -38,7 +38,7 @@ def test_base_sync(cls: type, i: int):
 
 @classes
 @increment
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_base_async(cls: type, i: int):
     async_instance = cls(i, False)
     assert isinstance(async_instance.__class__, ASyncMeta)

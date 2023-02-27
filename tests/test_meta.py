@@ -40,7 +40,7 @@ def test_singleton_meta_sync(cls: type, i: int):
 
 @classes
 @increment
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_singleton_meta_async(cls: type, i: int):
     async_instance = cls(i, sync=False)
     assert isinstance(async_instance, ASyncGenericBase)
@@ -66,11 +66,12 @@ async def test_singleton_meta_async(cls: type, i: int):
         async_instance.__test_cached_property__(sync=True)
 
 
-def test_singleton_unspecified():
-    class TestUnspecified(ASyncGenericSingleton):
-        def __init__(self, sync=True):
-            self.sync = sync
 
+class TestUnspecified(ASyncGenericSingleton):
+    def __init__(self, sync=True):
+        self.sync = sync
+
+def test_singleton_unspecified():
     obj = TestUnspecified()
     assert obj.sync == True
     obj.test_attr = True
@@ -79,3 +80,10 @@ def test_singleton_unspecified():
 
     assert TestUnspecified(sync=True).sync == True
     assert TestUnspecified(sync=False).sync == False
+
+def test_singleton_switching():
+    obj = TestUnspecified()
+    assert obj.sync == True
+    obj.test_attr = True
+    newobj = TestUnspecified(sync=False)
+    assert not hasattr(newobj, 'test_attr')
