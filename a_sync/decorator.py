@@ -1,6 +1,6 @@
 
 import functools
-from typing import Callable, Literal, Optional, TypeVar
+from typing import Callable, Coroutine, Literal, TypeVar, overload
 
 from typing_extensions import ParamSpec  # type: ignore
 
@@ -10,7 +10,26 @@ P = ParamSpec("P")
 T = TypeVar("T")
 
 
-def a_sync(default: Optional[Literal['sync','async']] = None) -> Callable[[Callable[P, T]], Callable[P, T]]:
+
+@overload # no args
+def a_sync(default: Callable[P, T] = None) -> Callable[P, T]:...
+
+@overload # both defs, None default
+def a_sync(default: Literal[None] = None) -> Callable[[Callable[P, T]], Callable[P, T]]:...
+
+@overload # async def, async default
+def a_sync(default: Literal['async'] = None) -> Callable[[Callable[P, Coroutine[None, None, T]]], Callable[P, Coroutine[None, None, T]]]:...
+
+@overload # sync def, async default  TODO: DOESN'T TYPE CHECK CORRECTLY, FIX
+def a_sync(default: Literal['async'] = None) -> Callable[[Callable[P, T]], Callable[P, Coroutine[None, None, T]]]:...
+
+@overload # async def, sync default
+def a_sync(default: Literal['sync'] = None) -> Callable[[Callable[P, Coroutine[None, None, T]]], Callable[P, T]]:...
+
+@overload # sync def, sync default  TODO: DOESN'T TYPE CHECK CORRECTLY, FIX
+def a_sync(default: Literal['sync'] = None) -> Callable[[Callable[P, T]], Callable[P, T]]:...
+
+def a_sync(default = None):
     f"""
     A coroutine function decorated with this decorator can be called as a sync function by passing a boolean value for any of these kwargs: {_flags.VIABLE_FLAGS}
     """
