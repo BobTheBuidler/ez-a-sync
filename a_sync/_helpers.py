@@ -6,9 +6,9 @@ from typing import Awaitable, Callable, Literal, TypeVar, Union, overload
 from async_property.base import AsyncPropertyDescriptor
 from async_property.cached import AsyncCachedPropertyDescriptor
 
-T = TypeVar("T")
+from a_sync import _flags
 
-_flag_name_options = 'sync', 'asynchronous'
+T = TypeVar("T")
 
 
 def _validate_wrapped_fn(fn: Callable) -> None:
@@ -18,9 +18,9 @@ def _validate_wrapped_fn(fn: Callable) -> None:
     if not asyncio.iscoroutinefunction(fn):
         raise TypeError(f"{fn} must be a coroutine function.")
     fn_args = getfullargspec(fn)[0]
-    for flag in _flag_name_options:
+    for flag in _flags.VIABLE_FLAGS:
         if flag in fn_args:
-            raise RuntimeError(f"{fn} must not have any arguments with the following names: {_flag_name_options}")
+            raise RuntimeError(f"{fn} must not have any arguments with the following names: {_flags.VIABLE_FLAGS}")
 
 
 @overload
@@ -41,7 +41,7 @@ def _await_if_sync(awaitable: Awaitable[T], sync: bool) -> Union[T, Awaitable[T]
             return asyncio.get_event_loop().run_until_complete(awaitable)
         except RuntimeError as e:
             if "is already running" in str(e):
-                raise RuntimeError(str(e), f"You may want to make this an async function by setting one of the following kwargs: {_flag_name_options}")
+                raise RuntimeError(str(e), f"You may want to make this an async function by setting one of the following kwargs: {_flags.VIABLE_FLAGS}")
             raise
     else:
         return awaitable

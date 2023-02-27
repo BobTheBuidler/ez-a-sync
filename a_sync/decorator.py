@@ -1,10 +1,10 @@
 
 import functools
-from typing import Callable, TypeVar, Literal, Optional
+from typing import Callable, Literal, Optional, TypeVar
 
 from typing_extensions import ParamSpec  # type: ignore
 
-from a_sync import _helpers
+from a_sync import _flags, _helpers, _kwargs, exceptions
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -12,7 +12,7 @@ T = TypeVar("T")
 
 def a_sync(default: Optional[Literal['sync','async']] = None) -> Callable[[Callable[P, T]], Callable[P, T]]:
     f"""
-    A coroutine function decorated with this decorator can be called as a sync function by passing a boolean value for any of these kwargs: {_helpers._flag_name_options}
+    A coroutine function decorated with this decorator can be called as a sync function by passing a boolean value for any of these kwargs: {_flags.VIABLE_FLAGS}
     """
     if default not in ['async', 'sync', None]:
         if callable(default):
@@ -26,20 +26,13 @@ def a_sync(default: Optional[Literal['sync','async']] = None) -> Callable[[Calla
         @functools.wraps(coro_fn)
         def a_sync_wrap(*args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore
             # If a flag was specified in the kwargs, we will defer to it.
-            for flag in _helpers._flag_name_options:
-                if flag in kwargs:
-                    val = kwargs.pop(flag)
-                    if not isinstance(val, bool):
-                        raise TypeError(f"'{flag}' must be boolean. You passed {val}.")
-                    return _helpers._await_if_sync(
-                        coro_fn(*args, **kwargs),
-                        val if flag == 'sync' else not val
-                    )
-                
-            # No flag specified in the kwargs, we will defer to 'default'.
-            return _helpers._await_if_sync(
-                coro_fn(*args, **kwargs),
-                True if default == 'sync' else False
-            )
+            try:
+                flag = _kwargs.get_flag_name(kwargs)
+                flag_value = _kwargs.pop_flag_value(flag, kwargs)
+                should_await = _flags.negate_if_necessary(flag, flag_value)
+            except exceptions.NoFlagsFound:
+                # No flag specified in the kwargs, we will defer to 'default'.
+                should_await = True if default == 'sync' else False
+            return _helpers._await_if_sync(coro_fn(*args, **kwargs), should_await)
         return a_sync_wrap
     return a_sync_deco
