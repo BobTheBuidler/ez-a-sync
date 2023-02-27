@@ -27,9 +27,7 @@ def a_sync(default: Optional[Literal['sync','async']] = None) -> Callable[[Calla
         def a_sync_wrap(*args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore
             # If a flag was specified in the kwargs, we will defer to it.
             try:
-                flag = _kwargs.get_flag_name(kwargs)
-                flag_value = _kwargs.pop_flag_value(flag, kwargs)
-                should_await = _flags.negate_if_necessary(flag, flag_value)
+                should_await = _kwargs.is_sync(kwargs, pop_flag=True)
             except exceptions.NoFlagsFound:
                 # No flag specified in the kwargs, we will defer to 'default'.
                 should_await = True if default == 'sync' else False
