@@ -1,15 +1,18 @@
 
 import asyncio
-import pytest
 import time
 
-from tests.fixtures import TestClass
+import pytest
+
 from a_sync._meta import ASyncMeta
+from tests.fixtures import TestClass, TestInheritor, TestMeta, increment
 
+classes = pytest.mark.parametrize('cls', [TestClass, TestInheritor, TestMeta])
 
-@pytest.mark.parametrize('i', range(10))
-def test_base_sync(i: int):
-    sync_instance = TestClass(i, True)
+@classes
+@increment
+def test_base_sync(cls: type, i: int):
+    sync_instance = cls(i, True)
     assert isinstance(sync_instance.__class__, ASyncMeta)
 
     assert sync_instance.test_fn() == i
@@ -33,10 +36,11 @@ def test_base_sync(i: int):
     duration = time.time() - start
     assert duration < 3, "There is a 2 second sleep in 'test_cached_property' but it should only run once."
 
+@classes
+@increment
 @pytest.mark.asyncio
-@pytest.mark.parametrize('i', list(range(10)))
-async def test_base_async(i: int):
-    async_instance = TestClass(i, False)
+async def test_base_async(cls: type, i: int):
+    async_instance = cls(i, False)
     assert isinstance(async_instance.__class__, ASyncMeta)
 
     assert await async_instance.test_fn() == i
