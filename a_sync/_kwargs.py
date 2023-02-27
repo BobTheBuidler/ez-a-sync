@@ -1,6 +1,4 @@
 
-from typing import Any
-
 from a_sync import _flags, exceptions
 
 
@@ -14,13 +12,8 @@ def get_flag_name(kwargs: dict) -> str:
 
 def get_flag_value(flag: str, kwargs: dict) -> bool:
     flag_value = kwargs[flag]
-    return validate_flag_value(flag, flag_value)
+    return _flags.validate_flag_value(flag, flag_value)
 
 def pop_flag_value(flag: str, kwargs: dict) -> bool:
     flag_value = kwargs.pop(flag)
-    return validate_flag_value(flag, flag_value)
-
-def validate_flag_value(flag: str, flag_value: Any) -> bool:
-    if not isinstance(flag_value, bool):
-        raise exceptions.InvalidFlagValue(flag, flag_value)
-    return flag_value
+    return _flags.validate_flag_value(flag, flag_value)
