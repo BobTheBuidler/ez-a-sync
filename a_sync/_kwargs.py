@@ -10,10 +10,7 @@ def get_flag_name(kwargs: dict) -> str:
         raise exceptions.TooManyFlags('kwargs', present_flags)
     return present_flags[0]
 
-def get_flag_value(flag: str, kwargs: dict) -> bool:
-    flag_value = kwargs[flag]
-    return _flags.validate_flag_value(flag, flag_value)
-
-def pop_flag_value(flag: str, kwargs: dict) -> bool:
-    flag_value = kwargs.pop(flag)
-    return _flags.validate_flag_value(flag, flag_value)
+def is_sync(kwargs: dict, pop_flag: bool = False) -> bool:
+    flag = get_flag_name(kwargs)
+    flag_value = kwargs.pop(flag) if pop_flag else kwargs[flag]
+    return _flags.negate_if_necessary(flag, flag_value)
