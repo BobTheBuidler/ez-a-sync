@@ -47,7 +47,7 @@ def a_sync_property(async_property) -> tuple:
     from a_sync.base import ASyncABC
     from a_sync._meta import ASyncMeta
 
-    async_property.hidden_method_name = f"__{async_property.field_name}"
+    async_property.hidden_method_name = f"__{async_property.field_name}__"
 
     @functools.wraps(async_property)
     def a_sync_method(self, **kwargs):

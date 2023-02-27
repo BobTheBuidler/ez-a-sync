@@ -28,11 +28,11 @@ def test_base_sync(cls: type, i: int):
     assert isinstance(val, int)
 
     # Can we access hidden methods for properties?
-    assert sync_instance.__test_property() == i * 2
+    assert sync_instance.__test_property__() == i * 2
     start = time.time()
-    assert sync_instance.__test_cached_property() == i * 3
+    assert sync_instance.__test_cached_property__() == i * 3
     # Can we override them too?
-    assert asyncio.get_event_loop().run_until_complete(sync_instance.__test_cached_property(sync=False)) == i * 3
+    assert asyncio.get_event_loop().run_until_complete(sync_instance.__test_cached_property__(sync=False)) == i * 3
     duration = time.time() - start
     assert duration < 3, "There is a 2 second sleep in 'test_cached_property' but it should only run once."
 
@@ -56,8 +56,8 @@ async def test_base_async(cls: type, i: int):
         async_instance.test_fn(sync=True)
     
     # Can we access hidden methods for properties?
-    assert await async_instance.__test_property() == i * 2
-    assert await async_instance.__test_cached_property() == i * 3
+    assert await async_instance.__test_property__() == i * 2
+    assert await async_instance.__test_cached_property__() == i * 3
     # Can we override them too?
     with pytest.raises(RuntimeError):
-        async_instance.__test_cached_property(sync=True)
+        async_instance.__test_cached_property__(sync=True)
