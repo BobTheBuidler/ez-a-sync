@@ -1,7 +1,8 @@
 
 import abc
+from typing import Union
 
-from a_sync import _flags, _kwargs, exceptions
+from a_sync import _flags, _kwargs, exceptions, modifiers
 from a_sync._meta import ASyncMeta
 
 
@@ -36,6 +37,15 @@ class ASyncABC(metaclass=ASyncMeta):
             return _kwargs.is_sync(kwargs)
         except exceptions.NoFlagsFound:
             return cls.__a_sync_default_mode__  # type: ignore [return-value]
+
+    ######################################
+    # Concrete Methods (non-overridable) #
+    ######################################
+    
+    @property
+    def __a_sync_modifiers__(thing: Union[type, object]) -> modifiers.Modifiers:
+        """You should not override this."""
+        return modifiers.Modifiers({modifier: getattr(thing, modifier) for modifier in modifiers.valid_modifiers if hasattr(thing, modifier)})
 
     ####################
     # Abstract Methods #
