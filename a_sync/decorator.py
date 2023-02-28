@@ -25,13 +25,13 @@ T = TypeVar("T")
 @overload # async def, None default
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
-    default: Literal[None] = None
+    default: Literal[None] = None,
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
 @overload # sync def none default
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
-    default: Literal[None] = None
+    default: Literal[None] = None,
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
 # @a_sync(default='async')
@@ -55,6 +55,34 @@ def a_sync(
     coro_fn: Literal['async'] = None,
     default: Literal[None] = None,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]]:...  # type: ignore [misc]
+
+# a_sync(some_fn, default='async')
+
+@overload # async def, async default
+def a_sync(
+    coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
+    default: Literal['async'] = None,
+) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
+
+@overload # sync def async default
+def a_sync(
+    coro_fn: Callable[P, T] = None,  # type: ignore [misc]
+    default: Literal['async'] = None,
+) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
+
+# a_sync(some_fn, default='sync')
+
+@overload # async def, async default
+def a_sync(
+    coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
+    default: Literal['sync'] = None,
+) -> Callable[P, T]:...  # type: ignore [misc]
+
+@overload # sync def async default
+def a_sync(
+    coro_fn: Callable[P, T] = None,  # type: ignore [misc]
+    default: Literal['sync'] = None,
+) -> Callable[P, T]:...  # type: ignore [misc]
 
 # @a_sync(default='sync')
 # def some_fn():
