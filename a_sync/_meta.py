@@ -22,12 +22,12 @@ class ASyncMeta(ABCMeta):
 
 class ASyncSingletonMeta(ASyncMeta):
     def __init__(cls, name: str, bases: Tuple[type, ...], namespace: Dict[str, Any]) -> None:
-        cls.__instances = {}
+        cls.__instances: Dict[bool, object] = {}
         cls.__lock = threading.Lock()
         super().__init__(name, bases, namespace)
 
     def __call__(cls, *args: Any, **kwargs: Any):
-        is_sync = cls.__a_sync_instance_will_be_sync__(kwargs)
+        is_sync = cls.__a_sync_instance_will_be_sync__(kwargs)  # type: ignore [attr-defined]
         if is_sync not in cls.__instances:
             with cls.__lock:
                 # Check again in case `__instance` was set while we were waiting for the lock.
