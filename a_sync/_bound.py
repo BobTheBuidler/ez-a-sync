@@ -1,22 +1,25 @@
 
 import functools
 from inspect import isawaitable
-from typing import Callable, TypeVar, overload, Awaitable
+from typing import Awaitable, Callable, TypeVar, overload
 
 from typing_extensions import ParamSpec  # type: ignore [attr-defined]
 
 from a_sync import _helpers
-from a_sync.property import AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor
 from a_sync.decorator import a_sync as unbound_a_sync
+from a_sync.modifiers import Modifiers
+from a_sync.property import (AsyncCachedPropertyDescriptor,
+                             AsyncPropertyDescriptor)
 
 P = ParamSpec("P")
 T = TypeVar("T")
 
 
-def _wrap_bound_method(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: ignore [misc]
+def _wrap_bound_method(coro_fn: Callable[P, T], **modifiers: Modifiers) -> Callable[P, T]:  # type: ignore [misc]
     from a_sync.abstract import ASyncABC
+
     # First we wrap the coro_fn so overriding kwargs are handled automagically.
-    wrapped_coro_fn = unbound_a_sync(coro_fn)
+    wrapped_coro_fn = unbound_a_sync(coro_fn=coro_fn, **modifiers)
 
     @functools.wraps(coro_fn)
     def bound_a_sync_wrap(self, *args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore [name-defined]
@@ -35,28 +38,33 @@ def _wrap_bound_method(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: igno
 
 
 @overload
-def _wrap_property(async_property: AsyncPropertyDescriptor) -> AsyncPropertyDescriptor:
+def _wrap_property(async_property: AsyncPropertyDescriptor, **modifiers: Modifiers) -> AsyncPropertyDescriptor:
     ...
 @overload
-def _wrap_property(async_property: AsyncCachedPropertyDescriptor) -> AsyncCachedPropertyDescriptor:  # type: ignore [misc]
+def _wrap_property(async_property: AsyncCachedPropertyDescriptor, **modifiers: Modifiers) -> AsyncCachedPropertyDescriptor:  # type: ignore [misc]
     ...
-def _wrap_property(async_property) -> tuple:
+def _wrap_property(async_property, **modifiers: Modifiers) -> tuple:
     if not isinstance(async_property, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
         raise TypeError(f"{async_property} must be one of: AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor")
 
     from a_sync.abstract import ASyncABC
 
     async_property.hidden_method_name = f"__{async_property.field_name}__"
-
+    
+    @unbound_a_sync(**modifiers)
+    async def awaitable(instance: object) -> Awaitable[T]:
+        return await async_property.__get__(instance, async_property)
+    
     @functools.wraps(async_property)
     def a_sync_method(self, **kwargs):
         if not isinstance(self, ASyncABC):
             raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
-        awaitable: Awaitable[T] = async_property.__get__(self, async_property)
-        return _helpers._await_if_sync(awaitable, self.__a_sync_should_await__(kwargs))
+        return _helpers._await_if_sync(awaitable(self), self.__a_sync_should_await__(kwargs))
+    
     @property  # type: ignore [misc]
     @functools.wraps(async_property)
     def a_sync_property(self) -> T:
         a_sync_method = getattr(self, async_property.hidden_method_name)
         return _helpers._await_if_sync(a_sync_method(sync=False), self.__a_sync_should_await__({}))
+    
     return a_sync_property, a_sync_method
