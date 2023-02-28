@@ -1,11 +1,13 @@
 
+import asyncio
 import functools
+from concurrent.futures._base import Executor
 from typing import (Awaitable, Callable, Literal, Optional, TypeVar, Union,
                     overload)
 
 from typing_extensions import ParamSpec  # type: ignore [attr-defined]
 
-from a_sync import _flags, _helpers, _kwargs, exceptions
+from a_sync import _flags, _helpers, _kwargs, config, exceptions
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -26,12 +28,14 @@ T = TypeVar("T")
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal[None] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
 @overload # sync def none default
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal[None] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
 # @a_sync(default='async')
@@ -48,12 +52,14 @@ def a_sync(  # type: ignore [misc]
 def a_sync(
     coro_fn: Literal[None] = None,
     default: Literal['async'] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]]:...  # type: ignore [misc]
 
 @overload # if you try to use default as the only arg
 def a_sync(
     coro_fn: Literal['async'] = None,
     default: Literal[None] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]]:...  # type: ignore [misc]
 
 # a_sync(some_fn, default='async')
@@ -62,12 +68,14 @@ def a_sync(
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal['async'] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
 @overload # sync def async default
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['async'] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
 # a_sync(some_fn, default='sync')
@@ -76,12 +84,14 @@ def a_sync(  # type: ignore [misc]
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal['sync'] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
 @overload # sync def async default
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['sync'] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
 # @a_sync(default='sync')
@@ -98,18 +108,21 @@ def a_sync(  # type: ignore [misc]
 def a_sync(  # type: ignore [misc]
     coro_fn: Literal[None] = None,
     default: Literal['sync'] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...  # type: ignore [misc]
 
 @overload # if you try to use default as the only arg
 def a_sync(
     coro_fn: Literal['sync'] = None,
     default: Literal[None] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...  # type: ignore [misc]
 
 # catchall
 def a_sync(
     coro_fn: Optional[Union[Callable[P, Awaitable[T]], Callable[P, T]]] = None,  # type: ignore [misc]
     default: Literal['sync', 'async', None] = None,
+    sync_executor: Executor = config.default_sync_executor,
 ) -> Union[  # type: ignore [misc]
     # sync coro_fn, default=None
     Callable[P, T],
@@ -197,29 +210,45 @@ def a_sync(
     await some_fn(sync=False) == True
     """
     
+    # If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync('sync')...
     if coro_fn in ['async', 'sync']:
-        # If the dev tried passing a default as an arg instead of a kwarg:
         default = coro_fn
         coro_fn = None
         
     if default not in ['async', 'sync', None]:
         raise ValueError(f"'default' must be either 'sync', 'async', or None. You passed {default}.")
     
-    def a_sync_deco(coro_fn: Callable[P, Awaitable[T]]) -> Union[Callable[P, Awaitable[T]], Callable[P, T]]:  # type: ignore [misc]
-        _helpers._validate_wrapped_fn(coro_fn)
-        @functools.wraps(coro_fn)
-        def a_sync_wrap(*args: P.args, **kwargs: P.kwargs) -> Union[Awaitable[T], T]:  # type: ignore [name-defined]
-            # If a flag was specified in the kwargs, we will defer to it.
-            try:
-                should_await = _kwargs.is_sync(kwargs, pop_flag=True)
-            except exceptions.NoFlagsFound:
-                # No flag specified in the kwargs, we will defer to 'default'.
-                should_await = True if default == 'sync' else False
-            return _helpers._await_if_sync(coro_fn(*args, **kwargs), should_await)  # type: ignore [call-overload]
-        return a_sync_wrap
-    
-    if coro_fn is None:
-        return a_sync_deco
-    if not callable(coro_fn):
-        raise RuntimeError(f"a_sync's first arg must be callable. You passed {coro_fn}.")
-    return a_sync_deco(coro_fn)
+    def a_sync_deco(function: Callable[P, Awaitable[T]]) -> Union[Callable[P, Awaitable[T]], Callable[P, T]]:  # type: ignore [misc]
+        _helpers._validate_wrapped_fn(function)
+        if asyncio.iscoroutinefunction(function):
+            @functools.wraps(function)
+            def async_wrap(*args: P.args, **kwargs: P.kwargs) -> Union[Awaitable[T], T]:  # type: ignore [name-defined]
+                should_await = _run_sync(kwargs, default or 'async') # Must take place before coro is created.
+                coro = function(*args, **kwargs)
+                return _helpers._sync(coro) if should_await else coro
+            return async_wrap
+        elif callable(function):
+            @functools.wraps(function)
+            def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> Union[Awaitable[T], T]:  # type: ignore [name-defined]
+                if _run_sync(kwargs, default = default or 'sync'):
+                    return function(*args, **kwargs)
+                return asyncio.get_event_loop().run_in_executor(
+                    sync_executor, function, *args, **kwargs
+                )
+            return sync_wrap
+        raise RuntimeError(f"a_sync's first arg must be callable. You passed {function}.")
+    return a_sync_deco if coro_fn is None else a_sync_deco(coro_fn)
+
+def _run_sync(kwargs: dict, default: Literal['sync', 'async']):
+    # If a flag was specified in the kwargs, we will defer to it.
+    try:
+        return _kwargs.is_sync(kwargs, pop_flag=True)
+    except exceptions.NoFlagsFound:
+        # No flag specified in the kwargs, we will defer to 'default'.
+        if default == 'sync':
+            return True
+        elif default == 'async':
+            return False
+        else:
+            raise NotImplementedError(default)
+

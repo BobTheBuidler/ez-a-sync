@@ -21,11 +21,8 @@ def _test_kwargs(fn, default: Literal['sync','async',None]):
         assert fn() == 2
     elif default == 'async':
         assert asyncio.get_event_loop().run_until_complete(fn()) == 2
-    elif default is None:
-        assert asyncio.get_event_loop().run_until_complete(fn()) == 2
-    else:
-        raise NotImplementedError(default)
 
+# ASYNC DEF
 def test_decorator_no_args():
     @a_sync.a_sync
     async def some_test_fn() -> int:
@@ -43,14 +40,14 @@ def test_decorator_default_none_arg():
     @a_sync.a_sync(None)
     async def some_test_fn() -> int:
         return 2
-    asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
+    assert asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
     _test_kwargs(some_test_fn, None)
     
 def test_decorator_default_none_kwarg():
     @a_sync.a_sync(default=None)
     async def some_test_fn() -> int:
         return 2
-    asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
+    assert asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
     _test_kwargs(some_test_fn, None)
 
 def test_decorator_default_sync_arg():
@@ -81,6 +78,63 @@ def test_decorator_default_async_arg():
 def test_decorator_default_async_kwarg():
     @a_sync.a_sync(default='async')
     async def some_test_fn() -> int:
+        return 2
+    assert asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
+    _test_kwargs(some_test_fn, 'async')
+
+
+# SYNC DEF
+def test_sync_decorator_no_args():
+    @a_sync.a_sync
+    def some_test_fn() -> int:
+        return 2
+    assert some_test_fn() == 2
+    _test_kwargs(some_test_fn, None)
+    
+    @a_sync.a_sync()
+    def some_test_fn() -> int:
+        return 2
+    assert some_test_fn() == 2
+    _test_kwargs(some_test_fn, None)
+    
+def test_sync_decorator_default_none_arg():
+    @a_sync.a_sync(None)
+    def some_test_fn() -> int:
+        return 2
+    assert some_test_fn() == 2
+    _test_kwargs(some_test_fn, None)
+    
+def test_sync_decorator_default_none_kwarg():
+    @a_sync.a_sync(default=None)
+    def some_test_fn() -> int:
+        return 2
+    assert some_test_fn() == 2
+    _test_kwargs(some_test_fn, None)
+
+def test_sync_decorator_default_sync_arg():
+    @a_sync.a_sync('sync')
+    def some_test_fn() -> int:
+        return 2
+    assert some_test_fn() == 2
+    _test_kwargs(some_test_fn, 'sync')
+
+def test_sync_decorator_default_sync_kwarg():
+    @a_sync.a_sync(default='sync')
+    def some_test_fn() -> int:
+        return 2
+    assert some_test_fn() == 2
+    _test_kwargs(some_test_fn, 'sync')
+    
+def test_sync_decorator_default_async_arg():
+    @a_sync.a_sync('async')
+    def some_test_fn() -> int:
+        return 2
+    assert asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
+    _test_kwargs(some_test_fn, 'async')
+    
+def test_sync_decorator_default_async_kwarg():
+    @a_sync.a_sync(default='async')
+    def some_test_fn() -> int:
         return 2
     assert asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
     _test_kwargs(some_test_fn, 'async')

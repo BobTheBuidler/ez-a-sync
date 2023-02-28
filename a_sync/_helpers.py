@@ -15,8 +15,6 @@ def _validate_wrapped_fn(fn: Callable) -> None:
     """Ensures 'fn' is an appropriate function for wrapping with a_sync."""
     if isinstance(fn, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
         return # These are always valid
-    if not asyncio.iscoroutinefunction(fn):
-        raise TypeError(f"{fn} must be a coroutine function.")
     fn_args = getfullargspec(fn)[0]
     for flag in _flags.VIABLE_FLAGS:
         if flag in fn_args:
