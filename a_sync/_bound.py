@@ -13,15 +13,14 @@ T = TypeVar("T")
 
 
 def _wrap_bound_method(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: ignore [misc]
+    from a_sync.abstract import ASyncABC
     # First we wrap the coro_fn so overriding kwargs are handled automagically.
     wrapped_coro_fn = unbound_a_sync(coro_fn)
 
     @functools.wraps(coro_fn)
     def bound_a_sync_wrap(self, *args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore [name-defined]
-        from a_sync.base import ASyncGenericBase
-        from a_sync._meta import ASyncMeta
-        if not isinstance(self, ASyncGenericBase) and not isinstance(self.__class__, ASyncMeta):
-            raise RuntimeError(f"{self} must be an instance of a class that eiher inherits from ASyncBase or specifies ASyncMeta as its metaclass.")
+        if not isinstance(self, ASyncABC):
+            raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding kwarg was passed into the function call.
         retval_or_coro = wrapped_coro_fn(self, *args, **kwargs)
@@ -44,15 +43,14 @@ def _wrap_property(async_property) -> tuple:
     if not isinstance(async_property, (_descriptors.AsyncPropertyDescriptor, _descriptors.AsyncCachedPropertyDescriptor)):
         raise TypeError(f"{async_property} must be one of: AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor")
 
-    from a_sync.base import ASyncABC
-    from a_sync._meta import ASyncMeta
+    from a_sync.abstract import ASyncABC
 
     async_property.hidden_method_name = f"__{async_property.field_name}__"
 
     @functools.wraps(async_property)
     def a_sync_method(self, **kwargs):
-        if not isinstance(self, ASyncABC) and not isinstance(self.__class__, ASyncMeta):
-            raise RuntimeError(f"{self} must be an instance of a class that eiher inherits from ASyncBase or specifies ASyncMeta as its metaclass.")
+        if not isinstance(self, ASyncABC):
+            raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
         awaitable: Awaitable[T] = async_property.__get__(self, async_property)
         return _helpers._await_if_sync(awaitable, self.__a_sync_should_await__(kwargs))
     @property  # type: ignore [misc]
