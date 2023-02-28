@@ -7,7 +7,8 @@ from typing import (Awaitable, Callable, Literal, Optional, TypeVar, Union,
 
 from typing_extensions import ParamSpec  # type: ignore [attr-defined]
 
-from a_sync import _flags, _helpers, _kwargs, config, exceptions, semaphores
+from a_sync import (_flags, _helpers, _kwargs, config, exceptions,
+                    rate_limiting, semaphores)
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -28,7 +29,10 @@ T = TypeVar("T")
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal[None] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
@@ -36,7 +40,10 @@ def a_sync(
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal[None] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
@@ -54,7 +61,10 @@ def a_sync(  # type: ignore [misc]
 def a_sync(
     coro_fn: Literal[None] = None,
     default: Literal['async'] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]]:...  # type: ignore [misc]
 
@@ -62,7 +72,10 @@ def a_sync(
 def a_sync(
     coro_fn: Literal['async'] = None,
     default: Literal[None] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]]:...  # type: ignore [misc]
 
@@ -72,7 +85,10 @@ def a_sync(
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal['async'] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
@@ -80,7 +96,10 @@ def a_sync(
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['async'] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
@@ -90,7 +109,10 @@ def a_sync(  # type: ignore [misc]
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal['sync'] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
@@ -98,7 +120,10 @@ def a_sync(
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['sync'] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
@@ -116,7 +141,10 @@ def a_sync(  # type: ignore [misc]
 def a_sync(  # type: ignore [misc]
     coro_fn: Literal[None] = None,
     default: Literal['sync'] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...  # type: ignore [misc]
 
@@ -124,7 +152,10 @@ def a_sync(  # type: ignore [misc]
 def a_sync(
     coro_fn: Literal['sync'] = None,
     default: Literal[None] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...  # type: ignore [misc]
 
@@ -132,7 +163,10 @@ def a_sync(
 def a_sync(
     coro_fn: Optional[Union[Callable[P, Awaitable[T]], Callable[P, T]]] = None,  # type: ignore [misc]
     default: Literal['sync', 'async', None] = None,
+    # async settings
     _async_semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+    runs_per_minute: Optional[int] = None,
+    # sync settings
     sync_executor: Executor = config.default_sync_executor,
 ) -> Union[  # type: ignore [misc]
     # sync coro_fn, default=None
@@ -234,6 +268,7 @@ def a_sync(
     def apply_async_modifiers(coro_fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
         @functools.wraps(coro_fn)
         @semaphores.apply_semaphore(_async_semaphore)
+        @rate_limiting.apply_rate_limit(runs_per_minute)
         async def async_modifier_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
             return await coro_fn(*args, **kwargs)
         return async_modifier_wrap
