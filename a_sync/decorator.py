@@ -65,7 +65,7 @@ def a_sync(
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
 @overload # sync def async default
-def a_sync(
+def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['async'] = None,
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
@@ -79,7 +79,7 @@ def a_sync(
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
 @overload # sync def async default
-def a_sync(
+def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['sync'] = None,
 ) -> Callable[P, T]:...  # type: ignore [misc]
@@ -95,7 +95,7 @@ def a_sync(
 # NOTE These should output a decorator that will be applied to 'some_fn'
 
 @overload 
-def a_sync(
+def a_sync(  # type: ignore [misc]
     coro_fn: Literal[None] = None,
     default: Literal['sync'] = None,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...  # type: ignore [misc]
