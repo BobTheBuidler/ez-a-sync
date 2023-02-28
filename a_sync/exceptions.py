@@ -39,3 +39,12 @@ class InvalidFlag(ASyncFlagException):
 class InvalidFlagValue(ASyncFlagException):
     def __init__(self, flag: str, flag_value: Any):
         super().__init__(f"'{flag}' should be boolean. You passed {flag_value}.")
+
+
+
+class ImproperFunctionType(ValueError):
+    pass
+
+class FunctionNotAsync(ImproperFunctionType):
+    def __init__(self, fn):
+        super().__init__(f"'coro_fn' must be a coroutine function defined with 'async def'. You passed {fn}.")
