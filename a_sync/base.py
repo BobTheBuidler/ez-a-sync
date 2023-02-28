@@ -41,7 +41,7 @@ class ASyncGenericBase(ASyncABC):
     def __a_sync_default_mode__(cls) -> bool:
         flag = cls.__get_a_sync_flag_name_from_signature()
         flag_value = cls.__a_sync_flag_default_value_from_signature
-        return _flags.negate_if_necessary(flag, flag_value)
+        return _flags.negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
     
     @classmethod
     #@property # TODO debug why making this into a classproperty breaks it
@@ -60,6 +60,6 @@ class ASyncGenericBase(ASyncABC):
         signature = inspect.signature(cls.__init__)
         flag = cls.__get_a_sync_flag_name_from_signature()
         flag_value = signature.parameters[flag].default
-        if flag_value is inspect._empty:
+        if flag_value is inspect._empty:  # type: ignore [attr-defined]
             raise Exception("The implementation for 'cls' uses an arg to specify sync mode, instead of a kwarg. We are unable to proceed. I suppose we can extend the code to accept positional arg flags if necessary")
         return _flags.validate_flag_value(flag, flag_value)
