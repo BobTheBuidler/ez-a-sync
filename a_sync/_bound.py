@@ -5,7 +5,8 @@ from typing import Callable, TypeVar, overload, Awaitable
 
 from typing_extensions import ParamSpec  # type: ignore [attr-defined]
 
-from a_sync import _helpers, _descriptors
+from a_sync import _helpers
+from a_sync.property import AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor
 from a_sync.decorator import a_sync as unbound_a_sync
 
 P = ParamSpec("P")
@@ -34,13 +35,13 @@ def _wrap_bound_method(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: igno
 
 
 @overload
-def _wrap_property(async_property: _descriptors.AsyncPropertyDescriptor) -> _descriptors.AsyncPropertyDescriptor:
+def _wrap_property(async_property: AsyncPropertyDescriptor) -> AsyncPropertyDescriptor:
     ...
 @overload
-def _wrap_property(async_property: _descriptors.AsyncCachedPropertyDescriptor) -> _descriptors.AsyncCachedPropertyDescriptor:  # type: ignore [misc]
+def _wrap_property(async_property: AsyncCachedPropertyDescriptor) -> AsyncCachedPropertyDescriptor:  # type: ignore [misc]
     ...
 def _wrap_property(async_property) -> tuple:
-    if not isinstance(async_property, (_descriptors.AsyncPropertyDescriptor, _descriptors.AsyncCachedPropertyDescriptor)):
+    if not isinstance(async_property, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
         raise TypeError(f"{async_property} must be one of: AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor")
 
     from a_sync.abstract import ASyncABC
