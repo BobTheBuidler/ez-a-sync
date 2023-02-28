@@ -12,7 +12,7 @@ P = ParamSpec("P")
 T = TypeVar("T")
 
 
-def a_sync(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: ignore [misc]
+def _wrap_bound_method(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: ignore [misc]
     # First we wrap the coro_fn so overriding kwargs are handled automagically.
     wrapped_coro_fn = unbound_a_sync(coro_fn)
 
@@ -35,12 +35,12 @@ def a_sync(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: ignore [misc]
 
 
 @overload
-def a_sync_property(async_property: _descriptors.AsyncPropertyDescriptor) -> _descriptors.AsyncPropertyDescriptor:
+def _wrap_property(async_property: _descriptors.AsyncPropertyDescriptor) -> _descriptors.AsyncPropertyDescriptor:
     ...
 @overload
-def a_sync_property(async_property: _descriptors.AsyncCachedPropertyDescriptor) -> _descriptors.AsyncCachedPropertyDescriptor:  # type: ignore [misc]
+def _wrap_property(async_property: _descriptors.AsyncCachedPropertyDescriptor) -> _descriptors.AsyncCachedPropertyDescriptor:  # type: ignore [misc]
     ...
-def a_sync_property(async_property) -> tuple:
+def _wrap_property(async_property) -> tuple:
     if not isinstance(async_property, (_descriptors.AsyncPropertyDescriptor, _descriptors.AsyncCachedPropertyDescriptor)):
         raise TypeError(f"{async_property} must be one of: AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor")
 
