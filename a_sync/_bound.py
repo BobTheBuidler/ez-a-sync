@@ -29,7 +29,7 @@ def _wrap_bound_method(coro_fn: Callable[P, T]) -> Callable[P, T]:  # type: igno
             # We can return the value.
             return retval_or_coro            
         # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-        return _helpers._await_if_sync(retval_or_coro, self.__a_sync_should_await__(kwargs))
+        return _helpers._await_if_sync(retval_or_coro, self.__a_sync_should_await__(kwargs))  # type: ignore [call-overload]
     return bound_a_sync_wrap
 
 
