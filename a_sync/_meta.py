@@ -4,7 +4,7 @@ from abc import ABCMeta
 from asyncio import iscoroutinefunction
 from typing import Any, Dict, Tuple
 
-from a_sync import _bound, _descriptors
+from a_sync import _bound, property
 
 
 class ASyncMeta(ABCMeta):
@@ -12,7 +12,7 @@ class ASyncMeta(ABCMeta):
     def __new__(cls, name, bases, attrs):
         for attr_name, attr_value in list(attrs.items()):
             # Special handling for functions decorated with async_property and async_cached_property
-            if isinstance(attr_value, (_descriptors.AsyncPropertyDescriptor, _descriptors.AsyncCachedPropertyDescriptor)):
+            if isinstance(attr_value, (property.AsyncPropertyDescriptor, property.AsyncCachedPropertyDescriptor)):
                 attrs[attr_name], attrs[attr_value.hidden_method_name] = _bound._wrap_property(attr_value)
             elif iscoroutinefunction(attr_value):
                 # NOTE We will need to improve this logic if somebody needs to use it with classmethods or staticmethods.
