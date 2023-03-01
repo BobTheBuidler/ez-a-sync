@@ -224,7 +224,7 @@ def a_sync(  # type: ignore [misc]
     some_fn() == True
     await some_fn(sync=False) == True
     """
-    modifiers: ModifierManager = ModifierManager(**modifiers)
+    modifiers: ModifierManager = ModifierManager(modifiers)
     
     # If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync('sync')...
     if coro_fn in ['async', 'sync']:

@@ -43,7 +43,7 @@ def apply_async_memory_cache(
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
 
 def apply_async_memory_cache(
-    coro_fn: Optional[Union[Callable[P, Awaitable[T]], int]],
+    coro_fn: Optional[Union[Callable[P, Awaitable[T]], int]] = None,
     maxsize: Optional[int] = None,
     ttl: Optional[int] = None,
     typed: bool = False,
