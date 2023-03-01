@@ -1,37 +1,41 @@
 
 import asyncio
-from typing import Callable, Literal, Optional, TypeVar, Union, overload
 
 import async_property as ap
-from a_sync import modifiers
+
+from a_sync._typing import *
+from a_sync.modifiers import Modifiers
 
 T = TypeVar('T')
 
-class AsyncPropertyDescriptor(ap.base.AsyncPropertyDescriptor):
-    def __init__(self, _fget, field_name=None, **modifiers: modifiers.Modifiers):
+
+class PropertyDescriptor(Modified[T]):
+    def __init__(self, _fget, field_name=None, modifiers: Modifiers = Modifiers()):
         self.modifiers = modifiers
         super().__init__(_fget, field_name=field_name)
+    
+class AsyncPropertyDescriptor(PropertyDescriptor[T], ap.base.AsyncPropertyDescriptor):
+    pass
         
-class AsyncCachedPropertyDescriptor(ap.cached.AsyncCachedPropertyDescriptor):
-    def __init__(self, _fget, field_name=None, **modifiers: modifiers.Modifiers):
-        self.modifiers = modifiers
-        super().__init__(_fget, field_name=field_name)
+class AsyncCachedPropertyDescriptor(PropertyDescriptor[T], ap.cached.AsyncCachedPropertyDescriptor):
+    pass
+
 
 @overload
 def a_sync_property(
     func: Literal[None] = None,
-    **modifiers: modifiers.Modifiers,
+    **modifiers: Modifiers,
 ) -> Callable[[Callable[..., T]], AsyncPropertyDescriptor]:...
     
 @overload
 def a_sync_property(
     func: Callable[..., T] = None,
-    **modifiers: modifiers.Modifiers,
+    **modifiers: Modifiers,
 ) -> AsyncPropertyDescriptor:...
     
 def a_sync_property(
     func: Optional[Callable[..., T]] = None,
-    **modifiers: modifiers.Modifiers,
+    **modifiers: Modifiers,
 ) -> Union[
     AsyncPropertyDescriptor,
     Callable[[Callable[..., T]], AsyncPropertyDescriptor],
@@ -44,18 +48,18 @@ def a_sync_property(
 @overload
 def a_sync_cached_property(
     func: Literal[None] = None,
-    **modifiers: modifiers.Modifiers,
+    **modifiers: Modifiers,
 ) -> Callable[[Callable[..., T]], AsyncCachedPropertyDescriptor]:...
     
 @overload
 def a_sync_cached_property(
     func: Callable[..., T] = None,
-    **modifiers: modifiers.Modifiers,
+    **modifiers: Modifiers,
 ) -> AsyncCachedPropertyDescriptor:...
     
 def a_sync_cached_property(
     func: Optional[Callable[..., T]] = None,
-    **modifiers: modifiers.Modifiers,
+    **modifiers: Modifiers,
 ) -> Union[
     AsyncCachedPropertyDescriptor,
     Callable[[Callable[..., T]], AsyncCachedPropertyDescriptor],

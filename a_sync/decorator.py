@@ -1,17 +1,13 @@
 
-import asyncio
-import functools
 from concurrent.futures._base import Executor
-from typing import (Awaitable, Callable, Literal, Optional, TypeVar, Union,
-                    overload)
+from typing import Awaitable, Callable, Literal, Optional, Union, overload
 
-from typing_extensions import ParamSpec  # type: ignore [attr-defined]
+from typing_extensions import Unpack  # type: ignore [attr-defined]
 
-from a_sync import (_flags, _helpers, _kwargs, config, exceptions,
-                    rate_limiting, semaphores)
-
-P = ParamSpec("P")
-T = TypeVar("T")
+from a_sync import _flags, config, semaphores
+from a_sync._typing import ModifierKwargs, P, T
+from a_sync.modified import ASyncDecorator
+from a_sync.modifiers import Modifiers
 
 ########################
 # The a_sync decorator #
@@ -30,7 +26,8 @@ def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal[None] = None,
     # async settings
-    runs_per_minute: Optional[int] = None,
+    lru_cache_maxsize: Optional[int] = -1,
+    runs_per_minute: Optional[int] = None,  # can also be used for sync def fns used as async
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
     executor: Executor = config.default_sync_executor,
@@ -41,6 +38,7 @@ def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal[None] = None,
     # async settings
+    lru_cache_maxsize: Optional[int] = -1,
     runs_per_minute: Optional[int] = None,
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
@@ -62,6 +60,7 @@ def a_sync(
     coro_fn: Literal[None] = None,
     default: Literal['async'] = None,
     # async settings
+    lru_cache_maxsize: Optional[int] = -1,
     runs_per_minute: Optional[int] = None,
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
@@ -73,6 +72,7 @@ def a_sync(
     coro_fn: Literal['async'] = None,
     default: Literal[None] = None,
     # async settings
+    lru_cache_maxsize: Optional[int] = -1,
     runs_per_minute: Optional[int] = None,
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
@@ -86,6 +86,7 @@ def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal['async'] = None,
     # async settings
+    lru_cache_maxsize: Optional[int] = -1,
     runs_per_minute: Optional[int] = None,
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
@@ -97,6 +98,7 @@ def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['async'] = None,
     # async settings
+    lru_cache_maxsize: Optional[int] = -1,
     runs_per_minute: Optional[int] = None,
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
@@ -110,6 +112,7 @@ def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal['sync'] = None,
     # async settings
+    lru_cache_maxsize: Optional[int] = -1,
     runs_per_minute: Optional[int] = None,
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
@@ -121,6 +124,7 @@ def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['sync'] = None,
     # async settings
+    lru_cache_maxsize: Optional[int] = -1,
     runs_per_minute: Optional[int] = None,
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
@@ -142,6 +146,7 @@ def a_sync(  # type: ignore [misc]
     coro_fn: Literal[None] = None,
     default: Literal['sync'] = None,
     # async settings
+    lru_cache_maxsize: Optional[int] = -1,
     runs_per_minute: Optional[int] = None,
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
@@ -153,21 +158,33 @@ def a_sync(
     coro_fn: Literal['sync'] = None,
     default: Literal[None] = None,
     # async settings
+    lru_cache_maxsize: Optional[int] = -1,
     runs_per_minute: Optional[int] = None,
     semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
     # sync settings
     executor: Executor = config.default_sync_executor,
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...  # type: ignore [misc]
 
+
+
+'''
+lib defaults:
+async settings
+    cache_type: Optional[Literal['memory']] = None,
+    cache_typed: bool = False,
+    ram_cache_maxsize: Optional[int] = -1,
+    ram_cache_ttl: Optional[int] = None,
+    runs_per_minute: Optional[int] = None,
+    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
+sync settings
+    executor: Executor = config.default_sync_executor
+'''
+    
 # catchall
 def a_sync(
     coro_fn: Optional[Union[Callable[P, Awaitable[T]], Callable[P, T]]] = None,  # type: ignore [misc]
-    default: Literal['sync', 'async', None] = None,
-    # async settings
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    default: Literal['sync', 'async', None] = config.DEFAULT_MODE,
+    **modifiers: Unpack[ModifierKwargs],  # default values are set by passing these kwargs into a Modifiers object.
 ) -> Union[  # type: ignore [misc]
     # sync coro_fn, default=None
     Callable[P, T],
@@ -254,6 +271,7 @@ def a_sync(
     some_fn() == True
     await some_fn(sync=False) == True
     """
+    modifiers: Modifiers = Modifiers(modifiers)
     
     # If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync('sync')...
     if coro_fn in ['async', 'sync']:
@@ -261,78 +279,9 @@ def a_sync(
         coro_fn = None
         
     if default not in ['async', 'sync', None]:
-        raise ValueError(f"'default' must be either 'sync', 'async', or None. You passed {default}.")
-    
-    # Modifiers - Additional functionality will be added by stacking decorators here.
-    
-    def apply_async_modifiers(coro_fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
-        @functools.wraps(coro_fn)
-        @semaphores.apply_semaphore(semaphore)
-        @rate_limiting.apply_rate_limit(runs_per_minute)
-        async def async_modifier_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
-            return await coro_fn(*args, **kwargs)
-        return async_modifier_wrap
-    
-    def apply_sync_modifiers(function: Callable[P, T]) -> Callable[P, T]:
-        @functools.wraps(function)
-        # NOTE There are no sync modifiers at this time but they will be added here for my convenience.
-        def sync_modifier_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
-            return function(*args, **kwargs)
-        return sync_modifier_wrap
-    
+        raise 
     
     # Decorator
     
-    def a_sync_deco(function: Callable[P, Awaitable[T]]) -> Union[Callable[P, Awaitable[T]], Callable[P, T]]:  # type: ignore [misc]
-        
-        # First, are we using this decorator correctly?
-        _helpers._validate_wrapped_fn(function)
-        
-        # What kind of function are we decorating?
-        if asyncio.iscoroutinefunction(function):
-            # NOTE: The following code applies to async functions defined with 'async def'
-            
-            @functools.wraps(function)
-            def async_wrap(*args: P.args, **kwargs: P.kwargs) -> Union[Awaitable[T], T]:  # type: ignore [name-defined]
-                should_await = _run_sync(kwargs, default or 'async') # Must take place before coro is created.
-                modified_function = apply_async_modifiers(function)
-                coro = modified_function(*args, **kwargs)
-                return apply_sync_modifiers(_helpers._await)(coro) if should_await else coro
-            return async_wrap
-        
-        elif callable(function):
-            # NOTE: The following code applies to sync functions defined with 'def'
-            modified_sync_function = apply_sync_modifiers(function)
-            
-            @apply_async_modifiers
-            @functools.wraps(function)
-            async def create_awaitable(*args: P.args, **kwargs: P.kwargs) -> T:
-                return await apply_async_modifiers(asyncio.get_event_loop().run_in_executor)(
-                    executor, modified_sync_function, *args, **kwargs
-                )
-                
-            @functools.wraps(function)
-            def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> Union[Awaitable[T], T]:  # type: ignore [name-defined]
-                if _run_sync(kwargs, default = default or 'sync'):
-                    return modified_sync_function(*args, **kwargs)
-                return create_awaitable(*args, **kwargs)
-            
-            return sync_wrap
-        
-        raise RuntimeError(f"a_sync's first arg must be callable. You passed {function}.")
-    
+    a_sync_deco = ASyncDecorator(modifiers, default)
     return a_sync_deco if coro_fn is None else a_sync_deco(coro_fn)
-
-
-def _run_sync(kwargs: dict, default: Literal['sync', 'async']):
-    # If a flag was specified in the kwargs, we will defer to it.
-    try:
-        return _kwargs.is_sync(kwargs, pop_flag=True)
-    except exceptions.NoFlagsFound:
-        # No flag specified in the kwargs, we will defer to 'default'.
-        if default == 'sync':
-            return True
-        elif default == 'async':
-            return False
-        else:
-            raise NotImplementedError(default)
