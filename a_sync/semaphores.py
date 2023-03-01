@@ -2,14 +2,12 @@ import asyncio
 import functools
 from collections import defaultdict
 from threading import Thread, current_thread
-from typing import (Awaitable, Callable, DefaultDict, Literal, Optional,
-                    TypeVar, Union, overload)
+from typing import (Awaitable, Callable, DefaultDict, Literal, Optional, Union,
+                    overload)
 
-from typing_extensions import ParamSpec
 from a_sync import exceptions
+from a_sync._typing import P, T
 
-T = TypeVar('T')
-P = ParamSpec('P')
 
 class ThreadsafeSemaphore(asyncio.Semaphore):
     """
@@ -21,13 +19,14 @@ class ThreadsafeSemaphore(asyncio.Semaphore):
     """
 
     def __init__(self, value: Optional[int]) -> None:
+        assert isinstance(value, int), f"{value} should be an integer."
         self._value = value
         self.semaphores: DefaultDict[Thread, asyncio.Semaphore] = defaultdict(lambda: asyncio.Semaphore(value))
         self.dummy = DummySemaphore()
     
     @property
     def use_dummy(self) -> bool:
-        return self.value is None
+        return self._value is None
     
     @property
     def semaphore(self) -> asyncio.Semaphore:
