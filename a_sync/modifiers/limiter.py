@@ -26,6 +26,12 @@ def apply_rate_limit(
     runs_per_minute: int = None,
 ) -> Callable[P, Awaitable[T]]:...
     
+@overload
+def apply_rate_limit(
+    coro_fn: Callable[P, Awaitable[T]] = None,
+    runs_per_minute: AsyncLimiter = None,
+) -> Callable[P, Awaitable[T]]:...
+    
 def apply_rate_limit(
     coro_fn: Optional[Union[Callable[P, Awaitable[T]], int]] = None,
     runs_per_minute: Optional[int] = None,
@@ -47,7 +53,7 @@ def apply_rate_limit(
         raise exceptions.FunctionNotAsync(coro_fn)
     
     def rate_limit_decorator(coro_fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
-        limiter = AsyncLimiter(runs_per_minute) if runs_per_minute else aliases.dummy
+        limiter = runs_per_minute if isinstance(runs_per_minute, AsyncLimiter) else AsyncLimiter(runs_per_minute) if runs_per_minute else aliases.dummy
         async def rate_limit_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
             async with limiter:
                 return await coro_fn(*args, **kwargs)
