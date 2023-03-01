@@ -1,4 +1,4 @@
 aiolimiter==1.0.0
-async_lru==2.0.2
+async_lru>=1.0.2,<2.1
 async_property==0.2.1
 typing_extensions>=0.4.0
