@@ -33,7 +33,7 @@ null_modifiers = ModifierManager(
     )
 )
 
-DEFAULT_MODE = os.environ.get("A_SYNC_DEFAULT_MODE")
+DEFAULT_MODE: DefaultMode = os.environ.get("A_SYNC_DEFAULT_MODE")  # type: ignore [assignment]
 CACHE_TYPE = typ if (typ := os.environ.get("A_SYNC_CACHE_TYPE", "").lower()) else null_modifiers.cache_type
 CACHE_TYPED = bool(os.environ.get("A_SYNC_CACHE_TYPED"))
 RAM_CACHE_MAXSIZE = int(os.environ.get("A_SYNC_RAM_CACHE_MAXSIZE", -1)) 

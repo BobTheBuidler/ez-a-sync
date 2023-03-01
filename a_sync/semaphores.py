@@ -2,11 +2,9 @@ import asyncio
 import functools
 from collections import defaultdict
 from threading import Thread, current_thread
-from typing import (Awaitable, Callable, DefaultDict, Literal, Optional, Union,
-                    overload)
 
 from a_sync import exceptions
-from a_sync._typing import P, T
+from a_sync._typing import *
 
 
 class ThreadsafeSemaphore(asyncio.Semaphore):
@@ -21,7 +19,7 @@ class ThreadsafeSemaphore(asyncio.Semaphore):
     def __init__(self, value: Optional[int]) -> None:
         assert isinstance(value, int), f"{value} should be an integer."
         self._value = value
-        self.semaphores: DefaultDict[Thread, asyncio.Semaphore] = defaultdict(lambda: asyncio.Semaphore(value))
+        self.semaphores: DefaultDict[Thread, asyncio.Semaphore] = defaultdict(lambda: asyncio.Semaphore(value))  # type: ignore [arg-type]
         self.dummy = DummySemaphore()
     
     @property
@@ -60,32 +58,30 @@ Semaphore = Union[
     DummySemaphore,
 ]
 
-SemaphoreSpec = Union[Semaphore, int]
-
 @overload
 async def apply_semaphore(
-    coro_fn: Literal[None] = None,
-    semaphore: SemaphoreSpec = None,
+    coro_fn: Literal[None],
+    semaphore: SemaphoreSpec,
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
 
 @overload
 async def apply_semaphore(
-    coro_fn: SemaphoreSpec = None,
-    semaphore: Literal[None] = None,
+    coro_fn: SemaphoreSpec,
+    semaphore: Literal[None],
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
 
 @overload
 async def apply_semaphore(
-    coro_fn: Callable[P, Awaitable[T]] = None,
-    semaphore: SemaphoreSpec = None,
+    coro_fn: Callable[P, Awaitable[T]],
+    semaphore: SemaphoreSpec,
 ) -> Callable[P, Awaitable[T]]:...
     
 def apply_semaphore(
-    coro_fn: Union[Callable[P, T], SemaphoreSpec] = None,
-    semaphore: Optional[SemaphoreSpec] = None,
+    coro_fn: Optional[Union[Callable[P, Awaitable[T]], SemaphoreSpec]] = None,
+    semaphore: SemaphoreSpec = None,
 ) -> Union[
+    Callable[P, Awaitable[T]],
     Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]],
-    Callable[P, T],
 ]:
     # Parse Inputs
     if isinstance(coro_fn, (int, asyncio.Semaphore)):
@@ -107,7 +103,7 @@ def apply_semaphore(
     def semaphore_decorator(coro_fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
         @functools.wraps(coro_fn)
         async def semaphore_wrap(*args, **kwargs) -> T:
-            async with semaphore:
+            async with semaphore:  # type: ignore [union-attr]
                 return await coro_fn(*args, **kwargs)
         return semaphore_wrap
     return semaphore_decorator if coro_fn is None else semaphore_decorator(coro_fn)

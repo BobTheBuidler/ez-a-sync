@@ -9,18 +9,15 @@ from a_sync.modifiers import cache, limiter
 valid_modifiers = [key for key in ModifierKwargs.__annotations__ if not key.startswith('_') and not key.endswith('_')]
 
 class ModifierManager:
-    def __init__(self, modifiers: ModifierKwargs = None) -> None:
-        if modifiers:
-            for key in modifiers.keys():
-                if key not in valid_modifiers:
-                    raise ValueError(f"'{key}' is not a supported modifier.")
-            self._modifiers = modifiers
-        else:
-            self._modifiers = ModifierKwargs()
+    def __init__(self, modifiers: ModifierKwargs = ModifierKwargs()) -> None:
+        for key in modifiers.keys():
+            if key not in valid_modifiers:
+                raise ValueError(f"'{key}' is not a supported modifier.")
+        self._modifiers = modifiers
     def __repr__(self) -> str:
         return str(self._modifiers)
     def __getitem__(self, modifier_key: str):
-        return self._modifiers[modifier_key]
+        return self._modifiers[modifier_key]  # type: ignore [literal-required]
     def __getattribute__(self, modifier_key: str) -> Any:
         if modifier_key == '__dict__' or modifier_key not in valid_modifiers:
             return super().__getattribute__(modifier_key)
@@ -49,7 +46,8 @@ class ModifierManager:
         if self.use_limiter is not None:
             coro_fn = limiter.apply_rate_limit(coro_fn, self.runs_per_minute)
         if self.use_semaphore:
-            coro_fn = semaphores.apply_semaphore(coro_fn, self.semaphore)
+            semaphore: SemaphoreSpec = self.semaphore
+            coro_fn = semaphores.apply_semaphore(coro_fn, semaphore)
         if self.use_cache:
             coro_fn = cache.apply_async_cache(
                 coro_fn,
