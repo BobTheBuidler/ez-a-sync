@@ -3,7 +3,7 @@ import threading
 from abc import ABCMeta
 from typing import Any, Dict, Tuple
 
-from a_sync import _bound
+from a_sync import _bound, modifiers
 from a_sync.modified import ASyncFunction, Modified
 from a_sync.property import PropertyDescriptor
 
@@ -11,13 +11,13 @@ from a_sync.property import PropertyDescriptor
 class ASyncMeta(ABCMeta):
     """Any class with metaclass ASyncMeta will have its functions wrapped with a_sync upon class instantiation."""
     def __new__(cls, name, bases, attrs):
-        
         # Wrap all methods with a_sync abilities
         for attr_name, attr_value in list(attrs.items()):
-            
-            # Read modifiers from class definition
-            fn_modifiers = cls.__a_sync_modifiers__ if hasattr(cls, '__a_sync_modifiers__') else {}
-        
+            # Read modifiers from class definition 
+            # NOTE: Open uesion: what do we do when a parent class and subclass define the same modifier differently?
+            #       Currently the parent value is used for functions defined on the parent, 
+            #       and the subclass value is used for functions defined on the subclass.
+            fn_modifiers = modifiers.get_modifiers_from(attrs)
             # Special handling for functions decorated with a_sync decorators
             if isinstance(attr_value, Modified):
                 # Check for modifier overrides defined on the Modified object

@@ -2,16 +2,11 @@
 import functools
 from typing import Any, Awaitable, Callable
 
-from a_sync import cache, rate_limiting, semaphores
+from a_sync import config, semaphores
 from a_sync._typing import *
+from a_sync.modifiers import cache, limiter
 
 valid_modifiers = [key for key in ModifierKwargs.__annotations__ if not key.startswith('_') and not key.endswith('_')]
-
-
-def get_modifiers_from(thing: Union[dict, type, object]) -> ModifierKwargs:
-    if isinstance(thing, dict):
-        return ModifierKwargs({modifier: thing[modifier] for modifier in valid_modifiers if modifier in thing})
-    return ModifierKwargs({modifier: getattr(thing, modifier) for modifier in valid_modifiers if hasattr(thing, modifier)})
 
 class ModifierManager:
     def __init__(self, modifiers: ModifierKwargs = None) -> None:
@@ -32,31 +27,27 @@ class ModifierManager:
         try:
             return self[modifier_key]
         except:
-            from a_sync import config
             return config.default_modifiers[modifier_key]
     
     @property
     def use_limiter(self) -> bool:
-        from a_sync.config import null_modifiers
-        return self.runs_per_minute != null_modifiers.runs_per_minute
+        return self.runs_per_minute != config.null_modifiers.runs_per_minute
     @property
     def use_semaphore(self) -> bool:
-        from a_sync.config import null_modifiers
-        return self.semaphore != null_modifiers.semaphore
+        return self.semaphore != config.null_modifiers.semaphore
     @property
     def use_cache(self) -> bool:
-        from a_sync.config import null_modifiers
         return any([
-            self.cache_type != null_modifiers.cache_type,
-            self.ram_cache_maxsize != null_modifiers.ram_cache_maxsize,
-            self.ram_cache_ttl != null_modifiers.ram_cache_ttl,
-            self.cache_typed != null_modifiers.cache_typed,
+            self.cache_type != config.null_modifiers.cache_type,
+            self.ram_cache_maxsize != config.null_modifiers.ram_cache_maxsize,
+            self.ram_cache_ttl != config.null_modifiers.ram_cache_ttl,
+            self.cache_typed != config.null_modifiers.cache_typed,
         ])
     
     def apply_async_modifiers(self, coro_fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
         # NOTE: THESE STACK IN REVERSE ORDER
         if self.use_limiter is not None:
-            coro_fn = rate_limiting.apply_rate_limit(coro_fn, self.runs_per_minute)
+            coro_fn = limiter.apply_rate_limit(coro_fn, self.runs_per_minute)
         if self.use_semaphore:
             coro_fn = semaphores.apply_semaphore(coro_fn, self.semaphore)
         if self.use_cache:

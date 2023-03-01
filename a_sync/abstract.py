@@ -44,9 +44,9 @@ class ASyncABC(metaclass=ASyncMeta):
     ######################################
     
     @property
-    def __a_sync_modifiers__(thing: Union[type, object]) -> ModifierKwargs:
+    def __a_sync_modifiers__(self: "ASyncABC") -> ModifierKwargs:
         """You should not override this."""
-        return modifiers.get_modifiers_from(thing)
+        return modifiers.get_modifiers_from(self)
 
     ####################
     # Abstract Methods #
