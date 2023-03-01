@@ -1,17 +1,13 @@
 
 import asyncio
-from typing import (Awaitable, Callable, Literal, Optional, TypeVar, Union,
-                    overload)
+from typing import Awaitable, Callable, Literal, Optional, Union, overload
 
 from aiolimiter import AsyncLimiter
-from typing_extensions import ParamSpec, TypeVar
 
-from a_sync import exceptions, aliases
+from a_sync import aliases, exceptions
+from a_sync._typing import P, T
 
-T = TypeVar('T')
-P = ParamSpec('P')
-    
-    
+
 @overload
 def apply_rate_limit(
     coro_fn: Literal[None] = None,

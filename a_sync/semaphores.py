@@ -2,14 +2,12 @@ import asyncio
 import functools
 from collections import defaultdict
 from threading import Thread, current_thread
-from typing import (Awaitable, Callable, DefaultDict, Literal, Optional,
-                    TypeVar, Union, overload)
+from typing import (Awaitable, Callable, DefaultDict, Literal, Optional, Union,
+                    overload)
 
-from typing_extensions import ParamSpec
 from a_sync import exceptions
+from a_sync._typing import P, T
 
-T = TypeVar('T')
-P = ParamSpec('P')
 
 class ThreadsafeSemaphore(asyncio.Semaphore):
     """

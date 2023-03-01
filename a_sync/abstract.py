@@ -4,6 +4,7 @@ from typing import Union
 
 from a_sync import _flags, _kwargs, exceptions, modifiers
 from a_sync._meta import ASyncMeta
+from a_sync._typing import *
 
 
 class ASyncABC(metaclass=ASyncMeta):
@@ -43,9 +44,9 @@ class ASyncABC(metaclass=ASyncMeta):
     ######################################
     
     @property
-    def __a_sync_modifiers__(thing: Union[type, object]) -> modifiers.Modifiers:
+    def __a_sync_modifiers__(thing: Union[type, object]) -> ModifierKwargs:
         """You should not override this."""
-        return modifiers.Modifiers({modifier: getattr(thing, modifier) for modifier in modifiers.valid_modifiers if hasattr(thing, modifier)})
+        return modifiers.get_modifiers_from(thing)
 
     ####################
     # Abstract Methods #

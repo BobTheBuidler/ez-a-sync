@@ -297,7 +297,7 @@ def a_sync(
                 should_await = _run_sync(kwargs, default or 'async') # Must take place before coro is created.
                 modified_function = apply_async_modifiers(function)
                 coro = modified_function(*args, **kwargs)
-                return apply_sync_modifiers(_helpers._sync)(coro) if should_await else coro
+                return apply_sync_modifiers(_helpers._await)(coro) if should_await else coro
             return async_wrap
         
         elif callable(function):
