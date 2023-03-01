@@ -42,8 +42,11 @@ def a_sync_property(
     AsyncPropertyDescriptor[T],
     Callable[[Callable[..., T]], AsyncPropertyDescriptor[T]],
 ]:
+    if func in ['sync', 'async']:
+        modifiers['default'] = func
+        func = None
     def modifier_wrap(func) -> AsyncPropertyDescriptor[T]:
-        assert asyncio.iscoroutinefunction(func), 'Can only use with async def'
+        assert asyncio.iscoroutinefunction(func), func #'Can only use with async def'
         return AsyncPropertyDescriptor(func, modifiers=ModifierManager(modifiers))
     return modifier_wrap if func is None else modifier_wrap(func)
     
