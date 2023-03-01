@@ -4,9 +4,8 @@ from inspect import isawaitable
 from typing import Awaitable, Callable, overload
 
 from a_sync import _helpers
-from a_sync._typing import P, T
+from a_sync._typing import *
 from a_sync.decorator import a_sync as unbound_a_sync
-from a_sync.modifiers import ModifierKwargs
 from a_sync.property import (AsyncCachedPropertyDescriptor,
                              AsyncPropertyDescriptor)
 

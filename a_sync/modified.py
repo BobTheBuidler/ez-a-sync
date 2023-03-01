@@ -3,11 +3,11 @@ import functools
 
 from a_sync import _helpers, _kwargs, exceptions
 from a_sync._typing import *
-from a_sync.modifiers import Modifiers
+from a_sync.modifiers import ModifierManager
     
 
 class ASyncDecorator(Modified[T]):
-    def __init__(self, modifiers: Modifiers, default=None) -> None:
+    def __init__(self, modifiers: ModifierManager, default=None) -> None:
         self.default = default
         self.modifiers = modifiers
         self.validate_inputs()
@@ -16,12 +16,12 @@ class ASyncDecorator(Modified[T]):
     def validate_inputs(self) -> None:
         if self.default not in ['sync', 'async', None]:
             raise ValueError(f"'default' must be either 'sync', 'async', or None. You passed {self.default}.")
-        if not isinstance(self.modifiers, Modifiers):
-            raise TypeError(f"'modifiers should be of type 'Modifiers'. You passed {self.modifiers}")
+        if not isinstance(self.modifiers, ModifierManager):
+            raise TypeError(f"'modifiers should be of type 'ModifierManager'. You passed {self.modifiers}")
 
          
 class ASyncFunction(Modified[T]):
-    def __init__(self, fn: Callable[P, T], modifiers: Modifiers, default=None) -> None:
+    def __init__(self, fn: Callable[P, T], modifiers: ModifierManager, default=None) -> None:
         self.default = default
         self.modifiers = modifiers
         self.async_def = asyncio.iscoroutinefunction(fn)

@@ -6,7 +6,7 @@ from typing_extensions import Unpack  # type: ignore [attr-defined]
 from a_sync import _flags, config
 from a_sync._typing import ModifierKwargs, P, T
 from a_sync.modified import ASyncDecorator
-from a_sync.modifiers import Modifiers
+from a_sync.modifiers import ModifierManager
 
 ########################
 # The a_sync decorator #
@@ -131,7 +131,7 @@ sync settings
 def a_sync(
     coro_fn: Optional[Union[Callable[P, Awaitable[T]], Callable[P, T]]] = None,  # type: ignore [misc]
     default: Literal['sync', 'async', None] = config.DEFAULT_MODE,
-    **modifiers: Unpack[ModifierKwargs],  # default values are set by passing these kwargs into a Modifiers object.
+    **modifiers: Unpack[ModifierKwargs],  # default values are set by passing these kwargs into a ModifierManager object.
 ) -> Union[  # type: ignore [misc]
     # sync coro_fn, default=None
     Callable[P, T],
@@ -218,7 +218,7 @@ def a_sync(
     some_fn() == True
     await some_fn(sync=False) == True
     """
-    modifiers: Modifiers = Modifiers(modifiers)
+    modifiers: ModifierManager = ModifierManager(modifiers)
     
     # If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync('sync')...
     if coro_fn in ['async', 'sync']:

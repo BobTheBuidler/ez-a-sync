@@ -13,7 +13,7 @@ def get_modifiers_from(thing: Union[dict, type, object]) -> ModifierKwargs:
         return ModifierKwargs({modifier: thing[modifier] for modifier in valid_modifiers if modifier in thing})
     return ModifierKwargs({modifier: getattr(thing, modifier) for modifier in valid_modifiers if hasattr(thing, modifier)})
 
-class Modifiers:
+class ModifierManager:
     def __init__(self, modifiers: ModifierKwargs = None) -> None:
         if modifiers:
             for key in modifiers.keys():
@@ -33,7 +33,7 @@ class Modifiers:
             return self[modifier_key]
         except:
             from a_sync import config
-            return config.DefaultModifiers[modifier_key]
+            return config.default_modifiers[modifier_key]
     
     @property
     def use_limiter(self) -> bool:

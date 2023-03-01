@@ -6,11 +6,11 @@ import async_property as ap
 from a_sync import config
 from a_sync._typing import *
 from a_sync.modified import Modified
-from a_sync.modifiers import Modifiers
+from a_sync.modifiers import ModifierManager
 
 
 class PropertyDescriptor(Modified[T]):
-    def __init__(self, _fget, field_name=None, modifiers: Modifiers = Modifiers()):
+    def __init__(self, _fget, field_name=None, modifiers: ModifierManager = ModifierManager()):
         self.modifiers = modifiers
         super().__init__(_fget, field_name=field_name)
     
@@ -44,7 +44,7 @@ def a_sync_property(
 ]:
     def modifier_wrap(func) -> AsyncPropertyDescriptor[T]:
         assert asyncio.iscoroutinefunction(func), 'Can only use with async def'
-        return AsyncPropertyDescriptor(func, modifiers=Modifiers(modifiers))
+        return AsyncPropertyDescriptor(func, modifiers=ModifierManager(modifiers))
     return modifier_wrap if func is None else modifier_wrap(func)
     
 @overload
@@ -70,5 +70,5 @@ def a_sync_cached_property(
 ]:
     def modifier_wrap(func) -> AsyncCachedPropertyDescriptor[T]:
         assert asyncio.iscoroutinefunction(func), 'Can only use with async def'
-        return AsyncCachedPropertyDescriptor(func, modifiers=Modifiers(modifiers))
+        return AsyncCachedPropertyDescriptor(func, modifiers=ModifierManager(modifiers))
     return modifier_wrap if func is None else modifier_wrap(func)
