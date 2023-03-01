@@ -6,6 +6,8 @@ from a_sync._typing import *
 from a_sync.modifiers.cache.memory import apply_async_memory_cache
 
 
+CacheType = Literal['memory', None]
+
 class CacheArgs(TypedDict):
     cache_type: Literal['memory', None]
     cache_typed: bool
@@ -14,25 +16,25 @@ class CacheArgs(TypedDict):
 
 @overload
 def apply_async_cache(
-    coro_fn: Literal[None] = None,
+    coro_fn: Literal[None],
     **modifiers: Unpack[CacheArgs],
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
     
 @overload
 def apply_async_cache(
-    coro_fn: int = None,
+    coro_fn: int,
     **modifiers: Unpack[CacheArgs],
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
     
 @overload
 def apply_async_cache(
-    coro_fn: Callable[P, Awaitable[T]] = None,
+    coro_fn: Callable[P, Awaitable[T]],
     **modifiers: Unpack[CacheArgs],
 ) -> Callable[P, Awaitable[T]]:...
     
 def apply_async_cache(
-    coro_fn: Union[Callable[P, Awaitable[T]], Literal['memory']] = None,
-    cache_type: Literal['memory'] = 'memory',
+    coro_fn: Union[Callable[P, Awaitable[T]], CacheType, int] = None,
+    cache_type: CacheType = 'memory',
     cache_typed: bool = False,
     ram_cache_maxsize: Optional[int] = None,
     ram_cache_ttl: Optional[int] = None,

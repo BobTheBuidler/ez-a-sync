@@ -10,31 +10,25 @@ from a_sync._typing import P, T
 
 @overload
 def apply_rate_limit(
-    coro_fn: Literal[None] = None,
-    runs_per_minute: int = None,
+    coro_fn: Literal[None],
+    runs_per_minute: int,
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
     
 @overload
 def apply_rate_limit(
-    coro_fn: int = None,
-    runs_per_minute: Literal[None] = None,
+    coro_fn: int,
+    runs_per_minute: Literal[None],
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
     
 @overload
 def apply_rate_limit(
-    coro_fn: Callable[P, Awaitable[T]] = None,
-    runs_per_minute: int = None,
-) -> Callable[P, Awaitable[T]]:...
-    
-@overload
-def apply_rate_limit(
-    coro_fn: Callable[P, Awaitable[T]] = None,
-    runs_per_minute: AsyncLimiter = None,
+    coro_fn: Callable[P, Awaitable[T]],
+    runs_per_minute: Union[int, AsyncLimiter],
 ) -> Callable[P, Awaitable[T]]:...
     
 def apply_rate_limit(
     coro_fn: Optional[Union[Callable[P, Awaitable[T]], int]] = None,
-    runs_per_minute: Optional[int] = None,
+    runs_per_minute: Optional[Union[int, AsyncLimiter]] = None,
 ) -> Union[
     Callable[P, Awaitable[T]],
     Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]],
@@ -55,7 +49,7 @@ def apply_rate_limit(
     def rate_limit_decorator(coro_fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
         limiter = runs_per_minute if isinstance(runs_per_minute, AsyncLimiter) else AsyncLimiter(runs_per_minute) if runs_per_minute else aliases.dummy
         async def rate_limit_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
-            async with limiter:
+            async with limiter:  # type: ignore [attr-defined]
                 return await coro_fn(*args, **kwargs)
         return rate_limit_wrap
     

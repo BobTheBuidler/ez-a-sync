@@ -3,8 +3,8 @@ import asyncio
 from inspect import getfullargspec
 from typing import Awaitable, Callable
 
-from async_property.base import AsyncPropertyDescriptor
-from async_property.cached import AsyncCachedPropertyDescriptor
+from async_property.base import AsyncPropertyDescriptor  # type: ignore [import]
+from async_property.cached import AsyncCachedPropertyDescriptor  # type: ignore [import]
 
 from a_sync import _flags
 from a_sync._typing import T

@@ -8,8 +8,8 @@ from a_sync.semaphores import ThreadsafeSemaphore
 def get_modifiers_from(thing: Union[dict, type, object]) -> ModifierKwargs:
     if isinstance(thing, dict):
         apply_class_defined_modifiers(thing)
-        return ModifierKwargs({modifier: thing[modifier] for modifier in valid_modifiers if modifier in thing})
-    return ModifierKwargs({modifier: getattr(thing, modifier) for modifier in valid_modifiers if hasattr(thing, modifier)})
+        return ModifierKwargs({modifier: thing[modifier] for modifier in valid_modifiers if modifier in thing})  # type: ignore [misc]
+    return ModifierKwargs({modifier: getattr(thing, modifier) for modifier in valid_modifiers if hasattr(thing, modifier)})  # type: ignore [misc]
 
 def apply_class_defined_modifiers(attrs_from_metaclass: dict):
     if 'semaphore' in attrs_from_metaclass and isinstance(val := attrs_from_metaclass['semaphore'], int):

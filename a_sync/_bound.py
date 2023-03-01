@@ -1,7 +1,6 @@
 
 import functools
 from inspect import isawaitable
-from typing import Awaitable, Callable, overload
 
 from a_sync import _helpers
 from a_sync._typing import *
@@ -9,15 +8,26 @@ from a_sync.decorator import a_sync as unbound_a_sync
 from a_sync.property import (AsyncCachedPropertyDescriptor,
                              AsyncPropertyDescriptor)
 
+if TYPE_CHECKING:
+    from a_sync.abstract import ASyncABC
 
-def _wrap_bound_method(coro_fn: Callable[P, T], **modifiers: ModifierKwargs) -> Callable[P, T]:  # type: ignore [misc]
+
+Property = Callable[["ASyncABC"], T]
+HiddenMethod = Callable[["ASyncABC", Dict[str, bool]], T]
+AsyncBoundMethod = Callable[Concatenate["ASyncABC", P], Awaitable[T]]
+BoundMethod = Callable[Concatenate["ASyncABC", P], T]
+
+def _wrap_bound_method(
+    coro_fn: AsyncBoundMethod[P, T],
+    **modifiers: Unpack[ModifierKwargs]
+) -> AsyncBoundMethod[P, T]:  # type: ignore [misc]
     from a_sync.abstract import ASyncABC
 
     # First we wrap the coro_fn so overriding kwargs are handled automagically.
-    wrapped_coro_fn = unbound_a_sync(coro_fn=coro_fn, **modifiers)
+    wrapped_coro_fn: AsyncBoundMethod[P, T] = unbound_a_sync(coro_fn=coro_fn, **modifiers)  # type: ignore [arg-type]
 
     @functools.wraps(coro_fn)
-    def bound_a_sync_wrap(self, *args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore [name-defined]
+    def bound_a_sync_wrap(self: ASyncABC, *args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore [name-defined]
         if not isinstance(self, ASyncABC):
             raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
         # This could either be a coroutine or a return value from an awaited coroutine,
@@ -26,19 +36,28 @@ def _wrap_bound_method(coro_fn: Callable[P, T], **modifiers: ModifierKwargs) -> 
         if not isawaitable(retval):
             # The coroutine was already awaited due to the use of an overriding kwarg.
             # We can return the value.
-            return retval           
+            return retval  # type: ignore [return-value]
         # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-        return _helpers._await(coro) if self.__a_sync_should_await__(kwargs) else coro  # type: ignore [call-overload]
+        return _helpers._await(coro) if self.__a_sync_should_await__(kwargs) else coro  # type: ignore [call-overload, return-value]
     return bound_a_sync_wrap
 
 
 @overload
-def _wrap_property(async_property: AsyncPropertyDescriptor, **modifiers: ModifierKwargs) -> AsyncPropertyDescriptor:
-    ...
+def _wrap_property(
+    async_property: AsyncPropertyDescriptor[T],
+    **modifiers: Unpack[ModifierKwargs]
+) -> AsyncPropertyDescriptor[T]:...
+
 @overload
-def _wrap_property(async_property: AsyncCachedPropertyDescriptor, **modifiers: ModifierKwargs) -> AsyncCachedPropertyDescriptor:  # type: ignore [misc]
-    ...
-def _wrap_property(async_property, **modifiers: ModifierKwargs) -> tuple:
+def _wrap_property(
+    async_property: AsyncCachedPropertyDescriptor[T],
+    **modifiers: Unpack[ModifierKwargs]
+) -> AsyncCachedPropertyDescriptor:...
+
+def _wrap_property(
+    async_property: Union[AsyncPropertyDescriptor[T], AsyncCachedPropertyDescriptor[T]],
+    **modifiers: Unpack[ModifierKwargs]
+) -> Tuple[Property[T], HiddenMethod[T]]:
     if not isinstance(async_property, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
         raise TypeError(f"{async_property} must be one of: AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor")
 

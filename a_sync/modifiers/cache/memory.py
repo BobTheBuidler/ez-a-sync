@@ -9,40 +9,41 @@ from a_sync import exceptions
 from a_sync._typing import P, T
 
 
-@overload
-def apply_async_memory_cache(
-    coro_fn: Literal[None] = None,
-    maxsize: int = None,
-    ttl: Optional[int] = None,
-    typed: bool = False,
-) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
 
 @overload
 def apply_async_memory_cache(
-    coro_fn: Literal[None] = None,
-    maxsize: Literal[None] = None,
-    ttl: int = None,
+    coro_fn: Literal[None],
+    maxsize: Literal[None],
+    ttl: int,
+    typed: bool,
+) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
+    
+@overload
+def apply_async_memory_cache(
+    coro_fn: int,
+    maxsize: Literal[None],
+    ttl: Optional[int],
     typed: bool = False,
 ) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
     
 @overload
 def apply_async_memory_cache(
-    coro_fn: int = None,
-    maxsize: Literal[None] = None,
-    ttl: Optional[int] = None,
-    typed: bool = False,
-) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
-    
-@overload
-def apply_async_memory_cache(
-    coro_fn: Callable[P, Awaitable[T]] = None,
-    maxsize: int = None,
+    coro_fn: Callable[P, Awaitable[T]],
+    maxsize: int,
     ttl: Optional[int] = None,
     typed: bool = False,
 ) -> Callable[P, Awaitable[T]]:...
-    
+
+@overload
 def apply_async_memory_cache(
-    coro_fn: Optional[Union[Callable[P, Awaitable[T]], int]] = None,
+    coro_fn: Literal[None],
+    maxsize: Optional[int],
+    ttl: Optional[int],
+    typed: bool,
+) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
+
+def apply_async_memory_cache(
+    coro_fn: Optional[Union[Callable[P, Awaitable[T]], int]],
     maxsize: Optional[int] = None,
     ttl: Optional[int] = None,
     typed: bool = False,
