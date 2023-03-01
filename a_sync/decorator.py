@@ -1,10 +1,9 @@
 
-from concurrent.futures._base import Executor
 from typing import Awaitable, Callable, Literal, Optional, Union, overload
 
 from typing_extensions import Unpack  # type: ignore [attr-defined]
 
-from a_sync import _flags, config, semaphores
+from a_sync import _flags, config
 from a_sync._typing import ModifierKwargs, P, T
 from a_sync.modified import ASyncDecorator
 from a_sync.modifiers import Modifiers
@@ -25,24 +24,14 @@ from a_sync.modifiers import Modifiers
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal[None] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,  # can also be used for sync def fns used as async
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
 @overload # sync def none default
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal[None] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
 # @a_sync(default='async')
@@ -59,24 +48,14 @@ def a_sync(  # type: ignore [misc]
 def a_sync(
     coro_fn: Literal[None] = None,
     default: Literal['async'] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]]:...  # type: ignore [misc]
 
 @overload # if you try to use default as the only arg
 def a_sync(
     coro_fn: Literal['async'] = None,
     default: Literal[None] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]]:...  # type: ignore [misc]
 
 # a_sync(some_fn, default='async')
@@ -85,24 +64,14 @@ def a_sync(
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal['async'] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
 @overload # sync def async default
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['async'] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[P, Awaitable[T]]:...  # type: ignore [misc]
 
 # a_sync(some_fn, default='sync')
@@ -111,24 +80,14 @@ def a_sync(  # type: ignore [misc]
 def a_sync(
     coro_fn: Callable[P, Awaitable[T]] = None,  # type: ignore [misc]
     default: Literal['sync'] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
 @overload # sync def async default
 def a_sync(  # type: ignore [misc]
     coro_fn: Callable[P, T] = None,  # type: ignore [misc]
     default: Literal['sync'] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[P, T]:...  # type: ignore [misc]
 
 # @a_sync(default='sync')
@@ -145,27 +104,15 @@ def a_sync(  # type: ignore [misc]
 def a_sync(  # type: ignore [misc]
     coro_fn: Literal[None] = None,
     default: Literal['sync'] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...  # type: ignore [misc]
 
 @overload # if you try to use default as the only arg
 def a_sync(
     coro_fn: Literal['sync'] = None,
     default: Literal[None] = None,
-    # async settings
-    lru_cache_maxsize: Optional[int] = -1,
-    runs_per_minute: Optional[int] = None,
-    semaphore: semaphores.SemaphoreSpec = semaphores.dummy_semaphore,
-    # sync settings
-    executor: Executor = config.default_sync_executor,
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...  # type: ignore [misc]
-
-
 
 '''
 lib defaults:
