@@ -19,13 +19,14 @@ class ThreadsafeSemaphore(asyncio.Semaphore):
     """
 
     def __init__(self, value: Optional[int]) -> None:
+        assert isinstance(value, int), f"{value} should be an integer."
         self._value = value
         self.semaphores: DefaultDict[Thread, asyncio.Semaphore] = defaultdict(lambda: asyncio.Semaphore(value))
         self.dummy = DummySemaphore()
     
     @property
     def use_dummy(self) -> bool:
-        return self.value is None
+        return self._value is None
     
     @property
     def semaphore(self) -> asyncio.Semaphore:
