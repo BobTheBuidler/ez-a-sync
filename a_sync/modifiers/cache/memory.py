@@ -55,5 +55,4 @@ def apply_async_memory_cache(
         raise exceptions.FunctionNotAsync(coro_fn)
 
     cache_decorator = alru_cache(maxsize=maxsize, ttl=ttl, typed=typed)
-    decorated = cache_decorator(coro_fn)
-    return cache_decorator if coro_fn is None else decorated
+    return cache_decorator if coro_fn is None else cache_decorator(coro_fn)
