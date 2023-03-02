@@ -9,6 +9,16 @@ from a_sync.modifiers import cache, limiter
 valid_modifiers = [key for key in ModifierKwargs.__annotations__ if not key.startswith('_') and not key.endswith('_')]
 
 class ModifierManager:
+    default: DefaultMode
+    cache_type: CacheType
+    cache_typed: bool
+    ram_cache_maxsize: Optional[int]
+    ram_cache_ttl: Optional[int]
+    runs_per_minute: Optional[int]
+    semaphore: SemaphoreSpec
+    # sync modifiers
+    executor: Executor
+
     def __init__(self, **modifiers: ModifierKwargs) -> None:
         for key in modifiers.keys():
             if key not in valid_modifiers:
@@ -63,7 +73,3 @@ class ModifierManager:
             return function(*args, **kwargs)
         # NOTE There are no sync modifiers at this time but they will be added here for my convenience.
         return sync_modifier_wrap
-
-
-
-
