@@ -43,7 +43,7 @@ class ModifierManager:
     
     def apply_async_modifiers(self, coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:
         # NOTE: THESE STACK IN REVERSE ORDER
-        if self.use_limiter is not None:
+        if self.use_limiter:
             coro_fn = limiter.apply_rate_limit(coro_fn, self.runs_per_minute)
         if self.use_semaphore:
             coro_fn = semaphores.apply_semaphore(coro_fn, self.semaphore)
