@@ -3,15 +3,19 @@ import asyncio
 
 import async_property as ap  # type: ignore [import]
 
-from a_sync import config
+from a_sync import config, _helpers
 from a_sync._typing import *
 from a_sync.modified import Modified
 from a_sync.modifiers import ModifierManager
 
 
 class PropertyDescriptor(Modified[T]):
-    def __init__(self, _fget, field_name=None, **modifiers: ModifierKwargs):
+    def __init__(self, _fget: Callable[..., T], field_name=None, **modifiers: ModifierKwargs):
+        if not callable(_fget):
+            raise ValueError(f'Unable to decorate {_fget}')
         self.modifiers = ModifierManager(**modifiers)
+        if not asyncio.iscoroutinefunction(_fget):
+            _fget = self._asyncify(_fget)
         super().__init__(_fget, field_name=field_name)  # type: ignore [call-arg]
     
 class AsyncPropertyDescriptor(PropertyDescriptor[T], ap.base.AsyncPropertyDescriptor):
@@ -46,11 +50,11 @@ def a_sync_property(  # type: ignore [misc]
     if func in ['sync', 'async']:
         modifiers['default'] = func
         func = None
-    def modifier_wrap(func) -> AsyncPropertyDescriptor[T]:
-        assert asyncio.iscoroutinefunction(func), func #'Can only use with async def'
+    def modifier_wrap(func: Property[T]) -> AsyncPropertyDescriptor[T]:
         return AsyncPropertyDescriptor(func, **modifiers)
     return modifier_wrap if func is None else modifier_wrap(func)
     
+
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
     func: Literal[None],
@@ -73,7 +77,6 @@ def a_sync_cached_property(  # type: ignore [misc]
     AsyncCachedPropertyDescriptor[T],
     Callable[[Property[T]], AsyncCachedPropertyDescriptor[T]],
 ]:
-    def modifier_wrap(func) -> AsyncCachedPropertyDescriptor[T]:
-        assert asyncio.iscoroutinefunction(func), 'Can only use with async def'
+    def modifier_wrap(func: Property[T]) -> AsyncCachedPropertyDescriptor[T]:
         return AsyncCachedPropertyDescriptor(func, **modifiers)
     return modifier_wrap if func is None else modifier_wrap(func)
