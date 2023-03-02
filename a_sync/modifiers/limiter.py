@@ -1,38 +1,34 @@
 
 import asyncio
-from typing import Awaitable, Callable, Literal, Optional, Union, overload
 
 from aiolimiter import AsyncLimiter
 
 from a_sync import aliases, exceptions
-from a_sync._typing import P, T
+from a_sync._typing import *
 
 
 @overload
 def apply_rate_limit(
     coro_fn: Literal[None],
     runs_per_minute: int,
-) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
+) -> AsyncDecorator[P, T]:...
     
 @overload
 def apply_rate_limit(
     coro_fn: int,
     runs_per_minute: Literal[None],
-) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
+) -> AsyncDecorator[P, T]:...
     
 @overload
 def apply_rate_limit(
-    coro_fn: Callable[P, Awaitable[T]],
+    coro_fn: CoroFn[P, T],
     runs_per_minute: Union[int, AsyncLimiter],
-) -> Callable[P, Awaitable[T]]:...
+) -> CoroFn[P, T]:...
     
 def apply_rate_limit(
-    coro_fn: Optional[Union[Callable[P, Awaitable[T]], int]] = None,
+    coro_fn: Optional[Union[CoroFn[P, T], int]] = None,
     runs_per_minute: Optional[Union[int, AsyncLimiter]] = None,
-) -> Union[
-    Callable[P, Awaitable[T]],
-    Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]],
-]:
+) -> AsyncDecoratorOrCoroFn[P, T]:
     # Parse Inputs
     if isinstance(coro_fn, int):
         assert runs_per_minute is None
@@ -46,7 +42,7 @@ def apply_rate_limit(
     elif not asyncio.iscoroutinefunction(coro_fn):
         raise exceptions.FunctionNotAsync(coro_fn)
     
-    def rate_limit_decorator(coro_fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
+    def rate_limit_decorator(coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:
         limiter = runs_per_minute if isinstance(runs_per_minute, AsyncLimiter) else AsyncLimiter(runs_per_minute) if runs_per_minute else aliases.dummy
         async def rate_limit_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
             async with limiter:  # type: ignore [attr-defined]

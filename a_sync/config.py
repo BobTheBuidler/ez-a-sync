@@ -21,7 +21,7 @@ def get_default_executor() -> Executor:
 default_sync_executor = get_default_executor()
 
 null_modifiers = ModifierManager(
-    ModifierKwargs(
+    **ModifierKwargs(  # type: ignore [arg-type]
         default=None,
         cache_type=None,
         cache_typed=False,
@@ -34,7 +34,7 @@ null_modifiers = ModifierManager(
 )
 
 DEFAULT_MODE: DefaultMode = os.environ.get("A_SYNC_DEFAULT_MODE")  # type: ignore [assignment]
-CACHE_TYPE = typ if (typ := os.environ.get("A_SYNC_CACHE_TYPE", "").lower()) else null_modifiers.cache_type
+CACHE_TYPE: CacheType = typ if (typ := os.environ.get("A_SYNC_CACHE_TYPE", "").lower()) else null_modifiers.cache_type
 CACHE_TYPED = bool(os.environ.get("A_SYNC_CACHE_TYPED"))
 RAM_CACHE_MAXSIZE = int(os.environ.get("A_SYNC_RAM_CACHE_MAXSIZE", -1)) 
 RAM_CACHE_TTL = ttl if (ttl := float(os.environ.get("A_SYNC_RAM_CACHE_TTL", 0))) else null_modifiers.ram_cache_ttl
@@ -43,7 +43,7 @@ RUNS_PER_MINUTE = rpm if (rpm := int(os.environ.get("A_SYNC_RUNS_PER_MINUTE", 0)
 SEMAPHORE = rpm if (rpm := int(os.environ.get("A_SYNC_SEMAPHORE", 0))) else null_modifiers.semaphore
 
 default_modifiers = ModifierManager(
-    ModifierKwargs(
+    **ModifierKwargs(  # type: ignore [arg-type]
         default=DEFAULT_MODE,
         cache_type=CACHE_TYPE,
         cache_typed=CACHE_TYPED,

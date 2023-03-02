@@ -36,7 +36,7 @@ class ASyncGenericBase(ASyncABC):
             raise exceptions.InvalidFlagValue(flag, flag_value)
         return flag_value
 
-    @classmethod
+    @classmethod  # type: ignore [misc]
     @property
     def __a_sync_default_mode__(cls) -> bool:
         flag = cls.__get_a_sync_flag_name_from_signature()
@@ -54,7 +54,7 @@ class ASyncGenericBase(ASyncABC):
             raise exceptions.TooManyFlags(cls, present_flags)
         return present_flags[0]
 
-    @classmethod
+    @classmethod  # type: ignore [misc]
     @property
     def __a_sync_flag_default_value_from_signature(cls) -> bool:
         signature = inspect.signature(cls.__init__)
