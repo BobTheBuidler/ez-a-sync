@@ -1,8 +1,7 @@
 
 from a_sync import _flags, config
 from a_sync._typing import *
-from a_sync.modified import ASyncDecorator
-from a_sync.modifiers import ModifierManager
+from a_sync.modified import ASyncDecorator, ASyncFunction
 
 ########################
 # The a_sync decorator #
@@ -127,16 +126,7 @@ def a_sync(  # type: ignore [misc]
     coro_fn: Optional[AnyFn[P, T]] = None,
     default: DefaultMode = config.DEFAULT_MODE,
     **modifiers: Unpack[ModifierKwargs],  # default values are set by passing these kwargs into a ModifierManager object.
-) -> Union[
-    # sync coro_fn, default=None
-    SyncFn[P, T],
-    # async coro_fn, default=None
-    CoroFn[P, T],
-    # coro_fn=None, default='async'
-    AllToAsyncDecorator[P, T],
-    # coro_fn=None, default='sync'
-    AllToSyncDecorator[P, T],
-]:
+) -> Union[ASyncDecorator[P, T], ASyncFunction[P, T]]:
     f"""
     A coroutine function decorated with this decorator can be called as a sync function by passing a boolean value for any of these kwargs: {_flags.VIABLE_FLAGS}
     
@@ -224,17 +214,11 @@ def a_sync(  # type: ignore [misc]
     some_fn() == True
     await some_fn(sync=False) == True
     """
-    modifiers: ModifierManager = ModifierManager(**modifiers)
     
     # If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync('sync')...
     if coro_fn in ['async', 'sync']:
         default = coro_fn  # type: ignore [assignment]
         coro_fn = None
-        
-    if default not in ['async', 'sync', None]:
-        raise 
     
-    # Decorator
-    
-    a_sync_deco: ASyncDecorator = ASyncDecorator(modifiers, default)  # type: ignore [arg-type]
-    return a_sync_deco if coro_fn is None else a_sync_deco(coro_fn)
+    deco = ASyncDecorator(default=default, **modifiers)
+    return deco if coro_fn is None else deco(coro_fn)  # type: ignore [arg-type]

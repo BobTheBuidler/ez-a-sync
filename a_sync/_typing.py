@@ -1,9 +1,9 @@
 
 import asyncio
 from concurrent.futures._base import Executor
-from typing import (TYPE_CHECKING, Awaitable, Callable, DefaultDict, Dict,
-                    Generic, Literal, Optional, Tuple, TypedDict, TypeVar,
-                    Union, overload)
+from typing import (TYPE_CHECKING, Any, Awaitable, Callable, DefaultDict, Dict,
+                    Generic, Iterator, List, Literal, Optional, Tuple,
+                    Type, TypedDict, TypeVar, Union, overload)
 
 from typing_extensions import Concatenate, ParamSpec, Unpack
 
@@ -31,13 +31,6 @@ AllToSyncDecorator = Callable[[AnyFn[P, T]], SyncFn[P, T]]
 
 AsyncDecoratorOrCoroFn = Union[AsyncDecorator[P, T], CoroFn[P, T]]
 
-
-
-
-
-
-
-
 DefaultMode = Literal['sync', 'async', None]
 
 CacheType = Literal['memory', None]
@@ -53,6 +46,3 @@ class ModifierKwargs(TypedDict, total=False):
     semaphore: SemaphoreSpec
     # sync modifiers
     executor: Executor
-
-class Modified(Generic[T]):
-    pass

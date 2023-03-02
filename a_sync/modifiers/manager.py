@@ -1,14 +1,14 @@
 
 import functools
-from typing import Any, Awaitable, Callable
 
-from a_sync import config, semaphores
+from a_sync import semaphores
 from a_sync._typing import *
+from a_sync.config import default_modifiers, null_modifiers
 from a_sync.modifiers import cache, limiter
 
 valid_modifiers = [key for key in ModifierKwargs.__annotations__ if not key.startswith('_') and not key.endswith('_')]
 
-class ModifierManager:
+class ModifierManager(Dict[str, Any]):
     default: DefaultMode
     cache_type: CacheType
     cache_typed: bool
@@ -26,29 +26,25 @@ class ModifierManager:
         self._modifiers = modifiers
     def __repr__(self) -> str:
         return str(self._modifiers)
-    def __getitem__(self, modifier_key: str):
-        return self._modifiers[modifier_key]  # type: ignore [literal-required]
     def __getattribute__(self, modifier_key: str) -> Any:
-        if modifier_key == '__dict__' or modifier_key not in valid_modifiers:
+        if modifier_key not in valid_modifiers:
             return super().__getattribute__(modifier_key)
-        try:
-            return self[modifier_key]
-        except:
-            return config.default_modifiers[modifier_key]
+        return self[modifier_key] if modifier_key in self else defaults[modifier_key]
+
     
     @property
     def use_limiter(self) -> bool:
-        return self.runs_per_minute != config.null_modifiers.runs_per_minute
+        return self.runs_per_minute != nulls.runs_per_minute
     @property
     def use_semaphore(self) -> bool:
-        return self.semaphore != config.null_modifiers.semaphore
+        return self.semaphore != nulls.semaphore
     @property
     def use_cache(self) -> bool:
         return any([
-            self.cache_type != config.null_modifiers.cache_type,
-            self.ram_cache_maxsize != config.null_modifiers.ram_cache_maxsize,
-            self.ram_cache_ttl != config.null_modifiers.ram_cache_ttl,
-            self.cache_typed != config.null_modifiers.cache_typed,
+            self.cache_type != nulls.cache_type,
+            self.ram_cache_maxsize != nulls.ram_cache_maxsize,
+            self.ram_cache_ttl != nulls.ram_cache_ttl,
+            self.cache_typed != nulls.cache_typed,
         ])
     
     def apply_async_modifiers(self, coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:
@@ -73,3 +69,22 @@ class ModifierManager:
             return function(*args, **kwargs)
         # NOTE There are no sync modifiers at this time but they will be added here for my convenience.
         return sync_modifier_wrap
+    
+    # Dictionary api
+    def items(self) -> List[Tuple[str, Any]]:
+        return self._modifiers.items()
+    def keys(self) -> List[str]:
+        return self._modifiers.keys()
+    def values(self) -> List[Any]:
+        return self._modifiers.values()
+    def __contains__(self, key: str) -> bool:
+        return key in self._modifiers
+    def __iter__(self) -> Iterator[str]:
+        return self._modifiers.__iter__()
+    def __len__(self) -> int:
+        return len(self._modifiers)
+    def __getitem__(self, modifier_key: str):
+        return self._modifiers[modifier_key]  # type: ignore [literal-required]
+
+nulls = ModifierManager(**null_modifiers)
+defaults = ModifierManager(**default_modifiers)
