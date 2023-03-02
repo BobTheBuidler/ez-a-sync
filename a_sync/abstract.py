@@ -13,14 +13,14 @@ class ASyncABC(metaclass=ASyncMeta):
     # Concrete Methods (overridable) #
     ##################################
 
-    def __a_sync_should_await__(self, kwargs: dict) -> bool:
+    def __a_sync_should_await__(self, kwargs: dict, force: Optional[Literal[True]] = None) -> bool:
         """Returns a boolean that indicates whether methods of 'instance' should be called as sync or async methods."""
         try:
             # Defer to kwargs always
             return self.__should_await_from_kwargs(kwargs)
         except exceptions.NoFlagsFound:
             # No flag found in kwargs, check for a flag attribute.
-            return self.__should_await_from_instance
+            return force if force else self.__should_await_from_instance
 
     @property
     def __should_await_from_instance(self) -> bool:
