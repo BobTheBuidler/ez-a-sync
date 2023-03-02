@@ -3,7 +3,7 @@ import asyncio
 
 import async_property as ap  # type: ignore [import]
 
-from a_sync import config, _helpers
+from a_sync import config
 from a_sync._typing import *
 from a_sync.modified import Modified
 from a_sync.modifiers import ModifierManager

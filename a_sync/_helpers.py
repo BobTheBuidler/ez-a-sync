@@ -1,5 +1,6 @@
 
 import asyncio
+import functools
 from inspect import getfullargspec
 
 from async_property.base import \
@@ -15,6 +16,8 @@ def _validate_wrapped_fn(fn: Callable) -> None:
     """Ensures 'fn' is an appropriate function for wrapping with a_sync."""
     if isinstance(fn, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
         return # These are always valid
+    if not callable(fn):
+        raise TypeError(f'Input is not callable. Unable to decorate {fn}')
     fn_args = getfullargspec(fn)[0]
     for flag in _flags.VIABLE_FLAGS:
         if flag in fn_args:
@@ -29,3 +32,9 @@ def _await(awaitable: Awaitable[T]) -> T:
         if str(e) == "This event loop is already running":
             raise RuntimeError(str(e), running_event_loop_msg)
         raise
+
+def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:
+    @functools.wraps(func)
+    async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
+        return await asyncio.get_event_loop().run_in_executor(executor, func, *args, **kwargs)
+    return _asyncify_wrap
