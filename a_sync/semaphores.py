@@ -59,30 +59,27 @@ Semaphore = Union[
 ]
 
 @overload
-async def apply_semaphore(
+async def apply_semaphore(  # type: ignore [misc]
     coro_fn: Literal[None],
     semaphore: SemaphoreSpec,
-) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
+) -> AsyncDecorator[P, T]:...
 
 @overload
 async def apply_semaphore(
     coro_fn: SemaphoreSpec,
     semaphore: Literal[None],
-) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
+) -> AsyncDecorator[P, T]:...
 
 @overload
 async def apply_semaphore(
-    coro_fn: Callable[P, Awaitable[T]],
+    coro_fn: CoroFn[P, T],
     semaphore: SemaphoreSpec,
-) -> Callable[P, Awaitable[T]]:...
+) -> CoroFn[P, T]:...
     
 def apply_semaphore(
-    coro_fn: Optional[Union[Callable[P, Awaitable[T]], SemaphoreSpec]] = None,
+    coro_fn: Optional[Union[CoroFn[P, T], SemaphoreSpec]] = None,
     semaphore: SemaphoreSpec = None,
-) -> Union[
-    Callable[P, Awaitable[T]],
-    Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]],
-]:
+) -> AsyncDecoratorOrCoroFn[P, T]:
     # Parse Inputs
     if isinstance(coro_fn, (int, asyncio.Semaphore)):
         if semaphore is not None:
@@ -100,7 +97,7 @@ def apply_semaphore(
         raise TypeError(f"'semaphore' must either be an integer or a Semaphore object.")
         
     # Create and return the decorator
-    def semaphore_decorator(coro_fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
+    def semaphore_decorator(coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:
         @functools.wraps(coro_fn)
         async def semaphore_wrap(*args, **kwargs) -> T:
             async with semaphore:  # type: ignore [union-attr]

@@ -21,13 +21,17 @@ class ASyncDecorator(Modified[T]):
 
          
 class ASyncFunction(Modified[T]):
-    def __init__(self, fn: Callable[P, T], modifiers: ModifierManager, default=None) -> None:
+    @overload
+    def __init__(self, fn: CoroFn[P, T], modifiers: ModifierManager, default=None) -> None:...
+    @overload
+    def __init__(self, fn: SyncFn[P, T], modifiers: ModifierManager, default=None) -> None:...
+    def __init__(self, fn: AnyFn[P, T], modifiers: ModifierManager, default=None) -> None:
         self.default = default
         self.modifiers = modifiers
         self.async_def = asyncio.iscoroutinefunction(fn)
         self.decorated_fn = self.__decorate(fn)
     
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Union[Awaitable[T], T]:
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
         return self.decorated_fn(*args, **kwargs)
     
     def __decorate(self, func):
@@ -55,7 +59,7 @@ class ASyncFunction(Modified[T]):
         modified_async_function = self.modifiers.apply_async_modifiers(func)
         _await = self.modifiers.apply_sync_modifiers(_helpers._await)
         @functools.wraps(func)
-        def async_wrap(*args: P.args, **kwargs: P.kwargs) -> Union[Awaitable[T], T]:  # type: ignore [name-defined]
+        def async_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
             should_await = self.__run_sync(kwargs) # Must take place before coro is created, we're popping a kwarg.
             coro = modified_async_function(*args, **kwargs)
             return _await(coro) if should_await else coro
@@ -68,7 +72,7 @@ class ASyncFunction(Modified[T]):
         async def create_awaitable(*args: P.args, **kwargs: P.kwargs) -> T:
             return await asyncio.get_event_loop().run_in_executor(self.modifiers.executor, modified_sync_function, *args, **kwargs)
         @functools.wraps(func)
-        def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> Union[Awaitable[T], T]:  # type: ignore [name-defined]
+        def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
             if self.__run_sync(kwargs):
                 return modified_sync_function(*args, **kwargs)
             return create_awaitable(*args, **kwargs)

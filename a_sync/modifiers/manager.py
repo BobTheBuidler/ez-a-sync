@@ -9,7 +9,7 @@ from a_sync.modifiers import cache, limiter
 valid_modifiers = [key for key in ModifierKwargs.__annotations__ if not key.startswith('_') and not key.endswith('_')]
 
 class ModifierManager:
-    def __init__(self, modifiers: ModifierKwargs = ModifierKwargs()) -> None:
+    def __init__(self, **modifiers: ModifierKwargs) -> None:
         for key in modifiers.keys():
             if key not in valid_modifiers:
                 raise ValueError(f"'{key}' is not a supported modifier.")
@@ -41,13 +41,12 @@ class ModifierManager:
             self.cache_typed != config.null_modifiers.cache_typed,
         ])
     
-    def apply_async_modifiers(self, coro_fn: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
+    def apply_async_modifiers(self, coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:
         # NOTE: THESE STACK IN REVERSE ORDER
         if self.use_limiter is not None:
             coro_fn = limiter.apply_rate_limit(coro_fn, self.runs_per_minute)
         if self.use_semaphore:
-            semaphore: SemaphoreSpec = self.semaphore
-            coro_fn = semaphores.apply_semaphore(coro_fn, semaphore)
+            coro_fn = semaphores.apply_semaphore(coro_fn, self.semaphore)
         if self.use_cache:
             coro_fn = cache.apply_async_cache(
                 coro_fn,
@@ -58,7 +57,7 @@ class ModifierManager:
             )
         return coro_fn
     
-    def apply_sync_modifiers(self, function: Callable[P, T]) -> Callable[P, T]:
+    def apply_sync_modifiers(self, function: SyncFn[P, T]) -> SyncFn[P, T]:
         @functools.wraps(function)
         def sync_modifier_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
             return function(*args, **kwargs)

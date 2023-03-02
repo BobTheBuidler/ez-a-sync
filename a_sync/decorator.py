@@ -19,21 +19,21 @@ from a_sync.modifiers import ModifierManager
 @overload
 def a_sync(
     **modifiers: Unpack[ModifierKwargs],
-) -> Union[Callable[P, Awaitable[T]], Callable[P, T]]:...
+) -> AnyFn[P, T]:...
 
 @overload # async def, None default
 def a_sync(  # type: ignore [misc]
-    coro_fn: Callable[P, Awaitable[T]],
+    coro_fn: CoroFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[P, Awaitable[T]]:...
+) -> CoroFn[P, T]:...
 
 @overload # sync def none default
 def a_sync(  # type: ignore [misc]
-    coro_fn: Callable[P, T],
+    coro_fn: SyncFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[P, T]:...
+) -> SyncFn[P, T]:...
 
 # @a_sync(default='async')
 # def some_fn():
@@ -50,46 +50,46 @@ def a_sync(  # type: ignore [misc]
     coro_fn: Literal[None],
     default: Literal['async'],
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]]:...
+) -> AllToAsyncDecorator[P, T]:...
 
 @overload # if you try to use default as the only arg
 def a_sync(  # type: ignore [misc]
     coro_fn: Literal['async'],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]]:...
+) -> AllToAsyncDecorator[P, T]:...
 
 # a_sync(some_fn, default='async')
 
 @overload # async def, async default
 def a_sync(  # type: ignore [misc]
-    coro_fn: Callable[P, Awaitable[T]],
+    coro_fn: CoroFn[P, T],
     default: Literal['async'],
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[P, Awaitable[T]]:...
+) -> CoroFn[P, T]:...
 
 @overload # sync def async default
 def a_sync(  # type: ignore [misc]
-    coro_fn: Callable[P, T],
+    coro_fn: SyncFn[P, T],
     default: Literal['async'],
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[P, Awaitable[T]]:...
+) -> CoroFn[P, T]:...
 
 # a_sync(some_fn, default='sync')
 
-@overload # async def, async default
+@overload # async def, sync default
 def a_sync(  # type: ignore [misc]
-    coro_fn: Callable[P, Awaitable[T]],
+    coro_fn: CoroFn[P, T],
     default: Literal['sync'],
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[P, T]:...
+) -> SyncFn[P, T]:...
 
-@overload # sync def async default
+@overload # sync def sync default
 def a_sync(  # type: ignore [misc]
-    coro_fn: Callable[P, T],
+    coro_fn: SyncFn[P, T],
     default: Literal['sync'],
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[P, T]:...
+) -> SyncFn[P, T]:...
 
 # @a_sync(default='sync')
 # def some_fn():
@@ -106,43 +106,43 @@ def a_sync(  # type: ignore [misc]
     coro_fn: Literal[None],
     default: Literal['sync'],
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...
+) -> AllToSyncDecorator[P, T]:...
 
 @overload # if you try to use default as the only arg
 def a_sync(  # type: ignore [misc]
     coro_fn: Literal['sync'],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...
+) -> AllToSyncDecorator[P, T]:...
 
 @overload # if you try to use default as the only arg
 def a_sync(  # type: ignore [misc]
     coro_fn: Literal['sync'],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
-) -> Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]]:...
+) -> AllToSyncDecorator[P, T]:...
     
 # catchall
 def a_sync(  # type: ignore [misc]
-    coro_fn: Optional[Union[Callable[P, Awaitable[T]], Callable[P, T]]] = None,
+    coro_fn: Optional[AnyFn[P, T]] = None,
     default: DefaultMode = config.DEFAULT_MODE,
     **modifiers: Unpack[ModifierKwargs],  # default values are set by passing these kwargs into a ModifierManager object.
 ) -> Union[
     # sync coro_fn, default=None
-    Callable[P, T],
+    SyncFn[P, T],
     # async coro_fn, default=None
-    Callable[P, Awaitable[T]],
+    CoroFn[P, T],
     # coro_fn=None, default='async'
-    Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, Awaitable[T]]],
+    AllToAsyncDecorator[P, T],
     # coro_fn=None, default='sync'
-    Callable[[Union[Callable[P, Awaitable[T]], Callable[P, T]]], Callable[P, T]],
+    AllToSyncDecorator[P, T],
 ]:
     f"""
     A coroutine function decorated with this decorator can be called as a sync function by passing a boolean value for any of these kwargs: {_flags.VIABLE_FLAGS}
     
     lib defaults:
     async settings
-        cache_type: Optional[Literal['memory']] = None,
+        cache_type: CacheType = None,
         cache_typed: bool = False,
         ram_cache_maxsize: Optional[int] = -1,
         ram_cache_ttl: Optional[int] = None,
@@ -224,7 +224,7 @@ def a_sync(  # type: ignore [misc]
     some_fn() == True
     await some_fn(sync=False) == True
     """
-    modifiers: ModifierManager = ModifierManager(modifiers)
+    modifiers: ModifierManager = ModifierManager(**modifiers)
     
     # If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync('sync')...
     if coro_fn in ['async', 'sync']:

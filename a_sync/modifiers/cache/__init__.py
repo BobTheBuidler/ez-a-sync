@@ -6,10 +6,10 @@ from a_sync._typing import *
 from a_sync.modifiers.cache.memory import apply_async_memory_cache
 
 
-CacheType = Literal['memory', None]
+
 
 class CacheArgs(TypedDict):
-    cache_type: Literal['memory', None]
+    cache_type: CacheType
     cache_typed: bool
     ram_cache_maxsize: Optional[int]
     ram_cache_ttl: Optional[int]
@@ -18,30 +18,27 @@ class CacheArgs(TypedDict):
 def apply_async_cache(
     coro_fn: Literal[None],
     **modifiers: Unpack[CacheArgs],
-) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
+) -> AsyncDecorator[P, T]:...
     
 @overload
 def apply_async_cache(
     coro_fn: int,
     **modifiers: Unpack[CacheArgs],
-) -> Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]]:...
+) -> AsyncDecorator[P, T]:...
     
 @overload
 def apply_async_cache(
-    coro_fn: Callable[P, Awaitable[T]],
+    coro_fn: CoroFn[P, T],
     **modifiers: Unpack[CacheArgs],
-) -> Callable[P, Awaitable[T]]:...
+) -> CoroFn[P, T]:...
     
 def apply_async_cache(
-    coro_fn: Union[Callable[P, Awaitable[T]], CacheType, int] = None,
+    coro_fn: Union[CoroFn[P, T], CacheType, int] = None,
     cache_type: CacheType = 'memory',
     cache_typed: bool = False,
     ram_cache_maxsize: Optional[int] = None,
     ram_cache_ttl: Optional[int] = None,
-) -> Union[
-    Callable[P, Awaitable[T]],
-    Callable[[Callable[P, Awaitable[T]]], Callable[P, Awaitable[T]]],
-]:
+) -> AsyncDecoratorOrCoroFn[P, T]:
     
     # Parse Inputs
     if isinstance(coro_fn, int):

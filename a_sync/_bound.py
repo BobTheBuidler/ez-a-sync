@@ -12,11 +12,6 @@ if TYPE_CHECKING:
     from a_sync.abstract import ASyncABC
 
 
-Property = Callable[["ASyncABC"], T]
-HiddenMethod = Callable[["ASyncABC", Dict[str, bool]], T]
-AsyncBoundMethod = Callable[Concatenate["ASyncABC", P], Awaitable[T]]
-BoundMethod = Callable[Concatenate["ASyncABC", P], T]
-
 def _wrap_bound_method(
     coro_fn: AsyncBoundMethod[P, T],
     **modifiers: Unpack[ModifierKwargs]
