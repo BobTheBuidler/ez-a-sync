@@ -29,7 +29,7 @@ class ModifierManager(Dict[str, Any]):
     def __getattribute__(self, modifier_key: str) -> Any:
         if modifier_key not in valid_modifiers:
             return super().__getattribute__(modifier_key)
-        return self[modifier_key] if modifier_key in self else defaults[modifier_key]
+        return self[modifier_key] if modifier_key in self else user_defaults[modifier_key]
 
     
     @property
@@ -87,4 +87,4 @@ class ModifierManager(Dict[str, Any]):
         return self._modifiers[modifier_key]  # type: ignore [literal-required]
 
 nulls = ModifierManager(**null_modifiers)
-defaults = ModifierManager(**default_modifiers)
+user_defaults = ModifierManager(**default_modifiers)

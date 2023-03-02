@@ -5,6 +5,7 @@ from inspect import isawaitable
 from a_sync import _helpers
 from a_sync._typing import *
 from a_sync.decorator import a_sync as unbound_a_sync
+from a_sync.modified import ASyncFunction
 from a_sync.property import (AsyncCachedPropertyDescriptor,
                              AsyncPropertyDescriptor)
 
@@ -19,6 +20,14 @@ def _wrap_bound_method(
     from a_sync.abstract import ASyncABC
 
     # First we wrap the coro_fn so overriding kwargs are handled automagically.
+    # NOTE: We set the default here manually because the default set by the user will be used later in the code to determine whether to await.
+    _force_await = None
+    if not asyncio.iscoroutinefunction(coro_fn) and not isinstance(coro_fn, ASyncFunction):
+        if 'default' not in modifiers or modifiers['default'] is not 'async':
+            if 'default' in modifiers and modifiers['default'] == 'sync':
+                _force_await = True
+            modifiers['default'] = 'async'
+        
     wrapped_coro_fn: AsyncBoundMethod[P, T] = unbound_a_sync(coro_fn=coro_fn, **modifiers)  # type: ignore [arg-type]
 
     @functools.wraps(coro_fn)
@@ -33,7 +42,7 @@ def _wrap_bound_method(
             # We can return the value.
             return retval  # type: ignore [return-value]
         # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-        return _helpers._await(coro) if self.__a_sync_should_await__(kwargs) else coro  # type: ignore [call-overload, return-value]
+        return _helpers._await(coro) if self.__a_sync_should_await__(kwargs, force=_force_await) else coro  # type: ignore [call-overload, return-value]
     return bound_a_sync_wrap
 
 
@@ -60,15 +69,12 @@ def _wrap_property(
 
     async_property.hidden_method_name = f"__{async_property.field_name}__"
     
-    @unbound_a_sync(**modifiers)
-    async def awaitable(instance: ASyncABC) -> Awaitable[T]:
-        return await async_property.__get__(instance, async_property)
-    
     @functools.wraps(async_property)
     def a_sync_method(self: ASyncABC, **kwargs) -> T:
         if not isinstance(self, ASyncABC):
             raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
-        return _helpers._await(awaitable(self)) if self.__a_sync_should_await__(kwargs) else awaitable(self)
+        awaitable = async_property.__get__(self, async_property)
+        return _helpers._await(awaitable) if self.__a_sync_should_await__(kwargs) else awaitable
     
     @property  # type: ignore [misc]
     @functools.wraps(async_property)
