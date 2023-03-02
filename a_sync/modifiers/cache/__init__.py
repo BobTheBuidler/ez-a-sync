@@ -6,8 +6,6 @@ from a_sync._typing import *
 from a_sync.modifiers.cache.memory import apply_async_memory_cache
 
 
-
-
 class CacheArgs(TypedDict):
     cache_type: CacheType
     cache_typed: bool
