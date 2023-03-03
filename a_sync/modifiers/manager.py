@@ -3,7 +3,7 @@ import functools
 
 from a_sync import semaphores
 from a_sync._typing import *
-from a_sync.config import default_modifiers, null_modifiers
+from a_sync.config import user_set_default_modifiers, null_modifiers
 from a_sync.modifiers import cache, limiter
 
 valid_modifiers = [key for key in ModifierKwargs.__annotations__ if not key.startswith('_') and not key.endswith('_')]
@@ -87,4 +87,4 @@ class ModifierManager(Dict[str, Any]):
         return self._modifiers[modifier_key]  # type: ignore [literal-required]
 
 nulls = ModifierManager(**null_modifiers)
-user_defaults = ModifierManager(**default_modifiers)
+user_defaults = ModifierManager(**user_set_default_modifiers)

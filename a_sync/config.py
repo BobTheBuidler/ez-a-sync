@@ -30,6 +30,12 @@ null_modifiers = ModifierKwargs(
     executor=default_sync_executor,
 )
 
+#####################
+# Default Modifiers #
+#####################
+
+# User configurable default modifiers to be applied to any a_sync decorated function if you do not specify kwarg values for each modifier.
+
 DEFAULT_MODE: DefaultMode = os.environ.get("A_SYNC_DEFAULT_MODE")  # type: ignore [assignment]
 CACHE_TYPE: CacheType = typ if (typ := os.environ.get("A_SYNC_CACHE_TYPE", "").lower()) else null_modifiers['cache_type']
 CACHE_TYPED = bool(os.environ.get("A_SYNC_CACHE_TYPED"))
@@ -39,7 +45,7 @@ RAM_CACHE_TTL = ttl if (ttl := float(os.environ.get("A_SYNC_RAM_CACHE_TTL", 0)))
 RUNS_PER_MINUTE = rpm if (rpm := int(os.environ.get("A_SYNC_RUNS_PER_MINUTE", 0))) else null_modifiers['runs_per_minute']
 SEMAPHORE = rpm if (rpm := int(os.environ.get("A_SYNC_SEMAPHORE", 0))) else null_modifiers['semaphore']
 
-default_modifiers = ModifierKwargs(
+user_set_default_modifiers = ModifierKwargs(
     default=DEFAULT_MODE,
     cache_type=CACHE_TYPE,
     cache_typed=CACHE_TYPED,

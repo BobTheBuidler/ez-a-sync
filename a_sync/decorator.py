@@ -132,12 +132,12 @@ def a_sync(  # type: ignore [misc]
     
     lib defaults:
     async settings
-        cache_type: CacheType = None,
-        cache_typed: bool = False,
-        ram_cache_maxsize: Optional[int] = -1,
-        ram_cache_ttl: Optional[int] = None,
-        runs_per_minute: Optional[int] = None,
-        semaphore: SemaphoreSpec = semaphores.dummy_semaphore,
+        cache_type: CacheType = None,            - This can be None or 'memory'. 'memory' is a lru cache which can be modified with the 'cache_typed','ram_cache_maxsize','ram_cache_ttl' modifiers.
+        cache_typed: bool = False,               - Set to True if you want types considered treated for cache keys. ie with cache_typed=True, Decimal(0) and 0 will be considered separate keys.
+        ram_cache_maxsize: Optional[int] = -1,   - The maxsize for your lru cache. None if cache is unbounded. If you set this value without specifying a cache type, 'memory' will automatically be applied.
+        ram_cache_ttl: Optional[int] = None,     - The ttl for items in your lru cache. Set to None. If you set this value without specifying a cache type, 'memory' will automatically be applied.
+        runs_per_minute: Optional[int] = None,   - Setting this value enables a rate limiter for the decorated function.
+        semaphore: SemaphoreSpec = None,         - drop in a Semaphore for your async defined functions.
     sync settings
         executor: Executor = config.default_sync_executor
 
