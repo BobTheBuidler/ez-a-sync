@@ -1,8 +1,8 @@
 # ez-a-sync
 
-```
 super lite docs (better coming eventually):
 
+```
 @a_sync('async')
 def some_function():
     ...
