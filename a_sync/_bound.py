@@ -69,11 +69,15 @@ def _wrap_property(
 
     async_property.hidden_method_name = f"__{async_property.field_name}__"
     
+    @unbound_a_sync(**modifiers)
+    async def _get(instance: ASyncABC):
+        return await async_property.__get__(instance, async_property)
+    
     @functools.wraps(async_property)
     def a_sync_method(self: ASyncABC, **kwargs) -> T:
         if not isinstance(self, ASyncABC):
             raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
-        awaitable = async_property.__get__(self, async_property)
+        awaitable = _get(self)
         return _helpers._await(awaitable) if self.__a_sync_should_await__(kwargs) else awaitable
     
     @property  # type: ignore [misc]
