@@ -22,6 +22,9 @@ class ThreadsafeSemaphore(asyncio.Semaphore):
         self.semaphores: DefaultDict[Thread, asyncio.Semaphore] = defaultdict(lambda: asyncio.Semaphore(value))  # type: ignore [arg-type]
         self.dummy = DummySemaphore()
     
+    def __repr__(self) -> str:
+        return f"<ThreadsafeSemaphore value={self._value}>"
+    
     @property
     def use_dummy(self) -> bool:
         return self._value is None
@@ -45,6 +48,8 @@ class ThreadsafeSemaphore(asyncio.Semaphore):
 class DummySemaphore(asyncio.Semaphore):
     def __init__(*args, **kwargs):
         ...
+    def __repr__(self) -> str:
+        return "<DummySemaphore>"
     async def __aenter__(self):
         ...
     async def __aexit__(self, *args):
