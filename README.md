@@ -2,7 +2,7 @@
 
 ## Introduction
 
-`ez-a-sync` is a Python library that enables developers to write both synchronous and asynchronous code without having to write redundant code. It provides two decorators (@a_sync('async') and @a_sync('sync')), as well as a base class (ASyncGenericBase) which can be used to create classes that can be executed in both synchronous and asynchronous contexts.
+`ez-a-sync` is a Python library that enables developers to write both synchronous and asynchronous code without having to write redundant code. It provides a decorator `@a_sync()`, as well as a base class `ASyncGenericBase` which can be used to create classes that can be executed in both synchronous and asynchronous contexts.
 
 ## Installation
 
@@ -34,7 +34,7 @@ This function can then be executed asynchronously using `await`:
 aaa = await some_function()
 ```
 
-It can also be executed synchronously by passing `sync=True`:
+It can also be executed synchronously by passing `sync=True` or `asynchronous=False`:
 
 ```python
 aaa = some_function(sync=True)
@@ -46,7 +46,7 @@ The `@a_sync('sync')` decorator can be used to define a synchronous function tha
 
 ```python
 @a_sync('sync')
-def some_function():
+async def some_function():
     ...
 ```
 
@@ -56,7 +56,7 @@ This function can then be executed synchronously:
 aaa = some_function()
 ```
 
-It can also be executed asynchronously by passing `sync=False` and using `await`:
+It can also be overridden asynchronously by passing `sync=False` or `asynchronous=True` and using `await`:
 
 ```python
 aaa = await some_function(sync=False)
@@ -80,13 +80,13 @@ In this example, `CoolAsyncClass` has `asynchronous=True`, which means it is an 
 aaa = await CoolAsyncClass().some_sync_fn()
 ```
 
-`CoolAsyncClass` can also be called synchronously by passing `sync=True`:
+`CoolAsyncClass` functions can also be called synchronously by passing `sync=True`:
 
 ```python
 aaa = CoolAsyncClass().some_sync_fn(sync=True)
 ```
 
-Similarly, you can create a synchronous class by setting `asynchronous=False`:
+Similarly, you can create a synchronous class by setting `sync=True` or `asynchronous=False`:
 
 ```python
 class CoolSyncClass(ASyncGenericBase):
@@ -96,19 +96,19 @@ class CoolSyncClass(ASyncGenericBase):
        ...
 ```
 
-`CoolSyncClass` can be called synchronously:
+`CoolSyncClass` functions can be called synchronously:
 
 ```python
 aaa = CoolSyncClass().some_async_fn()
 ```
 
-It can also be called asynchronously by passing `sync=False` and using `await`:
+It can also be called asynchronously by passing `sync=False` or `asynchronous=True` and using `await`:
 
 ```python
 aaa = await CoolSyncClass().some_async_fn(sync=False)
 ```
 
-You can also create a class that can be executed in both synchronous and asynchronous contexts by not setting the `asynchronous` attribute and passing it as an argument when creating an instance:
+You can also create a class which functions can be executed in both synchronous and asynchronous contexts by not setting the `asynchronous` or `sync` attribute (both can be used interchangeably, pick your favorite) and passing it as an argument when creating an instance:
 
 ```python
 class CoolDualClass(ASyncGenericBase):
@@ -119,7 +119,7 @@ class CoolDualClass(ASyncGenericBase):
        ...
 ```
 
-You can create an instance of `CoolDualClass` with `asynchronous=True` to call it asynchronously:
+You can create an instance of `CoolDualClass` with `sync=False` or `asynchronous=True` to call it asynchronously:
 
 ```python
 async_instance = CoolDualClass(asynchronous=True)
@@ -127,7 +127,7 @@ aaa = await async_instance.some_async_fn()
 aaa = async_instance.some_async_fn(sync=True)
 ```
 
-You can also create an instance with `asynchronous=False` to call it synchronously:
+You can also create an instance with `sync=True` or `asynchronous=False` to call it synchronously:
 
 ```python
 sync_instance = CoolDualClass(asynchronous=False)
@@ -135,7 +135,7 @@ aaa = sync_instance.some_async_fn()
 aaa = sync_instance.some_async_fn(sync=False)
 ```
 
-### Settings
+### Modifiers
 
 The `ez-a-sync` library provides several settings that can be used to customize the behavior of the decorators and classes.
 
