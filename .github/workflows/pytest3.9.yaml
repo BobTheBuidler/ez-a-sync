@@ -1,17 +1,17 @@
-name: PyTest
+name: PyTest 3.9
 
 on:
   push:
     branch: dev
     paths:
       - '**.py'
-      - '**/pytest.yaml'
+      - '**/pytest3.9.yaml'
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master, dev ]
     paths:
       - '**.py'
-      - '**/pytest.yaml'
+      - '**/pytest3.9.yaml'
 
 jobs:
   test:
@@ -56,6 +56,7 @@ jobs:
         run: |
           pip install pytest
           pip install -r requirements.txt
+          pip install -r requirements-dev.txt
       
       - name: Run test suite
         run: pytest
