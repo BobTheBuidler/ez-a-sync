@@ -18,8 +18,11 @@ def _wrap_bound_method(
     **modifiers: Unpack[ModifierKwargs]
 ) -> AsyncBoundMethod[P, T]:  # type: ignore [misc]
     from a_sync.abstract import ASyncABC
-
-    # First we wrap the coro_fn so overriding kwargs are handled automagically.
+    
+    # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
+    if isinstance(coro_fn, ASyncFunction):
+        coro_fn = coro_fn._fn
+    
     # NOTE: We set the default here manually because the default set by the user will be used later in the code to determine whether to await.
     _force_await = None
     if not asyncio.iscoroutinefunction(coro_fn) and not isinstance(coro_fn, ASyncFunction):
@@ -27,18 +30,18 @@ def _wrap_bound_method(
             if 'default' in modifiers and modifiers['default'] == 'sync':
                 _force_await = True
             modifiers['default'] = 'async'
-        
-    wrapped_coro_fn: AsyncBoundMethod[P, T] = unbound_a_sync(coro_fn=coro_fn, **modifiers)  # type: ignore [arg-type]
+    
+    wrapped_coro_fn: AsyncBoundMethod[P, T] = ASyncFunction(coro_fn, **modifiers)  # type: ignore [arg-type]
 
     @functools.wraps(coro_fn)
     def bound_a_sync_wrap(self: ASyncABC, *args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore [name-defined]
         if not isinstance(self, ASyncABC):
             raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
         # This could either be a coroutine or a return value from an awaited coroutine,
-        #   depending on if an overriding kwarg was passed into the function call.
+        #   depending on if an overriding flag kwarg was passed into the function call.
         retval = coro = wrapped_coro_fn(self, *args, **kwargs)
         if not isawaitable(retval):
-            # The coroutine was already awaited due to the use of an overriding kwarg.
+            # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
             return retval  # type: ignore [return-value]
         # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
