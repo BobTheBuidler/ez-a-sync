@@ -46,6 +46,8 @@ class ASyncGenericBase(ASyncABC):
     @classmethod
     #@property # TODO debug why making this into a classproperty breaks it
     def __get_a_sync_flag_name_from_signature(cls) -> str:
+        if cls.__name__ == "ASyncGenericBase":
+            return None
         signature = inspect.signature(cls.__init__)
         present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in signature.parameters]
         if len(present_flags) == 0:
