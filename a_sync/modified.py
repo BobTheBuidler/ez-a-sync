@@ -1,5 +1,6 @@
 
 import functools
+import sys
 
 from a_sync import _helpers, _kwargs, exceptions
 from a_sync._typing import *
@@ -91,8 +92,13 @@ class ASyncFunction(Modified[T], Callable[P, T]):
                 return self._modified_fn(*args, **kwargs)
             return self._asyncified(*args, **kwargs)            
         return sync_wrap
+    
+if sys.version_info < (3, 10):
+    _inherit = ASyncFunction[AnyFn[P, T], ASyncFunction[P, T]]
+else:
+    _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
               
-class ASyncDecorator(ASyncFunction[AnyFn[P, T], ASyncFunction[P, T]]):
+class ASyncDecorator(_inherit):
     _fn = None
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         assert 'default' in modifiers, modifiers
