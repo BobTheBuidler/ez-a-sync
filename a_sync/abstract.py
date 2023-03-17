@@ -37,7 +37,7 @@ class ASyncABC(metaclass=ASyncMeta):
         try:
             return _kwargs.is_sync(kwargs)
         except exceptions.NoFlagsFound:
-            return cls.__a_sync_default_mode__  # type: ignore [return-value]
+            return cls.__a_sync_default_mode__()  # type: ignore [return-value]
 
     ######################################
     # Concrete Methods (non-overridable) #
@@ -61,6 +61,5 @@ class ASyncABC(metaclass=ASyncMeta):
         pass
     
     @abc.abstractclassmethod  # type: ignore [misc]
-    @abc.abstractproperty
     def __a_sync_default_mode__(cls) -> bool:
         ...

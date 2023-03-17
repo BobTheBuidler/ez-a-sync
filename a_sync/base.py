@@ -37,7 +37,6 @@ class ASyncGenericBase(ASyncABC):
         return flag_value
 
     @classmethod  # type: ignore [misc]
-    @property
     def __a_sync_default_mode__(cls) -> bool:
         flag = cls.__get_a_sync_flag_name_from_signature()
         flag_value = cls.__a_sync_flag_default_value_from_signature
