@@ -1,10 +1,9 @@
 
 import functools
 
-from a_sync import semaphores
 from a_sync._typing import *
 from a_sync.config import user_set_default_modifiers, null_modifiers
-from a_sync.modifiers import cache, limiter
+from a_sync.modifiers import cache, limiter, semaphores
 
 valid_modifiers = [key for key in ModifierKwargs.__annotations__ if not key.startswith('_') and not key.endswith('_')]
 
