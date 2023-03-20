@@ -1,8 +1,8 @@
 from aiolimiter import AsyncLimiter
 
 from a_sync._typing import *
-from a_sync.modifiers.manager import ModifierManager, valid_modifiers
-from a_sync.semaphores import ThreadsafeSemaphore
+from a_sync.modifiers.manager import valid_modifiers
+from a_sync.modifiers.semaphores import ThreadsafeSemaphore
 
 
 def get_modifiers_from(thing: Union[dict, type, object]) -> ModifierKwargs:

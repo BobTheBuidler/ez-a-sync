@@ -4,7 +4,7 @@ import sys
 
 from a_sync import _helpers, _kwargs, exceptions
 from a_sync._typing import *
-from a_sync.modifiers import ModifierManager
+from a_sync.modifiers.manager import ModifierManager
     
 
 class Modified(Generic[T]):
