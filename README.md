@@ -16,7 +16,7 @@ pip install ez-a-sync
 
 ### Decorators
 
-`ez-a-sync` provides two decorators: `@a_sync('async')` and `@a_sync('sync')`.
+`ez-a-sync` provides one decorator: `@a_sync()`.
 
 #### `@a_sync('async')`
 
