@@ -1,26 +1,11 @@
 
 import asyncio
 import pytest
-from typing import Literal
 
 import a_sync
+from tests.fixtures import _test_kwargs
 
 
-def _test_kwargs(fn, default: Literal['sync','async',None]):
-    # force async
-    assert asyncio.get_event_loop().run_until_complete(fn(sync=False)) == 2
-    assert asyncio.get_event_loop().run_until_complete(fn(asynchronous=True)) == 2
-    # force sync
-    with pytest.raises(TypeError):
-        assert asyncio.get_event_loop().run_until_complete(fn(sync=True)) == 2
-    with pytest.raises(TypeError):
-        assert asyncio.get_event_loop().run_until_complete(fn(asynchronous=False)) == 2
-    assert fn(sync=True) == 2
-    assert fn(asynchronous=False) == 2
-    if default == 'sync':
-        assert fn() == 2
-    elif default == 'async':
-        assert asyncio.get_event_loop().run_until_complete(fn()) == 2
 
 # ASYNC DEF
 def test_decorator_no_args():
