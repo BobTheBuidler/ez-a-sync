@@ -2,6 +2,7 @@
 import asyncio
 import time
 from threading import current_thread, main_thread
+from typing import Literal
 
 import pytest
 
@@ -114,3 +115,20 @@ class TestSemaphore(ASyncBase):
     async def test_cached_property(self) -> int:
         await asyncio.sleep(1)
         return self.v * 3
+
+
+def _test_kwargs(fn, default: Literal['sync','async',None]):
+    # force async
+    assert asyncio.get_event_loop().run_until_complete(fn(sync=False)) == 2
+    assert asyncio.get_event_loop().run_until_complete(fn(asynchronous=True)) == 2
+    # force sync
+    with pytest.raises(TypeError):
+        assert asyncio.get_event_loop().run_until_complete(fn(sync=True)) == 2
+    with pytest.raises(TypeError):
+        assert asyncio.get_event_loop().run_until_complete(fn(asynchronous=False)) == 2
+    assert fn(sync=True) == 2
+    assert fn(asynchronous=False) == 2
+    if default == 'sync':
+        assert fn() == 2
+    elif default == 'async':
+        assert asyncio.get_event_loop().run_until_complete(fn()) == 2
