@@ -20,7 +20,7 @@ pip install ez-a-sync
 
 #### `@a_sync('async')`
 
-The `@a_sync('async')` decorator can be used to define an asynchronous function that can also be executed synchronously. It should be used when the function will take longer to complete when running asynchronously.
+The `@a_sync('async')` decorator can be used to define an asynchronous function that can also be executed synchronously.
 
 ```python
 @a_sync('async')
