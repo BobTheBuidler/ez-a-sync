@@ -16,7 +16,7 @@ pip install ez-a-sync
 
 ### Decorators
 
-`ez-a-sync` provides one decorator: `@a_sync()`. You can explicitly pass the type of function you want with `@a_sync('sync') or `@a_sync('async')`
+`ez-a-sync` provides one decorator: `@a_sync()`. You can explicitly pass the type of function you want with `@a_sync('sync')` or `@a_sync('async')`
 
 #### `@a_sync('async')`
 
