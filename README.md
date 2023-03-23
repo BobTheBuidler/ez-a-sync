@@ -42,7 +42,7 @@ aaa = some_function(sync=True)
 
 #### `@a_sync('sync')`
 
-The `@a_sync('sync')` decorator can be used to define a synchronous function that can also be executed asynchronously. It should be used when the function will take longer to complete when running synchronously.
+The `@a_sync('sync')` decorator can be used to define a synchronous function that can also be executed asynchronously.
 
 ```python
 @a_sync('sync')
