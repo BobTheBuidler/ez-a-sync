@@ -150,7 +150,9 @@ def some_function():
 ```
 
 #### async modifiers
+
 The `@a_sync('async')` decorator has the following settings:
+
 - `cache_type`: This can be set to `None` or `'memory'`. `'memory'` is a LRU cache which can be modified with the `cache_typed`, `ram_cache_maxsize`, and `ram_cache_ttl` modifiers.
 - `cache_typed`: Set to `True` if you want types considered treated for cache keys. i.e. with `cache_typed=True`, `Decimal(0)` and `0` will be considered separate keys.
 - `ram_cache_maxsize`: The maxsize for your LRU cache. Set to `None` if the cache is unbounded. If you set this value without specifying a cache type, `'memory'` will automatically be applied.
@@ -159,6 +161,19 @@ The `@a_sync('async')` decorator has the following settings:
 - `semaphore`: Drop in a Semaphore for your async defined functions.
 
 #### sync modifiers
+
 The `@a_sync('sync')` decorator has the following setting:
+
 - `executor`: The executor for the synchronous function. Set to the library's default of `config.default_sync_executor`.
 
+#### Default Modifiers
+
+Instead of setting modifiers one by one in functions, you can set a default value for modifiers using ENV variables:
+
+- `DEFAULT_MODE`
+- `CACHE_TYPE`
+- `CACHE_TYPED`
+- `RAM_CACHE_MAXSIZE`
+- `RAM_CACHE_TTL`
+- `RUNS_PER_MINUTE`
+- `SEMAPHORE`
