@@ -1,5 +1,20 @@
-# ez-a-sync
+## Table of Contents
+<!-- TOC -->
 
+- [Table of Contents](#table-of-contents)
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Usage](#usage)
+    - [Decorators](#decorators)
+        - [@a_sync'async'](#a_syncasync)
+        - [@a_sync'sync'](#a_syncsync)
+    - [Classes](#classes)
+    - [Modifiers](#modifiers)
+        - [async modifiers](#async-modifiers)
+        - [sync modifiers](#sync-modifiers)
+        - [Default Modifiers](#default-modifiers)
+
+<!-- /TOC -->
 ## Introduction
 
 `ez-a-sync` is a Python library that enables developers to write both synchronous and asynchronous code without having to write redundant code. It provides a decorator `@a_sync()`, as well as a base class `ASyncGenericBase` which can be used to create classes that can be executed in both synchronous and asynchronous contexts.
