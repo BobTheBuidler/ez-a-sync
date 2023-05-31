@@ -15,9 +15,10 @@ from a_sync._typing import *
 def get_event_loop() -> asyncio.BaseEventLoop:
     try:
         return asyncio.get_event_loop()
-    except RuntimeError:
-        asyncio.set_event_loop(asyncio.new_event_loop())
-        return asyncio.get_event_loop()
+    except RuntimeError as e: # Necessary for use with multi-threaded applications.
+        if not str(e).startswith("There is no current event loop in thread"):
+            raise e
+        return asyncio.new_event_loop()
     
 def _validate_wrapped_fn(fn: Callable) -> None:
     """Ensures 'fn' is an appropriate function for wrapping with a_sync."""
