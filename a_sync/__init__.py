@@ -3,7 +3,8 @@ from a_sync import aliases
 from a_sync.base import ASyncGenericBase
 from a_sync.decorator import a_sync
 from a_sync.modifiers.semaphores import (DummySemaphore, ThreadsafeSemaphore,
-                               apply_semaphore)
+                                         apply_semaphore)
+from a_sync.primitives import *
 from a_sync.singleton import ASyncGenericSingleton
 
 # I alias the aliases for your convenience.
@@ -12,5 +13,4 @@ from a_sync.singleton import ASyncGenericSingleton
 aka = alias = aliases
 
 # alias for backward-compatability, will be removed eventually, probably in 0.1.0
-ASyncBase = ASyncGenericBase    
-
+ASyncBase = ASyncGenericBase
