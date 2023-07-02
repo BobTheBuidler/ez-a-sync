@@ -23,8 +23,15 @@ class _ASyncExecutorBase:
     _max_workers: int
     _workers: str
     async def run(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> T:
+        """
+        A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`
+        Doesn't `await this_executor.run(fn, *args)` look so much better?
+        """
         self._check_kwargs(_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work)
         return await self._aioloop_run_in_executor(self, fn, *args)
+    def submit(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> "asyncio.Task[T]":
+        """Submits a job to the executor and returns an `asyncio.Task` that can be awaited for the result."""
+        return asyncio.ensure_future(self.run(fn, *args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work))
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} object at {hex(id(self))} [{len(self)}/{self._max_workers} {self._workers}]>"
     def __len__(self) -> int:
