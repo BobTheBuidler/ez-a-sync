@@ -10,6 +10,7 @@ from async_property.cached import \
 
 from a_sync import _flags
 from a_sync._typing import *
+from a_sync.exceptions import ASyncRuntimeError, SyncModeInAsyncContextError
 
 
 def get_event_loop() -> asyncio.BaseEventLoop:
@@ -33,15 +34,13 @@ def _validate_wrapped_fn(fn: Callable) -> None:
         if flag in fn_args:
             raise RuntimeError(f"{fn} must not have any arguments with the following names: {_flags.VIABLE_FLAGS}")
 
-running_event_loop_msg = f"You may want to make this an async function by setting one of the following kwargs: {_flags.VIABLE_FLAGS}"
-
 def _await(awaitable: Awaitable[T]) -> T:
     try:
         return get_event_loop().run_until_complete(awaitable)
     except RuntimeError as e:
         if str(e) == "This event loop is already running":
-            raise RuntimeError(str(e), running_event_loop_msg)
-        raise
+            raise SyncModeInAsyncContextError() from None
+        raise ASyncRuntimeError(e) from e
 
 def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:
     @functools.wraps(func)
