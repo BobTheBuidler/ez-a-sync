@@ -11,7 +11,8 @@ from async_property.cached import \
 
 from a_sync import _flags
 from a_sync._typing import *
-from a_sync.exceptions import ASyncRuntimeError, KwargsUnsupportedError, SyncModeInAsyncContextError
+from a_sync.exceptions import (ASyncRuntimeError, KwargsUnsupportedError,
+                               SyncModeInAsyncContextError)
 
 
 def get_event_loop() -> asyncio.AbstractEventLoop:
