@@ -48,3 +48,14 @@ class ImproperFunctionType(ValueError):
 class FunctionNotAsync(ImproperFunctionType):
     def __init__(self, fn):
         super().__init__(f"'coro_fn' must be a coroutine function defined with 'async def'. You passed {fn}.")
+
+class ASyncRuntimeError(RuntimeError):
+    def __init__(self, e: RuntimeError):
+        super().__init__(str(e))
+
+class SyncModeInAsyncContextError(ASyncRuntimeError):
+    def __init__(self):
+        from a_sync import _flags
+        err = f"The event loop is already running, which means you're trying to use an ASync function synchronously from within an async context.\n"
+        err += f"Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:\n"
+        err += f"{_flags.VIABLE_FLAGS}"

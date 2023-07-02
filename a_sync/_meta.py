@@ -1,39 +1,67 @@
 
+import logging
 import threading
 from abc import ABCMeta
 from typing import Any, Dict, Tuple
 
-from a_sync import _bound, modifiers
+from a_sync import ENVIRONMENT_VARIABLES, _bound, modifiers
 from a_sync.modified import ASyncFunction, Modified
 from a_sync.property import PropertyDescriptor
 
+logger = logging.getLogger(__name__)
 
 class ASyncMeta(ABCMeta):
     """Any class with metaclass ASyncMeta will have its functions wrapped with a_sync upon class instantiation."""
-    def __new__(cls, name, bases, attrs):
-        # Wrap all methods with a_sync abilities
+    def __new__(cls, new_class_name, bases, attrs):
+        _update_logger(new_class_name)
+        logger.debug(f"woah, you're defining a new ASync class `{new_class_name}`! let's walk thru it together")
+        logger.debug(f"first, I check whether you've defined any modifiers on `{new_class_name}`")
+        # NOTE: Open uesion: what do we do when a parent class and subclass define the same modifier differently?
+        #       Currently the parent value is used for functions defined on the parent, 
+        #       and the subclass value is used for functions defined on the subclass.
+        class_defined_modifiers = modifiers.get_modifiers_from(attrs)
+        logger.debug(f'found modifiers: {class_defined_modifiers}')
+        logger.debug("now I inspect the class definition to figure out which attributes need to be wrapped")
         for attr_name, attr_value in list(attrs.items()):
-            # Read modifiers from class definition 
-            # NOTE: Open uesion: what do we do when a parent class and subclass define the same modifier differently?
-            #       Currently the parent value is used for functions defined on the parent, 
-            #       and the subclass value is used for functions defined on the subclass.
-            fn_modifiers = modifiers.get_modifiers_from(attrs)
+            if attr_name.startswith("_"):
+                logger.debug(f"`{new_class_name}.{attr_name}` starts with an underscore, skipping")
+                continue
+            elif "__" in attr_name:
+                logger.debug(f"`{new_class_name}.{attr_name}` incluldes a double-underscore, skipping")
+                continue
+            logger.debug(f"inspecting `{new_class_name}.{attr_name}` of type {attr_value.__class__.__name__}")
+            fn_modifiers = dict(class_defined_modifiers)
             # Special handling for functions decorated with a_sync decorators
             if isinstance(attr_value, Modified):
-                # Check for modifier overrides defined on the Modified object
-                fn_modifiers.update(attr_value.modifiers._modifiers)
+                logger.debug(f"`{new_class_name}.{attr_name}` is a `Modified` object, which means you decorated it with the a_sync decorator even though `{new_class_name}` is an ASync class")
+                logger.debug(f"you probably did this so you could apply some modifiers to `{attr_name}` specifically")
+                modified_modifiers = attr_value.modifiers._modifiers
+                if modified_modifiers:
+                    logger.debug(f"I found `{new_class_name}.{attr_name}` is modified with {modified_modifiers}")
+                    fn_modifiers.update(modified_modifiers)
+                else:
+                    logger.debug(f"I did not find any modifiers")
+                logger.debug(f"full modifier set for `{new_class_name}.{attr_name}`: {fn_modifiers}")
                 if isinstance(attr_value, PropertyDescriptor):
                     # Wrap property
-                    attrs[attr_name], attrs[attr_value.hidden_method_name] = _bound._wrap_property(attr_value, **fn_modifiers)
+                    logger.debug(f"`{attr_name} is a property, now let's wrap it")
+                    wrapped, hidden = _bound._wrap_property(attr_value, **fn_modifiers)
+                    attrs[attr_name] = wrapped
+                    logger.debug(f"`{attr_name}` is now `{wrapped}`")
+                    logger.debug(f"since `{attr_name}` is a property, we will add a hidden dundermethod so you can still access it both sync and async")
+                    attrs[attr_value.hidden_method_name] = hidden
+                    logger.debug(f"`{new_class_name}.{attr_value.hidden_method_name}` is now {hidden}")
                 elif isinstance(attr_value, ASyncFunction):
                     attrs[attr_name] = _bound._wrap_bound_method(attr_value, **fn_modifiers)
                 else:
                     raise NotImplementedError(attr_name, attr_value)
                     
-            if callable(attr_value) and "__" not in attr_name and not attr_name.startswith("_"):
+            elif callable(attr_value):
                 # NOTE We will need to improve this logic if somebody needs to use it with classmethods or staticmethods.
                 attrs[attr_name] = _bound._wrap_bound_method(attr_value, **fn_modifiers)
-        return super(ASyncMeta, cls).__new__(cls, name, bases, attrs)    
+            else:
+                logger.debug(f"`{new_class_name}.{attr_name}` is not callable, we will take no action with it")
+        return super(ASyncMeta, cls).__new__(cls, new_class_name, bases, attrs)    
 
 
 class ASyncSingletonMeta(ASyncMeta):
@@ -50,3 +78,14 @@ class ASyncSingletonMeta(ASyncMeta):
                 if is_sync not in cls.__instances:
                     cls.__instances[is_sync] = super().__call__(*args, **kwargs)
         return cls.__instances[is_sync]
+
+def _update_logger(new_class_name: str) -> None:
+    if ENVIRONMENT_VARIABLES.DEBUG_MODE or ENVIRONMENT_VARIABLES.DEBUG_CLASS_NAME == new_class_name:
+        logger.addHandler(_debug_handler)
+        logger.setLevel(logging.DEBUG)
+        logger.info("debug mode activated")
+    else:
+        logger.removeHandler(_debug_handler)
+        logger.setLevel(logging.INFO)
+
+_debug_handler = logging.StreamHandler()
