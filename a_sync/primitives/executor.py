@@ -1,13 +1,12 @@
-# NOTE: Will be deprecated soon in lieu of dank_mids.helpers.executor
 
 import asyncio
+import concurrent.futures as cf
 import queue
 import threading
 import weakref
-import  concurrent.futures as cf
 from concurrent.futures import _base, thread
 from functools import cached_property
-from typing import Any, Awaitable, Callable, TypeVar
+from typing import Callable, TypeVar
 
 from typing_extensions import ParamSpec
 
