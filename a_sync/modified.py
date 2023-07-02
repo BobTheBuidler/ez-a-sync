@@ -1,4 +1,4 @@
-
+# type: ignore [valid-type, misc]
 import functools
 import sys
 

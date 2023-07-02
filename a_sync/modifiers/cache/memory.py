@@ -1,4 +1,4 @@
-
+# type: ignore [valid-type, misc]
 import asyncio
 
 from async_lru import alru_cache

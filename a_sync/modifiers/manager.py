@@ -1,4 +1,4 @@
-
+# type: ignore [valid-type]
 import functools
 
 from a_sync._typing import *

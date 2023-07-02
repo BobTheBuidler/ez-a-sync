@@ -2,6 +2,7 @@
 import inspect
 import logging
 from functools import cached_property
+from typing import Optional
 
 from a_sync import _flags, exceptions
 from a_sync.abstract import ASyncABC
@@ -53,7 +54,7 @@ class ASyncGenericBase(ASyncABC):
         return sync
     
     @classmethod
-    def __get_a_sync_flag_name_from_signature(cls) -> str:
+    def __get_a_sync_flag_name_from_signature(cls) -> Optional[str]:
         logger.debug(f"Searching for flags defined on {cls}")
         if cls.__name__ == "ASyncGenericBase":
             logger.debug(f"There are no flags defined on the base class, this is expected. Skipping.")
