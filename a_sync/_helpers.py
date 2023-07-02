@@ -1,6 +1,7 @@
 
 import asyncio
 import functools
+from concurrent.futures import Executor
 from inspect import getfullargspec
 
 from async_property.base import \
@@ -10,10 +11,10 @@ from async_property.cached import \
 
 from a_sync import _flags
 from a_sync._typing import *
-from a_sync.exceptions import ASyncRuntimeError, SyncModeInAsyncContextError
+from a_sync.exceptions import ASyncRuntimeError, KwargsUnsupportedError, SyncModeInAsyncContextError
 
 
-def get_event_loop() -> asyncio.BaseEventLoop:
+def get_event_loop() -> asyncio.AbstractEventLoop:
     try:
         loop = asyncio.get_event_loop()
     except RuntimeError as e: # Necessary for use with multi-threaded applications.
@@ -39,11 +40,13 @@ def _await(awaitable: Awaitable[T]) -> T:
         return get_event_loop().run_until_complete(awaitable)
     except RuntimeError as e:
         if str(e) == "This event loop is already running":
-            raise SyncModeInAsyncContextError() from None
+            raise SyncModeInAsyncContextError from None
         raise ASyncRuntimeError(e) from e
 
-def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:
+def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: ignore [misc]
     @functools.wraps(func)
     async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
+        if kwargs:
+            raise KwargsUnsupportedError
         return await get_event_loop().run_in_executor(executor, func, *args, **kwargs)
     return _asyncify_wrap

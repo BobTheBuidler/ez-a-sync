@@ -1,4 +1,4 @@
-
+# type: ignore [valid-type, misc]
 from a_sync import _flags, config
 from a_sync._typing import *
 from a_sync.modified import ASyncDecorator, ASyncFunction
@@ -21,14 +21,14 @@ def a_sync(
 ) -> AnyFn[P, T]:...
 
 @overload # async def, None default
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: CoroFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
 ) -> CoroFn[P, T]:...
 
 @overload # sync def none default
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: SyncFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
@@ -45,14 +45,14 @@ def a_sync(  # type: ignore [misc]
 # NOTE These should output a decorator that will be applied to 'some_fn'
 
 @overload 
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: Literal[None],
     default: Literal['async'],
     **modifiers: Unpack[ModifierKwargs],
 ) -> AllToAsyncDecorator[P, T]:...
 
 @overload # if you try to use default as the only arg
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: Literal['async'],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
@@ -61,14 +61,14 @@ def a_sync(  # type: ignore [misc]
 # a_sync(some_fn, default='async')
 
 @overload # async def, async default
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: CoroFn[P, T],
     default: Literal['async'],
     **modifiers: Unpack[ModifierKwargs],
 ) -> CoroFn[P, T]:...
 
 @overload # sync def async default
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: SyncFn[P, T],
     default: Literal['async'],
     **modifiers: Unpack[ModifierKwargs],
@@ -77,14 +77,14 @@ def a_sync(  # type: ignore [misc]
 # a_sync(some_fn, default='sync')
 
 @overload # async def, sync default
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: CoroFn[P, T],
     default: Literal['sync'],
     **modifiers: Unpack[ModifierKwargs],
 ) -> SyncFn[P, T]:...
 
 @overload # sync def sync default
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: SyncFn[P, T],
     default: Literal['sync'],
     **modifiers: Unpack[ModifierKwargs],
@@ -101,28 +101,28 @@ def a_sync(  # type: ignore [misc]
 # NOTE These should output a decorator that will be applied to 'some_fn'
 
 @overload 
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: Literal[None],
     default: Literal['sync'],
     **modifiers: Unpack[ModifierKwargs],
 ) -> AllToSyncDecorator[P, T]:...
 
 @overload # if you try to use default as the only arg
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: Literal['sync'],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
 ) -> AllToSyncDecorator[P, T]:...
 
 @overload # if you try to use default as the only arg
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: Literal['sync'],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
 ) -> AllToSyncDecorator[P, T]:...
     
 # catchall
-def a_sync(  # type: ignore [misc]
+def a_sync(  
     coro_fn: Optional[AnyFn[P, T]] = None,
     default: DefaultMode = config.DEFAULT_MODE,
     **modifiers: Unpack[ModifierKwargs],  # default values are set by passing these kwargs into a ModifierManager object.

@@ -49,6 +49,10 @@ class FunctionNotAsync(ImproperFunctionType):
     def __init__(self, fn):
         super().__init__(f"'coro_fn' must be a coroutine function defined with 'async def'. You passed {fn}.")
 
+class KwargsUnsupportedError(ValueError):
+    def __init__(self):
+        super().__init__("`run_in_executor` does not support keyword arguments, pass them as positional args instead if you're able")
+        
 class ASyncRuntimeError(RuntimeError):
     def __init__(self, e: RuntimeError):
         super().__init__(str(e))

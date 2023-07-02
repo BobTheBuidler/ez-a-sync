@@ -1,3 +1,4 @@
+# type: ignore [valid-type, misc]
 import asyncio
 import functools
 from collections import defaultdict
