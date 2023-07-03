@@ -1,12 +1,13 @@
 
 import asyncio
 import concurrent.futures as cf
+import logging
 import queue
 import threading
 import weakref
 from concurrent.futures import _base, thread
 from functools import cached_property
-from typing import Callable, TypeVar
+from typing import Callable, NoReturn, TypeVar
 
 from typing_extensions import ParamSpec
 
@@ -14,6 +15,8 @@ TEN_MINUTES = 60 * 10
 
 T = TypeVar('T')
 P = ParamSpec('P')
+
+logger = logging.getLogger(__name__)
 
 """
 With ASync executors, you can simply run sync fns in your executor with `await executor.run(fn, *args)`
@@ -28,17 +31,15 @@ class _ASyncExecutorBase:
         Doesn't `await this_executor.run(fn, *args)` look so much better?
         """
         self._check_kwargs(_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work)
-        if not hasattr(self, '_work'):
-            self._work = []
-        self._work.append((fn, args))
-        self._ensure_debug_daemon()
+        t = self._start_debug_daemon(fn, *args)
         retval = await self._aioloop_run_in_executor(self, fn, *args)
-        self._work.remove((fn, args))
+        t.cancel()
+        return retval
     def submit(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> "asyncio.Task[T]":
         """Submits a job to the executor and returns an `asyncio.Task` that can be awaited for the result."""
         return asyncio.ensure_future(self.run(fn, *args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work))
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} object at {hex(id(self))} [{len(self)}/{self._max_workers} {self._workers}]>"
+        return f"<{self.__class__.__name__} object at {hex(id(self))} [{len(self)}/{self._max_workers} {self._workers}  {len(self._work_queue)}]>"
     def __len__(self) -> int:
         return len(getattr(self, f"_{self._workers}"))
     @cached_property
@@ -47,21 +48,14 @@ class _ASyncExecutorBase:
     def _check_kwargs(self, kwargs: dict):
         if kwargs: 
             raise ValueError("You can't use kwargs here, sorry. Pass them as positional args if you can.")
-    async def _debug_daemon(self) -> None:
-        while self._work:
+    async def _debug_daemon(self, fn, *args) -> NoReturn:
+        """Runs until manually cancelled by the finished work item"""
+        while True:
             await asyncio.sleep(15)
-            if self._work:
-                logger.debug(f'{self} processing {[self._work[i] for i in range(min(len(self._work), 10))]}{" and more" if len(self._work)>10 else ""}')
-    def _ensure_debug_daemon(self) -> None:
-        if not hasattr(self, '_daemon'):
-            self._daemon = None
-        if not self._daemon:
-            self._daemon = asyncio.create_task(self._debug_daemon())
-            def done_callback(t):
-                self._daemon = None
-                if e := t.exception():
-                    logger.info(e, exc_info=True)
-            self._daemon.add_done_callback(done_callback)
+            logger.debug(f'{self} processing {fn}{args}')
+    def _start_debug_daemon(self, fn, *args) -> "asyncio.Task[NoReturn]":
+        return asyncio.create_task(self._debug_daemon(fn, *args))
+    
 # Process
 
 class ProcessPoolExecutor(cf.ProcessPoolExecutor, _ASyncExecutorBase):
