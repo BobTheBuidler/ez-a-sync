@@ -48,3 +48,17 @@ def test_decorator_sync_with_cache_type():
     duration = time() - start
     assert duration < 1.5, "There is a 1 second sleep in this function but it should only run once."
     _test_kwargs(some_test_fn, 'sync')
+
+def test_decorator_sync_with_cache_maxsize():
+    # Fails
+    # TODO diagnose and fix
+    @a_sync.a_sync(default="sync", cache_type='memory')
+    def some_test_fn() -> int:
+        sleep(1)
+        return 2
+    start = time()
+    assert some_test_fn() == 2
+    assert some_test_fn() == 2
+    duration = time() - start
+    assert duration < 1.5, "There is a 1 second sleep in this function but it should only run once."
+    _test_kwargs(some_test_fn, 'sync')

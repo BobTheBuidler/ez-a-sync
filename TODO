@@ -1,0 +1,3 @@
+
+Fix:
+- memory cache with sync default neither works nor errs

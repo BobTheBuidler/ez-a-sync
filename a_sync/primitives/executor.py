@@ -28,7 +28,12 @@ class _ASyncExecutorBase:
         Doesn't `await this_executor.run(fn, *args)` look so much better?
         """
         self._check_kwargs(_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work)
-        return await self._aioloop_run_in_executor(self, fn, *args)
+        if not hasattr(self, '_work'):
+            self._work = []
+        self._work.append((fn, args))
+        self._ensure_debug_daemon()
+        retval = await self._aioloop_run_in_executor(self, fn, *args)
+        self._work.remove((fn, args))
     def submit(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> "asyncio.Task[T]":
         """Submits a job to the executor and returns an `asyncio.Task` that can be awaited for the result."""
         return asyncio.ensure_future(self.run(fn, *args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work))
@@ -42,7 +47,21 @@ class _ASyncExecutorBase:
     def _check_kwargs(self, kwargs: dict):
         if kwargs: 
             raise ValueError("You can't use kwargs here, sorry. Pass them as positional args if you can.")
-
+    async def _debug_daemon(self) -> None:
+        while self._work:
+            await asyncio.sleep(15)
+            if self._work:
+                logger.debug(f'{self} processing {[self._work[i] for i in range(min(len(self._work), 10))]}{" and more" if len(self._work)>10 else ""}')
+    def _ensure_debug_daemon(self) -> None:
+        if not hasattr(self, '_daemon'):
+            self._daemon = None
+        if not self._daemon:
+            self._daemon = asyncio.create_task(self._debug_daemon())
+            def done_callback(t):
+                self._daemon = None
+                if e := t.exception():
+                    logger.info(e, exc_info=True)
+            self._daemon.add_done_callback(done_callback)
 # Process
 
 class ProcessPoolExecutor(cf.ProcessPoolExecutor, _ASyncExecutorBase):
