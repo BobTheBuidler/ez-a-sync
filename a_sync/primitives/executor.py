@@ -35,9 +35,10 @@ class _ASyncExecutorBase:
         retval = await self._aioloop_run_in_executor(self, fn, *args)
         t.cancel()
         return retval
-    def submit(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> "asyncio.Task[T]":
-        """Submits a job to the executor and returns an `asyncio.Task` that can be awaited for the result."""
-        return asyncio.ensure_future(self.run(fn, *args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work))
+    # TODO: implement this later so submit returns asyncio.Future instead of cf.Future
+    #def submit(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> "asyncio.Task[T]":
+    #    """Submits a job to the executor and returns an `asyncio.Task` that can be awaited for the result."""
+    #    return asyncio.ensure_future(self.run(fn, *args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work))
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} object at {hex(id(self))} [{len(self)}/{self._max_workers} {self._workers}]>"
     def __len__(self) -> int:
@@ -58,13 +59,19 @@ class _ASyncExecutorBase:
     
 # Process
 
-class ProcessPoolExecutor(cf.ProcessPoolExecutor, _ASyncExecutorBase):
+class AsyncProcessPoolExecutor(cf.ProcessPoolExecutor, _ASyncExecutorBase):
     _workers = "processes"
 
 # Thread
 
-class ThreadPoolExecutor(cf.ThreadPoolExecutor, _ASyncExecutorBase):
+class AsyncThreadPoolExecutor(cf.ThreadPoolExecutor, _ASyncExecutorBase):
     _workers = "threads"
+    
+# For backward-compatibility
+ProcessPoolExecutor = AsyncProcessPoolExecutor
+ThreadPoolExecutor = AsyncThreadPoolExecutor
+
+# Pruning thread pool
 
 def _worker(executor_reference, work_queue, initializer, initargs, timeout):  # NOTE: NEW 'timeout'
     if initializer is not None:
@@ -127,7 +134,7 @@ def _worker(executor_reference, work_queue, initializer, initargs, timeout):  # 
     except BaseException:
         _base.LOGGER.critical('Exception in worker', exc_info=True)
 
-class PruningThreadPoolExecutor(cf.ThreadPoolExecutor):
+class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
     """
     This ThreadPoolExecutor implementation prunes inactive threads after 'timeout' seconds without a work item.
     Pruned threads will be automatically recreated as needed for future workloads. up to 'max_threads' can be active at any one time.
