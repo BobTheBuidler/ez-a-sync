@@ -6,7 +6,6 @@ import queue
 import threading
 import weakref
 from concurrent.futures import _base, thread
-from functools import cached_property
 from typing import Callable, NoReturn, TypeVar
 
 from typing_extensions import ParamSpec
@@ -19,52 +18,53 @@ P = ParamSpec('P')
 logger = logging.getLogger(__name__)
 
 """
-With ASync executors, you can simply run sync fns in your executor with `await executor.run(fn, *args)`
+With these executors, you can simply run sync fns in your executor with `await executor.run(fn, *args)`
+
+`executor.submit(fn, *args)` will work the same as the concurrent.futures implementation, but will return an asyncio.Future instead of a concurrent.futures.Future
 """
 
-class _ASyncExecutorBase:
+class _ASyncExecutorMixin:
     _max_workers: int
     _workers: str
-    async def run(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> T:
+    async def run(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
         """
         A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`
         Doesn't `await this_executor.run(fn, *args)` look so much better?
+        
+        Oh, and you can also use kwargs!
         """
-        self._check_kwargs(_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work)
-        t = self._start_debug_daemon(fn, *args)
-        retval = await self._aioloop_run_in_executor(self, fn, *args)
-        t.cancel()
-        return retval
-    # TODO: implement this later so submit returns asyncio.Future instead of cf.Future
-    #def submit(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> "asyncio.Task[T]":
-    #    """Submits a job to the executor and returns an `asyncio.Task` that can be awaited for the result."""
-    #    return asyncio.ensure_future(self.run(fn, *args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work))
+        return await self.submit(fn, *args, **kwargs)
+    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":
+        """Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking."""
+        fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))
+        if logger.isEnabledFor(logging.DEBUG) and asyncio.get_event_loop().is_running():
+            self._start_debug_daemon(fut, fn, *args, **kwargs)
+        return fut
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} object at {hex(id(self))} [{len(self)}/{self._max_workers} {self._workers}]>"
+        return f"<{self.__class__.__name__} object at {hex(id(self))} [{self.worker_count_current}/{self._max_workers} {self._workers}]>"
     def __len__(self) -> int:
-        return len(getattr(self, f"_{self._workers}"))
-    @cached_property
-    def _aioloop_run_in_executor(self) -> asyncio.BaseEventLoop:
-        return asyncio.get_event_loop().run_in_executor
-    def _check_kwargs(self, kwargs: dict):
-        if kwargs: 
-            raise ValueError("You can't use kwargs here, sorry. Pass them as positional args if you can.")
-    async def _debug_daemon(self, fn, *args) -> NoReturn:
+        # NOTE: should this be queue length instead? probably
+        return self.worker_count_current
+    @property
+    def worker_count_current(self) -> int:
+        len(getattr(self, f"_{self._workers}"))
+    async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> NoReturn:
         """Runs until manually cancelled by the finished work item"""
-        while True:
+        while not fut.done():
             await asyncio.sleep(15)
-            logger.debug(f'{self} processing {fn}{args}')
-    def _start_debug_daemon(self, fn, *args) -> "asyncio.Task[NoReturn]":
-        return asyncio.create_task(self._debug_daemon(fn, *args))
+            if not fut.done():
+                logger.debug(f'{self} processing {fn}{args}{kwargs}')
+    def _start_debug_daemon(self, fut, fn, *args, **kwargs) -> "asyncio.Task[NoReturn]":
+        return asyncio.create_task(self._debug_daemon(fut, fn, *args, **kwargs))
     
 # Process
 
-class AsyncProcessPoolExecutor(cf.ProcessPoolExecutor, _ASyncExecutorBase):
+class AsyncProcessPoolExecutor(_ASyncExecutorMixin, cf.ProcessPoolExecutor):
     _workers = "processes"
 
 # Thread
 
-class AsyncThreadPoolExecutor(cf.ThreadPoolExecutor, _ASyncExecutorBase):
+class AsyncThreadPoolExecutor(_ASyncExecutorMixin, cf.ThreadPoolExecutor):
     _workers = "threads"
     
 # For backward-compatibility
