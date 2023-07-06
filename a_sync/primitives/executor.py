@@ -1,70 +1,74 @@
 
+"""
+With these executors, you can simply run sync fns in your executor with `await executor.run(fn, *args)`
+
+`executor.submit(fn, *args)` will work the same as the concurrent.futures implementation, but will return an asyncio.Future instead of a concurrent.futures.Future
+"""
+
 import asyncio
 import concurrent.futures as cf
-import logging
 import queue
 import threading
 import weakref
 from concurrent.futures import _base, thread
-from functools import cached_property
-from typing import Callable, NoReturn, TypeVar
+from typing import Callable, TypeVar
 
 from typing_extensions import ParamSpec
+
+from a_sync.primitives._debug import _DebugDaemonMixin
 
 TEN_MINUTES = 60 * 10
 
 T = TypeVar('T')
 P = ParamSpec('P')
 
-logger = logging.getLogger(__name__)
 
-"""
-With ASync executors, you can simply run sync fns in your executor with `await executor.run(fn, *args)`
-"""
-
-class _ASyncExecutorBase:
+class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     _max_workers: int
     _workers: str
-    async def run(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> T:
+    async def run(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
         """
         A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`
         Doesn't `await this_executor.run(fn, *args)` look so much better?
+        
+        Oh, and you can also use kwargs!
         """
-        self._check_kwargs(_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work)
-        t = self._start_debug_daemon(fn, *args)
-        retval = await self._aioloop_run_in_executor(self, fn, *args)
-        t.cancel()
-        return retval
-    def submit(self, fn: Callable[P, T], *args: P.args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work: P.kwargs) -> "asyncio.Task[T]":
-        """Submits a job to the executor and returns an `asyncio.Task` that can be awaited for the result."""
-        return asyncio.ensure_future(self.run(fn, *args, **_kwargs_dont_work_but_i_need_this_here_to_make_type_hints_work))
+        return await self.submit(fn, *args, **kwargs)
+    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":
+        """Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking."""
+        fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))
+        self._start_debug_daemon(fut, fn, *args, **kwargs)
+        return fut
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} object at {hex(id(self))} [{len(self)}/{self._max_workers} {self._workers}]>"
+        return f"<{self.__class__.__name__} object at {hex(id(self))} [{self.worker_count_current}/{self._max_workers} {self._workers}]>"
     def __len__(self) -> int:
-        return len(getattr(self, f"_{self._workers}"))
-    @cached_property
-    def _aioloop_run_in_executor(self) -> asyncio.BaseEventLoop:
-        return asyncio.get_event_loop().run_in_executor
-    def _check_kwargs(self, kwargs: dict):
-        if kwargs: 
-            raise ValueError("You can't use kwargs here, sorry. Pass them as positional args if you can.")
-    async def _debug_daemon(self, fn, *args) -> NoReturn:
+        # NOTE: should this be queue length instead? probably
+        return self.worker_count_current
+    @property
+    def worker_count_current(self) -> int:
+        len(getattr(self, f"_{self._workers}"))
+    async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """Runs until manually cancelled by the finished work item"""
-        while True:
+        while not fut.done():
             await asyncio.sleep(15)
-            logger.debug(f'{self} processing {fn}{args}')
-    def _start_debug_daemon(self, fn, *args) -> "asyncio.Task[NoReturn]":
-        return asyncio.create_task(self._debug_daemon(fn, *args))
+            if not fut.done():
+                self.logger.debug(f'{self} processing {fn}{args}{kwargs}')
     
 # Process
 
-class ProcessPoolExecutor(cf.ProcessPoolExecutor, _ASyncExecutorBase):
+class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
     _workers = "processes"
 
 # Thread
 
-class ThreadPoolExecutor(cf.ThreadPoolExecutor, _ASyncExecutorBase):
+class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
     _workers = "threads"
+    
+# For backward-compatibility
+ProcessPoolExecutor = AsyncProcessPoolExecutor
+ThreadPoolExecutor = AsyncThreadPoolExecutor
+
+# Pruning thread pool
 
 def _worker(executor_reference, work_queue, initializer, initargs, timeout):  # NOTE: NEW 'timeout'
     if initializer is not None:
@@ -127,7 +131,7 @@ def _worker(executor_reference, work_queue, initializer, initargs, timeout):  # 
     except BaseException:
         _base.LOGGER.critical('Exception in worker', exc_info=True)
 
-class PruningThreadPoolExecutor(cf.ThreadPoolExecutor):
+class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
     """
     This ThreadPoolExecutor implementation prunes inactive threads after 'timeout' seconds without a work item.
     Pruned threads will be automatically recreated as needed for future workloads. up to 'max_threads' can be active at any one time.

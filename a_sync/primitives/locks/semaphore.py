@@ -7,19 +7,20 @@ from typing import Callable, Optional, TypeVar
 
 from typing_extensions import ParamSpec
 
+from a_sync.primitives._debug import _DebugDaemonMixin
+
 logger = logging.getLogger(__name__)
 
 T = TypeVar('T')
 P = ParamSpec('P')
 
-class Semaphore(asyncio.Semaphore):
+class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     def __init__(self, value: int, name=None, **kwargs) -> None:
         """
         `name` is used only in debug logs to provide useful context
         """
         super().__init__(value, **kwargs)
         self.name = name or self.__origin__ if hasattr(self, '__origin__') else None
-        self._daemon = None
         self._decorated = set()
     
     # Dank new functionality
@@ -45,18 +46,16 @@ class Semaphore(asyncio.Semaphore):
         self._decorated.add(f"{fn.__module__}.{fn.__name__}")
         return semaphore_wrapper
     
+    async def acquire(self) -> bool:
+        if self._value <= 0:
+            self._ensure_debug_daemon()
+        return await super().acquire()
+    
     # Everything below just adds some debug logs
     async def _debug_daemon(self) -> None:
         while self._waiters:
-            await asyncio.sleep(10)
-            logger.debug(f"{self} {self._name_string} has {len(self)} waiters for any of: {self._decorated}")
-            
-    def _ensure_debug_daemon(self):
-        if logger.isEnabledFor(logging.DEBUG) and self._daemon is None:
-            self._daemon = asyncio.create_task(self._debug_daemon())
-            def callback(t):
-                self._daemon = None
-            self._daemon.add_done_callback(callback)
+            await asyncio.sleep(60)
+            self.logger.debug(f"{self} has {len(self)} waiters for any of: {self._decorated}")
   
         
 class DummySemaphore(asyncio.Semaphore):
