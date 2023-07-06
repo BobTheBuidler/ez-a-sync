@@ -1,9 +1,12 @@
 import asyncio
 from collections import defaultdict
-from typing import Iterable
+from typing import Iterable, Optional
+
+from a_sync.primitives._debug import _DebugDaemonMixin
+from a_sync.primitives.locks.event import Event
 
 
-class CounterLock:
+class CounterLock(_DebugDaemonMixin):
     """
     A asyncio primative that blocks until the internal counter has reached a specific value.
     
@@ -13,18 +16,24 @@ class CounterLock:
     
     The internal counter can only increase.
     """
-    def __init__(self, start_value: int = 0):
+    def __init__(self, start_value: int = 0, name: Optional[str] = None):
+        self._name = name
         self._value = start_value
-        self._conditions = defaultdict(asyncio.Event)
+        self._events = defaultdict(Event)
         self.is_ready = lambda v: self._value >= v
         
     async def wait_for(self, value: int) -> bool:
         if not self.is_ready(value):
-            await self._conditions[value].wait()
+            self._ensure_debug_daemon()
+            await self._events[value].wait()
         return True
     
     def set(self, value: int) -> None:
         self.value = value
+    
+    def __repr__(self) -> str:
+        waiters = {v: len(self._events[v]._waiters) for v in sorted(self._events)}
+        return f"<CounterLock name={self._name} value={self._value} waiters={waiters}>"
         
     @property
     def value(self) -> int:
@@ -34,15 +43,15 @@ class CounterLock:
     def value(self, value: int) -> None:
         if value > self._value:
             self._value = value
-            ready = [
-                self._conditions.pop(key)
-                for key in list(self._conditions.keys())
-                if key <= self._value
-            ]
+            ready = [self._events.pop(key) for key in list(self._events.keys()) if key <= self._value]
             for event in ready:
                 event.set()
         elif value < self._value:
             raise ValueError("You cannot decrease the value.")
+    
+    def _debug_daemon(self) -> None:
+        while self._events:
+            self.logger.debug(self)
 
 class CounterLockCluster:
     """
