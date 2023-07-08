@@ -14,8 +14,11 @@ class PropertyDescriptor(Modified[T]):
         if not callable(_fget):
             raise ValueError(f'Unable to decorate {_fget}')
         self.modifiers = ModifierManager(**modifiers)
+        self._fn = _fget
         _fget = self.modifiers.apply_async_modifiers(_fget) if asyncio.iscoroutinefunction(_fget) else self._asyncify(_fget)
         super().__init__(_fget, field_name=field_name)  # type: ignore [call-arg]
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__module__}.{self.__class__.__name__} for {self._fn} at {hex(id(self))}>"
     
 class AsyncPropertyDescriptor(PropertyDescriptor[T], ap.base.AsyncPropertyDescriptor):
     pass
