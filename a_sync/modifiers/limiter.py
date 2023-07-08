@@ -1,4 +1,5 @@
-# type: ignore [valid-type, misc]
+# mypy: disable-error-code=valid-type
+# mypy: disable-error-code=misc
 import asyncio
 
 from aiolimiter import AsyncLimiter
