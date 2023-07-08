@@ -34,7 +34,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         return representation
     
     def __len__(self) -> int:
-        return len(self._waiters)
+        return len(self._waiters) if self._waiters else 0
     
     def decorate(self, fn: Callable[P, T]) -> Callable[P, T]:
         if not asyncio.iscoroutinefunction(fn):

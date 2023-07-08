@@ -5,7 +5,6 @@ from typing import (Dict, Generic, List, Literal, Optional, Protocol, Type,
                     TypeVar)
 
 from a_sync import Semaphore
-from hexbytes import HexBytes
 
 
 T = TypeVar('T', covariant=True)
