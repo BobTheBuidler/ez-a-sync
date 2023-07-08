@@ -1,4 +1,5 @@
-# type: ignore [valid-type, misc]
+# mypy: disable-error-code=valid-type
+# mypy: disable-error-code=misc
 import functools
 from inspect import isawaitable
 
@@ -56,6 +57,14 @@ def _wrap_bound_method(
         return _helpers._await(coro) if self.__a_sync_should_await__(kwargs, force=_force_await) else coro  # type: ignore [call-overload, return-value]
     return bound_a_sync_wrap
 
+class _PropertyGetter(Awaitable[T]):
+    def __init__(self, coro: Awaitable[T], property: Union[AsyncPropertyDescriptor[T], AsyncCachedPropertyDescriptor[T]]):
+        self._coro = coro
+        self._property = property
+    def __repr__(self) -> str:
+        return f"<_PropertyGetter for {self._property}._get at {hex(id(self))}>"
+    def __await__(self) -> T:
+        return self._coro.__await__()
 
 @overload
 def _wrap_property(
@@ -90,7 +99,7 @@ def _wrap_property(
     def a_sync_method(self: ASyncABC, **kwargs) -> T:
         if not isinstance(self, ASyncABC):
             raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
-        awaitable = _get(self)
+        awaitable = _PropertyGetter(_get(self), async_property)
         return _helpers._await(awaitable) if self.__a_sync_should_await__(kwargs, force=_force_await) else awaitable
     
     @property  # type: ignore [misc]
