@@ -93,6 +93,12 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     def loop(self) -> asyncio.AbstractEventLoop:
         return self._loop or asyncio.get_event_loop()
     
+    @property
+    def waiters (self) -> asyncio.AbstractEventLoop:
+        if self._waiters is None:
+            self._waiters = []
+        return self._waiters
+    
     async def acquire(self) -> Literal[True]:
         """Acquire a semaphore.
 
@@ -104,7 +110,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         """
         while self._parent._value <= 0:
             fut = self.loop.create_future()
-            self._waiters.append(fut)
+            self.waiters.append(fut)
             try:
                 await fut
             except:
