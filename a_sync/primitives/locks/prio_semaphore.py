@@ -1,11 +1,11 @@
 
 import asyncio
 import heapq
+from functools import cached_property
 from typing import (Dict, Generic, List, Literal, Optional, Protocol, Type,
                     TypeVar)
 
 from a_sync import Semaphore
-
 
 T = TypeVar('T', covariant=True)
 
@@ -89,6 +89,10 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
             raise TypeError(f"{other} is not type {self.__class__.__name__}")
         return self._priority < other._priority
     
+    @cached_property
+    def loop(self) -> asyncio.AbstractEventLoop:
+        return self._loop or asyncio.get_event_loop()
+    
     async def acquire(self) -> Literal[True]:
         """Acquire a semaphore.
 
@@ -99,7 +103,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         True.
         """
         while self._parent._value <= 0:
-            fut = self._loop.create_future()
+            fut = self.loop.create_future()
             self._waiters.append(fut)
             try:
                 await fut
