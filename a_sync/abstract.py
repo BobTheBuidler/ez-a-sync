@@ -35,12 +35,12 @@ class ASyncABC(metaclass=ASyncMeta):
         return _kwargs.is_sync(kwargs, pop_flag=True)
     
     @classmethod
-    def __a_sync_instance_will_be_sync__(cls, kwargs: dict) -> bool:
+    def __a_sync_instance_will_be_sync__(cls, args: tuple, kwargs: dict) -> bool:
         """You can override this if you want."""
         try:
-            logger.debug(f"checking `{cls}.__init__` signature against provided kwargs to determine a_sync mode for the new instance")
+            logger.debug(f"checking `{cls.__module__}.{cls.__name__}.__init__` signature against provided kwargs to determine a_sync mode for the new instance")
             sync = _kwargs.is_sync(kwargs)
-            logger.debug(f"kwargs indicate the new instance is {'a' if sync is False else ''}synchronous")
+            logger.debug(f"kwargs indicate the new instance created with args {args, kwargs} is {'a' if sync is False else ''}synchronous")
             return sync
         except exceptions.NoFlagsFound:
             logger.debug(f"No valid flags found in kwargs, checking class definition for defined default")

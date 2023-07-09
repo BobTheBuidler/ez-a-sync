@@ -71,7 +71,7 @@ class ASyncSingletonMeta(ASyncMeta):
         super().__init__(name, bases, namespace)
 
     def __call__(cls, *args: Any, **kwargs: Any):
-        is_sync = cls.__a_sync_instance_will_be_sync__(kwargs)  # type: ignore [attr-defined]
+        is_sync = cls.__a_sync_instance_will_be_sync__(args, kwargs)  # type: ignore [attr-defined]
         if is_sync not in cls.__instances:
             with cls.__lock:
                 # Check again in case `__instance` was set while we were waiting for the lock.
