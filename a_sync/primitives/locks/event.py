@@ -1,5 +1,5 @@
 
-import asyncio
+import asyncio, sys
 from functools import cached_property
 from typing import Optional
 
@@ -9,7 +9,10 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 class Event(asyncio.Event, _DebugDaemonMixin):
     """asyncio.Event but with some additional debug logging to help detect deadlocks."""
     def __init__(self, debug_daemon_interval: int = 300, *, loop: Optional[asyncio.AbstractEventLoop] = None):
-        super().__init__(loop=loop)
+        if sys.version_info >= (3, 10):
+            super().__init__()
+        else:
+            super().__init__(loop=loop)
         self._loop = self._loop or asyncio.get_event_loop()
         self._debug_daemon_interval = debug_daemon_interval
     async def wait(self) -> bool:
