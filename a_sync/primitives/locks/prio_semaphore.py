@@ -84,6 +84,9 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} parent={self._parent} {self._priority_name}={self._priority} waiters={len(self)}>"
     
+    def _repr_no_parent_(self) -> str:
+        return f"<{self.__class__.__name__} {self._priority_name}={self._priority} waiters={len(self)}>"
+    
     def __lt__(self, other) -> bool:
         if type(other) is not type(self):
             raise TypeError(f"{other} is not type {self.__class__.__name__}")
