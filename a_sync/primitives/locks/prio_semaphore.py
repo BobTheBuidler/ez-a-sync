@@ -38,7 +38,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         self._waiters = []
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={self._waiters}>"
+        return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={[manager._repr_no_parent_() for manager in self._waiters]}>"
 
     async def __aenter__(self) -> None:
         await self[self._top_priority].acquire()
@@ -57,15 +57,18 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     def _wake_up_next(self) -> None:
         while self._waiters:
             manager = heapq.heappop(self._waiters)
+            if len(manager) == 0:
+                # There are no more waiters, get rid of the empty manager
+                self._context_managers.pop(manager._priority)
+                continue
+            manager._wake_up_next()
             if len(manager):
-                manager._wake_up_next()
-                if len(manager):
-                    # There are still waiters, put the manager back
-                    heapq.heappush(self._waiters, manager)  # type: ignore [misc]
-                else:
-                    # There are no more waiters, get rid of the empty manager
-                    self._context_managers.pop(manager._priority)
-                break
+                # There are still waiters, put the manager back
+                heapq.heappush(self._waiters, manager)  # type: ignore [misc]
+            else:
+                # There are no more waiters, get rid of the empty manager
+                self._context_managers.pop(manager._priority)
+            break
 
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     _loop: asyncio.AbstractEventLoop
