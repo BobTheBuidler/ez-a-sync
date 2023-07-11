@@ -55,18 +55,17 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         return self._context_managers[priority]
     
     def _wake_up_next(self) -> None:
-        if self._waiters:
+        while self._waiters:
             manager = heapq.heappop(self._waiters)
-            manager._wake_up_next()
-            self._heap_push(manager)
-    
-    def _heap_push(self, manager: "_AbstractPrioritySemaphoreContextManager[PT]") -> None:
-        if len(manager):
-            # There are still waiters, put the manager back
-            heapq.heappush(self._waiters, manager)  # type: ignore [misc]
-        else:
-            # There are no more waiters, get rid of the empty manager
-            self._context_managers.pop(manager._priority)
+            if len(manager):
+                manager._wake_up_next()
+                if len(manager):
+                    # There are still waiters, put the manager back
+                    heapq.heappush(self._waiters, manager)  # type: ignore [misc]
+                else:
+                    # There are no more waiters, get rid of the empty manager
+                    self._context_managers.pop(manager._priority)
+                break
 
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     _loop: asyncio.AbstractEventLoop
