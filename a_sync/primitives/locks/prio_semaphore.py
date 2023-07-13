@@ -53,6 +53,15 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             heapq.heappush(self._waiters, context_manager)  # type: ignore [misc]
             self._context_managers[priority] = context_manager
         return self._context_managers[priority]
+
+    def locked(self) -> bool:
+        """Returns True if semaphore cannot be acquired immediately."""
+        return self._value == 0 or (
+            any(
+                cm._waiters and any(not w.cancelled() for w in cm._waiters) 
+                for cm in (self._context_managers.values() or ())
+            )
+        )
     
     def _wake_up_next(self) -> None:
         while self._waiters:
