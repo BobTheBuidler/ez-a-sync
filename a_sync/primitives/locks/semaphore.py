@@ -3,7 +3,7 @@ import functools
 import logging
 from collections import defaultdict
 from threading import Thread, current_thread
-from typing import Callable, Optional, TypeVar
+from typing import Callable, Literal, Optional, TypeVar
 
 from typing_extensions import ParamSpec
 
@@ -34,7 +34,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         return representation
     
     def __len__(self) -> int:
-        return len(self._waiters)
+        return len(self._waiters) if self._waiters else 0
     
     def decorate(self, fn: Callable[P, T]) -> Callable[P, T]:
         if not asyncio.iscoroutinefunction(fn):
@@ -64,6 +64,10 @@ class DummySemaphore(asyncio.Semaphore):
         self.name = name
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} name={self.name}>"
+    async def acquire(self) -> Literal[True]:
+        return True
+    def release(self) -> None:
+        ...
     async def __aenter__(self):
         ...
     async def __aexit__(self, *args):

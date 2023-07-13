@@ -1,12 +1,11 @@
 
 import asyncio
 import heapq
+from functools import cached_property
 from typing import (Dict, Generic, List, Literal, Optional, Protocol, Type,
                     TypeVar)
 
 from a_sync import Semaphore
-from hexbytes import HexBytes
-
 
 T = TypeVar('T', covariant=True)
 
@@ -39,7 +38,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         self._waiters = []
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={self._waiters}>"
+        return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={[manager._repr_no_parent_() for manager in self._waiters]}>"
 
     async def __aenter__(self) -> None:
         await self[self._top_priority].acquire()
@@ -54,20 +53,31 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             heapq.heappush(self._waiters, context_manager)  # type: ignore [misc]
             self._context_managers[priority] = context_manager
         return self._context_managers[priority]
+
+    def locked(self) -> bool:
+        """Returns True if semaphore cannot be acquired immediately."""
+        return self._value == 0 or (
+            any(
+                cm._waiters and any(not w.cancelled() for w in cm._waiters) 
+                for cm in (self._context_managers.values() or ())
+            )
+        )
     
     def _wake_up_next(self) -> None:
-        if self._waiters:
+        while self._waiters:
             manager = heapq.heappop(self._waiters)
+            if len(manager) == 0:
+                # There are no more waiters, get rid of the empty manager
+                self._context_managers.pop(manager._priority)
+                continue
             manager._wake_up_next()
-            self._heap_push(manager)
-    
-    def _heap_push(self, manager: "_AbstractPrioritySemaphoreContextManager[PT]") -> None:
-        if len(manager):
-            # There are still waiters, put the manager back
-            heapq.heappush(self._waiters, manager)  # type: ignore [misc]
-        else:
-            # There are no more waiters, get rid of the empty manager
-            self._context_managers.pop(manager._priority)
+            if len(manager):
+                # There are still waiters, put the manager back
+                heapq.heappush(self._waiters, manager)  # type: ignore [misc]
+            else:
+                # There are no more waiters, get rid of the empty manager
+                self._context_managers.pop(manager._priority)
+            break
 
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     _loop: asyncio.AbstractEventLoop
@@ -85,10 +95,23 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} parent={self._parent} {self._priority_name}={self._priority} waiters={len(self)}>"
     
+    def _repr_no_parent_(self) -> str:
+        return f"<{self.__class__.__name__} {self._priority_name}={self._priority} waiters={len(self)}>"
+    
     def __lt__(self, other) -> bool:
         if type(other) is not type(self):
             raise TypeError(f"{other} is not type {self.__class__.__name__}")
         return self._priority < other._priority
+    
+    @cached_property
+    def loop(self) -> asyncio.AbstractEventLoop:
+        return self._loop or asyncio.get_event_loop()
+    
+    @property
+    def waiters (self) -> asyncio.AbstractEventLoop:
+        if self._waiters is None:
+            self._waiters = []
+        return self._waiters
     
     async def acquire(self) -> Literal[True]:
         """Acquire a semaphore.
@@ -100,8 +123,8 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         True.
         """
         while self._parent._value <= 0:
-            fut = self._loop.create_future()
-            self._waiters.append(fut)
+            fut = self.loop.create_future()
+            self.waiters.append(fut)
             try:
                 await fut
             except:
