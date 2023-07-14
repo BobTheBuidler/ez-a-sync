@@ -1,11 +1,14 @@
 
 import asyncio
 import heapq
+import logging
 from functools import cached_property
 from typing import (Dict, Generic, List, Literal, Optional, Protocol, Type,
                     TypeVar)
 
-from a_sync import Semaphore
+from a_sync.primitives.locks.semaphore import Semaphore
+
+logger = logging.getLogger(__name__)
 
 T = TypeVar('T', covariant=True)
 
@@ -68,6 +71,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             manager = heapq.heappop(self._waiters)
             if len(manager) == 0:
                 # There are no more waiters, get rid of the empty manager
+                logger.debug("manager %s has no more waiters, popping from %s", manager, self)
                 self._context_managers.pop(manager._priority)
                 continue
             manager._wake_up_next()
@@ -78,6 +82,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
                 # There are no more waiters, get rid of the empty manager
                 self._context_managers.pop(manager._priority)
             break
+        logger.debug("%s has no waiters to wake", self)
 
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     _loop: asyncio.AbstractEventLoop
@@ -108,7 +113,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         return self._loop or asyncio.get_event_loop()
     
     @property
-    def waiters (self) -> asyncio.AbstractEventLoop:
+    def waiters (self) -> List[asyncio.Future]:
         if self._waiters is None:
             self._waiters = []
         return self._waiters

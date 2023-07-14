@@ -20,10 +20,6 @@ class Event(asyncio.Event, _DebugDaemonMixin):
             return True
         self._ensure_debug_daemon()
         return await super().wait()
-    
-    @cached_property
-    def loop(self) -> asyncio.AbstractEventLoop:
-        return 
         
     async def _debug_daemon(self) -> None:
         while not self.is_set():
