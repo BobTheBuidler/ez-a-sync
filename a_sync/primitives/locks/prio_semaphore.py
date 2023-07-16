@@ -74,6 +74,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
                 logger.debug("manager %s has no more waiters, popping from %s", manager, self)
                 self._context_managers.pop(manager._priority)
                 continue
+            logger.debug("waking up next for %s", manager)
             manager._wake_up_next()
             if len(manager):
                 # There are still waiters, put the manager back
@@ -127,6 +128,8 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         called release() to make it larger than 0, and then return
         True.
         """
+        if self._parent._value <= 0:
+            self._ensure_debug_daemon()
         while self._parent._value <= 0:
             fut = self.loop.create_future()
             self.waiters.append(fut)
