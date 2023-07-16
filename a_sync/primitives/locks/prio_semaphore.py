@@ -78,7 +78,14 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             logger.debug("waking up next for %s", manager._repr_no_parent_())
             
             start_len = len(manager)
-            manager._wake_up_next()
+            if not manager._waiters:
+                logger.debug('not manager._waiters')
+            while manager._waiters:
+                waiter = manager._waiters.popleft()
+                if not waiter.done():
+                    waiter.set_result(None)
+                    logger.debug(f"woke up %s", waiter)
+                    break
             end_len = len(manager)
             assert start_len - 1 == end_len, f"start {start_len} end {end_len}"
             if end_len:
