@@ -75,8 +75,12 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
                 self._context_managers.pop(manager._priority)
                 continue
             logger.debug("waking up next for %s", manager._repr_no_parent_())
+            
+            start_len = len(manager)
             manager._wake_up_next()
-            if len(manager):
+            end_len = len(manager)
+            assert start_len - 1 == end_len, f"start {start_len} end {end_len}"
+            if end_len:
                 # There are still waiters, put the manager back
                 heapq.heappush(self._waiters, manager)  # type: ignore [misc]
             else:
