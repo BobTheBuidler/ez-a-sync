@@ -4,8 +4,8 @@ import heapq
 import logging
 from collections import deque
 from functools import cached_property
-from typing import (Dict, Generic, List, Literal, Optional, Protocol, Type,
-                    TypeVar)
+from typing import (Deque, Dict, Generic, List, Literal, Optional, Protocol,
+                    Type, TypeVar)
 
 from a_sync.primitives.locks.semaphore import Semaphore
 
@@ -99,7 +99,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     _loop: asyncio.AbstractEventLoop
-    _waiters: List[asyncio.Future]  # type: ignore [assignment]
+    _waiters: Deque[asyncio.Future]  # type: ignore [assignment]
     
     @property
     def _priority_name(self) -> str:
@@ -126,7 +126,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         return self._loop or asyncio.get_event_loop()
     
     @property
-    def waiters (self) -> List[asyncio.Future]:
+    def waiters (self) -> Deque[asyncio.Future]:
         if self._waiters is None:
             self._waiters = deque()
         return self._waiters
