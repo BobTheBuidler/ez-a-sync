@@ -2,6 +2,7 @@
 import asyncio
 import heapq
 import logging
+from collections import deque
 from functools import cached_property
 from typing import (Dict, Generic, List, Literal, Optional, Protocol, Type,
                     TypeVar)
@@ -120,7 +121,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     @property
     def waiters (self) -> List[asyncio.Future]:
         if self._waiters is None:
-            self._waiters = []
+            self._waiters = deque()
         return self._waiters
     
     async def acquire(self) -> Literal[True]:
