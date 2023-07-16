@@ -81,7 +81,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             else:
                 # There are no more waiters, get rid of the empty manager
                 self._context_managers.pop(manager._priority)
-            break
+            return
         logger.debug("%s has no waiters to wake", self)
 
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
