@@ -71,10 +71,10 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             manager = heapq.heappop(self._waiters)
             if len(manager) == 0:
                 # There are no more waiters, get rid of the empty manager
-                logger.debug("manager %s has no more waiters, popping from %s", manager, self)
+                logger.debug("manager %s has no more waiters, popping from %s", manager._repr_no_parent_(), self)
                 self._context_managers.pop(manager._priority)
                 continue
-            logger.debug("waking up next for %s", manager)
+            logger.debug("waking up next for %s", manager._repr_no_parent_())
             manager._wake_up_next()
             if len(manager):
                 # There are still waiters, put the manager back
@@ -102,7 +102,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         return f"<{self.__class__.__name__} parent={self._parent} {self._priority_name}={self._priority} waiters={len(self)}>"
     
     def _repr_no_parent_(self) -> str:
-        return f"<{self.__class__.__name__} {self._priority_name}={self._priority} waiters={len(self)}>"
+        return f"<{self.__class__.__name__} parent_name={self._parent.name} {self._priority_name}={self._priority} waiters={len(self)}>"
     
     def __lt__(self, other) -> bool:
         if type(other) is not type(self):
