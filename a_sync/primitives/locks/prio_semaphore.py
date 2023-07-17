@@ -1,11 +1,15 @@
 
 import asyncio
 import heapq
+import logging
+from collections import deque
 from functools import cached_property
-from typing import (Dict, Generic, List, Literal, Optional, Protocol, Type,
-                    TypeVar)
+from typing import (Deque, Dict, Generic, List, Literal, Optional, Protocol,
+                    Type, TypeVar)
 
-from a_sync import Semaphore
+from a_sync.primitives.locks.semaphore import Semaphore
+
+logger = logging.getLogger(__name__)
 
 T = TypeVar('T', covariant=True)
 
@@ -68,20 +72,45 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             manager = heapq.heappop(self._waiters)
             if len(manager) == 0:
                 # There are no more waiters, get rid of the empty manager
+                logger.debug("manager %s has no more waiters, popping from %s", manager._repr_no_parent_(), self)
                 self._context_managers.pop(manager._priority)
                 continue
-            manager._wake_up_next()
-            if len(manager):
+            logger.debug("waking up next for %s", manager._repr_no_parent_())
+            
+            woke_up = False
+            start_len = len(manager)
+        
+            if not manager._waiters:
+                logger.debug('not manager._waiters')
+            
+            while manager._waiters:
+                waiter = manager._waiters.popleft()
+                if not waiter.done():
+                    waiter.set_result(None)
+                    logger.debug(f"woke up %s", waiter)
+                    woke_up = True
+                    break
+            
+            if not woke_up:
+                self._context_managers.pop(manager._priority)
+                continue
+            
+            end_len = len(manager)
+            
+            assert start_len > end_len, f"start {start_len} end {end_len}"
+            
+            if end_len:
                 # There are still waiters, put the manager back
                 heapq.heappush(self._waiters, manager)  # type: ignore [misc]
             else:
                 # There are no more waiters, get rid of the empty manager
                 self._context_managers.pop(manager._priority)
-            break
+            return
+        logger.debug("%s has no waiters to wake", self)
 
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     _loop: asyncio.AbstractEventLoop
-    _waiters: List[asyncio.Future]  # type: ignore [assignment]
+    _waiters: Deque[asyncio.Future]  # type: ignore [assignment]
     
     @property
     def _priority_name(self) -> str:
@@ -96,7 +125,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         return f"<{self.__class__.__name__} parent={self._parent} {self._priority_name}={self._priority} waiters={len(self)}>"
     
     def _repr_no_parent_(self) -> str:
-        return f"<{self.__class__.__name__} {self._priority_name}={self._priority} waiters={len(self)}>"
+        return f"<{self.__class__.__name__} parent_name={self._parent.name} {self._priority_name}={self._priority} waiters={len(self)}>"
     
     def __lt__(self, other) -> bool:
         if type(other) is not type(self):
@@ -108,9 +137,9 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         return self._loop or asyncio.get_event_loop()
     
     @property
-    def waiters (self) -> asyncio.AbstractEventLoop:
+    def waiters (self) -> Deque[asyncio.Future]:
         if self._waiters is None:
-            self._waiters = []
+            self._waiters = deque()
         return self._waiters
     
     async def acquire(self) -> Literal[True]:
@@ -122,6 +151,8 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         called release() to make it larger than 0, and then return
         True.
         """
+        if self._parent._value <= 0:
+            self._ensure_debug_daemon()
         while self._parent._value <= 0:
             fut = self.loop.create_future()
             self.waiters.append(fut)
