@@ -38,8 +38,9 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":
         """Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking."""
         if self._max_workers == 0:
-            return fn(*args, **kwargs)
-        fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))
+            fut = asyncio.ensure_future(self._exec_sync(fn, *args, **kwargs))
+        else:
+            fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))
         self._start_debug_daemon(fut, fn, *args, **kwargs)
         return fut
     def __repr__(self) -> str:
@@ -50,6 +51,8 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     @property
     def worker_count_current(self) -> int:
         len(getattr(self, f"_{self._workers}"))
+    async def _exec_sync(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
+        return fn(*args, **kwargs)
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """Runs until manually cancelled by the finished work item"""
         while not fut.done():
