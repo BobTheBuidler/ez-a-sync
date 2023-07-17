@@ -12,6 +12,7 @@ import queue
 import threading
 import weakref
 from concurrent.futures import _base, thread
+from functools import cached_property
 from typing import Any, Callable, Optional, Tuple, TypeVar
 
 from typing_extensions import ParamSpec
@@ -34,26 +35,28 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         
         Oh, and you can also use kwargs!
         """
-        if self._max_workers == 0:
-            return fn(*args, **kwargs)
-        return await self.submit(fn, *args, **kwargs)
+        return fn(*args, **kwargs) if self.sync_mode else await self.submit(fn, *args, **kwargs)
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":
         """Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking."""
-        if self._max_workers == 0:
+        if self.sync_mode:
             fut = asyncio.ensure_future(self._exec_sync(fn, *args, **kwargs))
         else:
             fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))
-        self._start_debug_daemon(fut, fn, *args, **kwargs)
+            self._start_debug_daemon(fut, fn, *args, **kwargs)
         return fut
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} object at {hex(id(self))} [{self.worker_count_current}/{self._max_workers} {self._workers}]>"
     def __len__(self) -> int:
         # NOTE: should this be queue length instead? probably
         return self.worker_count_current
+    @cached_property
+    def sync_mode(self) -> bool:
+        return self._max_workers == 0
     @property
     def worker_count_current(self) -> int:
         len(getattr(self, f"_{self._workers}"))
     async def _exec_sync(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
+        """Just wraps a fn and its args into an awaitable."""
         return fn(*args, **kwargs)
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """Runs until manually cancelled by the finished work item"""
