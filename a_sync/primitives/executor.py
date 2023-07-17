@@ -7,11 +7,12 @@ With these executors, you can simply run sync fns in your executor with `await e
 
 import asyncio
 import concurrent.futures as cf
+import multiprocessing.context
 import queue
 import threading
 import weakref
 from concurrent.futures import _base, thread
-from typing import Callable, TypeVar
+from typing import Any, Callable, Optional, Tuple, TypeVar
 
 from typing_extensions import ParamSpec
 
@@ -36,6 +37,8 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         return await self.submit(fn, *args, **kwargs)
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":
         """Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking."""
+        if self._max_workers == 0:
+            return fn(*args, **kwargs)
         fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))
         self._start_debug_daemon(fut, fn, *args, **kwargs)
         return fut
@@ -58,11 +61,35 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
 
 class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
     _workers = "processes"
+    def __init__(
+        self, 
+        max_workers: Optional[int] = None, 
+        mp_context: Optional[multiprocessing.context.BaseContext] = None, 
+        initializer: Callable[..., object] = None,
+        initargs: Tuple[Any, ...] = (),
+    ) -> None:
+        if max_workers == 0:
+            super().__init__(1, mp_context, initializer, initargs)
+            self._max_workers = 0
+        else:
+            super().__init__(max_workers, mp_context, initializer, initargs)
 
 # Thread
 
 class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
     _workers = "threads"
+    def __init__(
+        self, 
+        max_workers: Optional[int] = None, 
+        thread_name_prefix: str = '', 
+        initializer: Callable[..., object] = None,
+        initargs: Tuple[Any, ...] = (),
+    ) -> None:
+        if max_workers == 0:
+            super().__init__(1, thread_name_prefix, initializer, initargs)
+            self._max_workers = 0
+        else:
+            super().__init__(max_workers, thread_name_prefix, initializer, initargs)
     
 # For backward-compatibility
 ProcessPoolExecutor = AsyncProcessPoolExecutor
