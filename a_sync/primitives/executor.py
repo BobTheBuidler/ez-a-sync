@@ -34,6 +34,8 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         
         Oh, and you can also use kwargs!
         """
+        if self._max_workers == 0:
+            return fn(*args, **kwargs)
         return await self.submit(fn, *args, **kwargs)
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":
         """Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking."""
