@@ -60,6 +60,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         
 class DummySemaphore(asyncio.Semaphore):
     """It can go where a semaphore goes, but it does nothing."""
+    _value = 0
     def __init__(self, name: Optional[str] = None):
         self.name = name
     def __repr__(self) -> str:
