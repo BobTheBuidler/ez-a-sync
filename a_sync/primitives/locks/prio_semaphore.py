@@ -87,7 +87,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             
             while manager._waiters:
                 waiter = manager._waiters.popleft()
-                waiter = self._potential_lost_waiters.remove(waiter)
+                self._potential_lost_waiters.remove(waiter)
                 if not waiter.done():
                     waiter.set_result(None)
                     logger.debug("woke up %s", waiter)
