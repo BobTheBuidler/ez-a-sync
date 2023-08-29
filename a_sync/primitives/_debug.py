@@ -17,7 +17,7 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
         return asyncio.get_event_loop().create_future()
     def _ensure_debug_daemon(self, *args, **kwargs) -> asyncio.Task:
         if not self.debug_logs_enabled:
-            return asyncio.get_event_loop().create_future()
+            self._daemon = asyncio.get_event_loop().create_future()
         if not hasattr(self, '_daemon') or self._daemon is None:
             self._daemon = self._start_debug_daemon(*args, **kwargs)
             self._daemon.add_done_callback(self._stop_debug_daemon)
