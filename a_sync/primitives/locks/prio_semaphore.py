@@ -116,7 +116,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             logger.debug('we found a lost waiter %s', waiter)
             if not waiter.done():
                 waiter.set_result(None)
-                logger.warning("woke up lost waiter %s", waiter)
+                logger.debug("woke up lost waiter %s", waiter)
                 return
         logger.debug("%s has no waiters to wake", self)
 
