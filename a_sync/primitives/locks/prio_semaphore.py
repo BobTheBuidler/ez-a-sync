@@ -52,6 +52,9 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     async def __aexit__(self, *_) -> None:
         self[self._top_priority].release()
     
+    async def acquire(self) -> Literal[True]:
+        return await self[self._top_priority].acquire()
+    
     def __getitem__(self, priority: Optional[PT]) -> "_AbstractPrioritySemaphoreContextManager[PT]":
         priority = self._top_priority if priority is None else priority
         if priority not in self._context_managers:
