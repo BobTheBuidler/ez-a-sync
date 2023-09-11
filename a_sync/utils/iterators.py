@@ -53,7 +53,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:
     queue = Queue()
     task = asyncio.create_task(exhaust_iterators(iterators, queue=queue))
     def done_callback(t: asyncio.Task) -> None:
-        if t.exception() and not next.done(): 
+        if t.exception() and not next_fut.done(): 
             next_fut.set_exception(t.exception())
     task.add_done_callback(done_callback)
     while not task.done():
