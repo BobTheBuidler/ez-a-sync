@@ -55,7 +55,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:
             next.set_exception(t.exception())
     task.add_done_callback(done_callback)
     while not task.done():
-        next = asyncio.create_task(queue.get())
+        next = asyncio.ensure_future(queue.get())
         yield await next
         for next in queue.get_nowait(-1):
             yield next
