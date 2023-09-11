@@ -1,15 +1,19 @@
 
 import asyncio
+import logging
 from asyncio.futures import _chain_future
 from typing import AsyncIterator, Optional, TypeVar, Union, overload
 
 from a_sync.primitives.queue import Queue
+
+logger = logging.getLogger(__name__)
 
 T = TypeVar('T')
 
 async def exhaust_iterator(iterator: AsyncIterator[T], *, queue: Optional[asyncio.Queue] = None) -> None:
     if queue:
         async for thing in iterator:
+            logger.debug('putting %s from %s to queue %s', thing, iterator, queue)
             queue.put_nowait(thing)
     else:
         async for thing in iterator:
