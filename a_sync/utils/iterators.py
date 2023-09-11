@@ -1,6 +1,8 @@
 
 import asyncio
+from asyncio.futures import _chain_future
 from typing import AsyncIterator, Optional, TypeVar, Union, overload
+
 from a_sync.primitives.queue import Queue
 
 T = TypeVar('T')
@@ -52,11 +54,12 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:
     task = asyncio.create_task(exhaust_iterators(iterators, queue=queue))
     def done_callback(t: asyncio.Task) -> None:
         if t.exception() and not next.done(): 
-            next.set_exception(t.exception())
+            next_fut.set_exception(t.exception())
     task.add_done_callback(done_callback)
     while not task.done():
-        next = asyncio.ensure_future(queue.get())
-        yield await next
+        next_fut = asyncio.get_event_loop().create_future()
+        _chain_future(asyncio.create_task(queue.get()), next_fut)
+        yield await next_fut
         for next in queue.get_nowait(-1):
             yield next
     if e := task.exception():
