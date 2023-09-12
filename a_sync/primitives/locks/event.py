@@ -20,9 +20,8 @@ class Event(asyncio.Event, _DebugDaemonMixin):
             return True
         self._ensure_debug_daemon()
         return await super().wait()
-        
     async def _debug_daemon(self) -> None:
         while not self.is_set():
             await asyncio.sleep(self._debug_daemon_interval)
             if not self.is_set():
-                self.logger.debug(f"Waiting for {self}")
+                self.logger.debug("Waiting for %s", self)
