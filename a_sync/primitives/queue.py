@@ -1,9 +1,15 @@
 import asyncio
-from typing import TypeVar
+import sys
+from typing import Generic, TypeVar
 
 T = TypeVar('T')
 
-class Queue(asyncio.Queue[T]):
+if sys.version_info < (3, 9):
+    bases = (asyncio.Queue, Generic[T])
+else:
+    bases = (asyncio.Queue[T], )
+
+class Queue(*bases):
     """The only difference between an a_sync.Queue and an asyncio.Queue is that `get_nowait` can retrn multiple responses."""
     def get_nowait(self, i: int = 1, can_return_less: bool = False) -> T:
         """

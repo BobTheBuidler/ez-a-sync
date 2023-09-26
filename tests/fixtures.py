@@ -76,6 +76,9 @@ class TestSync(ASyncBase):
         time.sleep(2)
         return self.v * 3
 
+class TestLimiter(TestClass):
+    limiter = 1
+    
 class TestInheritor(TestClass):
     pass
 
