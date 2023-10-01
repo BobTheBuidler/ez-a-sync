@@ -8,8 +8,12 @@ from typing import (Any, Awaitable, Callable, List, Set, TypeVar, Union,
 from typing_extensions import Unpack
 
 T = TypeVar('T')
+from a_sync import a_sync
 
 MaybeMeta = Union[T, "ASyncFuture[T]"]
+
+def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs) -> Callable[P, "ASyncFuture[T]"]:
+    return ASyncFuture.wrap_callable(callable, **kwargs)
 
 async def _gather_check_and_materialize(*things: Unpack[MaybeMeta[T]]) -> List[T]:
     return await asyncio.gather(*[_check_and_materialize(thing) for thing in things])
@@ -81,6 +85,13 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
             return r.result
         # the result should be callable like an asyncio.Future
         return super().result
+    @classmethod
+    def wrap_callable(cls, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs) -> Callable[P, "ASyncFuture[T]"]:
+        callable = a_sync(callable, **kwargs)
+        @wraps(callable)
+        def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
+            return cls(callable(*args, **kwargs, sync=False))
+        return future_wrap
     def __getattr__(self, attr: str) -> Any:
         return getattr(_materialize(self), attr)
     def __getitem__(self, key) -> Any:
