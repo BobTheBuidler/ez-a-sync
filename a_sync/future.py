@@ -5,11 +5,12 @@ from decimal import Decimal
 from typing import (Any, Awaitable, Callable, List, Set, TypeVar, Union,
                     overload)
 
-from typing_extensions import Unpack
+from typing_extensions import ParamSpec, Unpack
 
-T = TypeVar('T')
 from a_sync import a_sync
 
+T = TypeVar('T')
+P = ParamSpec('P')
 MaybeMeta = Union[T, "ASyncFuture[T]"]
 
 def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs) -> Callable[P, "ASyncFuture[T]"]:
