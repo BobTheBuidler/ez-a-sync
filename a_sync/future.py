@@ -2,6 +2,7 @@
 
 import asyncio
 from decimal import Decimal
+from functools import wraps
 from typing import (Any, Awaitable, Callable, List, Set, TypeVar, Union,
                     overload)
 
