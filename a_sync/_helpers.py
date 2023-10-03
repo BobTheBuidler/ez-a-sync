@@ -47,7 +47,8 @@ def _await(awaitable: Awaitable[T]) -> T:
 def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: ignore [misc]
     @functools.wraps(func)
     async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
-        if kwargs: 
-            raise KwargsUnsupportedError
-        return await get_event_loop().run_in_executor(executor, func, *args)
+        return await asyncio.futures.wrap_future(
+            executor.submit(func, *args, **kwargs), 
+            loop=get_event_loop(),
+        )
     return _asyncify_wrap
