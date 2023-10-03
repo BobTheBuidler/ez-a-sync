@@ -33,8 +33,6 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
         retval = asyncio.get_event_loop().run_until_complete(meta._awaitable)
         meta.set_result(retval)
         meta._done.set()
-        print(f'dependencies: {meta.dependencies}')
-        print(f'dependants: {meta.dependants}')
         return retval
     except RuntimeError as e:
         raise RuntimeError(f"{meta} result is not set and the event loop is running, you will need to await it first") from e
@@ -43,7 +41,6 @@ Numeric = Union[int, float, Decimal, "ASyncFuture[int]", "ASyncFuture[float]", "
 
 class ASyncFuture(asyncio.Future, Awaitable[T]):
     def __init__(self, awaitable: Awaitable[T], dependencies: List["ASyncFuture"] = []) -> None:
-        #print(awaitable)
         self._awaitable = awaitable
         self._dependencies = dependencies
         for dependency in dependencies:
@@ -114,9 +111,6 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
         self._started = True
         self.set_result(await self._awaitable)
         self._done.set()
-        print(f'self {self.__repr__()}')
-        print(f'dependencies: {self.dependencies}')
-        print(f'dependants: {self.dependants}')
         return self._result
     def __iter__(self):
         return _materialize(self).__iter__()
