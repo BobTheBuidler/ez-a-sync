@@ -2,20 +2,20 @@
 
 import asyncio
 from decimal import Decimal
-from functools import wraps
+from functools import partial, wraps
 from typing import (Any, Awaitable, Callable, List, Set, TypeVar, Union,
                     overload)
 
 from typing_extensions import ParamSpec, Unpack
 
-from a_sync import a_sync
+from a_sync._typing import ModifierKwargs
 
 T = TypeVar('T')
 P = ParamSpec('P')
 MaybeMeta = Union[T, "ASyncFuture[T]"]
 
-def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs) -> Callable[P, "ASyncFuture[T]"]:
-    return ASyncFuture.wrap_callable(callable, **kwargs)
+def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]) -> Callable[P, "ASyncFuture[T]"]:
+    return _ASyncFutureWrappedFn(callable, **kwargs)
 
 async def _gather_check_and_materialize(*things: Unpack[MaybeMeta[T]]) -> List[T]:
     return await asyncio.gather(*[_check_and_materialize(thing) for thing in things])
@@ -33,8 +33,6 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
         retval = asyncio.get_event_loop().run_until_complete(meta._awaitable)
         meta.set_result(retval)
         meta._done.set()
-        print(f'dependencies: {meta.dependencies}')
-        print(f'dependants: {meta.dependants}')
         return retval
     except RuntimeError as e:
         raise RuntimeError(f"{meta} result is not set and the event loop is running, you will need to await it first") from e
@@ -43,7 +41,6 @@ Numeric = Union[int, float, Decimal, "ASyncFuture[int]", "ASyncFuture[float]", "
 
 class ASyncFuture(asyncio.Future, Awaitable[T]):
     def __init__(self, awaitable: Awaitable[T], dependencies: List["ASyncFuture"] = []) -> None:
-        #print(awaitable)
         self._awaitable = awaitable
         self._dependencies = dependencies
         for dependency in dependencies:
@@ -87,13 +84,6 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
             return r.result
         # the result should be callable like an asyncio.Future
         return super().result
-    @classmethod
-    def wrap_callable(cls, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs) -> Callable[P, "ASyncFuture[T]"]:
-        callable = a_sync(callable, **kwargs)
-        @wraps(callable)
-        def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
-            return cls(callable(*args, **kwargs, sync=False))
-        return future_wrap
     def __getattr__(self, attr: str) -> Any:
         return getattr(_materialize(self), attr)
     def __getitem__(self, key) -> Any:
@@ -121,9 +111,6 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
         self._started = True
         self.set_result(await self._awaitable)
         self._done.set()
-        print(f'self {self.__repr__()}')
-        print(f'dependencies: {self.dependencies}')
-        print(f'dependants: {self.dependants}')
         return self._result
     def __iter__(self):
         return _materialize(self).__iter__()
@@ -496,3 +483,21 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
         return int(_materialize(self))
     def __float__(self) -> float:
         return float(_materialize(self))
+      
+class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
+    __slots__ = "callable", "wrapped"
+    def __init__(self, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]):
+        from a_sync import a_sync
+        if callable:
+            self.callable = callable
+            a_sync_callable = a_sync(callable, default="async", **kwargs)
+            @wraps(callable)
+            def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
+                return ASyncFuture(a_sync_callable(*args, **kwargs, sync=False))
+            self.wrapped = future_wrap
+        else:
+            self.wrapped = partial(_ASyncFutureWrappedFn, **kwargs)
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> ASyncFuture[T]:
+        return self.wrapped(*args, **kwargs)
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} {self.callable}>"
