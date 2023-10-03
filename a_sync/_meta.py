@@ -14,20 +14,23 @@ class ASyncMeta(ABCMeta):
     """Any class with metaclass ASyncMeta will have its functions wrapped with a_sync upon class instantiation."""
     def __new__(cls, new_class_name, bases, attrs):
         _update_logger(new_class_name)
-        logger.debug(f"woah, you're defining a new ASync class `{new_class_name}`! let's walk thru it together")
-        logger.debug(f"first, I check whether you've defined any modifiers on `{new_class_name}`")
+        logger.debug(f"woah, you're defining a new ASync class `%s`! let's walk thru it together", new_class_name)
+        logger.debug(f"first, I check whether you've defined any modifiers on `%s`", new_class_name)
         # NOTE: Open uesion: what do we do when a parent class and subclass define the same modifier differently?
         #       Currently the parent value is used for functions defined on the parent, 
         #       and the subclass value is used for functions defined on the subclass.
         class_defined_modifiers = modifiers.get_modifiers_from(attrs)
-        logger.debug(f'found modifiers: {class_defined_modifiers}')
+        logger.debug(f'found modifiers: %s', class_defined_modifiers)
         logger.debug("now I inspect the class definition to figure out which attributes need to be wrapped")
         for attr_name, attr_value in list(attrs.items()):
             if attr_name.startswith("_"):
-                logger.debug(f"`{new_class_name}.{attr_name}` starts with an underscore, skipping")
+                logger.debug(f"`%s.%s` starts with an underscore, skipping", new_class_name, attr_name)
                 continue
             elif "__" in attr_name:
-                logger.debug(f"`{new_class_name}.{attr_name}` incluldes a double-underscore, skipping")
+                logger.debug(f"`%s.%s` incluldes a double-underscore, skipping", new_class_name, attr_name)
+                continue
+            elif isinstance(attr_value, _ASyncFutureWrappedFn):
+                logger.debug(f"`%s.%s` is a %s, skipping", new_class_name, attr_name, attr_value.__class__.__name__)
                 continue
             logger.debug(f"inspecting `{new_class_name}.{attr_name}` of type {attr_value.__class__.__name__}")
             fn_modifiers = dict(class_defined_modifiers)
