@@ -15,7 +15,7 @@ P = ParamSpec('P')
 MaybeMeta = Union[T, "ASyncFuture[T]"]
 
 def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs) -> Callable[P, "ASyncFuture[T]"]:
-    return ASyncFuture.wrap_callable(callable, **kwargs)
+    return _ASyncFutureWrappedFn(callable, **kwargs)
 
 async def _gather_check_and_materialize(*things: Unpack[MaybeMeta[T]]) -> List[T]:
     return await asyncio.gather(*[_check_and_materialize(thing) for thing in things])
@@ -496,3 +496,14 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
         return int(_materialize(self))
     def __float__(self) -> float:
         return float(_materialize(self))
+      
+class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
+    __slots__ = "callable", "wrapped"
+    def __init__(self, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]]):
+        self.callable = a_sync(callable, default="async", **kwargs)
+        @wraps(callable)
+        def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
+            return ASyncFuture(callable(*args, **kwargs, sync=False))
+        self.wrapped = future_wrap
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> ASyncFuture[T]:
+        return self.wrapped(*args, **kwargs)
