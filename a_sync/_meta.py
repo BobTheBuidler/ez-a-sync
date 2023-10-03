@@ -5,6 +5,7 @@ from abc import ABCMeta
 from typing import Any, Dict, Tuple
 
 from a_sync import ENVIRONMENT_VARIABLES, _bound, modifiers
+from a_sync.future import _ASyncFutureWrappedFn
 from a_sync.modified import ASyncFunction, Modified
 from a_sync.property import PropertyDescriptor
 
