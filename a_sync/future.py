@@ -8,7 +8,6 @@ from typing import (Any, Awaitable, Callable, List, Set, TypeVar, Union,
 
 from typing_extensions import ParamSpec, Unpack
 
-from a_sync import a_sync
 from a_sync._typing import ModifierKwargs
 
 T = TypeVar('T')
@@ -88,13 +87,6 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
             return r.result
         # the result should be callable like an asyncio.Future
         return super().result
-    @classmethod
-    def wrap_callable(cls, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs) -> Callable[P, "ASyncFuture[T]"]:
-        callable = a_sync(callable, **kwargs)
-        @wraps(callable)
-        def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
-            return cls(callable(*args, **kwargs, sync=False))
-        return future_wrap
     def __getattr__(self, attr: str) -> Any:
         return getattr(_materialize(self), attr)
     def __getitem__(self, key) -> Any:
@@ -501,6 +493,7 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
 class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
     __slots__ = "callable", "wrapped"
     def __init__(self, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]):
+        from a_sync import a_sync
         if callable:
             self.callable = callable
             a_sync_callable = a_sync(callable, default="async", **kwargs)
