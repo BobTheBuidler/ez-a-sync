@@ -9,12 +9,13 @@ from typing import (Any, Awaitable, Callable, List, Set, TypeVar, Union,
 from typing_extensions import ParamSpec, Unpack
 
 from a_sync import a_sync
+from a_sync._typing import ModifierKwargs
 
 T = TypeVar('T')
 P = ParamSpec('P')
 MaybeMeta = Union[T, "ASyncFuture[T]"]
 
-def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs) -> Callable[P, "ASyncFuture[T]"]:
+def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs: Unpack[ModifierKwargs]) -> Callable[P, "ASyncFuture[T]"]:
     return _ASyncFutureWrappedFn(callable, **kwargs)
 
 async def _gather_check_and_materialize(*things: Unpack[MaybeMeta[T]]) -> List[T]:
@@ -499,7 +500,7 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
       
 class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
     __slots__ = "callable", "wrapped"
-    def __init__(self, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]]):
+    def __init__(self, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], **kwargs: Unpack[ModifierKwargs]):
         self.callable = a_sync(callable, default="async", **kwargs)
         @wraps(callable)
         def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
