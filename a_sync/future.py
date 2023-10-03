@@ -502,12 +502,15 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
     __slots__ = "callable", "wrapped"
     def __init__(self, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]):
         if callable:
-            self.callable = a_sync(callable, default="async", **kwargs)
+            self.callable = callable
+            a_sync_callable = a_sync(callable, default="async", **kwargs)
             @wraps(callable)
             def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
-                return ASyncFuture(callable(*args, **kwargs, sync=False))
+                return ASyncFuture(a_sync_callable(*args, **kwargs, sync=False))
             self.wrapped = future_wrap
         else:
             self.wrapped = partial(_ASyncFutureWrappedFn, **kwargs)
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> ASyncFuture[T]:
         return self.wrapped(*args, **kwargs)
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} {self.callable}>"
