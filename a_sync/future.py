@@ -15,7 +15,7 @@ T = TypeVar('T')
 P = ParamSpec('P')
 MaybeMeta = Union[T, "ASyncFuture[T]"]
 
-def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], *, _=None, **kwargs: Unpack[ModifierKwargs]) -> Callable[P, "ASyncFuture[T]"]:
+def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]) -> Callable[P, "ASyncFuture[T]"]:
     return _ASyncFutureWrappedFn(callable, **kwargs)
 
 async def _gather_check_and_materialize(*things: Unpack[MaybeMeta[T]]) -> List[T]:
@@ -500,11 +500,14 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
       
 class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
     __slots__ = "callable", "wrapped"
-    def __init__(self, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]], *, _=None, **kwargs: Unpack[ModifierKwargs]):
-        self.callable = a_sync(callable, default="async", **kwargs)
-        @wraps(callable)
-        def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
-            return ASyncFuture(callable(*args, **kwargs, sync=False))
-        self.wrapped = future_wrap
+    def __init__(self, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]):
+        if callable:
+            self.callable = a_sync(callable, default="async", **kwargs)
+            @wraps(callable)
+            def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
+                return ASyncFuture(callable(*args, **kwargs, sync=False))
+            self.wrapped = future_wrap
+        else:
+            self.wrapped = partial(_ASyncFutureWrappedFn, **kwargs)
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> ASyncFuture[T]:
         return self.wrapped(*args, **kwargs)
