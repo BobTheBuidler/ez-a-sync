@@ -44,7 +44,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         self._potential_lost_waiters = []
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={[manager._repr_no_parent_() for manager in self._waiters]}>"
+        return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={self._count_waiters()}>"
 
     async def __aenter__(self) -> None:
         await self[self._top_priority].acquire()
@@ -71,6 +71,9 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
                 for cm in (self._context_managers.values() or ())
             )
         )
+    
+    def _count_waiters(self) -> Dict[PT, int]:
+        return {manager._priority: len(manager._waiters) for manager in sorted(self._waiters, key=lambda m: m._priority)}
     
     def _wake_up_next(self) -> None:
         while self._waiters:
