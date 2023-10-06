@@ -1,5 +1,6 @@
 import asyncio
 from collections import defaultdict
+from time import time
 from typing import Iterable, Optional
 
 from a_sync.primitives._debug import _DebugDaemonMixin
@@ -49,9 +50,11 @@ class CounterLock(_DebugDaemonMixin):
         elif value < self._value:
             raise ValueError("You cannot decrease the value.")
     
-    def _debug_daemon(self) -> None:
+    async def _debug_daemon(self) -> None:
+        start = time()
         while self._events:
-            self.logger.debug(self)
+            self.logger.debug("%s is still locked after %sm", self, round(time() - start / 60, 2))
+            await asyncio.sleep(300)
 
 class CounterLockCluster:
     """
