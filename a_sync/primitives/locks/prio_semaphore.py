@@ -73,7 +73,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         )
     
     def _count_waiters(self) -> Dict[PT, int]:
-        return {manager._priority: len(manager.waiters) for manager in sorted(self.waiters, key=lambda m: m._priority)}
+        return {manager._priority: len(manager.waiters) for manager in sorted(self._waiters, key=lambda m: m._priority)}
     
     def _wake_up_next(self) -> None:
         while self._waiters:
