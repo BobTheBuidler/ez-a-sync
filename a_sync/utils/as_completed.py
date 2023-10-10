@@ -3,8 +3,13 @@ import asyncio
 from typing import (Any, AsyncIterator, Awaitable, Iterable, Iterator, Mapping,
                     Optional, Tuple, TypeVar, Union, overload)
 
-from tqdm.asyncio import tqdm_asyncio
-
+try:
+    from tqdm.asyncio import tqdm_asyncio
+except ImportError as e:
+    class tqdm_asyncio:
+        def as_completed(*args, **kwargs):
+            raise ImportError("You must have tqdm installed to use this feature")
+        
 from a_sync.iter import ASyncIterator
 
 T = TypeVar('T')
@@ -43,8 +48,7 @@ def as_completed_mapping(mapping: Mapping[KT, Awaitable[VT]], *, timeout: Option
     return as_completed([__mapping_wrap(k, v) for k, v in mapping.items()], timeout=timeout, return_exceptions=return_exceptions, aiter=aiter, tqdm=tqdm, **tqdm_kwargs)
 
 async def __yield_as_completed(futs: Iterable[Awaitable[T]], *, timeout: Optional[float] = None, return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> AsyncIterator[T]:
-    futs = tqdm_asyncio.as_completed(futs, timeout=timeout, **tqdm_kwargs) if tqdm else asyncio.as_completed(futs, timeout=timeout)
-    for fut in futs:
+    for fut in as_completed(futs, timeout=timeout, return_exceptions=return_exceptions, tqdm=tqdm, **tqdm_kwargs):
         yield await fut
         
 async def __mapping_wrap(k: KT, v: Awaitable[VT]) -> VT:

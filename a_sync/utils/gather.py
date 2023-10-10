@@ -3,7 +3,12 @@ import asyncio
 from typing import (Any, Awaitable, Dict, List, Mapping, TypeVar, Union,
                     overload)
 
-from tqdm.asyncio import tqdm_asyncio
+try:
+    from tqdm.asyncio import tqdm_asyncio
+except ImportError as e:
+    class tqdm_asyncio:
+        async def gather(*args, **kwargs):
+            raise ImportError("You must have tqdm installed in order to use this feature")
 
 from a_sync.utils.as_completed import as_completed_mapping
 
