@@ -27,7 +27,7 @@ def as_completed(fs, *, timeout: Optional[float] = None, return_exceptions: bool
     if return_exceptions:
         raise NotImplementedError
     return (
-        as_completed_mapping(fs) if isinstance(fs, Mapping)
+        as_completed_mapping(fs, timeout=timeout, return_exceptions=return_exceptions, aiter=aiter, tqdm=tqdm, **tqdm_kwargs) if isinstance(fs, Mapping)
         else ASyncIterator.wrap(__yield_as_completed(fs, tqdm=tqdm, **tqdm_kwargs)) if aiter 
         else tqdm_asyncio.as_completed(fs, timeout=timeout, **tqdm_kwargs) if tqdm 
         else asyncio.as_completed(fs, timeout=timeout)
