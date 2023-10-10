@@ -1,6 +1,7 @@
 
 import asyncio
-from typing import Any, Awaitable, Dict, List, Mapping, TypeVar
+from typing import (Any, Awaitable, Dict, List, Mapping, TypeVar, Union,
+                    overload)
 
 from tqdm.asyncio import tqdm_asyncio
 
@@ -10,7 +11,13 @@ T = TypeVar('T')
 KT = TypeVar('KT')
 VT = TypeVar('VT')
 
+@overload
+async def gather(*awaitables: Mapping[KT, Awaitable[VT]], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Dict[KT, VT]:
+    ...
+@overload
 async def gather(*awaitables: Awaitable[T], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> List[T]:
+    ...
+async def gather(*awaitables: Union[Awaitable[T], Mapping[KT, Awaitable[VT]]], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Union[List[T], Dict[KT, VT]]:
     return await (
         gather_mapping(awaitables[0], return_exceptions=return_exceptions, tqdm=tqdm, **tqdm_kwargs) if _is_mapping(awaitables)
         else tqdm_asyncio.gather(*awaitables, return_exceptions=return_exceptions, **tqdm_kwargs) if tqdm
