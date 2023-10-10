@@ -31,7 +31,7 @@ T8 = TypeVar('T8')
 T9 = TypeVar('T9')
 
 @overload
-async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:
+async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:...
 @overload
 async def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1], iterator2: AsyncIterator[T2], iterator3: AsyncIterator[T3], iterator4: AsyncIterator[T4], iterator5: AsyncIterator[T5], iterator6: AsyncIterator[T6], iterator7: AsyncIterator[T7], iterator8: AsyncIterator[T8], iterator9: AsyncIterator[T9]) -> AsyncIterator[Union[T0, T1, T2, T3, T4, T5, T6, T7, T8, T9]]:...
 @overload
@@ -67,7 +67,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:
         for next in queue.get_nowait(-1):
             yield next
     
-    get_task.cancel()
     if e := task.exception():
+        get_task.cancel()
         raise e
 
