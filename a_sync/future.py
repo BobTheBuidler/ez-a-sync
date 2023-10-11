@@ -513,6 +513,7 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
 
 @final
 class _ASyncFutureInstanceMethod(Generic[P, T]):
+    # NOTE: probably could just replace this with functools.partial
     def __init__(
         self,
         wrapper: _ASyncFutureWrappedFn[P, T],
