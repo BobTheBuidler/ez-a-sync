@@ -3,10 +3,10 @@
 import asyncio
 from decimal import Decimal
 from functools import partial, wraps
-from typing import (Any, Awaitable, Callable, List, Set, TypeVar, Union,
-                    overload)
+from typing import (Any, Awaitable, Callable, Generic, List, Optional, Set,
+                    TypeVar, Union, final, overload)
 
-from typing_extensions import ParamSpec, Unpack
+from typing_extensions import ParamSpec, Self, Unpack
 
 from a_sync._typing import ModifierKwargs
 
@@ -40,6 +40,7 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
 Numeric = Union[int, float, Decimal, "ASyncFuture[int]", "ASyncFuture[float]", "ASyncFuture[Decimal]"]
 
 class ASyncFuture(asyncio.Future, Awaitable[T]):
+    __slots__ = "_awaitable", "_dependencies", "_dependants", "_done", "_started"
     def __init__(self, awaitable: Awaitable[T], dependencies: List["ASyncFuture"] = []) -> None:
         self._awaitable = awaitable
         self._dependencies = dependencies
@@ -483,13 +484,16 @@ class ASyncFuture(asyncio.Future, Awaitable[T]):
         return int(_materialize(self))
     def __float__(self) -> float:
         return float(_materialize(self))
-      
+
+
+@final  
 class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
-    __slots__ = "callable", "wrapped"
+    __slots__ = "callable", "wrapped", "_callable_name"
     def __init__(self, callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]):
         from a_sync import a_sync
         if callable:
             self.callable = callable
+            self._callable_name = callable.__name__
             a_sync_callable = a_sync(callable, default="async", **kwargs)
             @wraps(callable)
             def future_wrap(*args: P.args, **kwargs: P.kwargs) -> "ASyncFuture[T]":
@@ -501,3 +505,48 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
         return self.wrapped(*args, **kwargs)
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.callable}>"
+    def __get__(self, instance: object, owner: Optional) -> Union[Self, "_ASyncFutureInstanceMethod[P, T]"]:
+        if owner is None:
+            return self
+        else:
+            return _ASyncFutureInstanceMethod(self, instance)
+
+@final
+class _ASyncFutureInstanceMethod(Generic[P, T]):
+    # NOTE: probably could just replace this with functools.partial
+    def __init__(
+        self,
+        wrapper: _ASyncFutureWrappedFn[P, T],
+        instance: object,
+    ) -> None:
+        try:
+            self.__module__ = wrapper.__module__
+        except AttributeError:
+            pass
+        try:
+            self.__name__ = wrapper.__name__
+        except AttributeError:
+            pass
+        try:
+            self.__qualname__ = wrapper.__qualname__
+        except AttributeError:
+            pass
+        try:
+            self.__doc__ = wrapper.__doc__
+        except AttributeError:
+            pass
+        try:
+            self.__annotations__ = wrapper.__annotations__
+        except AttributeError:
+            pass
+        try:
+            self.__dict__.update(wrapper.__dict__)
+        except AttributeError:
+            pass
+        self.__instance = instance
+        self.__wrapper = wrapper
+
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} for {self.__wrapper.callable} bound to {self.__instance}>"
+    def __call__(self, /, *fn_args: P.args, **fn_kwargs: P.kwargs) -> T:
+        return self.__wrapper(self.__instance, *fn_args, **fn_kwargs)
