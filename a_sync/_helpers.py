@@ -4,6 +4,7 @@ import functools
 from concurrent.futures import Executor
 from inspect import getfullargspec
 
+from async_lru import _LRUCacheWrapper
 from async_property.base import \
     AsyncPropertyDescriptor  # type: ignore [import]
 from async_property.cached import \
@@ -31,6 +32,8 @@ def _validate_wrapped_fn(fn: Callable) -> None:
         return # These are always valid
     if not callable(fn):
         raise TypeError(f'Input is not callable. Unable to decorate {fn}')
+    if isinstance(fn, _LRUCacheWrapper):
+        fn = fn.__wrapped__
     fn_args = getfullargspec(fn)[0]
     for flag in _flags.VIABLE_FLAGS:
         if flag in fn_args:
