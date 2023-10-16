@@ -9,7 +9,10 @@ class ASyncIterable(AsyncIterable[T], Iterable[T]):
     def __iter__(self) -> Iterator[T]:
         aiterator = self.__aiter__()
         while True:
-            yield asyncio.get_event_loop().run_until_complete(aiterator.__anext__())
+            try:
+                yield asyncio.get_event_loop().run_until_complete(aiterator.__anext__())
+            except StopAsyncIteration as e:
+                raise StopIteration(*e.args) from e
     @classmethod
     def wrap(self, aiterable: AsyncIterable[T]) -> "ASyncWrappedIterable[T]":
         return ASyncWrappedIterable(aiterable)
