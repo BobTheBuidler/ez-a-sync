@@ -7,12 +7,7 @@ T = TypeVar('T')
 class ASyncIterable(AsyncIterable[T], Iterable[T]):
     """An abstract iterable implementation that can be used in both a `for` loop and an `async for` loop."""
     def __iter__(self) -> Iterator[T]:
-        aiterator = self.__aiter__()
-        while True:
-            try:
-                yield asyncio.get_event_loop().run_until_complete(aiterator.__anext__())
-            except StopAsyncIteration as e:
-                raise StopIteration(*e.args) from e
+        yield from ASyncIterator.wrap(self.__aiter__())
     @classmethod
     def wrap(self, aiterable: AsyncIterable[T]) -> "ASyncWrappedIterable[T]":
         return ASyncWrappedIterable(aiterable)
@@ -39,4 +34,3 @@ class ASyncWrappedIterator(ASyncIterator[T]):
         self.__aiterator = async_iterator
     async def __anext__(self) -> T:
         return await self.__aiterator.__anext__()
-    
