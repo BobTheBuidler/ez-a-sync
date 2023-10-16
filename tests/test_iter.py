@@ -26,7 +26,7 @@ async def test_iterable_async():
 def test_iterator_sync():
     iterator = ASyncIterator.wrap(async_gen())
     for i in range(4):
-        if i < 4:
+        if i < 3:
             assert next(iterator) == i
         else:
             with pytest.raises(StopIteration):
@@ -35,7 +35,7 @@ def test_iterator_sync():
 async def test_iterator_async():
     iterator = ASyncIterator.wrap(async_gen())
     for i in range(4):
-        if i < 4:
+        if i < 3:
             assert await iterator.__anext__() == i
         else:
             with pytest.raises(StopIteration):
