@@ -40,5 +40,5 @@ async def test_iterator_async():
         if i < 3:
             assert await iterator.__anext__() == i
         else:
-            with pytest.raises(StopIteration):
+            with pytest.raises(StopAsyncIteration):
                 await iterator.__anext__()
