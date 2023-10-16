@@ -19,7 +19,8 @@ def test_iterator_wrap():
 
 def test_iterable_sync():
     assert [i for i in ASyncIterable.wrap(async_gen())] == [0, 1, 2]
-    
+
+@pytest.mark.asyncio_cooperative
 async def test_iterable_async():
     assert [i async for i in ASyncIterable.wrap(async_gen())] == [0, 1, 2]
 
@@ -31,7 +32,8 @@ def test_iterator_sync():
         else:
             with pytest.raises(StopIteration):
                 next(iterator)
-    
+
+@pytest.mark.asyncio_cooperative   
 async def test_iterator_async():
     iterator = ASyncIterator.wrap(async_gen())
     for i in range(4):
