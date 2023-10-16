@@ -77,7 +77,8 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __await__(self) -> Awaitable[T]:
         return self.__await().__await__()
     async def __await(self) -> T:
-        self.set_result(await self.__task__)
+        if not self.done():
+            self.set_result(await self.__task__)
         return self._result
     @property
     def __task__(self) -> "asyncio.Task[T]":
