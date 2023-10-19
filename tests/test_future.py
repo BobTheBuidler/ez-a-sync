@@ -20,6 +20,8 @@ async def two() -> int:
 async def zero():
     return 0
 
+def test_result():
+    assert ASyncFuture(one()).result() == 1
 def test_add():
     assert ASyncFuture(one()) + ASyncFuture(two()) == 3
     assert ASyncFuture(one()) + 2 == 3

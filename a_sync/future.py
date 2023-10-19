@@ -59,11 +59,18 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         return [self]
     @property
     def result(self) -> Union[Callable[[], T], Any]:
-        if hasattr(r := super().result(), 'result'):
-            # can be property, method, whatever. should work.
-            return r.result
-        # the result should be callable like an asyncio.Future
-        return super().result
+        """
+        If this future is not done, it will work like cf.Future.result. It will block, await the awaitable, and return the result when ready.
+        If this future is done and the result has attribute `results`, will return `getattr(future_result, 'result')`
+        If this future is done and the result does NOT have attribute `results`, will again work like cf.Future.result
+        """
+        if self.done():
+            if hasattr(r := super().result(), 'result'):
+                # can be property, method, whatever. should work.
+                return r.result
+            # the result should be callable like an asyncio.Future
+            return super().result
+        return lambda: _materialize(self)
     def __getattr__(self, attr: str) -> Any:
         return getattr(_materialize(self), attr)
     def __getitem__(self, key) -> Any:
