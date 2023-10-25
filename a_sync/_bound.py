@@ -36,7 +36,7 @@ def _wrap_bound_method(
     
     # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
     if isinstance(coro_fn, ASyncFunction):
-        coro_fn = coro_fn._fn
+        coro_fn = coro_fn.__wrapped__
     
     modifiers, _force_await = _clean_default_from_modifiers(coro_fn, modifiers)
     

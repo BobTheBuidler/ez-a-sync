@@ -31,10 +31,14 @@ class ASyncFunction(Modified[T], Callable[P, T]):
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         _helpers._validate_wrapped_fn(fn)
         self.modifiers = ModifierManager(**modifiers)
-        self._fn = fn
+        self.__name__ = fn.__name__
+        self.__wrapped__ = fn
     
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
         return self.fn(*args, **kwargs)
+    
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} {self.__name__} at {hex(id(self))}>"
     
     @functools.cached_property
     def fn(self): # -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
@@ -48,7 +52,7 @@ class ASyncFunction(Modified[T], Callable[P, T]):
     
     @property
     def _async_def(self) -> bool:
-        return asyncio.iscoroutinefunction(self._fn)
+        return asyncio.iscoroutinefunction(self.__wrapped__)
     
     def _run_sync(self, kwargs: dict):
         try:
@@ -61,7 +65,7 @@ class ASyncFunction(Modified[T], Callable[P, T]):
     @functools.cached_property
     def _asyncified(self) -> CoroFn[P, T]:
         """Turns 'self._fn' async and applies both sync and async modifiers."""
-        assert not self._async_def, f"Can only be applied to sync functions, not {self._fn}"
+        assert not self._async_def, f"Can only be applied to sync functions, not {self.__wrapped__}"
         return self._asyncify(self._modified_fn)
     
     @functools.cached_property
@@ -71,8 +75,8 @@ class ASyncFunction(Modified[T], Callable[P, T]):
         Applies async modifiers to 'self._fn' if 'self._fn' is a sync function.
         """
         if self._async_def:
-            return self.modifiers.apply_async_modifiers(self._fn)
-        return self.modifiers.apply_sync_modifiers(self._fn)
+            return self.modifiers.apply_async_modifiers(self.__wrapped__)
+        return self.modifiers.apply_sync_modifiers(self.__wrapped__)
     
     @functools.cached_property
     def _async_wrap(self): # -> SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]]:
