@@ -1,1 +1,2 @@
 pytest-asyncio-cooperative
+pytest-cov
