@@ -31,8 +31,9 @@ class ASyncFunction(Modified[T], Callable[P, T], Generic[P, T]):
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         _helpers._validate_wrapped_fn(fn)
         self.modifiers = ModifierManager(**modifiers)
-        self.__name__ = fn.__name__
         self.__wrapped__ = fn
+        if hasattr(self.__wrapped__, '__name__'):
+            self.__name__ = self.__wrapped__.__name__
     
     @overload
     def __call__(self, *args: P.args, sync: Literal[True] = True, **kwargs: P.kwargs) -> T:...
