@@ -6,7 +6,7 @@ from typing import (Any, AsyncIterator, Awaitable, Iterable, Iterator, Mapping,
 try:
     from tqdm.asyncio import tqdm_asyncio
 except ImportError as e:
-    class tqdm_asyncio:
+    class tqdm_asyncio:  # type: ignore [no-redef]
         def as_completed(*args, **kwargs):
             raise ImportError("You must have tqdm installed to use this feature")
         
