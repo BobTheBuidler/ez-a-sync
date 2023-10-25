@@ -6,7 +6,7 @@ from typing import (Any, Awaitable, Dict, List, Mapping, TypeVar, Union,
 try:
     from tqdm.asyncio import tqdm_asyncio
 except ImportError as e:
-    class tqdm_asyncio:
+    class tqdm_asyncio:  # type: ignore [no-redef]
         async def gather(*args, **kwargs):
             raise ImportError("You must have tqdm installed in order to use this feature")
 

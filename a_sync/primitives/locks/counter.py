@@ -1,7 +1,7 @@
 import asyncio
 from collections import defaultdict
 from time import time
-from typing import Iterable, Optional
+from typing import DefaultDict, Iterable, Optional
 
 from a_sync.primitives._debug import _DebugDaemonMixin
 from a_sync.primitives.locks.event import Event
@@ -20,7 +20,7 @@ class CounterLock(_DebugDaemonMixin):
     def __init__(self, start_value: int = 0, name: Optional[str] = None):
         self._name = name
         self._value = start_value
-        self._events = defaultdict(Event)
+        self._events: DefaultDict[int, Event] = defaultdict(Event)
         self.is_ready = lambda v: self._value >= v
         
     async def wait_for(self, value: int) -> bool:

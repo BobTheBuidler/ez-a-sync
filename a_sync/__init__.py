@@ -2,7 +2,7 @@
 from a_sync import aliases
 from a_sync.base import ASyncGenericBase
 from a_sync.decorator import a_sync
-from a_sync.future import ASyncFuture, future
+from a_sync.future import ASyncFuture, future  # type: ignore [attr-defined]
 from a_sync.iter import ASyncIterable, ASyncIterator
 from a_sync.modifiers.semaphores import apply_semaphore
 from a_sync.primitives import *

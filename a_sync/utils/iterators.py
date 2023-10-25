@@ -54,7 +54,7 @@ async def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1],
 async def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1]) -> AsyncIterator[Union[T0, T1]]:...
 @overload
 async def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1], iterator2: AsyncIterator[T2], *iterators: AsyncIterator[T]) -> AsyncIterator[Union[T0, T1, T2, T]]:...
-async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:
+async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type: ignore [misc]
     queue = Queue()
     task = asyncio.create_task(exhaust_iterators(iterators, queue=queue))
     def done_callback(t: asyncio.Task) -> None:
