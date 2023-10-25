@@ -23,7 +23,7 @@ class Modified(Generic[T]):
         return self.modifiers.default
     
         
-class ASyncFunction(Modified[T], Callable[P, T]):
+class ASyncFunction(Modified[T], Callable[P, T], Generic[P, T]):
     @overload
     def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:...
     @overload
@@ -34,10 +34,18 @@ class ASyncFunction(Modified[T], Callable[P, T]):
         self.__name__ = fn.__name__
         self.__wrapped__ = fn
     
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[True] = True, **kwargs: P.kwargs) -> T:...
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[False] = False, **kwargs: P.kwargs) -> Awaitable[T]:...
+    @overload
+    def __call__(self, *args: P.args, asynchronous: Literal[False] = False, **kwargs: P.kwargs) -> T:...
+    @overload
+    def __call__(self, *args: P.args, asynchronous: Literal[True] = True, **kwargs: P.kwargs) -> Awaitable[T]:...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
         return self.fn(*args, **kwargs)
     
-    def __repr__(self) -> str:
+    async def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.__name__} at {hex(id(self))}>"
     
     @functools.cached_property
@@ -66,7 +74,7 @@ class ASyncFunction(Modified[T], Callable[P, T]):
     def _asyncified(self) -> CoroFn[P, T]:
         """Turns 'self._fn' async and applies both sync and async modifiers."""
         assert not self._async_def, f"Can only be applied to sync functions, not {self.__wrapped__}"
-        return self._asyncify(self._modified_fn)
+        return self._asyncify(self._modified_fn)  # type: ignore [arg-type]
     
     @functools.cached_property
     def _modified_fn(self) -> AnyFn[P, T]:
@@ -75,8 +83,8 @@ class ASyncFunction(Modified[T], Callable[P, T]):
         Applies async modifiers to 'self._fn' if 'self._fn' is a sync function.
         """
         if self._async_def:
-            return self.modifiers.apply_async_modifiers(self.__wrapped__)
-        return self.modifiers.apply_sync_modifiers(self.__wrapped__)
+            return self.modifiers.apply_async_modifiers(self.__wrapped__)  # type: ignore [arg-type]
+        return self.modifiers.apply_sync_modifiers(self.__wrapped__)  # type: ignore [return-value]
     
     @functools.cached_property
     def _async_wrap(self): # -> SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]]:
@@ -114,5 +122,5 @@ class ASyncDecorator(_inherit):
         if self.default not in ['sync', 'async', None]:
             raise ValueError(f"'default' must be either 'sync', 'async', or None. You passed {self.default}.")
         
-    def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
         return ASyncFunction(func, **self.modifiers)
