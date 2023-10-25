@@ -21,7 +21,7 @@ def _clean_default_from_modifiers(
     # NOTE: We set the default here manually because the default set by the user will be used later in the code to determine whether to await.
     force_await = None
     if not asyncio.iscoroutinefunction(coro_fn) and not isinstance(coro_fn, ASyncFunction):
-        if 'default' not in modifiers or modifiers['default'] is not 'async':
+        if 'default' not in modifiers or modifiers['default'] != 'async':
             if 'default' in modifiers and modifiers['default'] == 'sync':
                 force_await = True
             modifiers['default'] = 'async'
