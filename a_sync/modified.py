@@ -64,10 +64,10 @@ class ASyncFunction(Modified[T], Callable[P, T], Generic[P, T]):
         return asyncio.iscoroutinefunction(self.__wrapped__)
     
     def _run_sync(self, kwargs: dict):
-        try:
+        if flag := _kwargs.get_flag_name(kwargs):
             # If a flag was specified in the kwargs, we will defer to it.
-            return _kwargs.is_sync(kwargs, pop_flag=True)
-        except exceptions.NoFlagsFound:
+            return _kwargs.is_sync(flag, kwargs, pop_flag=True)
+        else:
             # No flag specified in the kwargs, we will defer to 'default'.
             return self._sync_default
     

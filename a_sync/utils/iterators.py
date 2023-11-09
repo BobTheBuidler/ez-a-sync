@@ -67,11 +67,10 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
         get_task = asyncio.create_task(coro=queue.get(), name=str(queue))
         _chain_future(get_task, next_fut)
         for item in (await next_fut, *queue.get_nowait(-1)):
-            if not isinstance(item, _Done):
-                yield item
-            else:
+            if isinstance(item, _Done):
                 task.cancel()
                 return
+            yield item
             
     if e := task.exception():
         get_task.cancel()
