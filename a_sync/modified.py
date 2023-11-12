@@ -46,7 +46,7 @@ class ASyncFunction(Modified[T], Callable[P, T], Generic[P, T]):
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
         return self.fn(*args, **kwargs)
     
-    async def __repr__(self) -> str:
+    def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.__name__} at {hex(id(self))}>"
     
     @functools.cached_property
