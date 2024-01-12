@@ -10,12 +10,12 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         ...    
-    def _start_debug_daemon(self, *args, **kwargs) -> "asyncio.Task":
+    def _start_debug_daemon(self, *args, **kwargs) -> "asyncio.Future[None]":
         if self.debug_logs_enabled and asyncio.get_event_loop().is_running():
             return asyncio.create_task(self._debug_daemon(*args, **kwargs))
         # else we return a blank Future since we shouldn't or can't create the daemon
         return asyncio.get_event_loop().create_future()
-    def _ensure_debug_daemon(self, *args, **kwargs) -> asyncio.Task:
+    def _ensure_debug_daemon(self, *args, **kwargs) -> "asyncio.Future[None]":
         if not self.debug_logs_enabled:
             self._daemon = asyncio.get_event_loop().create_future()
         if not hasattr(self, '_daemon') or self._daemon is None:
