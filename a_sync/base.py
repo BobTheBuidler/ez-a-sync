@@ -1,8 +1,9 @@
 
 import inspect
 import logging
+from contextlib import suppress
 from functools import cached_property
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from a_sync import _flags, exceptions
 from a_sync.abstract import ASyncABC
@@ -47,30 +48,36 @@ class ASyncGenericBase(ASyncABC):
 
     @classmethod  # type: ignore [misc]
     def __a_sync_default_mode__(cls) -> bool:
-        flag = cls.__get_a_sync_flag_name_from_signature()
-        flag_value = cls.__a_sync_flag_default_value_from_signature()
+        try:
+            flag = cls.__get_a_sync_flag_name_from_signature()
+            flag_value = cls.__a_sync_flag_default_value_from_signature()
+        except exceptions.NoFlagsFound:
+            flag = cls.__get_a_sync_flag_name_from_class_def()
+            flag_value = cls.__get_a_sync_flag_value_from_class_def(flag)
         sync = _flags.negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
         logger.debug("`%s.%s` indicates default mode is %ssynchronous", cls, flag, 'a' if sync is False else '')
         return sync
     
     @classmethod
     def __get_a_sync_flag_name_from_signature(cls) -> Optional[str]:
-        logger.debug("Searching for flags defined on %s", cls)
+        logger.debug("Searching for flags defined on %s.__init__", cls)
         if cls.__name__ == "ASyncGenericBase":
             logger.debug("There are no flags defined on the base class, this is expected. Skipping.")
             return None
         parameters = inspect.signature(cls.__init__).parameters
         logger.debug("parameters: %s", parameters)
-        present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in parameters]
-        if len(present_flags) == 0:
-            logger.debug("There are too many flags defined on %s", cls)
-            raise exceptions.NoFlagsFound(cls, parameters.keys())
-        if len(present_flags) > 1:
-            logger.debug("There are too many flags defined on %s", cls)
-            raise exceptions.TooManyFlags(cls, present_flags)
-        flag = present_flags[0]
-        logger.debug("found flag %s", flag)
-        return flag
+        return cls.__parse_flag_name_from_list(parameters)
+
+    @classmethod
+    def __get_a_sync_flag_name_from_class_def(cls) -> Optional[str]:
+        logger.debug("Searching for flags defined on %s", cls)
+        try:
+            return cls.__parse_flag_name_from_list(cls.__dict__)
+        except exceptions.NoFlagsFound:
+            for base in cls.__bases__:
+                with suppress(exceptions.NoFlagsFound):
+                    return cls.__parse_flag_name_from_list(base.__dict__)
+        raise exceptions.NoFlagsFound(cls, list(cls.__dict__.keys()))
 
     @classmethod  # type: ignore [misc]
     def __a_sync_flag_default_value_from_signature(cls) -> bool:
@@ -84,3 +91,23 @@ class ASyncGenericBase(ASyncABC):
             )
         logger.debug('%s defines %s, default value %s', cls, flag, flag_value)
         return flag_value
+
+    @classmethod
+    def __get_a_sync_flag_value_from_class_def(cls, flag: str) -> Optional[bool]:
+        for spec in [cls, *cls.__bases__]:
+            flag_value = spec.__dict__.get(flag)
+            if flag_value is not None:
+                return flag_value
+
+    @classmethod
+    def __parse_flag_name_from_list(cls, items: Dict[str, Any]) -> Optional[str]:
+        present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in items]
+        if len(present_flags) == 0:
+            logger.debug("There are too many flags defined on %s", cls)
+            raise exceptions.NoFlagsFound(cls, items.keys())
+        if len(present_flags) > 1:
+            logger.debug("There are too many flags defined on %s", cls)
+            raise exceptions.TooManyFlags(cls, present_flags)
+        flag = present_flags[0]
+        logger.debug("found flag %s", flag)
+        return flag
