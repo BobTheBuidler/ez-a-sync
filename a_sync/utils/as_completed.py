@@ -121,14 +121,19 @@ def as_completed_mapping(mapping: Mapping[KT, Awaitable[VT]], *, timeout: Option
             ...
         ```
     """
-    return as_completed([__mapping_wrap(k, v) for k, v in mapping.items()], timeout=timeout, return_exceptions=return_exceptions, aiter=aiter, tqdm=tqdm, **tqdm_kwargs)
+    return as_completed([__mapping_wrap(k, v, return_exceptions=return_exceptions) for k, v in mapping.items()], timeout=timeout, aiter=aiter, tqdm=tqdm, **tqdm_kwargs)
 
 async def __yield_as_completed(futs: Iterable[Awaitable[T]], *, timeout: Optional[float] = None, return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> AsyncIterator[T]:
     for fut in as_completed(futs, timeout=timeout, return_exceptions=return_exceptions, tqdm=tqdm, **tqdm_kwargs):
         yield await fut
         
-async def __mapping_wrap(k: KT, v: Awaitable[VT]) -> VT:
-    return k, await v
+async def __mapping_wrap(k: KT, v: Awaitable[VT], return_exceptions: bool = False) -> VT:
+    try:
+        return k, await v
+    except Exception as e:
+        if return_exceptions:
+            return k, e
+        raise e
 
 async def __exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
     try:
