@@ -135,3 +135,14 @@ def _test_kwargs(fn, default: Literal['sync','async',None]):
         assert fn() == 2
     elif default == 'async':
         assert asyncio.get_event_loop().run_until_complete(fn()) == 2
+
+async def sample_task(n):
+    await asyncio.sleep(0.01)
+    return n
+
+async def timeout_task(n):
+    await asyncio.sleep(0.1)
+    return n
+
+async def sample_exc(n):
+    raise ValueError("Sample error")

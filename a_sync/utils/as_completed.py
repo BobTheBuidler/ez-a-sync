@@ -76,11 +76,12 @@ def as_completed(fs, *, timeout: Optional[float] = None, return_exceptions: bool
             ...
         ```
     """
+    if isinstance(fs, Mapping):
+        return as_completed_mapping(fs, timeout=timeout, return_exceptions=return_exceptions, aiter=aiter, tqdm=tqdm, **tqdm_kwargs) 
     if return_exceptions:
-        raise NotImplementedError
+        fs = [__exc_wrap(f) for f in fs]
     return (
-        as_completed_mapping(fs, timeout=timeout, return_exceptions=return_exceptions, aiter=aiter, tqdm=tqdm, **tqdm_kwargs) if isinstance(fs, Mapping)
-        else ASyncIterator.wrap(__yield_as_completed(fs, tqdm=tqdm, **tqdm_kwargs)) if aiter 
+        ASyncIterator.wrap(__yield_as_completed(fs, timeout=timeout, tqdm=tqdm, **tqdm_kwargs)) if aiter 
         else tqdm_asyncio.as_completed(fs, timeout=timeout, **tqdm_kwargs) if tqdm 
         else asyncio.as_completed(fs, timeout=timeout)
     )
@@ -128,3 +129,9 @@ async def __yield_as_completed(futs: Iterable[Awaitable[T]], *, timeout: Optiona
         
 async def __mapping_wrap(k: KT, v: Awaitable[VT]) -> VT:
     return k, await v
+
+async def __exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
+    try:
+        return await awaitable
+    except Exception as e:
+        return e
