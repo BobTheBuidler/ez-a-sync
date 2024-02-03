@@ -2,11 +2,11 @@ import pytest
 
 from a_sync import create_task
 
-@pytest.marks.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_create_task():
     await create_task(coro=asyncio.sleep(0), name='test')
 
-@pytest.marks.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_persistent_task():
     check = False
     async def task():
