@@ -7,9 +7,10 @@ _T = TypeVar('_T')
 
 logger = logging.getLogger(__name__)
 
-def create_task(awaitable: Awaitable[_T], *, name: Optional[str] = None, skip_gc_until_done: bool = False) -> "asyncio.Task[_T]":
+def create_task(coro: Awaitable[_T], *, name: Optional[str] = None, skip_gc_until_done: bool = False) -> "asyncio.Task[_T]":
     """A wrapper over `asyncio.create_task` which will work with any `Awaitable` object, not just `Coroutine` objects"""
-    coro = awaitable if asyncio.iscoroutine(awaitable) else __await(awaitable)
+    if not asyncio.iscoroutine(coro):
+        coro = __await(coro)
     task = asyncio.create_task(coro, name=name)
     if skip_gc_until_done:
         __persist(task)
