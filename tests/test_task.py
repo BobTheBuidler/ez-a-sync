@@ -1,3 +1,4 @@
+import asyncio
 import pytest
 
 from a_sync import create_task
