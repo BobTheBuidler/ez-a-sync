@@ -18,3 +18,12 @@ async def test_persistent_task():
     # there is no local reference to the newly created task. does it still complete? 
     await asyncio.sleep(2)
     assert check is True
+
+@pytest.mark.asyncio_cooperative
+async def test_pruning():
+    async def task():
+        return
+    create_task(coro=task(), skip_gc_until_done=True)
+    await asyncio.sleep(0)
+    # previously, it failed here
+    create_task(coro=task(), skip_gc_until_done=True)
