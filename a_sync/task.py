@@ -26,7 +26,7 @@ def __persist(task: "asyncio.Task[Any]") -> None:
     __prune_persisted_tasks()
 
 def __prune_persisted_tasks():
-    for task in __persisted_tasks:
+    for task in tuple(__persisted_tasks):
         if task.done():
             if e := task.exception():
                 logger.exception(e)
