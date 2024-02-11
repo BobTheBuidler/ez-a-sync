@@ -2,12 +2,18 @@ import asyncio
 
 from a_sync.utils.iterators import (as_yielded, exhaust_iterator,
                                     exhaust_iterators)
+from a_sync.utils.as_completed import as_completed
+from a_sync.utils.gather import gather
+from a_sync.utils.map import map
 
 
 __all__ = [
     "all",
     "any",
+    "as_completed",
     "as_yielded",
+    "gather",
+    "map",
     "exhaust_iterator",
     "exhaust_iterators",
 ]
