@@ -23,7 +23,7 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
     except RuntimeError as e:
         raise RuntimeError(f"{meta} result is not set and the event loop is running, you will need to await it first") from e
 
-Numeric = Union[int, float, Decimal, "ASyncFuture[int]", "ASyncFuture[float]", "ASyncFuture[Decimal]"]
+MetaNumeric = Union[Numeric, "ASyncFuture[int]", "ASyncFuture[float]", "ASyncFuture[Decimal]"]
 
 class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     __slots__ = "__awaitable__", "__dependencies", "__dependants", "__task"
@@ -120,7 +120,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __add__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]":...
     @overload
     def __add__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]":...
-    def __add__(self, other: Numeric) -> "ASyncFuture":
+    def __add__(self, other: MetaNumeric) -> "ASyncFuture":
         return ASyncFuture(self.__add(other), dependencies=self.__list_dependencies(other))
     @overload
     def __sub__(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]":...
@@ -150,7 +150,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __sub__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]":...
     @overload
     def __sub__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]":...
-    def __sub__(self, other: Numeric) -> "ASyncFuture":
+    def __sub__(self, other: MetaNumeric) -> "ASyncFuture":
         return ASyncFuture(self.__sub(other), dependencies=self.__list_dependencies(other))
     def __mul__(self, other) -> "ASyncFuture":
         return ASyncFuture(self.__mul(other), dependencies=self.__list_dependencies(other))

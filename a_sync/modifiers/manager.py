@@ -70,13 +70,13 @@ class ModifierManager(Dict[str, Any]):
         return sync_modifier_wrap
     
     # Dictionary api
-    def items(self) -> List[Tuple[str, Any]]:
+    def items(self) -> ItemsView[str, Any]:
         return self._modifiers.items()
-    def keys(self) -> List[str]:
+    def keys(self) -> KeysView[str]:
         return self._modifiers.keys()
-    def values(self) -> List[Any]:
+    def values(self) -> ValuesView[Any]:
         return self._modifiers.values()
-    def __contains__(self, key: str) -> bool:
+    def __contains__(self, key: str) -> bool:  # type: ignore [override]
         return key in self._modifiers
     def __iter__(self) -> Iterator[str]:
         return self._modifiers.__iter__()

@@ -4,8 +4,8 @@ from concurrent.futures._base import Executor
 from decimal import Decimal
 from typing import (TYPE_CHECKING, Any, AsyncIterable, AsyncIterator, Awaitable, 
                     Callable, DefaultDict, Dict, Generic, Iterable, Iterator, 
-                    List, Literal, Optional, Set, Tuple, Type, TypedDict, TypeVar, 
-                    Union, final, overload)
+                    List, Literal, Optional, Protocol, Set, Tuple, Type, TypedDict,
+                    TypeVar, Union, final, overload)
 
 from typing_extensions import Concatenate, ParamSpec, Self, Unpack
 
@@ -16,6 +16,8 @@ T = TypeVar("T")
 K = TypeVar("K")
 V = TypeVar("V")
 P = ParamSpec("P")
+
+Numeric = Union[int, float, Decimal]
 
 MaybeAwaitable = Union[Awaitable[T], T]
 

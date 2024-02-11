@@ -16,7 +16,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         """
         super().__init__(value, **kwargs)
         self.name = name or self.__origin__ if hasattr(self, '__origin__') else None
-        self._decorated = set()
+        self._decorated: Set[str] = set()
     
     # Dank new functionality
     def __call__(self, fn: Callable[P, T]) -> Callable[P, T]:
@@ -31,7 +31,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     def __len__(self) -> int:
         return len(self._waiters) if self._waiters else 0
     
-    def decorate(self, fn: Callable[P, T]) -> Callable[P, T]:
+    def decorate(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
         if not asyncio.iscoroutinefunction(fn):
             raise TypeError(f"{fn} must be a coroutine function")
         @functools.wraps(fn)
@@ -41,7 +41,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         self._decorated.add(f"{fn.__module__}.{fn.__name__}")
         return semaphore_wrapper
     
-    async def acquire(self) -> bool:
+    async def acquire(self) -> Literal[True]:
         if self._value <= 0:
             self._ensure_debug_daemon()
         return await super().acquire()

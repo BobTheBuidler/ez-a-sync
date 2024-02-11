@@ -93,7 +93,7 @@ class ASyncGenericBase(ASyncABC):
         return flag_value
 
     @classmethod
-    def __get_a_sync_flag_value_from_class_def(cls, flag: str) -> Optional[bool]:
+    def __get_a_sync_flag_value_from_class_def(cls, flag: Optional[str]) -> Optional[bool]:
         for spec in [cls, *cls.__bases__]:
             flag_value = spec.__dict__.get(flag)
             if flag_value is not None:

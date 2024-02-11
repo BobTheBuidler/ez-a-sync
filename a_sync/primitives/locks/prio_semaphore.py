@@ -4,9 +4,8 @@ import heapq
 import logging
 from collections import deque
 from functools import cached_property
-from typing import (Deque, Dict, Generic, List, Literal, Optional, Protocol,
-                    Type, TypeVar)
 
+from a_sync._typing import *
 from a_sync.primitives.locks.semaphore import Semaphore
 
 logger = logging.getLogger(__name__)
@@ -188,10 +187,10 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     def release(self) -> None:
         self._parent.release()
     
-class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager[int]):
+class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager[Numeric]):
     _priority_name = "priority"
 
-class PrioritySemaphore(_AbstractPrioritySemaphore[int, _PrioritySemaphoreContextManager]):  # type: ignore [type-var]
+class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreContextManager]):  # type: ignore [type-var]
     _context_manager_class = _PrioritySemaphoreContextManager
     _top_priority = -1
     """

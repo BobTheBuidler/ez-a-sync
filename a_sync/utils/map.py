@@ -1,6 +1,4 @@
 
-from typing import Awaitable, Callable, Literal, Tuple, Union, overload
-
 from a_sync._typing import *
 from a_sync.iter import ASyncIterator
 
