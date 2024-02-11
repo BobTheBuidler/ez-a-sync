@@ -1,8 +1,7 @@
 import asyncio
 import sys
-from typing import Generic, List, TypeVar, Union, overload
 
-T = TypeVar('T')
+from a_sync._typing import *
 
 if sys.version_info < (3, 9):
     bases = (asyncio.Queue, Generic[T])

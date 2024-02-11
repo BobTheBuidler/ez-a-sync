@@ -2,19 +2,11 @@
 
 import asyncio
 import concurrent.futures
-from decimal import Decimal
 from functools import partial, wraps
 from inspect import isawaitable
-from typing import (Any, Awaitable, Callable, Generic, List, Optional, Set,
-                    TypeVar, Union, final, overload)
 
-from typing_extensions import ParamSpec, Self, Unpack
+from a_sync._typing import *
 
-from a_sync._typing import ModifierKwargs
-
-T = TypeVar('T')
-P = ParamSpec('P')
-MaybeAwaitable = Union[T, Awaitable[T]]
 
 def future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]) -> Callable[P, Union[T, "ASyncFuture[T]"]]:
     return _ASyncFutureWrappedFn(callable, **kwargs)

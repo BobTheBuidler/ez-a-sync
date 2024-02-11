@@ -13,17 +13,12 @@ import threading
 import weakref
 from concurrent.futures import _base, thread
 from functools import cached_property
-from typing import Any, Callable, Optional, Tuple, TypeVar
 
-from typing_extensions import ParamSpec
-
+from a_sync._typing import *
 from a_sync.primitives._debug import _DebugDaemonMixin
 
+
 TEN_MINUTES = 60 * 10
-
-T = TypeVar('T')
-P = ParamSpec('P')
-
 
 class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     _max_workers: int

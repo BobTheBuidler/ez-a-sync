@@ -1,16 +1,20 @@
 
 import asyncio
 from concurrent.futures._base import Executor
-from typing import (TYPE_CHECKING, Any, Awaitable, Callable, DefaultDict, Dict,
-                    Generic, Iterator, List, Literal, Optional, Tuple,
-                    Type, TypedDict, TypeVar, Union, overload)
+from decimal import Decimal
+from typing import (TYPE_CHECKING, Any, AsyncIterable, AsyncIterator, Awaitable, 
+                    Callable, DefaultDict, Dict, Generic, Iterable, Iterator, 
+                    List, Literal, Optional, Set, Tuple, Type, TypedDict, TypeVar, 
+                    Union, final, overload)
 
-from typing_extensions import Concatenate, ParamSpec, Unpack
+from typing_extensions import Concatenate, ParamSpec, Self, Unpack
 
 if TYPE_CHECKING:
     from a_sync.abstract import ASyncABC
 
 T = TypeVar("T")
+K = TypeVar("K")
+V = TypeVar("V")
 P = ParamSpec("P")
 
 MaybeAwaitable = Union[Awaitable[T], T]
@@ -46,3 +50,5 @@ class ModifierKwargs(TypedDict, total=False):
     semaphore: SemaphoreSpec
     # sync modifiers
     executor: Executor
+
+AnyIterable = Union[AsyncIterable[K], Iterable[K]]
