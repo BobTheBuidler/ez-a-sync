@@ -69,5 +69,5 @@ class ASyncABC(metaclass=ASyncMeta):
         pass
     
     @abc.abstractclassmethod  # type: ignore [arg-type, misc]
-    def __a_sync_default_mode__(cls) -> bool:
+    def __a_sync_default_mode__(cls) -> bool:  # type: ignore [empty-body]
         pass

@@ -1,12 +1,12 @@
 
 import asyncio
+from _collections_abc import dict_keys, dict_values, dict_items
 from concurrent.futures._base import Executor
 from decimal import Decimal
 from typing import (TYPE_CHECKING, Any, AsyncIterable, AsyncIterator, Awaitable, 
                     Callable, DefaultDict, Deque, Dict, Generator, Generic,
-                    ItemsView, Iterable, Iterator, KeysView, List, Literal,
-                    Optional, Protocol, Set, Tuple, Type, TypedDict, TypeVar,
-                    Union, ValuesView, final, overload)
+                    Iterable, Iterator, List, Literal, Optional, Protocol, Set, 
+                    Tuple, Type, TypedDict, TypeVar, Union, final, overload)
 
 from typing_extensions import Concatenate, ParamSpec, Self, Unpack
 
