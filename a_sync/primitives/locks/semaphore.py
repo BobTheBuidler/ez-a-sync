@@ -3,16 +3,11 @@ import functools
 import logging
 from collections import defaultdict
 from threading import Thread, current_thread
-from typing import Callable, Literal, Optional, TypeVar
 
-from typing_extensions import ParamSpec
-
+from a_sync._typing import *
 from a_sync.primitives._debug import _DebugDaemonMixin
 
 logger = logging.getLogger(__name__)
-
-T = TypeVar('T')
-P = ParamSpec('P')
 
 class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     def __init__(self, value: int, name=None, **kwargs) -> None:

@@ -1,8 +1,7 @@
 
 import asyncio
-from typing import AsyncIterable, AsyncIterator, Iterable, Iterator, TypeVar
+from a_sync._typing import *
 
-T = TypeVar('T')
 
 class ASyncIterable(AsyncIterable[T], Iterable[T]):
     """An abstract iterable implementation that can be used in both a `for` loop and an `async for` loop."""
