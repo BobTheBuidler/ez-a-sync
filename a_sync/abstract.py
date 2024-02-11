@@ -68,6 +68,6 @@ class ASyncABC(metaclass=ASyncMeta):
     def __a_sync_flag_value__(self) -> bool:
         pass
     
-    @abc.abstractclassmethod  # type: ignore [misc]
+    @abc.abstractclassmethod  # type: ignore [arg-type, misc]
     def __a_sync_default_mode__(cls) -> bool:
-        ...
+        pass

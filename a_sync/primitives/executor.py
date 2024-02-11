@@ -20,6 +20,8 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 
 TEN_MINUTES = 60 * 10
 
+Initializer = Callable[..., object]
+
 class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     _max_workers: int
     _workers: str
@@ -31,7 +33,7 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         Oh, and you can also use kwargs!
         """
         return fn(*args, **kwargs) if self.sync_mode else await self.submit(fn, *args, **kwargs)
-    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":
+    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
         """Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking."""
         if self.sync_mode:
             fut = asyncio.ensure_future(self._exec_sync(fn, *args, **kwargs))
@@ -49,7 +51,7 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         return self._max_workers == 0
     @property
     def worker_count_current(self) -> int:
-        len(getattr(self, f"_{self._workers}"))
+        return len(getattr(self, f"_{self._workers}"))
     async def _exec_sync(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
         """Just wraps a fn and its args into an awaitable."""
         return fn(*args, **kwargs)
@@ -68,7 +70,7 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
         self, 
         max_workers: Optional[int] = None, 
         mp_context: Optional[multiprocessing.context.BaseContext] = None, 
-        initializer: Callable[..., object] = None,
+        initializer: Optional[Initializer] = None,
         initargs: Tuple[Any, ...] = (),
     ) -> None:
         if max_workers == 0:
@@ -85,7 +87,7 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
         self, 
         max_workers: Optional[int] = None, 
         thread_name_prefix: str = '', 
-        initializer: Callable[..., object] = None,
+        initializer: Optional[Initializer] = None,
         initargs: Tuple[Any, ...] = (),
     ) -> None:
         if max_workers == 0:

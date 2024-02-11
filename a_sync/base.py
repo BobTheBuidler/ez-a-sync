@@ -59,7 +59,7 @@ class ASyncGenericBase(ASyncABC):
         return sync
     
     @classmethod
-    def __get_a_sync_flag_name_from_signature(cls) -> Optional[str]:
+    def __get_a_sync_flag_name_from_signature(cls) -> str:
         logger.debug("Searching for flags defined on %s.__init__", cls)
         if cls.__name__ == "ASyncGenericBase":
             logger.debug("There are no flags defined on the base class, this is expected. Skipping.")
@@ -69,7 +69,7 @@ class ASyncGenericBase(ASyncABC):
         return cls.__parse_flag_name_from_list(parameters)
 
     @classmethod
-    def __get_a_sync_flag_name_from_class_def(cls) -> Optional[str]:
+    def __get_a_sync_flag_name_from_class_def(cls) -> str:
         logger.debug("Searching for flags defined on %s", cls)
         try:
             return cls.__parse_flag_name_from_list(cls.__dict__)
@@ -93,14 +93,14 @@ class ASyncGenericBase(ASyncABC):
         return flag_value
 
     @classmethod
-    def __get_a_sync_flag_value_from_class_def(cls, flag: str) -> Optional[bool]:
+    def __get_a_sync_flag_value_from_class_def(cls, flag: str) -> bool:
         for spec in [cls, *cls.__bases__]:
-            flag_value = spec.__dict__.get(flag)
-            if flag_value is not None:
-                return flag_value
+            if flag in spec.__dict__:
+                return spec.__dict__[flag]
+        raise exceptions.FlagNotDefined(cls, flag)
 
     @classmethod
-    def __parse_flag_name_from_list(cls, items: Dict[str, Any]) -> Optional[str]:
+    def __parse_flag_name_from_list(cls, items: Dict[str, Any]) -> str:
         present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in items]
         if len(present_flags) == 0:
             logger.debug("There are too many flags defined on %s", cls)

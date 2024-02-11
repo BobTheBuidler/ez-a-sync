@@ -4,14 +4,12 @@ import heapq
 import logging
 from collections import deque
 from functools import cached_property
-from typing import (Deque, Dict, Generic, List, Literal, Optional, Protocol,
-                    Type, TypeVar)
 
+from a_sync._typing import *
 from a_sync.primitives.locks.semaphore import Semaphore
 
 logger = logging.getLogger(__name__)
 
-T = TypeVar('T', covariant=True)
 
 class Priority(Protocol):
     def __lt__(self, other) -> bool:
@@ -41,7 +39,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         super().__init__(value, name=name)
         self._waiters = []
         # NOTE: This should (hopefully) be temporary
-        self._potential_lost_waiters = []
+        self._potential_lost_waiters: List["asyncio.Future[None]"] = []
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={self._count_waiters()}>"
@@ -188,10 +186,10 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     def release(self) -> None:
         self._parent.release()
     
-class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager[int]):
+class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager[Numeric]):
     _priority_name = "priority"
 
-class PrioritySemaphore(_AbstractPrioritySemaphore[int, _PrioritySemaphoreContextManager]):  # type: ignore [type-var]
+class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreContextManager]):  # type: ignore [type-var]
     _context_manager_class = _PrioritySemaphoreContextManager
     _top_priority = -1
     """

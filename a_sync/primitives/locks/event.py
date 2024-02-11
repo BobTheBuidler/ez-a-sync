@@ -1,13 +1,17 @@
 
-import asyncio, sys
-from functools import cached_property
-from typing import Optional
+import asyncio
+import sys
 
+from a_sync._typing import *
 from a_sync.primitives._debug import _DebugDaemonMixin
 
 
 class Event(asyncio.Event, _DebugDaemonMixin):
     """asyncio.Event but with some additional debug logging to help detect deadlocks."""
+    _value: bool
+    _loop: asyncio.AbstractEventLoop
+    _waiters: Deque["asyncio.Future[None]"]
+    
     def __init__(self, name: str = "", debug_daemon_interval: int = 300, *, loop: Optional[asyncio.AbstractEventLoop] = None):
         if sys.version_info >= (3, 10):
             super().__init__()
@@ -22,7 +26,7 @@ class Event(asyncio.Event, _DebugDaemonMixin):
         if self._waiters:
             status += f', waiters:{len(self._waiters)}'
         return f"<{self.__class__.__module__}.{self.__class__.__name__} {label} at {hex(id(self))} [{status}]>"
-    async def wait(self) -> bool:
+    async def wait(self) -> Literal[True]:
         if self.is_set():
             return True
         self._ensure_debug_daemon()

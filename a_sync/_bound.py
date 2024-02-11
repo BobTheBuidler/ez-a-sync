@@ -63,7 +63,7 @@ class _PropertyGetter(Awaitable[T]):
         self._property = property
     def __repr__(self) -> str:
         return f"<_PropertyGetter for {self._property}._get at {hex(id(self))}>"
-    def __await__(self) -> T:
+    def __await__(self) -> Generator[Any, None, T]:
         return self._coro.__await__()
 
 @overload

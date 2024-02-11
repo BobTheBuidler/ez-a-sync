@@ -1,5 +1,5 @@
 
-from typing import Any, Set
+from typing import Any, Optional, Set, Type
 
 
 class ASyncFlagException(ValueError):
@@ -31,7 +31,7 @@ class TooManyFlags(ASyncFlagException):
         super().__init__(err)
 
 class InvalidFlag(ASyncFlagException):
-    def __init__(self, flag: str):
+    def __init__(self, flag: Optional[str]):
         err = f"'flag' must be one of: {self.viable_flags}. You passed {flag}."
         err += "\nThis code should not be reached and likely indicates an issue with a custom subclass definition."
         super().__init__(err)
@@ -40,6 +40,9 @@ class InvalidFlagValue(ASyncFlagException):
     def __init__(self, flag: str, flag_value: Any):
         super().__init__(f"'{flag}' should be boolean. You passed {flag_value}.")
 
+class FlagNotDefined(ASyncFlagException):
+    def __init__(self, obj: Type, flag: str):
+        super().__init__(f"{obj} flag {flag} is not defined.")
 
 
 class ImproperFunctionType(ValueError):
