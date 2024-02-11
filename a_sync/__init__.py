@@ -7,7 +7,7 @@ from a_sync.iter import ASyncIterable, ASyncIterator
 from a_sync.modifiers.semaphores import apply_semaphore
 from a_sync.primitives import *
 from a_sync.singleton import ASyncGenericSingleton
-from a_sync.task import create_task
+from a_sync.task import TaskMapping, create_task
 from a_sync.utils import all, any, as_yielded
 from a_sync.utils.as_completed import as_completed
 from a_sync.utils.gather import gather
@@ -33,4 +33,5 @@ __all__ = [
     "ASyncIterable",
     "ASyncIterator",
     "ASyncGenericSingleton",
+    "TaskMapping", 
 ]
