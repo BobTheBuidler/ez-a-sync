@@ -10,7 +10,6 @@ from a_sync.primitives.locks.semaphore import Semaphore
 
 logger = logging.getLogger(__name__)
 
-T = TypeVar('T', covariant=True)
 
 class Priority(Protocol):
     def __lt__(self, other) -> bool:
@@ -40,7 +39,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         super().__init__(value, name=name)
         self._waiters = []
         # NOTE: This should (hopefully) be temporary
-        self._potential_lost_waiters = []
+        self._potential_lost_waiters: List["asyncio.Future[None]"] = []
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={self._count_waiters()}>"

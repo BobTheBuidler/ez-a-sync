@@ -20,6 +20,8 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 
 TEN_MINUTES = 60 * 10
 
+Initializer = Callable[..., object]
+
 class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     _max_workers: int
     _workers: str
@@ -68,7 +70,7 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
         self, 
         max_workers: Optional[int] = None, 
         mp_context: Optional[multiprocessing.context.BaseContext] = None, 
-        initializer: Callable[..., object] = None,
+        initializer: Optional[Initializer] = None,
         initargs: Tuple[Any, ...] = (),
     ) -> None:
         if max_workers == 0:
@@ -85,7 +87,7 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
         self, 
         max_workers: Optional[int] = None, 
         thread_name_prefix: str = '', 
-        initializer: Callable[..., object] = None,
+        initializer: Optional[Initializer] = None,
         initargs: Tuple[Any, ...] = (),
     ) -> None:
         if max_workers == 0:

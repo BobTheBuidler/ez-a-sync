@@ -38,7 +38,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
             return task
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         assert not self, "must be empty"
-        async for key in as_yielded(*[__yield_keys(iterable) for iterable in iterables]):
+        async for key in as_yielded(*[__yield_keys(iterable) for iterable in iterables]):  # type: ignore [attr-defined]
             self[key]  # ensure task is running
             async for key, value in self.yield_completed(pop=pop):
                 yield __yield(key, value, yields)
@@ -47,7 +47,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
     async def yield_completed(self, pop: bool = True) -> AsyncIterator[Tuple[K, V]]:
         for k, task in dict(self).items():
             if task.done():
-                yield k, await self.pop(k) if pop else task
+                if pop:
+                    task = self.pop(k)
+                yield k, await task
 
 
 __persisted_tasks: Set["asyncio.Task[Any]"] = set()

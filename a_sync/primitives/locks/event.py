@@ -9,7 +9,7 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 class Event(asyncio.Event, _DebugDaemonMixin):
     """asyncio.Event but with some additional debug logging to help detect deadlocks."""
     _value: bool
-    _loop: asyncio.BaseEventLoop
+    _loop: asyncio.AbstractEventLoop
     _waiters: Deque["asyncio.Future[None]"]
     
     def __init__(self, name: str = "", debug_daemon_interval: int = 300, *, loop: Optional[asyncio.AbstractEventLoop] = None):

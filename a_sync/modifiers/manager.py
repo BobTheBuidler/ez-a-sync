@@ -18,7 +18,7 @@ class ModifierManager(Dict[str, Any]):
     # sync modifiers
     executor: Executor
 
-    def __init__(self, **modifiers: ModifierKwargs) -> None:
+    def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         for key in modifiers.keys():
             if key not in valid_modifiers:
                 raise ValueError(f"'{key}' is not a supported modifier.")

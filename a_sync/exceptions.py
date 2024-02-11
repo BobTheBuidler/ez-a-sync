@@ -1,5 +1,5 @@
 
-from typing import Any, Optional, Set
+from typing import Any, Optional, Set, Type
 
 
 class ASyncFlagException(ValueError):
@@ -40,6 +40,9 @@ class InvalidFlagValue(ASyncFlagException):
     def __init__(self, flag: str, flag_value: Any):
         super().__init__(f"'{flag}' should be boolean. You passed {flag_value}.")
 
+class FlagNotDefined(ASyncFlagException):
+    def __init__(self, obj: Type, flag: str):
+        super().__init__(f"{obj} flag {flag} is not defined.")
 
 
 class ImproperFunctionType(ValueError):
