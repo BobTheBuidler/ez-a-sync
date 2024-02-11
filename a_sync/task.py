@@ -10,7 +10,7 @@ from a_sync.utils.as_completed import as_completed
 
 logger = logging.getLogger(__name__)
 
-def create_task(awaitable: Awaitable[T], *, name: Optional[str] = None, skip_gc_until_done: bool = False) -> "asyncio.Task[T]":
+def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until_done: bool = False) -> "asyncio.Task[T]":
     """A wrapper over `asyncio.create_task` which will work with any `Awaitable` object, not just `Coroutine` objects"""
     if not asyncio.iscoroutine(coro):
         coro = __await(coro)
