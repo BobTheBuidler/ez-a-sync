@@ -3,9 +3,9 @@ import inspect
 import logging
 from contextlib import suppress
 from functools import cached_property
-from typing import Any, Dict, Optional
 
 from a_sync import _flags, exceptions
+from a_sync._typing import *
 from a_sync.abstract import ASyncABC
 
 
@@ -47,7 +47,7 @@ class ASyncGenericBase(ASyncABC):
         return flag_value
 
     @classmethod  # type: ignore [misc]
-    def __a_sync_default_mode__(cls) -> bool:
+    def __a_sync_default_mode__(cls) -> bool:  # type: ignore [override]
         try:
             flag = cls.__get_a_sync_flag_name_from_signature()
             flag_value = cls.__a_sync_flag_default_value_from_signature()
@@ -72,11 +72,13 @@ class ASyncGenericBase(ASyncABC):
     def __get_a_sync_flag_name_from_class_def(cls) -> str:
         logger.debug("Searching for flags defined on %s", cls)
         try:
-            return cls.__parse_flag_name_from_list(cls.__dict__)
+            return cls.__parse_flag_name_from_list(cls.__dict__)  # type: ignore [arg-type]
+                                                                    # idk why __dict__ doesn't type check as a dict
         except exceptions.NoFlagsFound:
             for base in cls.__bases__:
                 with suppress(exceptions.NoFlagsFound):
-                    return cls.__parse_flag_name_from_list(base.__dict__)
+                    return cls.__parse_flag_name_from_list(base.__dict__)  # type: ignore [arg-type]  
+                                                                            # idk why __dict__ doesn't type check as a dict
         raise exceptions.NoFlagsFound(cls, list(cls.__dict__.keys()))
 
     @classmethod  # type: ignore [misc]
