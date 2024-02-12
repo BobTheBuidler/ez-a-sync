@@ -45,7 +45,7 @@ class ASyncABC(metaclass=ASyncMeta):
             logger.debug("kwargs indicate the new instance created with args %s %s is %ssynchronous", args, kwargs, 'a' if sync is False else '')
             return sync
         logger.debug("No valid flags found in kwargs, checking class definition for defined default")
-        return cls.__a_sync_default_mode__()  # type: ignore [return-value]
+        return cls.__a_sync_default_mode__()  # type: ignore [arg-type]
 
     ######################################
     # Concrete Methods (non-overridable) #
@@ -69,5 +69,6 @@ class ASyncABC(metaclass=ASyncMeta):
         pass
     
     @abc.abstractclassmethod  # type: ignore [arg-type, misc]
-    def __a_sync_default_mode__(cls) -> bool:
+    def __a_sync_default_mode__(cls) -> bool:  # type: ignore [empty-body] 
+                                                # mypy doesnt recognize this abc member
         pass
