@@ -66,3 +66,7 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
         err = f"The event loop is already running, which means you're trying to use an ASync function synchronously from within an async context.\n"
         err += f"Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:\n"
         err += f"{_flags.VIABLE_FLAGS}"
+
+class MappingNotEmptyError(Exception):
+    def __init__(self):
+        super().__init__("TaskMapping already contains some data. In order to use `map`, you need a fresh one.")
