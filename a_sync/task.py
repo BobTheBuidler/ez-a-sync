@@ -2,8 +2,8 @@
 import asyncio
 import logging
 
-from a_sync._typing import K, P, T, V
 from a_sync._typing import *
+from a_sync import exceptions
 from a_sync.utils.iterators import as_yielded
 from a_sync.utils.as_completed import as_completed
 
@@ -37,13 +37,14 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
             super().__setitem__(item, task)
             return task
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
-        assert not self, "must be empty"
-        async for key in as_yielded(*[__yield_keys(iterable) for iterable in iterables]):  # type: ignore [attr-defined]
+        if self:
+            raise exceptions.MappingNotEmptyError
+        async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]):  # type: ignore [attr-defined]
             self[key]  # ensure task is running
             async for key, value in self.yield_completed(pop=pop):
-                yield __yield(key, value, yields)
+                yield _yield(key, value, yields)
         async for key, value in as_completed(self, aiter=True):
-            yield __yield(key, value, yields)
+            yield _yield(key, value, yields)
     async def yield_completed(self, pop: bool = True) -> AsyncIterator[Tuple[K, V]]:
         for k, task in dict(self).items():
             if task.done():
@@ -69,15 +70,19 @@ def __prune_persisted_tasks():
                 raise e
             __persisted_tasks.discard(task)
 
-def __yield(key: Any, value: Any, yields: Literal['keys', 'both']):
+@overload
+def _yield(key: K, value: V, yields: Literal['keys']) -> K:...
+@overload
+def _yield(key: K, value: V, yields: Literal['both']) -> Tuple[K, V]:...
+def _yield(key: K, value: V, yields: Literal['keys', 'both']) -> Union[K, Tuple[K, V]]:
     if yields == 'both':
-        yield key, value
+        return key, value
     elif yields == 'keys':
-        yield key
+        return key
     else:
         raise ValueError(f"`yields` must be 'keys' or 'both'. You passed {yields}")
 
-async def __yield_keys(iterable: AnyIterable[K]) -> AsyncIterator[K]:
+async def _yield_keys(iterable: AnyIterable[K]) -> AsyncIterator[K]:
     if isinstance(iterable, AsyncIterable):
         async for key in iterable:
             yield key
