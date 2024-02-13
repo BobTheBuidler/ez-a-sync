@@ -64,6 +64,8 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         if self:
             raise exceptions.MappingNotEmptyError
+        else:
+            print(self)
         async for _ in self._tasks_for_iterables(*iterables):
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
