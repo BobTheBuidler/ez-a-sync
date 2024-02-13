@@ -23,7 +23,7 @@ async def gather(*awaitables: Mapping[KT, Awaitable[VT]], return_exceptions: boo
 @overload
 async def gather(*awaitables: Awaitable[T], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> List[T]:
     ...
-async def gather(*awaitables: Union[Awaitable[T], Mapping[KT, Awaitable[VT]]], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Union[List[T], Dict[KT, VT]]:
+async def gather(*awaitables: Union[Awaitable[T], Mapping[KT, Awaitable[VT]]], return_exceptions: bool = False, exclude_if: Callable[[T], bool], tqdm: bool = False, **tqdm_kwargs: Any) -> Union[List[T], Dict[KT, VT]]:
     """
     Concurrently awaits a list of awaitable objects or mappings of awaitables and returns the results.
 
@@ -57,11 +57,14 @@ async def gather(*awaitables: Union[Awaitable[T], Mapping[KT, Awaitable[VT]]], r
         results = await gather(mapping)
         ```
     """
-    return await (
+    results = await (
         gather_mapping(awaitables[0], return_exceptions=return_exceptions, tqdm=tqdm, **tqdm_kwargs) if _is_mapping(awaitables)
         else tqdm_asyncio.gather(*awaitables, return_exceptions=return_exceptions, **tqdm_kwargs) if tqdm
         else asyncio.gather(*awaitables, return_exceptions=return_exceptions)  # type: ignore [arg-type]
     )
+    if exclude_if:
+        results = [r for r in results if not exclude_if(r)]
+    return results
     
 async def gather_mapping(mapping: Mapping[KT, Awaitable[VT]], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Dict[KT, VT]:
     """
