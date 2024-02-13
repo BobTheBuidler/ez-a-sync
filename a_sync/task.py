@@ -20,9 +20,12 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
     if skip_gc_until_done:
         __persist(task)
     return task
-    
+
+
+MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
+
 class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"]):
-    def __init__(self, coro_fn: Callable[Concatenate[K, P], Awaitable[V]] = None, *iterables: AnyIterable[K], name: str = '', **coro_fn_kwargs: P.kwargs) -> None:
+    def __init__(self, coro_fn: MappingFn[K, P, V] = None, *iterables: AnyIterable[K], name: str = '', **coro_fn_kwargs: P.kwargs) -> None:
         self._coro_fn = coro_fn
         self._coro_fn_kwargs = coro_fn_kwargs
         self._name = name
