@@ -4,8 +4,9 @@ import logging
 
 from a_sync._typing import *
 from a_sync import exceptions
-from a_sync.utils.iterators import as_yielded
 from a_sync.utils.as_completed import as_completed
+from a_sync.utils.iterators import as_yielded
+from a_sync.utils.gather import gather
 
 
 logger = logging.getLogger(__name__)
@@ -36,6 +37,12 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
             )
             super().__setitem__(item, task)
             return task
+    def __await__(self) -> Generator[Any, None, Dict[K, V]]:
+        """await all tasks and returns a mapping with the results for each key"""
+        return gather(self).__await__()
+    def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
+        """aiterate thru all key-task pairs, yielding the key-result pair as each task completes"""
+        return as_completed(self, aiter=True)
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         if self:
             raise exceptions.MappingNotEmptyError
