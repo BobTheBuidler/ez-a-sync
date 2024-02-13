@@ -39,13 +39,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
             return task
     def __await__(self) -> Generator[Any, None, Dict[K, V]]:
         """await all tasks and returns a mapping with the results for each key"""
-        return gather(self).__await__()
-    async def _await(self) -> Dict[K, V]:
-        await self._load_iterables()
-        return await gather(self)
+        return self._await().__await__()
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
         """aiterate thru all key-task pairs, yielding the key-result pair as each task completes"""
-        await self._load_iterables()
+        if self._loader:
+            await self._loader
         async for k, v in as_completed(self, aiter=True):
             yield k, v
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
@@ -63,6 +61,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
                 if pop:
                     task = self.pop(k)
                 yield k, await task
+    async def _await(self) -> Dict[K, V]:
+        if self._loader:
+            await self._loader
+        return await gather(self)
 
 
 __persisted_tasks: Set["asyncio.Task[Any]"] = set()
