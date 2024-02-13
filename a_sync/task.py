@@ -4,7 +4,7 @@ import logging
 
 from a_sync._typing import *
 from a_sync import exceptions
-from a_sync.utils.iterators import as_yielded
+from a_sync.utils.iterators import as_yielded, exhaust_iterator
 from a_sync.utils.as_completed import as_completed
 
 
@@ -52,8 +52,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
                     task = self.pop(k)
                 yield k, await task
     async def _load_iterables(self, *iterables) -> None:
-        async for _ in self._tasks_for_iterables(*iterables):
-            pass
+        if self._iterables and not self:
+            await exhaust_iterator(self._tasks_for_iterables(*iterables))
     async def _tasks_for_iterables(self, *iterables) -> AsyncIterator["asyncio.Task[V]"]:
         async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]):  # type: ignore [attr-defined]
             yield self[key]  # ensure task is running
