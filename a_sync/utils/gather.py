@@ -10,6 +10,7 @@ except ImportError as e:
         async def gather(*args, **kwargs):
             raise ImportError("You must have tqdm installed in order to use this feature")
 
+from a_sync._typing import *
 from a_sync.utils.as_completed import as_completed_mapping
 
 T = TypeVar('T')
