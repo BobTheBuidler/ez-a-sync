@@ -31,7 +31,7 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
         self._name = name
         if iterables:
             self._aiterable = self._tasks_for_iterables(*iterables)
-            self._loader = create_task(exhaust_iterator(self._iterable))
+            self._loader = create_task(exhaust_iterator(self._aiterable))
         else:
             self._aiterable = None
             self._loader = None
