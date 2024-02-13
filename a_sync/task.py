@@ -20,10 +20,11 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
     return task
 
 class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
-    def __init__(self, coro_fn: Callable[Concatenate[K, P], Awaitable[V]] = None, *, name: str = '', **coro_fn_kwargs: P.kwargs) -> None:
+    def __init__(self, coro_fn: Callable[Concatenate[K, P], Awaitable[V]] = None, *iterables: AnyIterable[K], name: str = '', **coro_fn_kwargs: P.kwargs) -> None:
         self._coro_fn = coro_fn
         self._coro_fn_kwargs = coro_fn_kwargs
         self._name = name
+        self._iterables = iterables
     def __setitem__(self, item: Any, value: Any) -> None:
         raise NotImplementedError("You cannot manually set items in a TaskMapping")
     def __getitem__(self, item: K) -> "asyncio.Task[V]":
@@ -37,10 +38,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
             super().__setitem__(item, task)
             return task
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
-        if self:
+        if self or self._iterables:
             raise exceptions.MappingNotEmptyError
-        async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]):  # type: ignore [attr-defined]
-            self[key]  # ensure task is running
+        async for _ in self._tasks_for_iterables(*iterables):
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
         async for key, value in as_completed(self, aiter=True):
@@ -51,6 +51,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"]):
                 if pop:
                     task = self.pop(k)
                 yield k, await task
+    async def _load_iterables(self, *iterables) -> None:
+        async for _ in self._tasks_for_iterables(*iterables):
+            pass
+    async def _tasks_for_iterables(self, *iterables) -> AsyncIterator["asyncio.Task[V]"]:
+        async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]):  # type: ignore [attr-defined]
+            yield self[key]  # ensure task is running
+        
 
 
 __persisted_tasks: Set["asyncio.Task[Any]"] = set()
