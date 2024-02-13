@@ -17,13 +17,33 @@ T = TypeVar('T')
 KT = TypeVar('KT')
 VT = TypeVar('VT')
 
+Excluder = Callable[[T], bool]
+
 @overload
-async def gather(*awaitables: Mapping[KT, Awaitable[VT]], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Dict[KT, VT]:
+async def gather(
+    *awaitables: Mapping[KT, Awaitable[VT]], 
+    return_exceptions: bool = False, 
+    exclude_if: Optional[Excluder[T]] = None, 
+    tqdm: bool = False, 
+    **tqdm_kwargs: Any,
+) -> Dict[KT, VT]:
     ...
 @overload
-async def gather(*awaitables: Awaitable[T], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> List[T]:
+async def gather(
+    *awaitables: Awaitable[T], 
+    return_exceptions: bool = False, 
+    exclude_if: Optional[Excluder[T]] = None,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any,
+) -> List[T]:
     ...
-async def gather(*awaitables: Union[Awaitable[T], Mapping[KT, Awaitable[VT]]], return_exceptions: bool = False, exclude_if: Callable[[T], bool] = None, tqdm: bool = False, **tqdm_kwargs: Any) -> Union[List[T], Dict[KT, VT]]:
+async def gather(
+    *awaitables: Union[Awaitable[T], Mapping[KT, Awaitable[VT]]], 
+    return_exceptions: bool = False, 
+    exclude_if: Optional[Excluder[T]] = None, 
+    tqdm: bool = False, 
+    **tqdm_kwargs: Any,
+) -> Union[List[T], Dict[KT, VT]]:
     """
     Concurrently awaits a list of awaitable objects or mappings of awaitables and returns the results.
 

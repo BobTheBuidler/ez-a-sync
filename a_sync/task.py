@@ -31,7 +31,7 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
         self._name = name
         if iterables:
             self._aiterable = self._tasks_for_iterables(*iterables)
-            self._loader = create_task(exhaust_iterator(self._iterable))
+            self._loader = create_task(exhaust_iterator(self._aiterable))
         else:
             self._aiterable = None
             self._loader = None
@@ -64,6 +64,8 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         if self:
             raise exceptions.MappingNotEmptyError
+        else:
+            logger.info(self)
         async for _ in self._tasks_for_iterables(*iterables):
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)

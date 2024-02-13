@@ -54,11 +54,12 @@ async def test_task_mapping():
 async def test_task_mapping_map_with_sync_iter():
     tasks = TaskMapping(_coro_fn)
     async for k, v in tasks.map(range(5)):
+        # this shouldn't work since there is a mapping in progress
+        with pytest.raises(exceptions.MappingNotEmptyError):
+            async for k in tasks.map(range(5)):
+                ...
         assert isinstance(k, int)
         assert isinstance(v, str)
-    with pytest.raises(exceptions.MappingNotEmptyError):
-        async for k in tasks.map(range(5), yields='keys'):
-            assert isinstance(k, int)
     tasks = TaskMapping(_coro_fn)
     async for k in tasks.map(range(5), yields='keys'):
         assert isinstance(k, int)
@@ -72,9 +73,10 @@ async def test_task_mapping_map_with_async_iter():
     async for k, v in tasks.map(async_iter()):
         assert isinstance(k, int)
         assert isinstance(v, str)
-    with pytest.raises(exceptions.MappingNotEmptyError):
-        async for k in tasks.map(async_iter(), yields='keys'):
-            assert isinstance(k, int)
+        # this shouldn't work since there is a mapping in progress
+        with pytest.raises(exceptions.MappingNotEmptyError):
+            async for k in tasks.map(async_iter()):
+                ...
     tasks = TaskMapping(_coro_fn)
     async for k in tasks.map(async_iter(), yields='keys'):
         assert isinstance(k, int)
