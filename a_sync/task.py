@@ -21,7 +21,7 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
         __persist(task)
     return task
     
-class TaskMapping(ASyncIterable[K, V], DefaultDict[K, "asyncio.Task[V]"]):
+class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"]):
     def __init__(self, coro_fn: Callable[Concatenate[K, P], Awaitable[V]] = None, *iterables: AnyIterable[K], name: str = '', **coro_fn_kwargs: P.kwargs) -> None:
         self._coro_fn = coro_fn
         self._coro_fn_kwargs = coro_fn_kwargs
