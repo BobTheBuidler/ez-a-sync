@@ -30,10 +30,8 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
         self._coro_fn_kwargs = coro_fn_kwargs
         self._name = name
         if iterables:
-            self._aiterable = self._tasks_for_iterables(*iterables)
-            self._loader = create_task(exhaust_iterator(self._aiterable))
+            self._loader = create_task(exhaust_iterator(self._tasks_for_iterables(*iterables)))
         else:
-            self._aiterable = None
             self._loader = None
     def __setitem__(self, item: Any, value: Any) -> None:
         raise NotImplementedError("You cannot manually set items in a TaskMapping")
@@ -53,14 +51,24 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
     async def __aiter__(self) -> Union[AsyncIterator[Tuple[K, V]], AsyncIterator[K]]:
         """aiterate thru all key-task pairs, yielding the key-result pair as each task completes"""
         yielded = set()
-        async for _ in self._aiterable:
-            async for key, value in self.yield_completed(pop=False):
-                yielded.add(key)
+        # if you inited the TaskMapping with some iterators, we will load those
+        if self._loader:
+            while not self._loader.done():
+                async for key, value in self.yield_completed(pop=False):
+                    yielded.add(key)
+                    if key not in yielded:
+                        yield _yield(key, value, "both")
+                await asyncio.sleep(0)
+            # loader is already done by this point, but we need to check for exceptions
+            await self._loader
+        elif not self:
+            # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
+            raise exceptions.MappingIsEmptyError
+        # if there are any tasks that still need to complete, we need to await them and yield them
+        if self:
+            async for key, value in as_completed(self, aiter=True):
                 if key not in yielded:
                     yield _yield(key, value, "both")
-        async for key, value in as_completed(self, aiter=True):
-            if key not in yielded:
-                yield _yield(key, value, "both")
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         if self:
             raise exceptions.MappingNotEmptyError
@@ -82,6 +90,8 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
     async def _await(self) -> Dict[K, V]:
         if self._loader:
             await self._loader
+        if not self:
+            raise exceptions.MappingIsEmptyError
         return await gather(self)
     async def _tasks_for_iterables(self, *iterables) -> AsyncIterator["asyncio.Task[V]"]:
         async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]):  # type: ignore [attr-defined]

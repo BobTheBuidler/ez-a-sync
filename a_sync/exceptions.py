@@ -67,6 +67,10 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
         err += f"Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:\n"
         err += f"{_flags.VIABLE_FLAGS}"
 
+class MappingIsEmptyError(Exception):
+    def __init__(self):
+        super().__init__("TaskMapping does not contain anything to yield")
+
 class MappingNotEmptyError(Exception):
     def __init__(self):
         super().__init__("TaskMapping already contains some data. In order to use `map`, you need a fresh one.")
