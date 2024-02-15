@@ -1,4 +1,7 @@
+import asyncio
+
 from a_sync._helpers import get_event_loop
+
 
 def test_get_event_loop():
     assert get_event_loop() == asyncio.get_event_loop()
