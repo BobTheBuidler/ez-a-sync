@@ -19,7 +19,7 @@ from a_sync.modified import ASyncDecorator, ASyncFunction
 @overload
 def a_sync(
     **modifiers: Unpack[ModifierKwargs],
-) -> AnyFn[P, T]:...
+) -> ASyncDecorator:...
 
 @overload # async def, None default
 def a_sync(  

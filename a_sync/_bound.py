@@ -92,7 +92,7 @@ def _wrap_property(
     modifiers, _force_await = _clean_default_from_modifiers(async_property, modifiers)
     
     @unbound_a_sync(**modifiers)
-    async def _get(instance: ASyncABC):
+    async def _get(instance: ASyncABC) -> T:
         return await async_property.__get__(instance, async_property)
     
     @functools.wraps(async_property)
