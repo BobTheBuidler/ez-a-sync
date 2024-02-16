@@ -120,8 +120,8 @@ class ASyncDecorator(_inherit[P, T]):
         self.validate_inputs()
         
     def validate_inputs(self) -> None:
-        if self.default not in ['sync', 'async', None]:
-            raise ValueError(f"'default' must be either 'sync', 'async', or None. You passed {self.default}.")
+        if self.modifiers.default not in ['sync', 'async', None]:
+            raise ValueError(f"'default' must be either 'sync', 'async', or None. You passed {self.modifiers.default}.")
         
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
         return ASyncFunction(func, **self.modifiers)
