@@ -54,7 +54,7 @@ def a_sync_property(  # type: ignore [misc]
         func = None
     def modifier_wrap(func: Property[T]) -> AsyncPropertyDescriptor[T]:
         return AsyncPropertyDescriptor(func, **modifiers)
-    return modifier_wrap if func is None else modifier_wrap(func)
+    return modifier_wrap if func is None else modifier_wrap(func)  # type: ignore [arg-type]
     
 
 @overload

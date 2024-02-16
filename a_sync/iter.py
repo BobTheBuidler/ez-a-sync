@@ -25,7 +25,7 @@ class ASyncIterator(AsyncIterator[T], Iterator[T]):
 class ASyncWrappedIterable(ASyncIterable[T]):
     def __init__(self, async_iterable: AsyncIterable[T]):
         self.__aiterable = async_iterable
-    def __aiter__(self) -> AsyncIterable[T]:
+    def __aiter__(self) -> AsyncIterator[T]:
         return self.__aiterable.__aiter__()
 
 class ASyncWrappedIterator(ASyncIterator[T]):

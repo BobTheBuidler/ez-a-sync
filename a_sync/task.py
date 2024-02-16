@@ -29,6 +29,7 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
         self._coro_fn = coro_fn
         self._coro_fn_kwargs = coro_fn_kwargs
         self._name = name
+        self._loader: Optional["asyncio.Task[None]"]
         if iterables:
             self._loader = create_task(exhaust_iterator(self._tasks_for_iterables(*iterables)))
         else:
@@ -48,7 +49,7 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
     def __await__(self) -> Generator[Any, None, Dict[K, V]]:
         """await all tasks and returns a mapping with the results for each key"""
         return self._await().__await__()
-    async def __aiter__(self) -> Union[AsyncIterator[Tuple[K, V]], AsyncIterator[K]]:
+    async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
         """aiterate thru all key-task pairs, yielding the key-result pair as each task completes"""
         yielded = set()
         # if you inited the TaskMapping with some iterators, we will load those

@@ -38,7 +38,7 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         if self.sync_mode:
             fut = asyncio.ensure_future(self._exec_sync(fn, *args, **kwargs))
         else:
-            fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))
+            fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))  # type: ignore [assignment]
             self._start_debug_daemon(fut, fn, *args, **kwargs)
         return fut
     def __repr__(self) -> str:
