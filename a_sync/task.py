@@ -56,9 +56,9 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
         if self._loader:
             while not self._loader.done():
                 async for key, value in self.yield_completed(pop=False):
-                    yielded.add(key)
                     if key not in yielded:
                         yield _yield(key, value, "both")
+                        yielded.add(key)
                 await asyncio.sleep(0)
             # loader is already done by this point, but we need to check for exceptions
             await self._loader
@@ -70,6 +70,10 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], DefaultDict[K, "asyncio.Task[V]"])
             async for key, value in as_completed(self, aiter=True):
                 if key not in yielded:
                     yield _yield(key, value, "both")
+    def keys(self) -> KeysView[K]:
+        if self._loader and not self._loader.done():
+            raise exceptions.RuntimeError("the loader needs time to complete. bob will figure out a way to make this not impact sync users")
+        return super().keys()
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         if self:
             raise exceptions.MappingNotEmptyError
