@@ -13,20 +13,17 @@ except ImportError as e:
 from a_sync._typing import *
 from a_sync.utils.as_completed import as_completed_mapping
 
-T = TypeVar('T')
-KT = TypeVar('KT')
-VT = TypeVar('VT')
 
 Excluder = Callable[[T], bool]
 
 @overload
 async def gather(
-    *awaitables: Mapping[KT, Awaitable[VT]], 
+    *awaitables: Mapping[K, Awaitable[V]], 
     return_exceptions: bool = False, 
     exclude_if: Optional[Excluder[T]] = None, 
     tqdm: bool = False, 
     **tqdm_kwargs: Any,
-) -> Dict[KT, VT]:
+) -> Dict[K, V]:
     ...
 @overload
 async def gather(
@@ -38,12 +35,12 @@ async def gather(
 ) -> List[T]:
     ...
 async def gather(
-    *awaitables: Union[Awaitable[T], Mapping[KT, Awaitable[VT]]], 
+    *awaitables: Union[Awaitable[T], Mapping[K, Awaitable[V]]], 
     return_exceptions: bool = False, 
     exclude_if: Optional[Excluder[T]] = None, 
     tqdm: bool = False, 
     **tqdm_kwargs: Any,
-) -> Union[List[T], Dict[KT, VT]]:
+) -> Union[List[T], Dict[K, V]]:
     """
     Concurrently awaits a list of awaitable objects or mappings of awaitables and returns the results.
 
@@ -55,13 +52,13 @@ async def gather(
     - Provides progress reporting using tqdm if 'tqdm' is set to True.
     
     Args:
-        *awaitables (Union[Awaitable[T], Mapping[KT, Awaitable[VT]]]): The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.
+        *awaitables (Union[Awaitable[T], Mapping[K, Awaitable[V]]]): The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.
         return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
         tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
 
     Returns:
-        Union[List[T], Dict[KT, VT]]: A list of results when awaiting individual awaitables or a dictionary of results when awaiting mappings.
+        Union[List[T], Dict[K, V]]: A list of results when awaiting individual awaitables or a dictionary of results when awaiting mappings.
 
     Examples:
         Awaiting individual awaitables:
@@ -86,20 +83,20 @@ async def gather(
         results = [r for r in results if not exclude_if(r)]
     return results
     
-async def gather_mapping(mapping: Mapping[KT, Awaitable[VT]], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Dict[KT, VT]:
+async def gather_mapping(mapping: Mapping[K, Awaitable[V]], return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Dict[K, V]:
     """
     Concurrently awaits a mapping of awaitable objects and returns a dictionary of results.
 
     This function is designed to await a mapping of awaitable objects, where each key-value pair represents a unique awaitable. It enables concurrent execution and gathers results into a dictionary.
 
     Args:
-        mapping (Mapping[KT, Awaitable[VT]]): A dictionary-like object where keys are of type KT and values are awaitable objects of type VT.
+        mapping (Mapping[K, Awaitable[V]]): A dictionary-like object where keys are of type K and values are awaitable objects of type V.
         return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
         tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
 
     Returns:
-        Dict[KT, VT]: A dictionary with keys corresponding to the keys of the input mapping and values containing the results of the corresponding awaitables.
+        Dict[K, V]: A dictionary with keys corresponding to the keys of the input mapping and values containing the results of the corresponding awaitables.
 
     Example:
         The 'results' dictionary will contain the awaited results, where keys match the keys in the 'mapping' and values contain the results of the corresponding awaitables.

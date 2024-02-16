@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 def _clean_default_from_modifiers(
     coro_fn: AsyncBoundMethod[P, T],  # type: ignore [misc]
-    modifiers: dict
+    modifiers: ModifierKwargs,
 ):
     # NOTE: We set the default here manually because the default set by the user will be used later in the code to determine whether to await.
     force_await = None

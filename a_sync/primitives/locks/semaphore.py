@@ -20,7 +20,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     
     # Dank new functionality
     def __call__(self, fn: Callable[P, T]) -> Callable[P, T]:
-        return self.decorate(fn)
+        return self.decorate(fn)  # type: ignore [arg-type, return-value]
     
     def __repr__(self) -> str:
         representation = f"<{self.__class__.__name__} name={self.name} value={self._value} waiters={len(self)}>"

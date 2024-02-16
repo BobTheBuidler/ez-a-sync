@@ -59,7 +59,7 @@ class ASyncGenericBase(ASyncABC):
         return sync
     
     @classmethod
-    def __get_a_sync_flag_name_from_signature(cls) -> str:
+    def __get_a_sync_flag_name_from_signature(cls) -> Optional[str]:
         logger.debug("Searching for flags defined on %s.__init__", cls)
         if cls.__name__ == "ASyncGenericBase":
             logger.debug("There are no flags defined on the base class, this is expected. Skipping.")
