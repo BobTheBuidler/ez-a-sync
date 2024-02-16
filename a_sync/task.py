@@ -18,7 +18,7 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
         coro = __await(coro)
     task = asyncio.create_task(coro, name=name)
     if skip_gc_until_done:
-        __persist(task)
+        __persist(asyncio.create_task(__persisted_task_exc_wrap(task)))
     return task
 
 
@@ -102,7 +102,7 @@ __persisted_tasks: Set["asyncio.Task[Any]"] = set()
 
 async def __await(awaitable: Awaitable[T]) -> T:
     return await awaitable
-
+    
 def __persist(task: "asyncio.Task[Any]") -> None:
     __persisted_tasks.add(task)
     __prune_persisted_tasks()
@@ -110,10 +110,16 @@ def __persist(task: "asyncio.Task[Any]") -> None:
 def __prune_persisted_tasks():
     for task in tuple(__persisted_tasks):
         if task.done():
-            if e := task.exception():
+            if e := task.exception() and not isinstance(e, exceptions.PersistedTaskException):
                 logger.exception(e)
                 raise e
             __persisted_tasks.discard(task)
+
+async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
+    try:
+        await task
+    except Exception as e:
+        raise exceptions.PersistedTaskException(e, task) from e
 
 @overload
 def _yield(key: K, value: V, yields: Literal['keys']) -> K:...

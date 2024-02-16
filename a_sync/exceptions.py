@@ -1,5 +1,7 @@
 
-from typing import Any, Optional, Set, Type
+import asyncio
+
+from a_sync._typing import *
 
 
 class ASyncFlagException(ValueError):
@@ -74,3 +76,9 @@ class MappingIsEmptyError(Exception):
 class MappingNotEmptyError(Exception):
     def __init__(self):
         super().__init__("TaskMapping already contains some data. In order to use `map`, you need a fresh one.")
+
+class PersistedTaskException(Exception):
+    def __init__(self, exc: E, task: asyncio.Task) -> None:
+        super().__init__(f"{exc.__class__.__name__}: {exc}", task)
+        self.exception = exc
+        self.task = task
