@@ -13,7 +13,7 @@ class PropertyDescriptor(Modified[T]):
     def __init__(self, _fget: Callable[..., T], field_name=None, **modifiers: ModifierKwargs):
         if not callable(_fget):
             raise ValueError(f'Unable to decorate {_fget}')
-        self.modifiers = ModifierManager(**modifiers)
+        self.modifiers = ModifierManager(modifiers)
         self._fn = _fget
         _fget = self.modifiers.apply_async_modifiers(_fget) if asyncio.iscoroutinefunction(_fget) else self._asyncify(_fget)
         super().__init__(_fget, field_name=field_name)  # type: ignore [call-arg]

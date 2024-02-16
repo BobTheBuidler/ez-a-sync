@@ -18,7 +18,7 @@ class ModifierManager(Dict[str, Any]):
     # sync modifiers
     executor: Executor
 
-    def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
+    def __init__(self, modifiers: ModifierKwargs) -> None:
         for key in modifiers.keys():
             if key not in valid_modifiers:
                 raise ValueError(f"'{key}' is not a supported modifier.")
@@ -85,5 +85,5 @@ class ModifierManager(Dict[str, Any]):
     def __getitem__(self, modifier_key: str):
         return self._modifiers[modifier_key]  # type: ignore [literal-required]
 
-nulls = ModifierManager(**null_modifiers)
-user_defaults = ModifierManager(**user_set_default_modifiers)
+nulls = ModifierManager(null_modifiers)
+user_defaults = ModifierManager(user_set_default_modifiers)

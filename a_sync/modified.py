@@ -30,7 +30,7 @@ class ASyncFunction(Modified[T], Callable[P, T], Generic[P, T]):
     def __init__(self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:...
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         _helpers._validate_wrapped_fn(fn)
-        self.modifiers = ModifierManager(**modifiers)
+        self.modifiers = ModifierManager(modifiers)
         self.__wrapped__ = fn
         if hasattr(self.__wrapped__, '__name__'):
             self.__name__ = self.__wrapped__.__name__
@@ -112,11 +112,11 @@ if sys.version_info < (3, 10):
 else:
     _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
               
-class ASyncDecorator(_inherit):
+class ASyncDecorator(_inherit[P, T]):
     _fn = None
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         assert 'default' in modifiers, modifiers
-        self.modifiers = ModifierManager(**modifiers)
+        self.modifiers = ModifierManager(modifiers)
         self.validate_inputs()
         
     def validate_inputs(self) -> None:
