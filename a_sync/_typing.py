@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 T = TypeVar("T")
 K = TypeVar("K")
 V = TypeVar("V")
+E = TypeVar('E', bound=Exception)
 P = ParamSpec("P")
 
 Numeric = Union[int, float, Decimal]
