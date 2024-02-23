@@ -4,17 +4,17 @@ import sys
 from a_sync._typing import *
 
 if sys.version_info < (3, 9):
-    bases = (asyncio.Queue, Generic[T])
+    class _Queue(asyncio.Queue, Generic[T]):...
 else:
-    bases = (asyncio.Queue[T], )
+    class _Queue(asyncio.Queue[T]):...
 
-class Queue(*bases):
+class Queue(_Queue[T]):
     """The only difference between an a_sync.Queue and an asyncio.Queue is that `get_nowait` can retrn multiple responses."""
     @overload
-    def get_nowait(self, i = 1, can_return_less: bool = False) -> T:
+    def get_nowait(self, i: int = 1, can_return_less: Literal[False] = False) -> T:
         ...
     @overload
-    def get_nowait(self, i: int, can_return_less: bool = False) -> List[T]:
+    def get_nowait(self, i: int = 1, can_return_less: Literal[True] = False) -> List[T]:
         ...
     def get_nowait(self, i: int = 1, can_return_less: bool = False) -> Union[T, List[T]]:
         """
