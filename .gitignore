@@ -8,3 +8,4 @@ dist/
 .eggs/
 *.egg-info
 cache/
+mypy_plugin_tests/venv/
