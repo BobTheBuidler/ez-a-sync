@@ -1,4 +1,4 @@
-# type: ignore [var-annotated]
+# mypy: disable-error-code=var-annotated
 
 import asyncio
 import concurrent.futures
