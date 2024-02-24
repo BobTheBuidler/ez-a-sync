@@ -11,7 +11,7 @@ except ImportError as e:
             raise ImportError("You must have tqdm installed in order to use this feature")
 
 from a_sync._typing import *
-from a_sync.utils.as_completed import as_completed_mapping
+from a_sync.utils.as_completed import as_completed_mapping, _exc_wrap
 
 
 Excluder = Callable[[T], bool]
@@ -76,7 +76,7 @@ async def gather(
     """
     results = await (
         gather_mapping(awaitables[0], return_exceptions=return_exceptions, tqdm=tqdm, **tqdm_kwargs) if _is_mapping(awaitables)
-        else tqdm_asyncio.gather(*awaitables, return_exceptions=return_exceptions, **tqdm_kwargs) if tqdm
+        else tqdm_asyncio.gather(*(_exc_wrap(a) for a in awaitables) if return_exceptions else awaitables, **tqdm_kwargs) if tqdm
         else asyncio.gather(*awaitables, return_exceptions=return_exceptions)  # type: ignore [arg-type]
     )
     if exclude_if:

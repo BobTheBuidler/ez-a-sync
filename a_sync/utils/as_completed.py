@@ -73,7 +73,7 @@ def as_completed(fs, *, timeout: Optional[float] = None, return_exceptions: bool
     if isinstance(fs, Mapping):
         return as_completed_mapping(fs, timeout=timeout, return_exceptions=return_exceptions, aiter=aiter, tqdm=tqdm, **tqdm_kwargs) 
     if return_exceptions:
-        fs = [__exc_wrap(f) for f in fs]
+        fs = [_exc_wrap(f) for f in fs]
     return (
         ASyncIterator.wrap(__yield_as_completed(fs, timeout=timeout, tqdm=tqdm, **tqdm_kwargs)) if aiter 
         else tqdm_asyncio.as_completed(fs, timeout=timeout, **tqdm_kwargs) if tqdm 
@@ -117,6 +117,12 @@ def as_completed_mapping(mapping: Mapping[K, Awaitable[V]], *, timeout: Optional
     """
     return as_completed([__mapping_wrap(k, v, return_exceptions=return_exceptions) for k, v in mapping.items()], timeout=timeout, aiter=aiter, tqdm=tqdm, **tqdm_kwargs)
 
+async def _exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
+    try:
+        return await awaitable
+    except Exception as e:
+        return e
+    
 async def __yield_as_completed(futs: Iterable[Awaitable[T]], *, timeout: Optional[float] = None, return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> AsyncIterator[T]:
     for fut in as_completed(futs, timeout=timeout, return_exceptions=return_exceptions, tqdm=tqdm, **tqdm_kwargs):
         yield await fut
@@ -132,9 +138,4 @@ async def __mapping_wrap(k: K, v: Awaitable[V], return_exceptions: bool = False)
         if return_exceptions:
             return k, e
         raise e
-
-async def __exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
-    try:
-        return await awaitable
-    except Exception as e:
-        return e
+    
