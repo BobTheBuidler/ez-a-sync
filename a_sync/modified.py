@@ -32,8 +32,7 @@ class ASyncFunction(Modified[T], Callable[P, T], Generic[P, T]):
         _helpers._validate_wrapped_fn(fn)
         self.modifiers = ModifierManager(modifiers)
         self.__wrapped__ = fn
-        if hasattr(self.__wrapped__, '__name__'):
-            self.__name__ = self.__wrapped__.__name__
+        functools.update_wrapper(self, self.__wrapped__)
     
     @overload
     def __call__(self, *args: P.args, sync: Literal[True] = True, **kwargs: P.kwargs) -> T:...
@@ -47,7 +46,7 @@ class ASyncFunction(Modified[T], Callable[P, T], Generic[P, T]):
         return self.fn(*args, **kwargs)
     
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} {self.__name__} at {hex(id(self))}>"
+        return f"<{self.__class__.__name__} {self.__module__}.{self.__name__} at {hex(id(self))}>"
     
     @functools.cached_property
     def fn(self): # -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
