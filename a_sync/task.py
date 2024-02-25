@@ -115,7 +115,7 @@ def __persist(task: "asyncio.Task[Any]") -> None:
 def __prune_persisted_tasks():
     for task in tuple(__persisted_tasks):
         if task.done():
-            if e := task.exception() and not isinstance(e, exceptions.PersistedTaskException):
+            if (e := task.exception()) and not isinstance(e, exceptions.PersistedTaskException):
                 logger.exception(e)
                 raise e
             __persisted_tasks.discard(task)
