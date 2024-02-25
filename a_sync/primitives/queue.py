@@ -19,10 +19,11 @@ class Queue(_Queue[T]):
     async def get(self, i: int = 1, can_return_less: bool = False) -> Union[T, List[T]]:
         _validate_args(i, can_return_less)
         if i == 1:
+            if can_return_less:
+                raise RuntimeError("you cannot use the `can_return_less` kwarg when `i` is 1")
             return await super().get()
-        try:
-            items = self.get_nowait(i, can_return_less=True)
-        except asyncio.QueueEmpty:
+        items = self.get_nowait(i, can_return_less=True)
+        if not items:
             items = [await super().get()]
         if len(items) == i or can_return_less:
             return items
