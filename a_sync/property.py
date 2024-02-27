@@ -9,7 +9,7 @@ from a_sync._typing import *
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
     _fget: HiddenMethod[ASyncInstance, T]
-    def __init__(self, _fget: Callable[Concatenate[ASyncInstance, P], Awaitable[T]] | Callable[Concatenate[ASyncInstance, P], T], field_name=None, **modifiers: config.ModifierKwargs):
+    def __init__(self, _fget: Callable[Concatenate[ASyncInstance, P], Awaitable[T]], field_name=None, **modifiers: config.ModifierKwargs):
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers, self.force_await = _clean_default_from_modifiers(self, self.modifiers)
