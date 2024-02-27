@@ -12,6 +12,9 @@ from typing_extensions import Concatenate, ParamSpec, Self, Unpack
 
 if TYPE_CHECKING:
     from a_sync.abstract import ASyncABC
+    ASyncInstance = TypeVar("ASyncInstance", bound=ASyncABC)
+else:
+    ASyncInstance = TypeVar("ASyncInstance", bound=object)
 
 T = TypeVar("T")
 K = TypeVar("K")
@@ -23,12 +26,16 @@ Numeric = Union[int, float, Decimal]
 
 MaybeAwaitable = Union[Awaitable[T], T]
 
-Property = Callable[["ASyncABC"], T]
-HiddenMethod = Callable[["ASyncABC", Dict[str, bool]], T]
+Property = Callable[[object], T]
+HiddenMethod = Callable[[object, Dict[str, bool]], T]
 
 CoroFn = Callable[P, Awaitable[T]]
 SyncFn = Callable[P, T]
 AnyFn = Union[CoroFn[P, T], SyncFn[P, T]]
+
+AsyncUnboundMethod = Callable[Concatenate[ASyncInstance, P], Awaitable[T]]
+SyncUnboundMethod = Callable[Concatenate[ASyncInstance, P], T]
+UnboundMethod = Union[AsyncUnboundMethod[ASyncInstance, P, T], SyncUnboundMethod[ASyncInstance, P, T]]
 
 AsyncDecorator = Callable[[CoroFn[P, T]], CoroFn[P, T]]
 
