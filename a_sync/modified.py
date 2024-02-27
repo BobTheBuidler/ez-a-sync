@@ -1,5 +1,4 @@
-# mypy: disable-error-code=valid-type
-# mypy: disable-error-code=misc
+
 import functools
 import sys
 
@@ -8,14 +7,14 @@ from a_sync._typing import *
 from a_sync.modifiers.manager import ModifierManager
     
 
-class Modified(Generic[T]):
+class ModifiedMixin:
     modifiers: ModifierManager
     def _asyncify(self, func: SyncFn[P, T]) -> CoroFn[P, T]:
         """Applies only async modifiers."""
         coro_fn = _helpers._asyncify(func, self.modifiers.executor)
         return self.modifiers.apply_async_modifiers(coro_fn)
     @functools.cached_property
-    def _await(self): # -> SyncFn[[Awaitable[T]]] T]:
+    def _await(self) -> Callable[[Awaitable[T]], T]:
         """Applies only sync modifiers."""
         return self.modifiers.apply_sync_modifiers(_helpers._await)
     @property
@@ -23,7 +22,7 @@ class Modified(Generic[T]):
         return self.modifiers.default
     
         
-class ASyncFunction(Modified[T], Callable[P, T], Generic[P, T]):
+class ASyncFunction(ModifiedMixin, Generic[P, T]):
     @overload
     def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:...
     @overload
@@ -105,13 +104,13 @@ class ASyncFunction(Modified[T], Callable[P, T], Generic[P, T]):
                 return self._modified_fn(*args, **kwargs)
             return self._asyncified(*args, **kwargs)            
         return sync_wrap
-    
+
 if sys.version_info < (3, 10):
     _inherit = ASyncFunction[AnyFn[P, T], ASyncFunction[P, T]]
 else:
     _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
               
-class ASyncDecorator(_inherit[P, T]):
+class ASyncDecorator(ModifiedMixin):
     _fn = None
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         assert 'default' in modifiers, modifiers
@@ -122,5 +121,60 @@ class ASyncDecorator(_inherit[P, T]):
         if self.modifiers.default not in ['sync', 'async', None]:
             raise ValueError(f"'default' must be either 'sync', 'async', or None. You passed {self.modifiers.default}.")
         
+    @overload
+    def __call__(self, func: CoroFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
+        ...
+    @overload
+    def __call__(self, func: SyncFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
+        ...
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
         return ASyncFunction(func, **self.modifiers)
+
+
+# Mypy helper classes
+
+class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[True] = True, **kwargs: P.kwargs) -> T:...
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[False] = False, **kwargs: P.kwargs) -> Awaitable[T]:...
+    @overload
+    def __call__(self, *args: P.args, asynchronous: Literal[False] = False, **kwargs: P.kwargs) -> T:...
+    @overload
+    def __call__(self, *args: P.args, asynchronous: Literal[True] = True, **kwargs: P.kwargs) -> Awaitable[T]:...
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
+        return self.fn(*args, **kwargs)
+    
+class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs) -> Awaitable[T]:...
+    @overload
+    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T:...
+    @overload
+    def __call__(self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs) -> Awaitable[T]:...
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Awaitable[T]:...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
+        return self.fn(*args, **kwargs)
+    
+class ASyncDecoratorSyncDefault(ASyncDecorator):
+    @overload
+    def __call__(self, func: CoroFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
+        ...
+    @overload
+    def __call__(self, func: SyncFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
+        ...
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
+        ...
+
+class ASyncDecoratorAsyncDefault(ASyncDecorator):
+    @overload
+    def __call__(self, func: CoroFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
+        ...
+    @overload
+    def __call__(self, func: SyncFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
+        ...
