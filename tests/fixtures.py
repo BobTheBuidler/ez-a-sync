@@ -14,7 +14,7 @@ from a_sync.singleton import ASyncGenericSingleton
 increment = pytest.mark.parametrize('i', range(10))
 
 class TestClass(ASyncBase):
-    def __init__(self, v: int, sync: bool):
+    def __init__(self, v: int, sync: bool = False):
         self.v = v
         self.sync = sync
     
