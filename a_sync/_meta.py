@@ -6,7 +6,7 @@ from typing import Any, Dict, Tuple
 
 from a_sync import ENVIRONMENT_VARIABLES, _bound, modifiers
 from a_sync.future import _ASyncFutureWrappedFn  # type: ignore [attr-defined]
-from a_sync.modified import ASyncFunction, Modified
+from a_sync.modified import ASyncFunction, ModifiedMixin
 from a_sync.property import PropertyDescriptor
 
 logger = logging.getLogger(__name__)
@@ -36,8 +36,8 @@ class ASyncMeta(ABCMeta):
             logger.debug(f"inspecting `{new_class_name}.{attr_name}` of type {attr_value.__class__.__name__}")
             fn_modifiers = dict(class_defined_modifiers)
             # Special handling for functions decorated with a_sync decorators
-            if isinstance(attr_value, Modified):
-                logger.debug(f"`{new_class_name}.{attr_name}` is a `Modified` object, which means you decorated it with the a_sync decorator even though `{new_class_name}` is an ASync class")
+            if isinstance(attr_value, ModifiedMixin):
+                logger.debug(f"`{new_class_name}.{attr_name}` is a `ModifiedMixin` object, which means you decorated it with the a_sync decorator even though `{new_class_name}` is an ASync class")
                 logger.debug(f"you probably did this so you could apply some modifiers to `{attr_name}` specifically")
                 modified_modifiers = attr_value.modifiers._modifiers
                 if modified_modifiers:
