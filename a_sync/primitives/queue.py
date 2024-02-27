@@ -51,18 +51,18 @@ class Queue(_Queue[T]):
         Set `can_return_less` to True if you want to receive up to `i` items.
         """
         _validate_args(i, can_return_less)
-        values = []
+        items = []
         for _ in range(i):
             try:
-                values.append(self.get_nowait())
+                items.append(self.get_nowait())
             except asyncio.QueueEmpty:
-                if values and can_return_less:
-                    return values
+                if items and can_return_less:
+                    return items
                 # put these back in the queue since we didn't return them
-                for value in values:
+                for value in items:
                     self.put_nowait(value)
                 raise asyncio.QueueEmpty from None
-        return values
+        return items
     
         
 
