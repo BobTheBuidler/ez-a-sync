@@ -67,13 +67,13 @@ def a_sync_property(  # type: ignore [misc]
     
 @overload
 def a_sync_property(  # type: ignore [misc]
-    func: Literal["sync"],
+    default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
 ) -> ASyncPropertyDecoratorSyncDefault[T]:...
     
 @overload
 def a_sync_property(  # type: ignore [misc]
-    func: Literal["async"],
+    default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
 ) -> ASyncPropertyDecoratorAsyncDefault[T]:...
     
@@ -150,6 +150,18 @@ def a_sync_cached_property(  # type: ignore [misc]
     default: DefaultMode,
     **modifiers: Unpack[ModifierKwargs],
 ) -> ASyncCachedPropertyDecorator[T]:...
+
+@overload
+def a_sync_cached_property(  # type: ignore [misc]
+    default: Literal["sync"],
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncCachedPropertyDecoratorSyncDefault[T]:...
+
+@overload
+def a_sync_cached_property(  # type: ignore [misc]
+    default: Literal["async"],
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncCachedPropertyDecoratorAsyncDefault[T]:...
     
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
