@@ -2,7 +2,9 @@
 # mypy: disable-error-code=misc
 from a_sync import _flags, config
 from a_sync._typing import *
-from a_sync.modified import ASyncDecorator, ASyncFunction
+from a_sync.modified import (ASyncDecorator, ASyncFunction, ASyncDecoratorAsyncDefault, 
+                             ASyncDecoratorSyncDefault, ASyncFunctionAsyncDefault, 
+                             ASyncFunctionSyncDefault)
 
 ########################
 # The a_sync decorator #
@@ -18,6 +20,18 @@ from a_sync.modified import ASyncDecorator, ASyncFunction
 
 @overload
 def a_sync(
+    default: Literal["async"],
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncDecoratorAsyncDefault:...
+
+@overload
+def a_sync(
+    default: Literal["sync"],
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncDecoratorSyncDefault:...
+
+@overload
+def a_sync(
     **modifiers: Unpack[ModifierKwargs],
 ) -> ASyncDecorator:...
 
@@ -26,14 +40,14 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> CoroFn[P, T]:...
+) -> ASyncFunctionAsyncDefault[P, T]:...
 
 @overload # sync def none default
 def a_sync(  
     coro_fn: SyncFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> SyncFn[P, T]:...
+) -> ASyncFunctionSyncDefault[P, T]:...
 
 # @a_sync(default='async')
 # def some_fn():
@@ -50,14 +64,14 @@ def a_sync(
     coro_fn: Literal[None],
     default: Literal['async'],
     **modifiers: Unpack[ModifierKwargs],
-) -> AllToAsyncDecorator[P, T]:...
+) -> ASyncDecoratorAsyncDefault:...
 
 @overload # if you try to use default as the only arg
 def a_sync(  
     coro_fn: Literal['async'],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
-) -> AllToAsyncDecorator[P, T]:...
+) -> ASyncDecoratorAsyncDefault:...
 
 # a_sync(some_fn, default='async')
 
@@ -66,14 +80,14 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal['async'],
     **modifiers: Unpack[ModifierKwargs],
-) -> CoroFn[P, T]:...
+) -> ASyncFunctionAsyncDefault[P, T]:...
 
 @overload # sync def async default
 def a_sync(  
     coro_fn: SyncFn[P, T],
     default: Literal['async'],
     **modifiers: Unpack[ModifierKwargs],
-) -> CoroFn[P, T]:...
+) -> ASyncFunctionAsyncDefault[P, T]:...
 
 # a_sync(some_fn, default='sync')
 
@@ -82,14 +96,14 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal['sync'],
     **modifiers: Unpack[ModifierKwargs],
-) -> SyncFn[P, T]:...
+) -> ASyncFunctionSyncDefault:...
 
 @overload # sync def sync default
 def a_sync(  
     coro_fn: SyncFn[P, T],
     default: Literal['sync'],
     **modifiers: Unpack[ModifierKwargs],
-) -> SyncFn[P, T]:...
+) -> ASyncFunctionSyncDefault:...
 
 # @a_sync(default='sync')
 # def some_fn():
@@ -106,28 +120,28 @@ def a_sync(
     coro_fn: Literal[None],
     default: Literal['sync'],
     **modifiers: Unpack[ModifierKwargs],
-) -> AllToSyncDecorator[P, T]:...
+) -> ASyncDecoratorSyncDefault:...
 
 @overload # if you try to use default as the only arg
 def a_sync(  
     coro_fn: Literal['sync'],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> AllToSyncDecorator[P, T]:...
+) -> ASyncDecoratorSyncDefault:...
 
 @overload # if you try to use default as the only arg
 def a_sync(  
     coro_fn: Literal['sync'],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
-) -> AllToSyncDecorator[P, T]:...
+) -> ASyncDecoratorSyncDefault:...
     
 # catchall
 def a_sync(  
     coro_fn: Optional[AnyFn[P, T]] = None,
     default: DefaultMode = config.DEFAULT_MODE,
     **modifiers: Unpack[ModifierKwargs],  # default values are set by passing these kwargs into a ModifierManager object.
-) -> Union[ASyncDecorator[P, T], ASyncFunction[P, T]]:
+) -> Union[ASyncDecorator, ASyncFunction[P, T]]:
     f"""
     A coroutine function decorated with this decorator can be called as a sync function by passing a boolean value for any of these kwargs: {_flags.VIABLE_FLAGS}
     
