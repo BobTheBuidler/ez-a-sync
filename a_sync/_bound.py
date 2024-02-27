@@ -24,11 +24,10 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
                 bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
             elif self.default == "async":
                 bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
-            elif isinstance(instance, ASyncABC):
-                if instance.__a_sync_default_mode__() == "sync":
-                    bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
-                elif instance.__a_sync_default_mode__() == "async":
-                    bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+            elif isinstance(instance, ASyncABC) and instance.__a_sync_default_mode__() == "sync":
+                bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+            elif isinstance(instance, ASyncABC) and instance.__a_sync_default_mode__() == "async":
+                bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
             else:
                 bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
             instance.__dict__[self.field_name] = bound
