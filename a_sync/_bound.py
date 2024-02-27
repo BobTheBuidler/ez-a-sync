@@ -11,27 +11,29 @@ from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunct
 if TYPE_CHECKING:
     from a_sync.abstract import ASyncABC
 
-
-class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[ASyncInstance, P, T]):
-    _fget: ASyncFunction[Concatenate[ASyncInstance, P], T]
-    def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethod[P, T]":
-        if instance is None:
-            return self
-        try:
-            return instance.__dict__[self.field_name]
-        except KeyError:
-            if self.default == "sync":
-                bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
-            elif self.default == "async":
-                bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
-            elif instance.__a_sync_default_mode__() == "sync":
-                bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
-            elif instance.__a_sync_default_mode__() == "async":
-                bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
-            else:
-                bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
-            instance.__dict__[self.field_name] = bound
-            return bound
+    class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[ASyncInstance, P, T]):
+        _fget: ASyncFunction[Concatenate[ASyncInstance, P], T]
+else:
+    class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, T]):
+        _fget: ASyncFunction[Concatenate[ASyncInstance, P], T]
+        def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethod[P, T]":
+            if instance is None:
+                return self
+            try:
+                return instance.__dict__[self.field_name]
+            except KeyError:
+                if self.default == "sync":
+                    bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+                elif self.default == "async":
+                    bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+                elif instance.__a_sync_default_mode__() == "sync":
+                    bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+                elif instance.__a_sync_default_mode__() == "async":
+                    bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+                else:
+                    bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
+                instance.__dict__[self.field_name] = bound
+                return bound
 
 class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T]):
     def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethodSyncDefault[P, T]":
