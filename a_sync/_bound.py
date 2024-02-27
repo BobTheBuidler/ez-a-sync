@@ -19,6 +19,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
+            from a_sync.abstract import ASyncABC
             if self.default == "sync":
                 bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
             elif self.default == "async":
