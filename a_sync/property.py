@@ -62,6 +62,18 @@ def a_sync_property(  # type: ignore [misc]
     
 @overload
 def a_sync_property(  # type: ignore [misc]
+    func: Literal["sync"],
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncPropertyDecoratorSyncDefault[T]:...
+    
+@overload
+def a_sync_property(  # type: ignore [misc]
+    func: Literal["async"],
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncPropertyDecoratorAsyncDefault[T]:...
+    
+@overload
+def a_sync_property(  # type: ignore [misc]
     func: Property[T],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
