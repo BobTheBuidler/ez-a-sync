@@ -1,5 +1,4 @@
 
-import abc
 import functools
 
 from a_sync._typing import *
@@ -16,9 +15,19 @@ class ASyncDescriptor(ModifiedMixin, Generic[T]):
         functools.update_wrapper(self, _fget)
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} for {self._fn}>"
-    def __set__(self, instance, value):
-        raise RuntimeError(f"cannot set {self.field_name}")
-    def __delete__(self, instance):
-        raise RuntimeError(f"cannot delete {self.field_name}")
     def __set_name__(self, owner, name):
         self.field_name = name
+
+def clean_default_from_modifiers(
+    coro_fn: CoroFn[P, T],  # type: ignore [misc]
+    modifiers: ModifierKwargs,
+):
+    from a_sync.modified import ASyncFunction
+    # NOTE: We set the default here manually because the default set by the user will be used later in the code to determine whether to await.
+    force_await = False
+    if not asyncio.iscoroutinefunction(coro_fn) and not isinstance(coro_fn, ASyncFunction):
+        if 'default' not in modifiers or modifiers['default'] != 'async':
+            if 'default' in modifiers and modifiers['default'] == 'sync':
+                force_await = True
+            modifiers['default'] = 'async'
+    return modifiers, force_await

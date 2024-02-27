@@ -4,7 +4,7 @@ import functools
 from inspect import isawaitable
 
 from a_sync import _helpers
-from a_sync._descriptor import ASyncDescriptor
+from a_sync._descriptor import ASyncDescriptor, clean_default_from_modifiers
 from a_sync._typing import *
 from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 
@@ -24,14 +24,18 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
                 bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
             elif self.default == "async":
                 bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
-            elif isinstance(instance, ASyncABC) and instance.__should_await_from_instance__:
+            elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
                 bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
-            elif isinstance(instance, ASyncABC) and instance.__should_await_from_instance__:
+            elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
                 bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
             else:
                 bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             return bound
+    def __set__(self, instance, value):
+        raise RuntimeError(f"cannot set {self.field_name}, {self} is what you get. sorry.")
+    def __delete__(self, instance):
+        raise RuntimeError(f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry.")
 
 class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T]):
     def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethodSyncDefault[P, T]":
@@ -79,7 +83,7 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         if isinstance(unbound, ASyncFunction):
             unbound = unbound.__wrapped__
         
-        modifiers, self.force_await = _clean_default_from_modifiers(unbound, modifiers)
+        modifiers, self.force_await = clean_default_from_modifiers(unbound, modifiers)
         modified = _a_sync_function_cache(unbound, **modifiers)
         wrapped = functools.partial(ASyncBoundMethod.wrap, modified, self.instance, self.force_await)
         functools.update_wrapper(wrapped, unbound)
@@ -100,16 +104,3 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[P, T]):
 @functools.lru_cache(maxsize=None)
 def _a_sync_function_cache(unbound: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> ASyncFunction[P, T]:
     return ASyncFunction(unbound, **modifiers)
-
-def _clean_default_from_modifiers(
-    coro_fn: CoroFn[P, T],  # type: ignore [misc]
-    modifiers: ModifierKwargs,
-):
-    # NOTE: We set the default here manually because the default set by the user will be used later in the code to determine whether to await.
-    force_await = None
-    if not asyncio.iscoroutinefunction(coro_fn) and not isinstance(coro_fn, ASyncFunction):
-        if 'default' not in modifiers or modifiers['default'] != 'async':
-            if 'default' in modifiers and modifiers['default'] == 'sync':
-                force_await = True
-            modifiers['default'] = 'async'
-    return modifiers, force_await

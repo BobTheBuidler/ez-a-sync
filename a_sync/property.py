@@ -2,8 +2,8 @@
 import async_property as ap  # type: ignore [import]
 
 from a_sync import _helpers, config
-from a_sync._bound import ASyncMethodDescriptorAsyncDefault, _clean_default_from_modifiers
-from a_sync._descriptor import ASyncDescriptor
+from a_sync._bound import ASyncMethodDescriptorAsyncDefault
+from a_sync._descriptor import ASyncDescriptor, clean_default_from_modifiers
 from a_sync._typing import *
 
 
@@ -12,13 +12,14 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
     def __init__(self, _fget: Callable[Concatenate[ASyncInstance, P], Awaitable[T]], field_name=None, **modifiers: config.ModifierKwargs):
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
-        hidden_modifiers, self.force_await = _clean_default_from_modifiers(self, self.modifiers)
+        hidden_modifiers, self.should_await = clean_default_from_modifiers(self, self.modifiers)
         self.hidden_method_descriptor =  ASyncMethodDescriptorAsyncDefault(self.get, self.hidden_method_name, **hidden_modifiers)
     async def get(self, instance: ASyncInstance) -> T:
         return await super().__get__(instance, self)
     def __get__(self, instance: ASyncInstance, owner) -> T:
         awaitable = super().__get__(instance, owner)
-        return _helpers._await(awaitable) if instance.__a_sync_should_await__({}, force=self.force_await) else awaitable
+        should_await = self.should_await or instance.__a_sync_instance_should_await__
+        return _helpers._await(awaitable) if should_await else awaitable
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncPropertyDescriptor):
     pass
