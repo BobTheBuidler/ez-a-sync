@@ -24,9 +24,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
                 bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
             elif self.default == "async":
                 bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
-            elif isinstance(instance, ASyncABC) and instance.__should_await_from_instance:
+            elif isinstance(instance, ASyncABC) and instance.__should_await_from_instance__:
                 bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
-            elif isinstance(instance, ASyncABC) and instance.__should_await_from_instance:
+            elif isinstance(instance, ASyncABC) and instance.__should_await_from_instance__:
                 bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
             else:
                 bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)

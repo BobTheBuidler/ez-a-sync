@@ -22,10 +22,10 @@ class ASyncABC(metaclass=ASyncMeta):
             return self.__should_await_from_kwargs(kwargs)
         except exceptions.NoFlagsFound:
             # No flag found in kwargs, check for a flag attribute.
-            return force if force else self.__should_await_from_instance
+            return force if force else self.__should_await_from_instance__
 
     @property
-    def __should_await_from_instance(self) -> bool:
+    def __should_await_from_instance__(self) -> bool:
         """You can override this if you want."""
         return _flags.negate_if_necessary(self.__a_sync_flag_name__, self.__a_sync_flag_value__)
     
