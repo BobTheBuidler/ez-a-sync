@@ -24,7 +24,12 @@ class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncProp
     pass
         
 class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.cached.AsyncCachedPropertyDescriptor):
-    pass
+    def __init__(self, _fget, _fset=None, _fdel=None, field_name=None, **modifiers: Unpack[ModifierKwargs]):
+        super().__init__(_fget, field_name, **modifiers)
+        self._fset = _fset
+        self._fdel = _fdel
+        self._check_method_sync(_fset, 'setter')
+        self._check_method_sync(_fdel, 'deleter')
 
 class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
