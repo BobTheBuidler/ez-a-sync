@@ -19,15 +19,13 @@ else:
 T = TypeVar("T")
 K = TypeVar("K")
 V = TypeVar("V")
+O = TypeVar("O", bound=object)
 E = TypeVar('E', bound=Exception)
 P = ParamSpec("P")
 
 Numeric = Union[int, float, Decimal]
 
 MaybeAwaitable = Union[Awaitable[T], T]
-
-Property = Callable[[object], T]
-HiddenMethod = Callable[[object, Dict[str, bool]], T]
 
 CoroFn = Callable[P, Awaitable[T]]
 SyncFn = Callable[P, T]
@@ -37,7 +35,8 @@ AsyncUnboundMethod = Callable[Concatenate[ASyncInstance, P], Awaitable[T]]
 SyncUnboundMethod = Callable[Concatenate[ASyncInstance, P], T]
 UnboundMethod = Union[AsyncUnboundMethod[ASyncInstance, P, T], SyncUnboundMethod[ASyncInstance, P, T]]
 
-HiddenMethod = Callable[[ASyncInstance], T]
+Property = Callable[[object], T]
+HiddenMethod = Callable[[O], T]
 
 AsyncDecorator = Callable[[CoroFn[P, T]], CoroFn[P, T]]
 
