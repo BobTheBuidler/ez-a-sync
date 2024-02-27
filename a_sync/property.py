@@ -1,4 +1,6 @@
 
+import functools
+
 import async_property as ap  # type: ignore [import]
 
 from a_sync import _helpers, config
@@ -113,9 +115,8 @@ def a_sync_property(  # type: ignore [misc]
     if func in ['sync', 'async']:
         modifiers['default'] = func
         func = None
-    def decorator(func: Property[T]) -> ASyncPropertyDescriptor[T]:
-        return ASyncPropertyDescriptor(func, **modifiers)
-    return decorator if func is None else decorator(func)  # type: ignore [arg-type]
+    decorator = functools.partial(ASyncPropertyDescriptor, **modifiers)
+    return decorator if func is None else decorator(func)
 
 
 class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[T]):
@@ -196,6 +197,5 @@ def a_sync_cached_property(  # type: ignore [misc]
     ASyncCachedPropertyDecoratorSyncDefault[T],
     ASyncCachedPropertyDecoratorAsyncDefault[T],
 ]:
-    def decorator(func: Property[T]) -> ASyncCachedPropertyDescriptor[T]:
-        return ASyncCachedPropertyDescriptor(func, **modifiers)
+    decorator = functools.partial(ASyncCachedPropertyDescriptor, **modifiers)
     return decorator if func is None else decorator(func)
