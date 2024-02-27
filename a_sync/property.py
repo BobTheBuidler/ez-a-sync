@@ -102,7 +102,6 @@ def a_sync_property(  # type: ignore [misc]
     
 def a_sync_property(  # type: ignore [misc]
     func: Union[Property[T], DefaultMode] = None,
-    default: DefaultMode = config.DEFAULT_MODE,
     **modifiers: Unpack[ModifierKwargs],
 ) -> Union[
     ASyncPropertyDescriptor[T],
@@ -112,10 +111,14 @@ def a_sync_property(  # type: ignore [misc]
     ASyncPropertyDecoratorSyncDefault[T],
     ASyncPropertyDecoratorAsyncDefault[T],
 ]:
-    if func in ['sync', 'async']:
-        modifiers['default'] = func
-        func = None
-    decorator = functools.partial(ASyncPropertyDescriptor, **modifiers)
+    func, modifiers = _parse_args(func, modifiers)
+    if modifiers.get("default") == "sync":
+        descriptor_class = ASyncPropertyDescriptorSyncDefault
+    elif modifiers.get("default") == "async":
+        descriptor_class = ASyncPropertyDescriptorAsyncDefault
+    else:
+        descriptor_class = ASyncPropertyDescriptor
+    decorator = functools.partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
 
@@ -187,7 +190,6 @@ def a_sync_cached_property(  # type: ignore [misc]
     
 def a_sync_cached_property(  # type: ignore [misc]
     func: Optional[Property[T]] = None,
-    default: DefaultMode = config.DEFAULT_MODE,
     **modifiers: Unpack[ModifierKwargs],
 ) -> Union[
     ASyncCachedPropertyDescriptor[T],
@@ -197,5 +199,18 @@ def a_sync_cached_property(  # type: ignore [misc]
     ASyncCachedPropertyDecoratorSyncDefault[T],
     ASyncCachedPropertyDecoratorAsyncDefault[T],
 ]:
-    decorator = functools.partial(ASyncCachedPropertyDescriptor, **modifiers)
+    func, modifiers = _parse_args(func, modifiers)
+    if modifiers.get("default") == "sync":
+        descriptor_class = ASyncCachedPropertyDescriptorSyncDefault
+    elif modifiers.get("default") == "sync":
+        descriptor_class = ASyncCachedPropertyDescriptorAsyncDefault
+    else:
+        descriptor_class = ASyncCachedPropertyDescriptor
+    decorator = functools.partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
+
+def _parse_args(func: Union[None, DefaultMode, Property[T]], modifiers: ModifierKwargs) -> Tuple[Optional[Property[T]], ModifierKwargs]:
+    if func in ['sync', 'async']:
+        modifiers['default'] = func
+        func = None
+    return func, modifiers
