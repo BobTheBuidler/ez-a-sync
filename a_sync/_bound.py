@@ -51,7 +51,6 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         cls,
         a_sync_fn: ASyncFunction[Concatenate[ASyncInstance, P], T], 
         instance: "ASyncABC", 
-        force_await: Literal[True], 
         *args: P.args, 
         **kwargs: P.kwargs,
     ) -> T:...
@@ -60,7 +59,6 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         cls,
         a_sync_fn: ASyncFunction[Concatenate[ASyncInstance, P], T], 
         instance: "ASyncABC", 
-        force_await: bool, 
         *args: P.args, 
         **kwargs: P.kwargs,
     ) -> Union[T, Awaitable[T]]:
@@ -72,7 +70,7 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
             # We can return the value.
             return retval  # type: ignore [return-value]
         # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-        return _helpers._await(coro) if instance.__a_sync_should_await__(kwargs, force=force_await) else coro  # type: ignore [call-overload, return-value]
+        return _helpers._await(coro) if instance.__a_sync_should_await__(kwargs) else coro  # type: ignore [call-overload, return-value]
     def __init__(self, instance: ASyncInstance, unbound: AnyFn[Concatenate[ASyncInstance, P], T], **modifiers: Unpack[ModifierKwargs]) -> None:
         from a_sync.abstract import ASyncABC
         if not isinstance(instance, ASyncABC):
@@ -83,9 +81,8 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         if isinstance(unbound, ASyncFunction):
             unbound = unbound.__wrapped__
         
-        modifiers, self.force_await = clean_default_from_modifiers(unbound, modifiers)
-        modified = _a_sync_function_cache(unbound, **modifiers)
-        wrapped = functools.partial(ASyncBoundMethod.wrap, modified, self.instance, self.force_await)
+        modified = _a_sync_function_cache(unbound, **clean_default_from_modifiers(unbound, modifiers))
+        wrapped = functools.partial(ASyncBoundMethod.wrap, modified, self.instance)
         functools.update_wrapper(wrapped, unbound)
         super().__init__(wrapped, **modifiers)
     def __repr__(self) -> str:
