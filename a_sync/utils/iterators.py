@@ -1,14 +1,12 @@
 
 import asyncio
+import asyncio.futures
 import logging
-from asyncio.futures import _chain_future  # type: ignore [attr-defined]
-from typing import AsyncIterator, Optional, TypeVar, Union, overload
 
+from a_sync._typing import *
 from a_sync.primitives.queue import Queue
 
 logger = logging.getLogger(__name__)
-
-T = TypeVar('T')
 
 async def exhaust_iterator(iterator: AsyncIterator[T], *, queue: Optional[asyncio.Queue] = None) -> None:
     async for thing in iterator:
@@ -55,18 +53,22 @@ def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1]) -> As
 @overload
 def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1], iterator2: AsyncIterator[T2], *iterators: AsyncIterator[T]) -> AsyncIterator[Union[T0, T1, T2, T]]:...
 async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type: ignore [misc]
-    queue = Queue()
+    queue: Queue[T] = Queue()
+    def get_ready() -> List[T]:
+        try:
+            return queue.get_all_nowait()
+        except asyncio.QueueEmpty:
+            return []
     task = asyncio.create_task(exhaust_iterators(iterators, queue=queue))
     def done_callback(t: asyncio.Task) -> None:
         if (e := t.exception()) and not next_fut.done(): 
             next_fut.set_exception(e)
-        
     task.add_done_callback(done_callback)
     while not task.done():
         next_fut = asyncio.get_event_loop().create_future()
         get_task = asyncio.create_task(coro=queue.get(), name=str(queue))
-        _chain_future(get_task, next_fut)
-        for item in (await next_fut, *queue.get_nowait(-1)):
+        asyncio.futures._chain_future(get_task, next_fut)  # type: ignore [attr-defined]
+        for item in (await next_fut, *get_ready()):
             if isinstance(item, _Done):
                 task.cancel()
                 return
