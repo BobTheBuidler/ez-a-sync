@@ -5,11 +5,11 @@ import async_property as ap  # type: ignore [import]
 
 from a_sync import config
 from a_sync._typing import *
-from a_sync.modified import Modified
+from a_sync.modified import ModifiedMixin
 from a_sync.modifiers.manager import ModifierManager
 
 
-class PropertyDescriptor(Modified[T]):
+class PropertyDescriptor(ModifiedMixin, Generic[T]):
     def __init__(self, _fget: Callable[..., T], field_name=None, **modifiers: ModifierKwargs):
         if not callable(_fget):
             raise ValueError(f'Unable to decorate {_fget}')
