@@ -25,8 +25,6 @@ MaybeAwaitable = Union[Awaitable[T], T]
 
 Property = Callable[["ASyncABC"], T]
 HiddenMethod = Callable[["ASyncABC", Dict[str, bool]], T]
-AsyncBoundMethod = Callable[Concatenate["ASyncABC", P], Awaitable[T]]
-BoundMethod = Callable[Concatenate["ASyncABC", P], T]
 
 CoroFn = Callable[P, Awaitable[T]]
 SyncFn = Callable[P, T]

@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
 
 def _clean_default_from_modifiers(
-    coro_fn: AsyncBoundMethod[P, T],  # type: ignore [misc]
+    coro_fn: CoroFn[P, T],  # type: ignore [misc]
     modifiers: ModifierKwargs,
 ):
     # NOTE: We set the default here manually because the default set by the user will be used later in the code to determine whether to await.
@@ -29,9 +29,9 @@ def _clean_default_from_modifiers(
 
             
 def _wrap_bound_method(
-    coro_fn: AsyncBoundMethod[P, T],
+    coro_fn: CoroFn[P, T],
     **modifiers: Unpack[ModifierKwargs]
-) -> AsyncBoundMethod[P, T]:
+) -> ASyncFunction[P, T]:
     from a_sync.abstract import ASyncABC
     
     # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
@@ -40,7 +40,7 @@ def _wrap_bound_method(
     
     modifiers, _force_await = _clean_default_from_modifiers(coro_fn, modifiers)
     
-    wrapped_coro_fn: AsyncBoundMethod[P, T] = ASyncFunction(coro_fn, **modifiers)  # type: ignore [arg-type, valid-type, misc]
+    wrapped_coro_fn: ASyncFunction[P, T] = ASyncFunction(coro_fn, **modifiers)  # type: ignore [arg-type, valid-type, misc]
 
     @functools.wraps(coro_fn)
     def bound_a_sync_wrap(self: ASyncABC, *args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore [name-defined]
