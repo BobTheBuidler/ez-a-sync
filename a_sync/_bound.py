@@ -6,10 +6,7 @@ from inspect import isawaitable
 from a_sync import _helpers
 from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
-from a_sync.decorator import a_sync as unbound_a_sync
-from a_sync.modified import ASyncFunction
-from a_sync.property import (ASyncCachedPropertyDescriptor,
-                             ASyncPropertyDescriptor)
+from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 
 if TYPE_CHECKING:
     from a_sync.abstract import ASyncABC
@@ -17,15 +14,32 @@ if TYPE_CHECKING:
 
 class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[ASyncInstance, P, T]):
     _fget: ASyncFunction[Concatenate[ASyncInstance, P], T]
-    def __get__(self, instance: ASyncInstance, owner) -> ASyncFunction[P, T]:
+    def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethod[P, T]":
         if instance is None:
             return self
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
+            if self.default == "sync":
+                bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+            elif self.default == "async":
+                bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+            elif instance.__a_sync_default_mode__() == "sync":
+                bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+            elif instance.__a_sync_default_mode__() == "async":
+                bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+            else:
+                bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             return bound
+
+class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T]):
+    def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethodSyncDefault[P, T]":
+        return super().__get__(instance, owner)
+
+class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T]):
+    def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethodAsyncDefault[P, T]":
+        return super().__get__(instance, owner)
 
 class ASyncBoundMethod(ASyncFunction[P, T]):
     @overload
@@ -65,13 +79,22 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         if isinstance(unbound, ASyncFunction):
             unbound = unbound.__wrapped__
         
-        modifiers, self._force_await = _clean_default_from_modifiers(unbound, modifiers)
+        modifiers, self.force_await = _clean_default_from_modifiers(unbound, modifiers)
         modified = _a_sync_function_cache(unbound, **modifiers)
-        wrapped = functools.partial(ASyncBoundMethod.wrap, modified, self.instance, self._force_await)
+        wrapped = functools.partial(ASyncBoundMethod.wrap, modified, self.instance, self.force_await)
         functools.update_wrapper(wrapped, unbound)
         super().__init__(wrapped, **modifiers)
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} for function {self.__module__}.{self.instance.__class__.__name__}.{self.__name__} bound to {self.instance}>"
+
+
+class ASyncBoundMethodSyncDefault(ASyncBoundMethod[P, T]):
+    def __get__(self, instance: ASyncInstance, owner) -> ASyncFunctionSyncDefault[P, T]:
+        return super().__get__(instance, owner)
+
+class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[P, T]):
+    def __get__(self, instance: ASyncInstance, owner) -> ASyncFunctionAsyncDefault[P, T]:
+        return super().__get__(instance, owner)
 
 
 @functools.lru_cache(maxsize=None)

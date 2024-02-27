@@ -1,10 +1,8 @@
 
-import functools
-
 import async_property as ap  # type: ignore [import]
 
 from a_sync import _helpers, config
-from a_sync._bound import ASyncMethodDescriptor, _clean_default_from_modifiers
+from a_sync._bound import ASyncMethodDescriptorAsyncDefault, _clean_default_from_modifiers
 from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
 
@@ -15,7 +13,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers, self.force_await = _clean_default_from_modifiers(self, self.modifiers)
-        self.hidden_method_descriptor =  ASyncMethodDescriptor(self.get, self.hidden_method_name, **hidden_modifiers)
+        self.hidden_method_descriptor =  ASyncMethodDescriptorAsyncDefault(self.get, self.hidden_method_name, **hidden_modifiers)
     async def get(self, instance: ASyncInstance) -> T:
         return await super().__get__(instance, self)
     def __get__(self, instance: ASyncInstance, owner) -> T:
@@ -31,8 +29,10 @@ class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.cached.A
 class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
 
-class ASyncPropertyDescriptorAsyncDefault(ASyncPropertyDescriptor[Awaitable[T]]):
+class ASyncPropertyDescriptorAsyncDefault(ASyncPropertyDescriptor[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+    def __get__(self, instance, owner) -> Awaitable[T]:
+        return super().__get__(instance, owner)
 
 
 ASyncPropertyDecorator = Callable[[Property[T]], ASyncPropertyDescriptor[T]]
@@ -104,8 +104,10 @@ def a_sync_property(  # type: ignore [misc]
 class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
 
-class ASyncCachedPropertyDescriptorAsyncDefault(ASyncCachedPropertyDescriptor[Awaitable[T]]):
+class ASyncCachedPropertyDescriptorAsyncDefault(ASyncCachedPropertyDescriptor[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+    def __get__(self, instance, owner) -> Awaitable[T]:
+        return super().__get__(instance, owner)
 
 ASyncCachedPropertyDecorator = Callable[[Property[T]], ASyncCachedPropertyDescriptor[T]]
 ASyncCachedPropertyDecoratorSyncDefault = Callable[[Property[T]], ASyncCachedPropertyDescriptorSyncDefault[T]]
