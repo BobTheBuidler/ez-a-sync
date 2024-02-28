@@ -15,7 +15,12 @@ logger = logging.getLogger(__name__)
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
     wrapped: Property[T]
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
-    def __init__(self, _fget: Property[Awaitable[T]], field_name=None, **modifiers: config.ModifierKwargs):
+    def __init__(
+        self, 
+        _fget: Property[T], 
+        field_name: Optional[str] = None,
+        **modifiers: config.ModifierKwargs,
+    ) -> None:
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
@@ -38,7 +43,14 @@ class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncProp
         
 class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.cached.AsyncCachedPropertyDescriptor):
     __slots__ = "_fset", "_fdel", "__async_property__"
-    def __init__(self, _fget, _fset=None, _fdel=None, field_name=None, **modifiers: Unpack[ModifierKwargs]):
+    def __init__(
+        self, 
+        _fget: Property[T], 
+        _fset: Optional[Callable[[object, Any], None]] = None, 
+        _fdel: Optional[Callable[[object], None]] = None,
+        field_name: Optional[str] = None,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
         super().__init__(_fget, field_name, **modifiers)
         self._check_method_sync(_fset, 'setter')
         self._check_method_sync(_fdel, 'deleter')
