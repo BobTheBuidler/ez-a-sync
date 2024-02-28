@@ -12,13 +12,14 @@ from a_sync.utils.iterators import as_yielded, exhaust_iterator
 
 logger = logging.getLogger(__name__)
 
-def create_task(coro: Awaitable[T], *, name: Optional[str] = None, persist: bool = False) -> "asyncio.Task[T]":
+def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until_done: bool = False) -> "asyncio.Task[T]":
     """A wrapper over `asyncio.create_task` which will work with any `Awaitable` object, not just `Coroutine` objects"""
     if not asyncio.iscoroutine(coro):
         coro = __await(coro)
-    if persist:
-        return __persist(coro, name=name)
-    return asyncio.create_task(coro, name=name)
+    task = asyncio.create_task(coro, name=name)
+    if skip_gc_until_done:
+        __persist(asyncio.create_task(__persisted_task_exc_wrap(task)))
+    return task
 
 
 MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
@@ -108,19 +109,9 @@ __persisted_tasks: Set["asyncio.Task[Any]"] = set()
 async def __await(awaitable: Awaitable[T]) -> T:
     return await awaitable
     
-def __persist(coro: Coroutine[None, None, T], name: Optional[str] = None) -> "asyncio.Task[T]":
-    coro = __persisted_task_exc_wrap(coro)
-    task = asyncio.create_task(coro, name=name)
-    task.add_done_callback(__persisted_task_callback)
+def __persist(task: "asyncio.Task[Any]") -> None:
     __persisted_tasks.add(task)
     __prune_persisted_tasks()
-
-def __persisted_task_callback(task: "asyncio.Task[Any]") -> None:
-    if e := task.exception():
-        logger.error("ERROR for %s: %s", task, e)
-        logger.exception(e)
-    else:
-        __persisted_tasks.remove(task)
 
 def __prune_persisted_tasks():
     for task in tuple(__persisted_tasks):
@@ -128,13 +119,13 @@ def __prune_persisted_tasks():
             if (e := task.exception()) and not isinstance(e, exceptions.PersistedTaskException):
                 logger.exception(e)
                 raise e
-            __persisted_tasks.remove(task)
+            __persisted_tasks.discard(task)
 
-async def __persisted_task_exc_wrap(awaitable: Awaitable[T]) -> T:
+async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
     try:
-        return await awaitable
+        await task
     except Exception as e:
-        raise exceptions.PersistedTaskException(e, awaitable) from e
+        raise exceptions.PersistedTaskException(e, task) from e
 
 @overload
 def _yield(key: K, value: V, yields: Literal['keys']) -> K:...
