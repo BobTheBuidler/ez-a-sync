@@ -133,7 +133,7 @@ def a_sync_property(  # type: ignore [misc]
     return decorator if func is None else decorator(func)
 
 
-class cached_property(ASyncCachedPropertyDescriptor):...
+class cached_property(ASyncCachedPropertyDescriptor[T]):...
 
 class ASyncCachedPropertyDescriptorSyncDefault(cached_property[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
