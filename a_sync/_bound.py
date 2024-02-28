@@ -64,6 +64,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, 
             return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T]):
+    __slots__ = "instance", 
     def __init__(
         self, 
         instance: ASyncInstance, 

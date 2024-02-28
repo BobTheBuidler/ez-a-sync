@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
     _fget: Property[T]
+    __slots__ = "hidden_method_name", "hidden_method_descriptor"
     def __init__(self, _fget: Property[Awaitable[T]], field_name=None, **modifiers: config.ModifierKwargs):
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
@@ -35,6 +36,7 @@ class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncProp
     pass
         
 class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.cached.AsyncCachedPropertyDescriptor):
+    __slots__ = "_fset", "_fdel"
     def __init__(self, _fget, _fset=None, _fdel=None, field_name=None, **modifiers: Unpack[ModifierKwargs]):
         super().__init__(_fget, field_name, **modifiers)
         self._check_method_sync(_fset, 'setter')
@@ -244,11 +246,11 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[ASyncInstance, P,
 
 def _is_a_sync_instance(instance: object) -> bool:
     try:
-        return instance.__dict__["__is_a_sync_instance__"]
-    except KeyError:
+        return instance.__is_a_sync_instance__
+    except AttributeError:
         from a_sync.abstract import ASyncABC
         is_a_sync = isinstance(instance, ASyncABC)
-        instance.__dict__["__is_a_sync_instance__"] = is_a_sync
+        instance.__is_a_sync_instance__ = is_a_sync
         return is_a_sync
 
 def _parse_args(func: Union[None, DefaultMode, Property[T]], modifiers: ModifierKwargs) -> Tuple[Optional[Property[T]], ModifierKwargs]:

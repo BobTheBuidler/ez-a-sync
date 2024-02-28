@@ -9,6 +9,7 @@ from a_sync.modifiers.manager import ModifierManager
 
 class ModifiedMixin:
     modifiers: ModifierManager
+    __slots__ = "modifiers", 
     def _asyncify(self, func: SyncFn[P, T]) -> CoroFn[P, T]:
         """Applies only async modifiers."""
         coro_fn = _helpers._asyncify(func, self.modifiers.executor)
@@ -23,6 +24,7 @@ class ModifiedMixin:
     
         
 class ASyncFunction(ModifiedMixin, Generic[P, T]):
+    __slots__ = "__wrapped__", 
     @overload
     def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:...
     @overload
@@ -112,7 +114,6 @@ else:
     _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
               
 class ASyncDecorator(ModifiedMixin):
-    _fn = None
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         assert 'default' in modifiers, modifiers
         self.modifiers = ModifierManager(modifiers)
