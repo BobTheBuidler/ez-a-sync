@@ -26,7 +26,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
     def __get__(self, instance: ASyncInstance, owner) -> T:
         awaitable = super().__get__(instance, owner)
         # if the user didn't specify a default behavior, we will defer to the instance
-        should_await = self.default == "sync" if self.default else instance.__a_sync_instance_should_await__            
+        should_await = self.default == "sync" if self.default else instance.__a_sync_instance_should_await__ if isinstance(instance, ASyncABC) else not asyncio.get_event_loop().is_running()  
         return _helpers._await(awaitable) if should_await else awaitable
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncPropertyDescriptor):
