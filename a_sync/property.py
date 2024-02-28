@@ -13,14 +13,15 @@ from a_sync._typing import *
 logger = logging.getLogger(__name__)
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
-    _fget: Property[T]
-    __slots__ = "hidden_method_name", "hidden_method_descriptor"
+    wrapped: Property[T]
+    __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
     def __init__(self, _fget: Property[Awaitable[T]], field_name=None, **modifiers: config.ModifierKwargs):
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
         hidden_modifiers["default"] = "async"
         self.hidden_method_descriptor =  HiddenMethodDescriptor(self.get, self.hidden_method_name, **hidden_modifiers)
+        self._fget = self.wrapped
     async def get(self, instance: object) -> T:
         return await super().__get__(instance, None)
     def __get__(self, instance: object, owner) -> T:
@@ -239,7 +240,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[ASyncInstance, P,
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            bound = HiddenMethod(instance, self._fget, **self.modifiers)
+            bound = HiddenMethod(instance, self.wrapped, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new hidden method: %s", bound)
             return bound

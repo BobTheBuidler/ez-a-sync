@@ -13,7 +13,7 @@ from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunct
 logger = logging.getLogger(__name__)
 
 class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, T]):
-    _fget: ASyncFunction[Concatenate[O, P], T]
+    wrapped: ASyncFunction[Concatenate[O, P], T]
     def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethod[P, T]":
         if instance is None:
             return self
@@ -22,15 +22,15 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
         except KeyError:
             from a_sync.abstract import ASyncABC
             if self.default == "sync":
-                bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethodSyncDefault(instance, self.wrapped, **self.modifiers)
             elif self.default == "async":
-                bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethodAsyncDefault(instance, self.wrapped, **self.modifiers)
             elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
-                bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethodSyncDefault(instance, self.wrapped, **self.modifiers)
             elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
-                bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethodAsyncDefault(instance, self.wrapped, **self.modifiers)
             else:
-                bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethod(instance, self.wrapped, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
             return bound
@@ -46,7 +46,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+            bound = ASyncBoundMethodSyncDefault(instance, self.wrapped, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
             return bound
@@ -58,7 +58,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, 
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+            bound = ASyncBoundMethodAsyncDefault(instance, self.wrapped, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
             return bound
