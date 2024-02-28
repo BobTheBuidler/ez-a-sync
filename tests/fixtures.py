@@ -94,18 +94,17 @@ class TestSingletonMeta(TestClass, metaclass=ASyncSingletonMeta):
     pass
 
 class TestSemaphore(ASyncBase):
-    semaphore=1  # NOTE: this is detected propely by undecorated test_fn but not the properties
+    #semaphore=1  # NOTE: this is detected propely by undecorated test_fn but not the properties
     
     def __init__(self, v: int, sync: bool):
         self.v = v
         self.sync = sync
     
     # spec on class and function both working
-    #@a_sync.a_sync(semaphore=1)
+    @a_sync.a_sync(semaphore=1)
     async def test_fn(self) -> int:
         await asyncio.sleep(1)
         return self.v
-    
 
     # spec on class, function, property all working
     @a_sync.aka.property('async', semaphore=1)

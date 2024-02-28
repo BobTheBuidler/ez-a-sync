@@ -1,15 +1,16 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 import functools
+import logging
 from inspect import isawaitable
 
-from a_sync import _helpers
-from a_sync._descriptor import ASyncDescriptor, clean_default_from_modifiers
+from a_sync import _helpers, exceptions
+from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
 from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 
-if TYPE_CHECKING:
-    from a_sync.abstract import ASyncABC
+
+logger = logging.getLogger(__name__)
 
 class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, T]):
     _fget: ASyncFunction[Concatenate[O, P], T]
@@ -39,14 +40,34 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
 
 class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T]):
     def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethodSyncDefault[P, T]":
-        return super().__get__(instance, owner)
+        if instance is None:
+            return self
+        try:
+            return instance.__dict__[self.field_name]
+        except KeyError:
+            bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+            instance.__dict__[self.field_name] = bound
+            return bound
 
 class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T]):
     def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethodAsyncDefault[P, T]":
-        return super().__get__(instance, owner)
+        if instance is None:
+            return self
+        try:
+            return instance.__dict__[self.field_name]
+        except KeyError:
+            bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+            instance.__dict__[self.field_name] = bound
+            print(f"new bound method: {bound}")
+            return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T]):
-    def __init__(self, instance: ASyncInstance, unbound: AnyFn[Concatenate[ASyncInstance, P], T], **modifiers: Unpack[ModifierKwargs]) -> None:
+    def __init__(
+        self, 
+        instance: ASyncInstance, 
+        unbound: AnyFn[Concatenate[ASyncInstance, P], T], 
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
         from a_sync.abstract import ASyncABC
         if not isinstance(instance, ASyncABC):
             raise RuntimeError(f"{instance} must be an instance of a class that inherits from ASyncABC.")
@@ -55,12 +76,18 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
             unbound = unbound.__wrapped__
-        wrapped = functools.partial(unbound, self.instance)
+        if asyncio.iscoroutinefunction(unbound):
+            async def wrapped(*args: P.args, **kwargs: P.kwargs) -> T:
+                return await unbound(self.instance, *args, **kwargs)
+        else:
+            def wrapped(*args: P.args, **kwargs: P.kwargs) -> T:
+                return unbound(self.instance, *args, **kwargs)
         functools.update_wrapper(wrapped, unbound)
         super().__init__(wrapped, **modifiers)
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} for function {self.__module__}.{self.instance.__class__.__name__}.{self.__name__} bound to {self.instance}>"
     def __call__(self, *args, **kwargs):
+        logger.debug("calling %s", self)
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
         retval = coro = super().__call__(*args, **kwargs)
@@ -69,14 +96,9 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
             # We can return the value.
             return retval  # type: ignore [return-value]
         # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-        should_await = self.instance.__a_sync_should_await__(kwargs)
-        if isawaitable(retval) and should_await:
-            print(f'super().__call__ returned {retval}')
-        while isawaitable(retval) and should_await:
-            # TODO: figure out why we need to do this recursively
-            print(f'reawaiting {retval} for {self.__wrapped__}')
-            retval = coro = _helpers._await(coro) if self.instance.__a_sync_should_await__(kwargs) else coro  # type: ignore [call-overload, return-value]
-        return retval
+        return _helpers._await(coro) if self.should_await(kwargs) else coro  # type: ignore [call-overload, return-value]
+    def should_await(self, kwargs: dict) -> bool:
+        return self.instance.__a_sync_should_await__(kwargs)
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[P, T]):
@@ -90,8 +112,3 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[P, T]):
         return super().__get__(instance, owner)
     def __call__(self, *args, **kwargs) -> Awaitable[T]:
         return super().__call__(*args, **kwargs)
-
-
-@functools.lru_cache(maxsize=None)
-def _a_sync_function_cache(unbound: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> ASyncFunction[P, T]:
-    return ASyncFunction(unbound, **modifiers)

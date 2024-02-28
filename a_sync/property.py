@@ -1,27 +1,32 @@
 
 import functools
+import inspect
+import logging
 
 import async_property as ap  # type: ignore [import]
 
-from a_sync import _helpers, config
-from a_sync._bound import ASyncMethodDescriptorAsyncDefault
-from a_sync._descriptor import ASyncDescriptor, clean_default_from_modifiers
+from a_sync import _helpers, config, exceptions
+from a_sync._bound import ASyncBoundMethodAsyncDefault, ASyncMethodDescriptorAsyncDefault
+from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
 
 
+logger = logging.getLogger(__name__)
+
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
-    _fget: HiddenMethod[ASyncInstance, T]
+    _fget: Property[T]
     def __init__(self, _fget: Property[Awaitable[T]], field_name=None, **modifiers: config.ModifierKwargs):
         super().__init__(_fget, field_name, **modifiers)
-        self.should_await = modifiers["default"] == "sync" if "default" in modifiers else None
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
         hidden_modifiers["default"] = "async"
-        self.hidden_method_descriptor =  ASyncMethodDescriptorAsyncDefault(self._fget, self.hidden_method_name, **hidden_modifiers)
+        self.hidden_method_descriptor =  HiddenMethodDescriptor(self.get, self.hidden_method_name, **hidden_modifiers)
+    async def get(self, instance: ASyncInstance) -> T:
+        return await super().__get__(instance, None)
     def __get__(self, instance: ASyncInstance, owner) -> T:
         awaitable = super().__get__(instance, owner)
         # if the user didn't specify a default behavior, we will defer to the instance
-        should_await = self.should_await if self.should_await is not None else instance.__a_sync_instance_should_await__
+        should_await = self.default == "sync" if self.default else instance.__a_sync_instance_should_await__            
         return _helpers._await(awaitable) if should_await else awaitable
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncPropertyDescriptor):
@@ -216,3 +221,22 @@ def _parse_args(func: Union[None, DefaultMode, Property[T]], modifiers: Modifier
         modifiers['default'] = func
         func = None
     return func, modifiers
+
+class HiddenMethod(ASyncBoundMethodAsyncDefault[ASyncInstance, T]):
+    def should_await(self, kwargs: dict) -> bool:
+        try:
+            return self.instance.__a_sync_should_await_from_kwargs__(kwargs)
+        except exceptions.NoFlagsFound:
+            return False
+
+class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[ASyncInstance, P, T]):
+    def __get__(self, instance: ASyncInstance, owner) -> HiddenMethod[ASyncInstance, T]:
+        if instance is None:
+            return self
+        try:
+            return instance.__dict__[self.field_name]
+        except KeyError:
+            bound = HiddenMethod(instance, self._fget, **self.modifiers)
+            instance.__dict__[self.field_name] = bound
+            logger.debug("new hidden method: %s", bound)
+            return bound
