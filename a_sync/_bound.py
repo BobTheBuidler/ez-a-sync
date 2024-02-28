@@ -4,7 +4,7 @@ import functools
 import logging
 from inspect import isawaitable
 
-from a_sync import _helpers, exceptions
+from a_sync import _helpers, _kwargs
 from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
 from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
@@ -32,6 +32,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
             else:
                 bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
             instance.__dict__[self.field_name] = bound
+            logger.debug("new bound method: %s", bound)
             return bound
     def __set__(self, instance, value):
         raise RuntimeError(f"cannot set {self.field_name}, {self} is what you get. sorry.")
@@ -47,6 +48,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T
         except KeyError:
             bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
             instance.__dict__[self.field_name] = bound
+            logger.debug("new bound method: %s", bound)
             return bound
 
 class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T]):
@@ -58,7 +60,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, 
         except KeyError:
             bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
             instance.__dict__[self.field_name] = bound
-            print(f"new bound method: {bound}")
+            logger.debug("new bound method: %s", bound)
             return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T]):
@@ -68,9 +70,6 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         unbound: AnyFn[Concatenate[ASyncInstance, P], T], 
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
-        from a_sync.abstract import ASyncABC
-        if not isinstance(instance, ASyncABC):
-            raise RuntimeError(f"{instance} must be an instance of a class that inherits from ASyncABC.")
         self.instance = instance
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
@@ -97,8 +96,18 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
             return retval  # type: ignore [return-value]
         # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
         return _helpers._await(coro) if self.should_await(kwargs) else coro  # type: ignore [call-overload, return-value]
+    @functools.cached_property
+    def __bound_to_a_sync_instance__(self) -> bool:
+        from a_sync.abstract import ASyncABC
+        return isinstance(self.instance, ASyncABC)
     def should_await(self, kwargs: dict) -> bool:
-        return self.instance.__a_sync_should_await__(kwargs)
+        if flag := _kwargs.get_flag_name(kwargs):
+            return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
+        elif self.default:
+            return self.default == "sync"
+        elif self.__bound_to_a_sync_instance__:
+            return self.instance.__a_sync_should_await__(kwargs)
+        return asyncio.iscoroutinefunction(self.__wrapped__)
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[P, T]):

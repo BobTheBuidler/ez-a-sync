@@ -1,6 +1,5 @@
 
 import functools
-import inspect
 import logging
 
 import async_property as ap  # type: ignore [import]
@@ -26,7 +25,10 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
     def __get__(self, instance: object, owner) -> T:
         awaitable = super().__get__(instance, owner)
         # if the user didn't specify a default behavior, we will defer to the instance
-        should_await = self.default == "sync" if self.default else instance.__a_sync_instance_should_await__ if isinstance(instance, ASyncABC) else not asyncio.get_event_loop().is_running()  
+        if _is_a_sync_instance(instance):
+            should_await = self.default == "sync" if self.default else instance.__a_sync_instance_should_await__
+        else:
+            should_await = self.default == "sync" if self.default else not asyncio.get_event_loop().is_running()  
         return _helpers._await(awaitable) if should_await else awaitable
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncPropertyDescriptor):
@@ -40,16 +42,18 @@ class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.cached.A
         self._fset = _fset
         self._fdel = _fdel
 
-class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[T]):
+class property(ASyncPropertyDescriptor[T]):...
+
+class ASyncPropertyDescriptorSyncDefault(property[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
 
-class ASyncPropertyDescriptorAsyncDefault(ASyncPropertyDescriptor[T]):
+class ASyncPropertyDescriptorAsyncDefault(property[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
     def __get__(self, instance, owner) -> Awaitable[T]:
         return super().__get__(instance, owner)
 
 
-ASyncPropertyDecorator = Callable[[Property[T]], ASyncPropertyDescriptor[T]]
+ASyncPropertyDecorator = Callable[[Property[T]], property[T]]
 ASyncPropertyDecoratorSyncDefault = Callable[[Property[T]], ASyncPropertyDescriptorSyncDefault[T]]
 ASyncPropertyDecoratorAsyncDefault = Callable[[Property[T]], ASyncPropertyDescriptorAsyncDefault[T]]
 
@@ -124,20 +128,22 @@ def a_sync_property(  # type: ignore [misc]
     elif modifiers.get("default") == "async":
         descriptor_class = ASyncPropertyDescriptorAsyncDefault
     else:
-        descriptor_class = ASyncPropertyDescriptor
+        descriptor_class = property
     decorator = functools.partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
 
-class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[T]):
+class cached_property(ASyncCachedPropertyDescriptor):...
+
+class ASyncCachedPropertyDescriptorSyncDefault(cached_property[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
 
-class ASyncCachedPropertyDescriptorAsyncDefault(ASyncCachedPropertyDescriptor[T]):
+class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
     def __get__(self, instance, owner) -> Awaitable[T]:
         return super().__get__(instance, owner)
 
-ASyncCachedPropertyDecorator = Callable[[Property[T]], ASyncCachedPropertyDescriptor[T]]
+ASyncCachedPropertyDecorator = Callable[[Property[T]], cached_property[T]]
 ASyncCachedPropertyDecoratorSyncDefault = Callable[[Property[T]], ASyncCachedPropertyDescriptorSyncDefault[T]]
 ASyncCachedPropertyDecoratorAsyncDefault = Callable[[Property[T]], ASyncCachedPropertyDescriptorAsyncDefault[T]]
 
@@ -216,11 +222,6 @@ def a_sync_cached_property(  # type: ignore [misc]
     decorator = functools.partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
-def _parse_args(func: Union[None, DefaultMode, Property[T]], modifiers: ModifierKwargs) -> Tuple[Optional[Property[T]], ModifierKwargs]:
-    if func in ['sync', 'async']:
-        modifiers['default'] = func
-        func = None
-    return func, modifiers
 
 class HiddenMethod(ASyncBoundMethodAsyncDefault[ASyncInstance, T]):
     def should_await(self, kwargs: dict) -> bool:
@@ -240,3 +241,18 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[ASyncInstance, P,
             instance.__dict__[self.field_name] = bound
             logger.debug("new hidden method: %s", bound)
             return bound
+
+def _is_a_sync_instance(instance: object) -> bool:
+    try:
+        return instance.__dict__["__is_a_sync_instance__"]
+    except KeyError:
+        from a_sync.abstract import ASyncABC
+        is_a_sync = isinstance(instance, ASyncABC)
+        instance.__dict__["__is_a_sync_instance__"] = is_a_sync
+        return is_a_sync
+
+def _parse_args(func: Union[None, DefaultMode, Property[T]], modifiers: ModifierKwargs) -> Tuple[Optional[Property[T]], ModifierKwargs]:
+    if func in ['sync', 'async']:
+        modifiers['default'] = func
+        func = None
+    return func, 
