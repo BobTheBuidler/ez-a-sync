@@ -108,7 +108,7 @@ class TestSemaphore(ASyncBase):
     
 
     # spec on class, function, property all working
-    @a_sync.aka.property#('async', semaphore=1)
+    @a_sync.aka.property('async', semaphore=1)
     async def test_property(self) -> int:
         await asyncio.sleep(1)
         return self.v * 2

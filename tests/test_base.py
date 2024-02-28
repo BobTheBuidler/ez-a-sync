@@ -65,8 +65,13 @@ async def test_base_async(cls: type, i: int):
             async_instance.test_fn(sync=True)
     
     # Can we access hidden methods for properties?
-    assert await async_instance.__test_property__() == i * 2
-    assert await async_instance.__test_cached_property__() == i * 3
+    getter_coro = async_instance.__test_property__()
+    assert asyncio.iscoroutine(getter_coro), getter_coro
+    assert await getter_coro == i * 2
+
+    getter_coro = async_instance.__test_cached_property__()
+    assert asyncio.iscoroutine(getter_coro), getter_coro
+    assert await getter_coro == i * 3
     # Can we override them too?
     with pytest.raises(RuntimeError):
         async_instance.__test_cached_property__(sync=True)

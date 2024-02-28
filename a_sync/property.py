@@ -11,16 +11,18 @@ from a_sync._typing import *
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
     _fget: HiddenMethod[ASyncInstance, T]
-    def __init__(self, _fget: Callable[Concatenate[ASyncInstance, P], Awaitable[T]], field_name=None, **modifiers: config.ModifierKwargs):
+    def __init__(self, _fget: Property[Awaitable[T]], field_name=None, **modifiers: config.ModifierKwargs):
         super().__init__(_fget, field_name, **modifiers)
+        self.should_await = modifiers["default"] == "sync" if "default" in modifiers else None
         self.hidden_method_name = f"__{self.field_name}__"
-        hidden_modifiers = clean_default_from_modifiers(self, self.modifiers)
-        self.hidden_method_descriptor =  ASyncMethodDescriptorAsyncDefault(self.get, self.hidden_method_name, **hidden_modifiers)
-    async def get(self, instance: ASyncInstance) -> T:
-        return await super().__get__(instance, self)
+        hidden_modifiers = dict(self.modifiers)
+        hidden_modifiers["default"] = "async"
+        self.hidden_method_descriptor =  ASyncMethodDescriptorAsyncDefault(self._fget, self.hidden_method_name, **hidden_modifiers)
     def __get__(self, instance: ASyncInstance, owner) -> T:
         awaitable = super().__get__(instance, owner)
-        return _helpers._await(awaitable) if instance.__a_sync_instance_should_await__ else awaitable
+        # if the user didn't specify a default behavior, we will defer to the instance
+        should_await = self.should_await if self.should_await is not None else instance.__a_sync_instance_should_await__
+        return _helpers._await(awaitable) if should_await else awaitable
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncPropertyDescriptor):
     pass
@@ -28,10 +30,10 @@ class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncProp
 class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.cached.AsyncCachedPropertyDescriptor):
     def __init__(self, _fget, _fset=None, _fdel=None, field_name=None, **modifiers: Unpack[ModifierKwargs]):
         super().__init__(_fget, field_name, **modifiers)
-        self._fset = _fset
-        self._fdel = _fdel
         self._check_method_sync(_fset, 'setter')
         self._check_method_sync(_fdel, 'deleter')
+        self._fset = _fset
+        self._fdel = _fdel
 
 class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""

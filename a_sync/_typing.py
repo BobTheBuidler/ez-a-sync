@@ -36,7 +36,7 @@ SyncUnboundMethod = Callable[Concatenate[ASyncInstance, P], T]
 UnboundMethod = Union[AsyncUnboundMethod[ASyncInstance, P, T], SyncUnboundMethod[ASyncInstance, P, T]]
 
 Property = Callable[[object], T]
-HiddenMethod = Callable[[O], T]
+HiddenMethod = Callable[[O], Awaitable[T]]
 
 AsyncDecorator = Callable[[CoroFn[P, T]], CoroFn[P, T]]
 
