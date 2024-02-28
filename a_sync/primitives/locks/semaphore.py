@@ -88,7 +88,7 @@ class ThreadsafeSemaphore(Semaphore):
     def __len__(self) -> int:
         return sum(len(sem._waiters) for sem in self.semaphores.values())
     
-    @property
+    @functools.cached_property
     def use_dummy(self) -> bool:
         return self._value is None
     
