@@ -21,9 +21,9 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
         hidden_modifiers = dict(self.modifiers)
         hidden_modifiers["default"] = "async"
         self.hidden_method_descriptor =  HiddenMethodDescriptor(self.get, self.hidden_method_name, **hidden_modifiers)
-    async def get(self, instance: ASyncInstance) -> T:
+    async def get(self, instance: object) -> T:
         return await super().__get__(instance, None)
-    def __get__(self, instance: ASyncInstance, owner) -> T:
+    def __get__(self, instance: object, owner) -> T:
         awaitable = super().__get__(instance, owner)
         # if the user didn't specify a default behavior, we will defer to the instance
         should_await = self.default == "sync" if self.default else instance.__a_sync_instance_should_await__ if isinstance(instance, ASyncABC) else not asyncio.get_event_loop().is_running()  
