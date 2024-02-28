@@ -255,4 +255,4 @@ def _parse_args(func: Union[None, DefaultMode, Property[T]], modifiers: Modifier
     if func in ['sync', 'async']:
         modifiers['default'] = func
         func = None
-    return func, 
+    return func, modifiers
