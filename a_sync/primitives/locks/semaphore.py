@@ -1,6 +1,7 @@
 import asyncio
 import functools
 import logging
+import sys
 from collections import defaultdict
 from threading import Thread, current_thread
 
@@ -10,7 +11,10 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 logger = logging.getLogger(__name__)
 
 class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
-    __slots__ = "name", "_value", "_waiters", "_loop", "_decorated"
+    if sys.version_info >= (3, 10):
+        __slots__ = "name", "_value", "_waiters", "_decorated"
+    else:
+        __slots__ = "name", "_value", "_waiters", "_loop", "_decorated"
     def __init__(self, value: int, name=None, **kwargs) -> None:
         """
         `name` is used only in debug logs to provide useful context
