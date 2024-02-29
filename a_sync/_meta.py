@@ -5,10 +5,11 @@ from abc import ABCMeta
 from typing import Any, Dict, Tuple
 
 from a_sync import ENVIRONMENT_VARIABLES, modifiers
-from a_sync._bound import ASyncMethodDescriptor, _wrap_property
+from a_sync._bound import ASyncMethodDescriptor
 from a_sync.future import _ASyncFutureWrappedFn  # type: ignore [attr-defined]
 from a_sync.modified import ASyncFunction, ModifiedMixin
 from a_sync.property import ASyncPropertyDescriptor, ASyncCachedPropertyDescriptor
+from a_sync.primitives.locks.semaphore import Semaphore
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ class ASyncMeta(ABCMeta):
             elif "__" in attr_name:
                 logger.debug(f"`%s.%s` incluldes a double-underscore, skipping", new_class_name, attr_name)
                 continue
-            elif isinstance(attr_value, _ASyncFutureWrappedFn):
+            elif isinstance(attr_value, (_ASyncFutureWrappedFn, Semaphore)):
                 logger.debug(f"`%s.%s` is a %s, skipping", new_class_name, attr_name, attr_value.__class__.__name__)
                 continue
             logger.debug(f"inspecting `{new_class_name}.{attr_name}` of type {attr_value.__class__.__name__}")

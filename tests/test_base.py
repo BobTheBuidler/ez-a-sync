@@ -4,6 +4,7 @@ import time
 
 import pytest
 
+from a_sync._bound import ASyncBoundMethodAsyncDefault
 from a_sync._meta import ASyncMeta
 from tests.fixtures import TestClass, TestInheritor, TestMeta, increment, TestSync
 
@@ -28,9 +29,17 @@ def test_base_sync(cls: type, i: int):
     assert isinstance(val, int)
 
     # Can we access hidden methods for properties?
-    assert sync_instance.__test_property__() == i * 2
+    getter = sync_instance.__test_property__
+    assert isinstance(getter, ASyncBoundMethodAsyncDefault), getter
+    getter_coro = getter()
+    assert asyncio.iscoroutine(getter_coro), getter_coro
+    assert asyncio.get_event_loop().run_until_complete(getter_coro) == i * 2
     start = time.time()
-    assert sync_instance.__test_cached_property__() == i * 3
+    getter = sync_instance.__test_cached_property__
+    assert isinstance(getter, ASyncBoundMethodAsyncDefault), getter
+    getter_coro = getter()
+    assert asyncio.iscoroutine(getter_coro), getter_coro
+    assert asyncio.get_event_loop().run_until_complete(getter_coro) == i * 3
     # Can we override them too?
     assert asyncio.get_event_loop().run_until_complete(sync_instance.__test_cached_property__(sync=False)) == i * 3
     duration = time.time() - start
@@ -65,8 +74,17 @@ async def test_base_async(cls: type, i: int):
             async_instance.test_fn(sync=True)
     
     # Can we access hidden methods for properties?
-    assert await async_instance.__test_property__() == i * 2
-    assert await async_instance.__test_cached_property__() == i * 3
+    getter = async_instance.__test_property__
+    assert isinstance(getter, ASyncBoundMethodAsyncDefault), getter
+    getter_coro = getter()
+    assert asyncio.iscoroutine(getter_coro), getter_coro
+    assert await getter_coro == i * 2
+
+    getter = async_instance.__test_cached_property__
+    assert isinstance(getter, ASyncBoundMethodAsyncDefault), getter
+    getter_coro = getter()
+    assert asyncio.iscoroutine(getter_coro), getter_coro
+    assert await getter_coro == i * 3
     # Can we override them too?
     with pytest.raises(RuntimeError):
         async_instance.__test_cached_property__(sync=True)
