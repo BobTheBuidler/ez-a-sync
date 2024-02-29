@@ -2,8 +2,7 @@
 
 import pytest
 
-from a_sync.iter import (ASyncIterable, ASyncIterator, ASyncWrappedIterable,
-                         ASyncWrappedIterator)
+from a_sync.iter import ASyncIterable, ASyncIterator
 
 
 async def async_gen():
@@ -12,16 +11,20 @@ async def async_gen():
     yield 2
 
 def test_iterable_wrap():
-    assert isinstance(ASyncIterable.wrap(async_gen()), ASyncWrappedIterable)
+    assert isinstance(ASyncIterable(async_gen()), ASyncIterable)
+    assert isinstance(ASyncIterable.wrap(async_gen()), ASyncIterable)
 
 def test_iterator_wrap():
-    assert isinstance(ASyncIterator.wrap(async_gen()), ASyncWrappedIterator)
+    assert isinstance(ASyncIterator(async_gen()), ASyncIterator)
+    assert isinstance(ASyncIterator.wrap(async_gen()), ASyncIterator)
 
 def test_iterable_sync():
+    assert [i for i in ASyncIterable(async_gen())] == [0, 1, 2]
     assert [i for i in ASyncIterable.wrap(async_gen())] == [0, 1, 2]
 
 @pytest.mark.asyncio_cooperative
 async def test_iterable_async():
+    assert [i async for i in ASyncIterable(async_gen())] == [0, 1, 2]
     assert [i async for i in ASyncIterable.wrap(async_gen())] == [0, 1, 2]
 
 def test_iterator_sync():
