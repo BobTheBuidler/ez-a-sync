@@ -79,8 +79,8 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         else:
             self.__unbound__ = unbound
         bound = self._bound_async if asyncio.iscoroutinefunction(unbound) else self._bound_sync
-        functools.update_wrapper(bound, self.__unbound__)
         super().__init__(bound, **modifiers)
+        functools.update_wrapper(self, self.__unbound__)
     def __repr__(self) -> str:
         instance_type = type(self.instance)
         return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.__self__}>"
