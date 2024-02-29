@@ -4,15 +4,79 @@ import functools
 from inspect import isawaitable
 
 from a_sync import _helpers
+from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
 from a_sync.decorator import a_sync as unbound_a_sync
 from a_sync.modified import ASyncFunction
-from a_sync.property import (AsyncCachedPropertyDescriptor,
-                             AsyncPropertyDescriptor)
+from a_sync.property import (ASyncCachedPropertyDescriptor,
+                             ASyncPropertyDescriptor)
 
 if TYPE_CHECKING:
     from a_sync.abstract import ASyncABC
 
+
+class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[ASyncInstance, P, T]):
+    _fget: ASyncFunction[Concatenate[ASyncInstance, P], T]
+    def __get__(self, instance: ASyncInstance, owner) -> ASyncFunction[P, T]:
+        if instance is None:
+            return self
+        try:
+            return instance.__dict__[self.field_name]
+        except KeyError:
+            bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
+            instance.__dict__[self.field_name] = bound
+            return bound
+
+class ASyncBoundMethod(ASyncFunction[P, T]):
+    @overload
+    def wrap(
+        cls,
+        a_sync_fn: ASyncFunction[Concatenate[ASyncInstance, P], T], 
+        instance: "ASyncABC", 
+        force_await: Literal[True], 
+        *args: P.args, 
+        **kwargs: P.kwargs,
+    ) -> T:...
+    @classmethod
+    def wrap(
+        cls,
+        a_sync_fn: ASyncFunction[Concatenate[ASyncInstance, P], T], 
+        instance: "ASyncABC", 
+        force_await: bool, 
+        *args: P.args, 
+        **kwargs: P.kwargs,
+    ) -> Union[T, Awaitable[T]]:
+        # This could either be a coroutine or a return value from an awaited coroutine,
+        #   depending on if an overriding flag kwarg was passed into the function call.
+        retval = coro = a_sync_fn(instance, *args, **kwargs)
+        if not isawaitable(retval):
+            # The coroutine was already awaited due to the use of an overriding flag kwarg.
+            # We can return the value.
+            return retval  # type: ignore [return-value]
+        # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
+        return _helpers._await(coro) if instance.__a_sync_should_await__(kwargs, force=force_await) else coro  # type: ignore [call-overload, return-value]
+    def __init__(self, instance: ASyncInstance, unbound: AnyFn[Concatenate[ASyncInstance, P], T], **modifiers: Unpack[ModifierKwargs]) -> None:
+        from a_sync.abstract import ASyncABC
+        if not isinstance(instance, ASyncABC):
+            raise RuntimeError(f"{instance} must be an instance of a class that inherits from ASyncABC.")
+        self.instance = instance
+
+        # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
+        if isinstance(unbound, ASyncFunction):
+            unbound = unbound.__wrapped__
+        
+        modifiers, self._force_await = _clean_default_from_modifiers(unbound, modifiers)
+        modified = _a_sync_function_cache(unbound, **modifiers)
+        wrapped = functools.partial(ASyncBoundMethod.wrap, modified, self.instance, self._force_await)
+        functools.update_wrapper(wrapped, unbound)
+        super().__init__(wrapped, **modifiers)
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} for function {self.__module__}.{self.instance.__class__.__name__}.{self.__name__} bound to {self.instance}>"
+
+
+@functools.lru_cache(maxsize=None)
+def _a_sync_function_cache(unbound: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> ASyncFunction[P, T]:
+    return ASyncFunction(unbound, **modifiers)
 
 def _clean_default_from_modifiers(
     coro_fn: CoroFn[P, T],  # type: ignore [misc]
@@ -26,86 +90,3 @@ def _clean_default_from_modifiers(
                 force_await = True
             modifiers['default'] = 'async'
     return modifiers, force_await
-
-            
-def _wrap_bound_method(
-    coro_fn: CoroFn[P, T],
-    **modifiers: Unpack[ModifierKwargs]
-) -> ASyncFunction[P, T]:
-    from a_sync.abstract import ASyncABC
-    
-    # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
-    if isinstance(coro_fn, ASyncFunction):
-        coro_fn = coro_fn.__wrapped__
-    
-    modifiers, _force_await = _clean_default_from_modifiers(coro_fn, modifiers)
-    
-    wrapped_coro_fn: ASyncFunction[P, T] = ASyncFunction(coro_fn, **modifiers)  # type: ignore [arg-type, valid-type, misc]
-
-    @functools.wraps(coro_fn)
-    def bound_a_sync_wrap(self: ASyncABC, *args: P.args, **kwargs: P.kwargs) -> T:  # type: ignore [name-defined]
-        if not isinstance(self, ASyncABC):
-            raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
-        # This could either be a coroutine or a return value from an awaited coroutine,
-        #   depending on if an overriding flag kwarg was passed into the function call.
-        retval = coro = wrapped_coro_fn(self, *args, **kwargs)
-        if not isawaitable(retval):
-            # The coroutine was already awaited due to the use of an overriding flag kwarg.
-            # We can return the value.
-            return retval  # type: ignore [return-value]
-        # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-        return _helpers._await(coro) if self.__a_sync_should_await__(kwargs, force=_force_await) else coro  # type: ignore [call-overload, return-value]
-    return bound_a_sync_wrap
-
-class _PropertyGetter(Awaitable[T]):
-    def __init__(self, coro: Awaitable[T], property: Union[AsyncPropertyDescriptor[T], AsyncCachedPropertyDescriptor[T]]):
-        self._coro = coro
-        self._property = property
-    def __repr__(self) -> str:
-        return f"<_PropertyGetter for {self._property}._get at {hex(id(self))}>"
-    def __await__(self) -> Generator[Any, None, T]:
-        return self._coro.__await__()
-
-@overload
-def _wrap_property(
-    async_property: AsyncPropertyDescriptor[T],
-    **modifiers: Unpack[ModifierKwargs]
-) -> AsyncPropertyDescriptor[T]:...
-
-@overload
-def _wrap_property(
-    async_property: AsyncCachedPropertyDescriptor[T],
-    **modifiers: Unpack[ModifierKwargs]
-) -> AsyncCachedPropertyDescriptor:...
-
-def _wrap_property(
-    async_property: Union[AsyncPropertyDescriptor[T], AsyncCachedPropertyDescriptor[T]],
-    **modifiers: Unpack[ModifierKwargs]
-) -> Tuple[Property[T], HiddenMethod[T]]:
-    if not isinstance(async_property, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
-        raise TypeError(f"{async_property} must be one of: AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor")
-
-    from a_sync.abstract import ASyncABC
-
-    async_property.hidden_method_name = f"__{async_property.field_name}__"
-    
-    modifiers, _force_await = _clean_default_from_modifiers(async_property, modifiers)
-    
-    @unbound_a_sync(**modifiers)
-    async def _get(instance: ASyncABC) -> T:
-        return await async_property.__get__(instance, async_property)
-    
-    @functools.wraps(async_property)
-    def a_sync_method(self: ASyncABC, **kwargs) -> T:
-        if not isinstance(self, ASyncABC):
-            raise RuntimeError(f"{self} must be an instance of a class that inherits from ASyncABC.")
-        awaitable = _PropertyGetter(_get(self), async_property)
-        return _helpers._await(awaitable) if self.__a_sync_should_await__(kwargs, force=_force_await) else awaitable
-    
-    @property  # type: ignore [misc]
-    @functools.wraps(async_property)
-    def a_sync_property(self: ASyncABC) -> T:
-        coro = getattr(self, async_property.hidden_method_name)(sync=False)
-        return _helpers._await(coro) if self.__a_sync_should_await__({}, force=_force_await) else coro
-    
-    return a_sync_property, a_sync_method
