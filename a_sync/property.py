@@ -223,9 +223,13 @@ def a_sync_cached_property(  # type: ignore [misc]
     decorator = functools.partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
-
-class HiddenMethod(ASyncBoundMethodAsyncDefault[ASyncInstance, T]):
-    def should_await(self, kwargs: dict) -> bool:
+class HiddenMethod(ASyncBoundMethodAsyncDefault[O, T]):
+    def __init__(self, instance: O, unbound: AnyFn[Concatenate[O, P], T], field_name: str, **modifiers: _helpers.ModifierKwargs) -> None:
+        super().__init__(instance, unbound, **modifiers)
+        self.__name__ = field_name
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__} for property {self.__self__.__class__.__module__}.{self.__self__.__class__.__name__}.{self.__name__[2:-2]} bound to {self.__self__}>"
+    def _should_await(self, kwargs: dict) -> bool:
         try:
             return self.instance.__a_sync_should_await_from_kwargs__(kwargs)
         except exceptions.NoFlagsFound:
