@@ -17,7 +17,7 @@ class ModifiedMixin:
     def _await(self) -> Callable[[Awaitable[T]], T]:
         """Applies only sync modifiers."""
         return self.modifiers.apply_sync_modifiers(_helpers._await)
-    @property
+    @functools.cached_property
     def default(self) -> DefaultMode:
         return self.modifiers.default
     
@@ -52,7 +52,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         """Returns the final wrapped version of 'self._fn' decorated with all of the a_sync goodness."""
         return self._async_wrap if self._async_def else self._sync_wrap
     
-    @property
+    @functools.cached_property
     def _sync_default(self) -> bool:
         """If user did not specify a default, we defer to the function. 'def' vs 'async def'"""
         return True if self.default == 'sync' else False if self.default == 'async' else not self._async_def
@@ -61,7 +61,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def _async_def(self) -> bool:
         return asyncio.iscoroutinefunction(self.__wrapped__)
     
-    def _run_sync(self, kwargs: dict):
+    def _run_sync(self, kwargs: dict) -> bool:
         if flag := _kwargs.get_flag_name(kwargs):
             # If a flag was specified in the kwargs, we will defer to it.
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)
@@ -72,7 +72,8 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     @functools.cached_property
     def _asyncified(self) -> CoroFn[P, T]:
         """Turns 'self._fn' async and applies both sync and async modifiers."""
-        assert not self._async_def, f"Can only be applied to sync functions, not {self.__wrapped__}"
+        if self._async_def:
+            raise TypeError(f"Can only be applied to sync functions, not {self.__wrapped__}")
         return self._asyncify(self._modified_fn)  # type: ignore [arg-type]
     
     @functools.cached_property

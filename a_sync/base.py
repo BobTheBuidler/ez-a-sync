@@ -1,8 +1,8 @@
 
+import functools
 import inspect
 import logging
 from contextlib import suppress
-from functools import cached_property
 
 from a_sync import _flags, exceptions
 from a_sync._typing import *
@@ -17,7 +17,7 @@ class ASyncGenericBase(ASyncABC):
     Allows for the use of a variety of flags out-of-box.
     You can choose which flag(s) work best for your subclass implementation.
     """
-    @cached_property
+    @functools.cached_property
     def __a_sync_flag_name__(self) -> str:
         logger.debug("checking a_sync flag for %s", self)
         try:
@@ -37,8 +37,9 @@ class ASyncGenericBase(ASyncABC):
             raise exceptions.InvalidFlag(flag)
         return flag
         
-    @property  # This property is not cached so you can 
+    @functools.cached_property
     def __a_sync_flag_value__(self) -> bool:
+        """If you wish to be able to hotswap default modes, just duplicate this def as a non-cached property."""
         flag = self.__a_sync_flag_name__
         flag_value = getattr(self, flag)
         if not isinstance(flag_value, bool):

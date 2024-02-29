@@ -1,5 +1,6 @@
 
 import abc
+import functools
 import logging
 
 from a_sync import _flags, _kwargs, exceptions, modifiers
@@ -24,9 +25,12 @@ class ASyncABC(metaclass=ASyncMeta):
             # No flag found in kwargs, check for a flag attribute.
             return force if force else self.__should_await_from_instance
 
-    @property
+    @functools.cached_property
     def __should_await_from_instance(self) -> bool:
-        """You can override this if you want."""
+        """
+        You can override this if you want. 
+        If you want to be able to hotswap instance modes, you can redefine this as a non-cached property.
+        """
         return _flags.negate_if_necessary(self.__a_sync_flag_name__, self.__a_sync_flag_value__)
     
     def __should_await_from_kwargs(self, kwargs: dict) -> bool:
