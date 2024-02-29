@@ -14,7 +14,7 @@ async def test_persistent_task():
         await asyncio.sleep(1)
         nonlocal check
         check = True
-    create_task(coro=task(), skip_gc_until_done=True)
+    create_task(coro=task(), persist=True)
     # there is no local reference to the newly created task. does it still complete? 
     await asyncio.sleep(2)
     assert check is True
@@ -23,10 +23,10 @@ async def test_persistent_task():
 async def test_pruning():
     async def task():
         return
-    create_task(coro=task(), skip_gc_until_done=True)
+    create_task(coro=task(), persist=True)
     await asyncio.sleep(0)
     # previously, it failed here
-    create_task(coro=task(), skip_gc_until_done=True)
+    create_task(coro=task(), persist=True)
 
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_init():
