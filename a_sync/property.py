@@ -34,7 +34,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncPropertyDescriptor):
     pass
 
-class property(AsyncPropertyDescriptor[T]):...
+class property(ASyncPropertyDescriptor[T]):...
 
 class ASyncPropertyDescriptorSyncDefault(property[T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
