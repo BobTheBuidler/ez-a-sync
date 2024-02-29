@@ -75,10 +75,11 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
+            print(modifiers)
             self.__unbound__ = unbound.wrapped
         else:
             self.__unbound__ = unbound
-        bound = self._bound_async if asyncio.iscoroutinefunction(unbound) else self._bound_sync
+        bound = self._bound_async if asyncio.iscoroutinefunction(self.__unbound__) else self._bound_sync
         super().__init__(bound, **modifiers)
         functools.update_wrapper(self, self.__unbound__)
     def __repr__(self) -> str:
