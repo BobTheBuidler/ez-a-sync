@@ -5,6 +5,7 @@ import pytest
 
 from a_sync._meta import ASyncMeta
 from a_sync.base import ASyncGenericBase
+from a_sync.property import HiddenMethod
 from a_sync.singleton import ASyncGenericSingleton
 from tests.fixtures import TestSingleton, TestSingletonMeta, increment
 
@@ -30,9 +31,15 @@ def test_singleton_meta_sync(cls: type, i: int):
     assert isinstance(val, int)
 
     # Can we access hidden methods for properties?
-    assert sync_instance.__test_property__() == 0
+    getter = sync_instance.__test_property__
+    assert isinstance(getter, HiddenMethod), getter
+    getter_coro = getter()
+    assert asyncio.get_event_loop().run_until_complete(getter_coro) == 0
     start = time.time()
-    assert sync_instance.__test_cached_property__() == 0
+    getter = sync_instance.__test_property__
+    assert isinstance(getter, HiddenMethod), getter
+    getter_coro = getter()
+    assert asyncio.get_event_loop().run_until_complete(getter_coro) == 0
     # Can we override them too?
     assert asyncio.get_event_loop().run_until_complete(sync_instance.__test_cached_property__(sync=False)) == 0
     duration = time.time() - start

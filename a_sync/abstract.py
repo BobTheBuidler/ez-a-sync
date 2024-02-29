@@ -16,24 +16,24 @@ class ASyncABC(metaclass=ASyncMeta):
     # Concrete Methods (overridable) #
     ##################################
 
-    def __a_sync_should_await__(self, kwargs: dict, force: Optional[Literal[True]] = None) -> bool:
+    def __a_sync_should_await__(self, kwargs: dict) -> bool:
         """Returns a boolean that indicates whether methods of 'instance' should be called as sync or async methods."""
         try:
             # Defer to kwargs always
-            return self.__should_await_from_kwargs(kwargs)
+            return self.__a_sync_should_await_from_kwargs__(kwargs)
         except exceptions.NoFlagsFound:
             # No flag found in kwargs, check for a flag attribute.
-            return force if force else self.__should_await_from_instance
+            return self.__a_sync_instance_should_await__
 
     @functools.cached_property
-    def __should_await_from_instance(self) -> bool:
+    def __a_sync_instance_should_await__(self) -> bool:
         """
         You can override this if you want. 
         If you want to be able to hotswap instance modes, you can redefine this as a non-cached property.
         """
         return _flags.negate_if_necessary(self.__a_sync_flag_name__, self.__a_sync_flag_value__)
     
-    def __should_await_from_kwargs(self, kwargs: dict) -> bool:
+    def __a_sync_should_await_from_kwargs__(self, kwargs: dict) -> bool:
         """You can override this if you want."""
         if flag := _kwargs.get_flag_name(kwargs):
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]

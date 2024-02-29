@@ -52,7 +52,11 @@ class ImproperFunctionType(ValueError):
 
 class FunctionNotAsync(ImproperFunctionType):
     def __init__(self, fn):
-        super().__init__(f"'coro_fn' must be a coroutine function defined with 'async def'. You passed {fn}.")
+        super().__init__(f"`coro_fn` must be a coroutine function defined with `async def`. You passed {fn}.")
+
+class FunctionNotSync(ImproperFunctionType):
+    def __init__(self, fn):
+        super().__init__(f"`func` must be a coroutine function defined with `def`. You passed {fn}.")
 
 class KwargsUnsupportedError(ValueError):
     def __init__(self):

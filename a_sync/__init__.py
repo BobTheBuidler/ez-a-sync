@@ -6,6 +6,7 @@ from a_sync.future import ASyncFuture, future  # type: ignore [attr-defined]
 from a_sync.iter import ASyncIterable, ASyncIterator
 from a_sync.modifiers.semaphores import apply_semaphore
 from a_sync.primitives import *
+from a_sync.property import ASyncCachedPropertyDescriptor, ASyncPropertyDescriptor, cached_property, property
 from a_sync.singleton import ASyncGenericSingleton
 from a_sync.task import TaskMapping as map
 from a_sync.task import TaskMapping, create_task
@@ -18,7 +19,6 @@ aka = alias = aliases
 
 # alias for backward-compatability, will be removed eventually, probably in 0.1.0
 ASyncBase = ASyncGenericBase
-
 
 __all__ = [
     "all",
@@ -34,4 +34,9 @@ __all__ = [
     "ASyncIterator",
     "ASyncGenericSingleton",
     "TaskMapping", 
+    # property
+    "cached_property",
+    "property",
+    "ASyncPropertyDescriptor",
+    "ASyncCachedPropertyDescriptor",
 ]

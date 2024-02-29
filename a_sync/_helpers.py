@@ -10,10 +10,9 @@ from async_property.base import \
 from async_property.cached import \
     AsyncCachedPropertyDescriptor  # type: ignore [import]
 
-from a_sync import _flags
+from a_sync import _flags, exceptions
 from a_sync._typing import *
-from a_sync.exceptions import (ASyncRuntimeError, KwargsUnsupportedError,
-                               SyncModeInAsyncContextError)
+from a_sync.modified import ASyncFunction
 
 
 def get_event_loop() -> asyncio.AbstractEventLoop:
@@ -44,10 +43,12 @@ def _await(awaitable: Awaitable[T]) -> T:
         return get_event_loop().run_until_complete(awaitable)
     except RuntimeError as e:
         if str(e) == "This event loop is already running":
-            raise SyncModeInAsyncContextError from e
+            raise exceptions.SyncModeInAsyncContextError from e
         raise e
 
 def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: ignore [misc]
+    if asyncio.iscoroutinefunction(func) or isinstance(func, ASyncFunction):
+        raise exceptions.FunctionNotSync(func)
     @functools.wraps(func)
     async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
         return await asyncio.futures.wrap_future(
