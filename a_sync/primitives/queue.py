@@ -9,7 +9,8 @@ else:
     class _Queue(asyncio.Queue[T]):...
 
 class Queue(_Queue[T]):
-    # for type hint support
+    __slots__ = "_maxsize", "_loop", "_getters", "_putters", "_unfinished_tasks", "_finished"
+    # for type hint support, no functional difference
     async def get(self) -> T:
         return await super().get()
     def get_nowait(self) -> T:

@@ -17,6 +17,7 @@ class CounterLock(_DebugDaemonMixin):
     
     The internal counter can only increase.
     """
+    __slots__ = "is_ready", "_name", "_value", "_events"
     def __init__(self, start_value: int = 0, name: Optional[str] = None):
         self._name = name
         self._value = start_value
@@ -62,6 +63,7 @@ class CounterLockCluster:
     
     `wait_for(i)` will block until the value of all CounterLock objects is >= i.
     """
+    __slots__ = "locks", 
     def __init__(self, counter_locks: Iterable[CounterLock]) -> None:
         self.locks = list(counter_locks)
     

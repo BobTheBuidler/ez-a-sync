@@ -17,7 +17,7 @@ class ModifierManager(Dict[str, Any]):
     semaphore: SemaphoreSpec
     # sync modifiers
     executor: Executor
-
+    __slots__ = "_modifiers", 
     def __init__(self, modifiers: ModifierKwargs) -> None:
         for key in modifiers.keys():
             if key not in valid_modifiers:

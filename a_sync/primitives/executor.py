@@ -25,6 +25,7 @@ Initializer = Callable[..., object]
 class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     _max_workers: int
     _workers: str
+    __slots__ = "_max_workers", "_initializer", "_initargs", "_broken", "_shutdown_lock"
     async def run(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
         """
         A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`
@@ -66,6 +67,9 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
 
 class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
     _workers = "processes"
+    __slots__ = ("_mp_context", "_processes", "_pending_work_items", "_call_queue", "_result_queue",
+                 "_queue_management_thread", "_queue_count", "_shutdown_thread", "_work_ids",
+                 "_queue_management_thread_wakeup")
     def __init__(
         self, 
         max_workers: Optional[int] = None, 
@@ -83,6 +87,7 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
 
 class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
     _workers = "threads"
+    __slots__ = "_work_queue", "_idle_semaphore", "_threads", "_shutdown", "_thread_name_prefix"
     def __init__(
         self, 
         max_workers: Optional[int] = None, 
@@ -168,6 +173,7 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
     This ThreadPoolExecutor implementation prunes inactive threads after 'timeout' seconds without a work item.
     Pruned threads will be automatically recreated as needed for future workloads. up to 'max_threads' can be active at any one time.
     """
+    __slots__ = "_timeout", "_adjusting_lock"
     def __init__(self, max_workers=None, thread_name_prefix='',
                  initializer=None, initargs=(), timeout=TEN_MINUTES):
         self._timeout=timeout

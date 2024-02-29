@@ -5,11 +5,11 @@ from a_sync._typing import *
 from a_sync.modified import ASyncFunction, ModifiedMixin, ModifierManager
 
 class ASyncDescriptor(ModifiedMixin, Generic[T]):
+    __slots__ = "field_name", "_fget"
     def __init__(self, _fget: UnboundMethod[ASyncInstance, P, T], field_name=None, **modifiers: ModifierKwargs):
         if not callable(_fget):
             raise ValueError(f'Unable to decorate {_fget}')
         self.modifiers = ModifierManager(modifiers)
-        self._fn: UnboundMethod[ASyncInstance, P, T] = _fget
         if isinstance(_fget, ASyncFunction):
             self._fget = _fget
         elif asyncio.iscoroutinefunction(_fget):
