@@ -24,7 +24,35 @@ class AsyncPropertyDescriptor(PropertyDescriptor[T], ap.base.AsyncPropertyDescri
     pass
         
 class AsyncCachedPropertyDescriptor(PropertyDescriptor[T], ap.cached.AsyncCachedPropertyDescriptor):
-    pass
+    __slots__ = "_fset", "_fdel", "__async_property__"
+    def __init__(self, _fget, _fset=None, _fdel=None, field_name=None, **modifiers: Unpack[ModifierKwargs]):
+        super().__init__(_fget, field_name, **modifiers)
+        self._check_method_sync(_fset, 'setter')
+        self._check_method_sync(_fdel, 'deleter')
+        self._fset = _fset
+        self._fdel = _fdel
+
+class property(AsyncPropertyDescriptor[T]):...
+
+class ASyncPropertyDescriptorSyncDefault(property[T]):
+    """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+
+class ASyncPropertyDescriptorAsyncDefault(property[T]):
+    """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+    def __get__(self, instance, owner) -> Awaitable[T]:
+        return super().__get__(instance, owner)
+
+
+ASyncPropertyDecorator = Callable[[Property[T]], property[T]]
+ASyncPropertyDecoratorSyncDefault = Callable[[Property[T]], ASyncPropertyDescriptorSyncDefault[T]]
+ASyncPropertyDecoratorAsyncDefault = Callable[[Property[T]], ASyncPropertyDescriptorAsyncDefault[T]]
+
+@overload
+def a_sync_property(  # type: ignore [misc]
+    func: Literal[None],
+    default: Literal["sync"],
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncPropertyDecoratorSyncDefault[T]:...
 
 
 @overload
