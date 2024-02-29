@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from a_sync.abstract import ASyncABC
     ASyncInstance = TypeVar("ASyncInstance", bound=ASyncABC)
 else:
-    ASyncInstance = TypeVar("ASyncInstance", bound=object)
+    ASyncInstance = object
 
 T = TypeVar("T")
 K = TypeVar("K")
