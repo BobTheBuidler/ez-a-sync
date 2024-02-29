@@ -84,8 +84,8 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         functools.update_wrapper(wrapped, unbound)
         super().__init__(wrapped, **modifiers)
     def __repr__(self) -> str:
-        typ = type(self.instance)
-        return f"<{self.__class__.__name__} for function {typ.__module__}.{typ.__name__}.{self.__name__} bound to {self.__self__}>"
+        instance_type = type(self.instance)
+        return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.instance}>"
     def __call__(self, *args, **kwargs):
         logger.debug("calling %s", self)
         # This could either be a coroutine or a return value from an awaited coroutine,

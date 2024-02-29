@@ -228,7 +228,8 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[O, T]):
         super().__init__(instance, unbound, **modifiers)
         self.__name__ = field_name
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} for property {self.__self__.__class__.__module__}.{self.__self__.__class__.__name__}.{self.__name__[2:-2]} bound to {self.__self__}>"
+        instance_type = type(self.instance)
+        return f"<{self.__class__.__name__} for property {instance_type.__module__}.{instance_type.__name__}.{self.__name__[2:-2]} bound to {self.instance}>"
     def _should_await(self, kwargs: dict) -> bool:
         try:
             return self.instance.__a_sync_should_await_from_kwargs__(kwargs)
