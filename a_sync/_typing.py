@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from a_sync.abstract import ASyncABC
     ASyncInstance = TypeVar("ASyncInstance", bound=ASyncABC)
 else:
-    ASyncInstance = object
+    ASyncInstance = TypeVar("ASyncInstance", bound=object)
 
 T = TypeVar("T")
 K = TypeVar("K")
@@ -33,10 +33,7 @@ AnyFn = Union[CoroFn[P, T], SyncFn[P, T]]
 
 AsyncUnboundMethod = Callable[Concatenate[ASyncInstance, P], Awaitable[T]]
 SyncUnboundMethod = Callable[Concatenate[ASyncInstance, P], T]
-if TYPE_CHECKING:
-    UnboundMethod = Union[AsyncUnboundMethod[ASyncInstance, P, T], SyncUnboundMethod[ASyncInstance, P, T]]
-else:
-    UnboundMethod = Union[AsyncUnboundMethod[P, T], SyncUnboundMethod[P, T]]
+UnboundMethod = Union[AsyncUnboundMethod[ASyncInstance, P, T], SyncUnboundMethod[ASyncInstance, P, T]]
 
 Property = Callable[[object], T]
 
