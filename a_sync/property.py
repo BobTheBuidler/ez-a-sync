@@ -35,6 +35,7 @@ class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncProp
     pass
         
 class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.cached.AsyncCachedPropertyDescriptor):
+    __slots__ = "_fset", "_fdel", "__async_property__"
     def __init__(self, _fget, _fset=None, _fdel=None, field_name=None, **modifiers: Unpack[ModifierKwargs]):
         super().__init__(_fget, field_name, **modifiers)
         self._check_method_sync(_fset, 'setter')
