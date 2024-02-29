@@ -21,8 +21,6 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
         field_name: Optional[str] = None,
         **modifiers: config.ModifierKwargs,
     ) -> None:
-        if not isinstance(_fget, (AsyncPropertyGetter, PropertyGetter)):
-            raise ValueError(f"`_fget` must be a property getter, you passed {_fget}")
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
