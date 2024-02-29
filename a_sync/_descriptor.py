@@ -7,6 +7,8 @@ from a_sync.modified import ASyncFunction, ModifiedMixin, ModifierManager
 class ASyncDescriptor(ModifiedMixin, Generic[T]):
     __slots__ = "field_name",
     def __init__(self, _fget: AnyUnboundMethod[ASyncInstance, P, T], field_name=None, **modifiers: ModifierKwargs):
+        if not isinstance(_fget, (AsyncUnboundMethod, SyncUnboundMethod)):
+            raise ValueError(f"`_fget` must be a method descriptor, you passed {_fget}")
         if not callable(_fget):
             raise ValueError(f'Unable to decorate {_fget}')
         self.modifiers = ModifierManager(modifiers)

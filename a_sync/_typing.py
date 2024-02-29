@@ -6,7 +6,7 @@ from typing import (TYPE_CHECKING, Any, AsyncIterable, AsyncIterator, Awaitable,
                     Callable, Coroutine, DefaultDict, Deque, Dict, Generator, 
                     Generic, ItemsView, Iterable, Iterator, KeysView, List, Literal,
                     Mapping, Optional, Protocol, Set, Tuple, Type, TypedDict,
-                    TypeVar, Union, ValuesView, final, overload)
+                    TypeVar, Union, ValuesView, final, overload, runtime_checkable)
 
 from typing_extensions import Concatenate, ParamSpec, Self, Unpack
 
@@ -19,6 +19,7 @@ else:
 T = TypeVar("T")
 K = TypeVar("K")
 V = TypeVar("V")
+I = TypeVar("I")
 O = TypeVar("O", bound=object)
 E = TypeVar('E', bound=Exception)
 TYPE = TypeVar("TYPE", bound=Type)
@@ -32,24 +33,18 @@ CoroFn = Callable[P, Awaitable[T]]
 SyncFn = Callable[P, T]
 AnyFn = Union[CoroFn[P, T], SyncFn[P, T]]
 
-class CoroBoundMethod(Protocol[O, P, T]):
-    __self__: O
+class CoroBoundMethod(Protocol[I, P, T]):
+    __self__: I
     __call__: Callable[P, Awaitable[T]]
-class SyncBoundMethod(Protocol[O, P, T]):
-    __self__: O
+class SyncBoundMethod(Protocol[I, P, T]):
+    __self__: I
     __call__: Callable[P, T]
 AnyBoundMethod = Union[CoroBoundMethod[O, P, T], SyncBoundMethod[O, P, T]]
 
-class CoroClassMethod(Protocol[TYPE, P, T]):
-    __self__: TYPE
-    __call__: Callable[P, Awaitable[T]]
-class SyncClassMethod(Protocol[TYPE, P, T]):
-    __self__: TYPE
-    __call__: Callable[P, Awaitable[T]]
-AnyClassMethod = Union[CoroClassMethod[TYPE, P, T], SyncClassMethod[TYPE, P, T]]
-
+@runtime_checkable
 class AsyncUnboundMethod(Protocol[O, P, T]):
     __get__: Callable[[O, None], CoroBoundMethod[O, P, T]]
+@runtime_checkable
 class SyncUnboundMethod(Protocol[O, P, T]):
     __get__: Callable[[O, None], SyncBoundMethod[O, P, T]]
 AnyUnboundMethod = Union[AsyncUnboundMethod[O, P, T], SyncUnboundMethod[O, P, T]]
