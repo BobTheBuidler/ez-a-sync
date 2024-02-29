@@ -4,10 +4,12 @@ import threading
 from abc import ABCMeta
 from typing import Any, Dict, Tuple
 
-from a_sync import ENVIRONMENT_VARIABLES, _bound, modifiers
+from a_sync import ENVIRONMENT_VARIABLES, modifiers
+from a_sync._bound import ASyncMethodDescriptor
 from a_sync.future import _ASyncFutureWrappedFn  # type: ignore [attr-defined]
 from a_sync.modified import ASyncFunction, ModifiedMixin
-from a_sync.property import PropertyDescriptor
+from a_sync.property import ASyncPropertyDescriptor, ASyncCachedPropertyDescriptor
+from a_sync.primitives.locks.semaphore import Semaphore
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +32,7 @@ class ASyncMeta(ABCMeta):
             elif "__" in attr_name:
                 logger.debug(f"`%s.%s` incluldes a double-underscore, skipping", new_class_name, attr_name)
                 continue
-            elif isinstance(attr_value, _ASyncFutureWrappedFn):
+            elif isinstance(attr_value, (_ASyncFutureWrappedFn, Semaphore)):
                 logger.debug(f"`%s.%s` is a %s, skipping", new_class_name, attr_name, attr_value.__class__.__name__)
                 continue
             logger.debug(f"inspecting `{new_class_name}.{attr_name}` of type {attr_value.__class__.__name__}")
@@ -46,23 +48,20 @@ class ASyncMeta(ABCMeta):
                 else:
                     logger.debug(f"I did not find any modifiers")
                 logger.debug(f"full modifier set for `{new_class_name}.{attr_name}`: {fn_modifiers}")
-                if isinstance(attr_value, PropertyDescriptor):
+                if isinstance(attr_value, (ASyncPropertyDescriptor, ASyncCachedPropertyDescriptor)):
                     # Wrap property
                     logger.debug(f"`{attr_name} is a property, now let's wrap it")
-                    wrapped, hidden = _bound._wrap_property(attr_value, **fn_modifiers)
-                    attrs[attr_name] = wrapped
-                    logger.debug(f"`{attr_name}` is now `{wrapped}`")
                     logger.debug(f"since `{attr_name}` is a property, we will add a hidden dundermethod so you can still access it both sync and async")
-                    attrs[attr_value.hidden_method_name] = hidden
-                    logger.debug(f"`{new_class_name}.{attr_value.hidden_method_name}` is now {hidden}")
+                    attrs[attr_value.hidden_method_name] = attr_value.hidden_method_descriptor
+                    logger.debug(f"`{new_class_name}.{attr_value.hidden_method_name}` is now {attr_value.hidden_method_descriptor}")
                 elif isinstance(attr_value, ASyncFunction):
-                    attrs[attr_name] = _bound._wrap_bound_method(attr_value, **fn_modifiers)
+                    attrs[attr_name] = ASyncMethodDescriptor(attr_value, **fn_modifiers)
                 else:
                     raise NotImplementedError(attr_name, attr_value)
                     
             elif callable(attr_value):
                 # NOTE We will need to improve this logic if somebody needs to use it with classmethods or staticmethods.
-                attrs[attr_name] = _bound._wrap_bound_method(attr_value, **fn_modifiers)
+                attrs[attr_name] = ASyncMethodDescriptor(attr_value, **fn_modifiers)
             else:
                 logger.debug(f"`{new_class_name}.{attr_name}` is not callable, we will take no action with it")
         return super(ASyncMeta, cls).__new__(cls, new_class_name, bases, attrs)    

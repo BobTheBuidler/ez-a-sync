@@ -16,36 +16,35 @@ class ASyncABC(metaclass=ASyncMeta):
     # Concrete Methods (overridable) #
     ##################################
 
-    def __a_sync_should_await__(self, kwargs: dict, force: Optional[Literal[True]] = None) -> bool:
+    def __a_sync_should_await__(self, kwargs: dict) -> bool:
         """Returns a boolean that indicates whether methods of 'instance' should be called as sync or async methods."""
         try:
             # Defer to kwargs always
-            return self.__should_await_from_kwargs(kwargs)
+            return self.__a_sync_should_await_from_kwargs__(kwargs)
         except exceptions.NoFlagsFound:
             # No flag found in kwargs, check for a flag attribute.
-            return force if force else self.__should_await_from_instance
+            return self.__a_sync_instance_should_await__
 
     @functools.cached_property
-    def __should_await_from_instance(self) -> bool:
+    def __a_sync_instance_should_await__(self) -> bool:
         """
         You can override this if you want. 
         If you want to be able to hotswap instance modes, you can redefine this as a non-cached property.
         """
         return _flags.negate_if_necessary(self.__a_sync_flag_name__, self.__a_sync_flag_value__)
     
-    def __should_await_from_kwargs(self, kwargs: dict) -> bool:
+    def __a_sync_should_await_from_kwargs__(self, kwargs: dict) -> bool:
         """You can override this if you want."""
         if flag := _kwargs.get_flag_name(kwargs):
-            return _kwargs.is_sync(flag, kwargs, pop_flag=True)
-        else:
-            raise NoFlagsFound("kwargs", kwargs.keys())
+            return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
+        raise NoFlagsFound("kwargs", kwargs.keys())
     
     @classmethod
     def __a_sync_instance_will_be_sync__(cls, args: tuple, kwargs: dict) -> bool:
         """You can override this if you want."""
         logger.debug("checking `%s.%s.__init__` signature against provided kwargs to determine a_sync mode for the new instance", cls.__module__, cls.__name__)
         if flag := _kwargs.get_flag_name(kwargs):
-            sync = _kwargs.is_sync(flag, kwargs)
+            sync = _kwargs.is_sync(flag, kwargs)  # type: ignore [arg-type]
             logger.debug("kwargs indicate the new instance created with args %s %s is %ssynchronous", args, kwargs, 'a' if sync is False else '')
             return sync
         logger.debug("No valid flags found in kwargs, checking class definition for defined default")

@@ -19,7 +19,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         self._decorated: Set[str] = set()
     
     # Dank new functionality
-    def __call__(self, fn: Callable[P, T]) -> Callable[P, T]:
+    def __call__(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
         return self.decorate(fn)  # type: ignore [arg-type, return-value]
     
     def __repr__(self) -> str:
