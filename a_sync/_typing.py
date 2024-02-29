@@ -21,6 +21,7 @@ K = TypeVar("K")
 V = TypeVar("V")
 O = TypeVar("O", bound=object)
 E = TypeVar('E', bound=Exception)
+TYPE = TypeVar("TYPE", bound=Type)
 P = ParamSpec("P")
 
 Numeric = Union[int, float, Decimal]
@@ -31,22 +32,30 @@ CoroFn = Callable[P, Awaitable[T]]
 SyncFn = Callable[P, T]
 AnyFn = Union[CoroFn[P, T], SyncFn[P, T]]
 
-class CoroBoundMethod(Protocol[O, P, T], Callable[P, T]):
+class CoroBoundMethod(Protocol[O, P, T]):
     __self__: O
-class SyncBoundMethod(Protocol[O, P, T], Callable[P, Awaitable[T]]):
+    __call__: Callable[P, Awaitable[T]]
+class SyncBoundMethod(Protocol[O, P, T]):
     __self__: O
+    __call__: Callable[P, T]
 AnyBoundMethod = Union[CoroBoundMethod[O, P, T], SyncBoundMethod[O, P, T]]
 
-ClassMethod = AnyFn[Concatenate[Type, P], T]
+class CoroClassMethod(Protocol[TYPE, P, T]):
+    __self__: TYPE
+    __call__: Callable[P, Awaitable[T]]
+class SyncClassMethod(Protocol[TYPE, P, T]):
+    __self__: TYPE
+    __call__: Callable[P, Awaitable[T]]
+AnyClassMethod = Union[CoroClassMethod[TYPE, P, T], SyncClassMethod[TYPE, P, T]]
 
-class AsyncUnboundMethod(Protocol[O, Awaitable[T], Generic[P, T]]):
+class AsyncUnboundMethod(Protocol[O, P, T]):
     __get__: Callable[[O, None], CoroBoundMethod[O, P, T]]
-class SyncUnboundMethod(Protocol[O, T]):
+class SyncUnboundMethod(Protocol[O, P, T]):
     __get__: Callable[[O, None], SyncBoundMethod[O, P, T]]
 AnyUnboundMethod = Union[AsyncUnboundMethod[O, P, T], SyncUnboundMethod[O, P, T]]
 
-class AsyncPropertyGetter(CoroBoundMethod[object, T]):...
-class PropertyGetter(SyncBoundMethod[object, T]):...
+class AsyncPropertyGetter(CoroBoundMethod[object, tuple, T]):...
+class PropertyGetter(SyncBoundMethod[object, tuple, T]):...
 AnyPropertyGetter = Union[AsyncPropertyGetter[T], PropertyGetter[T]]
 
 AsyncDecorator = Callable[[CoroFn[P, T]], CoroFn[P, T]]
