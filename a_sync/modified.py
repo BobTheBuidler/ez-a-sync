@@ -9,7 +9,7 @@ from a_sync.modifiers.manager import ModifierManager
 
 class ModifiedMixin:
     modifiers: ModifierManager
-    __slots__ = "modifiers", 
+    __slots__ = "modifiers", "wrapped"
     def _asyncify(self, func: SyncFn[P, T]) -> CoroFn[P, T]:
         """Applies only async modifiers."""
         coro_fn = _helpers._asyncify(func, self.modifiers.executor)
