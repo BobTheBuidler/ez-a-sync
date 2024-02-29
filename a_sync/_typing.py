@@ -31,17 +31,25 @@ CoroFn = Callable[P, Awaitable[T]]
 SyncFn = Callable[P, T]
 AnyFn = Union[CoroFn[P, T], SyncFn[P, T]]
 
-AsyncUnboundMethod = Callable[Concatenate[ASyncInstance, P], Awaitable[T]]
-SyncUnboundMethod = Callable[Concatenate[ASyncInstance, P], T]
-UnboundMethod = Union[AsyncUnboundMethod[ASyncInstance, P, T], SyncUnboundMethod[ASyncInstance, P, T]]
+class CoroBoundMethod(Protocol[O, P, T], Callable[P, T]):
+    __self__: O
+class SyncBoundMethod(Protocol[O, P, T], Callable[P, Awaitable[T]]):
+    __self__: O
+AnyBoundMethod = Union[CoroBoundMethod[O, P, T], SyncBoundMethod[O, P, T]]
 
-Property = Callable[[object], T]
+ClassMethod = AnyFn[Concatenate[Type, P], T]
+
+class AsyncUnboundMethod(Protocol[O, Awaitable[T], Generic[P, T]]):
+    __get__: Callable[[O, None], CoroBoundMethod[O, P, T]]
+class SyncUnboundMethod(Protocol[O, T]):
+    __get__: Callable[[O, None], SyncBoundMethod[O, P, T]]
+AnyUnboundMethod = Union[AsyncUnboundMethod[O, P, T], SyncUnboundMethod[O, P, T]]
+
+class AsyncPropertyGetter(CoroBoundMethod[object, T]):...
+class PropertyGetter(SyncBoundMethod[object, T]):...
+AnyPropertyGetter = Union[AsyncPropertyGetter[T], PropertyGetter[T]]
 
 AsyncDecorator = Callable[[CoroFn[P, T]], CoroFn[P, T]]
-
-AllToAsyncDecorator = Callable[[AnyFn[P, T]], CoroFn[P, T]]
-AllToSyncDecorator = Callable[[AnyFn[P, T]], SyncFn[P, T]]
-
 AsyncDecoratorOrCoroFn = Union[AsyncDecorator[P, T], CoroFn[P, T]]
 
 DefaultMode = Literal['sync', 'async', None]

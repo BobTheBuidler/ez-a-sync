@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, T]):
     wrapped: ASyncFunction[Concatenate[O, P], T]
-    def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethod[P, T]":
+    def __get__(self, instance: O, owner) -> "ASyncBoundMethod[P, T]":
         if instance is None:
             return self
         try:
