@@ -19,6 +19,6 @@ class ASyncDescriptor(ModifiedMixin, Generic[T]):
         self.field_name = field_name or _fget.__name__
         functools.update_wrapper(self, _fget)
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} for {self._fn}>"
+        return f"<{self.__class__.__name__} for {self._fget}>"
     def __set_name__(self, owner, name):
         self.field_name = name
