@@ -75,7 +75,7 @@ def as_completed(fs, *, timeout: Optional[float] = None, return_exceptions: bool
     if return_exceptions:
         fs = [_exc_wrap(f) for f in fs]
     return (
-        ASyncIterator.wrap(__yield_as_completed(fs, timeout=timeout, tqdm=tqdm, **tqdm_kwargs)) if aiter 
+        ASyncIterator(__yield_as_completed(fs, timeout=timeout, tqdm=tqdm, **tqdm_kwargs)) if aiter 
         else tqdm_asyncio.as_completed(fs, timeout=timeout, **tqdm_kwargs) if tqdm 
         else asyncio.as_completed(fs, timeout=timeout)
     )
