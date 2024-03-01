@@ -28,9 +28,15 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[I, P, 
             elif self.default == "async":
                 bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
             elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
-                bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
+                try:
+                    bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
+                except AttributeError:
+                    bound = ASyncBoundMethod(instance, self.__wrapped__, **self.modifiers)
             elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
-                bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
+                try:
+                    bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
+                except AttributeError:
+                    bound = ASyncBoundMethod(instance, self.__wrapped__, **self.modifiers)
             else:
                 bound = ASyncBoundMethod(instance, self.__wrapped__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
