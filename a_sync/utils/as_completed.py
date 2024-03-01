@@ -115,6 +115,9 @@ def as_completed_mapping(mapping: Mapping[K, Awaitable[V]], *, timeout: Optional
             ...
         ```
     """
+    if type(mapping).__name__ == "TaskMapping":
+        # TODO: do this better
+        mapping = mapping._tasks
     return as_completed([__mapping_wrap(k, v, return_exceptions=return_exceptions) for k, v in mapping.items()], timeout=timeout, aiter=aiter, tqdm=tqdm, **tqdm_kwargs)
 
 async def _exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
