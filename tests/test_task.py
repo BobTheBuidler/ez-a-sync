@@ -49,6 +49,10 @@ async def test_task_mapping():
     assert await tasks[0] == "1"
     # can it do it again
     assert await tasks[0] == "1"
+    # can we await the mapping?
+    assert await tasks == {0: "1", 1: "22"}
+    # can we await one from scratch?
+    assert await TaskMapping(_coro_fn, range(5)) == {0: "1", 1: "22", 2: "333", 3: "4444", 4: "55555"}
     
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_map_with_sync_iter():
