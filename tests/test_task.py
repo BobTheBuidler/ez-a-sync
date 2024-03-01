@@ -31,11 +31,11 @@ async def test_pruning():
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_init():
     tasks = TaskMapping(_coro_fn)
-    assert tasks._coro_fn is _coro_fn
-    assert tasks._coro_fn_kwargs == {}
+    assert tasks._wrapped_func is _coro_fn
+    assert tasks._wrapped_func_kwargs == {}
     assert tasks._name == ""
     tasks = TaskMapping(_coro_fn, name='test', kwarg0=1, kwarg1=None)
-    assert tasks._coro_fn_kwargs == {'kwarg0': 1, 'kwarg1': None}
+    assert tasks._wrapped_func_kwargs == {'kwarg0': 1, 'kwarg1': None}
     assert tasks._name == "test"
 
 @pytest.mark.asyncio_cooperative
