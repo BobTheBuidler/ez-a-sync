@@ -33,7 +33,7 @@ class CoroBoundMethod(Protocol[I, P, T]):
 class SyncBoundMethod(Protocol[I, P, T]):
     __self__: I
     __call__: Callable[P, T]
-AnyBoundMethod = Union[CoroBoundMethod[P, T], SyncBoundMethod[P, T]]
+AnyBoundMethod = Union[CoroBoundMethod[Any, P, T], SyncBoundMethod[Any, P, T]]
 
 @runtime_checkable
 class AsyncUnboundMethod(Protocol[P, T]):
