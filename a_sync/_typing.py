@@ -36,14 +36,6 @@ class SyncBoundMethod(Protocol[I, P, T]):
     __call__: Callable[P, T]
 AnyBoundMethod = Union[CoroBoundMethod[Any, P, T], SyncBoundMethod[Any, P, T]]
 
-class CoroClassMethod(Protocol[TYPE, P, T]):
-    __self__: TYPE
-    __call__: Callable[P, Awaitable[T]]
-class SyncClassMethod(Protocol[TYPE, P, T]):
-    __self__: TYPE
-    __call__: Callable[P, Awaitable[T]]
-AnyClassMethod = Union[CoroClassMethod[type, P, T], SyncClassMethod[type, P, T]]
-
 @runtime_checkable
 class AsyncUnboundMethod(Protocol[O, P, T]):
     __get__: Callable[[O, None], CoroBoundMethod[O, P, T]]
