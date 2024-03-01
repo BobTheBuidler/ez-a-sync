@@ -36,6 +36,8 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
             self._init_loader = create_task(exhaust_iterator(self._tasks_for_iterables(*iterables)))
         else:
             self._init_loader = None
+    def __repr__(self) -> str:
+        return f"<{type(self).__name__} for {self._wrapped_func} ({self._tasks}) at {hex(id(self))}>"
     def __setitem__(self, item: Any, value: Any) -> None:
         raise NotImplementedError("You cannot manually set items in a TaskMapping")
     def __getitem__(self, item: K) -> "asyncio.Task[V]":

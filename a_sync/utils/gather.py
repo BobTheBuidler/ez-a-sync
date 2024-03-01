@@ -106,6 +106,9 @@ async def gather_mapping(mapping: Mapping[K, Awaitable[V]], return_exceptions: b
         results = await gather_mapping(mapping)
         ```
     """
+    if type(mapping).__name__ == "TaskMapping":
+        # TODO: do this better
+        mapping = mapping._tasks
     results = {k: v async for k, v in as_completed_mapping(mapping, return_exceptions=return_exceptions, aiter=True, tqdm=tqdm, **tqdm_kwargs)}
     return {k: results[k] for k in mapping.keys()}  # return data in same order as input mapping
 
