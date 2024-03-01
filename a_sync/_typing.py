@@ -10,11 +10,6 @@ from typing import (TYPE_CHECKING, Any, AsyncGenerator, AsyncIterable, AsyncIter
 
 from typing_extensions import Concatenate, ParamSpec, Self, Unpack
 
-if TYPE_CHECKING:
-    from a_sync.abstract import ASyncABC
-    ASyncInstance = TypeVar("ASyncInstance", bound=ASyncABC)
-else:
-    ASyncInstance = TypeVar("ASyncInstance", bound=object)
 
 T = TypeVar("T")
 K = TypeVar("K")

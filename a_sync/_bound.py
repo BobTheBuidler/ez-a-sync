@@ -9,12 +9,14 @@ from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
 from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 
+if TYPE_CHECKING:
+    from a_sync.abstract import ASyncABC
 
 logger = logging.getLogger(__name__)
 
 class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, T]):
     __wrapped__: AnyFn[Concatenate[O, P], T]
-    def __get__(self, instance: O, owner) -> "ASyncBoundMethod[P, T]":
+    def __get__(self, instance: O, owner: Any) -> "ASyncBoundMethod[P, T]":
         if instance is None:
             return self
         try:
@@ -39,8 +41,8 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
     def __delete__(self, instance):
         raise RuntimeError(f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry.")
 
-class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T]):
-    def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethodSyncDefault[P, T]":
+class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[O, P, T]):
+    def __get__(self, instance: O, owner: Any) -> "ASyncBoundMethodSyncDefault[P, T]":
         if instance is None:
             return self
         try:
@@ -51,8 +53,8 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T
             logger.debug("new bound method: %s", bound)
             return bound
 
-class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T]):
-    def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethodAsyncDefault[P, T]":
+class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[O, P, T]):
+    def __get__(self, instance: O, owner: Any) -> "ASyncBoundMethodAsyncDefault[P, T]":
         if instance is None:
             return self
         try:
@@ -64,7 +66,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, 
             return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T]):
-    __slots__ = "__unbound__", "__self__"
+    __slots__ = "__self__",
     def __init__(
         self, 
         instance: O, 
@@ -82,24 +84,24 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         super().__init__(bound, **modifiers)
         functools.update_wrapper(self, self.__unbound__)
     def __repr__(self) -> str:
-        instance_type = type(self.instance)
+        instance_type = type(self.__self__)
         return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.__self__}>"
     def __call__(self, *args, **kwargs):
         logger.debug("calling %s", self)
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
-        retval = coro = super().__call__(*args, **kwargs)
+        retval = coro = super().__call__(self.__self__, *args, **kwargs)
         if not isawaitable(retval):
             # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
             return retval  # type: ignore [return-value]
         # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-        return _helpers._await(coro) if self.should_await(kwargs) else coro  # type: ignore [call-overload, return-value]
+        return _helpers._await(coro) if self._should_await(kwargs) else coro  # type: ignore [call-overload, return-value]
     @functools.cached_property
     def __bound_to_a_sync_instance__(self) -> bool:
         from a_sync.abstract import ASyncABC
         return isinstance(self.__self__, ASyncABC)
-    def should_await(self, kwargs: dict) -> bool:
+    def _should_await(self, kwargs: dict) -> bool:
         if flag := _kwargs.get_flag_name(kwargs):
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
         elif self.default:
@@ -108,20 +110,16 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
             self.__self__: "ASyncABC"
             return self.__self__.__a_sync_should_await__(kwargs)
         return asyncio.iscoroutinefunction(self.__wrapped__)
-    def _bound_sync(self, *args: P.args, **kwargs: P.kwargs) -> T:
-        return self.__unbound__(self.__self__, *args, **kwargs)
-    async def _bound_async(self, *args: P.args, **kwargs: P.kwargs) -> T:
-        return await self.__unbound__(self.__self__, *args, **kwargs)
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[P, T]):
-    def __get__(self, instance: ASyncInstance, owner) -> ASyncFunctionSyncDefault[P, T]:
+    def __get__(self, instance: O, owner: Any) -> ASyncFunctionSyncDefault[P, T]:
         return super().__get__(instance, owner)
     def __call__(self, *args, **kwargs) -> T:
         return super().__call__(*args, **kwargs)
 
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[P, T]):
-    def __get__(self, instance: ASyncInstance, owner) -> ASyncFunctionAsyncDefault[P, T]:
+    def __get__(self, instance: O, owner: Any) -> ASyncFunctionAsyncDefault[P, T]:
         return super().__get__(instance, owner)
     def __call__(self, *args, **kwargs) -> Awaitable[T]:
         return super().__call__(*args, **kwargs)
