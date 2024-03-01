@@ -14,9 +14,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, T]):
-    __wrapped__: AnyFn[Concatenate[O, P], T]
-    def __get__(self, instance: O, owner: Any) -> "ASyncBoundMethod[P, T]":
+class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[I, P, T]):
+    __wrapped__: AnyFn[Concatenate[I, P], T]
+    def __get__(self, instance: I, owner: Any) -> "ASyncBoundMethod[I, P, T]":
         if instance is None:
             return self
         try:
@@ -41,8 +41,8 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
     def __delete__(self, instance):
         raise RuntimeError(f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry.")
 
-class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[O, P, T]):
-    def __get__(self, instance: O, owner: Any) -> "ASyncBoundMethodSyncDefault[P, T]":
+class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
+    def __get__(self, instance: I, owner: Any) -> "ASyncBoundMethodSyncDefault[I, P, T]":
         if instance is None:
             return self
         try:
@@ -53,8 +53,8 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[O, P, T]):
             logger.debug("new bound method: %s", bound)
             return bound
 
-class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[O, P, T]):
-    def __get__(self, instance: O, owner: Any) -> "ASyncBoundMethodAsyncDefault[P, T]":
+class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
+    def __get__(self, instance: I, owner: Any) -> "ASyncBoundMethodAsyncDefault[I, T]":
         if instance is None:
             return self
         try:
@@ -65,12 +65,12 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[O, P, T]):
             logger.debug("new bound method: %s", bound)
             return bound
 
-class ASyncBoundMethod(ASyncFunction[P, T]):
+class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     __slots__ = "__self__",
     def __init__(
         self, 
-        instance: O, 
-        unbound: AnyFn[Concatenate[O, P], T], 
+        instance: I, 
+        unbound: AnyFn[Concatenate[I, P], T], 
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
         self.__self__ = instance
@@ -101,6 +101,9 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
     def __bound_to_a_sync_instance__(self) -> bool:
         from a_sync.abstract import ASyncABC
         return isinstance(self.__self__, ASyncABC)
+    @functools.cached_property
+    def __is_async_def__(self) -> bool:
+        return asyncio.iscoroutinefunction(self.__wrapped__)
     def _should_await(self, kwargs: dict) -> bool:
         if flag := _kwargs.get_flag_name(kwargs):
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
@@ -109,17 +112,19 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         elif self.__bound_to_a_sync_instance__:
             self.__self__: "ASyncABC"
             return self.__self__.__a_sync_should_await__(kwargs)
-        return asyncio.iscoroutinefunction(self.__wrapped__)
+        return self.__is_async_def__
 
 
-class ASyncBoundMethodSyncDefault(ASyncBoundMethod[P, T]):
-    def __get__(self, instance: O, owner: Any) -> ASyncFunctionSyncDefault[P, T]:
+class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
+    """just a helper for your IDE's typing tools"""
+    def __get__(self, instance: Any, owner: Any) -> ASyncFunctionSyncDefault[P, T]:
         return super().__get__(instance, owner)
-    def __call__(self, *args, **kwargs) -> T:
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:
         return super().__call__(*args, **kwargs)
 
-class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[P, T]):
-    def __get__(self, instance: O, owner: Any) -> ASyncFunctionAsyncDefault[P, T]:
+class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
+    """just a helper for your IDE's typing tools"""
+    def __get__(self, instance: I, owner: Any) -> ASyncFunctionAsyncDefault[P, T]:
         return super().__get__(instance, owner)
     def __call__(self, *args, **kwargs) -> Awaitable[T]:
         return super().__call__(*args, **kwargs)

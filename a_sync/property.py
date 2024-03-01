@@ -25,7 +25,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
         hidden_modifiers["default"] = "async"
-        self.hidden_method_descriptor =  HiddenMethodDescriptor(self.get, self.hidden_method_name, **hidden_modifiers)
+        self.hidden_method_descriptor: HiddenMethodDescriptor[T] =  HiddenMethodDescriptor(self.get, self.hidden_method_name, **hidden_modifiers)
         if asyncio.iscoroutinefunction(_fget):
             self._fget = self.__wrapped__
         else:
@@ -238,8 +238,8 @@ def a_sync_cached_property(  # type: ignore [misc]
     decorator = functools.partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
-class HiddenMethod(ASyncBoundMethodAsyncDefault[O, T]):
-    def __init__(self, instance: O, unbound: AnyFn[Concatenate[O, P], T], field_name: str, **modifiers: _helpers.ModifierKwargs) -> None:
+class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
+    def __init__(self, instance: I, unbound: AnyFn[Concatenate[I, P], T], field_name: str, **modifiers: _helpers.ModifierKwargs) -> None:
         super().__init__(instance, unbound, **modifiers)
         self.__name__ = field_name
     def __repr__(self) -> str:
@@ -253,8 +253,8 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[O, T]):
     def __await__(self) -> Generator[Any, None, T]:
         return self().__await__()
 
-class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[O, P, T]):
-    def __get__(self, instance: O, owner: Any) -> HiddenMethod[O, T]:
+class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
+    def __get__(self, instance: I, owner: Any) -> HiddenMethod[I, T]:
         if instance is None:
             return self
         try:

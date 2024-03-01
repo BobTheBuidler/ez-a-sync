@@ -8,7 +8,7 @@ class ASyncDescriptor(ModifiedMixin, Generic[T]):
     __slots__ = "field_name", "_fget"
     def __init__(
         self, 
-        _fget: AnyUnboundMethod[O, P, T], 
+        _fget: AnyUnboundMethod[P, T], 
         field_name: Optional[str] = None, 
         **modifiers: ModifierKwargs,
     ) -> None:
@@ -19,7 +19,7 @@ class ASyncDescriptor(ModifiedMixin, Generic[T]):
             self.modifiers.update(_fget.modifiers)
             self.__wrapped__ = _fget
         elif asyncio.iscoroutinefunction(_fget):
-            self.__wrapped__: AsyncUnboundMethod[O, P, T] = self.modifiers.apply_async_modifiers(_fget)
+            self.__wrapped__: AsyncUnboundMethod[P, T] = self.modifiers.apply_async_modifiers(_fget)
         else:
             self.__wrapped__ = _fget
         self.field_name = field_name or _fget.__name__

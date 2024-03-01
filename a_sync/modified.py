@@ -167,11 +167,6 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
         ...
-    # classmethod matchers
-    # NOTE: these could potentially match improperly if you pass types around thru your functions but that is kinda rare and should be a non-issue for the purposes of this lib
-    @overload  
-    def __call__(self, func: AnyClassMethod[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
-        ...
     @overload
     def __call__(self, func: CoroFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
         ...
@@ -182,11 +177,6 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
 class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
-        ...
-    # classmethod matchers
-    # NOTE: these could potentially match improperly if you pass types around thru your functions but that is kinda rare and should be a non-issue for the purposes of this lib
-    @overload  
-    def __call__(self, func: AnyClassMethod[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
         ...
     # regular functions
     @overload
