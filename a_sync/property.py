@@ -251,7 +251,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
         except (AttributeError, exceptions.NoFlagsFound):
             return False
     def __await__(self) -> Generator[Any, None, T]:
-        return self().__await__()
+        return self(sync=False).__await__()
 
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
     def __get__(self, instance: I, owner: Any) -> HiddenMethod[I, T]:
