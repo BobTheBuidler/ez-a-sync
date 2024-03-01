@@ -13,8 +13,14 @@ from a_sync._typing import *
 logger = logging.getLogger(__name__)
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
-    _fget: Property[T]
-    def __init__(self, _fget: Property[Awaitable[T]], field_name=None, **modifiers: config.ModifierKwargs):
+    wrapped: Property[T]
+    __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
+    def __init__(
+        self, 
+        _fget: Property[T], 
+        field_name: Optional[str] = None,
+        **modifiers: config.ModifierKwargs,
+    ) -> None:
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
@@ -228,12 +234,17 @@ def a_sync_cached_property(  # type: ignore [misc]
     decorator = functools.partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
-
-class HiddenMethod(ASyncBoundMethodAsyncDefault[ASyncInstance, T]):
-    def should_await(self, kwargs: dict) -> bool:
+class HiddenMethod(ASyncBoundMethodAsyncDefault[O, T]):
+    def __init__(self, instance: O, unbound: AnyFn[Concatenate[O, P], T], field_name: str, **modifiers: _helpers.ModifierKwargs) -> None:
+        super().__init__(instance, unbound, **modifiers)
+        self.__name__ = field_name
+    def __repr__(self) -> str:
+        instance_type = type(self.__self__)
+        return f"<{self.__class__.__name__} for property {instance_type.__module__}.{instance_type.__name__}.{self.__name__[2:-2]} bound to {self.__self__}>"
+    def _should_await(self, kwargs: dict) -> bool:
         try:
-            return self.instance.__a_sync_should_await_from_kwargs__(kwargs)
-        except exceptions.NoFlagsFound:
+            return self.__self__.__a_sync_should_await_from_kwargs__(kwargs)
+        except (AttributeError, exceptions.NoFlagsFound):
             return False
 
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[ASyncInstance, P, T]):
@@ -243,7 +254,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[ASyncInstance, P,
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            bound = HiddenMethod(instance, self._fget, **self.modifiers)
+            bound = HiddenMethod(instance, self.__wrapped__, self.field_name, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new hidden method: %s", bound)
             return bound
