@@ -16,14 +16,14 @@ class ASyncDescriptor(ModifiedMixin, Generic[T]):
             raise ValueError(f'Unable to decorate {_fget}')
         self.modifiers = ModifierManager(modifiers)
         if isinstance(_fget, ASyncFunction):
-            self.wrapped = _fget
+            self.__wrapped__ = _fget
         elif asyncio.iscoroutinefunction(_fget):
-            self.wrapped: AsyncUnboundMethod[ASyncInstance, P, T] = self.modifiers.apply_async_modifiers(_fget)
+            self.__wrapped__: AsyncUnboundMethod[ASyncInstance, P, T] = self.modifiers.apply_async_modifiers(_fget)
         else:
-            self.wrapped = self._asyncify(_fget)
+            self.__wrapped__ = self._asyncify(_fget)
         self.field_name = field_name or _fget.__name__
         functools.update_wrapper(self, _fget)
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} for {self.wrapped}>"
+        return f"<{self.__class__.__name__} for {self.__wrapped__}>"
     def __set_name__(self, owner, name):
         self.field_name = name

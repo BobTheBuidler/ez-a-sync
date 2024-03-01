@@ -13,7 +13,7 @@ from a_sync._typing import *
 logger = logging.getLogger(__name__)
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
-    wrapped: AsyncPropertyGetter[T]
+    __wrapped__: AsyncPropertyGetter[T]
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
     def __init__(
         self, 
@@ -26,7 +26,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
         hidden_modifiers = dict(self.modifiers)
         hidden_modifiers["default"] = "async"
         self.hidden_method_descriptor =  HiddenMethodDescriptor(self.get, self.hidden_method_name, **hidden_modifiers)
-        self._fget = self.wrapped
+        self._fget = self.__wrapped__
     async def get(self, instance: object) -> T:
         return await super().__get__(instance, None)
     def __get__(self, instance: object, owner) -> T:

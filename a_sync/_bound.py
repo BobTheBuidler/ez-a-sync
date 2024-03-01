@@ -13,7 +13,7 @@ from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunct
 logger = logging.getLogger(__name__)
 
 class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, T]):
-    wrapped: ASyncFunction[Concatenate[O, P], T]
+    __wrapped__: AnyFn[Concatenate[O, P], T]
     def __get__(self, instance: O, owner) -> "ASyncBoundMethod[P, T]":
         if instance is None:
             return self
@@ -22,15 +22,15 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
         except KeyError:
             from a_sync.abstract import ASyncABC
             if self.default == "sync":
-                bound = ASyncBoundMethodSyncDefault(instance, self.wrapped, **self.modifiers)
+                bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
             elif self.default == "async":
-                bound = ASyncBoundMethodAsyncDefault(instance, self.wrapped, **self.modifiers)
+                bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
             elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
-                bound = ASyncBoundMethodSyncDefault(instance, self.wrapped, **self.modifiers)
+                bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
             elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
-                bound = ASyncBoundMethodAsyncDefault(instance, self.wrapped, **self.modifiers)
+                bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
             else:
-                bound = ASyncBoundMethod(instance, self.wrapped, **self.modifiers)
+                bound = ASyncBoundMethod(instance, self.__wrapped__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
             return bound
@@ -46,7 +46,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            bound = ASyncBoundMethodSyncDefault(instance, self.wrapped, **self.modifiers)
+            bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
             return bound
@@ -58,7 +58,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, 
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            bound = ASyncBoundMethodAsyncDefault(instance, self.wrapped, **self.modifiers)
+            bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
             return bound
@@ -75,8 +75,7 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
-            print(modifiers)
-            self.__unbound__ = unbound.wrapped
+            self.__unbound__ = unbound.__wrapped__
         else:
             self.__unbound__ = unbound
         bound = self._bound_async if asyncio.iscoroutinefunction(self.__unbound__) else self._bound_sync
@@ -108,7 +107,7 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         elif self.__bound_to_a_sync_instance__:
             self.__self__: "ASyncABC"
             return self.__self__.__a_sync_should_await__(kwargs)
-        return asyncio.iscoroutinefunction(self.wrapped)
+        return asyncio.iscoroutinefunction(self.__wrapped__)
     def _bound_sync(self, *args: P.args, **kwargs: P.kwargs) -> T:
         return self.__unbound__(self.__self__, *args, **kwargs)
     async def _bound_async(self, *args: P.args, **kwargs: P.kwargs) -> T:
