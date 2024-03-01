@@ -8,7 +8,7 @@ from typing import Any, Dict, Tuple
 from a_sync import ENVIRONMENT_VARIABLES, modifiers
 from a_sync._bound import ASyncMethodDescriptor
 from a_sync.future import _ASyncFutureWrappedFn  # type: ignore [attr-defined]
-from a_sync.iter import ASyncIterator
+from a_sync.iter import ASyncGeneratorFunction
 from a_sync.modified import ASyncFunction, ModifiedMixin
 from a_sync.property import ASyncPropertyDescriptor, ASyncCachedPropertyDescriptor
 from a_sync.primitives.locks.semaphore import Semaphore
@@ -61,7 +61,7 @@ class ASyncMeta(ABCMeta):
                 else:
                     raise NotImplementedError(attr_name, attr_value)
             elif inspect.isasyncgenfunction(attr_value):
-                attrs[attr_name] = ASyncIterator.wrap(attr_value)
+                attrs[attr_name] = ASyncGeneratorFunction(attr_value)
             elif callable(attr_value):
                 # NOTE We will need to improve this logic if somebody needs to use it with classmethods or staticmethods.
                 attrs[attr_name] = ASyncMethodDescriptor(attr_value, **fn_modifiers)

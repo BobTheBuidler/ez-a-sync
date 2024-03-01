@@ -53,11 +53,23 @@ class ASyncIterator(AsyncIterator[T], Iterator[T]):
 
 class ASyncGeneratorFunction(Generic[P, T]):
     # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
-    def __init__(self, async_gen_func: AsyncGenFunc[P, T]) -> None:
+    def __init__(self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None) -> None:
+        self.field_name = async_gen_func.__name__
         self.__wrapped__ = async_gen_func
+        self.__instance__ = instance
         functools.update_wrapper(self, self.__wrapped__)
     def __repr__(self) -> str:
         return f"<{type(self).__name__} for {self.__wrapped__} at {hex(id(self))}>"
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> ASyncIterator[T]:
-        return ASyncIterator(self.__wrapped__(*args, **kwargs))
-    
+        if self.__instance__ is None:
+            return ASyncIterator(self.__wrapped__(*args, **kwargs))
+        return ASyncIterator(self.__wrapped__(self.__instance__, *args, **kwargs))
+    def __get__(self, instance: Any, owner: Any) -> "ASyncGeneratorFunction[P, T]":
+        if instance is None:
+            return self
+        try:
+            return instance.__dict__[self.field_name]
+        except KeyError:
+            gen_func = ASyncGeneratorFunction(self.__wrapped__, instance)
+            instance.__dict__[self.field_name] = gen_func
+            return gen_func

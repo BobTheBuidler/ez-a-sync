@@ -2,6 +2,7 @@
 
 import pytest
 
+from a_sync.base import ASyncGenericBase
 from a_sync.iter import ASyncIterable, ASyncIterator
 
 
@@ -57,7 +58,7 @@ def test_generator_sync():
             with pytest.raises(StopIteration):
                 iterator.__next__()
 
-@pytest.mark.asyncio_cooperative   
+@pytest.mark.asyncio_cooperative
 async def test_generator_async():
     iterator = generator_wrap()
     for i in range(4):
@@ -66,3 +67,34 @@ async def test_generator_async():
         else:
             with pytest.raises(StopAsyncIteration):
                 await iterator.__anext__()
+
+class TestGenerator:
+    @ASyncIterator.wrap
+    async def generate(self):
+        yield 0
+        yield 1
+        yield 2
+
+def test_bound_generator_sync():
+    for _ in TestGenerator().generate():
+        assert isinstance(_, int)
+
+@pytest.mark.asyncio_cooperative
+async def test_bound_generator_async():
+    async for _ in TestGenerator().generate():
+        assert isinstance(_, int)
+
+class TestGeneratorMeta(ASyncGenericBase):
+    async def generate(self):
+        yield 0
+        yield 1
+        yield 2
+
+def test_bound_generator_meta_sync():
+    for _ in TestGeneratorMeta().generate():
+        assert isinstance(_, int)
+
+@pytest.mark.asyncio_cooperative
+async def test_bound_generator_meta_async():
+    async for _ in TestGeneratorMeta().generate():
+        assert isinstance(_, int)
