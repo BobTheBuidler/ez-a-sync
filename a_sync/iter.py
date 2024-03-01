@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 
 class ASyncIterable(AsyncIterable[T], Iterable[T]):
     """A hybrid Iterable/AsyncIterable implementation that can be used in both a `for` loop and an `async for` loop."""
-    def __iter__(self) -> Iterator[T]:
-        yield from ASyncIterator(self.__aiter__())
     @classmethod
     def wrap(cls, wrapped: AsyncIterable[T]) -> "ASyncIterable[T]":
         # NOTE: for backward-compatability only. Will be removed soon.
@@ -19,6 +17,10 @@ class ASyncIterable(AsyncIterable[T], Iterable[T]):
         return cls(wrapped)
     def __init__(self, async_iterable: AsyncIterable[T]):
         self.__wrapped__ = async_iterable
+    def __repr__(self) -> str:
+        return f"<{type(self).__name__} for {self.__wrapped__} at {hex(id(self))}>"
+    def __iter__(self) -> Iterator[T]:
+        yield from ASyncIterator(self.__aiter__())
     def __aiter__(self) -> AsyncIterator[T]:
         return self.__wrapped__.__aiter__()
     __slots__ = "__wrapped__", 
