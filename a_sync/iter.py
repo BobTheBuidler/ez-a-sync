@@ -52,11 +52,12 @@ class ASyncIterator(AsyncIterator[T], Iterator[T]):
         return await self.__wrapped__.__anext__()
 
 class ASyncGeneratorFunction(Generic[P, T]):
-    __slots__ = "__wrapped__", 
+    # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
     def __init__(self, async_gen_func: AsyncGenFunc[P, T]) -> None:
         self.__wrapped__ = async_gen_func
         functools.update_wrapper(self, self.__wrapped__)
-        assert inspect.isasyncgenfunction(self)
+    def __repr__(self) -> str:
+        return f"<{type(self).__name__} for {self.__wrapped__} at {hex(id(self))}>"
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> ASyncIterator[T]:
         return ASyncIterator(self.__wrapped__(*args, **kwargs))
     

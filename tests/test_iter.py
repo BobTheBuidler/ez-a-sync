@@ -45,3 +45,24 @@ async def test_iterator_async():
         else:
             with pytest.raises(StopAsyncIteration):
                 await iterator.__anext__()
+
+generator_wrap = ASyncIterator.wrap(async_gen)
+
+def test_generator_sync():
+    iterator = generator_wrap()
+    for i in range(4):
+        if i < 3:
+            assert iterator.__next__() == i
+        else:
+            with pytest.raises(StopIteration):
+                iterator.__next__()
+
+@pytest.mark.asyncio_cooperative   
+async def test_generator_async():
+    iterator = generator_wrap()
+    for i in range(4):
+        if i < 3:
+            assert await iterator.__anext__() == i
+        else:
+            with pytest.raises(StopAsyncIteration):
+                await iterator.__anext__()
