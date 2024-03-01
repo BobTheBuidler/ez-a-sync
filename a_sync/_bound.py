@@ -64,6 +64,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, 
             return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T]):
+    __slots__ = "instance", 
     def __init__(
         self, 
         instance: ASyncInstance, 
@@ -74,7 +75,7 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
-            unbound = unbound.__wrapped__
+            unbound = unbound.wrapped
         if asyncio.iscoroutinefunction(unbound):
             async def wrapped(*args: P.args, **kwargs: P.kwargs) -> T:
                 return await unbound(self.instance, *args, **kwargs)
@@ -108,7 +109,7 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
             return self.default == "sync"
         elif self.__bound_to_a_sync_instance__:
             return self.instance.__a_sync_should_await__(kwargs)
-        return asyncio.iscoroutinefunction(self.__wrapped__)
+        return asyncio.iscoroutinefunction(self.wrapped)
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[P, T]):

@@ -7,6 +7,7 @@ from a_sync.primitives._loggable import _LoggerMixin
 
 
 class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
+    __slots__ = "_daemon", 
     @abc.abstractmethod
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         ...    

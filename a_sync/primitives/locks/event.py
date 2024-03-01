@@ -11,7 +11,7 @@ class Event(asyncio.Event, _DebugDaemonMixin):
     _value: bool
     _loop: asyncio.AbstractEventLoop
     _waiters: Deque["asyncio.Future[None]"]
-    
+    __slots__ = "_value", "_loop", "_waiters", "_debug_daemon_interval"
     def __init__(self, name: str = "", debug_daemon_interval: int = 300, *, loop: Optional[asyncio.AbstractEventLoop] = None):
         if sys.version_info >= (3, 10):
             super().__init__()

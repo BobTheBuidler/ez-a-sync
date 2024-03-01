@@ -9,6 +9,7 @@ from a_sync.modifiers.manager import ModifierManager
 
 class ModifiedMixin:
     modifiers: ModifierManager
+    __slots__ = "modifiers", 
     def _asyncify(self, func: SyncFn[P, T]) -> CoroFn[P, T]:
         """Applies only async modifiers."""
         coro_fn = _helpers._asyncify(func, self.modifiers.executor)
@@ -23,6 +24,7 @@ class ModifiedMixin:
     
         
 class ASyncFunction(ModifiedMixin, Generic[P, T]):
+    # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
     @overload
     def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:...
     @overload
@@ -30,8 +32,8 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         _helpers._validate_wrapped_fn(fn)
         self.modifiers = ModifierManager(modifiers)
-        self.__wrapped__ = fn
-        functools.update_wrapper(self, self.__wrapped__)
+        self.wrapped = fn
+        functools.update_wrapper(self, self.wrapped)
     
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
@@ -59,7 +61,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     
     @property
     def _async_def(self) -> bool:
-        return asyncio.iscoroutinefunction(self.__wrapped__)
+        return asyncio.iscoroutinefunction(self.wrapped)
     
     def _run_sync(self, kwargs: dict) -> bool:
         if flag := _kwargs.get_flag_name(kwargs):
@@ -73,7 +75,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def _asyncified(self) -> CoroFn[P, T]:
         """Turns 'self._fn' async and applies both sync and async modifiers."""
         if self._async_def:
-            raise TypeError(f"Can only be applied to sync functions, not {self.__wrapped__}")
+            raise TypeError(f"Can only be applied to sync functions, not {self.wrapped}")
         return self._asyncify(self._modified_fn)  # type: ignore [arg-type]
     
     @functools.cached_property
@@ -83,8 +85,8 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         Applies async modifiers to 'self._fn' if 'self._fn' is a sync function.
         """
         if self._async_def:
-            return self.modifiers.apply_async_modifiers(self.__wrapped__)  # type: ignore [arg-type]
-        return self.modifiers.apply_sync_modifiers(self.__wrapped__)  # type: ignore [return-value]
+            return self.modifiers.apply_async_modifiers(self.wrapped)  # type: ignore [arg-type]
+        return self.modifiers.apply_sync_modifiers(self.wrapped)  # type: ignore [return-value]
     
     @functools.cached_property
     def _async_wrap(self): # -> SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]]:
@@ -112,7 +114,6 @@ else:
     _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
               
 class ASyncDecorator(ModifiedMixin):
-    _fn = None
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         assert 'default' in modifiers, modifiers
         self.modifiers = ModifierManager(modifiers)
