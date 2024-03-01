@@ -64,29 +64,27 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, 
             return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T]):
-    __slots__ = "instance", 
+    __slots__ = "__unbound__", "__self__"
     def __init__(
         self, 
-        instance: ASyncInstance, 
-        unbound: AnyFn[Concatenate[ASyncInstance, P], T], 
+        instance: O, 
+        unbound: AnyFn[Concatenate[O, P], T], 
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
-        self.instance = instance
+        self.__self__ = instance
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
-            unbound = unbound.wrapped
-        if asyncio.iscoroutinefunction(unbound):
-            async def wrapped(*args: P.args, **kwargs: P.kwargs) -> T:
-                return await unbound(self.instance, *args, **kwargs)
+            print(modifiers)
+            self.__unbound__ = unbound.wrapped
         else:
-            def wrapped(*args: P.args, **kwargs: P.kwargs) -> T:
-                return unbound(self.instance, *args, **kwargs)
-        functools.update_wrapper(wrapped, unbound)
-        super().__init__(wrapped, **modifiers)
+            self.__unbound__ = unbound
+        bound = self._bound_async if asyncio.iscoroutinefunction(self.__unbound__) else self._bound_sync
+        super().__init__(bound, **modifiers)
+        functools.update_wrapper(self, self.__unbound__)
     def __repr__(self) -> str:
         instance_type = type(self.instance)
-        return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.instance}>"
+        return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.__self__}>"
     def __call__(self, *args, **kwargs):
         logger.debug("calling %s", self)
         # This could either be a coroutine or a return value from an awaited coroutine,
@@ -101,15 +99,20 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
     @functools.cached_property
     def __bound_to_a_sync_instance__(self) -> bool:
         from a_sync.abstract import ASyncABC
-        return isinstance(self.instance, ASyncABC)
+        return isinstance(self.__self__, ASyncABC)
     def should_await(self, kwargs: dict) -> bool:
         if flag := _kwargs.get_flag_name(kwargs):
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
         elif self.default:
             return self.default == "sync"
         elif self.__bound_to_a_sync_instance__:
-            return self.instance.__a_sync_should_await__(kwargs)
+            self.__self__: "ASyncABC"
+            return self.__self__.__a_sync_should_await__(kwargs)
         return asyncio.iscoroutinefunction(self.wrapped)
+    def _bound_sync(self, *args: P.args, **kwargs: P.kwargs) -> T:
+        return self.__unbound__(self.__self__, *args, **kwargs)
+    async def _bound_async(self, *args: P.args, **kwargs: P.kwargs) -> T:
+        return await self.__unbound__(self.__self__, *args, **kwargs)
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[P, T]):
