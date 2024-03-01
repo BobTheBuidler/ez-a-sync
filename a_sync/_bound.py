@@ -13,7 +13,7 @@ from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunct
 logger = logging.getLogger(__name__)
 
 class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, T]):
-    _fget: ASyncFunction[Concatenate[O, P], T]
+    wrapped: ASyncFunction[Concatenate[O, P], T]
     def __get__(self, instance: ASyncInstance, owner) -> "ASyncBoundMethod[P, T]":
         if instance is None:
             return self
@@ -22,15 +22,15 @@ class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[O, P, 
         except KeyError:
             from a_sync.abstract import ASyncABC
             if self.default == "sync":
-                bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethodSyncDefault(instance, self.wrapped, **self.modifiers)
             elif self.default == "async":
-                bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethodAsyncDefault(instance, self.wrapped, **self.modifiers)
             elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
-                bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethodSyncDefault(instance, self.wrapped, **self.modifiers)
             elif isinstance(instance, ASyncABC) and instance.__a_sync_instance_should_await__:
-                bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethodAsyncDefault(instance, self.wrapped, **self.modifiers)
             else:
-                bound = ASyncBoundMethod(instance, self._fget, **self.modifiers)
+                bound = ASyncBoundMethod(instance, self.wrapped, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
             return bound
@@ -46,7 +46,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[ASyncInstance, P, T
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            bound = ASyncBoundMethodSyncDefault(instance, self._fget, **self.modifiers)
+            bound = ASyncBoundMethodSyncDefault(instance, self.wrapped, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
             return bound
@@ -58,12 +58,13 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[ASyncInstance, P, 
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            bound = ASyncBoundMethodAsyncDefault(instance, self._fget, **self.modifiers)
+            bound = ASyncBoundMethodAsyncDefault(instance, self.wrapped, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
             return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T]):
+    __slots__ = "instance", 
     def __init__(
         self, 
         instance: ASyncInstance, 
@@ -74,7 +75,7 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
-            unbound = unbound.__wrapped__
+            unbound = unbound.wrapped
         if asyncio.iscoroutinefunction(unbound):
             async def wrapped(*args: P.args, **kwargs: P.kwargs) -> T:
                 return await unbound(self.instance, *args, **kwargs)
@@ -108,7 +109,7 @@ class ASyncBoundMethod(ASyncFunction[P, T]):
             return self.default == "sync"
         elif self.__bound_to_a_sync_instance__:
             return self.instance.__a_sync_should_await__(kwargs)
-        return asyncio.iscoroutinefunction(self.__wrapped__)
+        return asyncio.iscoroutinefunction(self.wrapped)
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[P, T]):

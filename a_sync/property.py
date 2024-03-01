@@ -26,6 +26,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
         hidden_modifiers = dict(self.modifiers)
         hidden_modifiers["default"] = "async"
         self.hidden_method_descriptor =  HiddenMethodDescriptor(self.get, self.hidden_method_name, **hidden_modifiers)
+        self._fget = self.wrapped
     async def get(self, instance: object) -> T:
         return await super().__get__(instance, None)
     def __get__(self, instance: object, owner) -> T:
@@ -261,11 +262,11 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[ASyncInstance, P,
 
 def _is_a_sync_instance(instance: object) -> bool:
     try:
-        return instance.__dict__["__is_a_sync_instance__"]
-    except KeyError:
+        return instance.__is_a_sync_instance__
+    except AttributeError:
         from a_sync.abstract import ASyncABC
         is_a_sync = isinstance(instance, ASyncABC)
-        instance.__dict__["__is_a_sync_instance__"] = is_a_sync
+        instance.__is_a_sync_instance__ = is_a_sync
         return is_a_sync
 
 def _parse_args(func: Union[None, DefaultMode, Property[T]], modifiers: ModifierKwargs) -> Tuple[Optional[Property[T]], ModifierKwargs]:

@@ -23,12 +23,14 @@ class ASyncIterator(AsyncIterator[T], Iterator[T]):
         return ASyncWrappedIterator(aiterator)
 
 class ASyncWrappedIterable(ASyncIterable[T]):
+    __slots__ = "__aiterable", 
     def __init__(self, async_iterable: AsyncIterable[T]):
         self.__aiterable = async_iterable
     def __aiter__(self) -> AsyncIterator[T]:
         return self.__aiterable.__aiter__()
 
 class ASyncWrappedIterator(ASyncIterator[T]):
+    __slots__ = "__aiterator", 
     def __init__(self, async_iterator: AsyncIterator[T]):
         self.__aiterator = async_iterator
     async def __anext__(self) -> T:

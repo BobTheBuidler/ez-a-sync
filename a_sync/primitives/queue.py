@@ -4,12 +4,14 @@ import sys
 from a_sync._typing import *
 
 if sys.version_info < (3, 9):
-    class _Queue(asyncio.Queue, Generic[T]):...
+    class _Queue(asyncio.Queue, Generic[T]):
+        __slots__ = "_maxsize", "_loop", "_getters", "_putters", "_unfinished_tasks", "_finished"
 else:
-    class _Queue(asyncio.Queue[T]):...
+    class _Queue(asyncio.Queue[T]):
+        __slots__ = "_maxsize", "_getters", "_putters", "_unfinished_tasks", "_finished"
 
 class Queue(_Queue[T]):
-    # for type hint support
+    # for type hint support, no functional difference
     async def get(self) -> T:
         return await super().get()
     def get_nowait(self) -> T:

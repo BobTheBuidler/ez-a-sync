@@ -1,6 +1,7 @@
 import asyncio
 import functools
 import logging
+import sys
 from collections import defaultdict
 from threading import Thread, current_thread
 
@@ -10,6 +11,10 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 logger = logging.getLogger(__name__)
 
 class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
+    if sys.version_info >= (3, 10):
+        __slots__ = "name", "_value", "_waiters", "_decorated"
+    else:
+        __slots__ = "name", "_value", "_waiters", "_loop", "_decorated"
     def __init__(self, value: int, name=None, **kwargs) -> None:
         """
         `name` is used only in debug logs to provide useful context
@@ -55,9 +60,10 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         
 class DummySemaphore(asyncio.Semaphore):
     """It can go where a semaphore goes, but it does nothing."""
-    _value = 0
+    __slots__ = "name", "_value"
     def __init__(self, name: Optional[str] = None):
         self.name = name
+        self._value = 0
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} name={self.name}>"
     async def acquire(self) -> Literal[True]:
@@ -78,7 +84,7 @@ class ThreadsafeSemaphore(Semaphore):
     
     # TL;DR it's a janky fix for an edge case problem and will otherwise function as a normal a_sync.Semaphore (which is just an asyncio.Semaphore with extra bells and whistles).
     """
-
+    __slots__ = "semaphores", "dummy"
     def __init__(self, value: Optional[int], name: Optional[str] = None) -> None:
         assert isinstance(value, int), f"{value} should be an integer."
         super().__init__(value, name=name)
@@ -94,6 +100,7 @@ class ThreadsafeSemaphore(Semaphore):
     
     @property
     def semaphore(self) -> Semaphore:
+        # NOTE: we can't cache this value because we need to check the current thread every time
         return self.dummy if self.use_dummy else self.semaphores[current_thread()]
     
     async def __aenter__(self):

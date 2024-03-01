@@ -23,6 +23,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     name: Optional[str]
     _value: int
     _waiters: List["_AbstractPrioritySemaphoreContextManager[PT]"]  # type: ignore [assignment]
+    __slots__ = "name", "_value", "_waiters", "_context_managers", "_capacity", "_potential_lost_waiters"
 
     @property
     def _context_manager_class(self) -> Type["_AbstractPrioritySemaphoreContextManager[PT]"]:
@@ -127,6 +128,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     _loop: asyncio.AbstractEventLoop
     _waiters: Deque[asyncio.Future]  # type: ignore [assignment]
+    __slots__ = "_parent", "_priority"
     
     @property
     def _priority_name(self) -> str:

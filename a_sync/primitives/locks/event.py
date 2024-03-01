@@ -11,14 +11,19 @@ class Event(asyncio.Event, _DebugDaemonMixin):
     _value: bool
     _loop: asyncio.AbstractEventLoop
     _waiters: Deque["asyncio.Future[None]"]
-    
+    if sys.version_info >= (3, 10):
+        __slots__ = "_value", "_waiters", "_debug_daemon_interval"
+    else:
+        __slots__ = "_value", "_loop", "_waiters", "_debug_daemon_interval"
     def __init__(self, name: str = "", debug_daemon_interval: int = 300, *, loop: Optional[asyncio.AbstractEventLoop] = None):
         if sys.version_info >= (3, 10):
             super().__init__()
         else:
             super().__init__(loop=loop)
         self._name = name
-        self._loop = self._loop or asyncio.get_event_loop()
+        # backwards compatability
+        if hasattr(self, "_loop"):
+            self._loop = self._loop or asyncio.get_event_loop()
         self._debug_daemon_interval = debug_daemon_interval
     def __repr__(self) -> str:
         label = f'name={self._name}' if self._name else 'object'
