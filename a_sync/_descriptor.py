@@ -5,8 +5,13 @@ from a_sync._typing import *
 from a_sync.modified import ASyncFunction, ModifiedMixin, ModifierManager
 
 class ASyncDescriptor(ModifiedMixin, Generic[T]):
-    __slots__ = "field_name",
-    def __init__(self, _fget: UnboundMethod[ASyncInstance, P, T], field_name=None, **modifiers: ModifierKwargs):
+    __slots__ = "field_name", "_fget"
+    def __init__(
+        self, 
+        _fget: AnyUnboundMethod[ASyncInstance, P, T], 
+        field_name: Optional[str] = None, 
+        **modifiers: ModifierKwargs,
+    ) -> None:
         if not callable(_fget):
             raise ValueError(f'Unable to decorate {_fget}')
         self.modifiers = ModifierManager(modifiers)
