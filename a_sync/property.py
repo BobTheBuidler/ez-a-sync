@@ -250,6 +250,8 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[O, T]):
             return self.__self__.__a_sync_should_await_from_kwargs__(kwargs)
         except (AttributeError, exceptions.NoFlagsFound):
             return False
+    def __await__(self) -> Generator[Any, None, T]:
+        return self().__await__()
 
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[O, P, T]):
     def __get__(self, instance: O, owner: Any) -> HiddenMethod[O, T]:
