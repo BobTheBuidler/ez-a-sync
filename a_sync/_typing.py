@@ -37,14 +37,14 @@ AnyBoundMethod = Union[CoroBoundMethod[Any, P, T], SyncBoundMethod[Any, P, T]]
 
 @runtime_checkable
 class AsyncUnboundMethod(Protocol[P, T]):
-    __get__: Callable[[Any, None], CoroBoundMethod[P, T]]
+    __get__: Callable[[I, None], CoroBoundMethod[I, P, T]]
 @runtime_checkable
 class SyncUnboundMethod(Protocol[P, T]):
-    __get__: Callable[[Any, None], SyncBoundMethod[P, T]]
+    __get__: Callable[[I, None], SyncBoundMethod[I, P, T]]
 AnyUnboundMethod = Union[AsyncUnboundMethod[P, T], SyncUnboundMethod[P, T]]
 
-class AsyncPropertyGetter(CoroBoundMethod[Tuple[()], T]):...
-class PropertyGetter(SyncBoundMethod[Tuple[()], T]):...
+class AsyncPropertyGetter(CoroBoundMethod[Any, Tuple[()], T]):...
+class PropertyGetter(SyncBoundMethod[Any, Tuple[()], T]):...
 AnyPropertyGetter = Union[AsyncPropertyGetter[T], PropertyGetter[T]]
 
 AsyncDecorator = Callable[[CoroFn[P, T]], CoroFn[P, T]]

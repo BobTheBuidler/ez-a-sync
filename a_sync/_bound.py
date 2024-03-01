@@ -77,12 +77,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
-            self.__unbound__ = unbound.__wrapped__
-        else:
-            self.__unbound__ = unbound
-        bound = self._bound_async if asyncio.iscoroutinefunction(self.__unbound__) else self._bound_sync
-        super().__init__(bound, **modifiers)
-        functools.update_wrapper(self, self.__unbound__)
+            unbound = unbound.__wrapped__
+        super().__init__(unbound, **modifiers)
+        functools.update_wrapper(self, unbound)
     def __repr__(self) -> str:
         instance_type = type(self.__self__)
         return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.__self__}>"
