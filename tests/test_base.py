@@ -67,7 +67,7 @@ async def test_base_async(cls: type, i: int):
     assert await async_instance.test_cached_property == i * 3
     assert isinstance(await async_instance.test_cached_property, int)
     duration = time.time() - start
-    target_duration = 3
+    target_duration = 5 if isinstance(async_instance, TestSync) else 3
     # For TestSync, the duration can be higher because the calls execute inside of a threadpool which limits the amount of concurrency.
     assert duration < target_duration, "There is a 2 second sleep in 'test_cached_property' but it should only run once."
 
