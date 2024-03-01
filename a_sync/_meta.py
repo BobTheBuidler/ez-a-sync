@@ -68,7 +68,6 @@ class ASyncMeta(ABCMeta):
 
 
 class ASyncSingletonMeta(ASyncMeta):
-    __slots__ = "__instances", "__lock"
     def __init__(cls, name: str, bases: Tuple[type, ...], namespace: Dict[str, Any]) -> None:
         cls.__instances: Dict[bool, object] = {}
         cls.__lock = threading.Lock()
