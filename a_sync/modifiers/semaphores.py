@@ -11,19 +11,19 @@ from a_sync.primitives import ThreadsafeSemaphore, DummySemaphore
 
 
 @overload
-async def apply_semaphore(  # type: ignore [misc]
+def apply_semaphore(  # type: ignore [misc]
     coro_fn: Literal[None],
     semaphore: SemaphoreSpec,
 ) -> AsyncDecorator[P, T]:...
 
 @overload
-async def apply_semaphore(
+def apply_semaphore(
     coro_fn: SemaphoreSpec,
     semaphore: Literal[None],
 ) -> AsyncDecorator[P, T]:...
 
 @overload
-async def apply_semaphore(
+def apply_semaphore(
     coro_fn: CoroFn[P, T],
     semaphore: SemaphoreSpec,
 ) -> CoroFn[P, T]:...
@@ -46,7 +46,7 @@ def apply_semaphore(
     if isinstance(semaphore, int):
         semaphore = primitives.ThreadsafeSemaphore(semaphore)
     elif not isinstance(semaphore, asyncio.Semaphore):
-        raise TypeError(f"'semaphore' must either be an integer or a Semaphore object.")
+        raise TypeError(f"'semaphore' must either be an integer or a Semaphore object. You passed {semaphore}")
     
     # Create and return the decorator
     if isinstance(semaphore, primitives.Semaphore):
