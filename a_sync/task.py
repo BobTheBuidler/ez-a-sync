@@ -5,6 +5,7 @@ import logging
 from a_sync._typing import *
 from a_sync import exceptions
 from a_sync.iter import ASyncIterable
+from a_sync.primitives.queue import Queue
 from a_sync.utils.as_completed import as_completed
 from a_sync.utils.gather import gather
 from a_sync.utils.iterators import as_yielded, exhaust_iterator
@@ -25,7 +26,7 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
 MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
 
 class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
-    __slots__ = "_wrapped_func", "_wrapped_func_kwargs", "_name", "_tasks", "_init_loader"
+    __slots__ = "_wrapped_func", "_wrapped_func_kwargs", "_name", "_tasks", "_init_loader", "_init_loader_next"
     def __init__(self, wrapped_func: MappingFn[K, P, V] = None, *iterables: AnyIterable[K], name: str = '', **wrapped_func_kwargs: P.kwargs) -> None:
         self._wrapped_func = wrapped_func
         self._wrapped_func_kwargs = wrapped_func_kwargs
@@ -33,7 +34,9 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
         self._tasks: Dict[K, "asyncio.Task[V]"] = {}
         self._init_loader: Optional["asyncio.Task[None]"]
         if iterables:
-            self._init_loader = create_task(exhaust_iterator(self._tasks_for_iterables(*iterables)))
+            init_loader_queue: Queue[K] = Queue()
+            self._init_loader = create_task(exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue))
+            self._init_loader_next = init_loader_queue.get_all
         else:
             self._init_loader = None
     def __repr__(self) -> str:
@@ -61,11 +64,11 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
         # if you inited the TaskMapping with some iterators, we will load those
         if self._init_loader:
             while not self._init_loader.done():
+                await self._init_loader_next()
                 async for key, value in self.yield_completed(pop=False):
                     if key not in yielded:
                         yield _yield(key, value, "both")
                         yielded.add(key)
-                await asyncio.sleep(0)
             # loader is already done by this point, but we need to check for exceptions
             await self._init_loader
         elif not self:
