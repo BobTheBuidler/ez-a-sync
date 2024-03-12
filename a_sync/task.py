@@ -65,10 +65,11 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
         if self._init_loader:
             while not self._init_loader.done():
                 await self._init_loader_next()
-                async for key, value in self.yield_completed(pop=False):
-                    if key not in yielded:
-                        yield _yield(key, value, "both")
-                        yielded.add(key)
+                while [k for k in self._tasks if k not in yielded]:
+                    async for key, value in self.yield_completed(pop=False):
+                        if key not in yielded:
+                            yield _yield(key, value, "both")
+                            yielded.add(key)
             # loader is already done by this point, but we need to check for exceptions
             await self._init_loader
         elif not self:
