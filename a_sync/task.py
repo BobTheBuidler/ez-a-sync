@@ -70,6 +70,7 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
                         if key not in yielded:
                             yield _yield(key, value, "both")
                             yielded.add(key)
+                    await asyncio.sleep(0)
             # loader is already done by this point, but we need to check for exceptions
             await self._init_loader
         elif not self:
