@@ -117,8 +117,8 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
                 await self._init_loader_next()
                 while tasks := {key: task for key, task in self._tasks.items() if key not in yielded}:
                     if ready := {key: task for key, task in tasks.items() if task.done()}:
-                        async for key, value in as_completed(ready, aiter=True):
-                            yield key, value
+                        for key, task in ready.items():
+                            yield key, await task
                             yielded.add(key)
                     else:
                         await self._next.wait()
