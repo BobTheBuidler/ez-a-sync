@@ -72,7 +72,7 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
             self._next = asyncio.Event()
             @functools.wraps(wrapped_func)
             async def _wrapped_set_next(*args: P.args, **kwargs: P.kwargs) -> V:
-                retval = await wrapped_func(*args, **kwargs, **self._wrapped_func_kwargs)
+                retval = await wrapped_func(*args, **kwargs)
                 self._next.set()
                 self._next.clear()
                 return retval
