@@ -115,20 +115,22 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
         if self._init_loader:
             while not self._init_loader.done():
                 await self._init_loader_next()
-                while tasks := {k: v for k, v in self._tasks.items() if k not in yielded}:
-                    async for key, value in as_completed(tasks, aiter=True):
-                        yield _yield(key, value, "both")
-                        yielded.add(key)
-                    await self._next.wait()
+                while tasks := {key: task for key, task in self._tasks.items() if key not in yielded}:
+                    if ready := {key: task for key, task in tasks.items() if task.done()}:
+                        async for key, value in as_completed(ready, aiter=True):
+                            yield key, value
+                            yielded.add(key)
+                    else:
+                        await self._next.wait()
             # loader is already done by this point, but we need to check for exceptions
             await self._init_loader
         elif not self:
             # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
             raise exceptions.MappingIsEmptyError
         # if there are any tasks that still need to complete, we need to await them and yield them
-        if tasks := {k: v for k, v in self._tasks.items() if k not in yielded}:
+        if tasks := {key: task for key, task in self._tasks.items() if key not in yielded}:
             async for key, value in as_completed(tasks, aiter=True):
-                yield _yield(key, value, "both")
+                yield key, value
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         """
             Asynchronously map iterables to tasks and yield their results.
