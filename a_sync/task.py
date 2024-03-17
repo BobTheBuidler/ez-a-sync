@@ -145,8 +145,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         """
         if self:
             raise exceptions.MappingNotEmptyError
-        else:
-            logger.info(self)
         async for _ in self._tasks_for_iterables(*iterables):
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
