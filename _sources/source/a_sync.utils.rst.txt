@@ -1,0 +1,37 @@
+a\_sync.utils package
+=====================
+
+Submodules
+----------
+
+a\_sync.utils.as\_completed module
+----------------------------------
+
+.. automodule:: a_sync.utils.as_completed
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.utils.gather module
+---------------------------
+
+.. automodule:: a_sync.utils.gather
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.utils.iterators module
+------------------------------
+
+.. automodule:: a_sync.utils.iterators
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: a_sync.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

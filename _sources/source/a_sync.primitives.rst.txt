@@ -1,0 +1,37 @@
+a\_sync.primitives package
+==========================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   a_sync.primitives.locks
+
+Submodules
+----------
+
+a\_sync.primitives.executor module
+----------------------------------
+
+.. automodule:: a_sync.primitives.executor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.primitives.queue module
+-------------------------------
+
+.. automodule:: a_sync.primitives.queue
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: a_sync.primitives
+   :members:
+   :undoc-members:
+   :show-inheritance:

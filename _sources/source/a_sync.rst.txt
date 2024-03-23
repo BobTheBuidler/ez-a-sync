@@ -1,0 +1,127 @@
+a\_sync package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   a_sync.modifiers
+   a_sync.primitives
+   a_sync.utils
+
+Submodules
+----------
+
+a\_sync.ENVIRONMENT\_VARIABLES module
+-------------------------------------
+
+.. automodule:: a_sync.ENVIRONMENT_VARIABLES
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.abstract module
+-----------------------
+
+.. automodule:: a_sync.abstract
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.aliases module
+----------------------
+
+.. automodule:: a_sync.aliases
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.base module
+-------------------
+
+.. automodule:: a_sync.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.config module
+---------------------
+
+.. automodule:: a_sync.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.decorator module
+------------------------
+
+.. automodule:: a_sync.decorator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.exceptions module
+-------------------------
+
+.. automodule:: a_sync.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.future module
+---------------------
+
+.. automodule:: a_sync.future
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.iter module
+-------------------
+
+.. automodule:: a_sync.iter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.modified module
+-----------------------
+
+.. automodule:: a_sync.modified
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.property module
+-----------------------
+
+.. automodule:: a_sync.property
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.singleton module
+------------------------
+
+.. automodule:: a_sync.singleton
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+a\_sync.task module
+-------------------
+
+.. automodule:: a_sync.task
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: a_sync
+   :members:
+   :undoc-members:
+   :show-inheritance:

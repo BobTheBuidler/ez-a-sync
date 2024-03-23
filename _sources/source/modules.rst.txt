@@ -1,0 +1,7 @@
+a_sync
+======
+
+.. toctree::
+   :maxdepth: 4
+
+   a_sync
