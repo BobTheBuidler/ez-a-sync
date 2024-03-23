@@ -13,6 +13,8 @@ from a_sync.utils.iterators import as_yielded, exhaust_iterator
 logger = logging.getLogger(__name__)
 
 def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until_done: bool = False) -> "asyncio.Task[T]":
+    """A wrapper over `asyncio.create_task` which will work with any `Awaitable` object, not just `Coroutine` objects"""
+
     """
     Creates and schedules an asyncio Task from any Awaitable object.
     
@@ -58,7 +60,7 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
         self._wrapped_func_kwargs = wrapped_func_kwargs
         self._name = name
         self._tasks: Dict[K, "asyncio.Task[V]"] = {}
-        self._init_loader: Optional["asyncio.Task[None]"] = None
+        self._init_loader: Optional["asyncio.Task[None]"]
         if iterables:
             self._init_loader = create_task(exhaust_iterator(self._tasks_for_iterables(*iterables)))
         else:
@@ -89,26 +91,48 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
         return self._await().__await__()
     
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
+        """aiterate thru all key-task pairs, yielding the key-result pair as each task completes"""
+        yielded = set()
+        # if you inited the TaskMapping with some iterators, we will load those
         """Asynchronously iterate over the task results as they complete."""
-        yield from self.map(yields='both')
-    
+           
+        if self._init_loader:
+            while not self._init_loader.done():
+                async for key, value in self.yield_completed(pop=False):
+                    if key not in yielded:
+                        yield _yield(key, value, "both")
+                        yielded.add(key)
+                await asyncio.sleep(0)
+            # loader is already done by this point, but we need to check for exceptions
+            await self._init_loader
+        elif not self:
+            # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
+            raise exceptions.MappingIsEmptyError
+        # if there are any tasks that still need to complete, we need to await them and yield them
+        if self:
+            async for key, value in as_completed(self._tasks, aiter=True):
+                if key not in yielded:
+                    yield _yield(key, value, "both")
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         """
-        Asynchronously map iterables to tasks and yield their results.
+            Asynchronously map iterables to tasks and yield their results.
 
-        Args:
+            Args:
             *iterables: Iterables to map over.
             pop: Whether to remove tasks from the internal storage once they are completed.
             yields: Whether to yield 'keys', 'values', or 'both' (key-value pairs).
         
-        Yields:
+            Yields:
             Depending on `yields`, either keys, values,
             or tuples of key-value pairs representing the results of completed tasks.
         """
-        if self._init_loader:
-            await self._init_loader
-        async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]):
-            self[key]  # ensure task is running
+        if self:
+            raise exceptions.MappingNotEmptyError
+        else:
+            logger.info(self)
+        async for _ in self._tasks_for_iterables(*iterables):
+            async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]):
+                self[key]  # ensure task is running
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
         async for key, value in as_completed(self._tasks, aiter=True):
@@ -142,7 +166,7 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
     
     async def _tasks_for_iterables(self, *iterables) -> AsyncIterator["asyncio.Task[V]"]:
         """Ensure tasks are running for each key in the provided iterables."""
-        async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]):
+        async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
             yield self[key]  # ensure task is running
 
 
