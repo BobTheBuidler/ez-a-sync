@@ -21,8 +21,7 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
 
     Unlike asyncio.create_task, which requires a coroutine, this function accepts any Awaitable, ensuring broader
     compatibility. It optionally prevents the task from being garbage-collected until completion and provides
-    enhanced error management by wrapping exceptions in a custom exception. It also introduces a mechanism for
-    task management, keeping references to tasks to avoid premature garbage collection.
+    enhanced error management by wrapping exceptions in a custom exception.
 
     Args:
         coro: An Awaitable object from which to create the task.
