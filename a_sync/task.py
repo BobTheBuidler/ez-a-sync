@@ -13,19 +13,26 @@ from a_sync.utils.iterators import as_yielded, exhaust_iterator
 logger = logging.getLogger(__name__)
 
 def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until_done: bool = False) -> "asyncio.Task[T]":
+
     """A wrapper over `asyncio.create_task` which will work with any `Awaitable` object, not just `Coroutine` objects"""
 
     """
-    Creates and schedules an asyncio Task from any Awaitable object.
-    
+    Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.
+
+    Unlike asyncio.create_task, which requires a coroutine, this function accepts any Awaitable, ensuring broader
+    compatibility. It optionally prevents the task from being garbage-collected until completion and provides
+    enhanced error management by wrapping exceptions in a custom exception. It also introduces a mechanism for
+    task management, keeping references to tasks to avoid premature garbage collection.
+
     Args:
-        coro: The Awaitable object to schedule as a task.
-        name: An optional name for the task.
-        skip_gc_until_done: If True, the task is not garbage collected until it is done.
-    
+        coro: An Awaitable object from which to create the task.
+        name: Optional name for the task, aiding in debugging.
+        skip_gc_until_done: If True, the task is kept alive until it completes, preventing garbage collection.
+
     Returns:
-        An asyncio Task created from the provided Awaitable.
+        An asyncio.Task object created from the provided Awaitable.
     """
+
     if not asyncio.iscoroutine(coro):
         coro = __await(coro)
     task = asyncio.create_task(coro, name=name)
@@ -131,8 +138,6 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
         else:
             logger.info(self)
         async for _ in self._tasks_for_iterables(*iterables):
-            async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]):
-                self[key]  # ensure task is running
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
         async for key, value in as_completed(self._tasks, aiter=True):
@@ -142,7 +147,7 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
     
     async def yield_completed(self, pop: bool = True) -> AsyncIterator[Tuple[K, V]]:
         """
-        Asynchronously yield completed tasks.
+        Asynchronously yield tuples of key-value pairs representing the results of any completed tasks.
 
         Args:
             pop: Whether to remove tasks from the internal storage once they are completed.
