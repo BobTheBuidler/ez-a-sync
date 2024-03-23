@@ -100,7 +100,6 @@ class TaskMapping(ASyncIterable[Tuple[K, V]], Mapping[K, "asyncio.Task[V]"]):
         """aiterate thru all key-task pairs, yielding the key-result pair as each task completes"""
         yielded = set()
         # if you inited the TaskMapping with some iterators, we will load those
-        """Asynchronously iterate over the task results as they complete."""
            
         if self._init_loader:
             while not self._init_loader.done():
