@@ -1,5 +1,7 @@
 import asyncio
 import sys
+from functools import cached_property
+from typing import NoReturn
 
 from a_sync._typing import *
 
@@ -65,8 +67,38 @@ class Queue(_Queue[T]):
                     self.put_nowait(value)
                 raise asyncio.QueueEmpty from None
         return items
-    
-        
+
+
+class ProcessingQueue(Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
+    def __init__(self, func: Callable[[T], V], num_workers: int, *, loop: asyncio.AbstractEventLoop | None = None) -> None:
+        super().__init__(loop=loop)
+        self.func = func
+        self.num_workers = num_workers
+        self._futs: Dict[T, asyncio.Future[V]] = {}
+    async def __call__(self, item: T) -> V:
+        return await self.put_nowait()
+    async def put(self, item: T) -> "asyncio.Future[V]":
+        self._workers
+        fut = asyncio.get_event_loop().create_future()
+        await super().put((item, fut))
+        return fut
+    def put_nowait(self, item: T) -> "asyncio.Future[V]":
+        self._workers
+        fut = asyncio.get_event_loop().create_future()
+        super().put_nowait((item, fut))
+        return fut
+    @cached_property
+    def _workers(self) -> None:
+        return [asyncio.create_task(self._worker_coro()) for _ in range(self.num_workers)]
+    async def _worker_coro(self) -> NoReturn:
+        while True:
+            item, fut = await self.get()
+            try:
+                fut.set_result(await self.func(item))
+            except Exception as e:
+                fut.set_result(e)
+            self.task_done()
+
 
 def _validate_args(i: int, can_return_less: bool) -> None:
     if not isinstance(i, int):
