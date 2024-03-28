@@ -9,4 +9,4 @@ from a_sync.primitives.executor import (AsyncProcessPoolExecutor,
                                         PruningThreadPoolExecutor,
                                         ThreadPoolExecutor)
 from a_sync.primitives.locks import *
-from a_sync.primitives.queue import Queue
+from a_sync.primitives.queue import Queue, ProcessingQueue
