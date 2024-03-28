@@ -6,7 +6,7 @@ import logging
 from a_sync._typing import *
 from a_sync import exceptions
 from a_sync.iter import ASyncIterable
-from a_sync.primitives.queue import Queue
+from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.utils.as_completed import as_completed
 from a_sync.utils.gather import gather
 from a_sync.utils.iterators import as_yielded, exhaust_iterator
@@ -51,6 +51,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     Attributes:
         _wrapped_func: The function used to generate values for each key.
         _wrapped_func_kwargs: Additional keyword arguments passed to `_wrapped_func`.
+        _concurrency: The max number of coroutines that will run at any given time.
         _name: Optional name for tasks created by this mapping.
         _next: An asyncio Event that indicates the next result it ready
         _tasks: Internal storage for the tasks.
@@ -63,11 +64,19 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         name: An optional name for the tasks created by this mapping.
         **wrapped_func_kwargs: Keyword arguments that will be passed to `wrapped_func`.
     """
-    __slots__ = "_wrapped_func", "_wrapped_func_kwargs", "_name", "_next", "_init_loader", "_init_loader_next"
-    def __init__(self, wrapped_func: MappingFn[K, P, V] = None, *iterables: AnyIterable[K], name: str = '', **wrapped_func_kwargs: P.kwargs) -> None:
+    __slots__ = "_wrapped_func", "_wrapped_func_kwargs", "_concurrency", "_name", "_next", "_init_loader", "_init_loader_next", "__dict__"
+    def __init__(
+        self, 
+        wrapped_func: MappingFn[K, P, V] = None, 
+        *iterables: AnyIterable[K], 
+        name: str = '', 
+        concurrency: Optional[int] = None, 
+        **wrapped_func_kwargs: P.kwargs,
+    ) -> None:
         # NOTE: we don't use functools.partial here so the original fn is still exposed
         self._wrapped_func = wrapped_func
         self._wrapped_func_kwargs = wrapped_func_kwargs
+        self._concurrency = concurrency
         self._name = name
         self._init_loader: Optional["asyncio.Task[None]"]
         if iterables:
@@ -95,13 +104,16 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         try:
             return super().__getitem__(item)
         except KeyError:
-            task = create_task(
-                coro=self._wrapped_func(item, **self._wrapped_func_kwargs),
-                name=f"{self._name}[{item}]" if self._name else f"{item}",
-            )
-            super().__setitem__(item, task)
-            return task
-        
+            if self._concurrency:
+                # NOTE: we use a queue instead of a Semaphore to reduce memory use for use cases involving many many tasks
+                fut = self._queue.put_nowait(item)
+            else:
+                fut = create_task(
+                    coro=self._wrapped_func(item, **self._wrapped_func_kwargs),
+                    name=f"{self._name}[{item}]" if self._name else f"{item}",
+                )
+            super().__setitem__(item, fut)
+            return fut
     def __await__(self) -> Generator[Any, None, Dict[K, V]]:
         """Wait for all tasks to complete and return a dictionary of the results."""
         return self.gather().__await__()
@@ -130,6 +142,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if unyielded := {key: task for key, task in self.items() if key not in yielded}:
             async for key, value in as_completed(unyielded, aiter=True):
                 yield key, value
+    @functools.cached_property
+    def _queue(self) -> ProcessingQueue:
+        fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
+        return ProcessingQueue(fn, self._concurrency)
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         """
             Asynchronously map iterables to tasks and yield their results.
