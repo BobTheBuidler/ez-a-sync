@@ -85,7 +85,7 @@ class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
     def __call__(self, item: T) -> "asyncio.Future[V]":
         return self.put_nowait(item)
     def __del__(self) -> None:
-        if "_workers" in self.__dict__ and self.empty():
+        if "_workers" in self.__dict__ and self._unfinished_tasks == 0:
             self._workers.cancel()
     async def get(self):
         raise NotImplementedError(f"cannot get from `{type(self).__name__}`")
