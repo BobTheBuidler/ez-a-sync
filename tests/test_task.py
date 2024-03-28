@@ -53,17 +53,21 @@ async def test_task_mapping():
     assert await tasks == {0: "1", 1: "22"}
     # can we await one from scratch?
     assert await TaskMapping(_coro_fn, range(5)) == {0: "1", 1: "22", 2: "333", 3: "4444", 4: "55555"}
+    assert len(tasks) == 2
     
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_map_with_sync_iter():
     tasks = TaskMapping(_coro_fn)
+    i = 0
     async for k, v in tasks.map(range(5)):
-        # this shouldn't work since there is a mapping in progress
-        with pytest.raises(exceptions.MappingNotEmptyError):
-            async for k in tasks.map(range(5)):
-                ...
         assert isinstance(k, int)
         assert isinstance(v, str)
+        if i < 4:
+            # this shouldn't work since there is a mapping in progress
+            with pytest.raises(exceptions.MappingNotEmptyError):
+                async for k in tasks.map(range(5)):
+                    ...
+        i += 1
     tasks = TaskMapping(_coro_fn)
     async for k in tasks.map(range(5), yields='keys'):
         assert isinstance(k, int)
@@ -74,13 +78,16 @@ async def test_task_mapping_map_with_async_iter():
         for i in range(5):
             yield i
     tasks = TaskMapping(_coro_fn)
+    i = 0
     async for k, v in tasks.map(async_iter()):
         assert isinstance(k, int)
         assert isinstance(v, str)
-        # this shouldn't work since there is a mapping in progress
-        with pytest.raises(exceptions.MappingNotEmptyError):
-            async for k in tasks.map(async_iter()):
-                ...
+        if i < 4:
+            # this shouldn't work since there is a mapping in progress
+            with pytest.raises(exceptions.MappingNotEmptyError):
+                async for k in tasks.map(async_iter()):
+                    ...
+        i += 1
     tasks = TaskMapping(_coro_fn)
     async for k in tasks.map(async_iter(), yields='keys'):
         assert isinstance(k, int)
