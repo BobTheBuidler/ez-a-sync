@@ -74,14 +74,17 @@ class ProcessingQueue(Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
     def __init__(self, func: Callable[[T], V], num_workers: int, *, loop: asyncio.AbstractEventLoop | None = None) -> None:
         if sys.version_info < (3, 10):
             super().__init__(loop=loop)
+        elif loop:
+            raise NotImplementedError(f"You cannot pass a value for `loop` in python {sys.version_info}")
         else:
-            if loop:
-                raise NotImplementedError(f"You cannot pass a value for `loop` in python {sys.version_info}")
             super().__init__()
         self.func = func
         self.num_workers = num_workers
     async def __call__(self, item: T) -> V:
         return await self.put_nowait()
+    def __del__(self) -> None:
+        if "_workers" in self.__dict__ and self.empty():
+            self._workers.cancel()
     async def put(self, item: T) -> "asyncio.Future[V]":
         self._workers
         fut = asyncio.get_event_loop().create_future()
@@ -93,8 +96,12 @@ class ProcessingQueue(Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
         super().put_nowait((item, fut))
         return fut
     @cached_property
-    def _workers(self) -> None:
-        return [asyncio.create_task(self._worker_coro()) for _ in range(self.num_workers)]
+    def _workers(self) -> "asyncio.Task[NoReturn]":
+        from a_sync.task import create_task
+        return create_task(
+            asyncio.gather(*[self._worker_coro() for _ in range(self.num_workers)]),
+            name=str(self)
+        )
     async def _worker_coro(self) -> NoReturn:
         while True:
             item, fut = await self.get()
