@@ -80,8 +80,10 @@ class ProcessingQueue(Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
             super().__init__()
         self.func = func
         self.num_workers = num_workers
-    async def __call__(self, item: T) -> V:
-        return await self.put_nowait()
+    def __repr__(self) -> str:
+        return f"<{type(self).__name__} num_workers={self.num_workers} pending={self._unfinished_tasks}>"
+    def __call__(self, item: T) -> "asyncio.Future[V]":
+        return self.put_nowait(item)
     def __del__(self) -> None:
         if "_workers" in self.__dict__ and self.empty():
             self._workers.cancel()
