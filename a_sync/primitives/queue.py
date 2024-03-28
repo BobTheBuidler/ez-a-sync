@@ -70,7 +70,7 @@ class Queue(_Queue[T]):
 
 
 class ProcessingQueue(Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
-    __slots__ = "func", "num_workers", "__dict__"
+    __slots__ = "func", "num_workers"
     def __init__(self, func: Callable[[T], V], num_workers: int, *, loop: asyncio.AbstractEventLoop | None = None) -> None:
         if sys.version_info < (3, 10):
             super().__init__(loop=loop)
