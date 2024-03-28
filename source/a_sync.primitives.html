@@ -400,6 +400,61 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 <section id="module-a_sync.primitives.queue">
 <span id="a-sync-primitives-queue-module"></span><h2>a_sync.primitives.queue module<a class="headerlink" href="#module-a_sync.primitives.queue" title="Link to this heading">¶</a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">V</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AbstractEventLoop</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._worker_coro" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._workers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><span class="pre">NoReturn</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._workers" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.func">
+<span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.func" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.get">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.get" title="Link to this definition">¶</a></dt>
+<dd><p>Remove and return an item from the queue.</p>
+<p>If queue is empty, wait until an item is available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.get_nowait">
+<span class="sig-name descname"><span class="pre">get_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.get_nowait" title="Link to this definition">¶</a></dt>
+<dd><p>Remove and return an item from the queue.</p>
+<p>Return an item if one is immediately available, else raise QueueEmpty.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.num_workers">
+<span class="sig-name descname"><span class="pre">num_workers</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.num_workers" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.put">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><span class="pre">V</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put" title="Link to this definition">¶</a></dt>
+<dd><p>Put an item into the queue.</p>
+<p>Put an item into the queue. If the queue is full, wait until a free
+slot is available before adding item.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.put_nowait">
+<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><span class="pre">V</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put_nowait" title="Link to this definition">¶</a></dt>
+<dd><p>Put an item into the queue without blocking.</p>
+<p>If no free slot is immediately available, raise QueueFull.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">Queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>

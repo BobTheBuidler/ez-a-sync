@@ -526,12 +526,16 @@
 </li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.executor._worker">_worker() (in module a_sync.primitives.executor)</a>
 </li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._worker_coro">_worker_coro() (a_sync.primitives.queue.ProcessingQueue method)</a>
+</li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.executor._AsyncExecutorMixin._workers">_workers (a_sync.primitives.executor._AsyncExecutorMixin attribute)</a>
 
       <ul>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.executor.AsyncProcessPoolExecutor._workers">(a_sync.primitives.executor.AsyncProcessPoolExecutor attribute)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.executor.AsyncThreadPoolExecutor._workers">(a_sync.primitives.executor.AsyncThreadPoolExecutor attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._workers">(a_sync.primitives.queue.ProcessingQueue property)</a>
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.task.TaskMapping._wrapped_func">_wrapped_func (a_sync.task.TaskMapping attribute)</a>, <a href="source/a_sync.html#id4">[1]</a>
@@ -1012,6 +1016,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.func">func (a_sync.primitives.queue.ProcessingQueue attribute)</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.exceptions.FunctionNotAsync">FunctionNotAsync</a>
 </li>
       <li><a href="source/a_sync.html#a_sync.exceptions.FunctionNotSync">FunctionNotSync</a>
@@ -1040,9 +1046,11 @@
       </ul></li>
       <li><a href="source/a_sync.utils.html#a_sync.utils.gather.gather_mapping">gather_mapping() (in module a_sync.utils.gather)</a>
 </li>
-      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.get">get() (a_sync.primitives.queue.Queue method)</a>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.get">get() (a_sync.primitives.queue.ProcessingQueue method)</a>
 
       <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.get">(a_sync.primitives.queue.Queue method)</a>
+</li>
         <li><a href="source/a_sync.html#a_sync.property._ASyncPropertyDescriptorBase.get">(a_sync.property._ASyncPropertyDescriptorBase method)</a>
 </li>
       </ul></li>
@@ -1060,8 +1068,12 @@
 </li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.get_multi_nowait">get_multi_nowait() (a_sync.primitives.queue.Queue method)</a>
 </li>
-      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.get_nowait">get_nowait() (a_sync.primitives.queue.Queue method)</a>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.get_nowait">get_nowait() (a_sync.primitives.queue.ProcessingQueue method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.get_nowait">(a_sync.primitives.queue.Queue method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1279,6 +1291,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.html#a_sync.exceptions.NoFlagsFound">NoFlagsFound</a>
 </li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.num_workers">num_workers (a_sync.primitives.queue.ProcessingQueue attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1291,22 +1305,32 @@
 </li>
       <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore">PrioritySemaphore (class in a_sync.primitives.locks.prio_semaphore)</a>
 </li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue">ProcessingQueue (class in a_sync.primitives.queue)</a>
+</li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.executor.ProcessPoolExecutor">ProcessPoolExecutor (in module a_sync.primitives.executor)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.html#a_sync.property">property (class in a_sync)</a>
 
       <ul>
         <li><a href="source/a_sync.html#a_sync.property.property">(class in a_sync.property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.executor.PruningThreadPoolExecutor">PruningThreadPoolExecutor (class in a_sync.primitives.executor)</a>
 </li>
-      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.put">put() (a_sync.primitives.queue.Queue method)</a>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.put">put() (a_sync.primitives.queue.ProcessingQueue method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.put">(a_sync.primitives.queue.Queue method)</a>
 </li>
-      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.put_nowait">put_nowait() (a_sync.primitives.queue.Queue method)</a>
+      </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.put_nowait">put_nowait() (a_sync.primitives.queue.ProcessingQueue method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.put_nowait">(a_sync.primitives.queue.Queue method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
