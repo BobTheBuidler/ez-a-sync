@@ -96,7 +96,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     @functools.cached_property
     def _queue(self) -> ProcessingQueue:
         fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
-        return ProcessingQueue(fn)
+        return ProcessingQueue(fn, self._concurrency)
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         if self:
             raise exceptions.MappingNotEmptyError
