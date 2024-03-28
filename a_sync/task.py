@@ -27,7 +27,7 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
 MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
 
 class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]]):
-    __slots__ = "_wrapped_func", "_wrapped_func_kwargs", "_concurrency", "_name", "_next", "_init_loader", "_init_loader_next"
+    __slots__ = "_wrapped_func", "_wrapped_func_kwargs", "_concurrency", "_name", "_next", "_init_loader", "_init_loader_next", "__dict__"
     def __init__(self, wrapped_func: MappingFn[K, P, V] = None, *iterables: AnyIterable[K], name: str = '', concurrency: Optional[int] = None, **wrapped_func_kwargs: P.kwargs) -> None:
         # NOTE: we don't use functools.partial here so the original fn is still exposed
         self._wrapped_func = wrapped_func
