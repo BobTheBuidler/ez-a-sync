@@ -70,11 +70,16 @@ class Queue(_Queue[T]):
 
 
 class ProcessingQueue(Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
+    __slots__ = "func", "num_workers", "__dict__"
     def __init__(self, func: Callable[[T], V], num_workers: int, *, loop: asyncio.AbstractEventLoop | None = None) -> None:
-        super().__init__(loop=loop)
+        if sys.version_info < (3, 10):
+            super().__init__(loop=loop)
+        else:
+            if loop:
+                raise NotImplementedError(f"You cannot pass a value for `loop` in python {sys.version_info}")
+            super().__init__()
         self.func = func
         self.num_workers = num_workers
-        self._futs: Dict[T, asyncio.Future[V]] = {}
     async def __call__(self, item: T) -> V:
         return await self.put_nowait()
     async def put(self, item: T) -> "asyncio.Future[V]":
