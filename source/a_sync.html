@@ -1121,7 +1121,7 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.task.</span></span><span class="sig-name descname"><span class="pre">TaskMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wrapped_func:</span> <span class="pre">~typing.Callable[[~typing.Concatenate[~a_sync._typing.K,</span> <span class="pre">~P]],</span> <span class="pre">~typing.Awaitable[~a_sync._typing.V]]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">*iterables:</span> <span class="pre">~typing.AsyncIterable[~a_sync._typing.K]</span> <span class="pre">|</span> <span class="pre">~typing.Iterable[~a_sync._typing.K],</span> <span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">**wrapped_func_kwargs:</span> <span class="pre">~typing.~P</span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMapping" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.iter.ASyncIterable" title="a_sync.iter.ASyncIterable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterable</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>]</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDict</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]]</p>
 <p>A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping._wrapped_func">
@@ -1142,6 +1142,12 @@ They work kind of like a typical Singleton would, but you will have two instance
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping._next">
+<span class="sig-name descname"><span class="pre">_next</span></span><a class="headerlink" href="#a_sync.task.TaskMapping._next" title="Link to this definition">¶</a></dt>
+<dd><p>An asyncio Event that indicates the next result it ready</p>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping._tasks">
 <span class="sig-name descname"><span class="pre">_tasks</span></span><a class="headerlink" href="#a_sync.task.TaskMapping._tasks" title="Link to this definition">¶</a></dt>
 <dd><p>Internal storage for the tasks.</p>
@@ -1151,6 +1157,12 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping._init_loader">
 <span class="sig-name descname"><span class="pre">_init_loader</span></span><a class="headerlink" href="#a_sync.task.TaskMapping._init_loader" title="Link to this definition">¶</a></dt>
 <dd><p>An asyncio Task used to preload values from the iterables.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping._init_loader_next">
+<span class="sig-name descname"><span class="pre">_init_loader_next</span></span><a class="headerlink" href="#a_sync.task.TaskMapping._init_loader_next" title="Link to this definition">¶</a></dt>
+<dd><p>An asyncio Event that indicates the _init_loader started a new task.</p>
 </dd></dl>
 
 <dl class="field-list simple">
@@ -1174,23 +1186,18 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.task.TaskMapping._init_loader_next">
-<span class="sig-name descname"><span class="pre">_init_loader_next</span></span><a class="headerlink" href="#a_sync.task.TaskMapping._init_loader_next" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">_name</span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.task.TaskMapping._next">
-<span class="sig-name descname"><span class="pre">_next</span></span><a class="headerlink" href="#a_sync.task.TaskMapping._next" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_init_loader_next</span></span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">_tasks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><span class="pre">V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_name</span></span><a class="headerlink" href="#id2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">_next</span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1200,13 +1207,13 @@ They work kind of like a typical Singleton would, but you will have two instance
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">_wrapped_func</span></span><a class="headerlink" href="#id3" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">_wrapped_func</span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">_wrapped_func_kwargs</span></span><a class="headerlink" href="#id4" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">_wrapped_func_kwargs</span></span><a class="headerlink" href="#id5" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1220,7 +1227,7 @@ They work kind of like a typical Singleton would, but you will have two instance
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">iterables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncIterable</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'keys'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'both'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'both'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AsyncIterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.task.TaskMapping.map" title="Link to this definition">¶</a></dt>
 <dd><p>Asynchronously map iterables to tasks and yield their results.</p>
 <p>Args:
-<a href="#id5"><span class="problematic" id="id6">*</span></a>iterables: Iterables to map over.
+<a href="#id6"><span class="problematic" id="id7">*</span></a>iterables: Iterables to map over.
 pop: Whether to remove tasks from the internal storage once they are completed.
 yields: Whether to yield ‘keys’, ‘values’, or ‘both’ (key-value pairs).</p>
 <p>Yields:
@@ -1419,7 +1426,7 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.TaskMapping">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">TaskMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">wrapped_func:</span> <span class="pre">~typing.Callable[[~typing.Concatenate[~a_sync._typing.K,</span> <span class="pre">~P]],</span> <span class="pre">~typing.Awaitable[~a_sync._typing.V]]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">*iterables:</span> <span class="pre">~typing.AsyncIterable[~a_sync._typing.K]</span> <span class="pre">|</span> <span class="pre">~typing.Iterable[~a_sync._typing.K],</span> <span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">**wrapped_func_kwargs:</span> <span class="pre">~typing.~P</span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.TaskMapping" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.iter.ASyncIterable" title="a_sync.iter.ASyncIterable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterable</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>]</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDict</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]]</p>
 <p>A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.TaskMapping._wrapped_func">
@@ -1440,14 +1447,15 @@ They work kind of like a typical Singleton would, but you will have two instance
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.TaskMapping._next">
+<span class="sig-name descname"><span class="pre">_next</span></span><a class="headerlink" href="#a_sync.TaskMapping._next" title="Link to this definition">¶</a></dt>
+<dd><p>An asyncio Event that indicates the next result it ready</p>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.TaskMapping._tasks">
 <span class="sig-name descname"><span class="pre">_tasks</span></span><a class="headerlink" href="#a_sync.TaskMapping._tasks" title="Link to this definition">¶</a></dt>
 <dd><p>Internal storage for the tasks.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict[a_sync._typing.K, _asyncio.Task[a_sync._typing.V]]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -1459,6 +1467,12 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dd class="field-odd"><p>_asyncio.Task[None] | None</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.TaskMapping._init_loader_next">
+<span class="sig-name descname"><span class="pre">_init_loader_next</span></span><a class="headerlink" href="#a_sync.TaskMapping._init_loader_next" title="Link to this definition">¶</a></dt>
+<dd><p>An asyncio Event that indicates the _init_loader started a new task.</p>
 </dd></dl>
 
 <dl class="field-list simple">
@@ -1477,28 +1491,23 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id7">
-<span class="sig-name descname"><span class="pre">_init_loader</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id7" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.TaskMapping._init_loader_next">
-<span class="sig-name descname"><span class="pre">_init_loader_next</span></span><a class="headerlink" href="#a_sync.TaskMapping._init_loader_next" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">_name</span></span><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.TaskMapping._next">
-<span class="sig-name descname"><span class="pre">_next</span></span><a class="headerlink" href="#a_sync.TaskMapping._next" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_init_loader</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id8" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">_tasks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><span class="pre">V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id9" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_init_loader_next</span></span><a class="headerlink" href="#id9" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">_name</span></span><a class="headerlink" href="#id10" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">_next</span></span><a class="headerlink" href="#id11" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1508,13 +1517,13 @@ They work kind of like a typical Singleton would, but you will have two instance
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id10">
-<span class="sig-name descname"><span class="pre">_wrapped_func</span></span><a class="headerlink" href="#id10" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">_wrapped_func</span></span><a class="headerlink" href="#id12" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id11">
-<span class="sig-name descname"><span class="pre">_wrapped_func_kwargs</span></span><a class="headerlink" href="#id11" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">_wrapped_func_kwargs</span></span><a class="headerlink" href="#id13" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1528,7 +1537,7 @@ They work kind of like a typical Singleton would, but you will have two instance
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">iterables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncIterable</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yields</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'keys'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'both'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'both'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AsyncIterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.TaskMapping.map" title="Link to this definition">¶</a></dt>
 <dd><p>Asynchronously map iterables to tasks and yield their results.</p>
 <p>Args:
-<a href="#id12"><span class="problematic" id="id13">*</span></a>iterables: Iterables to map over.
+<a href="#id14"><span class="problematic" id="id15">*</span></a>iterables: Iterables to map over.
 pop: Whether to remove tasks from the internal storage once they are completed.
 yields: Whether to yield ‘keys’, ‘values’, or ‘both’ (key-value pairs).</p>
 <p>Yields:
@@ -1592,7 +1601,7 @@ or tuples of key-value pairs representing the results of completed tasks.</p>
 </dl>
 <p class="rubric">Examples</p>
 <p>Awaiting individual awaitables:
-<a href="#id14"><span class="problematic" id="id15">``</span></a>`
+<a href="#id16"><span class="problematic" id="id17">``</span></a>`
 awaitables = [async_function1(), async_function2()]
 for coro in as_completed(awaitables):</p>
 <blockquote>
@@ -1603,9 +1612,9 @@ for coro in as_completed(awaitables):</p>
 <dt>async for val in as_completed(awaitables, aiter=True):</dt><dd><p>…</p>
 </dd>
 </dl>
-<p><a href="#id16"><span class="problematic" id="id17">``</span></a><a href="#id18"><span class="problematic" id="id19">`</span></a></p>
+<p><a href="#id18"><span class="problematic" id="id19">``</span></a><a href="#id20"><span class="problematic" id="id21">`</span></a></p>
 <p>Awaiting mappings of awaitables:
-<a href="#id20"><span class="problematic" id="id21">``</span></a>`
+<a href="#id22"><span class="problematic" id="id23">``</span></a>`
 mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dl class="simple">
 <dt>for coro in as_completed(mapping):</dt><dd><p>k, v = await coro
@@ -1614,7 +1623,7 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dt>async for k, v in as_completed(mapping, aiter=True):</dt><dd><p>…</p>
 </dd>
 </dl>
-<p><a href="#id22"><span class="problematic" id="id23">``</span></a><a href="#id24"><span class="problematic" id="id25">`</span></a></p>
+<p><a href="#id24"><span class="problematic" id="id25">``</span></a><a href="#id26"><span class="problematic" id="id27">`</span></a></p>
 </dd></dl>
 
 <dl class="py function">
