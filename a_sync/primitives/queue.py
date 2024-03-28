@@ -1,9 +1,12 @@
 import asyncio
+import logging
 import sys
 from functools import cached_property
 from typing import NoReturn
 
 from a_sync._typing import *
+
+logger = logging.getLogger(__name__)
 
 if sys.version_info < (3, 9):
     class _Queue(asyncio.Queue, Generic[T]):
@@ -87,10 +90,6 @@ class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
     def __del__(self) -> None:
         if "_workers" in self.__dict__ and self._unfinished_tasks == 0:
             self._workers.cancel()
-    async def get(self):
-        raise NotImplementedError(f"cannot get from `{type(self).__name__}`")
-    def get_nowait(self):
-        raise NotImplementedError(f"cannot get from `{type(self).__name__}`")
     async def put(self, item: T) -> "asyncio.Future[V]":
         self._workers
         fut = asyncio.get_event_loop().create_future()
@@ -104,6 +103,7 @@ class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
     @cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
         from a_sync.task import create_task
+        logger.debug("starting worker task for %s", self)
         return create_task(
             asyncio.gather(*[self._worker_coro() for _ in range(self.num_workers)]),
             name=str(self)
@@ -112,7 +112,7 @@ class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
         item: T
         fut: asyncio.Future[V]
         while True:
-            item, fut = await super().get()
+            item, fut = await self.get()
             try:
                 fut.set_result(await self.func(item))
             except Exception as e:
