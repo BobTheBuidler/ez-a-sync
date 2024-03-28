@@ -69,7 +69,7 @@ class Queue(_Queue[T]):
         return items
 
 
-class ProcessingQueue(Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
+class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
     __slots__ = "func", "num_workers"
     def __init__(self, func: Callable[[T], V], num_workers: int, *, loop: asyncio.AbstractEventLoop | None = None) -> None:
         if sys.version_info < (3, 10):
@@ -87,6 +87,10 @@ class ProcessingQueue(Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
     def __del__(self) -> None:
         if "_workers" in self.__dict__ and self.empty():
             self._workers.cancel()
+    async def get(self):
+        raise NotImplementedError(f"cannot get from `{type(self).__name__}`")
+    def get_nowait(self):
+        raise NotImplementedError(f"cannot get from `{type(self).__name__}`")
     async def put(self, item: T) -> "asyncio.Future[V]":
         self._workers
         fut = asyncio.get_event_loop().create_future()
@@ -105,8 +109,10 @@ class ProcessingQueue(Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
             name=str(self)
         )
     async def _worker_coro(self) -> NoReturn:
+        item: T
+        fut: asyncio.Future[V]
         while True:
-            item, fut = await self.get()
+            item, fut = await super().get()
             try:
                 fut.set_result(await self.func(item))
             except Exception as e:
