@@ -88,8 +88,11 @@ class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
     def __call__(self, item: T) -> "asyncio.Future[V]":
         return self.put_nowait(item)
     def __del__(self) -> None:
-        if "_workers" in self.__dict__ and self._unfinished_tasks == 0:
-            self._workers.cancel()
+        if self._unfinished_tasks > 0:
+            context = {
+                'message': f'{self} was destroyed but has work pending!',
+            }
+            asyncio.get_event_loop().call_exception_handler(context)
     async def put(self, item: T) -> "asyncio.Future[V]":
         self._workers
         fut = asyncio.get_event_loop().create_future()
@@ -101,13 +104,15 @@ class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
         super().put_nowait((item, fut))
         return fut
     @cached_property
+    def _gather(self) -> "asyncio.Future[NoReturn]":
+        return 
+    @cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
         from a_sync.task import create_task
         logger.debug("starting worker task for %s", self)
-        return create_task(
-            asyncio.gather(*[self._worker_coro() for _ in range(self.num_workers)]),
-            name=str(self)
-        )
+        task = create_task(asyncio.gather(*[self._worker_coro() for _ in range(self.num_workers)]), name=repr(self))
+        task._log_destroy_pending = False
+        return task
     async def _worker_coro(self) -> NoReturn:
         item: T
         fut: asyncio.Future[V]
