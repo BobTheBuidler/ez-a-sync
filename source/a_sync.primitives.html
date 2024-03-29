@@ -418,20 +418,6 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 <span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.func" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.get">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.get" title="Link to this definition">¶</a></dt>
-<dd><p>Remove and return an item from the queue.</p>
-<p>If queue is empty, wait until an item is available.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.get_nowait">
-<span class="sig-name descname"><span class="pre">get_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.get_nowait" title="Link to this definition">¶</a></dt>
-<dd><p>Remove and return an item from the queue.</p>
-<p>Return an item if one is immediately available, else raise QueueEmpty.</p>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.num_workers">
 <span class="sig-name descname"><span class="pre">num_workers</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.num_workers" title="Link to this definition">¶</a></dt>
