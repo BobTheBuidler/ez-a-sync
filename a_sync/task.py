@@ -15,9 +15,6 @@ from a_sync.utils.iterators import as_yielded, exhaust_iterator
 logger = logging.getLogger(__name__)
 
 def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until_done: bool = False) -> "asyncio.Task[T]":
-
-    """A wrapper over `asyncio.create_task` which will work with any `Awaitable` object, not just `Coroutine` objects"""
-
     """
     Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.
 
@@ -114,6 +111,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 )
             super().__setitem__(item, fut)
             return fut
+        
     def __await__(self) -> Generator[Any, None, Dict[K, V]]:
         """Wait for all tasks to complete and return a dictionary of the results."""
         return self.gather().__await__()
@@ -142,10 +140,12 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if unyielded := {key: task for key, task in self.items() if key not in yielded}:
             async for key, value in as_completed(unyielded, aiter=True):
                 yield key, value
+
     @functools.cached_property
     def _queue(self) -> ProcessingQueue:
         fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
         return ProcessingQueue(fn, self._concurrency)
+    
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         """
             Asynchronously map iterables to tasks and yield their results.
