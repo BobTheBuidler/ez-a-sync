@@ -37,7 +37,11 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
         """Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking."""
         if self.sync_mode:
-            fut = asyncio.ensure_future(self._exec_sync(fn, *args, **kwargs))
+            fut = asyncio.get_event_loop().create_future()
+            try:
+                fut.set_result(fn(*args, **kwargs))
+            except Exception as e:
+                fut.set_exception(e)
         else:
             fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))  # type: ignore [assignment]
             self._start_debug_daemon(fut, fn, *args, **kwargs)
@@ -53,9 +57,6 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     @property
     def worker_count_current(self) -> int:
         return len(getattr(self, f"_{self._workers}"))
-    async def _exec_sync(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
-        """Just wraps a fn and its args into an awaitable."""
-        return fn(*args, **kwargs)
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """Runs until manually cancelled by the finished work item"""
         while not fut.done():
