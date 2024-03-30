@@ -1,8 +1,7 @@
 import asyncio
+import functools
 import logging
 import sys
-from functools import cached_property
-from typing import NoReturn
 
 from a_sync._typing import *
 
@@ -72,9 +71,9 @@ class Queue(_Queue[T]):
         return items
 
 
-class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
+class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     __slots__ = "func", "num_workers"
-    def __init__(self, func: Callable[[T], V], num_workers: int, *, loop: asyncio.AbstractEventLoop | None = None) -> None:
+    def __init__(self, func: Callable[P, Awaitable[V]], num_workers: int, *, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
         if sys.version_info < (3, 10):
             super().__init__(loop=loop)
         elif loop:
@@ -85,28 +84,25 @@ class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
         self.num_workers = num_workers
     def __repr__(self) -> str:
         return f"<{type(self).__name__} func={self.func} num_workers={self.num_workers} pending={self._unfinished_tasks}>"
-    def __call__(self, item: T) -> "asyncio.Future[V]":
-        return self.put_nowait(item)
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+        return self.put_nowait((args, kwargs))
     def __del__(self) -> None:
         if self._unfinished_tasks > 0:
             context = {
                 'message': f'{self} was destroyed but has work pending!',
             }
             asyncio.get_event_loop().call_exception_handler(context)
-    async def put(self, item: T) -> "asyncio.Future[V]":
+    async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         self._workers
         fut = asyncio.get_event_loop().create_future()
-        await super().put((item, fut))
+        await super().put((args, kwargs, fut))
         return fut
-    def put_nowait(self, item: T) -> "asyncio.Future[V]":
+    def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         self._workers
         fut = asyncio.get_event_loop().create_future()
-        super().put_nowait((item, fut))
+        super().put_nowait((args, kwargs, fut))
         return fut
-    @cached_property
-    def _gather(self) -> "asyncio.Future[NoReturn]":
-        return 
-    @cached_property
+    @functools.cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
         from a_sync.task import create_task
         logger.debug("starting worker task for %s", self)
@@ -114,12 +110,13 @@ class ProcessingQueue(_Queue[Tuple[T, "asyncio.Future[V]"]], Generic[T, V]):
         task._log_destroy_pending = False
         return task
     async def _worker_coro(self) -> NoReturn:
-        item: T
+        args: P.args
+        kwargs: P.kwargs
         fut: asyncio.Future[V]
         while True:
-            item, fut = await self.get()
+            args, kwargs, fut = await self.get()
             try:
-                fut.set_result(await self.func(item))
+                fut.set_result(await self.func(*args, **kwargs))
             except Exception as e:
                 fut.set_result(e)
             self.task_done()
