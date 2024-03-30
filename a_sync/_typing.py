@@ -5,8 +5,8 @@ from decimal import Decimal
 from typing import (TYPE_CHECKING, Any, AsyncGenerator, AsyncIterable, AsyncIterator, 
                     Awaitable, Callable, Coroutine, DefaultDict, Deque, Dict, Generator, 
                     Generic, ItemsView, Iterable, Iterator, KeysView, List, Literal,
-                    Mapping, Optional, Protocol, Set, Tuple, Type, TypedDict, TypeVar, 
-                    Union, ValuesView, final, overload, runtime_checkable)
+                    Mapping, NoReturn, Optional, Protocol, Set, Tuple, Type, TypedDict,
+                    TypeVar, Union, ValuesView, final, overload, runtime_checkable)
 
 from typing_extensions import Concatenate, ParamSpec, Self, Unpack
 
