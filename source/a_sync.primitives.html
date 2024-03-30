@@ -469,11 +469,11 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<em>Callable</em><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><em>V</em><em>]</em>) – </p></li>
+<li><p><strong>func</strong> (<em>Callable</em><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em>) – </p></li>
 <li><p><strong>num_workers</strong> (<em>int</em>) – </p></li>
 <li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>) – </p></li>
 </ul>
@@ -485,7 +485,7 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<em>Callable</em><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><em>V</em><em>]</em>) – </p></li>
+<li><p><strong>func</strong> (<em>Callable</em><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em>) – </p></li>
 <li><p><strong>num_workers</strong> (<em>int</em>) – </p></li>
 <li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>) – </p></li>
 </ul>
@@ -495,11 +495,6 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._gather">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_gather</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><span class="pre">NoReturn</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._gather" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._worker_coro">
@@ -528,13 +523,16 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.put">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put" title="Link to this definition">¶</a></dt>
 <dd><p>Put an item into the queue.</p>
 <p>Put an item into the queue. If the queue is full, wait until a free
 slot is available before adding item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>item</strong> (<em>T</em>) – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>~P</em>) – </p></li>
+<li><p><strong>kwargs</strong> (<em>~P</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
@@ -544,12 +542,15 @@ slot is available before adding item.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.put_nowait">
-<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put_nowait" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put_nowait" title="Link to this definition">¶</a></dt>
 <dd><p>Put an item into the queue without blocking.</p>
 <p>If no free slot is immediately available, raise QueueFull.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>item</strong> (<em>T</em>) – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>~P</em>) – </p></li>
+<li><p><strong>kwargs</strong> (<em>~P</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
