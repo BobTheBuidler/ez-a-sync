@@ -1,39 +1,176 @@
 <!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<html lang="en" data-content_root="../">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>a_sync.primitives package &mdash; ez-a-sync  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
-    <title>a_sync.primitives package &#8212; ez-a-sync  documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d1102ebc" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
-    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
 
-  
-  
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
 
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
           
+          
+          <a href="../index.html" class="icon icon-home">
+            ez-a-sync
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">a_sync.primitives package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-a_sync.primitives.executor">a_sync.primitives.executor module</a><ul>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.__init__"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._call_queue"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._call_queue</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._mp_context"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._mp_context</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._pending_work_items"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._pending_work_items</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._processes"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._processes</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_count"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._queue_count</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._queue_management_thread</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread_wakeup"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._queue_management_thread_wakeup</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._result_queue"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._result_queue</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._shutdown_thread"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._shutdown_thread</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._work_ids"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._work_ids</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._workers"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._workers</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.__init__"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._idle_semaphore"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._idle_semaphore</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._shutdown"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._shutdown</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._thread_name_prefix"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._thread_name_prefix</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._threads"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._threads</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._work_queue"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._work_queue</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._workers"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._workers</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.ProcessPoolExecutor"><code class="docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.__init__"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._adjust_thread_count"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._adjust_thread_count()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._adjusting_lock"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._adjusting_lock</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._timeout"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._timeout</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a_sync.primitives.executor.ThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._broken"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._broken</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._debug_daemon()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._initargs"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._initargs</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._initializer"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._initializer</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._max_workers"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._max_workers</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._shutdown_lock"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._shutdown_lock</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._workers"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._workers</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.run"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.run()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.submit"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.submit()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.sync_mode"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.sync_mode</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.worker_count_current"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.worker_count_current</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a_sync.primitives.executor._worker"><code class="docutils literal notranslate"><span class="pre">_worker()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-a_sync.primitives.queue">a_sync.primitives.queue module</a><ul>
+<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.__call__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__call__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.__init__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._worker_coro"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._worker_coro()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._workers</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.func"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.func</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.num_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.num_workers</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.put"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.put()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.put_nowait"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.put_nowait()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue"><code class="docutils literal notranslate"><span class="pre">Queue</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._finished"><code class="docutils literal notranslate"><span class="pre">Queue._finished</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._getters"><code class="docutils literal notranslate"><span class="pre">Queue._getters</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._maxsize"><code class="docutils literal notranslate"><span class="pre">Queue._maxsize</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._putters"><code class="docutils literal notranslate"><span class="pre">Queue._putters</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._unfinished_tasks"><code class="docutils literal notranslate"><span class="pre">Queue._unfinished_tasks</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get"><code class="docutils literal notranslate"><span class="pre">Queue.get()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_all"><code class="docutils literal notranslate"><span class="pre">Queue.get_all()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_all_nowait"><code class="docutils literal notranslate"><span class="pre">Queue.get_all_nowait()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_multi"><code class="docutils literal notranslate"><span class="pre">Queue.get_multi()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_multi_nowait"><code class="docutils literal notranslate"><span class="pre">Queue.get_multi_nowait()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_nowait"><code class="docutils literal notranslate"><span class="pre">Queue.get_nowait()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.put"><code class="docutils literal notranslate"><span class="pre">Queue.put()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.put_nowait"><code class="docutils literal notranslate"><span class="pre">Queue.put_nowait()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a_sync.primitives.queue._Queue"><code class="docutils literal notranslate"><span class="pre">_Queue</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._finished"><code class="docutils literal notranslate"><span class="pre">_Queue._finished</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._getters"><code class="docutils literal notranslate"><span class="pre">_Queue._getters</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._maxsize"><code class="docutils literal notranslate"><span class="pre">_Queue._maxsize</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._putters"><code class="docutils literal notranslate"><span class="pre">_Queue._putters</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._unfinished_tasks"><code class="docutils literal notranslate"><span class="pre">_Queue._unfinished_tasks</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#a_sync.primitives.queue._validate_args"><code class="docutils literal notranslate"><span class="pre">_validate_args()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-a_sync.primitives">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
 
-          <div class="body" role="main">
-            
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ez-a-sync</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">a_sync.primitives package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/a_sync.primitives.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
   <section id="a-sync-primitives-package">
-<h1>a_sync.primitives package<a class="headerlink" href="#a-sync-primitives-package" title="Link to this heading">¶</a></h1>
+<h1>a_sync.primitives package<a class="headerlink" href="#a-sync-primitives-package" title="Link to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="a_sync.primitives.locks.html">a_sync.primitives.locks package</a><ul>
@@ -89,6 +226,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__getitem__"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.__getitem__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__init__"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._capacity"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._capacity</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._context_manager_class"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._context_manager_class</span></code></a></li>
@@ -134,6 +272,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore"><code class="docutils literal notranslate"><span class="pre">Semaphore</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore.__call__"><code class="docutils literal notranslate"><span class="pre">Semaphore.__call__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore.__init__"><code class="docutils literal notranslate"><span class="pre">Semaphore.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore._debug_daemon"><code class="docutils literal notranslate"><span class="pre">Semaphore._debug_daemon()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore._decorated"><code class="docutils literal notranslate"><span class="pre">Semaphore._decorated</span></code></a></li>
@@ -161,15 +300,15 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
 <section id="module-a_sync.primitives.executor">
-<span id="a-sync-primitives-executor-module"></span><h2>a_sync.primitives.executor module<a class="headerlink" href="#module-a_sync.primitives.executor" title="Link to this heading">¶</a></h2>
+<span id="a-sync-primitives-executor-module"></span><h2>a_sync.primitives.executor module<a class="headerlink" href="#module-a_sync.primitives.executor" title="Link to this heading"></a></h2>
 <p>With these executors, you can simply run sync fns in your executor with <cite>await executor.run(fn, *args)</cite></p>
 <p><cite>executor.submit(fn, *args)</cite> will work the same as the concurrent.futures implementation, but will return an asyncio.Future instead of a concurrent.futures.Future</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">AsyncProcessPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mp_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">AsyncProcessPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mp_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin" title="a_sync.primitives.executor._AsyncExecutorMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -183,7 +322,7 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mp_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.__init__" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mp_context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -201,64 +340,64 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._call_queue">
-<span class="sig-name descname"><span class="pre">_call_queue</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._call_queue" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_call_queue</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._call_queue" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._mp_context">
-<span class="sig-name descname"><span class="pre">_mp_context</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._mp_context" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_mp_context</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._mp_context" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._pending_work_items">
-<span class="sig-name descname"><span class="pre">_pending_work_items</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._pending_work_items" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_pending_work_items</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._pending_work_items" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._processes">
-<span class="sig-name descname"><span class="pre">_processes</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._processes" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_processes</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._processes" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_count">
-<span class="sig-name descname"><span class="pre">_queue_count</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_count" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_queue_count</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_count" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread">
-<span class="sig-name descname"><span class="pre">_queue_management_thread</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_queue_management_thread</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread_wakeup">
-<span class="sig-name descname"><span class="pre">_queue_management_thread_wakeup</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread_wakeup" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_queue_management_thread_wakeup</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread_wakeup" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._result_queue">
-<span class="sig-name descname"><span class="pre">_result_queue</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._result_queue" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_result_queue</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._result_queue" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._shutdown_thread">
-<span class="sig-name descname"><span class="pre">_shutdown_thread</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._shutdown_thread" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_shutdown_thread</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._shutdown_thread" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._work_ids">
-<span class="sig-name descname"><span class="pre">_work_ids</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._work_ids" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_work_ids</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._work_ids" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncProcessPoolExecutor._workers">
-<span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'processes'</span></em><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._workers" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'processes'</span></em><a class="headerlink" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncThreadPoolExecutor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">AsyncThreadPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">AsyncThreadPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin" title="a_sync.primitives.executor._AsyncExecutorMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -272,7 +411,7 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncThreadPoolExecutor.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.__init__" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -290,88 +429,88 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncThreadPoolExecutor._idle_semaphore">
-<span class="sig-name descname"><span class="pre">_idle_semaphore</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._idle_semaphore" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_idle_semaphore</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._idle_semaphore" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncThreadPoolExecutor._shutdown">
-<span class="sig-name descname"><span class="pre">_shutdown</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._shutdown" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_shutdown</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._shutdown" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncThreadPoolExecutor._thread_name_prefix">
-<span class="sig-name descname"><span class="pre">_thread_name_prefix</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._thread_name_prefix" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_thread_name_prefix</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._thread_name_prefix" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncThreadPoolExecutor._threads">
-<span class="sig-name descname"><span class="pre">_threads</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._threads" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_threads</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._threads" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncThreadPoolExecutor._work_queue">
-<span class="sig-name descname"><span class="pre">_work_queue</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._work_queue" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_work_queue</span></span><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._work_queue" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.AsyncThreadPoolExecutor._workers">
-<span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'threads'</span></em><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._workers" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'threads'</span></em><a class="headerlink" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.ProcessPoolExecutor">
-<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">ProcessPoolExecutor</span></span><a class="headerlink" href="#a_sync.primitives.executor.ProcessPoolExecutor" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">ProcessPoolExecutor</span></span><a class="headerlink" href="#a_sync.primitives.executor.ProcessPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>alias of <a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor" title="a_sync.primitives.executor.AsyncProcessPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.PruningThreadPoolExecutor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">PruningThreadPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">PruningThreadPoolExecutor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor" title="a_sync.primitives.executor.AsyncThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a></p>
 <p>This ThreadPoolExecutor implementation prunes inactive threads after ‘timeout’ seconds without a work item.
 Pruned threads will be automatically recreated as needed for future workloads. up to ‘max_threads’ can be active at any one time.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.PruningThreadPoolExecutor.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.__init__" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_name_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">600</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.PruningThreadPoolExecutor._adjust_thread_count">
-<span class="sig-name descname"><span class="pre">_adjust_thread_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._adjust_thread_count" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_adjust_thread_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._adjust_thread_count" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.PruningThreadPoolExecutor._adjusting_lock">
-<span class="sig-name descname"><span class="pre">_adjusting_lock</span></span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._adjusting_lock" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_adjusting_lock</span></span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._adjusting_lock" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.PruningThreadPoolExecutor._timeout">
-<span class="sig-name descname"><span class="pre">_timeout</span></span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._timeout" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_timeout</span></span><a class="headerlink" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._timeout" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor.ThreadPoolExecutor">
-<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">ThreadPoolExecutor</span></span><a class="headerlink" href="#a_sync.primitives.executor.ThreadPoolExecutor" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">ThreadPoolExecutor</span></span><a class="headerlink" href="#a_sync.primitives.executor.ThreadPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>alias of <a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor" title="a_sync.primitives.executor.AsyncThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">_AsyncExecutorMixin</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">_AsyncExecutorMixin</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Executor</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin._broken">
-<span class="sig-name descname"><span class="pre">_broken</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._broken" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_broken</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._broken" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin._debug_daemon">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._debug_daemon" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Runs until manually cancelled by the finished work item</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -385,32 +524,32 @@ Pruned threads will be automatically recreated as needed for future workloads. u
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin._initargs">
-<span class="sig-name descname"><span class="pre">_initargs</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._initargs" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_initargs</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._initargs" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin._initializer">
-<span class="sig-name descname"><span class="pre">_initializer</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._initializer" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_initializer</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._initializer" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin._max_workers">
-<span class="sig-name descname"><span class="pre">_max_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._max_workers" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_max_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._max_workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin._shutdown_lock">
-<span class="sig-name descname"><span class="pre">_shutdown_lock</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._shutdown_lock" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_shutdown_lock</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._shutdown_lock" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin._workers">
-<span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._workers" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin.run">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin.run" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin.run" title="Link to this definition"></a></dt>
 <dd><p>A shorthand way to call <cite>await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)</cite>
 Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</p>
 <p>Oh, and you can also use kwargs!</p>
@@ -430,7 +569,7 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin.submit">
-<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin.submit" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin.submit" title="Link to this definition"></a></dt>
 <dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -448,27 +587,27 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin.sync_mode">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin.sync_mode" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin.sync_mode" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin.worker_count_current">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">worker_count_current</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin.worker_count_current" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">worker_count_current</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin.worker_count_current" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._worker">
-<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">_worker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">executor_reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor._worker" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">_worker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">executor_reference</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initializer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor._worker" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="module-a_sync.primitives.queue">
-<span id="a-sync-primitives-queue-module"></span><h2>a_sync.primitives.queue module<a class="headerlink" href="#module-a_sync.primitives.queue" title="Link to this heading">¶</a></h2>
+<span id="a-sync-primitives-queue-module"></span><h2>a_sync.primitives.queue module<a class="headerlink" href="#module-a_sync.primitives.queue" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -480,8 +619,25 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.__call__" title="Link to this definition"></a></dt>
+<dd><p>Call self as a function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>~P</em>) – </p></li>
+<li><p><strong>kwargs</strong> (<em>~P</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.__init__" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -498,7 +654,7 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._worker_coro" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>NoReturn</em></p>
@@ -508,22 +664,22 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._workers">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><span class="pre">NoReturn</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._workers" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><span class="pre">NoReturn</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.func">
-<span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.func" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.func" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.num_workers">
-<span class="sig-name descname"><span class="pre">num_workers</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.num_workers" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">num_workers</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.num_workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.put">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put" title="Link to this definition"></a></dt>
 <dd><p>Put an item into the queue.</p>
 <p>Put an item into the queue. If the queue is full, wait until a free
 slot is available before adding item.</p>
@@ -542,7 +698,7 @@ slot is available before adding item.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.put_nowait">
-<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put_nowait" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.put_nowait" title="Link to this definition"></a></dt>
 <dd><p>Put an item into the queue without blocking.</p>
 <p>If no free slot is immediately available, raise QueueFull.</p>
 <dl class="field-list simple">
@@ -562,36 +718,36 @@ slot is available before adding item.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">Queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">Queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue._finished">
-<span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._finished" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._finished" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue._getters">
-<span class="sig-name descname"><span class="pre">_getters</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._getters" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_getters</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._getters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue._maxsize">
-<span class="sig-name descname"><span class="pre">_maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._maxsize" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._maxsize" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue._putters">
-<span class="sig-name descname"><span class="pre">_putters</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._putters" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_putters</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._putters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue._unfinished_tasks">
-<span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._unfinished_tasks" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.Queue._unfinished_tasks" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue.get">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get" title="Link to this definition"></a></dt>
 <dd><p>Remove and return an item from the queue.</p>
 <p>If queue is empty, wait until an item is available.</p>
 <dl class="field-list simple">
@@ -603,7 +759,7 @@ slot is available before adding item.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue.get_all">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_all" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_all" title="Link to this definition"></a></dt>
 <dd><p>returns 1 or more items</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -614,7 +770,7 @@ slot is available before adding item.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue.get_all_nowait">
-<span class="sig-name descname"><span class="pre">get_all_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_all_nowait" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_all_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_all_nowait" title="Link to this definition"></a></dt>
 <dd><p>returns 1 or more items, or raises asyncio.QueueEmpty</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -625,7 +781,7 @@ slot is available before adding item.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue.get_multi">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_return_less</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_multi" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_return_less</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_multi" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -641,7 +797,7 @@ slot is available before adding item.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue.get_multi_nowait">
-<span class="sig-name descname"><span class="pre">get_multi_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_return_less</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_multi_nowait" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_multi_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_return_less</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_multi_nowait" title="Link to this definition"></a></dt>
 <dd><p>Just like <cite>asyncio.Queue.get_nowait</cite>, but will return <cite>i</cite> items instead of 1.
 Set <cite>can_return_less</cite> to True if you want to receive up to <cite>i</cite> items.</p>
 <dl class="field-list simple">
@@ -659,7 +815,7 @@ Set <cite>can_return_less</cite> to True if you want to receive up to <cite>i</c
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue.get_nowait">
-<span class="sig-name descname"><span class="pre">get_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_nowait" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.get_nowait" title="Link to this definition"></a></dt>
 <dd><p>Remove and return an item from the queue.</p>
 <p>Return an item if one is immediately available, else raise QueueEmpty.</p>
 <dl class="field-list simple">
@@ -671,7 +827,7 @@ Set <cite>can_return_less</cite> to True if you want to receive up to <cite>i</c
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue.put">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.put" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.put" title="Link to this definition"></a></dt>
 <dd><p>Put an item into the queue.</p>
 <p>Put an item into the queue. If the queue is full, wait until a free
 slot is available before adding item.</p>
@@ -687,7 +843,7 @@ slot is available before adding item.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.Queue.put_nowait">
-<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.put_nowait" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.Queue.put_nowait" title="Link to this definition"></a></dt>
 <dd><p>Put an item into the queue without blocking.</p>
 <p>If no free slot is immediately available, raise QueueFull.</p>
 <dl class="field-list simple">
@@ -704,38 +860,38 @@ slot is available before adding item.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._Queue">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_Queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._Queue" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_Queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._Queue" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._Queue._finished">
-<span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._finished" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._finished" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._Queue._getters">
-<span class="sig-name descname"><span class="pre">_getters</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._getters" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_getters</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._getters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._Queue._maxsize">
-<span class="sig-name descname"><span class="pre">_maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._maxsize" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._maxsize" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._Queue._putters">
-<span class="sig-name descname"><span class="pre">_putters</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._putters" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_putters</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._putters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._Queue._unfinished_tasks">
-<span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._unfinished_tasks" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue._unfinished_tasks" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._validate_args">
-<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_validate_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_return_less</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._validate_args" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_validate_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_return_less</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._validate_args" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -751,72 +907,37 @@ slot is available before adding item.</p>
 
 </section>
 <section id="module-a_sync.primitives">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-a_sync.primitives" title="Link to this heading">¶</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-a_sync.primitives" title="Link to this heading"></a></h2>
 <p>While not the focus of this lib, this module includes some new primitives and some modified versions of standard asyncio primitives.</p>
 </section>
 </section>
 
 
+           </div>
           </div>
-          
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, BobTheBuidler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">ez-a-sync</a></h1>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
 
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</div>
-<script>document.getElementById('searchbox').style.display = "block"</script>
-
-
-
-
-
-
-
-
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &#169;2024, BobTheBuidler.
-      
-      |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.2.6</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
-      
-      |
-      <a href="../_sources/source/a_sync.primitives.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
-    
-
-    
-  </body>
+</body>
 </html>
