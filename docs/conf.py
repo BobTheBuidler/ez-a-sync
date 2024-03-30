@@ -35,7 +35,7 @@ html_static_path = ['_static']
 autodoc_default_options = {
     'private-members': True,
     # hide private methods that aren't relevant to us here
-    #'exclude-members': f'{_pony_private_members},_abc_impl,_prune_running,_ConstantSingletonMeta__instances,_ConstantSingletonMeta__lock,_do_math,_coros',
+    'exclude-members': '_abc_impl,_fget,_fset,_fdel,_ASyncSingletonMeta__instances,_ASyncSingletonMeta__lock'
 }
 automodule_generate_module_stub = True
 
