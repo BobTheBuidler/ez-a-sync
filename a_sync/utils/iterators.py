@@ -9,12 +9,44 @@ from a_sync.primitives.queue import Queue
 logger = logging.getLogger(__name__)
 
 async def exhaust_iterator(iterator: AsyncIterator[T], *, queue: Optional[asyncio.Queue] = None) -> None:
+    """
+    Docs: 
+        [https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.exhaust_iterator](https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.exhaust_iterator)
+
+    Description:
+        Asynchronously iterates over items from the given async iterator and optionally places them into a queue.
+    
+        This function is a utility to exhaust an async iterator, with an option to forward the iterated items to a provided asyncio.Queue. It's particularly useful when dealing with asynchronous operations that produce items to be consumed by other parts of an application, enabling a producer-consumer pattern.
+
+    Args:
+        iterator (AsyncIterator[T]): The async iterator to exhaust.
+        queue (Optional[asyncio.Queue]): An optional queue where iterated items will be placed. If None, items are simply consumed.
+
+    Returns:
+        None
+    """
     async for thing in iterator:
         if queue:
             logger.debug('putting %s from %s to queue %s', thing, iterator, queue)
             queue.put_nowait(thing)
         
 async def exhaust_iterators(iterators, *, queue: Optional[asyncio.Queue] = None) -> None:
+    """
+    Docs: 
+        [https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.exhaust_iterators](https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.exhaust_iterators)
+    
+    Description:
+        Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.
+    
+        This function leverages asyncio.gather to concurrently exhaust multiple async iterators. It's useful in scenarios where items from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.
+
+    Args:
+        iterators: A sequence of async iterators to be exhausted concurrently.
+        queue (Optional[asyncio.Queue]): An optional queue where items from all iterators will be placed. If None, items are simply consumed.
+
+    Returns:
+        None
+    """
     await asyncio.gather(*[exhaust_iterator(iterator, queue=queue) for iterator in iterators]) 
     if queue:
         queue.put_nowait(_Done())
@@ -53,6 +85,26 @@ def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1]) -> As
 @overload
 def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1], iterator2: AsyncIterator[T2], *iterators: AsyncIterator[T]) -> AsyncIterator[Union[T0, T1, T2, T]]:...
 async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type: ignore [misc]
+    """
+    Docs: 
+        [https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.as_yielded](https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.as_yielded)
+
+    Description:
+        Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.
+
+        This function is designed to streamline the handling of multiple asynchronous data streams by consolidating them into a single asynchronous iteration context. It enables concurrent fetching and processing of items from multiple sources, improving efficiency and simplifying code structure when dealing with asynchronous operations.
+
+        The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.
+
+    Args:
+        *iterators: Variable length list of AsyncIterator objects to be merged.
+
+    Returns:
+        AsyncIterator[T]: An async iterator that yields items from the input async iterators as they become available.
+
+    Note:
+        This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability.
+    """
     queue: Queue[T] = Queue()
     def get_ready() -> List[T]:
         try:
@@ -79,4 +131,9 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
         raise e
 
 class _Done:
+    """
+    A sentinel class used to signal the completion of processing in the as_yielded function.
+
+    This class acts as a marker to indicate that all items have been processed and the asynchronous iteration can be concluded. It is used internally within the implementation of as_yielded to efficiently manage the termination of the iteration process once all source iterators have been exhausted.
+    """
     pass
