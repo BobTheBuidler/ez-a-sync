@@ -123,7 +123,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.utils.as_completed.tqdm_asyncio">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.as_completed.</span></span><span class="sig-name descname"><span class="pre">tqdm_asyncio</span></span><a class="headerlink" href="#a_sync.utils.as_completed.tqdm_asyncio" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.utils.as_completed.tqdm_asyncio.as_completed">
 <span class="sig-name descname"><span class="pre">as_completed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.utils.as_completed.tqdm_asyncio.as_completed" title="Link to this definition"></a></dt>
@@ -138,12 +138,12 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>k</strong> (<em>K</em>) – </p></li>
-<li><p><strong>v</strong> (<em>Awaitable</em><em>[</em><em>V</em><em>]</em>) – </p></li>
-<li><p><strong>return_exceptions</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em>) – </p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>V</em> | Exception</p>
+<dd class="field-even"><p><em>V</em> | <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)">Exception</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -154,15 +154,15 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>futs</strong> (<em>Iterable</em><em>[</em><em>Awaitable</em><em>[</em><em>T</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>return_exceptions</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>tqdm</strong> (<em>bool</em>) – </p></li>
-<li><p><strong>tqdm_kwargs</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>futs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – </p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – </p></li>
+<li><p><strong>tqdm_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>AsyncIterator</em>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -172,10 +172,10 @@
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.as_completed.</span></span><span class="sig-name descname"><span class="pre">_exc_wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">awaitable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.utils.as_completed._exc_wrap" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>awaitable</strong> (<em>Awaitable</em><em>[</em><em>T</em><em>]</em>) – </p>
+<dd class="field-odd"><p><strong>awaitable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – </p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em> | Exception</p>
+<dd class="field-even"><p><em>T</em> | <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)">Exception</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -194,10 +194,10 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fs</strong> (<em>Iterable</em><em>[</em><em>Awaitable</em><em>[</em><em>T</em><em>] or </em><em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em><em>]</em>) – The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
-<li><p><strong>return_exceptions</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>aiter</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, returns an async iterator of results. Defaults to False.</p></li>
-<li><p><strong>tqdm</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
 </ul>
 </dd>
@@ -244,10 +244,10 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mapping</strong> (<em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em>) – A dictionary-like object where keys are of type K and values are awaitable objects of type V.</p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
-<li><p><strong>return_exceptions</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>aiter</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, returns an async iterator of results. Defaults to False.</p></li>
-<li><p><strong>tqdm</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
 </ul>
 </dd>
@@ -277,7 +277,7 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.utils.gather.tqdm_asyncio">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.gather.</span></span><span class="sig-name descname"><span class="pre">tqdm_asyncio</span></span><a class="headerlink" href="#a_sync.utils.gather.tqdm_asyncio" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.utils.gather.tqdm_asyncio.gather">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.utils.gather.tqdm_asyncio.gather" title="Link to this definition"></a></dt>
@@ -292,9 +292,9 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.utils.gather.gather">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.gather.</span></span><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_if</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">V</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.utils.gather.gather" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.gather.</span></span><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.12)"><span class="pre">Mapping</span></a><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><span class="pre">Awaitable</span></a><span class="p"><span class="pre">[</span></span><span class="pre">V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_if</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">V</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.utils.gather.gather" title="Link to this definition"></a></dt>
 <dt class="sig sig-object py">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.gather.</span></span><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_if</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span></dt>
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.gather.</span></span><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><span class="pre">Awaitable</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_if</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span></dt>
 <dd><p>Concurrently awaits a list of awaitable objects or mappings of awaitables and returns the results.</p>
 <p>This function extends Python’s asyncio.gather, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.</p>
 <p>Differences from asyncio.gather:
@@ -305,8 +305,8 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>*awaitables</strong> (<em>Union</em><em>[</em><em>Awaitable</em><em>[</em><em>T</em><em>]</em><em>, </em><em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em><em>]</em>) – The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.</p></li>
-<li><p><strong>return_exceptions</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>tqdm</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
 </ul>
 </dd>
@@ -340,8 +340,8 @@ results will be a dictionary with ‘key1’ mapped to the result of thing1() an
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mapping</strong> (<em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em>) – A dictionary-like object where keys are of type K and values are awaitable objects of type V.</p></li>
-<li><p><strong>return_exceptions</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>tqdm</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
 </ul>
 </dd>
@@ -366,7 +366,7 @@ mapping = {‘task1’: async_function1(), ‘task2’: async_function2(), ‘ta
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.utils.iterators._Done">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.iterators.</span></span><span class="sig-name descname"><span class="pre">_Done</span></span><a class="headerlink" href="#a_sync.utils.iterators._Done" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A sentinel class used to signal the completion of processing in the as_yielded function.</p>
 <p>This class acts as a marker to indicate that all items have been processed and the asynchronous iteration can be concluded. It is used internally within the implementation of as_yielded to efficiently manage the termination of the iteration process once all source iterators have been exhausted.</p>
 </dd></dl>
@@ -382,7 +382,7 @@ mapping = {‘task1’: async_function1(), ‘task2’: async_function2(), ‘ta
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*iterators</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
+<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An async iterator that yields items from the input async iterators as they become available.</p>
@@ -409,7 +409,7 @@ mapping = {‘task1’: async_function1(), ‘task2’: async_function2(), ‘ta
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to exhaust.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><em>asyncio.Queue</em><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.12)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -433,7 +433,7 @@ mapping = {‘task1’: async_function1(), ‘task2’: async_function2(), ‘ta
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterators</strong> – A sequence of async iterators to be exhausted concurrently.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><em>asyncio.Queue</em><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.12)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -453,7 +453,7 @@ mapping = {‘task1’: async_function1(), ‘task2’: async_function2(), ‘ta
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.</span></span><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.utils.all" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -463,7 +463,7 @@ mapping = {‘task1’: async_function1(), ‘task2’: async_function2(), ‘ta
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.</span></span><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.utils.any" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -482,10 +482,10 @@ mapping = {‘task1’: async_function1(), ‘task2’: async_function2(), ‘ta
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fs</strong> (<em>Iterable</em><em>[</em><em>Awaitable</em><em>[</em><em>T</em><em>] or </em><em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em><em>]</em>) – The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</p></li>
-<li><p><strong>timeout</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
-<li><p><strong>return_exceptions</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>aiter</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, returns an async iterator of results. Defaults to False.</p></li>
-<li><p><strong>tqdm</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
 </ul>
 </dd>
@@ -534,7 +534,7 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*iterators</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
+<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An async iterator that yields items from the input async iterators as they become available.</p>
@@ -561,7 +561,7 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to exhaust.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><em>asyncio.Queue</em><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.12)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -585,7 +585,7 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterators</strong> – A sequence of async iterators to be exhausted concurrently.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><em>asyncio.Queue</em><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.12)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -609,11 +609,11 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*awaitables</strong> (<em>Awaitable</em><em>[</em><em>T</em><em>] </em><em>| </em><em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em>) – The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.</p></li>
-<li><p><strong>return_exceptions</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>tqdm</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>*awaitables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.12)"><em>Mapping</em></a><em>[</em><em>K</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>) – The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
-<li><p><strong>exclude_if</strong> (<em>Callable</em><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><em>bool</em><em>] </em><em>| </em><em>None</em>) – </p></li>
+<li><p><strong>exclude_if</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
