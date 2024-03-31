@@ -51,7 +51,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         name: An optional name for the tasks created by this mapping.
         **wrapped_func_kwargs: Keyword arguments that will be passed to `wrapped_func`.
     """
-    __slots__ = "_wrapped_func", "_wrapped_func_kwargs", "_concurrency", "_name", "_next", "_init_loader", "_init_loader_next", "__dict__"
+    __slots__ = "concurrency", "_wrapped_func", "_wrapped_func_kwargs", "_name", "_next", "_init_loader", "_init_loader_next", "__dict__"
     def __init__(
         self, 
         wrapped_func: MappingFn[K, P, V] = None, 
@@ -60,16 +60,17 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         concurrency: Optional[int] = None, 
         **wrapped_func_kwargs: P.kwargs,
     ) -> None:
+        self.concurrency = concurrency
+        "The max number of coroutines that will run at any given time."
         # NOTE: we don't use functools.partial here so the original fn is still exposed
         self._wrapped_func = wrapped_func
         "The function used to generate values for each key."
         self._wrapped_func_kwargs = wrapped_func_kwargs
         "Additional keyword arguments passed to `_wrapped_func`."
-        self._concurrency = concurrency
-        "The max number of coroutines that will run at any given time."
         self._name = name
         "Optional name for tasks created by this mapping."
         self._init_loader: Optional["asyncio.Task[None]"]
+        "An asyncio Task used to preload values from the iterables."
         if iterables:
             self._next = asyncio.Event()
             "An asyncio Event that indicates the next result is ready"
@@ -82,7 +83,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._wrapped_func = _wrapped_set_next
             init_loader_queue: Queue[K] = Queue()
             self._init_loader = create_task(exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue))
-            "An asyncio Task used to preload values from the iterables."
             self._init_loader_next = init_loader_queue.get_all
             "An asyncio Event that indicates the _init_loader started a new task."
         else:
@@ -98,7 +98,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         try:
             return super().__getitem__(item)
         except KeyError:
-            if self._concurrency:
+            if self.concurrency:
                 # NOTE: we use a queue instead of a Semaphore to reduce memory use for use cases involving many many tasks
                 fut = self._queue.put_nowait(item)
             else:
@@ -141,7 +141,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     @functools.cached_property
     def _queue(self) -> ProcessingQueue:
         fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
-        return ProcessingQueue(fn, self._concurrency)
+        return ProcessingQueue(fn, self.concurrency)
     
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         """
