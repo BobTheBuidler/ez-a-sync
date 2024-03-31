@@ -208,11 +208,13 @@
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__init__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__ipow"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__ipow()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__isub"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__isub()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.future.ASyncFuture.__iter__"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__iter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__itruediv"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__itruediv()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__le"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__le()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__list_dependencies"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__list_dependencies()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__lt"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__lt()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__mul"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__mul()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.future.ASyncFuture.__next__"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__next__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__pow"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__pow()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__radd"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__radd()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.future.ASyncFuture.__rfloordiv"><code class="docutils literal notranslate"><span class="pre">ASyncFuture.__rfloordiv()</span></code></a></li>
@@ -269,13 +271,19 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#a_sync.iter.ASyncIterable"><code class="docutils literal notranslate"><span class="pre">ASyncIterable</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.iter.ASyncIterable.__aiter__"><code class="docutils literal notranslate"><span class="pre">ASyncIterable.__aiter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.iter.ASyncIterable.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncIterable.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.iter.ASyncIterable.__iter__"><code class="docutils literal notranslate"><span class="pre">ASyncIterable.__iter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.iter.ASyncIterable.wrap"><code class="docutils literal notranslate"><span class="pre">ASyncIterable.wrap()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.iter.ASyncIterable._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncIterable._is_protocol</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#a_sync.iter.ASyncIterator"><code class="docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.iter.ASyncIterator.__aiter__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__aiter__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.iter.ASyncIterator.__anext__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__anext__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.iter.ASyncIterator.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.iter.ASyncIterator.__iter__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__iter__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.iter.ASyncIterator.__next__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__next__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.iter.ASyncIterator.wrap"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.wrap()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.iter.ASyncIterator._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncIterator._is_protocol</span></code></a></li>
 </ul>
@@ -617,8 +625,10 @@
 </li>
 <li><a class="reference internal" href="#module-a_sync.task">a_sync.task module</a><ul>
 <li><a class="reference internal" href="#a_sync.task.TaskMapping"><code class="docutils literal notranslate"><span class="pre">TaskMapping</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.task.TaskMapping.__aiter__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__aiter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.task.TaskMapping.__getitem__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__getitem__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.task.TaskMapping.__init__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.task.TaskMapping.__iter__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__iter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.task.TaskMapping.__new__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__new__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.task.TaskMapping._tasks_for_iterables"><code class="docutils literal notranslate"><span class="pre">TaskMapping._tasks_for_iterables()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.task.TaskMapping.clear"><code class="docutils literal notranslate"><span class="pre">TaskMapping.clear()</span></code></a></li>
@@ -687,13 +697,19 @@
 </li>
 <li><a class="reference internal" href="#a_sync.ASyncGenericSingleton"><code class="docutils literal notranslate"><span class="pre">ASyncGenericSingleton</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.ASyncIterable"><code class="docutils literal notranslate"><span class="pre">ASyncIterable</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.ASyncIterable.__aiter__"><code class="docutils literal notranslate"><span class="pre">ASyncIterable.__aiter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.ASyncIterable.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncIterable.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.ASyncIterable.__iter__"><code class="docutils literal notranslate"><span class="pre">ASyncIterable.__iter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.ASyncIterable.wrap"><code class="docutils literal notranslate"><span class="pre">ASyncIterable.wrap()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.ASyncIterable._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncIterable._is_protocol</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#a_sync.ASyncIterator"><code class="docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.ASyncIterator.__aiter__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__aiter__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.ASyncIterator.__anext__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__anext__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.ASyncIterator.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.ASyncIterator.__iter__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__iter__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.ASyncIterator.__next__"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.__next__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.ASyncIterator.wrap"><code class="docutils literal notranslate"><span class="pre">ASyncIterator.wrap()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.ASyncIterator._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncIterator._is_protocol</span></code></a></li>
 </ul>
@@ -715,8 +731,10 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#a_sync.TaskMapping"><code class="docutils literal notranslate"><span class="pre">TaskMapping</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.TaskMapping.__aiter__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__aiter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.TaskMapping.__getitem__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__getitem__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.TaskMapping.__init__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.TaskMapping.__iter__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__iter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.TaskMapping.__new__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__new__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.TaskMapping._tasks_for_iterables"><code class="docutils literal notranslate"><span class="pre">TaskMapping._tasks_for_iterables()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.TaskMapping.clear"><code class="docutils literal notranslate"><span class="pre">TaskMapping.clear()</span></code></a></li>
@@ -851,6 +869,7 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.modifiers.html#a_sync.modifiers.manager.ModifierManager"><code class="docutils literal notranslate"><span class="pre">ModifierManager</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.html#a_sync.modifiers.manager.ModifierManager.__getitem__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__getitem__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.html#a_sync.modifiers.manager.ModifierManager.__init__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.html#a_sync.modifiers.manager.ModifierManager.__iter__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__iter__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.html#a_sync.modifiers.manager.ModifierManager.__new__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__new__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.html#a_sync.modifiers.manager.ModifierManager.apply_async_modifiers"><code class="docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.html#a_sync.modifiers.manager.ModifierManager.apply_sync_modifiers"><code class="docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></a></li>
@@ -2003,6 +2022,11 @@ set self.__traceback__ to tb and return self.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.future.ASyncFuture.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.future.ASyncFuture.__iter__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.future.ASyncFuture.__itruediv">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__itruediv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.future.ASyncFuture.__itruediv" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -2051,6 +2075,11 @@ set self.__traceback__ to tb and return self.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.future.ASyncFuture.__next__">
+<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.future.ASyncFuture.__next__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.future.ASyncFuture.__pow">
@@ -2506,12 +2535,34 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__aiter__">
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
+<dd><p>Returns an async iterator for the wrapped async iterable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>AsyncIterator</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">async_iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the ASyncIterable with an async iterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>async_iterable</strong> (<em>AsyncIterable</em><em>[</em><em>T</em><em>]</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__iter__" title="Link to this definition"></a></dt>
+<dd><p>Returns an iterator for the wrapped async iterable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Iterator</em>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2548,12 +2599,44 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__aiter__">
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__anext__">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__anext__" title="Link to this definition"></a></dt>
+<dd><p>Asynchronously fetches the next item from the async iterator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>T</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">async_iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the ASyncIterator with an async iterator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>async_iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__iter__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__next__">
+<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__next__" title="Link to this definition"></a></dt>
+<dd><p>Return the next item from the iterator. When exhausted, raise StopIteration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4647,6 +4730,17 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDict</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]]</p>
 <p>A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping.__aiter__">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMapping.__aiter__" title="Link to this definition"></a></dt>
+<dd><p>aiterate thru all key-task pairs, yielding the key-result pair as each task completes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>AsyncIterator</em>[<em>Tuple</em>[<em>K</em>, <em>V</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping.__getitem__">
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMapping.__getitem__" title="Link to this definition"></a></dt>
 <dd><p>x.__getitem__(y) &lt;==&gt; x[y]</p>
@@ -4678,6 +4772,12 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMapping.__iter__" title="Link to this definition"></a></dt>
+<dd><p>Implement iter(self).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -5169,12 +5269,34 @@ They work kind of like a typical Singleton would, but you will have two instance
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ASyncIterable.__aiter__">
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
+<dd><p>Returns an async iterator for the wrapped async iterable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>AsyncIterator</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">async_iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterable.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the ASyncIterable with an async iterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>async_iterable</strong> (<em>AsyncIterable</em><em>[</em><em>T</em><em>]</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ASyncIterable.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterable.__iter__" title="Link to this definition"></a></dt>
+<dd><p>Returns an iterator for the wrapped async iterable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Iterator</em>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5211,12 +5333,44 @@ They work kind of like a typical Singleton would, but you will have two instance
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ASyncIterator.__aiter__">
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ASyncIterator.__anext__">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterator.__anext__" title="Link to this definition"></a></dt>
+<dd><p>Asynchronously fetches the next item from the async iterator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>T</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">async_iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterator.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the ASyncIterator with an async iterator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>async_iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ASyncIterator.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterator.__iter__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ASyncIterator.__next__">
+<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterator.__next__" title="Link to this definition"></a></dt>
+<dd><p>Return the next item from the iterator. When exhausted, raise StopIteration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -5341,6 +5495,17 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDict</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]]</p>
 <p>A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.TaskMapping.__aiter__">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.TaskMapping.__aiter__" title="Link to this definition"></a></dt>
+<dd><p>aiterate thru all key-task pairs, yielding the key-result pair as each task completes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>AsyncIterator</em>[<em>Tuple</em>[<em>K</em>, <em>V</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.TaskMapping.__getitem__">
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.TaskMapping.__getitem__" title="Link to this definition"></a></dt>
 <dd><p>x.__getitem__(y) &lt;==&gt; x[y]</p>
@@ -5372,6 +5537,12 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.TaskMapping.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.TaskMapping.__iter__" title="Link to this definition"></a></dt>
+<dd><p>Implement iter(self).</p>
 </dd></dl>
 
 <dl class="py method">

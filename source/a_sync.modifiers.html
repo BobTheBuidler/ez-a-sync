@@ -55,6 +55,7 @@
 <li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager"><code class="docutils literal notranslate"><span class="pre">ModifierManager</span></code></a><ul>
 <li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.__getitem__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__getitem__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.__init__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.__iter__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__iter__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.__new__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__new__()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.apply_async_modifiers"><code class="docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></a></li>
 <li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.apply_sync_modifiers"><code class="docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></a></li>
@@ -135,6 +136,7 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.memory.CacheKwargs"><code class="docutils literal notranslate"><span class="pre">CacheKwargs</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.memory.CacheKwargs.__getitem__"><code class="docutils literal notranslate"><span class="pre">CacheKwargs.__getitem__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.memory.CacheKwargs.__init__"><code class="docutils literal notranslate"><span class="pre">CacheKwargs.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.memory.CacheKwargs.__iter__"><code class="docutils literal notranslate"><span class="pre">CacheKwargs.__iter__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.memory.CacheKwargs.__new__"><code class="docutils literal notranslate"><span class="pre">CacheKwargs.__new__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.memory.CacheKwargs.clear"><code class="docutils literal notranslate"><span class="pre">CacheKwargs.clear()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.memory.CacheKwargs.copy"><code class="docutils literal notranslate"><span class="pre">CacheKwargs.copy()</span></code></a></li>
@@ -159,6 +161,7 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.CacheArgs"><code class="docutils literal notranslate"><span class="pre">CacheArgs</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.CacheArgs.__getitem__"><code class="docutils literal notranslate"><span class="pre">CacheArgs.__getitem__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.CacheArgs.__init__"><code class="docutils literal notranslate"><span class="pre">CacheArgs.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.CacheArgs.__iter__"><code class="docutils literal notranslate"><span class="pre">CacheArgs.__iter__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.CacheArgs.__new__"><code class="docutils literal notranslate"><span class="pre">CacheArgs.__new__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.CacheArgs.clear"><code class="docutils literal notranslate"><span class="pre">CacheArgs.clear()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.cache.html#a_sync.modifiers.cache.CacheArgs.copy"><code class="docutils literal notranslate"><span class="pre">CacheArgs.copy()</span></code></a></li>
@@ -233,6 +236,17 @@
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.modifiers.manager.ModifierManager.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.modifiers.manager.ModifierManager.__iter__" title="Link to this definition"></a></dt>
+<dd><p>Implement iter(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Iterator</em>[str]</p>
 </dd>
 </dl>
 </dd></dl>
