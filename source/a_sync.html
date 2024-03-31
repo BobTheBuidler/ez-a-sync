@@ -4646,16 +4646,6 @@ They work kind of like a typical Singleton would, but you will have two instance
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.task.</span></span><span class="sig-name descname"><span class="pre">TaskMapping</span></span><a class="headerlink" href="#a_sync.task.TaskMapping" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDict</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]]</p>
 <p>A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>wrapped_func</strong> – A function that takes a key (and optional parameters) and returns an Awaitable.</p></li>
-<li><p><strong>*iterables</strong> – Any number of iterables whose elements will be used as keys for task generation.</p></li>
-<li><p><strong>name</strong> – An optional name for the tasks created by this mapping.</p></li>
-<li><p><strong>**wrapped_func_kwargs</strong> – Keyword arguments that will be passed to <cite>wrapped_func</cite>.</p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping.__getitem__">
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMapping.__getitem__" title="Link to this definition"></a></dt>
@@ -4676,11 +4666,12 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wrapped_func</strong> (<em>Callable</em><em>[</em><em>[</em><em>Concatenate</em><em>[</em><em>K</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>] </em><em>| </em><em>None</em>) – </p></li>
-<li><p><strong>iterables</strong> (<em>AsyncIterable</em><em>[</em><em>K</em><em>] </em><em>| </em><em>Iterable</em><em>[</em><em>K</em><em>]</em>) – </p></li>
-<li><p><strong>name</strong> (<em>str</em>) – </p></li>
+<li><p><strong>wrapped_func</strong> (<em>Callable</em><em>[</em><em>[</em><em>Concatenate</em><em>[</em><em>K</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>] </em><em>| </em><em>None</em>) – A function that takes a key (and optional parameters) and returns an Awaitable.</p></li>
+<li><p><strong>*iterables</strong> (<em>AsyncIterable</em><em>[</em><em>K</em><em>] </em><em>| </em><em>Iterable</em><em>[</em><em>K</em><em>]</em>) – Any number of iterables whose elements will be used as keys for task generation.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – An optional name for the tasks created by this mapping.</p></li>
+<li><p><strong>**wrapped_func_kwargs</strong> (<em>~P</em>) – Keyword arguments that will be passed to <cite>wrapped_func</cite>.</p></li>
 <li><p><strong>concurrency</strong> (<em>int</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>wrapped_func_kwargs</strong> (<em>~P</em>) – </p></li>
+<li><p><strong>**wrapped_func_kwargs</strong> – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -5349,16 +5340,6 @@ They work kind of like a typical Singleton would, but you will have two instance
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">TaskMapping</span></span><a class="headerlink" href="#a_sync.TaskMapping" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDict</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]]</p>
 <p>A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>wrapped_func</strong> – A function that takes a key (and optional parameters) and returns an Awaitable.</p></li>
-<li><p><strong>*iterables</strong> – Any number of iterables whose elements will be used as keys for task generation.</p></li>
-<li><p><strong>name</strong> – An optional name for the tasks created by this mapping.</p></li>
-<li><p><strong>**wrapped_func_kwargs</strong> – Keyword arguments that will be passed to <cite>wrapped_func</cite>.</p></li>
-</ul>
-</dd>
-</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.TaskMapping.__getitem__">
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.TaskMapping.__getitem__" title="Link to this definition"></a></dt>
@@ -5379,11 +5360,12 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>wrapped_func</strong> (<em>Callable</em><em>[</em><em>[</em><em>Concatenate</em><em>[</em><em>K</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>] </em><em>| </em><em>None</em>) – </p></li>
-<li><p><strong>iterables</strong> (<em>AsyncIterable</em><em>[</em><em>K</em><em>] </em><em>| </em><em>Iterable</em><em>[</em><em>K</em><em>]</em>) – </p></li>
-<li><p><strong>name</strong> (<em>str</em>) – </p></li>
+<li><p><strong>wrapped_func</strong> (<em>Callable</em><em>[</em><em>[</em><em>Concatenate</em><em>[</em><em>K</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>] </em><em>| </em><em>None</em>) – A function that takes a key (and optional parameters) and returns an Awaitable.</p></li>
+<li><p><strong>*iterables</strong> (<em>AsyncIterable</em><em>[</em><em>K</em><em>] </em><em>| </em><em>Iterable</em><em>[</em><em>K</em><em>]</em>) – Any number of iterables whose elements will be used as keys for task generation.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – An optional name for the tasks created by this mapping.</p></li>
+<li><p><strong>**wrapped_func_kwargs</strong> (<em>~P</em>) – Keyword arguments that will be passed to <cite>wrapped_func</cite>.</p></li>
 <li><p><strong>concurrency</strong> (<em>int</em><em> | </em><em>None</em>) – </p></li>
-<li><p><strong>wrapped_func_kwargs</strong> (<em>~P</em>) – </p></li>
+<li><p><strong>**wrapped_func_kwargs</strong> – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
