@@ -323,6 +323,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.iter.ASyncGeneratorFunction.__call__"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunction.__call__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.iter.ASyncGeneratorFunction.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunction.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.iter.ASyncGeneratorFunction._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunction._is_protocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.iter.ASyncGeneratorFunction.field_name"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunction.field_name</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#a_sync.iter.ASyncIterable"><code class="docutils literal notranslate"><span class="pre">ASyncIterable</span></code></a><ul>
@@ -674,14 +675,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="a_sync.html#module-a_sync.task">a_sync.task module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping"><code class="docutils literal notranslate"><span class="pre">TaskMapping</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._wrapped_func"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._wrapped_func_kwargs"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func_kwargs</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._concurrency"><code class="docutils literal notranslate"><span class="pre">TaskMapping._concurrency</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._name"><code class="docutils literal notranslate"><span class="pre">TaskMapping._name</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._next"><code class="docutils literal notranslate"><span class="pre">TaskMapping._next</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._tasks"><code class="docutils literal notranslate"><span class="pre">TaskMapping._tasks</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._init_loader"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._init_loader_next"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader_next</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping.__getitem__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__getitem__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping.__init__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping.__new__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__new__()</span></code></a></li>
@@ -700,15 +693,15 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping.update"><code class="docutils literal notranslate"><span class="pre">TaskMapping.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping.values"><code class="docutils literal notranslate"><span class="pre">TaskMapping.values()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping.yield_completed"><code class="docutils literal notranslate"><span class="pre">TaskMapping.yield_completed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id0"><code class="docutils literal notranslate"><span class="pre">TaskMapping._concurrency</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id3"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id4"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader_next</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._init_loader"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._init_loader_next"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader_next</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._is_protocol"><code class="docutils literal notranslate"><span class="pre">TaskMapping._is_protocol</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id5"><code class="docutils literal notranslate"><span class="pre">TaskMapping._name</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id6"><code class="docutils literal notranslate"><span class="pre">TaskMapping._next</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._name"><code class="docutils literal notranslate"><span class="pre">TaskMapping._name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._next"><code class="docutils literal notranslate"><span class="pre">TaskMapping._next</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._queue"><code class="docutils literal notranslate"><span class="pre">TaskMapping._queue</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id7"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id8"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func_kwargs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._wrapped_func"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping._wrapped_func_kwargs"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func_kwargs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping.concurrency"><code class="docutils literal notranslate"><span class="pre">TaskMapping.concurrency</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.task.TaskMapping.default_factory"><code class="docutils literal notranslate"><span class="pre">TaskMapping.default_factory</span></code></a></li>
 </ul>
 </li>
@@ -780,14 +773,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping"><code class="docutils literal notranslate"><span class="pre">TaskMapping</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._wrapped_func"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._wrapped_func_kwargs"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func_kwargs</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._concurrency"><code class="docutils literal notranslate"><span class="pre">TaskMapping._concurrency</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._name"><code class="docutils literal notranslate"><span class="pre">TaskMapping._name</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._next"><code class="docutils literal notranslate"><span class="pre">TaskMapping._next</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._tasks"><code class="docutils literal notranslate"><span class="pre">TaskMapping._tasks</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._init_loader"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._init_loader_next"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader_next</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping.__getitem__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__getitem__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping.__init__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping.__new__"><code class="docutils literal notranslate"><span class="pre">TaskMapping.__new__()</span></code></a></li>
@@ -806,15 +791,15 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping.update"><code class="docutils literal notranslate"><span class="pre">TaskMapping.update()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping.values"><code class="docutils literal notranslate"><span class="pre">TaskMapping.values()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping.yield_completed"><code class="docutils literal notranslate"><span class="pre">TaskMapping.yield_completed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id11"><code class="docutils literal notranslate"><span class="pre">TaskMapping._concurrency</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id12"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id13"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader_next</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._init_loader"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._init_loader_next"><code class="docutils literal notranslate"><span class="pre">TaskMapping._init_loader_next</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._is_protocol"><code class="docutils literal notranslate"><span class="pre">TaskMapping._is_protocol</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id14"><code class="docutils literal notranslate"><span class="pre">TaskMapping._name</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id15"><code class="docutils literal notranslate"><span class="pre">TaskMapping._next</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._name"><code class="docutils literal notranslate"><span class="pre">TaskMapping._name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._next"><code class="docutils literal notranslate"><span class="pre">TaskMapping._next</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._queue"><code class="docutils literal notranslate"><span class="pre">TaskMapping._queue</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id16"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.html#id17"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func_kwargs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._wrapped_func"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping._wrapped_func_kwargs"><code class="docutils literal notranslate"><span class="pre">TaskMapping._wrapped_func_kwargs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping.concurrency"><code class="docutils literal notranslate"><span class="pre">TaskMapping.concurrency</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.html#a_sync.TaskMapping.default_factory"><code class="docutils literal notranslate"><span class="pre">TaskMapping.default_factory</span></code></a></li>
 </ul>
 </li>
