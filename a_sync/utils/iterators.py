@@ -10,9 +10,6 @@ logger = logging.getLogger(__name__)
 
 async def exhaust_iterator(iterator: AsyncIterator[T], *, queue: Optional[asyncio.Queue] = None) -> None:
     """
-    Docs: 
-        [https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.exhaust_iterator](https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.exhaust_iterator)
-
     Description:
         Asynchronously iterates over items from the given async iterator and optionally places them into a queue.
     
@@ -31,10 +28,7 @@ async def exhaust_iterator(iterator: AsyncIterator[T], *, queue: Optional[asynci
             queue.put_nowait(thing)
         
 async def exhaust_iterators(iterators, *, queue: Optional[asyncio.Queue] = None) -> None:
-    """
-    Docs: 
-        [https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.exhaust_iterators](https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.exhaust_iterators)
-    
+    """    
     Description:
         Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.
     
@@ -86,9 +80,6 @@ def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1]) -> As
 def as_yielded(iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1], iterator2: AsyncIterator[T2], *iterators: AsyncIterator[T]) -> AsyncIterator[Union[T0, T1, T2, T]]:...
 async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type: ignore [misc]
     """
-    Docs: 
-        [https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.as_yielded](https://bobthebuidler.github.io/ez-a-sync/source/a_sync.utils.html#a_sync.utils.as_yielded)
-
     Description:
         Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.
 

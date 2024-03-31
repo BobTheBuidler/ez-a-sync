@@ -45,16 +45,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     """
     A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.
     
-    Attributes:
-        _wrapped_func: The function used to generate values for each key.
-        _wrapped_func_kwargs: Additional keyword arguments passed to `_wrapped_func`.
-        _concurrency: The max number of coroutines that will run at any given time.
-        _name: Optional name for tasks created by this mapping.
-        _next: An asyncio Event that indicates the next result it ready
-        _tasks: Internal storage for the tasks.
-        _init_loader: An asyncio Task used to preload values from the iterables.
-        _init_loader_next: An asyncio Event that indicates the _init_loader started a new task.
-    
     Args:
         wrapped_func: A function that takes a key (and optional parameters) and returns an Awaitable.
         *iterables: Any number of iterables whose elements will be used as keys for task generation.
@@ -72,12 +62,17 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     ) -> None:
         # NOTE: we don't use functools.partial here so the original fn is still exposed
         self._wrapped_func = wrapped_func
+        "The function used to generate values for each key."
         self._wrapped_func_kwargs = wrapped_func_kwargs
+        "Additional keyword arguments passed to `_wrapped_func`."
         self._concurrency = concurrency
+        "The max number of coroutines that will run at any given time."
         self._name = name
+        "Optional name for tasks created by this mapping."
         self._init_loader: Optional["asyncio.Task[None]"]
         if iterables:
             self._next = asyncio.Event()
+            "An asyncio Event that indicates the next result is ready"
             @functools.wraps(wrapped_func)
             async def _wrapped_set_next(*args: P.args, **kwargs: P.kwargs) -> V:
                 retval = await wrapped_func(*args, **kwargs)
@@ -87,7 +82,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._wrapped_func = _wrapped_set_next
             init_loader_queue: Queue[K] = Queue()
             self._init_loader = create_task(exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue))
+            "An asyncio Task used to preload values from the iterables."
             self._init_loader_next = init_loader_queue.get_all
+            "An asyncio Event that indicates the _init_loader started a new task."
         else:
             self._init_loader = None
     
