@@ -19,6 +19,7 @@ a\_sync.modifiers.limiter module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.modifiers.manager module
 --------------------------------
@@ -27,6 +28,7 @@ a\_sync.modifiers.manager module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.modifiers.semaphores module
 -----------------------------------
@@ -35,6 +37,7 @@ a\_sync.modifiers.semaphores module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 Module contents
 ---------------
@@ -43,3 +46,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

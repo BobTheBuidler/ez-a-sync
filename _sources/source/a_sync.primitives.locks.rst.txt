@@ -11,6 +11,7 @@ a\_sync.primitives.locks.counter module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.primitives.locks.event module
 -------------------------------------
@@ -19,6 +20,7 @@ a\_sync.primitives.locks.event module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.primitives.locks.prio\_semaphore module
 -----------------------------------------------
@@ -27,6 +29,7 @@ a\_sync.primitives.locks.prio\_semaphore module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.primitives.locks.semaphore module
 -----------------------------------------
@@ -35,6 +38,7 @@ a\_sync.primitives.locks.semaphore module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 Module contents
 ---------------
@@ -43,3 +47,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

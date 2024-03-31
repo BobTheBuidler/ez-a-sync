@@ -21,6 +21,70 @@ a\_sync.ENVIRONMENT\_VARIABLES module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
+
+a\_sync.\_bound module
+----------------------
+
+.. automodule:: a_sync._bound
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.\_descriptor module
+---------------------------
+
+.. automodule:: a_sync._descriptor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.\_flags module
+----------------------
+
+.. automodule:: a_sync._flags
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.\_helpers module
+------------------------
+
+.. automodule:: a_sync._helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.\_kwargs module
+-----------------------
+
+.. automodule:: a_sync._kwargs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.\_meta module
+---------------------
+
+.. automodule:: a_sync._meta
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.\_typing module
+-----------------------
+
+.. automodule:: a_sync._typing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
 
 a\_sync.abstract module
 -----------------------
@@ -29,6 +93,7 @@ a\_sync.abstract module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.aliases module
 ----------------------
@@ -37,6 +102,7 @@ a\_sync.aliases module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.base module
 -------------------
@@ -45,6 +111,7 @@ a\_sync.base module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.config module
 ---------------------
@@ -53,6 +120,7 @@ a\_sync.config module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.decorator module
 ------------------------
@@ -61,6 +129,7 @@ a\_sync.decorator module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.exceptions module
 -------------------------
@@ -69,6 +138,7 @@ a\_sync.exceptions module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.future module
 ---------------------
@@ -77,6 +147,7 @@ a\_sync.future module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.iter module
 -------------------
@@ -85,6 +156,7 @@ a\_sync.iter module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.modified module
 -----------------------
@@ -93,6 +165,7 @@ a\_sync.modified module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.property module
 -----------------------
@@ -101,6 +174,7 @@ a\_sync.property module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.singleton module
 ------------------------
@@ -109,6 +183,7 @@ a\_sync.singleton module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.task module
 -------------------
@@ -117,6 +192,7 @@ a\_sync.task module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 Module contents
 ---------------
@@ -125,3 +201,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

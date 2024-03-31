@@ -47,6 +47,27 @@
 <li><a class="reference internal" href="#">a_sync.primitives package</a><ul>
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-a_sync.primitives._debug">a_sync.primitives._debug module</a><ul>
+<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._debug_daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._debug_daemon()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._ensure_debug_daemon()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._start_debug_daemon()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._stop_debug_daemon()</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._daemon</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin.debug_logs_enabled</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin.logger"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin.logger</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-a_sync.primitives._loggable">a_sync.primitives._loggable module</a><ul>
+<li><a class="reference internal" href="#a_sync.primitives._loggable._LoggerMixin"><code class="docutils literal notranslate"><span class="pre">_LoggerMixin</span></code></a><ul>
+<li><a class="reference internal" href="#a_sync.primitives._loggable._LoggerMixin.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">_LoggerMixin.debug_logs_enabled</span></code></a></li>
+<li><a class="reference internal" href="#a_sync.primitives._loggable._LoggerMixin.logger"><code class="docutils literal notranslate"><span class="pre">_LoggerMixin.logger</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-a_sync.primitives.executor">a_sync.primitives.executor module</a><ul>
 <li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor</span></code></a><ul>
 <li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.__init__"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.__init__()</span></code></a></li>
@@ -559,6 +580,95 @@
 </section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-a_sync.primitives._debug">
+<span id="a-sync-primitives-debug-module"></span><h2>a_sync.primitives._debug module<a class="headerlink" href="#module-a_sync.primitives._debug" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives._debug.</span></span><span class="sig-name descname"><span class="pre">_DebugDaemonMixin</span></span><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives._loggable._LoggerMixin" title="a_sync.primitives._loggable._LoggerMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_LoggerMixin</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._debug_daemon">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._debug_daemon" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fut</strong> (<em>Future</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._ensure_debug_daemon">
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Future</em>[None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._start_debug_daemon">
+<span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._start_debug_daemon" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Future</em>[None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._stop_debug_daemon">
+<span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._stop_debug_daemon" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._daemon">
+<span class="sig-name descname"><span class="pre">_daemon</span></span><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._daemon" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin.debug_logs_enabled">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin.debug_logs_enabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin.logger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-a_sync.primitives._loggable">
+<span id="a-sync-primitives-loggable-module"></span><h2>a_sync.primitives._loggable module<a class="headerlink" href="#module-a_sync.primitives._loggable" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync.primitives._loggable._LoggerMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives._loggable.</span></span><span class="sig-name descname"><span class="pre">_LoggerMixin</span></span><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives._loggable._LoggerMixin.debug_logs_enabled">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin.debug_logs_enabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives._loggable._LoggerMixin.logger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-a_sync.primitives.executor">
 <span id="a-sync-primitives-executor-module"></span><h2>a_sync.primitives.executor module<a class="headerlink" href="#module-a_sync.primitives.executor" title="Link to this heading"></a></h2>
@@ -1381,7 +1491,7 @@ cancelled.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.executor.</span></span><span class="sig-name descname"><span class="pre">_AsyncExecutorMixin</span></span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Executor</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Executor</span></code>, <a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin" title="a_sync.primitives._debug._DebugDaemonMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.executor._AsyncExecutorMixin._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.executor._AsyncExecutorMixin._debug_daemon" title="Link to this definition"></a></dt>

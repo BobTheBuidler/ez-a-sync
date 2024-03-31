@@ -12,6 +12,24 @@ Subpackages
 Submodules
 ----------
 
+a\_sync.primitives.\_debug module
+---------------------------------
+
+.. automodule:: a_sync.primitives._debug
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.primitives.\_loggable module
+------------------------------------
+
+.. automodule:: a_sync.primitives._loggable
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 a\_sync.primitives.executor module
 ----------------------------------
 
@@ -19,6 +37,7 @@ a\_sync.primitives.executor module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.primitives.queue module
 -------------------------------
@@ -27,6 +46,7 @@ a\_sync.primitives.queue module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 Module contents
 ---------------
@@ -35,3 +55,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:

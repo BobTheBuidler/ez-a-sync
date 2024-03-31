@@ -11,6 +11,7 @@ a\_sync.utils.as\_completed module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.utils.gather module
 ---------------------------
@@ -19,6 +20,7 @@ a\_sync.utils.gather module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 a\_sync.utils.iterators module
 ------------------------------
@@ -27,6 +29,7 @@ a\_sync.utils.iterators module
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
 
 Module contents
 ---------------
@@ -35,3 +38,4 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+   :private-members:
