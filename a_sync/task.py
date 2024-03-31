@@ -44,12 +44,6 @@ MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
 class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]]):
     """
     A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.
-    
-    Args:
-        wrapped_func: A function that takes a key (and optional parameters) and returns an Awaitable.
-        *iterables: Any number of iterables whose elements will be used as keys for task generation.
-        name: An optional name for the tasks created by this mapping.
-        **wrapped_func_kwargs: Keyword arguments that will be passed to `wrapped_func`.
     """
     __slots__ = "concurrency", "_wrapped_func", "_wrapped_func_kwargs", "_name", "_next", "_init_loader", "_init_loader_next", "__dict__"
     def __init__(
@@ -60,6 +54,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         concurrency: Optional[int] = None, 
         **wrapped_func_kwargs: P.kwargs,
     ) -> None:
+        """
+        Args:
+            wrapped_func: A function that takes a key (and optional parameters) and returns an Awaitable.
+            *iterables: Any number of iterables whose elements will be used as keys for task generation.
+            name: An optional name for the tasks created by this mapping.
+            **wrapped_func_kwargs: Keyword arguments that will be passed to `wrapped_func`.
+        """
         self.concurrency = concurrency
         "The max number of coroutines that will run at any given time."
         # NOTE: we don't use functools.partial here so the original fn is still exposed
