@@ -10,7 +10,7 @@ Welcome to ez-a-sync's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   a_sync
+   source/modules.rst
 
 Indices and tables
 ==================
