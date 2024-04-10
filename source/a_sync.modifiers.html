@@ -20,7 +20,9 @@
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="a_sync.modifiers.cache package" href="a_sync.modifiers.cache.html" />
+    <link rel="prev" title="a_sync package" href="a_sync.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,64 +44,44 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">a_sync.modifiers package</a><ul>
-<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-a_sync.modifiers.limiter">a_sync.modifiers.limiter module</a><ul>
-<li><a class="reference internal" href="#a_sync.modifiers.limiter.apply_rate_limit"><code class="docutils literal notranslate"><span class="pre">apply_rate_limit()</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">a_sync</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="a_sync.html">a_sync package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="a_sync.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">a_sync.modifiers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html">a_sync.primitives package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.utils.html">a_sync.utils package</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-a_sync.modifiers.manager">a_sync.modifiers.manager module</a><ul>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager"><code class="docutils literal notranslate"><span class="pre">ModifierManager</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.__getitem__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__getitem__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.__init__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.__iter__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__iter__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.__new__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__new__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.apply_async_modifiers"><code class="docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.apply_sync_modifiers"><code class="docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.clear"><code class="docutils literal notranslate"><span class="pre">ModifierManager.clear()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.copy"><code class="docutils literal notranslate"><span class="pre">ModifierManager.copy()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.fromkeys"><code class="docutils literal notranslate"><span class="pre">ModifierManager.fromkeys()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.get"><code class="docutils literal notranslate"><span class="pre">ModifierManager.get()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.items"><code class="docutils literal notranslate"><span class="pre">ModifierManager.items()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.keys"><code class="docutils literal notranslate"><span class="pre">ModifierManager.keys()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.pop"><code class="docutils literal notranslate"><span class="pre">ModifierManager.pop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.popitem"><code class="docutils literal notranslate"><span class="pre">ModifierManager.popitem()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.setdefault"><code class="docutils literal notranslate"><span class="pre">ModifierManager.setdefault()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.update"><code class="docutils literal notranslate"><span class="pre">ModifierManager.update()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.values"><code class="docutils literal notranslate"><span class="pre">ModifierManager.values()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager._is_protocol"><code class="docutils literal notranslate"><span class="pre">ModifierManager._is_protocol</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager._modifiers"><code class="docutils literal notranslate"><span class="pre">ModifierManager._modifiers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.cache_type"><code class="docutils literal notranslate"><span class="pre">ModifierManager.cache_type</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.cache_typed"><code class="docutils literal notranslate"><span class="pre">ModifierManager.cache_typed</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.default"><code class="docutils literal notranslate"><span class="pre">ModifierManager.default</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.executor"><code class="docutils literal notranslate"><span class="pre">ModifierManager.executor</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.ram_cache_maxsize"><code class="docutils literal notranslate"><span class="pre">ModifierManager.ram_cache_maxsize</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.ram_cache_ttl"><code class="docutils literal notranslate"><span class="pre">ModifierManager.ram_cache_ttl</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.runs_per_minute"><code class="docutils literal notranslate"><span class="pre">ModifierManager.runs_per_minute</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.semaphore"><code class="docutils literal notranslate"><span class="pre">ModifierManager.semaphore</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.use_cache"><code class="docutils literal notranslate"><span class="pre">ModifierManager.use_cache</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.use_limiter"><code class="docutils literal notranslate"><span class="pre">ModifierManager.use_limiter</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.manager.ModifierManager.use_semaphore"><code class="docutils literal notranslate"><span class="pre">ModifierManager.use_semaphore</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-a_sync.modifiers.semaphores">a_sync.modifiers.semaphores module</a><ul>
-<li><a class="reference internal" href="#a_sync.modifiers.semaphores.apply_semaphore"><code class="docutils literal notranslate"><span class="pre">apply_semaphore()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-a_sync.modifiers">Module contents</a><ul>
-<li><a class="reference internal" href="#a_sync.modifiers.apply_class_defined_modifiers"><code class="docutils literal notranslate"><span class="pre">apply_class_defined_modifiers()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.modifiers.get_modifiers_from"><code class="docutils literal notranslate"><span class="pre">get_modifiers_from()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.ENVIRONMENT_VARIABLES">a_sync.ENVIRONMENT_VARIABLES module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._bound">a_sync._bound module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._descriptor">a_sync._descriptor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._flags">a_sync._flags module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._helpers">a_sync._helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._kwargs">a_sync._kwargs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._meta">a_sync._meta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._typing">a_sync._typing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.abstract">a_sync.abstract module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.aliases">a_sync.aliases module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.base">a_sync.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.config">a_sync.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.decorator">a_sync.decorator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.exceptions">a_sync.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.future">a_sync.future module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.iter">a_sync.iter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.modified">a_sync.modified module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.property">a_sync.property module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.singleton">a_sync.singleton module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.task">a_sync.task module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -114,6 +96,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">a_sync</a></li>
+          <li class="breadcrumb-item"><a href="a_sync.html">a_sync package</a></li>
       <li class="breadcrumb-item active">a_sync.modifiers package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/source/a_sync.modifiers.rst.txt" rel="nofollow"> View page source</a>
@@ -482,7 +466,10 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="a_sync.html" class="btn btn-neutral float-left" title="a_sync package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="a_sync.modifiers.cache.html" class="btn btn-neutral float-right" title="a_sync.modifiers.cache package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

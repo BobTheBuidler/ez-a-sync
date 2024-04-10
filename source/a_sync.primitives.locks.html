@@ -20,7 +20,9 @@
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="a_sync.utils package" href="a_sync.utils.html" />
+    <link rel="prev" title="a_sync.primitives package" href="a_sync.primitives.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,261 +44,44 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">a_sync.primitives.locks package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-a_sync.primitives.locks.counter">a_sync.primitives.locks.counter module</a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock"><code class="docutils literal notranslate"><span class="pre">CounterLock</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock.__init__"><code class="docutils literal notranslate"><span class="pre">CounterLock.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock._debug_daemon"><code class="docutils literal notranslate"><span class="pre">CounterLock._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">CounterLock._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">CounterLock._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">CounterLock._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock.set"><code class="docutils literal notranslate"><span class="pre">CounterLock.set()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock.wait_for"><code class="docutils literal notranslate"><span class="pre">CounterLock.wait_for()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock._daemon"><code class="docutils literal notranslate"><span class="pre">CounterLock._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock._events"><code class="docutils literal notranslate"><span class="pre">CounterLock._events</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock._name"><code class="docutils literal notranslate"><span class="pre">CounterLock._name</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock._value"><code class="docutils literal notranslate"><span class="pre">CounterLock._value</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">CounterLock.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock.is_ready"><code class="docutils literal notranslate"><span class="pre">CounterLock.is_ready</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock.logger"><code class="docutils literal notranslate"><span class="pre">CounterLock.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLock.value"><code class="docutils literal notranslate"><span class="pre">CounterLock.value</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">a_sync</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="a_sync.html">a_sync package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="a_sync.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.html">a_sync.modifiers package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="a_sync.primitives.html">a_sync.primitives package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.utils.html">a_sync.utils package</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLockCluster"><code class="docutils literal notranslate"><span class="pre">CounterLockCluster</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLockCluster.__init__"><code class="docutils literal notranslate"><span class="pre">CounterLockCluster.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLockCluster.wait_for"><code class="docutils literal notranslate"><span class="pre">CounterLockCluster.wait_for()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.counter.CounterLockCluster.locks"><code class="docutils literal notranslate"><span class="pre">CounterLockCluster.locks</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-a_sync.primitives.locks.event">a_sync.primitives.locks.event module</a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event.__init__"><code class="docutils literal notranslate"><span class="pre">Event.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._debug_daemon"><code class="docutils literal notranslate"><span class="pre">Event._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">Event._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._get_loop"><code class="docutils literal notranslate"><span class="pre">Event._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">Event._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">Event._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event.clear"><code class="docutils literal notranslate"><span class="pre">Event.clear()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event.is_set"><code class="docutils literal notranslate"><span class="pre">Event.is_set()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event.set"><code class="docutils literal notranslate"><span class="pre">Event.set()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event.wait"><code class="docutils literal notranslate"><span class="pre">Event.wait()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._daemon"><code class="docutils literal notranslate"><span class="pre">Event._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._debug_daemon_interval"><code class="docutils literal notranslate"><span class="pre">Event._debug_daemon_interval</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._loop"><code class="docutils literal notranslate"><span class="pre">Event._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._value"><code class="docutils literal notranslate"><span class="pre">Event._value</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event._waiters"><code class="docutils literal notranslate"><span class="pre">Event._waiters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">Event.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.event.Event.logger"><code class="docutils literal notranslate"><span class="pre">Event.logger</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.ENVIRONMENT_VARIABLES">a_sync.ENVIRONMENT_VARIABLES module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._bound">a_sync._bound module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._descriptor">a_sync._descriptor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._flags">a_sync._flags module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._helpers">a_sync._helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._kwargs">a_sync._kwargs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._meta">a_sync._meta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._typing">a_sync._typing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.abstract">a_sync.abstract module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.aliases">a_sync.aliases module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.base">a_sync.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.config">a_sync.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.decorator">a_sync.decorator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.exceptions">a_sync.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.future">a_sync.future module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.iter">a_sync.iter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.modified">a_sync.modified module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.property">a_sync.property module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.singleton">a_sync.singleton module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.task">a_sync.task module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-a_sync.primitives.locks.prio_semaphore">a_sync.primitives.locks.prio_semaphore module</a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.Priority"><code class="docutils literal notranslate"><span class="pre">Priority</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.Priority.__init__"><code class="docutils literal notranslate"><span class="pre">Priority.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.Priority._is_protocol"><code class="docutils literal notranslate"><span class="pre">Priority._is_protocol</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.Priority._is_runtime_protocol"><code class="docutils literal notranslate"><span class="pre">Priority._is_runtime_protocol</span></code></a></li>
 </ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._context_manager_class"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._context_manager_class</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__call__"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.__call__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__getitem__"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.__getitem__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__init__"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._count_waiters"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._count_waiters()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._debug_daemon"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._get_loop"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._wake_up_next"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._wake_up_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.acquire"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.acquire()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.decorate"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.decorate()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.locked"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.locked()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.release"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.release()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._capacity"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._capacity</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._context_managers"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._context_managers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._daemon"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._decorated"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._decorated</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._is_protocol"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._is_protocol</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._loop"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._potential_lost_waiters"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._potential_lost_waiters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._top_priority"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._top_priority</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._value"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._value</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._waiters"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore._waiters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.logger"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.name"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.name</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__call__"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.__call__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__getitem__"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.__getitem__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__init__"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._count_waiters"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._count_waiters()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._get_loop"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._wake_up_next"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._wake_up_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.acquire"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.acquire()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.decorate"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.decorate()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.locked"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.locked()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.release"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.release()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._capacity"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._capacity</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._context_manager_class"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._context_manager_class</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._context_managers"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._context_managers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._decorated"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._decorated</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._is_protocol"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._is_protocol</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._loop"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._potential_lost_waiters"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._potential_lost_waiters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._top_priority"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._top_priority</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._value"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._value</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._waiters"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore._waiters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.logger"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.name"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore.name</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.__call__"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.__call__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.__init__"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._get_loop"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._repr_no_parent_"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._repr_no_parent_()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._wake_up_next"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._wake_up_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.acquire"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.acquire()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.decorate"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.decorate()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.locked"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.locked()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.release"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.release()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._daemon"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._decorated"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._decorated</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._is_protocol"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._is_protocol</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._loop"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._parent"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._parent</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._priority"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._priority</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._priority_name"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._priority_name</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._value"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._value</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._waiters"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager._waiters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.logger"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.loop"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.name"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.name</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.waiters"><code class="docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager.waiters</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.__call__"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.__call__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.__init__"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._debug_daemon"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._get_loop"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._repr_no_parent_"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._repr_no_parent_()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._wake_up_next"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._wake_up_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.acquire"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.acquire()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.decorate"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.decorate()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.locked"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.locked()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.release"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.release()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._daemon"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._decorated"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._decorated</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._is_protocol"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._is_protocol</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._loop"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._parent"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._parent</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._priority"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._priority</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._priority_name"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._priority_name</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._value"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._value</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._waiters"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager._waiters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.logger"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.loop"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.name"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.name</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.waiters"><code class="docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager.waiters</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-a_sync.primitives.locks.semaphore">a_sync.primitives.locks.semaphore module</a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore"><code class="docutils literal notranslate"><span class="pre">DummySemaphore</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore.__init__"><code class="docutils literal notranslate"><span class="pre">DummySemaphore.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore._get_loop"><code class="docutils literal notranslate"><span class="pre">DummySemaphore._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore._wake_up_next"><code class="docutils literal notranslate"><span class="pre">DummySemaphore._wake_up_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore.acquire"><code class="docutils literal notranslate"><span class="pre">DummySemaphore.acquire()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore.locked"><code class="docutils literal notranslate"><span class="pre">DummySemaphore.locked()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore.release"><code class="docutils literal notranslate"><span class="pre">DummySemaphore.release()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore._loop"><code class="docutils literal notranslate"><span class="pre">DummySemaphore._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore._value"><code class="docutils literal notranslate"><span class="pre">DummySemaphore._value</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.DummySemaphore.name"><code class="docutils literal notranslate"><span class="pre">DummySemaphore.name</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore"><code class="docutils literal notranslate"><span class="pre">Semaphore</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore.__call__"><code class="docutils literal notranslate"><span class="pre">Semaphore.__call__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore.__init__"><code class="docutils literal notranslate"><span class="pre">Semaphore.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._debug_daemon"><code class="docutils literal notranslate"><span class="pre">Semaphore._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">Semaphore._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._get_loop"><code class="docutils literal notranslate"><span class="pre">Semaphore._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">Semaphore._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">Semaphore._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._wake_up_next"><code class="docutils literal notranslate"><span class="pre">Semaphore._wake_up_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore.acquire"><code class="docutils literal notranslate"><span class="pre">Semaphore.acquire()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore.decorate"><code class="docutils literal notranslate"><span class="pre">Semaphore.decorate()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore.locked"><code class="docutils literal notranslate"><span class="pre">Semaphore.locked()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore.release"><code class="docutils literal notranslate"><span class="pre">Semaphore.release()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._daemon"><code class="docutils literal notranslate"><span class="pre">Semaphore._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._decorated"><code class="docutils literal notranslate"><span class="pre">Semaphore._decorated</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._loop"><code class="docutils literal notranslate"><span class="pre">Semaphore._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._value"><code class="docutils literal notranslate"><span class="pre">Semaphore._value</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore._waiters"><code class="docutils literal notranslate"><span class="pre">Semaphore._waiters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">Semaphore.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore.logger"><code class="docutils literal notranslate"><span class="pre">Semaphore.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore.name"><code class="docutils literal notranslate"><span class="pre">Semaphore.name</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.__call__"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.__call__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.__init__"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._debug_daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._get_loop"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._wake_up_next"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._wake_up_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.acquire"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.acquire()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.decorate"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.decorate()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.locked"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.locked()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.release"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.release()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._decorated"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._decorated</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._loop"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._value"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._value</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._waiters"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._waiters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.dummy"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.dummy</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.logger"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.name"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.name</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.semaphore"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.semaphore</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.semaphores"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.semaphores</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.use_dummy"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.use_dummy</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-a_sync.primitives.locks">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -311,6 +96,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">a_sync</a></li>
+          <li class="breadcrumb-item"><a href="a_sync.html">a_sync package</a></li>
+          <li class="breadcrumb-item"><a href="a_sync.primitives.html">a_sync.primitives package</a></li>
       <li class="breadcrumb-item active">a_sync.primitives.locks package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/source/a_sync.primitives.locks.rst.txt" rel="nofollow"> View page source</a>
@@ -2057,7 +1845,10 @@ become larger than zero again, wake up that coroutine.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="a_sync.primitives.html" class="btn btn-neutral float-left" title="a_sync.primitives package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="a_sync.utils.html" class="btn btn-neutral float-right" title="a_sync.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

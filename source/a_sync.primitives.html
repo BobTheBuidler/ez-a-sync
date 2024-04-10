@@ -20,7 +20,9 @@
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="a_sync.primitives.locks package" href="a_sync.primitives.locks.html" />
+    <link rel="prev" title="a_sync.modifiers.cache package" href="a_sync.modifiers.cache.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,258 +44,44 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <!-- Local TOC -->
-              <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">a_sync.primitives package</a><ul>
-<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-a_sync.primitives._debug">a_sync.primitives._debug module</a><ul>
-<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._debug_daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin._daemon"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin.logger"><code class="docutils literal notranslate"><span class="pre">_DebugDaemonMixin.logger</span></code></a></li>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">a_sync</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="a_sync.html">a_sync package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="a_sync.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.html">a_sync.modifiers package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">a_sync.primitives package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.utils.html">a_sync.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.ENVIRONMENT_VARIABLES">a_sync.ENVIRONMENT_VARIABLES module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._bound">a_sync._bound module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._descriptor">a_sync._descriptor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._flags">a_sync._flags module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._helpers">a_sync._helpers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._kwargs">a_sync._kwargs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._meta">a_sync._meta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._typing">a_sync._typing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.abstract">a_sync.abstract module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.aliases">a_sync.aliases module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.base">a_sync.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.config">a_sync.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.decorator">a_sync.decorator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.exceptions">a_sync.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.future">a_sync.future module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.iter">a_sync.iter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.modified">a_sync.modified module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.property">a_sync.property module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.singleton">a_sync.singleton module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.task">a_sync.task module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-a_sync.primitives._loggable">a_sync.primitives._loggable module</a><ul>
-<li><a class="reference internal" href="#a_sync.primitives._loggable._LoggerMixin"><code class="docutils literal notranslate"><span class="pre">_LoggerMixin</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives._loggable._LoggerMixin.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">_LoggerMixin.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives._loggable._LoggerMixin.logger"><code class="docutils literal notranslate"><span class="pre">_LoggerMixin.logger</span></code></a></li>
 </ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-a_sync.primitives.executor">a_sync.primitives.executor module</a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.__init__"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._adjust_process_count"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._adjust_process_count()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._debug_daemon"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._launch_processes"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._launch_processes()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._spawn_process"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._spawn_process()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._start_executor_manager_thread"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._start_executor_manager_thread()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.map"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.map()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.run"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.run()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.shutdown"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.shutdown()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.submit"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.submit()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._broken"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._broken</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._call_queue"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._call_queue</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._daemon"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._initargs"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._initargs</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._initializer"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._initializer</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._max_workers"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._max_workers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._mp_context"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._mp_context</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._pending_work_items"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._pending_work_items</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._processes"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._processes</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_count"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._queue_count</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._queue_management_thread</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread_wakeup"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._queue_management_thread_wakeup</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._result_queue"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._result_queue</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._shutdown_lock"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._shutdown_lock</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._shutdown_thread"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._shutdown_thread</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._work_ids"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._work_ids</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor._workers"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor._workers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.logger"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.sync_mode"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.sync_mode</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncProcessPoolExecutor.worker_count_current"><code class="docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor.worker_count_current</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.__init__"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._adjust_thread_count"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._adjust_thread_count()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._debug_daemon"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._initializer_failed"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._initializer_failed()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.map"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.map()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.run"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.run()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.shutdown"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.shutdown()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.submit"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.submit()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._broken"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._broken</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._counter"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._counter</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._daemon"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._idle_semaphore"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._idle_semaphore</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._initargs"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._initargs</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._initializer"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._initializer</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._max_workers"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._max_workers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._shutdown"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._shutdown</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._shutdown_lock"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._shutdown_lock</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._thread_name_prefix"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._thread_name_prefix</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._threads"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._threads</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._work_queue"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._work_queue</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor._workers"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor._workers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.logger"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.sync_mode"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.sync_mode</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.AsyncThreadPoolExecutor.worker_count_current"><code class="docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor.worker_count_current</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.ProcessPoolExecutor"><code class="docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.__init__"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._adjust_thread_count"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._adjust_thread_count()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._debug_daemon"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._initializer_failed"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._initializer_failed()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.map"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.map()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.run"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.run()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.shutdown"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.shutdown()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.submit"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.submit()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._adjusting_lock"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._adjusting_lock</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._broken"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._broken</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._counter"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._counter</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._daemon"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._idle_semaphore"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._idle_semaphore</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._initargs"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._initargs</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._initializer"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._initializer</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._max_workers"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._max_workers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._shutdown"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._shutdown</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._shutdown_lock"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._shutdown_lock</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._thread_name_prefix"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._thread_name_prefix</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._threads"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._threads</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._timeout"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._timeout</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._work_queue"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._work_queue</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor._workers"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor._workers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.logger"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.sync_mode"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.sync_mode</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.PruningThreadPoolExecutor.worker_count_current"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor.worker_count_current</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.executor.ThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._ensure_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._start_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._stop_debug_daemon()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.map"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.map()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.run"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.run()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.shutdown"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.shutdown()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.submit"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.submit()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._broken"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._broken</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._daemon"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._daemon</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._initargs"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._initargs</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._initializer"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._initializer</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._max_workers"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._max_workers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._shutdown_lock"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._shutdown_lock</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin._workers"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin._workers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.debug_logs_enabled</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.logger"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.logger</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.sync_mode"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.sync_mode</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._AsyncExecutorMixin.worker_count_current"><code class="docutils literal notranslate"><span class="pre">_AsyncExecutorMixin.worker_count_current</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.executor._worker"><code class="docutils literal notranslate"><span class="pre">_worker()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-a_sync.primitives.queue">a_sync.primitives.queue module</a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.__call__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__call__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.__init__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._format"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._format()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._get"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._get()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._get_loop"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._init"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._init()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._put"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._put()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._wakeup_next"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._wakeup_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._worker_coro"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._worker_coro()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.empty"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.empty()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.full"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.full()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.get"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.get()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.get_nowait"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.get_nowait()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.join"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.join()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.put"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.put()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.put_nowait"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.put_nowait()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.qsize"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.qsize()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.task_done"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.task_done()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._finished"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._finished</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._getters"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._getters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._is_protocol"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._is_protocol</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._loop"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._maxsize"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._maxsize</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._putters"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._putters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._unfinished_tasks"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._unfinished_tasks</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue._workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._workers</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.func"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.func</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.maxsize"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.maxsize</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue.num_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.num_workers</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue"><code class="docutils literal notranslate"><span class="pre">Queue</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.__init__"><code class="docutils literal notranslate"><span class="pre">Queue.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._format"><code class="docutils literal notranslate"><span class="pre">Queue._format()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._get"><code class="docutils literal notranslate"><span class="pre">Queue._get()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._get_loop"><code class="docutils literal notranslate"><span class="pre">Queue._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._init"><code class="docutils literal notranslate"><span class="pre">Queue._init()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._put"><code class="docutils literal notranslate"><span class="pre">Queue._put()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._wakeup_next"><code class="docutils literal notranslate"><span class="pre">Queue._wakeup_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.empty"><code class="docutils literal notranslate"><span class="pre">Queue.empty()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.full"><code class="docutils literal notranslate"><span class="pre">Queue.full()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get"><code class="docutils literal notranslate"><span class="pre">Queue.get()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_all"><code class="docutils literal notranslate"><span class="pre">Queue.get_all()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_all_nowait"><code class="docutils literal notranslate"><span class="pre">Queue.get_all_nowait()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_multi"><code class="docutils literal notranslate"><span class="pre">Queue.get_multi()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_multi_nowait"><code class="docutils literal notranslate"><span class="pre">Queue.get_multi_nowait()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.get_nowait"><code class="docutils literal notranslate"><span class="pre">Queue.get_nowait()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.join"><code class="docutils literal notranslate"><span class="pre">Queue.join()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.put"><code class="docutils literal notranslate"><span class="pre">Queue.put()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.put_nowait"><code class="docutils literal notranslate"><span class="pre">Queue.put_nowait()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.qsize"><code class="docutils literal notranslate"><span class="pre">Queue.qsize()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.task_done"><code class="docutils literal notranslate"><span class="pre">Queue.task_done()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._finished"><code class="docutils literal notranslate"><span class="pre">Queue._finished</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._getters"><code class="docutils literal notranslate"><span class="pre">Queue._getters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._loop"><code class="docutils literal notranslate"><span class="pre">Queue._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._maxsize"><code class="docutils literal notranslate"><span class="pre">Queue._maxsize</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._putters"><code class="docutils literal notranslate"><span class="pre">Queue._putters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue._unfinished_tasks"><code class="docutils literal notranslate"><span class="pre">Queue._unfinished_tasks</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue.Queue.maxsize"><code class="docutils literal notranslate"><span class="pre">Queue.maxsize</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue"><code class="docutils literal notranslate"><span class="pre">_Queue</span></code></a><ul>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.__init__"><code class="docutils literal notranslate"><span class="pre">_Queue.__init__()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._format"><code class="docutils literal notranslate"><span class="pre">_Queue._format()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._get"><code class="docutils literal notranslate"><span class="pre">_Queue._get()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._get_loop"><code class="docutils literal notranslate"><span class="pre">_Queue._get_loop()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._init"><code class="docutils literal notranslate"><span class="pre">_Queue._init()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._put"><code class="docutils literal notranslate"><span class="pre">_Queue._put()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._wakeup_next"><code class="docutils literal notranslate"><span class="pre">_Queue._wakeup_next()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.empty"><code class="docutils literal notranslate"><span class="pre">_Queue.empty()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.full"><code class="docutils literal notranslate"><span class="pre">_Queue.full()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.get"><code class="docutils literal notranslate"><span class="pre">_Queue.get()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.get_nowait"><code class="docutils literal notranslate"><span class="pre">_Queue.get_nowait()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.join"><code class="docutils literal notranslate"><span class="pre">_Queue.join()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.put"><code class="docutils literal notranslate"><span class="pre">_Queue.put()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.put_nowait"><code class="docutils literal notranslate"><span class="pre">_Queue.put_nowait()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.qsize"><code class="docutils literal notranslate"><span class="pre">_Queue.qsize()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.task_done"><code class="docutils literal notranslate"><span class="pre">_Queue.task_done()</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._finished"><code class="docutils literal notranslate"><span class="pre">_Queue._finished</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._getters"><code class="docutils literal notranslate"><span class="pre">_Queue._getters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._loop"><code class="docutils literal notranslate"><span class="pre">_Queue._loop</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._maxsize"><code class="docutils literal notranslate"><span class="pre">_Queue._maxsize</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._putters"><code class="docutils literal notranslate"><span class="pre">_Queue._putters</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue._unfinished_tasks"><code class="docutils literal notranslate"><span class="pre">_Queue._unfinished_tasks</span></code></a></li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._Queue.maxsize"><code class="docutils literal notranslate"><span class="pre">_Queue.maxsize</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#a_sync.primitives.queue._validate_args"><code class="docutils literal notranslate"><span class="pre">_validate_args()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-a_sync.primitives">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
+
         </div>
       </div>
     </nav>
@@ -308,6 +96,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">a_sync</a></li>
+          <li class="breadcrumb-item"><a href="a_sync.html">a_sync package</a></li>
       <li class="breadcrumb-item active">a_sync.primitives package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/source/a_sync.primitives.rst.txt" rel="nofollow"> View page source</a>
@@ -2335,7 +2125,10 @@ the queue.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="a_sync.modifiers.cache.html" class="btn btn-neutral float-left" title="a_sync.modifiers.cache package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="a_sync.primitives.locks.html" class="btn btn-neutral float-right" title="a_sync.primitives.locks package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
