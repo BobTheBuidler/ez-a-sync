@@ -38,94 +38,83 @@ from sphinx.domains.python import PyFunction
 from sphinx.ext.autodoc import FunctionDocumenter
 
 from a_sync._descriptor import ASyncDescriptor
+from a_sync.iter import ASyncGeneratorFunction
 from a_sync.modified import ASyncFunction
 
 
 
-class ASyncFunctionDocumenter(FunctionDocumenter):
+class _ASyncCallableDocumenter(FunctionDocumenter):
+    typ: type
+
+    @classmethod
+    def can_document_member(cls, member, membername, isattr, parent):
+        return isinstance(member, cls.typ) and getattr(member, '__wrapped__')
+    
+    def format_args(self):
+        wrapped = getattr(self.object, '__wrapped__', None)
+        if wrapped is not None:
+            sig = signature(wrapped)
+            if "self" in sig.parameters or "cls" in sig.parameters:
+                sig = sig.replace(parameters=list(sig.parameters.values())[1:])
+            return str(sig)
+        return ''
+
+    def document_members(self, all_members=False):
+        pass
+
+    def check_module(self):
+        # Normally checks if *self.object* is really defined in the module
+        # given by *self.modname*. But since functions decorated with the @task
+        # decorator are instances living in the celery.local, we have to check
+        # the wrapped function instead.
+        wrapped = getattr(self.object, '__wrapped__', None)
+        if wrapped and getattr(wrapped, '__module__') == self.modname:
+            return True
+        return super().check_module()
+    
+class _ASyncDirective(PyFunction):
+    prefix_env: str
+    def get_signature_prefix(self, sig):
+        return [nodes.Text(getattr(self.env.config, self.prefix_env))]
+
+class ASyncFunctionDocumenter(_ASyncCallableDocumenter):
     """Document ASyncFunction instance definitions."""
-
     objtype = 'function'
+    typ = ASyncFunction
     #member_order = 11
 
-    @classmethod
-    def can_document_member(cls, member, membername, isattr, parent):
-        return isinstance(member, ASyncFunction) and getattr(member, '__wrapped__')
 
-    def format_args(self):
-        wrapped = getattr(self.object, '__wrapped__', None)
-        if wrapped is not None:
-            sig = signature(wrapped)
-            if "self" in sig.parameters or "cls" in sig.parameters:
-                sig = sig.replace(parameters=list(sig.parameters.values())[1:])
-            return str(sig)
-        return ''
-
-    def document_members(self, all_members=False):
-        pass
-
-    def check_module(self):
-        # Normally checks if *self.object* is really defined in the module
-        # given by *self.modname*. But since functions decorated with the @task
-        # decorator are instances living in the celery.local, we have to check
-        # the wrapped function instead.
-        wrapped = getattr(self.object, '__wrapped__', None)
-        if wrapped and getattr(wrapped, '__module__') == self.modname:
-            return True
-        return super().check_module()
-
-
-class ASyncFunctionDirective(PyFunction):
+class ASyncFunctionDirective(_ASyncDirective):
     """Sphinx task directive."""
-
-    def get_signature_prefix(self, sig):
-        return [nodes.Text(self.env.config.a_sync_function_prefix)]
+    prefix_env = "a_sync_function_prefix"
 
 
-
-class ASyncDescriptorDocumenter(FunctionDocumenter):
+class ASyncDescriptorDocumenter(_ASyncCallableDocumenter):
     """Document ASyncDescriptor instance definitions."""
-
     objtype = 'descriptor'
+    typ = ASyncDescriptor
     #member_order = 11
 
-    @classmethod
-    def can_document_member(cls, member, membername, isattr, parent):
-        return isinstance(member, ASyncDescriptor) and getattr(member, '__wrapped__')
 
-    def format_args(self):
-        wrapped = getattr(self.object, '__wrapped__', None)
-        if wrapped is not None:
-            sig = signature(wrapped)
-            if "self" in sig.parameters or "cls" in sig.parameters:
-                sig = sig.replace(parameters=list(sig.parameters.values())[1:])
-            return str(sig)
-        return ''
-
-    def document_members(self, all_members=False):
-        pass
-
-    def check_module(self):
-        # Normally checks if *self.object* is really defined in the module
-        # given by *self.modname*. But since functions decorated with the @task
-        # decorator are instances living in the celery.local, we have to check
-        # the wrapped function instead.
-        wrapped = getattr(self.object, '__wrapped__', None)
-        if wrapped and getattr(wrapped, '__module__') == self.modname:
-            return True
-        return super().check_module()
-
-
-class ASyncDescriptorDirective(PyFunction):
+class ASyncDescriptorDirective(_ASyncDirective):
     """Sphinx task directive."""
+    prefix_env = "a_sync_descriptor_directive"
 
-    def get_signature_prefix(self, sig):
-        return [nodes.Text(self.env.config.a_sync_descriptor_directive)]
 
+class ASyncGeneratorFunctionDocumenter(_ASyncCallableDocumenter):
+    """Document ASyncFunction instance definitions."""
+    objtype = 'generator_function'
+    typ = ASyncGeneratorFunction
+    #member_order = 11
+
+
+class ASyncGeneratorFunctionDirective(_ASyncDirective):
+    """Sphinx task directive."""
+    prefix_env = "a_sync_generator_function_prefix"
 
 def autodoc_skip_member_handler(app, what, name, obj, skip, options):
     """Handler for autodoc-skip-member event."""
-    if isinstance(obj, (ASyncFunction, ASyncDescriptor)) and getattr(obj, '__wrapped__'):
+    if isinstance(obj, (ASyncFunction, ASyncDescriptor, ASyncGeneratorFunction)) and getattr(obj, '__wrapped__'):
         if skip:
             return False
     return None
@@ -144,6 +133,12 @@ def setup(app):
     # descriptor
     app.add_autodocumenter(ASyncDescriptorDocumenter)
     app.add_directive_to_domain('py', 'a_sync_descriptor', ASyncDescriptorDirective)
+
+    # generator
+    
+    app.add_autodocumenter(ASyncGeneratorFunctionDocumenter)
+    app.add_directive_to_domain('py', 'a_sync_generator_function', ASyncGeneratorFunctionDirective)
+    app.add_config_value('a_sync_generator_function_prefix', '(genfunc)', True)
 
     app.connect('autodoc-skip-member', autodoc_skip_member_handler)
 
