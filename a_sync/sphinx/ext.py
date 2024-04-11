@@ -49,7 +49,7 @@ class _ASyncWrapperDocumenter:
 
     @classmethod
     def can_document_member(cls, member, membername, isattr, parent):
-        retval = isinstance(member, cls.typ) and getattr(member, '__wrapped__')
+        retval = isinstance(member, cls.typ) and getattr(member, '__wrapped__') is not None
         assert isinstance(retval, bool), retval
         return retval
 
