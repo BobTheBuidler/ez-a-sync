@@ -49,7 +49,9 @@ class _ASyncWrapperDocumenter:
 
     @classmethod
     def can_document_member(cls, member, membername, isattr, parent):
-        return isinstance(member, cls.typ) and getattr(member, '__wrapped__')
+        retval = isinstance(member, cls.typ) and getattr(member, '__wrapped__')
+        assert isinstance(retval, bool), retval
+        return retval
 
     def document_members(self, all_members=False):
         pass
@@ -75,12 +77,8 @@ class _ASyncFunctionDocumenter(_ASyncWrapperDocumenter, FunctionDocumenter):
         return ''
 
 class _ASyncMethodDocumenter(_ASyncWrapperDocumenter, MethodDocumenter):
-    @classmethod
-    def can_document_member(cls, member, membername, isattr, parent):
-        return isinstance(member, cls.typ) and getattr(member, '__wrapped__')
-    
     def format_args(self):
-        wrapped = getattr(self.object, '__wrapped__', None)
+        wrapped = getattr(self.object, '__wrapped__')
         if wrapped is not None:
             return str(signature(wrapped))
         return ''
