@@ -143,7 +143,8 @@ def setup(app):
 
     # descriptor
     app.add_autodocumenter(ASyncDescriptorDocumenter)
-    app.add_directive_to_domain('py', 'a_sync_descriptor', ASyncFunctionDirective)
+    app.add_directive_to_domain('py', 'a_sync_descriptor', ASyncDescriptorDirective)
+
     app.connect('autodoc-skip-member', autodoc_skip_member_handler)
 
     return {
