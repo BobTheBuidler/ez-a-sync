@@ -141,6 +141,7 @@ def setup(app):
     # descriptor
     app.add_autodocumenter(ASyncDescriptorDocumenter)
     app.add_directive_to_domain('py', 'a_sync_descriptor', ASyncDescriptorDirective)
+    app.add_config_value('a_sync_descriptor_prefix', '(method)', True)
 
     # generator
     
