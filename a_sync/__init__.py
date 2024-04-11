@@ -39,4 +39,18 @@ __all__ = [
     "property",
     "ASyncPropertyDescriptor",
     "ASyncCachedPropertyDescriptor",
+    # semaphores
+    "Semaphore",
+    "PrioritySemaphore",
+    "ThreadsafeSemaphore",
+    # queues
+    "Queue",
+    "ProcessingQueue",
+    # locks
+    "CounterLock",
+    "Event",
+    # executors
+    "AsyncThreadPoolExecutor",
+    "PruningThreadPoolExecutor",
+    "AsyncProcessPoolExecutor",
 ]
