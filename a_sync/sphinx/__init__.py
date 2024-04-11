@@ -1,4 +1,4 @@
 
-from sphinx import ext
+from a_sync.sphinx import ext
 
 __all__ = ["ext"]
