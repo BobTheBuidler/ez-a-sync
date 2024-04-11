@@ -9,6 +9,7 @@ Subpackages
 
    a_sync.modifiers
    a_sync.primitives
+   a_sync.sphinx
    a_sync.utils
 
 Submodules

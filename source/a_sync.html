@@ -51,6 +51,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.modifiers.html">a_sync.modifiers package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html">a_sync.primitives package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html">a_sync.sphinx package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.utils.html">a_sync.utils package</a></li>
 </ul>
 </li>
@@ -208,11 +209,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.CounterLock"><code class="docutils literal notranslate"><span class="pre">CounterLock</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.PrioritySemaphore"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync.ProcessPoolExecutor"><code class="docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.ProcessingQueue"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.PruningThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.Queue"><code class="docutils literal notranslate"><span class="pre">Queue</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.Semaphore"><code class="docutils literal notranslate"><span class="pre">Semaphore</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.TaskMapping"><code class="docutils literal notranslate"><span class="pre">TaskMapping</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync.ThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync.ThreadsafeSemaphore"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.cached_property"><code class="docutils literal notranslate"><span class="pre">cached_property</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.map"><code class="docutils literal notranslate"><span class="pre">map</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.property"><code class="docutils literal notranslate"><span class="pre">property</span></code></a></li>
@@ -717,6 +721,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.PrioritySemaphore.name"><code class="docutils literal notranslate"><span class="pre">PrioritySemaphore.name</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessPoolExecutor"><code class="docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__call__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__call__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__init__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__init__()</span></code></a></li>
@@ -835,8 +840,638 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.Semaphore.name"><code class="docutils literal notranslate"><span class="pre">Semaphore.name</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.__call__"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.__init__"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._debug_daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._debug_daemon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._ensure_debug_daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._ensure_debug_daemon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._get_loop"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._get_loop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._start_debug_daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._start_debug_daemon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._stop_debug_daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._stop_debug_daemon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._wake_up_next"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._wake_up_next()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.acquire"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.acquire()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.decorate"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.decorate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.locked"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.locked()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.release"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.release()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._daemon"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._daemon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._decorated"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._decorated</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._loop"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._loop</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._value"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._waiters"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._waiters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.debug_logs_enabled</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.dummy"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.dummy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.logger"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.logger</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.name"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.semaphore"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.semaphore</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.semaphores"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.semaphores</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.use_dummy"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.use_dummy</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="a_sync.sphinx.html">a_sync.sphinx package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="a_sync.sphinx.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="a_sync.sphinx.html#module-a_sync.sphinx.ext">a_sync.sphinx.ext module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#introduction">Introduction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#usage">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective._object_hierarchy_parts"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective._object_hierarchy_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective._toc_entry_name"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective._toc_entry_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.add_name"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.add_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.add_target_and_index"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.add_target_and_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.after_content"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.after_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.assert_has_content"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.assert_has_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.before_content"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.before_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.debug"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.directive_error"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.directive_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.error"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.get_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.get_field_type_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.get_index_text"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.get_index_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.get_location"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.get_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.get_signature_prefix"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.get_signature_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.get_signatures"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.get_signatures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.get_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.get_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.handle_signature"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.handle_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.info"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.needs_arglist"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.needs_arglist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.run"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.set_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.set_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.severe"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.severe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.transform_content"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.transform_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.warning"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.warning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective._doc_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective._doc_field_type_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective._is_protocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.allow_nesting"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.allow_nesting</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.config"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.doc_field_types"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.doc_field_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.domain"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.domain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.env"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.final_argument_whitespace"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.final_argument_whitespace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.has_content"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.has_content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.indexnode"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.indexnode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.optional_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.optional_arguments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.prefix_env"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.prefix_env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDirective.required_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDirective.required_arguments</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.typ"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.typ</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter._call_format_args"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter._call_format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter._find_signature"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter._find_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.add_content"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.add_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.add_directive_header"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.add_directive_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.add_line"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.add_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.annotate_to_first_argument"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.annotate_to_first_argument()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.can_document_member"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.can_document_member()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.check_module"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.check_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.document_members"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.document_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.filter_members"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.filter_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.format_args"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.format_name"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.format_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.format_signature"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.format_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.generate"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.get_attr"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.get_attr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.get_doc"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.get_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.get_object_members"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.get_object_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.get_real_modname"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.get_real_modname()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.get_sourcename"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.get_sourcename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.import_object"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.import_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.merge_default_value"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.merge_default_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.parse_name"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.parse_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.process_doc"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.process_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.resolve_name"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.resolve_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.sort_members"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.sort_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter._new_docstrings"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter._new_docstrings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter._signatures"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter._signatures</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.content_indent"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.content_indent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.directivetype"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.directivetype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.documenters"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.documenters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.member_order"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.member_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.priority"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.priority</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncDescriptorDocumenter.titles_allowed"><code class="docutils literal notranslate"><span class="pre">ASyncDescriptorDocumenter.titles_allowed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective._object_hierarchy_parts"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective._object_hierarchy_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective._toc_entry_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective._toc_entry_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.add_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.add_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.add_target_and_index"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.add_target_and_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.after_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.after_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.assert_has_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.assert_has_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.before_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.before_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.debug"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.directive_error"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.directive_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.error"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.get_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.get_field_type_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.get_index_text"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.get_index_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.get_location"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.get_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.get_signature_prefix"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.get_signature_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.get_signatures"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.get_signatures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.get_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.get_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.handle_signature"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.handle_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.info"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.needs_arglist"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.needs_arglist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.run"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.set_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.set_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.severe"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.severe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.transform_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.transform_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.warning"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.warning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective._doc_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective._doc_field_type_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective._is_protocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.allow_nesting"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.allow_nesting</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.config"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.doc_field_types"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.doc_field_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.domain"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.domain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.env"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.final_argument_whitespace"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.final_argument_whitespace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.has_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.has_content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.indexnode"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.indexnode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.optional_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.optional_arguments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.prefix_env"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.prefix_env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.required_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDirective.required_arguments</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.typ"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.typ</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter._call_format_args"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter._call_format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter._find_signature"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter._find_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.add_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.add_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.add_directive_header"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.add_directive_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.add_line"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.add_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.annotate_to_first_argument"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.annotate_to_first_argument()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.can_document_member"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.can_document_member()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.check_module"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.check_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.document_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.document_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.filter_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.filter_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.format_args"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.format_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.format_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.format_signature"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.format_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.generate"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.get_attr"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.get_attr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.get_doc"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.get_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.get_object_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.get_object_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.get_real_modname"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.get_real_modname()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.get_sourcename"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.get_sourcename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.import_object"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.import_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.merge_default_value"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.merge_default_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.parse_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.parse_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.process_doc"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.process_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.resolve_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.resolve_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.sort_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.sort_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter._new_docstrings"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter._new_docstrings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter._signatures"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter._signatures</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.content_indent"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.content_indent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.documenters"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.documenters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.member_order"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.member_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.priority"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.priority</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.titles_allowed"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionAsyncDocumenter.titles_allowed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective._object_hierarchy_parts"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective._object_hierarchy_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective._toc_entry_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective._toc_entry_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.add_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.add_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.add_target_and_index"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.add_target_and_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.after_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.after_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.assert_has_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.assert_has_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.before_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.before_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.debug"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.directive_error"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.directive_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.error"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.get_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.get_field_type_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.get_index_text"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.get_index_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.get_location"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.get_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.get_signature_prefix"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.get_signature_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.get_signatures"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.get_signatures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.get_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.get_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.handle_signature"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.handle_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.info"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.needs_arglist"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.needs_arglist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.run"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.set_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.set_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.severe"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.severe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.transform_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.transform_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.warning"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.warning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective._doc_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective._doc_field_type_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective._is_protocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.allow_nesting"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.allow_nesting</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.config"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.doc_field_types"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.doc_field_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.domain"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.domain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.env"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.final_argument_whitespace"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.final_argument_whitespace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.has_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.has_content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.indexnode"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.indexnode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.optional_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.optional_arguments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.prefix_env"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.prefix_env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDirective.required_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDirective.required_arguments</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.typ"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.typ</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter._call_format_args"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter._call_format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter._find_signature"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter._find_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.add_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.add_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.add_directive_header"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.add_directive_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.add_line"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.add_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.annotate_to_first_argument"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.annotate_to_first_argument()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.can_document_member"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.can_document_member()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.check_module"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.check_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.document_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.document_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.filter_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.filter_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.format_args"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.format_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.format_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.format_signature"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.format_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.generate"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.get_attr"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.get_attr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.get_doc"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.get_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.get_object_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.get_object_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.get_real_modname"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.get_real_modname()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.get_sourcename"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.get_sourcename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.import_object"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.import_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.merge_default_value"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.merge_default_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.parse_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.parse_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.process_doc"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.process_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.resolve_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.resolve_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.sort_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.sort_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter._new_docstrings"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter._new_docstrings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter._signatures"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter._signatures</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.content_indent"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.content_indent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.documenters"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.documenters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.member_order"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.member_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.priority"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.priority</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionDocumenter.titles_allowed"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionDocumenter.titles_allowed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective._object_hierarchy_parts"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective._object_hierarchy_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective._toc_entry_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective._toc_entry_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.add_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.add_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.add_target_and_index"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.add_target_and_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.after_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.after_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.assert_has_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.assert_has_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.before_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.before_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.debug"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.directive_error"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.directive_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.error"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.get_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.get_field_type_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.get_index_text"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.get_index_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.get_location"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.get_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.get_signature_prefix"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.get_signature_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.get_signatures"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.get_signatures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.get_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.get_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.handle_signature"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.handle_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.info"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.needs_arglist"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.needs_arglist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.run"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.set_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.set_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.severe"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.severe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.transform_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.transform_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.warning"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.warning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective._doc_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective._doc_field_type_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective._is_protocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.allow_nesting"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.allow_nesting</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.config"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.doc_field_types"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.doc_field_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.domain"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.domain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.env"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.final_argument_whitespace"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.final_argument_whitespace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.has_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.has_content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.indexnode"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.indexnode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.optional_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.optional_arguments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.prefix_env"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.prefix_env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDirective.required_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDirective.required_arguments</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.typ"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.typ</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter._call_format_args"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter._call_format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter._find_signature"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter._find_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.add_content"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.add_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.add_directive_header"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.add_directive_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.add_line"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.add_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.annotate_to_first_argument"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.annotate_to_first_argument()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.can_document_member"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.can_document_member()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.check_module"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.check_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.document_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.document_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.filter_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.filter_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.format_args"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.format_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.format_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.format_signature"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.format_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.generate"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.get_attr"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.get_attr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.get_doc"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.get_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.get_object_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.get_object_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.get_real_modname"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.get_real_modname()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.get_sourcename"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.get_sourcename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.import_object"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.import_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.merge_default_value"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.merge_default_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.parse_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.parse_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.process_doc"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.process_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.resolve_name"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.resolve_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.sort_members"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.sort_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter._new_docstrings"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter._new_docstrings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter._signatures"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter._signatures</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.content_indent"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.content_indent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.documenters"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.documenters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.member_order"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.member_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.priority"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.priority</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.titles_allowed"><code class="docutils literal notranslate"><span class="pre">ASyncFunctionSyncDocumenter.titles_allowed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective._object_hierarchy_parts"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective._object_hierarchy_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective._toc_entry_name"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective._toc_entry_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.add_name"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.add_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.add_target_and_index"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.add_target_and_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.after_content"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.after_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.assert_has_content"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.assert_has_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.before_content"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.before_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.debug"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.directive_error"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.directive_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.error"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.get_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.get_field_type_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.get_index_text"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.get_index_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.get_location"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.get_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.get_signature_prefix"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.get_signature_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.get_signatures"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.get_signatures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.get_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.get_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.handle_signature"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.handle_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.info"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.needs_arglist"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.needs_arglist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.run"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.set_source_info"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.set_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.severe"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.severe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.transform_content"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.transform_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.warning"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.warning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective._doc_field_type_map"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective._doc_field_type_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective._is_protocol"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective._is_protocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.allow_nesting"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.allow_nesting</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.config"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.doc_field_types"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.doc_field_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.domain"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.domain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.env"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.final_argument_whitespace"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.final_argument_whitespace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.has_content"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.has_content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.indexnode"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.indexnode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.optional_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.optional_arguments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.prefix_env"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.prefix_env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.required_arguments"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDirective.required_arguments</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.typ"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.typ</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter._call_format_args"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter._call_format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter._find_signature"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter._find_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.add_content"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.add_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.add_directive_header"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.add_directive_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.add_line"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.add_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.annotate_to_first_argument"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.annotate_to_first_argument()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.can_document_member"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.can_document_member()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.check_module"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.check_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.document_members"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.document_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.filter_members"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.filter_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.format_args"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.format_name"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.format_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.format_signature"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.format_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.generate"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.get_attr"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.get_attr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.get_doc"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.get_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.get_object_members"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.get_object_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.get_real_modname"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.get_real_modname()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.get_sourcename"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.get_sourcename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.import_object"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.import_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.merge_default_value"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.merge_default_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.parse_name"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.parse_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.process_doc"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.process_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.resolve_name"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.resolve_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.sort_members"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.sort_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter._new_docstrings"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter._new_docstrings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter._signatures"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter._signatures</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.content_indent"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.content_indent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.documenters"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.documenters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.member_order"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.member_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.objtype"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.option_spec"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.priority"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.priority</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.titles_allowed"><code class="docutils literal notranslate"><span class="pre">ASyncGeneratorFunctionDocumenter.titles_allowed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncDirective"><code class="docutils literal notranslate"><span class="pre">_ASyncDirective</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncDirective.get_signature_prefix"><code class="docutils literal notranslate"><span class="pre">_ASyncDirective.get_signature_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncDirective.prefix_env"><code class="docutils literal notranslate"><span class="pre">_ASyncDirective.prefix_env</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.__init__"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective._object_hierarchy_parts"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective._object_hierarchy_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective._toc_entry_name"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective._toc_entry_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.add_name"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.add_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.add_target_and_index"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.add_target_and_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.after_content"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.after_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.assert_has_content"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.assert_has_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.before_content"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.before_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.debug"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.directive_error"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.directive_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.error"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.get_field_type_map"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.get_field_type_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.get_index_text"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.get_index_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.get_location"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.get_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.get_signature_prefix"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.get_signature_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.get_signatures"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.get_signatures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.get_source_info"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.get_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.handle_signature"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.handle_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.info"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.needs_arglist"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.needs_arglist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.run"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.set_source_info"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.set_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.severe"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.severe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.transform_content"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.transform_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.warning"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.warning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective._doc_field_type_map"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective._doc_field_type_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective._is_protocol"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective._is_protocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.allow_nesting"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.allow_nesting</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.config"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.doc_field_types"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.doc_field_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.domain"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.domain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.env"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.final_argument_whitespace"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.final_argument_whitespace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.has_content"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.has_content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.indexnode"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.indexnode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.objtype"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.option_spec"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.optional_arguments"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.optional_arguments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.prefix_env"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.prefix_env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.required_arguments"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDirective.required_arguments</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.__init__"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter._call_format_args"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter._call_format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter._find_signature"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter._find_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.add_content"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.add_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.add_directive_header"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.add_directive_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.add_line"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.add_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.annotate_to_first_argument"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.annotate_to_first_argument()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.can_document_member"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.can_document_member()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.check_module"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.check_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.document_members"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.document_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.filter_members"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.filter_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.format_args"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.format_name"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.format_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.format_signature"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.format_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.generate"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.get_attr"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.get_attr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.get_doc"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.get_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.get_object_members"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.get_object_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.get_real_modname"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.get_real_modname()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.get_sourcename"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.get_sourcename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.import_object"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.import_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.merge_default_value"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.merge_default_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.parse_name"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.parse_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.process_doc"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.process_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.resolve_name"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.resolve_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.sort_members"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.sort_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter._new_docstrings"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter._new_docstrings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter._signatures"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter._signatures</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.content_indent"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.content_indent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.documenters"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.documenters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.member_order"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.member_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.objtype"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.option_spec"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.priority"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.priority</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.titles_allowed"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.titles_allowed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.typ"><code class="docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter.typ</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.__init__"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective._object_hierarchy_parts"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective._object_hierarchy_parts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective._toc_entry_name"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective._toc_entry_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.add_name"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.add_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.add_target_and_index"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.add_target_and_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.after_content"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.after_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.assert_has_content"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.assert_has_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.before_content"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.before_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.debug"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.debug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.directive_error"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.directive_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.error"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.get_field_type_map"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.get_field_type_map()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.get_index_text"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.get_index_text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.get_location"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.get_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.get_signature_prefix"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.get_signature_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.get_signatures"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.get_signatures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.get_source_info"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.get_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.handle_signature"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.handle_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.info"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.needs_arglist"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.needs_arglist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.run"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.set_source_info"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.set_source_info()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.severe"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.severe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.transform_content"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.transform_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.warning"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.warning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective._doc_field_type_map"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective._doc_field_type_map</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective._is_protocol"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective._is_protocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.allow_nesting"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.allow_nesting</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.config"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.doc_field_types"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.doc_field_types</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.domain"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.domain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.env"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.final_argument_whitespace"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.final_argument_whitespace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.has_content"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.has_content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.indexnode"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.indexnode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.objtype"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.option_spec"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.optional_arguments"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.optional_arguments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.prefix_env"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.prefix_env</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective.required_arguments"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDirective.required_arguments</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.__init__"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter._call_format_args"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter._call_format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter._find_signature"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter._find_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.add_content"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.add_content()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.add_directive_header"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.add_directive_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.add_line"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.add_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.annotate_to_first_argument"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.annotate_to_first_argument()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.can_document_member"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.can_document_member()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.check_module"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.check_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.document_members"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.document_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.filter_members"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.filter_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.format_args"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.format_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.format_name"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.format_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.format_signature"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.format_signature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.generate"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.get_attr"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.get_attr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.get_doc"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.get_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.get_object_members"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.get_object_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.get_real_modname"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.get_real_modname()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.get_sourcename"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.get_sourcename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.import_object"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.import_object()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.merge_default_value"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.merge_default_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.parse_name"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.parse_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.process_doc"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.process_doc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.resolve_name"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.resolve_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.sort_members"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.sort_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter._new_docstrings"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter._new_docstrings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter._signatures"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter._signatures</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.content_indent"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.content_indent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.directivetype"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.directivetype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.documenters"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.documenters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.member_order"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.member_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.objtype"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.objtype</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.option_spec"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.option_spec</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.priority"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.priority</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.titles_allowed"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.titles_allowed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter.typ"><code class="docutils literal notranslate"><span class="pre">_ASyncMethodDocumenter.typ</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncWrapperDocumenter"><code class="docutils literal notranslate"><span class="pre">_ASyncWrapperDocumenter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncWrapperDocumenter.can_document_member"><code class="docutils literal notranslate"><span class="pre">_ASyncWrapperDocumenter.can_document_member()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncWrapperDocumenter.check_module"><code class="docutils literal notranslate"><span class="pre">_ASyncWrapperDocumenter.check_module()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncWrapperDocumenter.document_members"><code class="docutils literal notranslate"><span class="pre">_ASyncWrapperDocumenter.document_members()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext._ASyncWrapperDocumenter.typ"><code class="docutils literal notranslate"><span class="pre">_ASyncWrapperDocumenter.typ</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.autodoc_skip_member_handler"><code class="docutils literal notranslate"><span class="pre">autodoc_skip_member_handler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.sphinx.html#a_sync.sphinx.ext.setup"><code class="docutils literal notranslate"><span class="pre">setup()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="a_sync.sphinx.html#module-a_sync.sphinx">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="a_sync.utils.html">a_sync.utils package</a><ul>
@@ -7512,6 +8147,12 @@ priority_semaphore = PrioritySemaphore(10)</p>
 
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ProcessPoolExecutor">
+<span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">ProcessPoolExecutor</span></span><a class="headerlink" href="#a_sync.ProcessPoolExecutor" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.executor.AsyncProcessPoolExecutor" title="a_sync.primitives.executor.AsyncProcessPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor</span></code></a></p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.ProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><a class="headerlink" href="#a_sync.ProcessingQueue" title="Link to this definition"></a></dt>
@@ -8652,6 +9293,210 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <span class="sig-name descname"><span class="pre">default_factory</span></span><a class="headerlink" href="#a_sync.TaskMapping.default_factory" title="Link to this definition"></a></dt>
 <dd><p>Factory for default value called by __missing__().</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadPoolExecutor">
+<span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">ThreadPoolExecutor</span></span><a class="headerlink" href="#a_sync.ThreadPoolExecutor" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.executor.AsyncThreadPoolExecutor" title="a_sync.primitives.executor.AsyncThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">ThreadsafeSemaphore</span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
+<p>While its a bit weird to run multiple event loops, sometimes either you or a lib you’re using must do so.
+When in use in threaded applications, this semaphore will not work as intended but at least your program will function.
+You may need to reduce the semaphore value for multi-threaded applications.</p>
+<p># TL;DR it’s a janky fix for an edge case problem and will otherwise function as a normal a_sync.Semaphore (which is just an asyncio.Semaphore with extra bells and whistles).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.__call__" title="Link to this definition"></a></dt>
+<dd><p>Call self as a function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.__init__" title="Link to this definition"></a></dt>
+<dd><p><cite>name</cite> is used only in debug logs to provide useful context</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>) – </p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._debug_daemon">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._debug_daemon" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._ensure_debug_daemon">
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Future</em>[None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._get_loop">
+<span class="sig-name descname"><span class="pre">_get_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._get_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._start_debug_daemon">
+<span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._start_debug_daemon" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Future</em>[None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._stop_debug_daemon">
+<span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._stop_debug_daemon" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._wake_up_next">
+<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._wake_up_next" title="Link to this definition"></a></dt>
+<dd><p>Wake up the first waiter that isn’t done.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.acquire">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.acquire" title="Link to this definition"></a></dt>
+<dd><p>Acquire a semaphore.</p>
+<p>If the internal counter is larger than zero on entry,
+decrement it by one and return True immediately.  If it is
+zero on entry, block, waiting until some other coroutine has
+called release() to make it larger than 0, and then return
+True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.12)"><em>Literal</em></a>[True]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.decorate">
+<span class="sig-name descname"><span class="pre">decorate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.decorate" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.locked">
+<span class="sig-name descname"><span class="pre">locked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.locked" title="Link to this definition"></a></dt>
+<dd><p>Returns True if semaphore cannot be acquired immediately.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.release">
+<span class="sig-name descname"><span class="pre">release</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.release" title="Link to this definition"></a></dt>
+<dd><p>Release a semaphore, incrementing the internal counter by one.</p>
+<p>When it was zero on entry and another coroutine is waiting for it to
+become larger than zero again, wake up that coroutine.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._daemon">
+<span class="sig-name descname"><span class="pre">_daemon</span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._daemon" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._decorated">
+<span class="sig-name descname"><span class="pre">_decorated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._decorated" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._loop">
+<span class="sig-name descname"><span class="pre">_loop</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._value">
+<span class="sig-name descname"><span class="pre">_value</span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._waiters">
+<span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._waiters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.debug_logs_enabled">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.dummy">
+<span class="sig-name descname"><span class="pre">dummy</span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.dummy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.logger">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.logger" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.semaphore">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">semaphore</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><span class="pre">Semaphore</span></a></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.semaphore" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.semaphores">
+<span class="sig-name descname"><span class="pre">semaphores</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.12)"><span class="pre">DefaultDict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/threading.html#threading.Thread" title="(in Python v3.12)"><span class="pre">Thread</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><span class="pre">Semaphore</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.semaphores" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.use_dummy">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_dummy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.use_dummy" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
