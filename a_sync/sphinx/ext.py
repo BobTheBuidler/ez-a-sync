@@ -144,9 +144,9 @@ def setup(app):
 
     # generator
     
-    app.add_autodocumenter(ASyncGeneratorFunctionDocumenter)
-    app.add_directive_to_domain('py', 'a_sync_generator_function', ASyncGeneratorFunctionDirective)
-    app.add_config_value('a_sync_generator_function_prefix', '(genfunc)', True)
+    #app.add_autodocumenter(ASyncGeneratorFunctionDocumenter)
+    #app.add_directive_to_domain('py', 'a_sync_generator_function', ASyncGeneratorFunctionDirective)
+    #app.add_config_value('a_sync_generator_function_prefix', '(genfunc)', True)
 
     app.connect('autodoc-skip-member', autodoc_skip_member_handler)
 
