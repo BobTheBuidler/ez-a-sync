@@ -37,7 +37,17 @@ html_static_path = ['_static']
 
 autodoc_default_options = {
     'private-members': True,
-    'special-members': '__init__,__call__,__getitem__,__iter__,__aiter__,__next__,__anext__',
+    'special-members': ','.join([
+        '__init__',
+        '__call__',
+        '__getitem__',
+        '__iter__',
+        '__aiter__',
+        '__next__',
+        '__anext__',
+        '_Done',
+        
+    ]),
     'inherited-members': True,
     'member-order': 'groupwise',
     # hide private methods that aren't relevant to us here
