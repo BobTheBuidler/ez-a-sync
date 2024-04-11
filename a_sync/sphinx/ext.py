@@ -88,7 +88,7 @@ class _ASyncDirective(PyFunction):
 
 class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):
     """Document ASyncFunction instance definitions."""
-    objtype = 'function'
+    objtype = 'a_sync_function'
     typ = ASyncFunction
     #member_order = 11
 
@@ -100,7 +100,7 @@ class ASyncFunctionDirective(_ASyncDirective):
 
 class ASyncDescriptorDocumenter(_ASyncMethodDocumenter):
     """Document ASyncDescriptor instance definitions."""
-    objtype = 'descriptor'
+    objtype = 'a_sync_descriptor'
     typ = ASyncDescriptor
     #member_order = 11
 
