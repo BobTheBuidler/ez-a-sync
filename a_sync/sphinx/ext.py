@@ -13,7 +13,7 @@ Add the extension to your :file:`docs/conf.py` configuration module:
 .. code-block:: python
 
     extensions = (...,
-                  'a_sync.contrib.sphinx')
+                  'a_sync_sphinx_ext.func')
 
 If you'd like to change the prefix for tasks in reference documentation
 then you can change the ``a_sync_function_prefix`` configuration value:
@@ -22,6 +22,7 @@ then you can change the ``a_sync_function_prefix`` configuration value:
 
     a_sync_function_prefix = '(function)'  # < default
     a_sync_descriptor_prefix = '(descriptor)'  # < default
+    a_sync_generator_function_prefix = '(genfunc)'  # < default
 
 With the extension installed `autodoc` will automatically find
 ASyncFunction objects (e.g. when using the automodule directive)
@@ -35,7 +36,7 @@ from inspect import signature
 
 from docutils import nodes
 from sphinx.domains.python import PyFunction
-from sphinx.ext.autodoc import FunctionDocumenter
+from sphinx.ext.autodoc import FunctionDocumenter, MethodDocumenter
 
 from a_sync._descriptor import ASyncDescriptor
 from a_sync.iter import ASyncGeneratorFunction
@@ -43,21 +44,12 @@ from a_sync.modified import ASyncFunction
 
 
 
-class _ASyncCallableDocumenter(FunctionDocumenter):
+class _ASyncWrapperDocumenter:
     typ: type
 
     @classmethod
     def can_document_member(cls, member, membername, isattr, parent):
         return isinstance(member, cls.typ) and getattr(member, '__wrapped__')
-    
-    def format_args(self):
-        wrapped = getattr(self.object, '__wrapped__', None)
-        if wrapped is not None:
-            sig = signature(wrapped)
-            if "self" in sig.parameters or "cls" in sig.parameters:
-                sig = sig.replace(parameters=list(sig.parameters.values())[1:])
-            return str(sig)
-        return ''
 
     def document_members(self, all_members=False):
         pass
@@ -71,13 +63,30 @@ class _ASyncCallableDocumenter(FunctionDocumenter):
         if wrapped and getattr(wrapped, '__module__') == self.modname:
             return True
         return super().check_module()
+
+class _ASyncFunctionDocumenter(_ASyncWrapperDocumenter, FunctionDocumenter):
+    def format_args(self):
+        wrapped = getattr(self.object, '__wrapped__', None)
+        if wrapped is not None:
+            sig = signature(wrapped)
+            if "self" in sig.parameters or "cls" in sig.parameters:
+                sig = sig.replace(parameters=list(sig.parameters.values())[1:])
+            return str(sig)
+        return ''
+
+class _ASyncMethodDocumenter(_ASyncWrapperDocumenter, MethodDocumenter):
+    def format_args(self):
+        wrapped = getattr(self.object, '__wrapped__', None)
+        if wrapped is not None:
+            return str(signature(wrapped))
+        return ''
     
 class _ASyncDirective(PyFunction):
     prefix_env: str
     def get_signature_prefix(self, sig):
         return [nodes.Text(getattr(self.env.config, self.prefix_env))]
 
-class ASyncFunctionDocumenter(_ASyncCallableDocumenter):
+class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):
     """Document ASyncFunction instance definitions."""
     objtype = 'function'
     typ = ASyncFunction
@@ -89,7 +98,7 @@ class ASyncFunctionDirective(_ASyncDirective):
     prefix_env = "a_sync_function_prefix"
 
 
-class ASyncDescriptorDocumenter(_ASyncCallableDocumenter):
+class ASyncDescriptorDocumenter(_ASyncMethodDocumenter):
     """Document ASyncDescriptor instance definitions."""
     objtype = 'descriptor'
     typ = ASyncDescriptor
@@ -98,10 +107,10 @@ class ASyncDescriptorDocumenter(_ASyncCallableDocumenter):
 
 class ASyncDescriptorDirective(_ASyncDirective):
     """Sphinx task directive."""
-    prefix_env = "a_sync_descriptor_directive"
+    prefix_env = "a_sync_descriptor_prefix"
 
 
-class ASyncGeneratorFunctionDocumenter(_ASyncCallableDocumenter):
+class ASyncGeneratorFunctionDocumenter(_ASyncFunctionDocumenter):
     """Document ASyncFunction instance definitions."""
     objtype = 'generator_function'
     typ = ASyncGeneratorFunction
@@ -123,7 +132,6 @@ def autodoc_skip_member_handler(app, what, name, obj, skip, options):
 def setup(app):
     """Setup Sphinx extension."""
     app.setup_extension('sphinx.ext.autodoc')
-    
     
     # function
     app.add_autodocumenter(ASyncFunctionDocumenter)
