@@ -13,7 +13,9 @@ from a_sync.primitives.queue import Queue, ProcessingQueue
 
 __all__ = [
     "AsyncThreadPoolExecutor",
+    "ThreadPoolExecutor",
     "AsyncProcessPoolExecutor",
+    "ProcessPoolExecutor",
     "PruningThreadPoolExecutor",
     "Semaphore",
     "ThreadsafeSemaphore",
