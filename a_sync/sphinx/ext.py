@@ -13,7 +13,7 @@ Add the extension to your :file:`docs/conf.py` configuration module:
 .. code-block:: python
 
     extensions = (...,
-                  'a_sync_sphinx_ext.func')
+                  'a_sync.sphinx.ext')
 
 If you'd like to change the prefix for tasks in reference documentation
 then you can change the ``a_sync_function_prefix`` configuration value:
