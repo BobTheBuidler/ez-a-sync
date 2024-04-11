@@ -46,7 +46,7 @@ autodoc_default_options = {
         '__next__',
         '__anext__',
         '_Done',
-        
+        '_is_protocol',
     ]),
     'inherited-members': True,
     'member-order': 'groupwise',
