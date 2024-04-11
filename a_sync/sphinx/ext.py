@@ -35,7 +35,7 @@ Use ``.. autotask::`` to alternatively manually document a task.
 from inspect import signature
 
 from docutils import nodes
-from sphinx.domains.python import PyFunction
+from sphinx.domains.python import PyFunction, PyMethod
 from sphinx.ext.autodoc import FunctionDocumenter, MethodDocumenter
 
 from a_sync._descriptor import ASyncDescriptor
@@ -75,16 +75,27 @@ class _ASyncFunctionDocumenter(_ASyncWrapperDocumenter, FunctionDocumenter):
         return ''
 
 class _ASyncMethodDocumenter(_ASyncWrapperDocumenter, MethodDocumenter):
+    @classmethod
+    def can_document_member(cls, member, membername, isattr, parent):
+        return isinstance(member, cls.typ) and getattr(member, '__wrapped__')
+    
     def format_args(self):
         wrapped = getattr(self.object, '__wrapped__', None)
         if wrapped is not None:
             return str(signature(wrapped))
         return ''
     
-class _ASyncDirective(PyFunction):
+class _ASyncDirective:
     prefix_env: str
     def get_signature_prefix(self, sig):
         return [nodes.Text(getattr(self.env.config, self.prefix_env))]
+
+class _ASyncFunctionDirective(_ASyncDirective, PyFunction):
+    pass
+
+class _ASyncMethodDirective(_ASyncDirective, PyMethod):
+    pass
+    
 
 class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):
     """Document ASyncFunction instance definitions."""
@@ -93,7 +104,7 @@ class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):
     #member_order = 11
 
 
-class ASyncFunctionDirective(_ASyncDirective):
+class ASyncFunctionDirective(_ASyncFunctionDirective):
     """Sphinx task directive."""
     prefix_env = "a_sync_function_prefix"
 
@@ -105,19 +116,19 @@ class ASyncDescriptorDocumenter(_ASyncMethodDocumenter):
     #member_order = 11
 
 
-class ASyncDescriptorDirective(_ASyncDirective):
+class ASyncDescriptorDirective(_ASyncMethodDirective):
     """Sphinx task directive."""
     prefix_env = "a_sync_descriptor_prefix"
 
 
 class ASyncGeneratorFunctionDocumenter(_ASyncFunctionDocumenter):
     """Document ASyncFunction instance definitions."""
-    objtype = 'generator_function'
+    objtype = 'a_sync_generator_function'
     typ = ASyncGeneratorFunction
     #member_order = 11
 
 
-class ASyncGeneratorFunctionDirective(_ASyncDirective):
+class ASyncGeneratorFunctionDirective(_ASyncFunctionDirective):
     """Sphinx task directive."""
     prefix_env = "a_sync_generator_function_prefix"
 
@@ -136,18 +147,18 @@ def setup(app):
     # function
     app.add_autodocumenter(ASyncFunctionDocumenter)
     app.add_directive_to_domain('py', 'a_sync_function', ASyncFunctionDirective)
-    app.add_config_value('a_sync_function_prefix', '(function)', True)
+    app.add_config_value('a_sync_function_prefix', ':class:`a_sync.modified.ASyncFunction`', True)
 
     # descriptor
     app.add_autodocumenter(ASyncDescriptorDocumenter)
     app.add_directive_to_domain('py', 'a_sync_descriptor', ASyncDescriptorDirective)
-    app.add_config_value('a_sync_descriptor_prefix', '(method)', True)
+    app.add_config_value('a_sync_descriptor_prefix', 'ASyncDescriptor', True)
 
     # generator
     
-    #app.add_autodocumenter(ASyncGeneratorFunctionDocumenter)
-    #app.add_directive_to_domain('py', 'a_sync_generator_function', ASyncGeneratorFunctionDirective)
-    #app.add_config_value('a_sync_generator_function_prefix', '(genfunc)', True)
+    app.add_autodocumenter(ASyncGeneratorFunctionDocumenter)
+    app.add_directive_to_domain('py', 'a_sync_generator_function', ASyncGeneratorFunctionDirective)
+    app.add_config_value('a_sync_generator_function_prefix', 'ASyncGeneratorFunction', True)
 
     app.connect('autodoc-skip-member', autodoc_skip_member_handler)
 
