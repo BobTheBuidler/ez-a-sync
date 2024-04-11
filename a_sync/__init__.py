@@ -51,6 +51,8 @@ __all__ = [
     "Event",
     # executors
     "AsyncThreadPoolExecutor",
+    "ThreadPoolExecutor",
     "PruningThreadPoolExecutor",
     "AsyncProcessPoolExecutor",
+    "ProcessPoolExecutor",
 ]
