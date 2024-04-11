@@ -40,10 +40,10 @@ from a_sync.iter import ASyncGeneratorFunction
 
 
 
-class ASyncFunctionDocumenter(FunctionDocumenter):
+class ASyncGeneratorFunctionDocumenter(FunctionDocumenter):
     """Document ASyncFunction instance definitions."""
 
-    objtype = 'function'
+    objtype = 'generator_function'
     #member_order = 11
 
     @classmethod
@@ -73,7 +73,7 @@ class ASyncFunctionDocumenter(FunctionDocumenter):
         return super().check_module()
 
 
-class ASyncFunctionDirective(PyFunction):
+class ASyncGeneratorFunctionDirective(PyFunction):
     """Sphinx task directive."""
 
     def get_signature_prefix(self, sig):
@@ -91,9 +91,9 @@ def autodoc_skip_member_handler(app, what, name, obj, skip, options):
 def setup(app):
     """Setup Sphinx extension."""
     app.setup_extension('sphinx.ext.autodoc')
-    app.add_autodocumenter(ASyncFunctionDocumenter)
-    app.add_directive_to_domain('py', 'task', ASyncFunctionDirective)
-    app.add_config_value('a_sync_function_prefix', '(function)', True)
+    app.add_autodocumenter(ASyncGeneratorFunctionDocumenter)
+    app.add_directive_to_domain('py', 'a_sync_generator_function', ASyncGeneratorFunctionDirective)
+    app.add_config_value('a_sync_generator_function_prefix', '(genfunc)', True)
     app.connect('autodoc-skip-member', autodoc_skip_member_handler)
 
     return {

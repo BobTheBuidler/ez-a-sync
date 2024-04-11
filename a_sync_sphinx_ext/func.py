@@ -92,7 +92,7 @@ def setup(app):
     """Setup Sphinx extension."""
     app.setup_extension('sphinx.ext.autodoc')
     app.add_autodocumenter(ASyncFunctionDocumenter)
-    app.add_directive_to_domain('py', 'task', ASyncFunctionDirective)
+    app.add_directive_to_domain('py', 'a_sync_function', ASyncFunctionDirective)
     app.add_config_value('a_sync_function_prefix', '(function)', True)
     app.connect('autodoc-skip-member', autodoc_skip_member_handler)
 
