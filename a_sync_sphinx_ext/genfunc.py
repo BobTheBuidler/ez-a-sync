@@ -20,7 +20,7 @@ then you can change the ``a_sync_function_prefix`` configuration value:
 
 .. code-block:: python
 
-    a_sync_function_prefix = '(function)'  # < default
+    a_sync_generator_function_prefix = '(genfunc)'  # < default
 
 With the extension installed `autodoc` will automatically find
 ASyncFunction objects (e.g. when using the automodule directive)
@@ -77,7 +77,7 @@ class ASyncGeneratorFunctionDirective(PyFunction):
     """Sphinx task directive."""
 
     def get_signature_prefix(self, sig):
-        return [nodes.Text(self.env.config.celery_task_prefix)]
+        return [nodes.Text(self.env.config.a_sync_generator_function_prefix)]
 
 
 def autodoc_skip_member_handler(app, what, name, obj, skip, options):
