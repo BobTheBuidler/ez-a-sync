@@ -32,7 +32,9 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
             self._fget = _helpers._asyncify(self.__wrapped__, self.modifiers.executor)
     async def get(self, instance: object) -> T:
         return await super().__get__(instance, None)
-    def __get__(self, instance: object, owner: Any) -> T:
+    def __get__(self, instance: Optional[object], owner: Any) -> T:
+        if instance is None:
+            return self
         awaitable = super().__get__(instance, owner)
         # if the user didn't specify a default behavior, we will defer to the instance
         if _is_a_sync_instance(instance):
