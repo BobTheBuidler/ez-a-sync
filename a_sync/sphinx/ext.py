@@ -171,8 +171,8 @@ def setup(app):
     app.add_directive_to_domain('py', 'a_sync_function', ASyncFunctionDirective)
     app.add_directive_to_domain('py', 'a_sync_function_sync', ASyncFunctionSyncDirective)
     app.add_directive_to_domain('py', 'a_sync_function_async', ASyncFunctionAsyncDirective)
-    app.add_config_value('a_sync_function_sync_prefix', 'ASyncFunctionSyncDefault', True)
-    app.add_config_value('a_sync_function_async_prefix', 'ASyncFunctionAsyncDefault', True)
+    app.add_config_value('a_sync_function_sync_prefix', 'ASyncFunction (sync)', True)
+    app.add_config_value('a_sync_function_async_prefix', 'ASyncFunction (async)', True)
     app.add_config_value('a_sync_function_prefix', 'ASyncFunction', True)
 
     # descriptor
