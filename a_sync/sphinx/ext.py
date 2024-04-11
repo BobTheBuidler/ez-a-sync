@@ -40,7 +40,7 @@ from sphinx.ext.autodoc import FunctionDocumenter, MethodDocumenter
 
 from a_sync._descriptor import ASyncDescriptor
 from a_sync.iter import ASyncGeneratorFunction
-from a_sync.modified import ASyncFunction
+from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 
 
 
@@ -101,12 +101,32 @@ class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):
     """Document ASyncFunction instance definitions."""
     objtype = 'a_sync_function'
     typ = ASyncFunction
+    priority = 15
+    #member_order = 11
+
+class ASyncFunctionSyncDocumenter(_ASyncFunctionDocumenter):
+    """Document ASyncFunction instance definitions."""
+    objtype = 'a_sync_function_sync'
+    typ = ASyncFunctionSyncDefault
+    priority = 14
+    #member_order = 11
+
+class ASyncFunctionAsyncDocumenter(_ASyncFunctionDocumenter):
+    """Document ASyncFunction instance definitions."""
+    objtype = 'a_sync_function_async'
+    typ = ASyncFunctionAsyncDefault
+    priority = 13
     #member_order = 11
 
 
 class ASyncFunctionDirective(_ASyncFunctionDirective):
-    """Sphinx task directive."""
     prefix_env = "a_sync_function_prefix"
+
+class ASyncFunctionSyncDirective(_ASyncFunctionDirective):
+    prefix_env = "a_sync_function_sync_prefix"
+
+class ASyncFunctionAsyncDirective(_ASyncFunctionDirective):
+    prefix_env = "a_sync_function_async_prefix"
 
 
 class ASyncDescriptorDocumenter(_ASyncMethodDocumenter):
@@ -146,8 +166,14 @@ def setup(app):
     
     # function
     app.add_autodocumenter(ASyncFunctionDocumenter)
+    app.add_autodocumenter(ASyncFunctionSyncDocumenter)
+    app.add_autodocumenter(ASyncFunctionAsyncDocumenter)
     app.add_directive_to_domain('py', 'a_sync_function', ASyncFunctionDirective)
-    app.add_config_value('a_sync_function_prefix', ':class:`a_sync.modified.ASyncFunction`', True)
+    app.add_directive_to_domain('py', 'a_sync_function_sync', ASyncFunctionSyncDirective)
+    app.add_directive_to_domain('py', 'a_sync_function_async', ASyncFunctionAsyncDirective)
+    app.add_config_value('a_sync_function_sync_prefix', 'ASyncFunctionSyncDefault', True)
+    app.add_config_value('a_sync_function_async_prefix', 'ASyncFunctionAsyncDefault', True)
+    app.add_config_value('a_sync_function_prefix', 'ASyncFunction', True)
 
     # descriptor
     app.add_autodocumenter(ASyncDescriptorDocumenter)
