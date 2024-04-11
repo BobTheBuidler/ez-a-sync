@@ -16,6 +16,7 @@ __all__ = [
     "AsyncProcessPoolExecutor",
     "PruningThreadPoolExecutor",
     "Semaphore",
+    "ThreadsafeSemaphore",
     "PrioritySemaphore",
     "CounterLock",
     "Event",
