@@ -6,8 +6,7 @@ on:
     paths:
       - '**.py'
       - '**/pytest.yaml'
-    paths-ignore:
-      - '**/docs/conf.py'
+      - '!**/docs/conf.py'
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master, dev ]
