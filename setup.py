@@ -21,6 +21,7 @@ setup(
     setup_requires=[
         'setuptools_scm',
     ],
+    python_requires=">=3.8,<3.13",
     package_data={
         "a_sync": ["py.typed"],
     },
