@@ -13,8 +13,7 @@ on:
     paths:
       - '**.py'
       - '**/pytest.yaml'
-    paths-ignore:
-      - '**/docs/conf.py'
+      - '!**/docs/conf.py'
 
 jobs:
   test:
