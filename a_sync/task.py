@@ -5,7 +5,6 @@ import logging
 
 from a_sync._typing import *
 from a_sync import exceptions
-from a_sync.iter import ASyncIterable
 from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.utils.as_completed import as_completed
 from a_sync.utils.gather import gather

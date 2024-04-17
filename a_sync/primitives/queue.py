@@ -96,14 +96,14 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         self._workers
         if self._no_futs:
-            return await super().put((args, kwargs, None))
+            return await super().put((args, kwargs))
         fut = asyncio.get_event_loop().create_future()
         await super().put((args, kwargs, fut))
         return fut
     def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         self._workers
         if self._no_futs:
-            return super().put_nowait((args, kwargs, None))
+            return super().put_nowait((args, kwargs))
         fut = asyncio.get_event_loop().create_future()
         super().put_nowait((args, kwargs, fut))
         return fut
