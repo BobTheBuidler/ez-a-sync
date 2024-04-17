@@ -86,7 +86,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     def __repr__(self) -> str:
         return f"<{type(self).__name__} func={self.func} num_workers={self.num_workers} pending={self._unfinished_tasks}>"
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
-        return self.put_nowait((args, kwargs))
+        return self.put_nowait(*args, **kwargs))
     def __del__(self) -> None:
         if self._unfinished_tasks > 0:
             context = {
