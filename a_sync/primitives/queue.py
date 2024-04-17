@@ -73,7 +73,13 @@ class Queue(_Queue[T]):
 
 class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     __slots__ = "func", "num_workers"
-    def __init__(self, func: Callable[P, Awaitable[V]], num_workers: int, *, return_data: bool = True, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
+    def __init__(
+        self, 
+        func: Callable[P, Awaitable[V]], 
+        num_workers: int, 
+        *, return_data: bool = True, 
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+    ) -> None:
         if sys.version_info < (3, 10):
             super().__init__(loop=loop)
         elif loop:
