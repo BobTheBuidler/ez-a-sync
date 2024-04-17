@@ -73,7 +73,7 @@ class Queue(_Queue[T]):
 
 class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     __slots__ = "func", "num_workers"
-    def __init__(self, func: Callable[P, Awaitable[V]], num_workers: int, *, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
+    def __init__(self, func: Callable[P, Awaitable[V]], num_workers: int, *, return_data: bool = True, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
         if sys.version_info < (3, 10):
             super().__init__(loop=loop)
         elif loop:
@@ -82,6 +82,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             super().__init__()
         self.func = func
         self.num_workers = num_workers
+        self._no_futs = not return_data
     def __repr__(self) -> str:
         return f"<{type(self).__name__} func={self.func} num_workers={self.num_workers} pending={self._unfinished_tasks}>"
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
@@ -94,11 +95,15 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             asyncio.get_event_loop().call_exception_handler(context)
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         self._workers
+        if self._no_futs:
+            return await super().put((args, kwargs, None))
         fut = asyncio.get_event_loop().create_future()
         await super().put((args, kwargs, fut))
         return fut
     def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         self._workers
+        if self._no_futs:
+            return super().put_nowait((args, kwargs, None))
         fut = asyncio.get_event_loop().create_future()
         super().put_nowait((args, kwargs, fut))
         return fut
@@ -112,14 +117,23 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     async def _worker_coro(self) -> NoReturn:
         args: P.args
         kwargs: P.kwargs
-        fut: asyncio.Future[V]
-        while True:
-            args, kwargs, fut = await self.get()
-            try:
-                fut.set_result(await self.func(*args, **kwargs))
-            except Exception as e:
-                fut.set_result(e)
-            self.task_done()
+        if self._no_futs:
+            while True:
+                args, kwargs = await self.get()
+                try:
+                    await self.func(*args, **kwargs)
+                except Exception as e:
+                    logger.exception(e)
+                self.task_done()
+        else:
+            fut: asyncio.Future[V]
+            while True:
+                args, kwargs, fut = await self.get()
+                try:
+                    fut.set_result(await self.func(*args, **kwargs))
+                except Exception as e:
+                    fut.set_result(e)
+                self.task_done()
 
 
 def _validate_args(i: int, can_return_less: bool) -> None:
