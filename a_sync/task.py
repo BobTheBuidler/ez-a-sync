@@ -89,7 +89,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._wrapped_func = _wrapped_set_next
             init_loader_queue: Queue[K] = Queue()
             self._init_loader = create_task(exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue))
-            "An asyncio Task used to preload values from the iterables."
             self._init_loader_next = init_loader_queue.get_all
             "An asyncio Event that indicates the _init_loader started a new task."
         else:
