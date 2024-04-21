@@ -336,11 +336,11 @@ class _AwaitableView(Iterator[T]):
     consumed = False
     def __init__(self, view: Iterator[T]) -> None:
         self._view = view
-    def __iter__(self) -> Iterator[T]:
+    def __next__(self) -> Iterator[T]:
         if consumed:
             raise RuntimeError("This iterator has already started")
         consumed = True
-        return self._view.__iter__
+        return self._view.__next__()
     def __await__(self) -> List[T]:
         if consumed:
             raise RuntimeError("This iterator has already started")
