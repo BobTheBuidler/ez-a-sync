@@ -31,7 +31,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     async def _materialized(self) -> List[T]:
         """Asynchronously iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
         return [obj async for obj in self]
-    __slots__ = ()
+    __slots__ = '__async_property__', 
     
 class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     """

@@ -22,11 +22,13 @@ def test_iterator_wrap():
 def test_iterable_sync():
     assert [i for i in ASyncIterable(async_gen())] == [0, 1, 2]
     assert [i for i in ASyncIterable.wrap(async_gen())] == [0, 1, 2]
+    assert ASyncIterable.wrap(async_gen()).materialized == [0, 1, 2]
 
 @pytest.mark.asyncio_cooperative
 async def test_iterable_async():
     assert [i async for i in ASyncIterable(async_gen())] == [0, 1, 2]
     assert [i async for i in ASyncIterable.wrap(async_gen())] == [0, 1, 2]
+    assert await ASyncIterable.wrap(async_gen()) == [0, 1, 2]
 
 def test_iterator_sync():
     iterator = ASyncIterator.wrap(async_gen())
@@ -36,6 +38,7 @@ def test_iterator_sync():
         else:
             with pytest.raises(StopIteration):
                 next(iterator)
+    assert ASyncIterator.wrap(async_gen()).materialized == [0, 1, 2]
 
 @pytest.mark.asyncio_cooperative   
 async def test_iterator_async():
@@ -46,6 +49,7 @@ async def test_iterator_async():
         else:
             with pytest.raises(StopAsyncIteration):
                 await iterator.__anext__()
+    assert await ASyncIterator.wrap(async_gen()) == [0, 1, 2]
 
 generator_wrap = ASyncIterator.wrap(async_gen)
 
@@ -57,6 +61,7 @@ def test_generator_sync():
         else:
             with pytest.raises(StopIteration):
                 iterator.__next__()
+    assert generator_wrap().materialized == [0, 1, 2]
 
 @pytest.mark.asyncio_cooperative
 async def test_generator_async():
@@ -67,6 +72,7 @@ async def test_generator_async():
         else:
             with pytest.raises(StopAsyncIteration):
                 await iterator.__anext__()
+    assert await generator_wrap() == [0, 1, 2]
 
 class TestGenerator:
     @ASyncIterator.wrap
