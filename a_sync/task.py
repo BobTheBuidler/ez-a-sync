@@ -91,6 +91,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     def __repr__(self) -> str:
         return f"<{type(self).__name__} for {self._wrapped_func} ({dict.__repr__(self)}) at {hex(id(self))}>"
     
+    def __hash__(self) -> int:
+        return id(self)
+    
     def __setitem__(self, item: Any, value: Any) -> None:
         raise NotImplementedError("You cannot manually set items in a TaskMapping")
     
