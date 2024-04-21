@@ -4,6 +4,7 @@ import functools
 import inspect
 import logging
 
+from a_sync import _kwargs
 from a_sync._bound import ASyncBoundMethod, ASyncMethodDescriptor, ASyncMethodDescriptorSyncDefault
 from a_sync._typing import *
 from a_sync import exceptions
@@ -74,6 +75,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._wrapped_func = wrapped_func
         "The function used to generate values for each key."
 
+        if isinstance(wrapped_func, ASyncMethodDescriptor):
+            if _kwargs.get_flag_name(wrapped_func_kwargs) is None:
+                wrapped_func_kwargs["sync"] = False
         self._wrapped_func_kwargs = wrapped_func_kwargs
         "Additional keyword arguments passed to `_wrapped_func`."
 
