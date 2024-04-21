@@ -433,22 +433,18 @@ class _AwaitableView(ASyncGenericBase, Iterable[T]):
     def __iter__(self) -> Iterator[T]:
         return iter(self._view)
     def __await__(self) -> List[T]:
-        return self.__await().__await__()
-    async def __await(self) -> List[T]:
-        await self._mapping._init_loader
-        return await self._await()
-    def _await(self):
-        raise NotImplementedError
+        return self._await().__await__()
+    async def _await(self) -> List[T]:
+        return [result async for result in self]
 
 class AwaitableItems(_AwaitableView[Tuple[K, V]]):
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
-        return self._mapping.__aiter__()
-    async def _await(self) -> List[Tuple[K, V]]:
-        return [(key, result) async for key, result in self]
+        await self._mapping._init_loader
+        for key, fut in self._mapping.values():
+            yield key, await fut
     
 class AwaitableValues(_AwaitableView[T]):
     async def __aiter__(self) -> AsyncIterator[T]:
         await self._mapping._init_loader
-        return as_completed(self._mapping.values(), aiter=True).__aiter__()
-    async def _await(self) -> List[T]:
-        return [result async for result in self]
+        for fut in self._mapping.values():
+            yield await fut
