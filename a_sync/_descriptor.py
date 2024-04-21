@@ -32,11 +32,9 @@ class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
         return f"<{self.__class__.__name__} for {self.__wrapped__}>"
     def __set_name__(self, owner, name):
         self.field_name = name
-    def map(self, instances: AnyIterable[I], *args: P.args, **bound_method_kwargs: P.kwargs) -> "TaskMapping[I, T]":
-        if args:
-            raise NotImplementedError("using args here is not yet supported, try passing them as kwargs")
+    def map(self, *instances: AnyIterable[I], **bound_method_kwargs: P.kwargs) -> "TaskMapping[I, T]":
         from a_sync.task import TaskMapping
-        return TaskMapping(self, instances, **bound_method_kwargs)
+        return TaskMapping(self, *instances, **bound_method_kwargs)
     @functools.cached_property
     def all(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], bool]:
         return decorator.a_sync(default=self.default)(self._all)
