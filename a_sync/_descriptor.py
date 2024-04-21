@@ -50,13 +50,13 @@ class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
     @functools.cached_property
     def sum(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], T]:
         return decorator.a_sync(default=self.default)(self._sum)
-    async def _all(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> bool:
-        return await self.map(instances, *args, owner=owner, concurrency=concurrency, name=name, **kwargs).all(pop=True, sync=False)
-    async def _any(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> bool:
-        return await self.map(instances, *args, owner=owner, concurrency=concurrency, name=name, **kwargs).any(pop=True, sync=False)
-    async def _min(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> T:
-        return await self.map(instances, *args, owner=owner, concurrency=concurrency, name=name, **kwargs).min(pop=True, sync=False)
-    async def _max(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> T:
-        return await self.map(instances, *args, owner=owner, concurrency=concurrency, name=name, **kwargs).max(pop=True, sync=False)
-    async def _sum(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> T:
-        return await self.map(instances, *args, owner=owner, concurrency=concurrency, name=name, **kwargs).sum(pop=True, sync=False)
+    async def _all(self, *instances: AnyIterable[I], concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> bool:
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).all(pop=True, sync=False)
+    async def _any(self, instances: AnyIterable[I], concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> bool:
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).any(pop=True, sync=False)
+    async def _min(self, instances: AnyIterable[I], concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> T:
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).min(pop=True, sync=False)
+    async def _max(self, instances: AnyIterable[I], concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> T:
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).max(pop=True, sync=False)
+    async def _sum(self, instances: AnyIterable[I], concurrency: Optional[int] = None, name: str = "", **kwargs: P.kwargs) -> T:
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).sum(pop=True, sync=False)
