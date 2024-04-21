@@ -14,6 +14,10 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     """
     A mixin class defining logic for awaiting an AsyncIterable
     """
+    __wrapped__: AsyncIterable[T]
+    def __aiter__(self) -> AsyncIterator[T]:
+        "Returns an async iterator for the wrapped async iterable."
+        return self.__wrapped__.__aiter__()
     def __await__(self) -> Generator[Any, Any, List[T]]:
         """Asynchronously iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
         return self._materialize().__await__()
@@ -47,9 +51,6 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     def __iter__(self) -> Iterator[T]:
         "Returns an iterator for the wrapped async iterable."
         yield from ASyncIterator(self.__aiter__())
-    def __aiter__(self) -> AsyncIterator[T]:
-        "Returns an async iterator for the wrapped async iterable."
-        return self.__wrapped__.__aiter__()
     __slots__ = "__wrapped__", 
 
 AsyncGenFunc = Callable[P, AsyncGenerator[T, None]]
