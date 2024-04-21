@@ -4,6 +4,8 @@ import functools
 import inspect
 import logging
 
+from async_property import async_cached_property
+
 from a_sync import _helpers
 from a_sync._typing import *
 
@@ -20,11 +22,13 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         return self.__wrapped__.__aiter__()
     def __await__(self) -> Generator[Any, Any, List[T]]:
         """Asynchronously iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
-        return self._materialize().__await__()
-    def materialize(self) -> List[T]:
+        return self._materialized.__await__()
+    @property
+    def materialized(self) -> List[T]:
         """Iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
-        return _helpers._await(self._materialize())
-    async def _materialize(self) -> List[T]:
+        return _helpers._await(self._materialized)
+    @async_cached_property
+    async def _materialized(self) -> List[T]:
         """Asynchronously iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
         return [obj async for obj in self]
     __slots__ = ()
