@@ -203,7 +203,11 @@ __persisted_tasks: Set["asyncio.Task[Any]"] = set()
 
 async def __await(awaitable: Awaitable[T]) -> T:
     """Wait for the completion of an Awaitable."""
-    return await awaitable
+    try:
+        return await awaitable
+    except RuntimeError as e:
+        raise RuntimeError(e, awaitable)
+
     
 def __persist(task: "asyncio.Task[Any]") -> None:
     """Add a task to the set of persisted tasks."""

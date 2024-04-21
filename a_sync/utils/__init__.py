@@ -19,7 +19,14 @@ __all__ = [
 async def any(*awaitables) -> bool:
     futs = [asyncio.ensure_future(a) for a in awaitables]
     for fut in asyncio.as_completed(futs):
-        if bool(await fut):
+        try:
+            result = bool(await fut)
+        except RuntimeError as e:
+            if str(e) == "cannot reuse already awaited coroutine":
+                raise RuntimeError(str(e), fut) from None
+            else:
+                raise e
+        if bool(result):
             for fut in futs:
                 fut.cancel()
             return True
@@ -28,7 +35,14 @@ async def any(*awaitables) -> bool:
 async def all(*awaitables) -> bool:
     futs = [asyncio.ensure_future(a) for a in awaitables]
     for fut in asyncio.as_completed(awaitables):
-        if not bool(await fut):
+        try:
+            result = bool(await fut)
+        except RuntimeError as e:
+            if str(e) == "cannot reuse already awaited coroutine":
+                raise RuntimeError(str(e), fut) from e
+            else:
+                raise e
+        if not result:
             for fut in futs:
                 fut.cancel()
             return False
