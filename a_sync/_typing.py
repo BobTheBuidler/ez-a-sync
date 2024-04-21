@@ -43,9 +43,9 @@ class SyncUnboundMethod(Protocol[I, P, T]):
     __get__: Callable[[I, None], SyncBoundMethod[I, P, T]]
 AnyUnboundMethod = Union[AsyncUnboundMethod[I, P, T], SyncUnboundMethod[I, P, T]]
 
-class AsyncPropertyGetter(CoroBoundMethod[Any, Tuple[()], T]):...
-class PropertyGetter(SyncBoundMethod[Any, Tuple[()], T]):...
-AnyPropertyGetter = Union[AsyncPropertyGetter[T], PropertyGetter[T]]
+AsyncGetterFunction = Callable[[I], Awaitable[T]]
+SyncGetterFunction = Callable[[I], T]
+AnyGetterFunction = Union[AsyncGetterFunction[I, T], SyncGetterFunction[I, T]]
 
 AsyncDecorator = Callable[[CoroFn[P, T]], CoroFn[P, T]]
 AsyncDecoratorOrCoroFn = Union[AsyncDecorator[P, T], CoroFn[P, T]]
