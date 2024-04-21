@@ -49,7 +49,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     """
     A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.
     """
-    _destroyed = True
     __slots__ = "concurrency", "_wrapped_func", "_wrapped_func_kwargs", "_name", "_next", "_init_loader", "_init_loader_next", "__dict__"
     def __init__(
         self, 
@@ -79,6 +78,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
         self._name = name
         "Optional name for tasks created by this mapping."
+
+        self._destroyed: bool = True
+        "Boolean indicating whether his mapping has been destroyed and is no longer usable."
 
         self._init_loader: Optional["asyncio.Task[None]"]
         "An asyncio Task used to preload values from the iterables."
@@ -139,8 +141,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 while unyielded := [key for key in self if key not in yielded]:
                     if ready := {key: task for key in unyielded if (task:=self[key]).done()}:
                         for key, task in ready.items():
-                            if pop:
-                                self.pop(key)
+                            self._if_pop_pop(pop, key)
                             yield key, await task
                             yielded.add(key)
                     else:
@@ -153,8 +154,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         # if there are any tasks that still need to complete, we need to await them and yield them
         if unyielded := {key: task for key, task in self.items() if key not in yielded}:
             async for key, value in as_completed(unyielded, aiter=True):
-                if pop:
-                    self.pop(key)
+                self._if_pop_pop(pop, key)
                 yield key, value
 
     def __delitem__(self, item: K) -> None:
