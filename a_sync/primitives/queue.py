@@ -125,17 +125,18 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         kwargs: P.kwargs
         if self._no_futs:
             while True:
-                args, kwargs = await self.get()
                 try:
+                    args, kwargs = await self.get()
                     await self.func(*args, **kwargs)
                 except Exception as e:
+                    logger.error("%s in worker for %s!", type(e).__name__, self)
                     logger.exception(e)
                 self.task_done()
         else:
             fut: asyncio.Future[V]
             while True:
-                args, kwargs, fut = await self.get()
                 try:
+                    args, kwargs, fut = await self.get()
                     fut.set_result(await self.func(*args, **kwargs))
                 except Exception as e:
                     fut.set_result(e)
