@@ -446,6 +446,6 @@ class AwaitableItems(_AwaitableView[Tuple[K, V]]):
 class AwaitableValues(_AwaitableView[T]):
     async def __aiter__(self) -> AsyncIterator[T]:
         await self._mapping._init_loader
-        return as_completed([*self._mapping.values()], aiter=True)
+        return as_completed(self._mapping.values(), aiter=True).__aiter__()
     async def _await(self) -> List[T]:
         return [result async for result in self]
