@@ -70,9 +70,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._wrapped_func = _unwrap(wrapped_func)
         "The function used to generate values for each key."
 
-        if self._wrapped_func.__name__ == "__get__" and "owner" not in self._wrapped_func_kwargs:
-            # getters will need this
-            wrapped_func_kwargs["owner"] = None
         self._wrapped_func_kwargs = wrapped_func_kwargs
         "Additional keyword arguments passed to `_wrapped_func`."
 
