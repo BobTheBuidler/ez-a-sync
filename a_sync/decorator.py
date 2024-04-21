@@ -235,5 +235,10 @@ def a_sync(
         default = coro_fn  # type: ignore [assignment]
         coro_fn = None
     
-    deco = ASyncDecorator(default=default, **modifiers)
+    if default == "sync":
+        deco = ASyncDecoratorSyncDefault(default=default, **modifiers)
+    elif default == "async":
+        deco = ASyncDecoratorAsyncDefault(default=default, **modifiers)
+    else:
+        deco = ASyncDecorator(default=default, **modifiers)
     return deco if coro_fn is None else deco(coro_fn)  # type: ignore [arg-type]

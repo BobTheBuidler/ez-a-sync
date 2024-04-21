@@ -1,5 +1,6 @@
 
 import functools
+import inspect
 import logging
 import sys
 
@@ -34,6 +35,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def __init__(self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:...
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         _helpers._validate_wrapped_fn(fn)
+        _check_not_genfunc(fn)
         self.modifiers = ModifierManager(modifiers)
         self.__wrapped__ = fn
         functools.update_wrapper(self, self.__wrapped__)
@@ -156,7 +158,18 @@ class ASyncDecorator(ModifiedMixin):
     def __call__(self, func: SyncFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
         ...
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
-        return ASyncFunction(func, **self.modifiers)
+        if self.default == "async":
+            return ASyncFunctionAsyncDefault(func, **self.modifiers)
+        elif self.default == "sync":
+            return ASyncFunctionSyncDefault(func, **self.modifiers)
+        elif asyncio.iscoroutinefunction(func):
+            return ASyncFunctionAsyncDefault(func, **self.modifiers)
+        else:
+            return ASyncFunctionSyncDefault(func, **self.modifiers)
+
+def _check_not_genfunc(func: Callable) -> None:
+    if inspect.isasyncgenfunction(func) or inspect.isgeneratorfunction(func):
+        raise ValueError("unable to decorate generator functions with this decorator")
 
 
 # Mypy helper classes
@@ -196,6 +209,8 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
         ...
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:
+        return ASyncFunctionSyncDefault(func, **self.modifiers)
 
 class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
@@ -204,6 +219,8 @@ class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
         ...
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
+        return ASyncFunctionAsyncDefault(func, **self.modifiers)
 
 
 def _args_not_supported(args) -> None:
