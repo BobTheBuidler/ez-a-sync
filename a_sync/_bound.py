@@ -129,9 +129,14 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         if not isawaitable(retval):
             # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
+            logger.debug("returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs)
             return retval  # type: ignore [return-value]
         # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-        return _helpers._await(coro) if self._should_await(kwargs) else coro  # type: ignore [call-overload, return-value]
+        if self._should_await(kwargs):
+            logger.debug("awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs)
+            retval = _helpers._await(coro)
+        logger.debug("returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs)
+        return retval  # type: ignore [call-overload, return-value]
     @functools.cached_property
     def __bound_to_a_sync_instance__(self) -> bool:
         from a_sync.abstract import ASyncABC
