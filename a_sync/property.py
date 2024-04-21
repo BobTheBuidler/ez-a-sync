@@ -35,9 +35,11 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
             self._fget = _helpers._asyncify(self.__wrapped__, self.modifiers.executor)
     async def get(self, instance: object) -> T:
         return await super().__get__(instance, None)
-    def map(self, instances: Iterable[object], owner:Any = None) -> "TaskMapping[object, T]":
+    def map(self, instances: Iterable[object], owner: Any = None) -> "TaskMapping[object, T]":
         from a_sync.task import TaskMapping
         return TaskMapping(self.__get__, instances, owner=owner)
+    async def sum(self, instances: Iterable[object], owner: Any = None) -> Any:
+        return sum(await self.map(instances, owner=owner).values())
     def __get__(self, instance: Optional[object], owner: Any) -> T:
         if instance is None:
             return self
