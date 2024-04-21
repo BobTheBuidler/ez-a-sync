@@ -291,7 +291,7 @@ async def _yield_keys(iterable: AnyIterable[K]) -> AsyncIterator[K]:
         raise TypeError(iterable)
 
 @functools.lru_cache(maxsize=None)
-def _unwrap(wrapped_func: Union[AnyFn[P, T], ASyncMethodDescriptor[P, T]]) -> Callable[P, Awaitable[T]]:
+def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]"]) -> Callable[P, Awaitable[T]]:
     if isinstance(wrapped_func, ASyncMethodDescriptor):
         wrapped_func = wrapped_func.__wrapped__
         if not isinstance(wrapped_func, ASyncFunction):
