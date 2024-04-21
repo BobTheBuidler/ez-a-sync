@@ -59,7 +59,11 @@ async def test_base_async(cls: type, i: int):
     
     if isinstance(async_instance, TestSync):
         with pytest.raises(WrongThreadError):
-            assert await async_instance.test_fn() == i
+            from typing import Any
+            test_fn: ASyncBoundMethodAsyncDefault[TestSync, Any, int] = async_instance.test_fn
+            assert isinstance(test_fn, ASyncBoundMethodAsyncDefault)
+            result = await test_fn()
+            assert result == i
     else:
         assert await async_instance.test_fn() == i
     assert await async_instance.test_property == i * 2
