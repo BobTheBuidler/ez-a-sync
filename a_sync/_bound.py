@@ -122,7 +122,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
-        logger.debug("calling %s", self)
+        logger.debug("calling %s with args: %s kwargs: %s", self, args, kwargs)
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
         retval = coro = ASyncFunction.__call__(self, self.__self__, *args, **kwargs)

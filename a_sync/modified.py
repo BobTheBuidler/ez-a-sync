@@ -1,11 +1,14 @@
 
 import functools
+import logging
 import sys
 
 from a_sync import _helpers, _kwargs
 from a_sync._typing import *
 from a_sync.modifiers.manager import ModifierManager
     
+
+logger = logging.getLogger(__name__)
 
 class ModifiedMixin:
     modifiers: ModifierManager
@@ -46,6 +49,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
+        logger.debug("calling %s fn: %s with args: %s kwargs: %s", self, self.fn, args, kwargs)
         return self.fn(*args, **kwargs)
     
     def __repr__(self) -> str:
