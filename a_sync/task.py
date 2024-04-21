@@ -198,6 +198,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     async def all(self, pop: bool = True):
         if pop:
             self._check_destroyed()
+        self._check_empty()
         async for key, result in self:
             if pop:
                 self.pop(key, None)
