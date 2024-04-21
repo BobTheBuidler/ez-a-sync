@@ -65,10 +65,10 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             raise ValueError(instance)
         logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, owner)
-    def map(self, instances: AnyIterable[I], owner: Any = None) -> "TaskMapping[I, T]":
+    def map(self, instances: AnyIterable[I], owner: Any = None, concurrency: Optional[int] = None, name: str = "") -> "TaskMapping[I, T]":
         from a_sync.task import TaskMapping
         logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
-        return TaskMapping(self, instances, owner=owner)
+        return TaskMapping(self, instances, owner=owner, name=name or self.field_name, concurrency=concurrency)
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
     pass
