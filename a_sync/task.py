@@ -466,6 +466,8 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
                 if key not in yielded:
                     yielded.add(key)
                     yield key
+        if e := self._mapping._init_loader.exception():
+            raise e
         for key in self._mapping:
             if key not in yielded:
                 yield key
