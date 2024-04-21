@@ -106,6 +106,18 @@ ASyncPropertyDecoratorAsyncDefault = Callable[[AnyGetterFunction[I, T]], ASyncPr
 
 @overload
 def a_sync_property(  # type: ignore [misc]
+    func: Literal[None] = None,
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncPropertyDecorator[I, T]:...
+
+@overload
+def a_sync_property(  # type: ignore [misc]
+    func: AnyGetterFunction[I, T],
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncPropertyDescriptor[I, T]:...
+
+@overload
+def a_sync_property(  # type: ignore [misc]
     func: Literal[None],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
@@ -221,6 +233,18 @@ class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[I, T]):
 ASyncCachedPropertyDecorator = Callable[[AnyGetterFunction[I, T]], cached_property[I, T]]
 ASyncCachedPropertyDecoratorSyncDefault = Callable[[AnyGetterFunction[I, T]], ASyncCachedPropertyDescriptorSyncDefault[I, T]]
 ASyncCachedPropertyDecoratorAsyncDefault = Callable[[AnyGetterFunction[I, T]], ASyncCachedPropertyDescriptorAsyncDefault[I, T]]
+
+@overload
+def a_sync_cached_property(  # type: ignore [misc]
+    func: Literal[None] = None,
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncCachedPropertyDecorator[I, T]:...
+
+@overload
+def a_sync_cached_property(  # type: ignore [misc]
+    func: AnyGetterFunction[I, T],
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncCachedPropertyDescriptor[I, T]:...
 
 @overload
 def a_sync_cached_property(  # type: ignore [misc]

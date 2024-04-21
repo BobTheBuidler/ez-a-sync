@@ -105,6 +105,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     raise e
                 # its okay, we can start it as soon as the loop starts
                 self.__init_loader_coro = init_loader_coro
+                """An optional asyncio Coroutine to be run by the `_init_loader`"""
+                
             self._init_loader_next = init_loader_queue.get_all
             "An asyncio Event that indicates the _init_loader started a new task."
         else:
