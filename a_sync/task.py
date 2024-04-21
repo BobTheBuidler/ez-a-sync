@@ -6,6 +6,7 @@ import logging
 from a_sync._bound import ASyncMethodDescriptor
 from a_sync._typing import *
 from a_sync import exceptions
+from a_sync.base import ASyncGenericBase
 from a_sync.modified import ASyncFunction
 from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.property import _ASyncPropertyDescriptorBase
@@ -47,6 +48,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     """
     A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.
     """
+    _destroyed = True
     __slots__ = "concurrency", "_wrapped_func", "_wrapped_func_kwargs", "_name", "_next", "_init_loader", "_init_loader_next", "__dict__"
     def __init__(
         self, 
@@ -188,6 +190,41 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             if pop:
                 self.pop(key)
             yield _yield(key, value, yields)
+    
+    async def all(self, pop: bool = True):
+        if pop:
+            self._check_destroyed()
+        async for key, result in self:
+            if pop:
+                self.pop(key, None)
+            if not bool(result):
+                if pop:
+                    self.clear(cancel=True)
+                return False
+        return True
+    
+    async def any(self, pop: bool = True):
+        if pop:
+            self._check_destroyed()
+        async for key, result in self:
+            if pop:
+                self.pop(key, None)
+            if bool(result):
+                if pop:
+                    self.clear(cancel=True)
+                return True
+        return False
+            
+    async def sum(self, pop: bool = False):
+        if pop:
+            self._check_destroyed()
+        await self._init_loader
+        retval = 0
+        for key, task in self.items():
+            if pop:
+                self.pop(key, None)
+            retval += await task
+        return retval
 
     async def yield_completed(self, pop: bool = True) -> AsyncIterator[Tuple[K, V]]:
         """
@@ -224,6 +261,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     def clear(self, cancel: bool = False) -> None:
         for k in self:
             self.pop(k, cancel=cancel)
+
+    def _check_destroyed(self) -> None:
+        if self._destroyed:
+            raise RuntimeError
+        self._destroyed = True
 
     async def _tasks_for_iterables(self, *iterables) -> AsyncIterator["asyncio.Task[V]"]:
         """Ensure tasks are running for each key in the provided iterables."""
@@ -329,13 +371,15 @@ def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASy
     return wrapped_func
 
 
-class _AwaitableView(Iterator[T]):
+class _AwaitableView(ASyncGenericBase, Iterator[T]):
     consumed = False
     def __init__(self, view: Iterator[T], task_mapping: TaskMapping) -> None:
         self._view = view
         self._mapping = task_mapping
     def __next__(self) -> Iterator[T]:
         return self._view.__next__()
+    async def __anext__(self) -> T:
+        return await self._view.__next__()
     def __await__(self) -> List[T]:
         return self.__await().__await__()
     async def __await(self) -> List[T]:
