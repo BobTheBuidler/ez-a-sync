@@ -43,7 +43,7 @@ def _await(awaitable: Awaitable[T]) -> T:
         return get_event_loop().run_until_complete(awaitable)
     except RuntimeError as e:
         if str(e) == "This event loop is already running":
-            raise exceptions.SyncModeInAsyncContextError from e
+            raise exceptions.SyncModeInAsyncContextError from None
         raise e
 
 def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: ignore [misc]
