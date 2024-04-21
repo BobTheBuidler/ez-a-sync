@@ -16,6 +16,10 @@ logger = logging.getLogger(__name__)
 
 class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     __wrapped__: AnyFn[P, T]
+    async def __call__(self, instance: I, *args: P.args, **kwargs: P.kwargs) -> T:
+        # NOTE: This is only used by TaskMapping atm  # TODO: use it elsewhere
+        logger.debug("awaiting %s for instance: %s args: %s kwargs: %s", self, instance, args, kwargs)
+        return await self.__get__(instance, None)(*args, **kwargs)
     @overload
     def __get__(self, instance: None, owner: Any) -> Self:...
     @overload
