@@ -68,7 +68,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     def map(self, instances: AnyIterable[I], owner: Any = None) -> "TaskMapping[I, T]":
         from a_sync.task import TaskMapping
         logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
-        return TaskMapping(self.get, instances, owner=owner)
+        return TaskMapping(self, instances, owner=owner)
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
     pass
