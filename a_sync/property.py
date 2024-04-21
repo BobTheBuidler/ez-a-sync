@@ -57,9 +57,13 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, None, T]):
         logger.debug("returning %s for %s for instance: %s owner: %s", retval, self, instance, owner)
         return retval
     async def get(self, instance: I) -> T:
+        if instance is None:
+            raise ValueError(instance)
         logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, None)
     def map(self, instances: AnyIterable[I], owner: Any = None) -> "TaskMapping[I, T]":
+        if not instances:
+            raise ValueError(instances)
         from a_sync.task import TaskMapping
         logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
         return TaskMapping(self.__get__, instances, owner=owner)
