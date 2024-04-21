@@ -86,7 +86,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._init_loader: Optional["asyncio.Task[None]"]
         "An asyncio Task used to preload values from the iterables."
 
-        if iterables is not None:
+        if iterables:
             self._next = asyncio.Event()
             "An asyncio Event that indicates the next result is ready"
             @functools.wraps(wrapped_func)
