@@ -8,6 +8,7 @@ from a_sync._typing import *
 from a_sync import exceptions
 from a_sync.modified import ASyncFunction
 from a_sync.primitives.queue import Queue, ProcessingQueue
+from a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.utils.as_completed import as_completed
 from a_sync.utils.gather import gather
 from a_sync.utils.iterators import as_yielded, exhaust_iterator
@@ -69,6 +70,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._wrapped_func = _unwrap(wrapped_func)
         "The function used to generate values for each key."
 
+        if self._wrapped_func.__name__ == "__get__" and "owner" not in self._wrapped_func_kwargs:
+            # getters will need this
+            wrapped_func_kwargs["owner"] = None
         self._wrapped_func_kwargs = wrapped_func_kwargs
         "Additional keyword arguments passed to `_wrapped_func`."
 
@@ -315,15 +319,17 @@ async def _yield_keys(iterable: AnyIterable[K]) -> AsyncIterator[K]:
         raise TypeError(iterable)
 
 @functools.lru_cache(maxsize=None)
-def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]"]) -> Callable[P, Awaitable[T]]:
+def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[T]], kwargs: dict) -> Callable[P, Awaitable[T]]:
     if isinstance(wrapped_func, ASyncMethodDescriptor):
         wrapped_func = wrapped_func.__wrapped__
         if not isinstance(wrapped_func, ASyncFunction):
             wrapped_func = ASyncFunction(wrapped_func)
+    elif isinstance(wrapped_func, _ASyncPropertyDescriptorBase):
+        wrapped_func = wrapped_func.__get__
     # NOTE: we don't use functools.partial here so the original fn is still exposed
     if isinstance(wrapped_func, ASyncFunction):
         return wrapped_func._async_wrap if wrapped_func._async_def else wrapped_func._asyncified
-    return wrapped_func
+    return wrapped_func, wrapped_func_kwargs
 
 
 class _AwaitableView(Iterator[T]):
