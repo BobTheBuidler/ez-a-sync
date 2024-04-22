@@ -456,7 +456,7 @@ def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASy
     elif isinstance(wrapped_func, ASyncFunction):
         # this speeds things up a bit by bypassing some logic
         # TODO implement it like this elsewhere if profilers suggest
-        return wrapped_func._async_wrap if wrapped_func._async_def else wrapped_func._asyncified
+        return wrapped_func._modified_fn if wrapped_func._async_def else wrapped_func._asyncified
     return wrapped_func
 
 
