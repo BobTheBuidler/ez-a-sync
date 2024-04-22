@@ -207,8 +207,8 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
 class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueue[T]):
     """A PriorityQueue subclass that allows priorities to be updated (or computed) on the fly"""
 
-class VariablePriorityProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]):
-    """A PriorityProcessingQueue subclass that allows priorities to be updated (or computed) on the fly"""
+class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]):
+    """A PriorityProcessingQueue subclass that will execute jobs with the most waiters first"""
     _no_futs = False
     def __init__(self, func: Callable[Concatenate[T, P], Awaitable[V]], num_workers: int, *, loop: asyncio.AbstractEventLoop | None = None) -> None:
         super().__init__(func, num_workers, return_data=True, loop=loop)
