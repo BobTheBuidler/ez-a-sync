@@ -164,7 +164,7 @@ def _validate_args(i: int, can_return_less: bool) -> None:
         raise ValueError(f"`i` must be an integer greater than 1. You passed {i}")
 
 
-class PriorityFuture(asyncio.Future):
+class SmartFuture(asyncio.Future, Generic[T]):
     # classvar holds default value for instances
     _waiters: Set["asyncio.Task[T]"] = set()
     def __repr__(self):
@@ -182,7 +182,7 @@ class PriorityFuture(asyncio.Future):
         if not self.done():
             raise RuntimeError("await wasn't used with future")
         return self.result()  # May raise too.
-    def __lt__(self, other: "PriorityFuture") -> bool:
+    def __lt__(self, other: "SmartFuture") -> bool:
         """heap considers lower values as higher priority so a future with more waiters will be 'less than' a future with less waiters."""
         return self.num_waiters > other.num_waiters
     @property
@@ -216,20 +216,12 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
 class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
     def _get(self, heapify=heapq.heapify, heappop=heapq.heappop):
         "Resort the heap to consider any changes in priorities and pop the smallest value"
-        try:
-            return heappop(heapify(self._queue))
-        except TypeError as e:
-            if str(e) != "heap argument must be a list":
-                raise e
-            items = tuple(self._queue)
-            # TODO: debug why this is needed
-            self._init(None)
-            assert isinstance(self._queue, list), self._queue
-            for item in items:
-                self.put_nowait(item)
-            return heappop(heapify(self._queue))
+        # resort the heap
+        heapify(self._queue)
+        # take the job with the most waiters
+        return heappop(self._queue)
     def _create_future(self) -> "asyncio.Future[V]":
-        return PriorityFuture(loop=asyncio.get_event_loop())
+        return SmartFuture(loop=asyncio.get_event_loop())
 
 class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueue):
     """A PriorityQueue subclass that allows priorities to be updated (or computed) on the fly"""
@@ -245,12 +237,12 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ) -> None:
         super().__init__(func, num_workers, return_data=True, loop=loop)
-    async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+    async def put(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
         self._workers
         fut = asyncio.get_event_loop().create_future()
         await Queue.put(self, (fut, args, kwargs))
         return fut
-    def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+    def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
         self._workers
         fut = self._create_future()
         Queue.put_nowait(self, (fut, args, kwargs))
