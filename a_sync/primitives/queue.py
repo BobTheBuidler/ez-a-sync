@@ -216,7 +216,14 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
 class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
     def _get(self, heapify=heapq.heapify, heappop=heapq.heappop):
         "Resort the heap to consider any changes in priorities and pop the smallest value"
-        return heappop(heapify(self._queue))
+        try:
+            return heappop(heapify(self._queue))
+        except TypeError as e:
+            if str(e) != "heap argument must be a list":
+                raise e
+            # TODO: debug why this is needed
+            self._init(None)
+            return heappop(heapify(self._queue))
     def _create_future(self) -> "asyncio.Future[V]":
         return PriorityFuture(loop=asyncio.get_event_loop())
 
