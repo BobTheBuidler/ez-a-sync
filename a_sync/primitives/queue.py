@@ -178,8 +178,7 @@ class SmartFuture(asyncio.Future, Generic[T]):
             return self.result()  # May raise too.
         self._asyncio_future_blocking = True
         self._waiters.add(current_task := asyncio.current_task(self._loop))
-        logger.info("awaiting %s", self)
-        logger.info("workers: %s", self._queue._workers)
+        logger.debug("awaiting %s", self)
         yield self  # This tells Task to wait for completion.
         self._waiters.remove(current_task)
         if self.num_waiters == 0:
@@ -275,6 +274,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         while True:
             try:
                 args, kwargs, fut = await self.get()
+                logger.info("processing %s", fut)
                 fut.set_result(await self.func(*args, **kwargs))
             except Exception as e:
                 try:
