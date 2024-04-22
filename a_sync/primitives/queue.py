@@ -221,12 +221,13 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
         except TypeError as e:
             if str(e) != "heap argument must be a list":
                 raise e
-            assert len(self._queue) == 1, self._queue
-            item = self._queue.pop()
+            items = tuple(self._queue)
             # TODO: debug why this is needed
             self._init(None)
             assert isinstance(self._queue, list), self._queue
-            return item
+            for item in items:
+                self.put_nowait(item)
+            return heappop(heapify(self._queue))
     def _create_future(self) -> "asyncio.Future[V]":
         return PriorityFuture(loop=asyncio.get_event_loop())
 
