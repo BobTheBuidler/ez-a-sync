@@ -168,7 +168,7 @@ class SmartFuture(asyncio.Future, Generic[T]):
     # classvar holds default value for instances
     _waiters: Set["asyncio.Task[T]"] = set()
     def __repr__(self):
-        return f"<{type(self).__name__} waiters={len(self._waiters)} {self._state}>"
+        return f"<{type(self).__name__} waiters={self.num_waiters} {self._state}>"
     def __await__(self):
         logger.info("entering %s", self)
         if self.done():
@@ -248,9 +248,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Queue.put_nowait(self, (fut, args, kwargs))
         return fut
     def _get(self):
-        logger.info("getting next for %s", self)
         fut, args, kwargs = super()._get()
-        logger.info("got args: %s kwargs: %s fut: %s", args, kwargs, fut)
         return args, kwargs, fut
     async def _worker_coro(self) -> NoReturn:
         args: P.args
