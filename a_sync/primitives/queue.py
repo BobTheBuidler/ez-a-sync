@@ -162,6 +162,7 @@ class PriorityFuture(asyncio.Future):
     def __repr__(self):
         return f"<{type(self).__name__} waiters={len(self._waiters)} {self._state}>"
     def __await__(self):
+        logger.info("entering %s", self)
         if self.done():
             return self.result()  # May raise too.
         logger.info("awaiting %s", self)
@@ -175,7 +176,10 @@ class PriorityFuture(asyncio.Future):
         return self.result()  # May raise too.
     def __lt__(self, other: "PriorityFuture") -> bool:
         """heap considers lower values as higher priority so a future with more waiters will be 'less than' a future with less waiters."""
-        return len(self._waiters) > len(other._waiters)
+        return self.num_waiters > other.num_waiters
+    @property
+    def num_waiters(self) -> int:
+        return len(self._waiters)
 
 
 class _PriorityQueueMixin(Generic[T]):
