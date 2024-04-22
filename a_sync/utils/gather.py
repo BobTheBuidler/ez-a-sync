@@ -113,8 +113,12 @@ async def gather_mapping(
         results = await gather_mapping(mapping)
         ```
     """
-    results = {k: v async for k, v in as_completed_mapping(mapping, return_exceptions=return_exceptions, aiter=True, tqdm=tqdm, **tqdm_kwargs)}
+    results = {
+        k: v 
+        async for k, v in as_completed_mapping(mapping, return_exceptions=return_exceptions, aiter=True, tqdm=tqdm, **tqdm_kwargs)
+        if exclude_if is None or not exclude_if(k)
+    }
     # return data in same order as input mapping
-    return {k: result for k in mapping.keys() if exclude_if is None or not exclude_if(result := results[k])}  
+    return {k: results[k] for k in mapping}  
 
 _is_mapping = lambda awaitables: len(awaitables) == 1 and isinstance(awaitables[0], Mapping)
