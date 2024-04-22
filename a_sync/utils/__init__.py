@@ -23,7 +23,7 @@ async def any(*awaitables) -> bool:
             result = bool(await fut)
         except RuntimeError as e:
             if str(e) == "cannot reuse already awaited coroutine":
-                raise RuntimeError(str(e), fut) from None
+                raise RuntimeError(str(e), fut) from e
             else:
                 raise e
         if bool(result):

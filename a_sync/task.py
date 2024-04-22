@@ -3,8 +3,10 @@ import asyncio
 import functools
 import logging
 
+from a_sync._bound import ASyncMethodDescriptor
 from a_sync._typing import *
 from a_sync import exceptions
+from a_sync.modified import ASyncFunction
 from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.utils.as_completed import as_completed
 from a_sync.utils.gather import gather
@@ -60,17 +62,22 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             name: An optional name for the tasks created by this mapping.
             **wrapped_func_kwargs: Keyword arguments that will be passed to `wrapped_func`.
         """
+
         self.concurrency = concurrency
         "The max number of coroutines that will run at any given time."
-        # NOTE: we don't use functools.partial here so the original fn is still exposed
-        self._wrapped_func = wrapped_func
+
+        self._wrapped_func = _unwrap(wrapped_func)
         "The function used to generate values for each key."
+
         self._wrapped_func_kwargs = wrapped_func_kwargs
         "Additional keyword arguments passed to `_wrapped_func`."
+
         self._name = name
         "Optional name for tasks created by this mapping."
+
         self._init_loader: Optional["asyncio.Task[None]"]
         "An asyncio Task used to preload values from the iterables."
+
         if iterables:
             self._next = asyncio.Event()
             "An asyncio Event that indicates the next result is ready"
@@ -168,7 +175,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             if pop:
                 self.pop(key)
             yield _yield(key, value, yields)
-    
+
     async def yield_completed(self, pop: bool = True) -> AsyncIterator[Tuple[K, V]]:
         """
         Asynchronously yield tuples of key-value pairs representing the results of any completed tasks.
@@ -282,3 +289,14 @@ async def _yield_keys(iterable: AnyIterable[K]) -> AsyncIterator[K]:
             yield key
     else:
         raise TypeError(iterable)
+
+@functools.lru_cache(maxsize=None)
+def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]"]) -> Callable[P, Awaitable[T]]:
+    if isinstance(wrapped_func, ASyncMethodDescriptor):
+        wrapped_func = wrapped_func.__wrapped__
+        if not isinstance(wrapped_func, ASyncFunction):
+            wrapped_func = ASyncFunction(wrapped_func)
+    # NOTE: we don't use functools.partial here so the original fn is still exposed
+    if isinstance(wrapped_func, ASyncFunction):
+        return wrapped_func._async_wrap if wrapped_func._async_def else wrapped_func._asyncified
+    return wrapped_func
