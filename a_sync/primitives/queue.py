@@ -171,7 +171,7 @@ class SmartFuture(asyncio.Future, Generic[T]):
         self._key = key
         self._waiters: Set["asyncio.Task[T]"] = set()
     def __repr__(self):
-        return f"<{type(self).__name__} waiters={self.num_waiters} {self._state}>"
+        return f"<{type(self).__name__} key={self._key} waiters={self.num_waiters} {self._state}>"
     def __await__(self):
         logger.debug("entering %s", self)
         if self.done():
