@@ -275,9 +275,12 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             try:
                 args, kwargs, fut = await self.get()
                 logger.info("processing %s", fut)
-                fut.set_result(await self.func(*args, **kwargs))
+                result = await self.func(*args, **kwargs)
+                logger.info("result: %s", result)
+                fut.set_result(result)
             except Exception as e:
                 try:
+                    logger.info("%s: %s", type(e).__name__, e)
                     fut.set_exception(e)
                 except UnboundLocalError as u:
                     logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
