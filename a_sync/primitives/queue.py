@@ -231,7 +231,9 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Queue.put_nowait(self, (fut, args, kwargs))
         return fut
     def _get(self):
+        logger.info("getting next for %s", self)
         fut, args, kwargs = super()._get()
+        logger.info("got args: %s kwargs: %s fut: %s", args, kwargs, fut)
         return args, kwargs, fut
     async def _worker_coro(self) -> NoReturn:
         args: P.args
