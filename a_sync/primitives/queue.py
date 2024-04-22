@@ -159,6 +159,8 @@ def _validate_args(i: int, can_return_less: bool) -> None:
 class PriorityFuture(asyncio.Future):
     # classvar holds default value for instances
     _waiters: Set["asyncio.Task[T]"] = set()
+    def __repr__(self):
+        return f"<{type(self).__name__} waiters={len(self._waiters)} {self._state}>"
     def __await__(self):
         if self.done():
             return self.result()  # May raise too.
@@ -193,8 +195,6 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         fut = self._create_future()
         super().put_nowait(self, (priority, args, kwargs, fut))
         return fut
-    def _put(self, item, heappush=heapq.heappush):
-        heappush(self._queue, item)
     def _get(self, heappop=heapq.heappop):
         priority, args, kwargs, fut = heappop(self._queue)
         return args, kwargs, fut
