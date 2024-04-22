@@ -205,8 +205,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
         async for key, value in as_completed(self, aiter=True):
-            if pop:
-                self.pop(key)
+            self._if_pop_pop(pop, key)
             yield _yield(key, value, yields)
     
     @ASyncMethodDescriptorSyncDefault
@@ -270,8 +269,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         """
         for k, task in dict(self).items():
             if task.done():
-                if pop:
-                    task = self.pop(k)
+                self._if_pop_pop(pop, k)
                 yield k, await task
     
     @ASyncMethodDescriptorSyncDefault
@@ -319,9 +317,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if pop:
             self.clear(cancel=True)
     
+    @overload
+    def _if_pop_pop(self, pop: bool, key: K, cancel: bool = False) -> None:...
+    @overload
+    def _if_pop_pop(self, pop: bool, key: K, default: T, cancel: bool = False) -> None:...
     def _if_pop_pop(self, pop: bool, *args: K, cancel: bool = False) -> None:
-        # TODO: fix
-        return
         if pop:
             self.pop(*args, cancel=cancel)
     
