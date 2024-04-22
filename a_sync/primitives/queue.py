@@ -241,7 +241,9 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         fut: asyncio.Future[V]
         while True:
             try:
+                logger.info("getting next for %s", self)
                 args, kwargs, fut = await self.get()
+                logger.info("got args: %s kwargs: %s fut: %s", args, kwargs, fut)
                 fut.set_result(await self.func(*args, **kwargs))
             except Exception as e:
                 fut.set_result(e)
