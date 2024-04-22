@@ -250,6 +250,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         self._workers
         key = self._get_key(*args, **kwargs)
         if fut := self._futs.get(key, None):
+            logger.info("using cached fut")
             return fut
         fut = self._create_future(key)
         self._futs[key] = fut
