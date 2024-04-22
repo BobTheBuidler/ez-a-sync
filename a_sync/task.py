@@ -119,12 +119,15 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     # TODO: perform this check earlier and pre-prepare the args/kwargs ordering
                     new_args = list(args)
                     new_kwargs = dict(kwargs)
-                    for i, arg in enumerate(inspect.getfullargspec(self.__wrapped__).args):
-                        if arg in kwargs:
-                            new_args.insert(i, new_kwargs.pop(arg))
-                        else:
-                            break
-                    return await _wrapped_set_next(*new_args, **new_kwargs)
+                    try:
+                        for i, arg in enumerate(inspect.getfullargspec(self.__wrapped__).args):
+                            if arg in kwargs:
+                                new_args.insert(i, new_kwargs.pop(arg))
+                            else:
+                                break
+                        return await _wrapped_set_next(*new_args, **new_kwargs)
+                    except TypeError as e2:
+                        raise e if str(e2) == "unsupported callable" else e2
             self._wrapped_func = _wrapped_set_next
             init_loader_queue: Queue[Tuple[K, "asyncio.Future[V]"]] = Queue()
             init_loader_coro = exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue)
