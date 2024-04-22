@@ -18,6 +18,7 @@ else:
 class Queue(_Queue[T]):
     # for type hint support, no functional difference
     async def get(self) -> T:
+        self._queue
         return await _Queue.get(self)
     def get_nowait(self) -> T:
         return _Queue.get_nowait(self)
@@ -174,7 +175,8 @@ class PriorityFuture(asyncio.Future):
 
 
 class _PriorityQueueMixin(Generic[T]):
-    _queue: list
+    def _init(self, maxsize):
+        self._queue: List[T] = []
     def _put(self, item, heappush=heapq.heappush):
         heappush(self._queue, item)
     def _get(self, heappop=heapq.heappop):
