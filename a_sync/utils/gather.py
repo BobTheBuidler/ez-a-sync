@@ -75,7 +75,7 @@ async def gather(
         ```
     """
     results = await (
-        gather_mapping(awaitables[0], return_exceptions=return_exceptions, exclude_if, tqdm=tqdm, **tqdm_kwargs) if _is_mapping(awaitables)
+        gather_mapping(awaitables[0], return_exceptions=return_exceptions, exclude_if=exclude_if, tqdm=tqdm, **tqdm_kwargs) if _is_mapping(awaitables)
         else tqdm_asyncio.gather(*(_exc_wrap(a) for a in awaitables) if return_exceptions else awaitables, **tqdm_kwargs) if tqdm
         else asyncio.gather(*awaitables, return_exceptions=return_exceptions)  # type: ignore [arg-type]
     )
