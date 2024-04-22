@@ -314,11 +314,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return ProcessingQueue(fn, self.concurrency)
     
     def _if_pop_check_destroyed(self, pop: bool) -> None:
-        # TODO: fix
-        return
         if pop:
             if self._destroyed:
-                raise RuntimeError
+                raise RuntimeError(f"{self} has already been consumed")
             self._destroyed = True
     
     def _if_pop_clear(self, pop: bool) -> None:
@@ -355,7 +353,10 @@ async def __await(awaitable: Awaitable[T]) -> T:
     try:
         return await awaitable
     except RuntimeError as e:
-        raise RuntimeError(e, awaitable)
+        if isinstance(awaitable, asyncio.tasks._GatheringFuture):
+            raise RuntimeError(str(e), f"_GatheringFuture({awaitable._children})") from None
+        else:
+            raise RuntimeError(str(e), awaitable) from None
 
     
 def __persist(task: "asyncio.Task[Any]") -> None:
