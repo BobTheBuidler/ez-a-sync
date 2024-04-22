@@ -164,8 +164,10 @@ class PriorityFuture(asyncio.Future):
     def __await__(self):
         if self.done():
             return self.result()  # May raise too.
+        logger.info("awaiting %s", self)
         self._asyncio_future_blocking = True
         self._waiters.add(current_task := asyncio.current_task(self._loop))
+        logger.info("%s waiters: %s", self, self._waiters)
         yield self  # This tells Task to wait for completion.
         self._waiters.remove(current_task)
         if not self.done():
