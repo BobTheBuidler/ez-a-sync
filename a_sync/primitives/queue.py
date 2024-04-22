@@ -18,13 +18,13 @@ else:
 class Queue(_Queue[T]):
     # for type hint support, no functional difference
     async def get(self) -> T:
-        return await super().get()
+        return await _Queue.get(self)
     def get_nowait(self) -> T:
-        return super().get_nowait()
+        return _Queue.get_nowait(self)
     async def put(self, item: T) -> None:
-        return super().put(item)
+        return _Queue.put(self, item)
     def put_nowait(self, item: T) -> None:
-        return super().put_nowait(item)
+        return _Queue.put_nowait(self, item)
     
     async def get_all(self) -> List[T]:
         """returns 1 or more items"""
