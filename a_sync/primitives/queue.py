@@ -144,7 +144,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                     fut.set_result(await self.func(*args, **kwargs))
                 except Exception as e:
                     try:
-                        fut.set_result(e)
+                        fut.set_exception(e)
                     except UnboundLocalError as u:
                         logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
                         if str(e) != "local variable 'fut' referenced before assignment":
@@ -280,7 +280,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                 fut.set_result(await self.func(*args, **kwargs))
             except Exception as e:
                 try:
-                    fut.set_result(e)
+                    fut.set_exception(e)
                 except UnboundLocalError as u:
                     logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
                     if str(e) != "local variable 'fut' referenced before assignment":
