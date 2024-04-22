@@ -55,7 +55,16 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     _destroyed: bool = False
     "Boolean indicating whether his mapping has been consumed and is no longer usable for aggregations."
 
-    __slots__ = "concurrency", "_wrapped_func", "_wrapped_func_kwargs", "_name", "_next", "_init_loader_next", "__dict__", "__init_loader_coro"
+    _init_loader: Optional["asyncio.Task[None]"] = None
+    "An asyncio Task used to preload values from the iterables."
+
+    _init_loader_next: Optional[Callable[[], Awaitable[Tuple[K, V]]]] = None
+    "An asyncio Event that indicates the _init_loader started a new task."
+    
+    __init_loader_coro: Optional[Awaitable[None]] = None
+    """An optional asyncio Coroutine to be run by the `_init_loader`"""
+
+    __slots__ = "concurrency", "_wrapped_func", "_wrapped_func_kwargs", "_name", "_next", "__wrapped__", "__dict__"
     def __init__(
         self, 
         wrapped_func: MappingFn[K, P, V] = None, 
@@ -75,6 +84,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self.concurrency = concurrency
         "The max number of coroutines that will run at any given time."
 
+        self.__wrapped__ = wrapped_func
+        "The original callable used to initialize this mapping without any modifications."""
+
         wrapped_func = _unwrap(wrapped_func)
         self._wrapped_func = wrapped_func
         "The function used to generate values for each key."
@@ -88,18 +100,18 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._name = name
         "Optional name for tasks created by this mapping."
 
-        self._init_loader: Optional["asyncio.Task[None]"]
-        "An asyncio Task used to preload values from the iterables."
-
         if iterables:
             self._next = asyncio.Event()
             "An asyncio Event that indicates the next result is ready"
             @functools.wraps(wrapped_func)
             async def _wrapped_set_next(*args: P.args, **kwargs: P.kwargs) -> V:
-                retval = await wrapped_func(*args, **kwargs)
-                self._next.set()
-                self._next.clear()
-                return retval
+                try:
+                    retval = await wrapped_func(*args, **kwargs)
+                    self._next.set()
+                    self._next.clear()
+                    return retval
+                except exceptions.SyncModeInAsyncContextError as e:
+                    raise Exception(e, self.__wrapped__)
             self._wrapped_func = _wrapped_set_next
             init_loader_queue: Queue[Tuple[K, "asyncio.Future[V]"]] = Queue()
             init_loader_coro = exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue)
@@ -110,10 +122,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     raise e
                 # its okay, we can start it as soon as the loop starts
                 self.__init_loader_coro = init_loader_coro
-                """An optional asyncio Coroutine to be run by the `_init_loader`"""
-
             self._init_loader_next = init_loader_queue.get_all
-            "An asyncio Event that indicates the _init_loader started a new task."
         else:
             self._init_loader = None
     
