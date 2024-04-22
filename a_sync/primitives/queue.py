@@ -228,7 +228,7 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
     def _get_key(self, *args, **kwargs) -> "_Key":
         return (args, tuple((kwarg, kwargs[kwarg]) for kwarg in sorted(kwargs)))
     def _create_future(self, key: "_Key") -> "asyncio.Future[V]":
-        return SmartFuture(key, loop=asyncio.get_event_loop())
+        return SmartFuture(self, key, loop=asyncio.get_event_loop())
 
 class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueue):
     """A PriorityQueue subclass that allows priorities to be updated (or computed) on the fly"""
