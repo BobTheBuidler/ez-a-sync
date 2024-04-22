@@ -102,14 +102,14 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             }
             asyncio.get_event_loop().call_exception_handler(context)
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
-        self._workers
+        self._ensure_workers()
         if self._no_futs:
             return await super().put((args, kwargs))
         fut = self._create_future()
         await super().put((args, kwargs, fut))
         return fut
     def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
-        self._workers
+        self._ensure_workers()
         if self._no_futs:
             return super().put_nowait((args, kwargs))
         fut = self._create_future()
@@ -117,6 +117,9 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         return fut
     def _create_future(self) -> "asyncio.Future[V]":
         return asyncio.get_event_loop().create_future()
+    def _ensure_workers(self) -> None:
+        if self._workers.done():
+            raise self._workers.exception()
     @functools.cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
         from a_sync.task import create_task
@@ -204,12 +207,12 @@ class _PriorityQueueMixin(Generic[T]):
 
 class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
     async def put(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
-        self._workers
+        self._ensure_workers()
         fut = asyncio.get_event_loop().create_future()
         await super().put(self, (priority, args, kwargs, fut))
         return fut
     def put_nowait(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
-        self._workers
+        self._ensure_workers()
         fut = self._create_future()
         super().put_nowait(self, (priority, args, kwargs, fut))
         return fut
