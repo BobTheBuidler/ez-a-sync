@@ -176,10 +176,11 @@ class SmartFuture(asyncio.Future, Generic[T]):
         logger.debug("entering %s", self)
         if self.done():
             return self.result()  # May raise too.
-        logger.info("awaiting %s", self)
         self._asyncio_future_blocking = True
         self._waiters.add(current_task := asyncio.current_task(self._loop))
+        logger.info("awaiting %s", self)
         logger.info("%s waiters: %s", self, self._waiters)
+        logger.info("workers: %s", self._queue._workers)
         yield self  # This tells Task to wait for completion.
         self._waiters.remove(current_task)
         if self.num_waiters == 0:
