@@ -14,7 +14,7 @@ from a_sync.modified import ASyncFunction
 from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.utils.as_completed import as_completed
-from a_sync.utils.gather import gather
+from a_sync.utils.gather import Excluder, gather
 from a_sync.utils.iterators import as_yielded, exhaust_iterator
 
 
@@ -294,12 +294,18 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 yield k, await task
     
     @ASyncMethodDescriptorSyncDefault
-    async def gather(self) -> Dict[K, V]:
+    async def gather(
+        self, 
+        return_exceptions: bool = False, 
+        exclude_if: Excluder[V] = None,
+        tqdm: bool = False,
+        **tqdm_kwargs: Any,
+    ) -> Dict[K, V]:
         """Wait for all tasks to complete and return a dictionary of the results."""
         if self._init_loader:
             await self._init_loader
         self._check_empty()
-        return await gather(self)
+        return await gather(self, return_exceptions=return_exceptions, exclude_if=exclude_if, tqdm=tqdm, **tqdm_kwargs)
     
     @overload
     def pop(self, item: K, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":...
