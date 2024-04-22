@@ -202,7 +202,7 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
         "Resort the heap to consider any changes in priorities and pop the smallest value"
         return heappop(heapify(self._queue))
     def _create_future(self) -> "asyncio.Future[V]":
-        return PriorityFuture(asyncio.get_event_loop())
+        return PriorityFuture(loop=asyncio.get_event_loop())
 
 class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueue):
     """A PriorityQueue subclass that allows priorities to be updated (or computed) on the fly"""
