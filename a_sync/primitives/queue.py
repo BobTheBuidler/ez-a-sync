@@ -275,7 +275,6 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         while True:
             try:
                 args, kwargs, fut = await self.get()
-                logger.info("calling %s with args: %s kwargs: %s", self.func, args, kwargs)
                 fut.set_result(await self.func(*args, **kwargs))
             except Exception as e:
                 try:
