@@ -129,16 +129,19 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         try:
             return super().__getitem__(item)
         except KeyError:
-            if self.concurrency:
-                # NOTE: we use a queue instead of a Semaphore to reduce memory use for use cases involving many many tasks
-                fut = self._queue.put_nowait(item)
-            else:
-                fut = create_task(
-                    coro=self._wrapped_func(item, **self._wrapped_func_kwargs),
-                    name=f"{self._name}[{item}]" if self._name else f"{item}",
-                )
-            super().__setitem__(item, fut)
-            return fut
+            try:
+                if self.concurrency:
+                    # NOTE: we use a queue instead of a Semaphore to reduce memory use for use cases involving many many tasks
+                    fut = self._queue.put_nowait(item)
+                else:
+                    fut = create_task(
+                        coro=self._wrapped_func(item, **self._wrapped_func_kwargs),
+                        name=f"{self._name}[{item}]" if self._name else f"{item}",
+                    )
+                super().__setitem__(item, fut)
+                return fut
+            except Exception as e:
+                raise e from None
         
     def __await__(self) -> Generator[Any, None, Dict[K, V]]:
         """Wait for all tasks to complete and return a dictionary of the results."""
