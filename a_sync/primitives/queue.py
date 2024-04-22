@@ -170,7 +170,7 @@ class SmartFuture(asyncio.Future, Generic[T]):
     def __repr__(self):
         return f"<{type(self).__name__} waiters={self.num_waiters} {self._state}>"
     def __await__(self):
-        logger.info("entering %s", self)
+        logger.debug("entering %s", self)
         if self.done():
             return self.result()  # May raise too.
         logger.info("awaiting %s", self)
