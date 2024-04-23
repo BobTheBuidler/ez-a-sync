@@ -283,6 +283,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self.pop(k, cancel=cancel)
 
     def _if_pop_check_destroyed(self, pop: bool) -> None:
+        # TODO: fix
+        return
         if pop:
             if self._destroyed:
                 raise RuntimeError
@@ -293,6 +295,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self.clear(cancel=True)
     
     def _if_pop_pop(self, pop: bool, *args: K, cancel: bool = False) -> None:
+        # TODO: fix
+        return
         if pop:
             self.pop(*args, cancel=cancel)
     
