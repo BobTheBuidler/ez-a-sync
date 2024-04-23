@@ -159,10 +159,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         super().__delitem__(item)
 
     def values(self) -> "AwaitableValues[T]":
-        return AwaitableValues(super().values())
+        return AwaitableValues(super().values(), self)
     
     def items(self) -> "AwaitableValues[K, T]":
-        return AwaitableItems(super().items())
+        return AwaitableItems(super().items(), self)
     
     @functools.cached_property
     def _queue(self) -> ProcessingQueue:
@@ -337,15 +337,19 @@ def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASy
 
 class _AwaitableView(Iterator[T]):
     consumed = False
-    def __init__(self, view: Iterator[T]) -> None:
+    def __init__(self, view: Iterator[T], task_mapping: TaskMapping) -> None:
         self._view = view
+        self._mapping = task_mapping
     def __next__(self) -> Iterator[T]:
+        return self._view.__next__()
+    def __await__(self) -> List[T]:
+        return self.__await().__await__()
+    async def __await(self) -> List[T]:
         if consumed:
             raise RuntimeError("This iterator has already started")
         consumed = True
-        return self._view.__next__()
-    def __await__(self) -> List[T]:
-        return self._await().__await__()
+        await self._mapping._init_loader
+        return await self._await()
     def _await(self):
         raise NotImplementedError
 
