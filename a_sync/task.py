@@ -7,6 +7,8 @@ from a_sync._bound import ASyncMethodDescriptor
 from a_sync._typing import *
 from a_sync import exceptions
 from a_sync.base import ASyncGenericBase
+from a_sync.decorator import a_sync
+from a_sync.iter import ASyncIterator
 from a_sync.modified import ASyncFunction
 from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.property import _ASyncPropertyDescriptorBase
@@ -169,6 +171,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
         return ProcessingQueue(fn, self.concurrency)
     
+    @ASyncIterator.wrap
     async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         """
             Asynchronously map iterables to tasks and yield their results.
@@ -192,6 +195,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 self.pop(key)
             yield _yield(key, value, yields)
     
+    @a_sync(default="sync")
     async def all(self, pop: bool = True):
         if pop:
             self._check_destroyed()
@@ -204,6 +208,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 return False
         return True
     
+    @a_sync(default="sync")
     async def any(self, pop: bool = True):
         if pop:
             self._check_destroyed()
@@ -215,7 +220,32 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     self.clear(cancel=True)
                 return True
         return False
+    
+    @a_sync(default="sync")
+    async def max(self, pop: bool = True) -> bool:
+        if pop:
+            self._check_destroyed()
+        max = None
+        async for key, result in self:
+            if pop:
+                self.pop(key, None)
+            if max is None or result > max:
+                max = result
+        return max
+    
+    @a_sync(default="sync")
+    async def min(self, pop: bool = True):
+        if pop:
+            self._check_destroyed()
+        min = None
+        async for key, result in self:
+            if pop:
+                self.pop(key, None)
+            if min is None or result < min:
+                min = result
+        return min
             
+    @a_sync(default="sync")
     async def sum(self, pop: bool = False):
         if pop:
             self._check_destroyed()
@@ -227,6 +257,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             retval += await task
         return retval
 
+    @ASyncIterator.wrap
     async def yield_completed(self, pop: bool = True) -> AsyncIterator[Tuple[K, V]]:
         """
         Asynchronously yield tuples of key-value pairs representing the results of any completed tasks.
@@ -243,6 +274,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     task = self.pop(k)
                 yield k, await task
     
+    @a_sync(default="sync")
     async def gather(self) -> Dict[K, V]:
         """Wait for all tasks to complete and return a dictionary of the results."""
         if self._init_loader:
@@ -268,6 +300,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             raise RuntimeError
         self._destroyed = True
 
+    @ASyncIterator.wrap
     async def _tasks_for_iterables(self, *iterables) -> AsyncIterator["asyncio.Task[V]"]:
         """Ensure tasks are running for each key in the provided iterables."""
         async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
