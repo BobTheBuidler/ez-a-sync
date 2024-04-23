@@ -69,7 +69,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self.concurrency = concurrency
         "The max number of coroutines that will run at any given time."
 
-        self._wrapped_func = _unwrap(wrapped_func)
+        wrapped_func = _unwrap(wrapped_func)
+        self._wrapped_func = wrapped_func
         "The function used to generate values for each key."
 
         self._wrapped_func_kwargs = wrapped_func_kwargs
