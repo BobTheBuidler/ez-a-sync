@@ -162,7 +162,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
             self._check_empty()
         # if there are any tasks that still need to complete, we need to await them and yield them
-        if unyielded := {key: task for key, task in self.items() if key not in yielded}:
+        if unyielded := {key: self[key] for key in self if key not in yielded}:
             async for key, value in as_completed(unyielded, aiter=True):
                 self._if_pop_pop(pop, key)
                 yield key, value
@@ -430,15 +430,11 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
 
 @functools.lru_cache(maxsize=None)
 def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[I, T]]) -> Callable[P, Awaitable[T]]:
-    if isinstance(wrapped_func, ASyncBoundMethod):
+    if isinstance(wrapped_func, (ASyncBoundMethod, ASyncMethodDescriptor)):
         return wrapped_func
-    elif isinstance(wrapped_func, ASyncMethodDescriptor):
-        wrapped_func = wrapped_func.__wrapped__
-        if not isinstance(wrapped_func, ASyncFunction):
-            wrapped_func = ASyncFunction(wrapped_func)
     elif isinstance(wrapped_func, _ASyncPropertyDescriptorBase):
-        wrapped_func = wrapped_func.get
-    if isinstance(wrapped_func, ASyncFunction):
+        return wrapped_func.get
+    elif isinstance(wrapped_func, ASyncFunction):
         # this speeds things up a bit by bypassing some logic
         # TODO implement it like this elsewhere if profilers suggest
         return wrapped_func._async_wrap if wrapped_func._async_def else wrapped_func._asyncified
