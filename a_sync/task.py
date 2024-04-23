@@ -198,18 +198,17 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             yield _yield(key, value, yields)
     
     @ASyncMethodDescriptorSyncDefault
-    async def all(self, pop: bool = True):
+    async def all(self, pop: bool = True) -> bool:
         self._if_pop_check_destroyed(pop)
         async for key, result in self:
-            if pop:
-                self.pop(key, None)
+            self._if_pop_pop(pop, key, None)
             if not bool(result):
                 self._if_pop_clear(pop)
                 return False
         return True
     
     @ASyncMethodDescriptorSyncDefault
-    async def any(self, pop: bool = True):
+    async def any(self, pop: bool = True) -> bool:
         self._if_pop_check_destroyed(pop)
         async for key, result in self.__aiter__(pop=True):
             if bool(result):
@@ -218,7 +217,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return False
     
     @ASyncMethodDescriptorSyncDefault
-    async def max(self, pop: bool = True) -> bool:
+    async def max(self, pop: bool = True) -> V:
         self._if_pop_check_destroyed(pop)
         max = None
         async for key, result in self.__aiter__(pop=True):
@@ -227,7 +226,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return max
     
     @ASyncMethodDescriptorSyncDefault
-    async def min(self, pop: bool = True):
+    async def min(self, pop: bool = True) -> V:
         self._if_pop_check_destroyed(pop)
         min = None
         async for key, result in self.__aiter__(pop=True):
@@ -236,14 +235,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return min
             
     @ASyncMethodDescriptorSyncDefault
-    async def sum(self, pop: bool = False):
+    async def sum(self, pop: bool = False) -> V:
         self._if_pop_check_destroyed(pop)
         await self._init_loader
         self._check_empty()
         retval = 0
         for key, task in self.items():
-            if pop:
-                self.pop(key, None)
+            self._if_pop_pop(pop, key, None)
             retval += await task
         return retval
 
@@ -272,7 +270,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._check_empty()
         return await gather(self)
     
-    def pop(self, *args, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
+    def pop(self, *args: K, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
         if not cancel:
             return super().pop(*args)
         fut_or_task = super().pop(*args)
@@ -293,6 +291,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     def _if_pop_clear(self, pop: bool) -> None:
         if pop:
             self.clear(cancel=True)
+    
+    def _if_pop_pop(self, pop: bool, *args: K, cancel: bool = False) -> None:
+        if pop:
+            self.pop(*args, cancel=cancel)
     
     def _check_empty(self) -> None:
         if not self:
