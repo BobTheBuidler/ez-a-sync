@@ -3,12 +3,37 @@ import asyncio
 import functools
 import inspect
 import logging
+
+from async_property import async_cached_property
+
+from a_sync import _helpers
 from a_sync._typing import *
 
 
 logger = logging.getLogger(__name__)
 
-class ASyncIterable(AsyncIterable[T], Iterable[T]):
+class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
+    """
+    A mixin class defining logic for awaiting an AsyncIterable
+    """
+    __wrapped__: AsyncIterable[T]
+    def __aiter__(self) -> AsyncIterator[T]:
+        "Returns an async iterator for the wrapped async iterable."
+        return self.__wrapped__.__aiter__()
+    def __await__(self) -> Generator[Any, Any, List[T]]:
+        """Asynchronously iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
+        return self._materialized.__await__()
+    @property
+    def materialized(self) -> List[T]:
+        """Iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
+        return _helpers._await(self._materialized)
+    @async_cached_property
+    async def _materialized(self) -> List[T]:
+        """Asynchronously iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
+        return [obj async for obj in self]
+    __slots__ = '__async_property__', 
+    
+class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     """
     Description:
         A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols. This class allows objects to be iterated over using either a standard `for` loop or an `async for` loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.
@@ -30,14 +55,11 @@ class ASyncIterable(AsyncIterable[T], Iterable[T]):
     def __iter__(self) -> Iterator[T]:
         "Returns an iterator for the wrapped async iterable."
         yield from ASyncIterator(self.__aiter__())
-    def __aiter__(self) -> AsyncIterator[T]:
-        "Returns an async iterator for the wrapped async iterable."
-        return self.__wrapped__.__aiter__()
     __slots__ = "__wrapped__", 
 
 AsyncGenFunc = Callable[P, AsyncGenerator[T, None]]
 
-class ASyncIterator(AsyncIterator[T], Iterator[T]):
+class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
     """
     Description:
         A hybrid Iterator/AsyncIterator implementation that bridges the gap between synchronous and asynchronous iteration. This class provides a unified interface for iteration that can seamlessly operate in both synchronous (`for` loop) and asynchronous (`async for` loop) contexts. It allows the wrapping of asynchronous iterable objects or async generator functions, making them usable in synchronous code without explicitly managing event loops or asynchronous context switches.
