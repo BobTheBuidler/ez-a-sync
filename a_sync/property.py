@@ -42,7 +42,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, None, T]):
     def __get__(self, instance: Optional[I], owner: Any) -> T:
         if instance is None:
             return self
-        logger.debug("getting awaitable for %s for instances: %s owner: %s", self, instance, owner)
+        logger.debug("getting awaitable for %s for instance: %s owner: %s", self, instance, owner)
         awaitable = super().__get__(instance, owner)
         # if the user didn't specify a default behavior, we will defer to the instance
         if _is_a_sync_instance(instance):
@@ -50,9 +50,12 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, None, T]):
         else:
             should_await = self.default == "sync" if self.default else not asyncio.get_event_loop().is_running()  
         if should_await:
-            logger.debug("awaiting awaitable for %s for instances: %s owner: %s", self, instance, owner)
-            return _helpers._await(awaitable)
-        return awaitable
+            logger.debug("awaiting awaitable for %s for instance: %s owner: %s", awaitable, self, instance, owner)
+            retval = _helpers._await(awaitable)
+        else:
+            retval = awaitable
+        logger.debug("returning %s for %s for instance: %s owner: %s", retval, self, instance, owner)
+        return retval
     async def get(self, instance: I) -> T:
         logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, None)
