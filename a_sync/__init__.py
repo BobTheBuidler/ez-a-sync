@@ -46,6 +46,7 @@ __all__ = [
     # queues
     "Queue",
     "ProcessingQueue",
+    "SmartProcessingQueue",
     # locks
     "CounterLock",
     "Event",
