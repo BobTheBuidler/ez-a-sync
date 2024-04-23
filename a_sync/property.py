@@ -42,17 +42,23 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, None, T]):
     def __get__(self, instance: Optional[I], owner: Any) -> T:
         if instance is None:
             return self
+        logger.debug("getting awaitable for %s for instances: %s owner: %s", self, instance, owner)
         awaitable = super().__get__(instance, owner)
         # if the user didn't specify a default behavior, we will defer to the instance
         if _is_a_sync_instance(instance):
             should_await = self.default == "sync" if self.default else instance.__a_sync_instance_should_await__
         else:
             should_await = self.default == "sync" if self.default else not asyncio.get_event_loop().is_running()  
-        return _helpers._await(awaitable) if should_await else awaitable
+        if should_await:
+            logger.debug("awaiting awaitable for %s for instances: %s owner: %s", self, instance, owner)
+            return _helpers._await(awaitable)
+        return awaitable
     async def get(self, instance: I) -> T:
+        logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, None)
     def map(self, instances: AnyIterable[I], owner: Any = None) -> "TaskMapping[I, T]":
         from a_sync.task import TaskMapping
+        logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
         return TaskMapping(self.__get__, instances, owner=owner)
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
