@@ -188,7 +188,11 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__call__">(a_sync.primitives.ProcessingQueue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.__call__">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.__call__">(a_sync.primitives.queue.ProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.__call__">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.Semaphore.__call__">(a_sync.primitives.Semaphore method)</a>
 </li>
@@ -412,9 +416,17 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.__init__">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.__init__">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.__init__">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.__init__">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.__init__">(a_sync.primitives.queue.SmartFuture method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.__init__">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.__init__">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.Semaphore.__init__">(a_sync.primitives.Semaphore method)</a>
 </li>
@@ -512,6 +524,8 @@
 </li>
         <li><a href="source/a_sync.modifiers.html#a_sync.modifiers.manager.ModifierManager.__iter__">(a_sync.modifiers.manager.ModifierManager method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.__iter__">(a_sync.primitives.queue.SmartFuture method)</a>
+</li>
         <li><a href="source/a_sync.html#a_sync.task.TaskMapping.__iter__">(a_sync.task.TaskMapping method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.TaskMapping.__iter__">(a_sync.TaskMapping method)</a>
@@ -571,6 +585,8 @@
         <li><a href="source/a_sync.modifiers.cache.html#a_sync.modifiers.cache.memory.CacheKwargs.__new__">(a_sync.modifiers.cache.memory.CacheKwargs method)</a>
 </li>
         <li><a href="source/a_sync.modifiers.html#a_sync.modifiers.manager.ModifierManager.__new__">(a_sync.modifiers.manager.ModifierManager method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.__new__">(a_sync.primitives.queue.SmartFuture method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.task.TaskMapping.__new__">(a_sync.task.TaskMapping method)</a>
 </li>
@@ -783,6 +799,8 @@
         <li><a href="source/a_sync.html#a_sync._helpers._asyncify">(in module a_sync._helpers)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._asyncio_future_blocking">_asyncio_future_blocking (a_sync.primitives.queue.SmartFuture attribute)</a>
+</li>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDirective">_ASyncMethodDirective (class in a_sync.sphinx.ext)</a>
 </li>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncMethodDocumenter">_ASyncMethodDocumenter (class in a_sync.sphinx.ext)</a>
@@ -901,6 +919,10 @@
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.future._ASyncFutureWrappedFn._callable_name">_callable_name (a_sync.future._ASyncFutureWrappedFn attribute)</a>
 </li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._callbacks">_callbacks (a_sync.primitives.queue.SmartFuture attribute)</a>
+</li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._cancel_message">_cancel_message (a_sync.primitives.queue.SmartFuture attribute)</a>
+</li>
       <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._capacity">_capacity (a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore attribute)</a>
 
       <ul>
@@ -983,6 +1005,22 @@
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.PruningThreadPoolExecutor._counter">(a_sync.primitives.PruningThreadPoolExecutor attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.PruningThreadPoolExecutor._counter">(a_sync.PruningThreadPoolExecutor attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue._create_future">_create_future() (a_sync.primitives.ProcessingQueue method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._create_future">(a_sync.primitives.queue._VariablePriorityQueueMixin method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._create_future">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._create_future">(a_sync.primitives.queue.ProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._create_future">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._create_future">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.ProcessingQueue._create_future">(a_sync.ProcessingQueue method)</a>
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.AsyncProcessPoolExecutor._daemon">_daemon (a_sync.AsyncProcessPoolExecutor attribute)</a>
@@ -1225,6 +1263,18 @@
         <li><a href="source/a_sync.html#a_sync.ThreadsafeSemaphore._ensure_debug_daemon">(a_sync.ThreadsafeSemaphore method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue._ensure_workers">_ensure_workers() (a_sync.primitives.ProcessingQueue method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._ensure_workers">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._ensure_workers">(a_sync.primitives.queue.ProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._ensure_workers">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.ProcessingQueue._ensure_workers">(a_sync.ProcessingQueue method)</a>
+</li>
+      </ul></li>
       <li><a href="source/a_sync.html#a_sync.CounterLock._events">_events (a_sync.CounterLock attribute)</a>
 
       <ul>
@@ -1234,6 +1284,8 @@
 </li>
       </ul></li>
       <li><a href="source/a_sync.utils.html#a_sync.utils.as_completed._exc_wrap">_exc_wrap() (in module a_sync.utils.as_completed)</a>
+</li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._exception">_exception (a_sync.primitives.queue.SmartFuture attribute)</a>
 </li>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter._find_signature">_find_signature() (a_sync.sphinx.ext._ASyncFunctionDocumenter method)</a>
 
@@ -1251,8 +1303,6 @@
         <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter._find_signature">(a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue._finished">_finished (a_sync.primitives.ProcessingQueue attribute)</a>
 
       <ul>
@@ -1260,9 +1310,13 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._finished">(a_sync.primitives.queue._Queue attribute)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._finished">(a_sync.primitives.queue.PriorityProcessingQueue attribute)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._finished">(a_sync.primitives.queue.ProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._finished">(a_sync.primitives.queue.Queue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._finished">(a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._finished">(a_sync.ProcessingQueue attribute)</a>
 </li>
@@ -1276,15 +1330,23 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._format">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._format">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._format">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._format">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._format">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._format">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._format">(a_sync.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.Queue._format">(a_sync.Queue method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.html#a_sync.future._gather_check_and_materialize">_gather_check_and_materialize() (in module a_sync.future)</a>
 </li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue._get">_get() (a_sync.primitives.ProcessingQueue method)</a>
@@ -1292,15 +1354,33 @@
       <ul>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.Queue._get">(a_sync.primitives.Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._PriorityQueueMixin._get">(a_sync.primitives.queue._PriorityQueueMixin method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._get">(a_sync.primitives.queue._Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._get">(a_sync.primitives.queue._VariablePriorityQueueMixin method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._get">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._get">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._get">(a_sync.primitives.queue.Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._get">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._get">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
+</li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._get">(a_sync.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.Queue._get">(a_sync.Queue method)</a>
+</li>
+      </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._get_key">_get_key() (a_sync.primitives.queue._VariablePriorityQueueMixin method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._get_key">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._get_key">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.Event._get_loop">_get_loop() (a_sync.Event method)</a>
@@ -1332,9 +1412,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._get_loop">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._get_loop">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._get_loop">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._get_loop">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._get_loop">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._get_loop">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.Semaphore._get_loop">(a_sync.primitives.Semaphore method)</a>
 </li>
@@ -1358,9 +1444,13 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._getters">(a_sync.primitives.queue._Queue attribute)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._getters">(a_sync.primitives.queue.PriorityProcessingQueue attribute)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._getters">(a_sync.primitives.queue.ProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._getters">(a_sync.primitives.queue.Queue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._getters">(a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._getters">(a_sync.ProcessingQueue attribute)</a>
 </li>
@@ -1386,11 +1476,21 @@
       <ul>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.Queue._init">(a_sync.primitives.Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._PriorityQueueMixin._init">(a_sync.primitives.queue._PriorityQueueMixin method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._init">(a_sync.primitives.queue._Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._init">(a_sync.primitives.queue._VariablePriorityQueueMixin method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._init">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._init">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._init">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._init">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._init">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._init">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -1544,7 +1644,19 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue._is_protocol">(a_sync.primitives.ProcessingQueue attribute)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._PriorityQueueMixin._is_protocol">(a_sync.primitives.queue._PriorityQueueMixin attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._is_protocol">(a_sync.primitives.queue._VariablePriorityQueueMixin attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._is_protocol">(a_sync.primitives.queue.PriorityProcessingQueue attribute)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._is_protocol">(a_sync.primitives.queue.ProcessingQueue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._is_protocol">(a_sync.primitives.queue.SmartFuture attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._is_protocol">(a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._is_protocol">(a_sync.primitives.queue.VariablePriorityQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.PrioritySemaphore._is_protocol">(a_sync.PrioritySemaphore attribute)</a>
 </li>
@@ -1617,6 +1729,8 @@
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.executor.AsyncProcessPoolExecutor._launch_processes">(a_sync.primitives.executor.AsyncProcessPoolExecutor method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._log_traceback">_log_traceback (a_sync.primitives.queue.SmartFuture attribute)</a>
+</li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives._loggable._LoggerMixin">_LoggerMixin (class in a_sync.primitives._loggable)</a>
 </li>
       <li><a href="source/a_sync.html#a_sync.Event._loop">_loop (a_sync.Event attribute)</a>
@@ -1648,9 +1762,17 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._loop">(a_sync.primitives.queue._Queue attribute)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._loop">(a_sync.primitives.queue.PriorityProcessingQueue attribute)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._loop">(a_sync.primitives.queue.ProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._loop">(a_sync.primitives.queue.Queue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._loop">(a_sync.primitives.queue.SmartFuture attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._loop">(a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._loop">(a_sync.primitives.queue.VariablePriorityQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.Semaphore._loop">(a_sync.primitives.Semaphore attribute)</a>
 </li>
@@ -1667,6 +1789,8 @@
         <li><a href="source/a_sync.html#a_sync.ThreadsafeSemaphore._loop">(a_sync.ThreadsafeSemaphore attribute)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._make_cancelled_error">_make_cancelled_error() (a_sync.primitives.queue.SmartFuture method)</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.future._materialize">_materialize() (in module a_sync.future)</a>
 </li>
       <li><a href="source/a_sync.html#a_sync.AsyncProcessPoolExecutor._max_workers">_max_workers (a_sync.AsyncProcessPoolExecutor attribute)</a>
@@ -1698,9 +1822,13 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._maxsize">(a_sync.primitives.queue._Queue attribute)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._maxsize">(a_sync.primitives.queue.PriorityProcessingQueue attribute)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._maxsize">(a_sync.primitives.queue.ProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._maxsize">(a_sync.primitives.queue.Queue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._maxsize">(a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._maxsize">(a_sync.ProcessingQueue attribute)</a>
 </li>
@@ -1767,6 +1895,8 @@
         <li><a href="source/a_sync.html#a_sync.TaskMapping._next">(a_sync.TaskMapping attribute)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._no_futs">_no_futs (a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
+</li>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective._object_hierarchy_parts">_object_hierarchy_parts() (a_sync.sphinx.ext._ASyncFunctionDirective method)</a>
 
       <ul>
@@ -1821,6 +1951,8 @@
         <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._priority_name">(a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager attribute)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._PriorityQueueMixin">_PriorityQueueMixin (class in a_sync.primitives.queue)</a>
+</li>
       <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager">_PrioritySemaphoreContextManager (class in a_sync.primitives.locks.prio_semaphore)</a>
 </li>
       <li><a href="source/a_sync.html#a_sync.AsyncProcessPoolExecutor._processes">_processes (a_sync.AsyncProcessPoolExecutor attribute)</a>
@@ -1836,11 +1968,21 @@
       <ul>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.Queue._put">(a_sync.primitives.Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._PriorityQueueMixin._put">(a_sync.primitives.queue._PriorityQueueMixin method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._put">(a_sync.primitives.queue._Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._put">(a_sync.primitives.queue._VariablePriorityQueueMixin method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._put">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._put">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._put">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._put">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._put">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._put">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -1854,9 +1996,13 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._putters">(a_sync.primitives.queue._Queue attribute)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._putters">(a_sync.primitives.queue.PriorityProcessingQueue attribute)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._putters">(a_sync.primitives.queue.ProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._putters">(a_sync.primitives.queue.Queue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._putters">(a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._putters">(a_sync.ProcessingQueue attribute)</a>
 </li>
@@ -1895,12 +2041,16 @@
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.executor.AsyncProcessPoolExecutor._queue_management_thread_wakeup">(a_sync.primitives.executor.AsyncProcessPoolExecutor attribute)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._repr_info">_repr_info() (a_sync.primitives.queue.SmartFuture method)</a>
+</li>
       <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._repr_no_parent_">_repr_no_parent_() (a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager method)</a>
 
       <ul>
         <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._repr_no_parent_">(a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._result">_result (a_sync.primitives.queue.SmartFuture attribute)</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.AsyncProcessPoolExecutor._result_queue">_result_queue (a_sync.AsyncProcessPoolExecutor attribute)</a>
 
       <ul>
@@ -1995,6 +2145,8 @@
         <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter._signatures">(a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter attribute)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._source_traceback">_source_traceback (a_sync.primitives.queue.SmartFuture attribute)</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.AsyncProcessPoolExecutor._spawn_process">_spawn_process() (a_sync.AsyncProcessPoolExecutor method)</a>
 
       <ul>
@@ -2071,6 +2223,8 @@
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.executor.AsyncProcessPoolExecutor._start_executor_manager_thread">(a_sync.primitives.executor.AsyncProcessPoolExecutor method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture._state">_state (a_sync.primitives.queue.SmartFuture attribute)</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.AsyncProcessPoolExecutor._stop_debug_daemon">_stop_debug_daemon() (a_sync.AsyncProcessPoolExecutor method)</a>
 
       <ul>
@@ -2238,9 +2392,13 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._unfinished_tasks">(a_sync.primitives.queue._Queue attribute)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._unfinished_tasks">(a_sync.primitives.queue.PriorityProcessingQueue attribute)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._unfinished_tasks">(a_sync.primitives.queue.ProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._unfinished_tasks">(a_sync.primitives.queue.Queue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._unfinished_tasks">(a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._unfinished_tasks">(a_sync.ProcessingQueue attribute)</a>
 </li>
@@ -2295,6 +2453,8 @@
         <li><a href="source/a_sync.html#a_sync.ThreadsafeSemaphore._value">(a_sync.ThreadsafeSemaphore attribute)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin">_VariablePriorityQueueMixin (class in a_sync.primitives.queue)</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.Event._waiters">_waiters (a_sync.Event attribute)</a>
 
       <ul>
@@ -2362,9 +2522,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue._wakeup_next">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._wakeup_next">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._wakeup_next">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue._wakeup_next">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._wakeup_next">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._wakeup_next">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._wakeup_next">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -2398,7 +2564,11 @@
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue._worker_coro">_worker_coro() (a_sync.primitives.ProcessingQueue method)</a>
 
       <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._worker_coro">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._worker_coro">(a_sync.primitives.queue.ProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._worker_coro">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._worker_coro">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -2424,7 +2594,11 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.PruningThreadPoolExecutor._workers">(a_sync.primitives.PruningThreadPoolExecutor attribute)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._workers">(a_sync.primitives.queue.PriorityProcessingQueue property)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._workers">(a_sync.primitives.queue.ProcessingQueue property)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._workers">(a_sync.primitives.queue.SmartProcessingQueue property)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue._workers">(a_sync.ProcessingQueue property)</a>
 </li>
@@ -2821,7 +2995,11 @@
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.add_done_callback">add_done_callback() (a_sync.future.ASyncFuture method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.add_done_callback">(a_sync.primitives.queue.SmartFuture method)</a>
 </li>
+      </ul></li>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.add_line">add_line() (a_sync.sphinx.ext._ASyncFunctionDocumenter method)</a>
 
       <ul>
@@ -3239,9 +3417,17 @@
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.cancel">cancel() (a_sync.future.ASyncFuture method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.cancel">(a_sync.primitives.queue.SmartFuture method)</a>
 </li>
+      </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.cancelled">cancelled() (a_sync.future.ASyncFuture method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.cancelled">(a_sync.primitives.queue.SmartFuture method)</a>
 </li>
+      </ul></li>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.check_module">check_module() (a_sync.sphinx.ext._ASyncFunctionDocumenter method)</a>
 
       <ul>
@@ -3665,7 +3851,11 @@
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.done">done() (a_sync.future.ASyncFuture method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.done">(a_sync.primitives.queue.SmartFuture method)</a>
 </li>
+      </ul></li>
       <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.dummy">dummy (a_sync.primitives.locks.semaphore.ThreadsafeSemaphore attribute)</a>
 
       <ul>
@@ -3689,9 +3879,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.empty">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.empty">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.empty">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.empty">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.empty">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.empty">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.empty">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -3714,6 +3910,8 @@
         <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.env">(a_sync.sphinx.ext.ASyncGeneratorFunctionDirective property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.error">error() (a_sync.sphinx.ext._ASyncFunctionDirective method)</a>
 
       <ul>
@@ -3730,8 +3928,6 @@
         <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.error">(a_sync.sphinx.ext.ASyncGeneratorFunctionDirective method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.html#a_sync.Event">Event (class in a_sync)</a>
 
       <ul>
@@ -3741,7 +3937,11 @@
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.exception">exception() (a_sync.future.ASyncFuture method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.exception">(a_sync.primitives.queue.SmartFuture method)</a>
 </li>
+      </ul></li>
       <li><a href="source/a_sync.html#a_sync._typing.ModifierKwargs.executor">executor (a_sync._typing.ModifierKwargs attribute)</a>
 
       <ul>
@@ -3856,8 +4056,6 @@
         <li><a href="source/a_sync.html#a_sync.property.HiddenMethod.fn">(a_sync.property.HiddenMethod property)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.format_args">format_args() (a_sync.sphinx.ext._ASyncFunctionDocumenter method)</a>
 
       <ul>
@@ -3874,6 +4072,8 @@
         <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.format_args">(a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.format_name">format_name() (a_sync.sphinx.ext._ASyncFunctionDocumenter method)</a>
 
       <ul>
@@ -3927,9 +4127,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.full">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.full">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.full">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.full">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.full">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.full">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.full">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -3939,7 +4145,11 @@
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue.func">func (a_sync.primitives.ProcessingQueue attribute)</a>
 
       <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.func">(a_sync.primitives.queue.PriorityProcessingQueue attribute)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.func">(a_sync.primitives.queue.ProcessingQueue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.func">(a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.func">(a_sync.ProcessingQueue attribute)</a>
 </li>
@@ -4009,9 +4219,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.get">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.get">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.get">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.get">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.get">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.get">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.get">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -4228,6 +4444,8 @@
         <li><a href="source/a_sync.html#a_sync.property.cached_property.get_lock">(a_sync.property.cached_property method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.get_loop">get_loop() (a_sync.primitives.queue.SmartFuture method)</a>
+</li>
       <li><a href="source/a_sync.modifiers.html#a_sync.modifiers.get_modifiers_from">get_modifiers_from() (in module a_sync.modifiers)</a>
 </li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.Queue.get_multi">get_multi() (a_sync.primitives.Queue method)</a>
@@ -4253,9 +4471,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.get_nowait">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.get_nowait">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.get_nowait">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.get_nowait">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.get_nowait">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.get_nowait">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.get_nowait">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -4581,9 +4805,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.join">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.join">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.join">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.join">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.join">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.join">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.join">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -4767,9 +4997,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.maxsize">(a_sync.primitives.queue._Queue property)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.maxsize">(a_sync.primitives.queue.PriorityProcessingQueue property)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.maxsize">(a_sync.primitives.queue.ProcessingQueue property)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.maxsize">(a_sync.primitives.queue.Queue property)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.maxsize">(a_sync.primitives.queue.SmartProcessingQueue property)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.maxsize">(a_sync.primitives.queue.VariablePriorityQueue property)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.maxsize">(a_sync.ProcessingQueue property)</a>
 </li>
@@ -5043,10 +5279,16 @@
         <li><a href="source/a_sync.html#a_sync.property.cached_property.not_loaded">(a_sync.property.cached_property method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.num_waiters">num_waiters (a_sync.primitives.queue.SmartFuture property)</a>
+</li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue.num_workers">num_workers (a_sync.primitives.ProcessingQueue attribute)</a>
 
       <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.num_workers">(a_sync.primitives.queue.PriorityProcessingQueue attribute)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.num_workers">(a_sync.primitives.queue.ProcessingQueue attribute)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.num_workers">(a_sync.primitives.queue.SmartProcessingQueue attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.num_workers">(a_sync.ProcessingQueue attribute)</a>
 </li>
@@ -5223,8 +5465,8 @@
       </ul></li>
       <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore.Priority">Priority (class in a_sync.primitives.locks.prio_semaphore)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue">PriorityProcessingQueue (class in a_sync.primitives.queue)</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.PrioritySemaphore">PrioritySemaphore (class in a_sync)</a>
 
       <ul>
@@ -5233,6 +5475,8 @@
         <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore">(class in a_sync.primitives.locks.prio_semaphore)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.process_doc">process_doc() (a_sync.sphinx.ext._ASyncFunctionDocumenter method)</a>
 
       <ul>
@@ -5288,9 +5532,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.put">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.put">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.put">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.put">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.put">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.put">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.put">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -5304,9 +5554,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.put_nowait">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.put_nowait">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.put_nowait">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.put_nowait">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.put_nowait">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.put_nowait">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.put_nowait">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -5326,9 +5582,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.qsize">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.qsize">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.qsize">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.qsize">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.qsize">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.qsize">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.qsize">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -5401,6 +5663,8 @@
         <li><a href="source/a_sync.html#a_sync.ThreadsafeSemaphore.release">(a_sync.ThreadsafeSemaphore method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.remove_done_callback">remove_done_callback() (a_sync.primitives.queue.SmartFuture method)</a>
+</li>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.required_arguments">required_arguments (a_sync.sphinx.ext._ASyncFunctionDirective attribute)</a>
 
       <ul>
@@ -5436,6 +5700,8 @@
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.result">result (a_sync.future.ASyncFuture property)</a>
+</li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.result">result() (a_sync.primitives.queue.SmartFuture method)</a>
 </li>
       <li><a href="source/a_sync.html#a_sync.AsyncProcessPoolExecutor.run">run() (a_sync.AsyncProcessPoolExecutor method)</a>
 
@@ -5544,9 +5810,17 @@
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.set_exception">set_exception() (a_sync.future.ASyncFuture method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.set_exception">(a_sync.primitives.queue.SmartFuture method)</a>
 </li>
+      </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.set_result">set_result() (a_sync.future.ASyncFuture method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture.set_result">(a_sync.primitives.queue.SmartFuture method)</a>
 </li>
+      </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.set_running_or_notify_cancel">set_running_or_notify_cancel() (a_sync.future.ASyncFuture method)</a>
 </li>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDirective.set_source_info">set_source_info() (a_sync.sphinx.ext._ASyncFunctionDirective method)</a>
@@ -5635,6 +5909,10 @@
         <li><a href="source/a_sync.html#a_sync.PruningThreadPoolExecutor.shutdown">(a_sync.PruningThreadPoolExecutor method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartFuture">SmartFuture (class in a_sync.primitives.queue)</a>
+</li>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue">SmartProcessingQueue (class in a_sync.primitives.queue)</a>
+</li>
       <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext._ASyncFunctionDocumenter.sort_members">sort_members() (a_sync.sphinx.ext._ASyncFunctionDocumenter method)</a>
 
       <ul>
@@ -5714,9 +5992,15 @@
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._Queue.task_done">(a_sync.primitives.queue._Queue method)</a>
 </li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.task_done">(a_sync.primitives.queue.PriorityProcessingQueue method)</a>
+</li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.task_done">(a_sync.primitives.queue.ProcessingQueue method)</a>
 </li>
         <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.Queue.task_done">(a_sync.primitives.queue.Queue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.task_done">(a_sync.primitives.queue.SmartProcessingQueue method)</a>
+</li>
+        <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.task_done">(a_sync.primitives.queue.VariablePriorityQueue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.ProcessingQueue.task_done">(a_sync.ProcessingQueue method)</a>
 </li>
@@ -5885,6 +6169,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue">VariablePriorityQueue (class in a_sync.primitives.queue)</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.exceptions.ASyncFlagException.viable_flags">viable_flags (a_sync.exceptions.ASyncFlagException property)</a>
 
       <ul>

@@ -1488,6 +1488,260 @@ cancelled.</p></li>
 <section id="module-a_sync.primitives.queue">
 <span id="a-sync-primitives-queue-module"></span><h2>a_sync.primitives.queue module<a class="headerlink" href="#module-a_sync.primitives.queue" title="Link to this heading"></a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">PriorityProcessingQueue</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._PriorityQueueMixin" title="a_sync.primitives.queue._PriorityQueueMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_PriorityQueueMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.__call__" title="Link to this definition"></a></dt>
+<dd><p>Call self as a function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>~P</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>~P</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+<li><p><strong>return_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._create_future">
+<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._create_future" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._ensure_workers">
+<span class="sig-name descname"><span class="pre">_ensure_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._ensure_workers" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._format">
+<span class="sig-name descname"><span class="pre">_format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._format" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._get">
+<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heappop=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappop&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._get" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._get_loop">
+<span class="sig-name descname"><span class="pre">_get_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._get_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._init">
+<span class="sig-name descname"><span class="pre">_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._init" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._put">
+<span class="sig-name descname"><span class="pre">_put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heappush=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappush&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._put" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._wakeup_next">
+<span class="sig-name descname"><span class="pre">_wakeup_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._wakeup_next" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.empty" title="Link to this definition"></a></dt>
+<dd><p>Return True if the queue is empty, False otherwise.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.full">
+<span class="sig-name descname"><span class="pre">full</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.full" title="Link to this definition"></a></dt>
+<dd><p>Return True if there are maxsize items in the queue.</p>
+<p>Note: if the Queue was initialized with maxsize=0 (the default),
+then full() is never True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.get">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.get" title="Link to this definition"></a></dt>
+<dd><p>Remove and return an item from the queue.</p>
+<p>If queue is empty, wait until an item is available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.get_nowait">
+<span class="sig-name descname"><span class="pre">get_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.get_nowait" title="Link to this definition"></a></dt>
+<dd><p>Remove and return an item from the queue.</p>
+<p>Return an item if one is immediately available, else raise QueueEmpty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.join">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.join" title="Link to this definition"></a></dt>
+<dd><p>Block until all items in the queue have been gotten and processed.</p>
+<p>The count of unfinished tasks goes up whenever an item is added to the
+queue. The count goes down whenever a consumer calls task_done() to
+indicate that the item was retrieved and all work on it is complete.
+When the count of unfinished tasks drops to zero, join() unblocks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.put">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.put" title="Link to this definition"></a></dt>
+<dd><p>Put an item into the queue.</p>
+<p>Put an item into the queue. If the queue is full, wait until a free
+slot is available before adding item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>)</p></li>
+<li><p><strong>args</strong> (<em>~P</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>~P</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.put_nowait">
+<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.put_nowait" title="Link to this definition"></a></dt>
+<dd><p>Put an item into the queue without blocking.</p>
+<p>If no free slot is immediately available, raise QueueFull.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>)</p></li>
+<li><p><strong>args</strong> (<em>~P</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>~P</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.qsize">
+<span class="sig-name descname"><span class="pre">qsize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.qsize" title="Link to this definition"></a></dt>
+<dd><p>Number of items in the queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.task_done">
+<span class="sig-name descname"><span class="pre">task_done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.task_done" title="Link to this definition"></a></dt>
+<dd><p>Indicate that a formerly enqueued task is complete.</p>
+<p>Used by queue consumers. For each get() used to fetch a task,
+a subsequent call to task_done() tells the queue that the processing
+on the task is complete.</p>
+<p>If a join() is currently blocking, it will resume when all items have
+been processed (meaning that a task_done() call was received for every
+item that had been put() into the queue).</p>
+<p>Raises ValueError if called more times than there were items placed in
+the queue.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._finished">
+<span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._finished" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._getters">
+<span class="sig-name descname"><span class="pre">_getters</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._getters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._is_protocol">
+<span class="sig-name descname"><span class="pre">_is_protocol</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._is_protocol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._loop">
+<span class="sig-name descname"><span class="pre">_loop</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._maxsize">
+<span class="sig-name descname"><span class="pre">_maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._maxsize" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._putters">
+<span class="sig-name descname"><span class="pre">_putters</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._putters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._unfinished_tasks">
+<span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._workers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._workers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.func">
+<span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.func" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.maxsize">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.maxsize" title="Link to this definition"></a></dt>
+<dd><p>Number of items allowed in the queue.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.num_workers">
+<span class="sig-name descname"><span class="pre">num_workers</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.num_workers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
@@ -1522,6 +1776,26 @@ cancelled.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._create_future">
+<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._create_future" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._ensure_workers">
+<span class="sig-name descname"><span class="pre">_ensure_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._ensure_workers" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1952,6 +2226,640 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">SmartFuture</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> (<a class="reference internal" href="#a_sync.primitives.queue.SmartProcessingQueue" title="a_sync.primitives.queue.SmartProcessingQueue"><em>SmartProcessingQueue</em></a>)</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.__iter__" title="Link to this definition"></a></dt>
+<dd><p>Implement iter(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._make_cancelled_error">
+<span class="sig-name descname"><span class="pre">_make_cancelled_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._make_cancelled_error" title="Link to this definition"></a></dt>
+<dd><p>Create the CancelledError to raise if the Future is cancelled.</p>
+<p>This should only be called once when handling a cancellation since
+it erases the context exception value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._repr_info">
+<span class="sig-name descname"><span class="pre">_repr_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._repr_info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.add_done_callback">
+<span class="sig-name descname"><span class="pre">add_done_callback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.add_done_callback" title="Link to this definition"></a></dt>
+<dd><p>Add a callback to be run when the future becomes done.</p>
+<p>The callback is called with a single argument - the future object. If
+the future is already done when this is called, the callback is
+scheduled with call_soon.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.cancel" title="Link to this definition"></a></dt>
+<dd><p>Cancel the future and schedule callbacks.</p>
+<p>If the future is already done or cancelled, return False.  Otherwise,
+change the future’s state to cancelled, schedule the callbacks and
+return True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.cancelled">
+<span class="sig-name descname"><span class="pre">cancelled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.cancelled" title="Link to this definition"></a></dt>
+<dd><p>Return True if the future was cancelled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.done">
+<span class="sig-name descname"><span class="pre">done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.done" title="Link to this definition"></a></dt>
+<dd><p>Return True if the future is done.</p>
+<p>Done means either that a result / exception are available, or that the
+future was cancelled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.exception">
+<span class="sig-name descname"><span class="pre">exception</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.exception" title="Link to this definition"></a></dt>
+<dd><p>Return the exception that was set on this future.</p>
+<p>The exception (or None if no exception was set) is returned only if
+the future is done.  If the future has been cancelled, raises
+CancelledError.  If the future isn’t done yet, raises
+InvalidStateError.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.get_loop">
+<span class="sig-name descname"><span class="pre">get_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.get_loop" title="Link to this definition"></a></dt>
+<dd><p>Return the event loop the Future is bound to.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.remove_done_callback">
+<span class="sig-name descname"><span class="pre">remove_done_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.remove_done_callback" title="Link to this definition"></a></dt>
+<dd><p>Remove all instances of a callback from the “call when done” list.</p>
+<p>Returns the number of callbacks removed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.result">
+<span class="sig-name descname"><span class="pre">result</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.result" title="Link to this definition"></a></dt>
+<dd><p>Return the result this future represents.</p>
+<p>If the future has been cancelled, raises CancelledError.  If the
+future’s result isn’t yet available, raises InvalidStateError.  If
+the future is done and has an exception set, this exception is raised.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.set_exception">
+<span class="sig-name descname"><span class="pre">set_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.set_exception" title="Link to this definition"></a></dt>
+<dd><p>Mark the future done and set an exception.</p>
+<p>If the future is already done when this method is called, raises
+InvalidStateError.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.set_result">
+<span class="sig-name descname"><span class="pre">set_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.set_result" title="Link to this definition"></a></dt>
+<dd><p>Mark the future done and set its result.</p>
+<p>If the future is already done when this method is called, raises
+InvalidStateError.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._asyncio_future_blocking">
+<span class="sig-name descname"><span class="pre">_asyncio_future_blocking</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._asyncio_future_blocking" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._callbacks">
+<span class="sig-name descname"><span class="pre">_callbacks</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._callbacks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._cancel_message">
+<span class="sig-name descname"><span class="pre">_cancel_message</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._cancel_message" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._exception">
+<span class="sig-name descname"><span class="pre">_exception</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._exception" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._is_protocol">
+<span class="sig-name descname"><span class="pre">_is_protocol</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._is_protocol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._log_traceback">
+<span class="sig-name descname"><span class="pre">_log_traceback</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._log_traceback" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._loop">
+<span class="sig-name descname"><span class="pre">_loop</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._result">
+<span class="sig-name descname"><span class="pre">_result</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._result" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._source_traceback">
+<span class="sig-name descname"><span class="pre">_source_traceback</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._source_traceback" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._state">
+<span class="sig-name descname"><span class="pre">_state</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._state" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.num_waiters">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.num_waiters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">SmartProcessingQueue</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._VariablePriorityQueueMixin" title="a_sync.primitives.queue._VariablePriorityQueueMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concatenate</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<p>A PriorityProcessingQueue subclass that will execute jobs with the most waiters first</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.__call__" title="Link to this definition"></a></dt>
+<dd><p>Call self as a function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>~P</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>~P</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>T</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
+<li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._create_future">
+<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._create_future" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._ensure_workers">
+<span class="sig-name descname"><span class="pre">_ensure_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._ensure_workers" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._format">
+<span class="sig-name descname"><span class="pre">_format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._format" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._get">
+<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._get" title="Link to this definition"></a></dt>
+<dd><p>Resort the heap to consider any changes in priorities and pop the smallest value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._get_key">
+<span class="sig-name descname"><span class="pre">_get_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._get_key" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._get_loop">
+<span class="sig-name descname"><span class="pre">_get_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._get_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._init">
+<span class="sig-name descname"><span class="pre">_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._init" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._put">
+<span class="sig-name descname"><span class="pre">_put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heappush=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappush&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._put" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._wakeup_next">
+<span class="sig-name descname"><span class="pre">_wakeup_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._wakeup_next" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.empty" title="Link to this definition"></a></dt>
+<dd><p>Return True if the queue is empty, False otherwise.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.full">
+<span class="sig-name descname"><span class="pre">full</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.full" title="Link to this definition"></a></dt>
+<dd><p>Return True if there are maxsize items in the queue.</p>
+<p>Note: if the Queue was initialized with maxsize=0 (the default),
+then full() is never True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.get">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.get" title="Link to this definition"></a></dt>
+<dd><p>Remove and return an item from the queue.</p>
+<p>If queue is empty, wait until an item is available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.get_nowait">
+<span class="sig-name descname"><span class="pre">get_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.get_nowait" title="Link to this definition"></a></dt>
+<dd><p>Remove and return an item from the queue.</p>
+<p>Return an item if one is immediately available, else raise QueueEmpty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.join">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.join" title="Link to this definition"></a></dt>
+<dd><p>Block until all items in the queue have been gotten and processed.</p>
+<p>The count of unfinished tasks goes up whenever an item is added to the
+queue. The count goes down whenever a consumer calls task_done() to
+indicate that the item was retrieved and all work on it is complete.
+When the count of unfinished tasks drops to zero, join() unblocks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.put">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.put" title="Link to this definition"></a></dt>
+<dd><p>Put an item into the queue.</p>
+<p>Put an item into the queue. If the queue is full, wait until a free
+slot is available before adding item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>~P</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>~P</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.primitives.queue.SmartFuture" title="a_sync.primitives.queue.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.put_nowait">
+<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.put_nowait" title="Link to this definition"></a></dt>
+<dd><p>Put an item into the queue without blocking.</p>
+<p>If no free slot is immediately available, raise QueueFull.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<em>~P</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>~P</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.primitives.queue.SmartFuture" title="a_sync.primitives.queue.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.qsize">
+<span class="sig-name descname"><span class="pre">qsize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.qsize" title="Link to this definition"></a></dt>
+<dd><p>Number of items in the queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.task_done">
+<span class="sig-name descname"><span class="pre">task_done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.task_done" title="Link to this definition"></a></dt>
+<dd><p>Indicate that a formerly enqueued task is complete.</p>
+<p>Used by queue consumers. For each get() used to fetch a task,
+a subsequent call to task_done() tells the queue that the processing
+on the task is complete.</p>
+<p>If a join() is currently blocking, it will resume when all items have
+been processed (meaning that a task_done() call was received for every
+item that had been put() into the queue).</p>
+<p>Raises ValueError if called more times than there were items placed in
+the queue.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._finished">
+<span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._finished" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._getters">
+<span class="sig-name descname"><span class="pre">_getters</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._getters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._is_protocol">
+<span class="sig-name descname"><span class="pre">_is_protocol</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._is_protocol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._loop">
+<span class="sig-name descname"><span class="pre">_loop</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._maxsize">
+<span class="sig-name descname"><span class="pre">_maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._maxsize" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._no_futs">
+<span class="sig-name descname"><span class="pre">_no_futs</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._no_futs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._putters">
+<span class="sig-name descname"><span class="pre">_putters</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._putters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._unfinished_tasks">
+<span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._workers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._workers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.func">
+<span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.func" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.maxsize">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.maxsize" title="Link to this definition"></a></dt>
+<dd><p>Number of items allowed in the queue.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.num_workers">
+<span class="sig-name descname"><span class="pre">num_workers</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.num_workers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">VariablePriorityQueue</span></span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._VariablePriorityQueueMixin" title="a_sync.primitives.queue._VariablePriorityQueueMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">PriorityQueue</span></code></p>
+<p>A PriorityQueue subclass that allows priorities to be updated (or computed) on the fly</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop=&lt;object</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._create_future">
+<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._create_future" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._format">
+<span class="sig-name descname"><span class="pre">_format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._format" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._get">
+<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heapify=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heapify&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heappop=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappop&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._get" title="Link to this definition"></a></dt>
+<dd><p>Resort the heap to consider any changes in priorities and pop the smallest value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._get_key">
+<span class="sig-name descname"><span class="pre">_get_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._get_key" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._get_loop">
+<span class="sig-name descname"><span class="pre">_get_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._get_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._init">
+<span class="sig-name descname"><span class="pre">_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._init" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._put">
+<span class="sig-name descname"><span class="pre">_put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heappush=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappush&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._put" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._wakeup_next">
+<span class="sig-name descname"><span class="pre">_wakeup_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._wakeup_next" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.empty" title="Link to this definition"></a></dt>
+<dd><p>Return True if the queue is empty, False otherwise.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.full">
+<span class="sig-name descname"><span class="pre">full</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.full" title="Link to this definition"></a></dt>
+<dd><p>Return True if there are maxsize items in the queue.</p>
+<p>Note: if the Queue was initialized with maxsize=0 (the default),
+then full() is never True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.get">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.get" title="Link to this definition"></a></dt>
+<dd><p>Remove and return an item from the queue.</p>
+<p>If queue is empty, wait until an item is available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.get_nowait">
+<span class="sig-name descname"><span class="pre">get_nowait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.get_nowait" title="Link to this definition"></a></dt>
+<dd><p>Remove and return an item from the queue.</p>
+<p>Return an item if one is immediately available, else raise QueueEmpty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.join">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">join</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.join" title="Link to this definition"></a></dt>
+<dd><p>Block until all items in the queue have been gotten and processed.</p>
+<p>The count of unfinished tasks goes up whenever an item is added to the
+queue. The count goes down whenever a consumer calls task_done() to
+indicate that the item was retrieved and all work on it is complete.
+When the count of unfinished tasks drops to zero, join() unblocks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.put">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.put" title="Link to this definition"></a></dt>
+<dd><p>Put an item into the queue.</p>
+<p>Put an item into the queue. If the queue is full, wait until a free
+slot is available before adding item.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.put_nowait">
+<span class="sig-name descname"><span class="pre">put_nowait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.put_nowait" title="Link to this definition"></a></dt>
+<dd><p>Put an item into the queue without blocking.</p>
+<p>If no free slot is immediately available, raise QueueFull.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.qsize">
+<span class="sig-name descname"><span class="pre">qsize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.qsize" title="Link to this definition"></a></dt>
+<dd><p>Number of items in the queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.task_done">
+<span class="sig-name descname"><span class="pre">task_done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.task_done" title="Link to this definition"></a></dt>
+<dd><p>Indicate that a formerly enqueued task is complete.</p>
+<p>Used by queue consumers. For each get() used to fetch a task,
+a subsequent call to task_done() tells the queue that the processing
+on the task is complete.</p>
+<p>If a join() is currently blocking, it will resume when all items have
+been processed (meaning that a task_done() call was received for every
+item that had been put() into the queue).</p>
+<p>Raises ValueError if called more times than there were items placed in
+the queue.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._is_protocol">
+<span class="sig-name descname"><span class="pre">_is_protocol</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._is_protocol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._loop">
+<span class="sig-name descname"><span class="pre">_loop</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue.maxsize">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue.maxsize" title="Link to this definition"></a></dt>
+<dd><p>Number of items allowed in the queue.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._PriorityQueueMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_PriorityQueueMixin</span></span><a class="headerlink" href="#a_sync.primitives.queue._PriorityQueueMixin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._PriorityQueueMixin._get">
+<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heappop=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappop&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._PriorityQueueMixin._get" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._PriorityQueueMixin._init">
+<span class="sig-name descname"><span class="pre">_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._PriorityQueueMixin._init" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._PriorityQueueMixin._put">
+<span class="sig-name descname"><span class="pre">_put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heappush=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappush&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._PriorityQueueMixin._put" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._PriorityQueueMixin._is_protocol">
+<span class="sig-name descname"><span class="pre">_is_protocol</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue._PriorityQueueMixin._is_protocol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._Queue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_Queue</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
@@ -2098,6 +3006,56 @@ the queue.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue._Queue.maxsize" title="Link to this definition"></a></dt>
 <dd><p>Number of items allowed in the queue.</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._VariablePriorityQueueMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_VariablePriorityQueueMixin</span></span><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._PriorityQueueMixin" title="a_sync.primitives.queue._PriorityQueueMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_PriorityQueueMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._VariablePriorityQueueMixin._create_future">
+<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin._create_future" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._VariablePriorityQueueMixin._get">
+<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heapify=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heapify&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heappop=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappop&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin._get" title="Link to this definition"></a></dt>
+<dd><p>Resort the heap to consider any changes in priorities and pop the smallest value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._VariablePriorityQueueMixin._get_key">
+<span class="sig-name descname"><span class="pre">_get_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin._get_key" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._VariablePriorityQueueMixin._init">
+<span class="sig-name descname"><span class="pre">_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxsize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin._init" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._VariablePriorityQueueMixin._put">
+<span class="sig-name descname"><span class="pre">_put</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heappush=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappush&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin._put" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._VariablePriorityQueueMixin._is_protocol">
+<span class="sig-name descname"><span class="pre">_is_protocol</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin._is_protocol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -3234,6 +4192,26 @@ priority_semaphore = PrioritySemaphore(10)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._create_future">
+<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._create_future" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Future</em>[<em>V</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._ensure_workers">
+<span class="sig-name descname"><span class="pre">_ensure_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._ensure_workers" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
