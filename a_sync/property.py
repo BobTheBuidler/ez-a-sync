@@ -8,7 +8,7 @@ from a_sync import _helpers, config, decorator, exceptions
 from a_sync._bound import ASyncBoundMethodAsyncDefault, ASyncMethodDescriptorAsyncDefault
 from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
-from a_sync.modified import ASyncFunction
+from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, T]):
+class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, None, T]):
     __wrapped__: AsyncPropertyGetter[T]
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
     def __init__(
@@ -81,12 +81,42 @@ class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncP
 class property(ASyncPropertyDescriptor[I, T]):...
 
 class ASyncPropertyDescriptorSyncDefault(property[I, T]):
-    """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+    default = "sync"
+    @functools.cached_property
+    async def all(self) -> ASyncFunctionSyncDefault[AnyIterable[I], bool]:
+        return decorator.a_sync(default=self.default)(self._all)
+    @functools.cached_property
+    async def any(self) -> ASyncFunctionSyncDefault[AnyIterable[I], bool]:
+        return decorator.a_sync(default=self.default)(self._any)
+    @functools.cached_property
+    async def min(self) -> ASyncFunctionSyncDefault[AnyIterable[I], T]:
+        return decorator.a_sync(default=self.default)(self._min)
+    @functools.cached_property
+    async def max(self) -> ASyncFunctionSyncDefault[AnyIterable[I], T]:
+        return decorator.a_sync(default=self.default)(self._max)
+    @functools.cached_property
+    async def sum(self) -> ASyncFunctionSyncDefault[AnyIterable[I], T]:
+        return decorator.a_sync(default=self.default)(self._sum)
 
 class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
-    """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+    default = "async"
     def __get__(self, instance, owner: Any) -> Awaitable[T]:
         return super().__get__(instance, owner)
+    @functools.cached_property
+    async def all(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], bool]:
+        return decorator.a_sync(default=self.default)(self._all)
+    @functools.cached_property
+    async def any(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], bool]:
+        return decorator.a_sync(default=self.default)(self._any)
+    @functools.cached_property
+    async def min(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], T]:
+        return decorator.a_sync(default=self.default)(self._min)
+    @functools.cached_property
+    async def max(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], T]:
+        return decorator.a_sync(default=self.default)(self._max)
+    @functools.cached_property
+    async def sum(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], T]:
+        return decorator.a_sync(default=self.default)(self._sum)
 
 
 ASyncPropertyDecorator = Callable[[AsyncPropertyGetter[T]], property[I, T]]

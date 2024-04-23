@@ -4,11 +4,11 @@ import functools
 from a_sync._typing import *
 from a_sync.modified import ASyncFunction, ModifiedMixin, ModifierManager
 
-class ASyncDescriptor(ModifiedMixin, Generic[I, T]):
+class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
     __slots__ = "field_name", "_fget"
     def __init__(
         self, 
-        _fget: AnyUnboundMethod[I, P, T], 
+        _fget: AnyFn[Concatenate[I, P], T], 
         field_name: Optional[str] = None, 
         **modifiers: ModifierKwargs,
     ) -> None:
