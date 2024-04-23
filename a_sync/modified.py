@@ -221,9 +221,4 @@ class ASyncDecoratorAsyncDefault(ASyncDecorator):
         ...
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
         return ASyncFunctionAsyncDefault(func, **self.modifiers)
-
-
-def _args_not_supported(args) -> None:
-    if args:
-        raise NotImplementedError("You are unable to pass more than 1 argument at this time. Try passing them as kwargs.")
     
