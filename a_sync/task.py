@@ -213,7 +213,10 @@ async def __await(awaitable: Awaitable[T]) -> T:
     try:
         return await awaitable
     except RuntimeError as e:
-        raise RuntimeError(e, awaitable)
+        args = [e, awaitable]
+        if isinstance(awaitable, asyncio.tasks._GatheringFuture):
+            args.append(awaitable._children)
+        raise RuntimeError(*args) from None
 
     
 def __persist(task: "asyncio.Task[Any]") -> None:
