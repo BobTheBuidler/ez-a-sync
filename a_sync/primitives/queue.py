@@ -97,7 +97,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     def __repr__(self) -> str:
         repr_string = f"<{type(self).__name__}"
         if self._name:
-            repr_str += f" name={self._name}
+            repr_str += f" name={self._name}"
         repr_str += f" func={self.func} num_workers={self.num_workers}"
         if self._unfinished_tasks:
             repr_str += f" pending={self._unfinished_tasks}"
