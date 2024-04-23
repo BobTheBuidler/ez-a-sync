@@ -31,7 +31,7 @@ async def test_pruning():
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_init():
     tasks = TaskMapping(_coro_fn)
-    assert tasks._wrapped_func is _coro_fn
+    assert tasks._wrapped_func is _coro_fn, f"{tasks._wrapped_func} , {_coro_fn}, {tasks._wrapped_func == _coro_fn}"
     assert tasks._wrapped_func_kwargs == {}
     assert tasks._name == ""
     tasks = TaskMapping(_coro_fn, name='test', kwarg0=1, kwarg1=None)
@@ -69,8 +69,43 @@ async def test_task_mapping_map_with_sync_iter():
                     ...
         i += 1
     tasks = TaskMapping(_coro_fn)
-    async for k in tasks.map(range(5), yields='keys'):
+    async for k in tasks.map(range(5), pop=False, yields='keys'):
         assert isinstance(k, int)
+    
+    # test keys
+    for k in tasks.keys():
+        assert isinstance(k, int)
+    awaited = await tasks.keys()
+    assert isinstance(awaited, list)
+    for k in awaited:
+        assert isinstance(k, int)
+    async for k in tasks.keys():
+        assert isinstance(k, int)
+    
+    # test values
+    for v in tasks.values():
+        assert isinstance(v, asyncio.Future)
+        assert isinstance(await v, str)
+    awaited = await tasks.values()
+    assert isinstance(awaited, list)
+    for v in awaited:
+        assert isinstance(v, str)
+    async for v in tasks.values():
+        assert isinstance(v, str)
+    
+    # test items
+    for k, v in tasks.items():
+        assert isinstance(k, int)
+        assert isinstance(v, asyncio.Future)
+        assert isinstance(await v, str)
+    awaited = await tasks.items()
+    assert isinstance(awaited, list)
+    for k, v in awaited:
+        assert isinstance(k, int)
+        assert isinstance(v, str)
+    async for k, v in tasks.items():
+        assert isinstance(k, int)
+        assert isinstance(v, str)
     
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_map_with_async_iter():
@@ -89,7 +124,72 @@ async def test_task_mapping_map_with_async_iter():
                     ...
         i += 1
     tasks = TaskMapping(_coro_fn)
-    async for k in tasks.map(async_iter(), yields='keys'):
+    async for k in tasks.map(async_iter(), pop=False, yields='keys'):
+        assert isinstance(k, int)
+    
+    # test keys
+    for k in tasks.keys():
+        assert isinstance(k, int)
+    awaited = await tasks.keys()
+    assert isinstance(awaited, list)
+    for k in awaited:
+        assert isinstance(k, int)
+    async for k in tasks.keys():
+        assert isinstance(k, int)
+    
+    # test values
+    for v in tasks.values():
+        assert isinstance(v, asyncio.Future)
+        assert isinstance(await v, str)
+    awaited = await tasks.values()
+    assert isinstance(awaited, list)
+    for v in awaited:
+        assert isinstance(v, str)
+    async for v in tasks.values():
+        assert isinstance(v, str)
+    
+    # test items
+    for k, v in tasks.items():
+        assert isinstance(k, int)
+        assert isinstance(v, asyncio.Future)
+        assert isinstance(await v, str)
+    awaited = await tasks.items()
+    assert isinstance(awaited, list)
+    for k, v in awaited:
+        assert isinstance(k, int)
+        assert isinstance(v, str)
+    async for k, v in tasks.items():
+        assert isinstance(k, int)
+        assert isinstance(v, str)
+
+def test_taskmapping_views_sync():
+    tasks = TaskMapping(_coro_fn, range(5))
+    
+    # keys are currently empty until the loop has a chance to run
+    assert len(tasks.keys()) == 0
+    assert len(tasks.values()) == 0
+    assert len(tasks.items()) == 0
+    
+    tasks.gather()
+
+    assert len(tasks.keys()) == 5
+    assert len(tasks.values()) == 5
+    assert len(tasks.items()) == 5
+
+    for k in tasks.keys():
+        assert isinstance(k, int)
+
+    # test values
+    for v in tasks.values():
+        assert isinstance(v, asyncio.Future)
+    
+    # test items
+    for k, v in tasks.items():
+        assert isinstance(k, int)
+        assert isinstance(v, asyncio.Future)
+        
+    assert len(tasks.keys()) == 5
+    for k in tasks.keys():
         assert isinstance(k, int)
 
 async def _coro_fn(i: int) -> str:
