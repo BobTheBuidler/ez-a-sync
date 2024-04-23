@@ -17,6 +17,11 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, None, T]):
+    any: ASyncFunction[Concatenate[AnyIterable[I], ...], bool]
+    all: ASyncFunction[Concatenate[AnyIterable[I], ...], bool]
+    min: ASyncFunction[Concatenate[AnyIterable[I], ...], T]
+    max: ASyncFunction[Concatenate[AnyIterable[I], ...], T]
+    sum: ASyncFunction[Concatenate[AnyIterable[I], ...], T]
     __wrapped__: AsyncPropertyGetter[T]
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
     def __init__(
@@ -49,31 +54,6 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, None, T]):
     def map(self, instances: AnyIterable[I], owner: Any = None) -> "TaskMapping[I, T]":
         from a_sync.task import TaskMapping
         return TaskMapping(self.__get__, instances, owner=owner)
-    @functools.cached_property
-    async def all(self) -> ASyncFunction[AnyIterable[I], bool]:
-        return decorator.a_sync(default=self.default)(self._all)
-    @functools.cached_property
-    async def any(self) -> ASyncFunction[AnyIterable[I], bool]:
-        return decorator.a_sync(default=self.default)(self._any)
-    @functools.cached_property
-    async def min(self) -> ASyncFunction[AnyIterable[I], T]:
-        return decorator.a_sync(default=self.default)(self._min)
-    @functools.cached_property
-    async def max(self) -> ASyncFunction[AnyIterable[I], T]:
-        return decorator.a_sync(default=self.default)(self._max)
-    @functools.cached_property
-    async def sum(self) -> ASyncFunction[AnyIterable[I], T]:
-        return decorator.a_sync(default=self.default)(self._sum)
-    async def _all(self, instances: AnyIterable[I], owner: Any = None) -> bool:
-        return await self.map(instances, owner=owner).all(pop=True, sync=False)
-    async def _any(self, instances: AnyIterable[I], owner: Any = None) -> bool:
-        return await self.map(instances, owner=owner).any(pop=True, sync=False)
-    async def _min(self, instances: AnyIterable[I], owner: Any = None) -> T:
-        return await self.map(instances, owner=owner).min(pop=True, sync=False)
-    async def _max(self, instances: AnyIterable[I], owner: Any = None) -> T:
-        return await self.map(instances, owner=owner).max(pop=True, sync=False)
-    async def _sum(self, instances: AnyIterable[I], owner: Any = None) -> T:
-        return await self.map(instances, owner=owner).sum(pop=True, sync=False)
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
     pass
@@ -82,41 +62,21 @@ class property(ASyncPropertyDescriptor[I, T]):...
 
 class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     default = "sync"
-    @functools.cached_property
-    async def all(self) -> ASyncFunctionSyncDefault[AnyIterable[I], bool]:
-        return decorator.a_sync(default=self.default)(self._all)
-    @functools.cached_property
-    async def any(self) -> ASyncFunctionSyncDefault[AnyIterable[I], bool]:
-        return decorator.a_sync(default=self.default)(self._any)
-    @functools.cached_property
-    async def min(self) -> ASyncFunctionSyncDefault[AnyIterable[I], T]:
-        return decorator.a_sync(default=self.default)(self._min)
-    @functools.cached_property
-    async def max(self) -> ASyncFunctionSyncDefault[AnyIterable[I], T]:
-        return decorator.a_sync(default=self.default)(self._max)
-    @functools.cached_property
-    async def sum(self) -> ASyncFunctionSyncDefault[AnyIterable[I], T]:
-        return decorator.a_sync(default=self.default)(self._sum)
+    any: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], bool]
+    all: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], bool]
+    min: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], T]
+    max: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], T]
+    sum: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], T]
 
 class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
     default = "async"
     def __get__(self, instance, owner: Any) -> Awaitable[T]:
         return super().__get__(instance, owner)
-    @functools.cached_property
-    async def all(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], bool]:
-        return decorator.a_sync(default=self.default)(self._all)
-    @functools.cached_property
-    async def any(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], bool]:
-        return decorator.a_sync(default=self.default)(self._any)
-    @functools.cached_property
-    async def min(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], T]:
-        return decorator.a_sync(default=self.default)(self._min)
-    @functools.cached_property
-    async def max(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], T]:
-        return decorator.a_sync(default=self.default)(self._max)
-    @functools.cached_property
-    async def sum(self) -> ASyncFunctionAsyncDefault[AnyIterable[I], T]:
-        return decorator.a_sync(default=self.default)(self._sum)
+    any: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], bool]
+    all: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], bool]
+    min: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], T]
+    max: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], T]
+    sum: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], T]
 
 
 ASyncPropertyDecorator = Callable[[AsyncPropertyGetter[T]], property[I, T]]

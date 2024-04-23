@@ -1,8 +1,12 @@
 
 import functools
 
+from a_sync import decorator
 from a_sync._typing import *
 from a_sync.modified import ASyncFunction, ModifiedMixin, ModifierManager
+
+if TYPE_CHECKING:
+    from a_sync import TaskMapping
 
 class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
     __slots__ = "field_name", "_fget"
@@ -28,3 +32,33 @@ class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
         return f"<{self.__class__.__name__} for {self.__wrapped__}>"
     def __set_name__(self, owner, name):
         self.field_name = name
+    def map(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, **bound_method_kwargs: P.kwargs) -> "TaskMapping[I, T]":
+        if args:
+            raise NotImplementedError("using args here is not yet supported, try passing them as kwargs")
+        from a_sync.task import TaskMapping
+        return TaskMapping(self.__get__, instances, owner=owner, **bound_method_kwargs)
+    @functools.cached_property
+    def all(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], bool]:
+        return decorator.a_sync(default=self.default)(self._all)
+    @functools.cached_property
+    def any(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], bool]:
+        return decorator.a_sync(default=self.default)(self._any)
+    @functools.cached_property
+    def min(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], T]:
+        return decorator.a_sync(default=self.default)(self._min)
+    @functools.cached_property
+    def max(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], T]:
+        return decorator.a_sync(default=self.default)(self._max)
+    @functools.cached_property
+    def sum(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], T]:
+        return decorator.a_sync(default=self.default)(self._sum)
+    async def _all(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, **kwargs: P.kwargs) -> bool:
+        return await self.map(instances, *args, owner=owner, **kwargs).all(pop=True, sync=False)
+    async def _any(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, **kwargs: P.kwargs) -> bool:
+        return await self.map(instances, *args, owner=owner, **kwargs).any(pop=True, sync=False)
+    async def _min(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, **kwargs: P.kwargs) -> T:
+        return await self.map(instances, *args, owner=owner, **kwargs).min(pop=True, sync=False)
+    async def _max(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, **kwargs: P.kwargs) -> T:
+        return await self.map(instances, *args, owner=owner, **kwargs).max(pop=True, sync=False)
+    async def _sum(self, instances: AnyIterable[I], *args: P.args, owner: Any = None, **kwargs: P.kwargs) -> T:
+        return await self.map(instances, *args, owner=owner, **kwargs).sum(pop=True, sync=False)
