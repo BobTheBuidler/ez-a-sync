@@ -51,6 +51,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     """
     A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.
     """
+    
+    _destroyed: bool = False
+    "Boolean indicating whether his mapping has been consumed and is no longer usable for aggregations."
+
     __slots__ = "concurrency", "_wrapped_func", "_wrapped_func_kwargs", "_name", "_next", "_init_loader_next", "__dict__", "__init_loader_coro"
     def __init__(
         self, 
@@ -83,9 +87,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
         self._name = name
         "Optional name for tasks created by this mapping."
-
-        self._destroyed: bool = True
-        "Boolean indicating whether his mapping has been destroyed and is no longer usable."
 
         self._init_loader: Optional["asyncio.Task[None]"]
         "An asyncio Task used to preload values from the iterables."
@@ -202,8 +203,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             Depending on `yields`, either keys, values,
             or tuples of key-value pairs representing the results of completed tasks.
         """
-        if not iterables:
-            self._check_not_empty()
+        self._check_not_empty()
         async for _ in self._tasks_for_iterables(*iterables):
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
