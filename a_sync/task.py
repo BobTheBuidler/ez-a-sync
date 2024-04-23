@@ -86,7 +86,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._init_loader: Optional["asyncio.Task[None]"]
         "An asyncio Task used to preload values from the iterables."
 
-        if iterables:
+        if iterables is not None:
             self._next = asyncio.Event()
             "An asyncio Event that indicates the next result is ready"
             @functools.wraps(wrapped_func)
@@ -398,7 +398,9 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
     Yields:
         Keys extracted from the iterable.
     """
-    if isinstance(iterable, AsyncIterable):
+    if not iterable:
+        raise ValueError(iterable)
+    elif isinstance(iterable, AsyncIterable):
         async for key in iterable:
             yield key
     elif isinstance(iterable, Iterable):
