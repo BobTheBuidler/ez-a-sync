@@ -104,7 +104,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._next = asyncio.Event()
             "An asyncio Event that indicates the next result is ready"
             @functools.wraps(wrapped_func)
-            async def _wrapped_set_next(*args: P.args, **kwargs: P.kwargs) -> V:
+            async def _wrapped_set_next(*args: P.args, __a_sync_recursion: int = 0, **kwargs: P.kwargs) -> V:
                 try:
                     retval = await wrapped_func(*args, **kwargs)
                     self._next.set()
@@ -113,7 +113,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 except exceptions.SyncModeInAsyncContextError as e:
                     raise Exception(e, self.__wrapped__)
                 except TypeError as e:
-                    if not (str(e).startswith(wrapped_func.__name__) and "got multiple values for argument" in str(e)):
+                    if recursion > 2 or not (str(e).startswith(wrapped_func.__name__) and "got multiple values for argument" in str(e)):
                         raise e
                     # NOTE: args ordering is clashing with provided kwargs. We can handle this in a hacky way.
                     # TODO: perform this check earlier and pre-prepare the args/kwargs ordering
@@ -125,7 +125,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                                 new_args.insert(i, new_kwargs.pop(arg))
                             else:
                                 break
-                        return await _wrapped_set_next(*new_args, **new_kwargs)
+                        return await _wrapped_set_next(*new_args, **new_kwargs, __a_sync_recursion=__a_sync_recursion+1)
                     except TypeError as e2:
                         raise e if str(e2) == "unsupported callable" else e2
             self._wrapped_func = _wrapped_set_next
