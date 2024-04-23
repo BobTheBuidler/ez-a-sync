@@ -4,7 +4,7 @@ import functools
 import inspect
 import logging
 
-from a_sync._bound import ASyncMethodDescriptor, ASyncMethodDescriptorSyncDefault
+from a_sync._bound import ASyncBoundMethod, ASyncMethodDescriptor, ASyncMethodDescriptorSyncDefault
 from a_sync._typing import *
 from a_sync import exceptions
 from a_sync.base import ASyncGenericBase
@@ -414,14 +414,17 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
 
 @functools.lru_cache(maxsize=None)
 def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[I, T]]) -> Callable[P, Awaitable[T]]:
-    if isinstance(wrapped_func, ASyncMethodDescriptor):
+    if isinstance(wrapped_func, ASyncBoundMethod):
+        return wrapped_func
+    elif isinstance(wrapped_func, ASyncMethodDescriptor):
         wrapped_func = wrapped_func.__wrapped__
         if not isinstance(wrapped_func, ASyncFunction):
             wrapped_func = ASyncFunction(wrapped_func)
     elif isinstance(wrapped_func, _ASyncPropertyDescriptorBase):
         wrapped_func = wrapped_func.__get__
-    # NOTE: we don't use functools.partial here so the original fn is still exposed
     if isinstance(wrapped_func, ASyncFunction):
+        # this speeds things up a bit by bypassing some logic
+        # TODO implement it like this elsewhere if profilers suggest
         return wrapped_func._async_wrap if wrapped_func._async_def else wrapped_func._asyncified
     return wrapped_func
 
