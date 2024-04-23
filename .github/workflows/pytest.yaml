@@ -14,6 +14,10 @@ on:
       - '**.py'
       - '**/pytest.yaml'
       - '!**/docs/conf.py'
+      
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
