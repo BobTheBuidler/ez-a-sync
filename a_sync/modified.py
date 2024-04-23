@@ -1,11 +1,15 @@
 
 import functools
+import inspect
+import logging
 import sys
 
 from a_sync import _helpers, _kwargs
 from a_sync._typing import *
 from a_sync.modifiers.manager import ModifierManager
     
+
+logger = logging.getLogger(__name__)
 
 class ModifiedMixin:
     modifiers: ModifierManager
@@ -31,6 +35,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def __init__(self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:...
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         _helpers._validate_wrapped_fn(fn)
+        _check_not_genfunc(fn)
         self.modifiers = ModifierManager(modifiers)
         self.__wrapped__ = fn
         functools.update_wrapper(self, self.__wrapped__)
@@ -43,7 +48,10 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T:...
     @overload
     def __call__(self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs) -> Awaitable[T]:...
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
+        logger.debug("calling %s fn: %s with args: %s kwargs: %s", self, self.fn, args, kwargs)
         return self.fn(*args, **kwargs)
     
     def __repr__(self) -> str:
@@ -53,6 +61,26 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def fn(self): # -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
         """Returns the final wrapped version of 'self._fn' decorated with all of the a_sync goodness."""
         return self._async_wrap if self._async_def else self._sync_wrap
+    
+    async def any(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> bool:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).any(pop=True, sync=False)
+    
+    async def all(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> bool:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).all(pop=True, sync=False)
+    
+    async def min(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> T:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).min(pop=True, sync=False)
+    
+    async def max(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> T:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).max(pop=True, sync=False)
+    
+    async def sum(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> T:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).sum(pop=True, sync=False)
     
     @functools.cached_property
     def _sync_default(self) -> bool:
@@ -130,7 +158,18 @@ class ASyncDecorator(ModifiedMixin):
     def __call__(self, func: SyncFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
         ...
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
-        return ASyncFunction(func, **self.modifiers)
+        if self.default == "async":
+            return ASyncFunctionAsyncDefault(func, **self.modifiers)
+        elif self.default == "sync":
+            return ASyncFunctionSyncDefault(func, **self.modifiers)
+        elif asyncio.iscoroutinefunction(func):
+            return ASyncFunctionAsyncDefault(func, **self.modifiers)
+        else:
+            return ASyncFunctionSyncDefault(func, **self.modifiers)
+
+def _check_not_genfunc(func: Callable) -> None:
+    if inspect.isasyncgenfunction(func) or inspect.isgeneratorfunction(func):
+        raise ValueError("unable to decorate generator functions with this decorator")
 
 
 # Mypy helper classes
@@ -170,6 +209,8 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
         ...
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:
+        return ASyncFunctionSyncDefault(func, **self.modifiers)
 
 class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
@@ -178,3 +219,6 @@ class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
         ...
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
+        return ASyncFunctionAsyncDefault(func, **self.modifiers)
+    
