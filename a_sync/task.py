@@ -332,7 +332,7 @@ def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASy
     # NOTE: we don't use functools.partial here so the original fn is still exposed
     if isinstance(wrapped_func, ASyncFunction):
         return wrapped_func._async_wrap if wrapped_func._async_def else wrapped_func._asyncified
-    return wrapped_func, wrapped_func_kwargs
+    return wrapped_func
 
 
 class _AwaitableView(Iterator[T]):
