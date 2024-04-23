@@ -96,7 +96,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 self._next.clear()
                 return retval
             self._wrapped_func = _wrapped_set_next
-            init_loader_queue: Queue[K] = Queue()
+            init_loader_queue: Queue[Tuple[K, "asyncio.Future[V]"]] = Queue()
             init_loader_coro = exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue)
             try:
                 self._init_loader = create_task(init_loader_coro)
@@ -330,10 +330,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             raise exceptions.MappingNotEmptyError
 
     @ASyncGeneratorFunction
-    async def _tasks_for_iterables(self, *iterables: AnyIterableOrAwaitableIterable[K]) -> AsyncIterator["asyncio.Task[V]"]:
+    async def _tasks_for_iterables(self, *iterables: AnyIterableOrAwaitableIterable[K]) -> AsyncIterator[Tuple[K, "asyncio.Task[V]"]]:
         """Ensure tasks are running for each key in the provided iterables."""
         async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
-            yield self[key]  # ensure task is running
+            yield key, self[key]  # ensure task is running
 
 
 __persisted_tasks: Set["asyncio.Task[Any]"] = set()
@@ -467,7 +467,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         if self._mapping._init_loader is None:
             return
         while not self._mapping._init_loader.done():
-            for key in await self._mapping._init_loader_next():
+            for key, fut in await self._mapping._init_loader_next():
                 if key not in yielded:
                     yielded.add(key)
                     yield key
@@ -485,8 +485,4 @@ class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
 class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
     async def __aiter__(self) -> AsyncIterator[V]:
         async for key in self._mapping.keys():
-            fut = self._mapping[key]
-            assert isinstance(fut, asyncio.Future), fut
-            retval = await fut
-            assert not isinstance(fut, asyncio.Future), retval
-            yield retval
+            yield await self._mapping[key]
