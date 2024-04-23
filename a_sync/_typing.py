@@ -68,5 +68,3 @@ class ModifierKwargs(TypedDict, total=False):
 
 AnyIterable = Union[AsyncIterable[K], Iterable[K]]
 AnyIterableOrAwaitableIterable = Union[AnyIterable[K], Awaitable[AnyIterable[K]]]
-
-TaskOrFuture = Union["asyncio.Task[V]", "asyncio.Future[V]"]
