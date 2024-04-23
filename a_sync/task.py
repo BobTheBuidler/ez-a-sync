@@ -270,7 +270,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._check_empty()
         return await gather(self)
     
-    def pop(self, *args: K, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
+    @overload
+    def pop(self, item: K, cancel: bool = False) -> TaskOrFuture[V]:...
+    @overload
+    def pop(self, item: K, default: K, cancel: bool = False) -> TaskOrFuture[V]:...
+    def pop(self, *args: K, cancel: bool = False) -> TaskOrFuture[V]:
         if not cancel:
             return super().pop(*args)
         fut_or_task = super().pop(*args)
