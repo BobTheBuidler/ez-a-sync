@@ -106,7 +106,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
             unbound = unbound.__wrapped__
-        super().__init__(unbound, **modifiers)
+        ASyncFunction.__init__(self, unbound, **modifiers)
         functools.update_wrapper(self, unbound)
     def __repr__(self) -> str:
         instance_type = type(self.__self__)
@@ -152,7 +152,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     def __get__(self, instance: Any, owner: Any) -> ASyncFunctionSyncDefault[P, T]:
-        return super().__get__(instance, owner)
+        return ASyncBoundMethod.__get__(self, instance, owner)
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
     @overload
@@ -164,11 +164,11 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:
-        return super().__call__(*args, **kwargs)
+        return ASyncBoundMethod.__call__(self, *args, **kwargs)
 
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     def __get__(self, instance: I, owner: Any) -> ASyncFunctionAsyncDefault[P, T]:
-        return super().__get__(instance, owner)
+        return ASyncBoundMethod.__get__(self, instance, owner)
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
     @overload
@@ -180,4 +180,4 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Awaitable[T]:...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Awaitable[T]:
-        return super().__call__(*args, **kwargs)
+        return ASyncBoundMethod.__call__(self, *args, **kwargs)
