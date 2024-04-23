@@ -17,11 +17,11 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, None, T]):
-    any: ASyncFunction[Concatenate[AnyIterable[I], ...], bool]
-    all: ASyncFunction[Concatenate[AnyIterable[I], ...], bool]
-    min: ASyncFunction[Concatenate[AnyIterable[I], ...], T]
-    max: ASyncFunction[Concatenate[AnyIterable[I], ...], T]
-    sum: ASyncFunction[Concatenate[AnyIterable[I], ...], T]
+    any: ASyncFunction[AnyIterable[I], bool]
+    all: ASyncFunction[AnyIterable[I], bool]
+    min: ASyncFunction[AnyIterable[I], T]
+    max: ASyncFunction[AnyIterable[I], T]
+    sum: ASyncFunction[AnyIterable[I], T]
     __wrapped__: AsyncPropertyGetter[T]
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
     def __init__(
@@ -62,21 +62,21 @@ class property(ASyncPropertyDescriptor[I, T]):...
 
 class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     default = "sync"
-    any: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], bool]
-    all: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], bool]
-    min: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], T]
-    max: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], T]
-    sum: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], ...], T]
+    any: ASyncFunctionSyncDefault[AnyIterable[I], bool]
+    all: ASyncFunctionSyncDefault[AnyIterable[I], bool]
+    min: ASyncFunctionSyncDefault[AnyIterable[I], T]
+    max: ASyncFunctionSyncDefault[AnyIterable[I], T]
+    sum: ASyncFunctionSyncDefault[AnyIterable[I], T]
 
 class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
     default = "async"
     def __get__(self, instance, owner: Any) -> Awaitable[T]:
         return super().__get__(instance, owner)
-    any: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], bool]
-    all: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], bool]
-    min: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], T]
-    max: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], T]
-    sum: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], ...], T]
+    any: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
+    all: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
+    min: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
+    max: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
+    sum: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
 
 
 ASyncPropertyDecorator = Callable[[AsyncPropertyGetter[T]], property[I, T]]

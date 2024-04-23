@@ -51,6 +51,11 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
 
 class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
     default = "sync"
+    any: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], P], bool]
+    all: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], P], bool]
+    min: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], P], T]
+    max: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], P], T]
+    sum: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], P], T]
     @overload
     def __get__(self, instance: None, owner: Any = None) -> "ASyncMethodDescriptorSyncDefault[I, P, T]":...
     @overload
@@ -68,6 +73,11 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
 
 class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
     default = "async"
+    any: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], bool]
+    all: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], bool]
+    min: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], T]
+    max: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], T]
+    sum: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], T]
     @overload
     def __get__(self, instance: None, owner: Any) -> "ASyncMethodDescriptorAsyncDefault[I, P, T]":...
     @overload
@@ -141,7 +151,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
-    default = "sync"
     def __get__(self, instance: Any, owner: Any) -> ASyncFunctionSyncDefault[P, T]:
         return super().__get__(instance, owner)
     @overload
@@ -158,7 +167,6 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
         return super().__call__(*args, **kwargs)
 
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
-    default = "async"
     def __get__(self, instance: I, owner: Any) -> ASyncFunctionAsyncDefault[P, T]:
         return super().__get__(instance, owner)
     @overload

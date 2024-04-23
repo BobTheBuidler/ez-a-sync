@@ -43,6 +43,8 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T:...
     @overload
     def __call__(self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs) -> Awaitable[T]:...
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:
         return self.fn(*args, **kwargs)
     
@@ -53,6 +55,26 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def fn(self): # -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
         """Returns the final wrapped version of 'self._fn' decorated with all of the a_sync goodness."""
         return self._async_wrap if self._async_def else self._sync_wrap
+    
+    async def any(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> bool:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).any(pop=True, sync=False)
+    
+    async def all(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> bool:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).all(pop=True, sync=False)
+    
+    async def min(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> T:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).min(pop=True, sync=False)
+    
+    async def max(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> T:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).max(pop=True, sync=False)
+    
+    async def sum(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> T:
+        from a_sync import TaskMapping
+        return await TaskMapping(self, iterable, **kwargs).sum(pop=True, sync=False)
     
     @functools.cached_property
     def _sync_default(self) -> bool:
@@ -178,3 +200,9 @@ class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
         ...
+
+
+def _args_not_supported(args) -> None:
+    if args:
+        raise NotImplementedError("You are unable to pass more than 1 argument at this time. Try passing them as kwargs.")
+    
