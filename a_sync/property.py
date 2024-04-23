@@ -60,15 +60,15 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             retval = awaitable
         logger.debug("returning %s for %s for instance: %s owner: %s", retval, self, instance, owner)
         return retval
-    async def get(self, instance: I) -> T:
+    async def get(self, instance: I, owner: Any = None) -> T:
         if instance is None:
             raise ValueError(instance)
         logger.debug("awaiting %s for instance %s", self, instance)
-        return await super().__get__(instance, None)
+        return await super().__get__(instance, owner)
     def map(self, instances: AnyIterable[I], owner: Any = None) -> "TaskMapping[I, T]":
         from a_sync.task import TaskMapping
         logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
-        return TaskMapping(self.__get__, instances, owner=owner)
+        return TaskMapping(self.get, instances, owner=owner)
 
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
     pass
@@ -91,8 +91,6 @@ class ASyncPropertyDescriptorSyncDefault(property[I, T]):
 
 class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
     default = "async"
-    def __get__(self, instance, owner: Any) -> Awaitable[T]:
-        return super().__get__(instance, owner)
     any: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
     all: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
     min: ASyncFunctionAsyncDefault[AnyIterable[I], T]
