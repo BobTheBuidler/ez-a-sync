@@ -9,6 +9,9 @@ from a_sync._bound import ASyncBoundMethodAsyncDefault, ASyncMethodDescriptorAsy
 from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
 
+if TYPE_CHECKING:
+    from a_sync.task import TaskMapping
+
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +35,9 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
             self._fget = _helpers._asyncify(self.__wrapped__, self.modifiers.executor)
     async def get(self, instance: object) -> T:
         return await super().__get__(instance, None)
+    def map(self, instances: Iterable[object]) -> "TaskMapping[object, T]":
+        from a_sync.task import TaskMapping
+        return TaskMapping(self.get, instances)
     def __get__(self, instance: Optional[object], owner: Any) -> T:
         if instance is None:
             return self
