@@ -129,7 +129,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         """Wait for all tasks to complete and return a dictionary of the results."""
         return self.gather().__await__()
 
-    async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
+    async def __aiter__(self, pop: bool = False) -> AsyncIterator[Tuple[K, V]]:
         """aiterate thru all key-task pairs, yielding the key-result pair as each task completes"""
         yielded = set()
         # if you inited the TaskMapping with some iterators, we will load those
@@ -140,6 +140,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 while unyielded := [key for key in self if key not in yielded]:
                     if ready := {key: task for key in unyielded if (task:=self[key]).done()}:
                         for key, task in ready.items():
+                            if pop:
+                                self.pop(key)
                             yield key, await task
                             yielded.add(key)
                     else:
@@ -152,6 +154,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         # if there are any tasks that still need to complete, we need to await them and yield them
         if unyielded := {key: task for key, task in self.items() if key not in yielded}:
             async for key, value in as_completed(unyielded, aiter=True):
+                if pop:
+                    self.pop(key)
                 yield key, value
 
     def __delitem__(self, item: K) -> None:
@@ -212,9 +216,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     async def any(self, pop: bool = True):
         if pop:
             self._check_destroyed()
-        async for key, result in self:
-            if pop:
-                self.pop(key, None)
+        async for key, result in self.__aiter__(pop=True):
             if bool(result):
                 if pop:
                     self.clear(cancel=True)
@@ -226,9 +228,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if pop:
             self._check_destroyed()
         max = None
-        async for key, result in self:
-            if pop:
-                self.pop(key, None)
+        async for key, result in self.__aiter__(pop=True):
             if max is None or result > max:
                 max = result
         return max
@@ -238,9 +238,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if pop:
             self._check_destroyed()
         min = None
-        async for key, result in self:
-            if pop:
-                self.pop(key, None)
+        async for key, result in self.__aiter__(pop=True):
             if min is None or result < min:
                 min = result
         return min
