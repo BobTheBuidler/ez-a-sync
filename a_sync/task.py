@@ -322,7 +322,7 @@ async def _yield_keys(iterable: AnyIterable[K]) -> AsyncIterator[K]:
         raise TypeError(iterable)
 
 @functools.lru_cache(maxsize=None)
-def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[T]], kwargs: dict) -> Callable[P, Awaitable[T]]:
+def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[T]]) -> Callable[P, Awaitable[T]]:
     if isinstance(wrapped_func, ASyncMethodDescriptor):
         wrapped_func = wrapped_func.__wrapped__
         if not isinstance(wrapped_func, ASyncFunction):
@@ -345,21 +345,14 @@ class _AwaitableView(Iterator[T]):
         consumed = True
         return self._view.__next__()
     def __await__(self) -> List[T]:
-        if consumed:
-            raise RuntimeError("This iterator has already started")
-        consumed = True
         return self._await().__await__()
+    def _await(self):
+        raise NotImplementedError
 
 class AwaitableItems(_AwaitableView[Tuple[K, V]]):
     async def _await(self) -> List[T]:
-        items = []
-        for key, task in self._view:
-            items.append((key, await task))
-        return items
+        return [(key, await task) for key, task in self._view]
     
 class AwaitableValues(_AwaitableView[T]):
     async def _await(self) -> List[T]:
-        values = []
-        for task in self._view:
-            values.append(await task)
-        return values
+        return [await task for task in self._view]
