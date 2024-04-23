@@ -79,7 +79,9 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         self, 
         func: Callable[P, Awaitable[V]], 
         num_workers: int, 
-        *, return_data: bool = True, 
+        *, 
+        return_data: bool = True, 
+        name: str = "",
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ) -> None:
         if sys.version_info < (3, 10):
@@ -90,9 +92,16 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             super().__init__()
         self.func = func
         self.num_workers = num_workers
+        self._name = name
         self._no_futs = not return_data
     def __repr__(self) -> str:
-        return f"<{type(self).__name__} func={self.func} num_workers={self.num_workers} pending={self._unfinished_tasks}>"
+        repr_string = f"<{type(self).__name__}"
+        if self._name:
+            repr_str += f" name={self._name}
+        repr_str += f" func={self.func} num_workers={self.num_workers}"
+        if self._unfinished_tasks:
+            repr_str += f" pending={self._unfinished_tasks}"
+        return f"{repr_str}>"
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         return self.put_nowait(*args, **kwargs)
     def __del__(self) -> None:
@@ -124,7 +133,12 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     def _workers(self) -> "asyncio.Task[NoReturn]":
         from a_sync.task import create_task
         logger.debug("starting worker task for %s", self)
-        task = create_task(asyncio.gather(*[self._worker_coro() for _ in range(self.num_workers)]), name=repr(self))
+        task = create_task(
+            asyncio.gather(*[
+                asyncio.create_task(self._worker_coro(), name=f"{self._name or repr(self)} [Task-{i}]") 
+                for i in range(self.num_workers)]), 
+            name=f"{self._name or repr(self)} worker Task",
+        )
         task._log_destroy_pending = False
         return task
     async def _worker_coro(self) -> NoReturn:
@@ -249,12 +263,13 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         func: Callable[Concatenate[T, P], Awaitable[V]], 
         num_workers: int, 
         *, 
+        name: str = "",
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ) -> None:
-        super().__init__(func, num_workers, return_data=True, loop=loop)
+        super().__init__(func, num_workers, return_data=True, name=name, loop=loop)
         self._futs: Dict[_Key[T], SmartFuture[T]] = {}
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
-        self._workers
+        self._ensure_workers()
         key = self._get_key(*args, **kwargs)
         if fut := self._futs.get(key, None):
             logger.info("using cached fut")
@@ -264,7 +279,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         await Queue.put(self, (fut, args, kwargs))
         return fut
     def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
-        self._workers
+        self._ensure_workers()
         key = self._get_key(*args, **kwargs)
         if fut := self._futs.get(key, None):
             logger.info("using cached fut")
