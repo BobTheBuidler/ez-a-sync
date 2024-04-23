@@ -435,7 +435,7 @@ def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASy
         if not isinstance(wrapped_func, ASyncFunction):
             wrapped_func = ASyncFunction(wrapped_func)
     elif isinstance(wrapped_func, _ASyncPropertyDescriptorBase):
-        wrapped_func = wrapped_func.get
+        wrapped_func = wrapped_func._fget
     if isinstance(wrapped_func, ASyncFunction):
         # this speeds things up a bit by bypassing some logic
         # TODO implement it like this elsewhere if profilers suggest
@@ -483,4 +483,8 @@ class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
 class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
     async def __aiter__(self) -> AsyncIterator[V]:
         async for key in self._mapping.keys():
-            yield await self._mapping[key]
+            fut = self._mapping[key]
+            assert isinstance(fut, asyncio.Future), fut
+            retval = await fut
+            assert not isinstance(fut, asyncio.Future), retval
+            return retval
