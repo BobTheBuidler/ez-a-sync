@@ -148,6 +148,18 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key, value in as_completed(unyielded, aiter=True):
                 yield key, value
 
+    def __delitem__(self, item: K) -> None:
+        task_or_fut = super().__getitem__(item)
+        if task_or_fut.done():
+            task_or_fut.cancel()
+        super().__delitem__(item)
+
+    def values(self) -> "AwaitableValues[T]":
+        return AwaitableValues(super().values())
+    
+    def items(self) -> "AwaitableValues[K, T]":
+        return AwaitableItems(super().items())
+    
     @functools.cached_property
     def _queue(self) -> ProcessingQueue:
         fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
@@ -200,6 +212,18 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             raise exceptions.MappingIsEmptyError
         return await gather(self)
     
+    def pop(self, *args, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
+        if not cancel:
+            return super().pop(*args)
+        fut_or_task = super().pop(*args)
+        if isinstance(fut_or_task, asyncio.Future) and not fut_or_task.done():
+            fut_or_task.cancel()
+        return fut_or_task
+    
+    def clear(self, cancel: bool = False) -> None:
+        for k in self:
+            self.pop(k, cancel=cancel)
+
     async def _tasks_for_iterables(self, *iterables) -> AsyncIterator["asyncio.Task[V]"]:
         """Ensure tasks are running for each key in the provided iterables."""
         async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
@@ -303,3 +327,33 @@ def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]"]) -> 
     if isinstance(wrapped_func, ASyncFunction):
         return wrapped_func._async_wrap if wrapped_func._async_def else wrapped_func._asyncified
     return wrapped_func
+
+
+class _AwaitableView(Iterator[T]):
+    consumed = False
+    def __init__(self, view: Iterator[T]) -> None:
+        self._view = view
+    def __iter__(self) -> Iterator[T]:
+        if consumed:
+            raise RuntimeError("This iterator has already started")
+        consumed = True
+        return self._view.__iter__
+    def __await__(self) -> List[T]:
+        if consumed:
+            raise RuntimeError("This iterator has already started")
+        consumed = True
+        return self._await().__await__()
+
+class AwaitableItems(_AwaitableView[Tuple[K, V]]):
+    async def _await(self) -> List[T]:
+        items = []
+        for key, task in self._view:
+            items.append((key, await task))
+        return items
+    
+class AwaitableValues(_AwaitableView[T]):
+    async def _await(self) -> List[T]:
+        values = []
+        for task in self._view:
+            values.append(await task)
+        return values
