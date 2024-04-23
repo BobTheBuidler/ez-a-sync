@@ -7,7 +7,9 @@ import sys
 from a_sync import _helpers, _kwargs
 from a_sync._typing import *
 from a_sync.modifiers.manager import ModifierManager
-    
+
+if TYPE_CHECKING:
+    from a_sync import TaskMapping
 
 logger = logging.getLogger(__name__)
 
@@ -62,25 +64,24 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         """Returns the final wrapped version of 'self._fn' decorated with all of the a_sync goodness."""
         return self._async_wrap if self._async_def else self._sync_wrap
     
-    async def any(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> bool:
+    def map(self, *iterables: AnyIterable[Any], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> "TaskMapping[P, T]":
         from a_sync import TaskMapping
-        return await TaskMapping(self, iterable, **kwargs).any(pop=True, sync=False)
+        return TaskMapping(self, *iterables, concurrency=concurrency, name=task_name, **kwargs)
     
-    async def all(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> bool:
-        from a_sync import TaskMapping
-        return await TaskMapping(self, iterable, **kwargs).all(pop=True, sync=False)
+    async def any(self, *iterables: AnyIterable[object], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> bool:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).any(pop=True, sync=False)
     
-    async def min(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> T:
-        from a_sync import TaskMapping
-        return await TaskMapping(self, iterable, **kwargs).min(pop=True, sync=False)
+    async def all(self, *iterables: AnyIterable[object], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> bool:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).all(pop=True, sync=False)
     
-    async def max(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> T:
-        from a_sync import TaskMapping
-        return await TaskMapping(self, iterable, **kwargs).max(pop=True, sync=False)
+    async def min(self, *iterables: AnyIterable[object], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> T:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).min(pop=True, sync=False)
     
-    async def sum(self, iterable: AnyIterable[object], *args: P.args, **kwargs: P.kwargs) -> T:
-        from a_sync import TaskMapping
-        return await TaskMapping(self, iterable, **kwargs).sum(pop=True, sync=False)
+    async def max(self, *iterables: AnyIterable[object], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> T:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).max(pop=True, sync=False)
+    
+    async def sum(self, *iterables: AnyIterable[object], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> T:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).sum(pop=True, sync=False)
     
     @functools.cached_property
     def _sync_default(self) -> bool:
