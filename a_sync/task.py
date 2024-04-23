@@ -1,6 +1,7 @@
 
 import asyncio
 import functools
+import inspect
 import logging
 
 from a_sync._bound import ASyncMethodDescriptor, ASyncMethodDescriptorSyncDefault
@@ -53,7 +54,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     def __init__(
         self, 
         wrapped_func: MappingFn[K, P, V] = None, 
-        *iterables: AnyIterable[K], 
+        *iterables: AnyIterableOrAwaitableIterable[K], 
         name: str = '', 
         concurrency: Optional[int] = None, 
         **wrapped_func_kwargs: P.kwargs,
@@ -175,7 +176,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return ProcessingQueue(fn, self.concurrency)
     
     @ASyncGeneratorFunction
-    async def map(self, *iterables: AnyIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
+    async def map(self, *iterables: AnyIterableOrAwaitableIterable[K], pop: bool = True, yields: Literal['keys', 'both'] = 'both') -> AsyncIterator[Tuple[K, V]]:
         """
             Asynchronously map iterables to tasks and yield their results.
 
@@ -313,7 +314,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             raise exceptions.MappingNotEmptyError
 
     @ASyncGeneratorFunction
-    async def _tasks_for_iterables(self, *iterables) -> AsyncIterator["asyncio.Task[V]"]:
+    async def _tasks_for_iterables(self, *iterables: AnyIterableOrAwaitableIterable[K]) -> AsyncIterator["asyncio.Task[V]"]:
         """Ensure tasks are running for each key in the provided iterables."""
         async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
             yield self[key]  # ensure task is running
@@ -387,7 +388,7 @@ def _yield(key: K, value: V, yields: Literal['keys', 'both']) -> Union[K, Tuple[
     else:
         raise ValueError(f"`yields` must be 'keys' or 'both'. You passed {yields}")
     
-async def _yield_keys(iterable: AnyIterable[K]) -> AsyncIterator[K]:
+async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncIterator[K]:
     """
     Asynchronously yield keys from the provided iterable.
 
@@ -402,6 +403,9 @@ async def _yield_keys(iterable: AnyIterable[K]) -> AsyncIterator[K]:
             yield key
     elif isinstance(iterable, Iterable):
         for key in iterable:
+            yield key
+    elif inspect.isawaitable(iterable):
+        async for key in _yield_keys(await iterable):
             yield key
     else:
         raise TypeError(iterable)
