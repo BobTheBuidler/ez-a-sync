@@ -236,6 +236,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         async for key, result in self.__aiter__(pop=pop):
             if max is None or result > max:
                 max = result
+        if min is None:
+            raise ValueError("we should not get here")
         return max
     
     @ASyncMethodDescriptorSyncDefault
@@ -245,14 +247,21 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         async for key, result in self.__aiter__(pop=pop):
             if min is None or result < min:
                 min = result
+        if min is None:
+            raise ValueError("we should not get here")
         return min
             
     @ASyncMethodDescriptorSyncDefault
     async def sum(self, pop: bool = False) -> V:
         self._if_pop_check_destroyed(pop)
-        retval = 0
+        retval = None
         async for key, result in self.__aiter__(pop=pop):
-            retval += result
+            if retval is None:
+                retval = 0 + result
+            else:
+                retval += result
+        if retval is None:
+            raise ValueError("we should not get here")
         return result
 
     @ASyncIterator.wrap
