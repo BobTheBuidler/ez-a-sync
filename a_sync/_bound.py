@@ -125,7 +125,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         logger.debug("calling %s", self)
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
-        retval = coro = super().__call__(self.__self__, *args, **kwargs)
+        retval = coro = ASyncFunction.__call__(self, self.__self__, *args, **kwargs)
         if not isawaitable(retval):
             # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
