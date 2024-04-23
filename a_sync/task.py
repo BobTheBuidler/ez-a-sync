@@ -106,7 +106,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 # its okay, we can start it as soon as the loop starts
                 self.__init_loader_coro = init_loader_coro
                 """An optional asyncio Coroutine to be run by the `_init_loader`"""
-                
+
             self._init_loader_next = init_loader_queue.get_all
             "An asyncio Event that indicates the _init_loader started a new task."
         else:
@@ -489,4 +489,4 @@ class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
             assert isinstance(fut, asyncio.Future), fut
             retval = await fut
             assert not isinstance(fut, asyncio.Future), retval
-            return retval
+            yield retval
