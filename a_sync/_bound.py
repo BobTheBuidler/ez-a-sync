@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-class ASyncMethodDescriptor(ASyncDescriptor[ASyncFunction[P, T]], Generic[I, P, T]):
+class ASyncMethodDescriptor(ASyncDescriptor[I, ASyncFunction[P, T]], Generic[I, P, T]):
     __wrapped__: AnyFn[Concatenate[I, P], T]
     def __get__(self, instance: I, owner: Any) -> "ASyncBoundMethod[I, P, T]":
         if instance is None:

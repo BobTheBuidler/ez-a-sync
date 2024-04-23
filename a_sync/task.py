@@ -146,9 +146,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                         await self._next.wait()
             # loader is already done by this point, but we need to check for exceptions
             await self._init_loader
-        elif not self:
+        else:
             # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
-            raise exceptions.MappingIsEmptyError
+            self._check_empty()
         # if there are any tasks that still need to complete, we need to await them and yield them
         if unyielded := {key: task for key, task in self.items() if key not in yielded}:
             async for key, value in as_completed(unyielded, aiter=True):
@@ -185,8 +185,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             Depending on `yields`, either keys, values,
             or tuples of key-value pairs representing the results of completed tasks.
         """
-        if self:
-            raise exceptions.MappingNotEmptyError
+        self._check_not_empty()
         async for _ in self._tasks_for_iterables(*iterables):
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
@@ -199,6 +198,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     async def all(self, pop: bool = True):
         if pop:
             self._check_destroyed()
+        self._check_empty()
         async for key, result in self:
             if pop:
                 self.pop(key, None)
@@ -250,6 +250,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if pop:
             self._check_destroyed()
         await self._init_loader
+        self._check_empty()
         retval = 0
         for key, task in self.items():
             if pop:
@@ -279,8 +280,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         """Wait for all tasks to complete and return a dictionary of the results."""
         if self._init_loader:
             await self._init_loader
-        if not self:
-            raise exceptions.MappingIsEmptyError
+        self._check_empty()
         return await gather(self)
     
     def pop(self, *args, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
@@ -299,6 +299,14 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if self._destroyed:
             raise RuntimeError
         self._destroyed = True
+    
+    def _check_empty(self) -> None:
+        if not self:
+            raise exceptions.MappingIsEmptyError
+    
+    def _check_not_empty(self) -> None:
+        if self:
+            raise exceptions.MappingNotEmptyError
 
     @ASyncIterator.wrap
     async def _tasks_for_iterables(self, *iterables) -> AsyncIterator["asyncio.Task[V]"]:
@@ -395,7 +403,7 @@ async def _yield_keys(iterable: AnyIterable[K]) -> AsyncIterator[K]:
         raise TypeError(iterable)
 
 @functools.lru_cache(maxsize=None)
-def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[T]]) -> Callable[P, Awaitable[T]]:
+def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[I, T]]) -> Callable[P, Awaitable[T]]:
     if isinstance(wrapped_func, ASyncMethodDescriptor):
         wrapped_func = wrapped_func.__wrapped__
         if not isinstance(wrapped_func, ASyncFunction):
@@ -408,30 +416,29 @@ def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASy
     return wrapped_func
 
 
-class _AwaitableView(ASyncGenericBase, Iterator[T]):
-    consumed = False
+class _AwaitableView(ASyncGenericBase, Iterable[T]):
     def __init__(self, view: Iterator[T], task_mapping: TaskMapping) -> None:
         self._view = view
         self._mapping = task_mapping
-    def __next__(self) -> Iterator[T]:
-        return self._view.__next__()
-    async def __anext__(self) -> T:
-        return await self._view.__next__()
+    def __iter__(self) -> Iterator[T]:
+        return iter(self._view)
     def __await__(self) -> List[T]:
         return self.__await().__await__()
     async def __await(self) -> List[T]:
-        if consumed:
-            raise RuntimeError("This iterator has already started")
-        consumed = True
         await self._mapping._init_loader
         return await self._await()
     def _await(self):
         raise NotImplementedError
 
 class AwaitableItems(_AwaitableView[Tuple[K, V]]):
-    async def _await(self) -> List[T]:
-        return [(key, await task) for key, task in self._view]
+    async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
+        return self._mapping.__aiter__()
+    async def _await(self) -> List[Tuple[K, V]]:
+        return [(key, result) async for key, result in self]
     
 class AwaitableValues(_AwaitableView[T]):
+    async def __aiter__(self) -> AsyncIterator[T]:
+        await self._mapping._init_loader
+        return as_completed([*self._mapping.values()], aiter=True)
     async def _await(self) -> List[T]:
-        return [await task for task in self._view]
+        return [result async for result in self]

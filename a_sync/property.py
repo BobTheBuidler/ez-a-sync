@@ -4,10 +4,11 @@ import logging
 
 import async_property as ap  # type: ignore [import]
 
-from a_sync import _helpers, config, exceptions
+from a_sync import _helpers, config, decorator, exceptions
 from a_sync._bound import ASyncBoundMethodAsyncDefault, ASyncMethodDescriptorAsyncDefault
 from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
+from a_sync.modified import ASyncFunction
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -15,7 +16,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
+class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, T]):
     __wrapped__: AsyncPropertyGetter[T]
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
     def __init__(
@@ -33,14 +34,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
             self._fget = self.__wrapped__
         else:
             self._fget = _helpers._asyncify(self.__wrapped__, self.modifiers.executor)
-    async def get(self, instance: object) -> T:
-        return await super().__get__(instance, None)
-    def map(self, instances: Iterable[object], owner: Any = None) -> "TaskMapping[object, T]":
-        from a_sync.task import TaskMapping
-        return TaskMapping(self.__get__, instances, owner=owner)
-    async def sum(self, instances: Iterable[object], owner: Any = None) -> Any:
-        return sum(await self.map(instances, owner=owner).values())
-    def __get__(self, instance: Optional[object], owner: Any) -> T:
+    def __get__(self, instance: Optional[I], owner: Any) -> T:
         if instance is None:
             return self
         awaitable = super().__get__(instance, owner)
@@ -50,96 +44,126 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[T]):
         else:
             should_await = self.default == "sync" if self.default else not asyncio.get_event_loop().is_running()  
         return _helpers._await(awaitable) if should_await else awaitable
+    async def get(self, instance: I) -> T:
+        return await super().__get__(instance, None)
+    def map(self, instances: AnyIterable[I], owner: Any = None) -> "TaskMapping[I, T]":
+        from a_sync.task import TaskMapping
+        return TaskMapping(self.__get__, instances, owner=owner)
+    @functools.cached_property
+    async def all(self) -> ASyncFunction[AnyIterable[I], bool]:
+        return decorator.a_sync(default=self.default)(self._all)
+    @functools.cached_property
+    async def any(self) -> ASyncFunction[AnyIterable[I], bool]:
+        return decorator.a_sync(default=self.default)(self._any)
+    @functools.cached_property
+    async def min(self) -> ASyncFunction[AnyIterable[I], T]:
+        return decorator.a_sync(default=self.default)(self._min)
+    @functools.cached_property
+    async def max(self) -> ASyncFunction[AnyIterable[I], T]:
+        return decorator.a_sync(default=self.default)(self._max)
+    @functools.cached_property
+    async def sum(self) -> ASyncFunction[AnyIterable[I], T]:
+        return decorator.a_sync(default=self.default)(self._sum)
+    async def _all(self, instances: AnyIterable[I], owner: Any = None) -> bool:
+        return await self.map(instances, owner=owner).all(pop=True, sync=False)
+    async def _any(self, instances: AnyIterable[I], owner: Any = None) -> bool:
+        return await self.map(instances, owner=owner).any(pop=True, sync=False)
+    async def _min(self, instances: AnyIterable[I], owner: Any = None) -> T:
+        return await self.map(instances, owner=owner).min(pop=True, sync=False)
+    async def _max(self, instances: AnyIterable[I], owner: Any = None) -> T:
+        return await self.map(instances, owner=owner).max(pop=True, sync=False)
+    async def _sum(self, instances: AnyIterable[I], owner: Any = None) -> T:
+        return await self.map(instances, owner=owner).sum(pop=True, sync=False)
 
-class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.base.AsyncPropertyDescriptor):
+class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
     pass
 
-class property(ASyncPropertyDescriptor[T]):...
+class property(ASyncPropertyDescriptor[I, T]):...
 
-class ASyncPropertyDescriptorSyncDefault(property[T]):
+class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
 
-class ASyncPropertyDescriptorAsyncDefault(property[T]):
+class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
     def __get__(self, instance, owner: Any) -> Awaitable[T]:
         return super().__get__(instance, owner)
 
 
-ASyncPropertyDecorator = Callable[[AsyncPropertyGetter[T]], property[T]]
-ASyncPropertyDecoratorSyncDefault = Callable[[AsyncPropertyGetter[T]], ASyncPropertyDescriptorSyncDefault[T]]
-ASyncPropertyDecoratorAsyncDefault = Callable[[AsyncPropertyGetter[T]], ASyncPropertyDescriptorAsyncDefault[T]]
+ASyncPropertyDecorator = Callable[[AsyncPropertyGetter[T]], property[I, T]]
+ASyncPropertyDecoratorSyncDefault = Callable[[AsyncPropertyGetter[T]], ASyncPropertyDescriptorSyncDefault[I, T]]
+ASyncPropertyDecoratorAsyncDefault = Callable[[AsyncPropertyGetter[T]], ASyncPropertyDescriptorAsyncDefault[I, T]]
 
 @overload
 def a_sync_property(  # type: ignore [misc]
     func: Literal[None],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncPropertyDecoratorSyncDefault[T]:...
+) -> ASyncPropertyDecoratorSyncDefault[I, T]:...
 
 @overload
 def a_sync_property(  # type: ignore [misc]
     func: Literal[None],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncPropertyDecoratorSyncDefault[T]:...
+) -> ASyncPropertyDecoratorSyncDefault[I, T]:...
 
 @overload
 def a_sync_property(  # type: ignore [misc]
     func: Literal[None],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncPropertyDecoratorAsyncDefault[T]:...
+) -> ASyncPropertyDecoratorAsyncDefault[I, T]:...
 
 @overload
 def a_sync_property(  # type: ignore [misc]
     func: Literal[None],
     default: DefaultMode = config.DEFAULT_MODE,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncPropertyDecorator[T]:...
+) -> ASyncPropertyDecorator[I, T]:...
     
 @overload
 def a_sync_property(  # type: ignore [misc]
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncPropertyDecoratorSyncDefault[T]:...
+) -> ASyncPropertyDecoratorSyncDefault[I, T]:...
     
 @overload
 def a_sync_property(  # type: ignore [misc]
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncPropertyDecoratorAsyncDefault[T]:...
+) -> ASyncPropertyDecoratorAsyncDefault[I, T]:...
     
 @overload
 def a_sync_property(  # type: ignore [misc]
     func: AnyPropertyGetter[T],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncPropertyDescriptorSyncDefault[T]:...
+) -> ASyncPropertyDescriptorSyncDefault[I, T]:...
     
 @overload
 def a_sync_property(  # type: ignore [misc]
     func: AnyPropertyGetter[T],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncPropertyDescriptorAsyncDefault[T]:...
+) -> ASyncPropertyDescriptorAsyncDefault[I, T]:...
     
 @overload
 def a_sync_property(  # type: ignore [misc]
     func: AnyPropertyGetter[T],
     default: DefaultMode = config.DEFAULT_MODE,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncPropertyDescriptor[T]:...
+) -> ASyncPropertyDescriptor[I, T]:...
     
 def a_sync_property(  # type: ignore [misc]
     func: Union[AnyPropertyGetter[T], DefaultMode] = None,
     **modifiers: Unpack[ModifierKwargs],
 ) -> Union[
-    ASyncPropertyDescriptor[T],
-    ASyncPropertyDescriptorSyncDefault[T], 
-    ASyncPropertyDescriptorAsyncDefault[T], 
-    ASyncPropertyDecorator[T],
-    ASyncPropertyDecoratorSyncDefault[T],
-    ASyncPropertyDecoratorAsyncDefault[T],
+    ASyncPropertyDescriptor[I, T],
+    ASyncPropertyDescriptorSyncDefault[I, T], 
+    ASyncPropertyDescriptorAsyncDefault[I, T], 
+    ASyncPropertyDecorator[I, T],
+    ASyncPropertyDecoratorSyncDefault[I, T],
+    ASyncPropertyDecoratorAsyncDefault[I, T],
 ]:
     func, modifiers = _parse_args(func, modifiers)
     if modifiers.get("default") == "sync":
@@ -152,7 +176,7 @@ def a_sync_property(  # type: ignore [misc]
     return decorator if func is None else decorator(func)
 
 
-class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.cached.AsyncCachedPropertyDescriptor):
+class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.cached.AsyncCachedPropertyDescriptor):
     __slots__ = "_fset", "_fdel", "__async_property__"
     def __init__(self, _fget, _fset=None, _fdel=None, field_name=None, **modifiers: Unpack[ModifierKwargs]):
         super().__init__(_fget, field_name, **modifiers)
@@ -161,82 +185,82 @@ class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[T], ap.cached.A
         self._fset = _fset
         self._fdel = _fdel
 
-class cached_property(ASyncCachedPropertyDescriptor[T]):...
+class cached_property(ASyncCachedPropertyDescriptor[I, T]):...
 
-class ASyncCachedPropertyDescriptorSyncDefault(cached_property[T]):
+class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
 
-class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[T]):
+class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[I, T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
 
-ASyncCachedPropertyDecorator = Callable[[AsyncPropertyGetter[T]], cached_property[T]]
-ASyncCachedPropertyDecoratorSyncDefault = Callable[[AsyncPropertyGetter[T]], ASyncCachedPropertyDescriptorSyncDefault[T]]
-ASyncCachedPropertyDecoratorAsyncDefault = Callable[[AsyncPropertyGetter[T]], ASyncCachedPropertyDescriptorAsyncDefault[T]]
+ASyncCachedPropertyDecorator = Callable[[AsyncPropertyGetter[T]], cached_property[I, T]]
+ASyncCachedPropertyDecoratorSyncDefault = Callable[[AsyncPropertyGetter[T]], ASyncCachedPropertyDescriptorSyncDefault[I, T]]
+ASyncCachedPropertyDecoratorAsyncDefault = Callable[[AsyncPropertyGetter[T]], ASyncCachedPropertyDescriptorAsyncDefault[I, T]]
 
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
     func: Literal[None],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncCachedPropertyDecoratorSyncDefault[T]:...
+) -> ASyncCachedPropertyDecoratorSyncDefault[I, T]:...
 
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
     func: Literal[None],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncCachedPropertyDecoratorAsyncDefault[T]:...
+) -> ASyncCachedPropertyDecoratorAsyncDefault[I, T]:...
 
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
     func: Literal[None],
     default: DefaultMode,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncCachedPropertyDecorator[T]:...
+) -> ASyncCachedPropertyDecorator[I, T]:...
 
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncCachedPropertyDecoratorSyncDefault[T]:...
+) -> ASyncCachedPropertyDecoratorSyncDefault[I, T]:...
 
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncCachedPropertyDecoratorAsyncDefault[T]:...
+) -> ASyncCachedPropertyDecoratorAsyncDefault[I, T]:...
     
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
     func: AnyPropertyGetter[T],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncCachedPropertyDescriptorSyncDefault[T]:... 
+) -> ASyncCachedPropertyDescriptorSyncDefault[I, T]:... 
 
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
     func: AnyPropertyGetter[T],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncCachedPropertyDescriptorAsyncDefault[T]:... 
+) -> ASyncCachedPropertyDescriptorAsyncDefault[I, T]:... 
 
 @overload
 def a_sync_cached_property(  # type: ignore [misc]
     func: AnyPropertyGetter[T],
     default: DefaultMode = config.DEFAULT_MODE,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncCachedPropertyDescriptor[T]:...
+) -> ASyncCachedPropertyDescriptor[I, T]:...
     
 def a_sync_cached_property(  # type: ignore [misc]
     func: Optional[AnyPropertyGetter[T]] = None,
     **modifiers: Unpack[ModifierKwargs],
 ) -> Union[
-    ASyncCachedPropertyDescriptor[T],
-    ASyncCachedPropertyDescriptorSyncDefault[T], 
-    ASyncCachedPropertyDescriptorAsyncDefault[T], 
-    ASyncCachedPropertyDecorator[T],
-    ASyncCachedPropertyDecoratorSyncDefault[T],
-    ASyncCachedPropertyDecoratorAsyncDefault[T],
+    ASyncCachedPropertyDescriptor[I, T],
+    ASyncCachedPropertyDescriptorSyncDefault[I, T], 
+    ASyncCachedPropertyDescriptorAsyncDefault[I, T], 
+    ASyncCachedPropertyDecorator[I, T],
+    ASyncCachedPropertyDecoratorSyncDefault[I, T],
+    ASyncCachedPropertyDecoratorAsyncDefault[I, T],
 ]:
     func, modifiers = _parse_args(func, modifiers)
     if modifiers.get("default") == "sync":
