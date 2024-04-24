@@ -342,7 +342,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     @functools.cached_property
     def _queue(self) -> ProcessingQueue:
         fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
-        return ProcessingQueue(fn, self.concurrency)
+        return ProcessingQueue(fn, self.concurrency, name=self._name)
     
     def _if_pop_check_destroyed(self, pop: bool) -> None:
         if pop:
