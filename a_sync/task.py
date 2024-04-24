@@ -350,8 +350,12 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if pop:
             self.clear(cancel=True)
             # _queue is a cached_property, we don't want to create it if it doesn't exist
-            self.__dict__.pop("_queue", None)
-            await asyncio.sleep(0)
+            if queue := self.__dict__.pop("_queue", None):
+                queue: ProcessingQueue
+                await queue.close()
+            else:
+                # we need to let the loop run once so the tasks can fully cancel
+                await asyncio.sleep(0)
     
     @overload
     def __if_pop_pop(self, pop: bool, key: K, cancel: bool = False) -> None:...
