@@ -30,6 +30,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.
     """
     
+    concurrency: Optional[int] = None
+    "The max number of coroutines that will run at any given time."
+
     _destroyed: bool = False
     "Boolean indicating whether his mapping has been consumed and is no longer usable for aggregations."
 
@@ -39,10 +42,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     _init_loader_next: Optional[Callable[[], Awaitable[Tuple[K, V]]]] = None
     "An asyncio Event that indicates the _init_loader started a new task."
     
+    _name: Optional[str] = None
+    "Optional name for tasks created by this mapping."
+
     __init_loader_coro: Optional[Awaitable[None]] = None
     """An optional asyncio Coroutine to be run by the `_init_loader`"""
 
-    __slots__ = "concurrency", "_wrapped_func", "_wrapped_func_kwargs", "_name", "_next", "__wrapped__", "__dict__"
+    __slots__ = "_wrapped_func", "_wrapped_func_kwargs", "_next", "__wrapped__", "__dict__"
     def __init__(
         self, 
         wrapped_func: MappingFn[K, P, V] = None, 
@@ -59,8 +65,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             **wrapped_func_kwargs: Keyword arguments that will be passed to `wrapped_func`.
         """
 
-        self.concurrency = concurrency
-        "The max number of coroutines that will run at any given time."
+        if concurrency:
+            self.concurrency = concurrency
 
         self.__wrapped__ = wrapped_func
         "The original callable used to initialize this mapping without any modifications."""
@@ -75,8 +81,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._wrapped_func_kwargs = wrapped_func_kwargs
         "Additional keyword arguments passed to `_wrapped_func`."
 
-        self._name = name
-        "Optional name for tasks created by this mapping."
+        if name:
+            self._name = name
 
         if iterables:
             self._next = asyncio.Event()
@@ -152,16 +158,17 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     async def __aiter__(self, pop: bool = False) -> AsyncIterator[Tuple[K, V]]:
         """aiterate thru all key-task pairs, yielding the key-result pair as each task completes"""
-        yielded = set()
+        self.__if_pop_check_destroyed(pop)
+
         # if you inited the TaskMapping with some iterators, we will load those
-           
+        yielded = set()
         if self._init_loader:
             while not self._init_loader.done():
                 await self._init_loader_next()
                 while unyielded := [key for key in self if key not in yielded]:
                     if ready := {key: task for key in unyielded if (task:=self[key]).done()}:
                         for key, task in ready.items():
-                            self._if_pop_pop(pop, key)
+                            self.__if_pop_pop(pop, key)
                             yield key, await task
                             yielded.add(key)
                     else:
@@ -174,8 +181,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         # if there are any tasks that still need to complete, we need to await them and yield them
         if unyielded := {key: self[key] for key in self if key not in yielded}:
             async for key, value in as_completed(unyielded, aiter=True):
-                self._if_pop_pop(pop, key)
+                self.__if_pop_pop(pop, key)
                 yield key, value
+        await self.__if_pop_clear(pop)
 
     def __delitem__(self, item: K) -> None:
         task_or_fut = super().__getitem__(item)
@@ -211,30 +219,28 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
         async for key, value in as_completed(self, aiter=True):
-            self._if_pop_pop(pop, key)
+            self.__if_pop_pop(pop, key)
             yield _yield(key, value, yields)
+        await self.__if_pop_clear(pop)
     
     @ASyncMethodDescriptorSyncDefault
     async def all(self, pop: bool = True) -> bool:
-        self._if_pop_check_destroyed(pop)
         async for key, result in self.__aiter__(pop=pop):
             if not bool(result):
-                self._if_pop_clear(pop)
+                await self.__if_pop_clear(pop)
                 return False
         return True
     
     @ASyncMethodDescriptorSyncDefault
     async def any(self, pop: bool = True) -> bool:
-        self._if_pop_check_destroyed(pop)
         async for key, result in self.__aiter__(pop=pop):
             if bool(result):
-                self._if_pop_clear(pop)
+                await self.__if_pop_clear(pop)
                 return True
         return False
     
     @ASyncMethodDescriptorSyncDefault
     async def max(self, pop: bool = True) -> V:
-        self._if_pop_check_destroyed(pop)
         max = None
         async for key, result in self.__aiter__(pop=pop):
             if max is None or result > max:
@@ -245,7 +251,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     
     @ASyncMethodDescriptorSyncDefault
     async def min(self, pop: bool = True) -> V:
-        self._if_pop_check_destroyed(pop)
         min = None
         async for key, result in self.__aiter__(pop=pop):
             if min is None or result < min:
@@ -256,7 +261,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             
     @ASyncMethodDescriptorSyncDefault
     async def sum(self, pop: bool = False) -> V:
-        self._if_pop_check_destroyed(pop)
         retval = None
         async for key, result in self.__aiter__(pop=pop):
             if retval is None:
@@ -280,7 +284,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         """
         for k, task in dict(self).items():
             if task.done():
-                self._if_pop_pop(pop, k)
+                self.__if_pop_pop(pop, k)
                 yield k, await task
     
     @ASyncMethodDescriptorSyncDefault
@@ -322,24 +326,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
         return ProcessingQueue(fn, self.concurrency, name=self._name)
     
-    def _if_pop_check_destroyed(self, pop: bool) -> None:
-        if pop:
-            if self._destroyed:
-                raise RuntimeError(f"{self} has already been consumed")
-            self._destroyed = True
-    
-    def _if_pop_clear(self, pop: bool) -> None:
-        if pop:
-            self.clear(cancel=True)
-    
-    @overload
-    def _if_pop_pop(self, pop: bool, key: K, cancel: bool = False) -> None:...
-    @overload
-    def _if_pop_pop(self, pop: bool, key: K, default: T, cancel: bool = False) -> None:...
-    def _if_pop_pop(self, pop: bool, *args: K, cancel: bool = False) -> None:
-        if pop:
-            self.pop(*args, cancel=cancel)
-    
     def _check_empty(self) -> None:
         if not self:
             raise exceptions.MappingIsEmptyError
@@ -353,6 +339,27 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         """Ensure tasks are running for each key in the provided iterables."""
         async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
             yield key, self[key]  # ensure task is running
+    
+    def __if_pop_check_destroyed(self, pop: bool) -> None:
+        if pop:
+            if self._destroyed:
+                raise RuntimeError(f"{self} has already been consumed")
+            self._destroyed = True
+    
+    async def __if_pop_clear(self, pop: bool) -> None:
+        if pop:
+            self.clear(cancel=True)
+            # _queue is a cached_property, we don't want to create it if it doesn't exist
+            self.__dict__.pop("_queue", None)
+            await asyncio.sleep(0)
+    
+    @overload
+    def __if_pop_pop(self, pop: bool, key: K, cancel: bool = False) -> None:...
+    @overload
+    def __if_pop_pop(self, pop: bool, key: K, default: T, cancel: bool = False) -> None:...
+    def __if_pop_pop(self, pop: bool, *args: K, cancel: bool = False) -> None:
+        if pop:
+            self.pop(*args, cancel=cancel)
 
 
 
