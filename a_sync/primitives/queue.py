@@ -142,8 +142,14 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     @functools.cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
         logger.debug("starting worker task for %s", self)
-        workers = [_start_task(self._worker_coro(), name=f"{self.name} [Task-{i}]") for i in range(self.num_workers)]
-        task = _start_task(asyncio.gather(*workers), name=f"{self.name} worker main Task")
+        workers = [
+            create_task(
+                coro=self._worker_coro(), 
+                name=f"{self.name} [Task-{i}]",
+                log_destroyed_pending=False,
+            ) for i in range(self.num_workers)
+        ]
+        task = create_task(asyncio.gather(*workers), name=f"{self.name} worker main Task", log_destroyed_pending=False)
         task._workers = workers
         return task
     async def _worker_coro(self) -> NoReturn:
@@ -186,12 +192,6 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         for worker in self._workers._workers:
             worker.cancel()
 
-
-def _start_task(coro: Coroutine, name: str) -> "asyncio.Task[NoReturn]":
-    task = create_task(coro, name=name)
-    # when this queue is garbage collected, these tasks should not log
-    task._log_destroy_pending = False
-    return task
 
 def _validate_args(i: int, can_return_less: bool) -> None:
     if not isinstance(i, int):

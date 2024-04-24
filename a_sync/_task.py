@@ -8,7 +8,13 @@ from a_sync._typing import *
 
 logger = logging.getLogger(__name__)
 
-def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until_done: bool = False) -> "asyncio.Task[T]":
+def create_task(
+    coro: Awaitable[T], 
+    *, 
+    name: Optional[str] = None, 
+    skip_gc_until_done: bool = False,
+    log_destroyed_pending: bool = True,
+) -> "asyncio.Task[T]":
     """
     Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.
 
@@ -20,6 +26,7 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
         coro: An Awaitable object from which to create the task.
         name: Optional name for the task, aiding in debugging.
         skip_gc_until_done: If True, the task is kept alive until it completes, preventing garbage collection.
+        log_destroyed_pending: If False, asyncio's default error log when a pending task is destroyed is suppressed.
 
     Returns:
         An asyncio.Task object created from the provided Awaitable.
@@ -30,6 +37,8 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
     task = asyncio.create_task(coro, name=name)
     if skip_gc_until_done:
         __persist(asyncio.create_task(__persisted_task_exc_wrap(task)))
+    if not log_destroyed_pending:
+        task._log_destroyed_pending = False
     return task
 
 
