@@ -64,10 +64,23 @@ def __prune_persisted_tasks():
     """Remove completed tasks from the set of persisted tasks."""
     for task in tuple(__persisted_tasks):
         if task.done():
-            if (e := task.exception()) and not isinstance(e, exceptions.PersistedTaskException):
-                logger.exception(e)
-                raise e
-            __persisted_tasks.discard(task)
+            e = task.exception()
+            if e:
+                if not isinstance(e, exceptions.PersistedTaskException):
+                    logger.exception(e)
+                    raise e
+                # we have to manually log the traceback that asyncio would usually log 
+                # since we already got the exception from the task and the usual handler will now not run
+                context = {
+                    'message':
+                        f'{task.__class__.__name__} exception was never retrieved',
+                    'exception': e,
+                    'future': task,
+                }
+                if task._source_traceback:
+                    context['source_traceback'] = task._source_traceback
+                task._loop.call_exception_handler(context)
+                __persisted_tasks.discard(task)
 
 async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
     """
