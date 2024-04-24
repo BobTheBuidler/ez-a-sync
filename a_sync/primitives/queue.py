@@ -200,7 +200,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                 # tasks cannot (and dont need to) be created as python is shutting down
                 if str(e) == "sys.meta_path is None, Python is likely shutting down":
                     return
-            for child_worker in self._workers._workers:
+            for child_worker in main_worker._workers:
                 child_worker.cancel()
 
 
