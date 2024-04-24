@@ -4,6 +4,7 @@ import heapq
 import logging
 import sys
 
+from a_sync._task import create_task
 from a_sync._typing import *
 
 logger = logging.getLogger(__name__)
@@ -74,6 +75,7 @@ class Queue(_Queue[T]):
 
 
 class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
+    _closed: bool = False
     __slots__ = "func", "num_workers"
     def __init__(
         self, 
@@ -110,6 +112,11 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                 'message': f'{self} was destroyed but has work pending!',
             }
             asyncio.get_event_loop().call_exception_handler(context)
+        if not self._closed:
+            self.__stop_workers()
+    @property
+    def name(self) -> str:
+        return self._name or repr(self)
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         self._ensure_workers()
         if self._no_futs:
@@ -124,22 +131,34 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         fut = self._create_future()
         super().put_nowait((args, kwargs, fut))
         return fut
+    async def close(self) -> None:
+        self.__stop_workers()
+        # let the loop run once so the tasks can be stopped fully
+        await asyncio.sleep(0)
     def _create_future(self) -> "asyncio.Future[V]":
         return asyncio.get_event_loop().create_future()
     def _ensure_workers(self) -> None:
+        if self._closed:
+            raise RuntimeError(f"{type(self).__name__} is closed: ", self) from None
         if self._workers.done():
+            worker_subtasks: List["asyncio.Task[NoReturn]"] = self._workers._workers
+            for worker in worker_subtasks:
+                if worker.done():
+                    raise worker.exception()
+            # this should never be reached, but just in case
             raise self._workers.exception()
     @functools.cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
-        from a_sync.task import create_task
         logger.debug("starting worker task for %s", self)
-        task = create_task(
-            asyncio.gather(*[
-                asyncio.create_task(self._worker_coro(), name=f"{self._name or repr(self)} [Task-{i}]") 
-                for i in range(self.num_workers)]), 
-            name=f"{self._name or repr(self)} worker Task",
-        )
-        task._log_destroy_pending = False
+        workers = [
+            create_task(
+                coro=self._worker_coro(), 
+                name=f"{self.name} [Task-{i}]",
+                log_destroy_pending=False,
+            ) for i in range(self.num_workers)
+        ]
+        task = create_task(asyncio.gather(*workers), name=f"{self.name} worker main Task", log_destroy_pending=False)
+        task._workers = workers
         return task
     async def _worker_coro(self) -> NoReturn:
         args: P.args
@@ -170,6 +189,19 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                         logger.exception(e)
                         raise e
                 self.task_done()
+    def __stop_workers(self) -> None:
+        self._closed = True
+        # since _workers is a cached property we want to pop it from instance.__dict__ so we dont accidentally create it
+        if main_worker := self.__dict__.pop("_workers", None):
+            try:
+                main_worker.cancel()
+            except ImportError as e:
+                # workers have not yet been started, and getting the property fails since
+                # tasks cannot (and dont need to) be created as python is shutting down
+                if str(e) == "sys.meta_path is None, Python is likely shutting down":
+                    return
+            for child_worker in main_worker._workers:
+                child_worker.cancel()
 
 
 def _validate_args(i: int, can_return_less: bool) -> None:
