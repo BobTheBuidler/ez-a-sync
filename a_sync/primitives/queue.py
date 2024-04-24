@@ -132,6 +132,11 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         return asyncio.get_event_loop().create_future()
     def _ensure_workers(self) -> None:
         if self._workers.done():
+            worker_subtasks: List["asyncio.Task[NoReturn]"] = self._workers._workers
+            for worker in worker_subtasks:
+                if worker.done():
+                    raise worker.exception()
+            # this should never be reached, but just in case
             raise self._workers.exception()
     @functools.cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
