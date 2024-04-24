@@ -110,6 +110,10 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                 'message': f'{self} was destroyed but has work pending!',
             }
             asyncio.get_event_loop().call_exception_handler(context)
+        self.__stop_workers()
+    @property
+    def name(self) -> str:
+        return self._name or repr(self)
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         self._ensure_workers()
         if self._no_futs:
@@ -133,12 +137,16 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     def _workers(self) -> "asyncio.Task[NoReturn]":
         from a_sync.task import create_task
         logger.debug("starting worker task for %s", self)
-        task = create_task(
-            asyncio.gather(*[
-                asyncio.create_task(self._worker_coro(), name=f"{self._name or repr(self)} [Task-{i}]") 
-                for i in range(self.num_workers)]), 
-            name=f"{self._name or repr(self)} worker Task",
-        )
+        workers = [
+            asyncio.create_task(self._worker_coro(), name=f"{self.name} [Task-{i}]") 
+            for i in range(self.num_workers)
+        ]
+        for task in workers:
+            # when this queue is garbage collected, these tasks should not log
+            task._log_destroy_pending = False
+        task = create_task(asyncio.gather(*workers), name=f"{self.name} worker main Task")
+        task._workers = workers
+        # when this queue is garbage collected, this task should not log
         task._log_destroy_pending = False
         return task
     async def _worker_coro(self) -> NoReturn:
@@ -170,6 +178,10 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                         logger.exception(e)
                         raise e
                 self.task_done()
+    def __stop_workers(self) -> None:
+        self._workers.cancel()
+        for worker in self._workers._workers:
+            worker.cancel()
 
 
 def _validate_args(i: int, can_return_less: bool) -> None:
