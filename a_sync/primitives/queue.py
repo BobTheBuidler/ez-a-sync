@@ -4,6 +4,7 @@ import heapq
 import logging
 import sys
 
+from a_sync._task import create_task
 from a_sync._typing import *
 
 logger = logging.getLogger(__name__)
@@ -175,14 +176,19 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                         raise e
                 self.task_done()
     def __stop_workers(self) -> None:
-        self._workers.cancel()
+        try:
+            self._workers.cancel()
+        except ImportError as e:
+            # workers have not yet been started, and getting the property fails since
+            # tasks cannot (and dont need to) be created as python is shutting down
+            if str(e) == "sys.meta_path is None, Python is likely shutting down":
+                return
         for worker in self._workers._workers:
             worker.cancel()
 
 
 def _start_task(coro: Coroutine, name: str) -> "asyncio.Task[NoReturn]":
-    from a_sync.task import create_task
-    task = asyncio.create_task(coro, name=name)
+    task = create_task(coro, name=name)
     # when this queue is garbage collected, these tasks should not log
     task._log_destroy_pending = False
     return task
