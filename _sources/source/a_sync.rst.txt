@@ -78,6 +78,15 @@ a\_sync.\_meta module
    :show-inheritance:
    :private-members:
 
+a\_sync.\_task module
+---------------------
+
+.. automodule:: a_sync._task
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 a\_sync.\_typing module
 -----------------------
 

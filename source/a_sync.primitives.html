@@ -63,6 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._helpers">a_sync._helpers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._kwargs">a_sync._kwargs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#a-sync-meta-module">a_sync._meta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._task">a_sync._task module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._typing">a_sync._typing module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#a-sync-abstract-module">a_sync.abstract module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.aliases">a_sync.aliases module</a></li>
@@ -75,7 +76,7 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.modified">a_sync.modified module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.property">a_sync.property module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#a-sync-singleton-module">a_sync.singleton module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="a_sync.html#a-sync-task-module">a_sync.task module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#id1">a_sync.task module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-contents">Module contents</a></li>
 </ul>
 </li>
@@ -1588,6 +1589,16 @@ cancelled.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.close" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.empty">
 <span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.empty" title="Link to this definition"></a></dt>
 <dd><p>Return True if the queue is empty, False otherwise.</p>
@@ -1685,6 +1696,11 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._closed">
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._closed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._finished">
 <span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._finished" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -1735,6 +1751,11 @@ the queue.</p>
 <dd><p>Number of items allowed in the queue.</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.num_workers">
 <span class="sig-name descname"><span class="pre">num_workers</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.num_workers" title="Link to this definition"></a></dt>
@@ -1778,6 +1799,16 @@ the queue.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.__stop_workers">
+<span class="sig-name descname"><span class="pre">__stop_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.__stop_workers" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1838,6 +1869,16 @@ the queue.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.close" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1938,6 +1979,11 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._closed">
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._closed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._finished">
 <span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._finished" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -1987,6 +2033,11 @@ the queue.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.maxsize" title="Link to this definition"></a></dt>
 <dd><p>Number of items allowed in the queue.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.num_workers">
@@ -2524,6 +2575,16 @@ InvalidStateError.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.close" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.empty">
 <span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.empty" title="Link to this definition"></a></dt>
 <dd><p>Return True if the queue is empty, False otherwise.</p>
@@ -2619,6 +2680,11 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._closed">
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._closed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._finished">
 <span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._finished" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -2673,6 +2739,11 @@ the queue.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxsize</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.maxsize" title="Link to this definition"></a></dt>
 <dd><p>Number of items allowed in the queue.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.num_workers">
@@ -4201,6 +4272,16 @@ priority_semaphore = PrioritySemaphore(10)</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.__stop_workers">
+<span class="sig-name descname"><span class="pre">__stop_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.__stop_workers" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._create_future">
 <span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._create_future" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -4256,6 +4337,16 @@ priority_semaphore = PrioritySemaphore(10)</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.close" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -4356,6 +4447,11 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._closed">
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._closed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._finished">
 <span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._finished" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -4405,6 +4501,11 @@ the queue.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxsize</span></span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.maxsize" title="Link to this definition"></a></dt>
 <dd><p>Number of items allowed in the queue.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.num_workers">
@@ -5188,6 +5289,16 @@ become larger than zero again, wake up that coroutine.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.close" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.empty">
 <span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.empty" title="Link to this definition"></a></dt>
 <dd><p>Return True if the queue is empty, False otherwise.</p>
@@ -5283,6 +5394,11 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._closed">
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._closed" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._finished">
 <span class="sig-name descname"><span class="pre">_finished</span></span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._finished" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -5342,6 +5458,11 @@ the queue.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxsize</span></span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.maxsize" title="Link to this definition"></a></dt>
 <dd><p>Number of items allowed in the queue.</p>
 </dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.num_workers">

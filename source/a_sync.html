@@ -89,6 +89,13 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#a-sync-meta-module">a_sync._meta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-a_sync._task">a_sync._task module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync._task.__await"><code class="docutils literal notranslate"><span class="pre">__await()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync._task.__persisted_task_exc_wrap"><code class="docutils literal notranslate"><span class="pre">__persisted_task_exc_wrap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync._task.__prune_persisted_tasks"><code class="docutils literal notranslate"><span class="pre">__prune_persisted_tasks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync._task.create_task"><code class="docutils literal notranslate"><span class="pre">create_task()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-a_sync._typing">a_sync._typing module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync._typing.AsyncUnboundMethod"><code class="docutils literal notranslate"><span class="pre">AsyncUnboundMethod</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync._typing.CoroBoundMethod"><code class="docutils literal notranslate"><span class="pre">CoroBoundMethod</span></code></a></li>
@@ -167,7 +174,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#a-sync-singleton-module">a_sync.singleton module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#a-sync-task-module">a_sync.task module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">a_sync.task module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
@@ -445,6 +452,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._put"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue._put()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._wakeup_next"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue._wakeup_next()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._worker_coro"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue._worker_coro()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.close"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.close()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.empty"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.empty()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.full"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.full()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.get"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.get()</span></code></a></li>
@@ -454,6 +462,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.put_nowait"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.put_nowait()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.qsize"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.qsize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.task_done"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.task_done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._closed"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue._closed</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._finished"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue._finished</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._getters"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue._getters</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._is_protocol"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue._is_protocol</span></code></a></li>
@@ -464,12 +473,14 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue._workers"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue._workers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.func"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.func</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.maxsize"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.maxsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.name"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.PriorityProcessingQueue.num_workers"><code class="docutils literal notranslate"><span class="pre">PriorityProcessingQueue.num_workers</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.__call__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__call__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.__init__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.__stop_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__stop_workers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._create_future"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._create_future()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._ensure_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._ensure_workers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._format"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._format()</span></code></a></li>
@@ -479,6 +490,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._put"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._put()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._wakeup_next"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._wakeup_next()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._worker_coro"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._worker_coro()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.close"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.close()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.empty"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.empty()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.full"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.full()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.get"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.get()</span></code></a></li>
@@ -488,6 +500,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.put_nowait"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.put_nowait()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.qsize"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.qsize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.task_done"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.task_done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._closed"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._closed</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._finished"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._finished</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._getters"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._getters</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._is_protocol"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._is_protocol</span></code></a></li>
@@ -498,6 +511,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._workers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.func"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.func</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.maxsize"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.maxsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.name"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.num_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.num_workers</span></code></a></li>
 </ul>
 </li>
@@ -573,6 +587,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._put"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._put()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._wakeup_next"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._wakeup_next()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._worker_coro"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._worker_coro()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.close"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.close()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.empty"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.empty()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.full"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.full()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.get"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.get()</span></code></a></li>
@@ -582,6 +597,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.put_nowait"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.put_nowait()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.qsize"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.qsize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.task_done"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.task_done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._closed"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._closed</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._finished"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._finished</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._getters"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._getters</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._is_protocol"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._is_protocol</span></code></a></li>
@@ -593,6 +609,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue._workers"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._workers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.func"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.func</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.maxsize"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.maxsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.name"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.SmartProcessingQueue.num_workers"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.num_workers</span></code></a></li>
 </ul>
 </li>
@@ -807,6 +824,7 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__call__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__call__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__init__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__stop_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__stop_workers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._create_future"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._create_future()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._ensure_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._ensure_workers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._format"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._format()</span></code></a></li>
@@ -816,6 +834,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._put"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._put()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._wakeup_next"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._wakeup_next()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._worker_coro"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._worker_coro()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.close"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.close()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.empty"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.empty()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.full"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.full()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.get"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.get()</span></code></a></li>
@@ -825,6 +844,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.put_nowait"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.put_nowait()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.qsize"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.qsize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.task_done"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.task_done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._closed"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._closed</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._finished"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._finished</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._getters"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._getters</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._is_protocol"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._is_protocol</span></code></a></li>
@@ -835,6 +855,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._workers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.func"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.func</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.maxsize"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.maxsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.name"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.num_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.num_workers</span></code></a></li>
 </ul>
 </li>
@@ -937,6 +958,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue._put"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._put()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue._wakeup_next"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._wakeup_next()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue._worker_coro"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._worker_coro()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.close"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.close()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.empty"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.empty()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.full"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.full()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.get"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.get()</span></code></a></li>
@@ -946,6 +968,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.put_nowait"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.put_nowait()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.qsize"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.qsize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.task_done"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.task_done()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue._closed"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._closed</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue._finished"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._finished</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue._futs"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._futs</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue._getters"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._getters</span></code></a></li>
@@ -958,6 +981,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue._workers"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue._workers</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.func"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.func</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.maxsize"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.maxsize</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.name"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.SmartProcessingQueue.num_workers"><code class="docutils literal notranslate"><span class="pre">SmartProcessingQueue.num_workers</span></code></a></li>
 </ul>
 </li>
@@ -2770,6 +2794,75 @@ You can use any of the provided flags, whichever makes most sense for your use c
 </section>
 <section id="a-sync-meta-module">
 <h2>a_sync._meta module<a class="headerlink" href="#a-sync-meta-module" title="Link to this heading"></a></h2>
+</section>
+<section id="module-a_sync._task">
+<span id="a-sync-task-module"></span><h2>a_sync._task module<a class="headerlink" href="#module-a_sync._task" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync._task.__await">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._task.</span></span><span class="sig-name descname"><span class="pre">__await</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">awaitable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._task.__await" title="Link to this definition"></a></dt>
+<dd><p>Wait for the completion of an Awaitable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>awaitable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync._task.__persisted_task_exc_wrap">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._task.</span></span><span class="sig-name descname"><span class="pre">__persisted_task_exc_wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._task.__persisted_task_exc_wrap" title="Link to this definition"></a></dt>
+<dd><p>Wrap a task to handle its exception in a specialized manner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>task</strong> (<em>Task</em><em>[</em><em>T</em><em>]</em>) – The asyncio Task to wrap.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the task, if successful.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.exceptions.PersistedTaskException" title="a_sync.exceptions.PersistedTaskException"><strong>PersistedTaskException</strong></a> – Wraps any exception raised by the task for special handling.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync._task.__prune_persisted_tasks">
+<span class="sig-prename descclassname"><span class="pre">a_sync._task.</span></span><span class="sig-name descname"><span class="pre">__prune_persisted_tasks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._task.__prune_persisted_tasks" title="Link to this definition"></a></dt>
+<dd><p>Remove completed tasks from the set of persisted tasks.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync._task.create_task">
+<span class="sig-prename descclassname"><span class="pre">a_sync._task.</span></span><span class="sig-name descname"><span class="pre">create_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coro</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_gc_until_done</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_destroy_pending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._task.create_task" title="Link to this definition"></a></dt>
+<dd><p>Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.</p>
+<p>Unlike asyncio.create_task, which requires a coroutine, this function accepts any Awaitable, ensuring broader
+compatibility. It optionally prevents the task from being garbage-collected until completion and provides
+enhanced error management by wrapping exceptions in a custom exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – An Awaitable object from which to create the task.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>) – Optional name for the task, aiding in debugging.</p></li>
+<li><p><strong>skip_gc_until_done</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, the task is kept alive until it completes, preventing garbage collection.</p></li>
+<li><p><strong>log_destroyed_pending</strong> – If False, asyncio’s default error log when a pending task is destroyed is suppressed.</p></li>
+<li><p><strong>log_destroy_pending</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An asyncio.Task object created from the provided Awaitable.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Task</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-a_sync._typing">
 <span id="a-sync-typing-module"></span><h2>a_sync._typing module<a class="headerlink" href="#module-a_sync._typing" title="Link to this heading"></a></h2>
@@ -8118,8 +8211,8 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <section id="a-sync-singleton-module">
 <h2>a_sync.singleton module<a class="headerlink" href="#a-sync-singleton-module" title="Link to this heading"></a></h2>
 </section>
-<section id="a-sync-task-module">
-<h2>a_sync.task module<a class="headerlink" href="#a-sync-task-module" title="Link to this heading"></a></h2>
+<section id="id1">
+<h2>a_sync.task module<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 </section>
 <section id="module-contents">
 <h2>Module contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
