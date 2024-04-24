@@ -154,10 +154,10 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             create_task(
                 coro=self._worker_coro(), 
                 name=f"{self.name} [Task-{i}]",
-                log_destroyed_pending=False,
+                log_destroy_pending=False,
             ) for i in range(self.num_workers)
         ]
-        task = create_task(asyncio.gather(*workers), name=f"{self.name} worker main Task", log_destroyed_pending=False)
+        task = create_task(asyncio.gather(*workers), name=f"{self.name} worker main Task", log_destroy_pending=False)
         task._workers = workers
         return task
     async def _worker_coro(self) -> NoReturn:

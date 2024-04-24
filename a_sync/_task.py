@@ -13,7 +13,7 @@ def create_task(
     *, 
     name: Optional[str] = None, 
     skip_gc_until_done: bool = False,
-    log_destroyed_pending: bool = True,
+    log_destroy_pending: bool = True,
 ) -> "asyncio.Task[T]":
     """
     Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.
@@ -37,8 +37,8 @@ def create_task(
     task = asyncio.create_task(coro, name=name)
     if skip_gc_until_done:
         __persisted_tasks.add(asyncio.create_task(__persisted_task_exc_wrap(task)))
-    if log_destroyed_pending is False:
-        task._log_destroyed_pending = False
+    if log_destroy_pending is False:
+        task._log_destroy_pending = False
     __prune_persisted_tasks()
     return task
 
