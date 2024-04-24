@@ -1,12 +1,6 @@
 name: PyTest
 
 on:
-  push:
-    branch: dev
-    paths:
-      - '**.py'
-      - '**/pytest.yaml'
-      - '!**/docs/conf.py'
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ master, dev ]
