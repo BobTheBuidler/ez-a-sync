@@ -335,12 +335,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self.pop(k, cancel=cancel)
 
     @functools.cached_property
-    def _init_loader(self) -> "asyncio.Task[None]":
-        name=f"{type(self).__name__} init loader loading {self.__iterables__} for {self}"
-        try:
-            return create_task(coro=self.__init_loader_coro, name=name)
-        except RuntimeError as e:
-            raise _NoRunningLoop if str(e) == "no running event loop" else e
+    def _init_loader(self) -> Optional["asyncio.Task[None]"]:
+        if self.__init_loader_coro:
+            name=f"{type(self).__name__} init loader loading {self.__iterables__} for {self}"
+            try:
+                return create_task(coro=self.__init_loader_coro, name=name)
+            except RuntimeError as e:
+                raise _NoRunningLoop if str(e) == "no running event loop" else e
     
     @functools.cached_property
     def _queue(self) -> ProcessingQueue:
