@@ -57,7 +57,7 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
         yield from ASyncIterator(self.__aiter__())
     __slots__ = "__wrapped__", 
 
-AsyncGenFunc = Callable[P, Union[AsyncGenerator[Any, None, T], AsyncIterator[T]]]
+AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
 
 class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
     """
