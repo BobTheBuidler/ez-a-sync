@@ -179,12 +179,12 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                     args, kwargs, fut = await self.get()
                     fut.set_result(await self.func(*args, **kwargs))
                 except asyncio.exceptions.InvalidStateError:
-                    logger.error("cannot set result for %s: %s", fut, result)
+                    logger.error("cannot set result for %s %s: %s", self.func.__name__, fut, result)
                 except Exception as e:
                     try:
                         fut.set_exception(e)
                     except asyncio.exceptions.InvalidStateError:
-                        logger.error("cannot set exception for %s: %s", fut, e)
+                        logger.error("cannot set exception for %s %s: %s", self.func.__name__, fut, e)
                     except UnboundLocalError as u:
                         logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
                         if str(e) != "local variable 'fut' referenced before assignment":
@@ -341,13 +341,13 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                 result = await self.func(*args, **kwargs)
                 fut.set_result(result)
             except asyncio.exceptions.InvalidStateError:
-                logger.error("cannot set result for %s: %s", fut, result)
+                logger.error("cannot set result for %s %s: %s", self.func.__name__, fut, result)
             except Exception as e:
                 logger.debug("%s: %s", type(e).__name__, e)
                 try:
                     fut.set_exception(e)
                 except asyncio.exceptions.InvalidStateError:
-                    logger.error("cannot set exception for %s: %s", fut, e)
+                    logger.error("cannot set exception for %s %s: %s", self.func.__name__, fut, e)
                 except UnboundLocalError as u:
                     logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
                     if str(e) != "local variable 'fut' referenced before assignment":
