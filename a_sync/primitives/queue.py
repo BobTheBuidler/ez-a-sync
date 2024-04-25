@@ -334,10 +334,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         while True:
             try:
                 args, kwargs, fut = await self.get()
-                if fut.num_waiters > 1:
-                    logger.info("processing %s", fut)
-                else:
-                    logger.debug("processing %s", fut)
+                logger.debug("processing %s", fut)
                 result = await self.func(*args, **kwargs)
                 fut.set_result(result)
             except asyncio.exceptions.InvalidStateError:
