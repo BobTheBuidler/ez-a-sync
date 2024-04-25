@@ -41,6 +41,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     _init_loader: Optional["asyncio.Task[None]"] = None
     "An asyncio Task used to preload values from the iterables."
     
+    _init_loader_next: Optional[Callable[[], Awaitable[Tuple[Tuple[K, "asyncio.Task[V]"]]]]] = None
+    "A coro function that blocks until the _init_loader starts a new task(s), and then returns a `Tuple[Tuple[K, asyncio.Task[V]]]` with all of the new tasks and the keys that started them."
+
     _name: Optional[str] = None
     "Optional name for tasks created by this mapping."
 
@@ -55,9 +58,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     
     __init_loader_coro: Optional[Awaitable[None]] = None
     """An optional asyncio Coroutine to be run by the `_init_loader`"""
-
-    __init_loader_next: Optional[Callable[[], Awaitable[Tuple[K, V]]]] = None
-    "An asyncio Event that indicates the _init_loader started a new task."
 
     __slots__ = "_wrapped_func", "__wrapped__", "__dict__"
     # NOTE: maybe since we use so many classvars here we are better off getting rid of slots
@@ -132,7 +132,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             with contextlib.suppress(_NoRunningLoop):
                 # its okay if we get this exception, we can start the task as soon as the loop starts
                 self._init_loader                
-            self.__init_loader_next = init_loader_queue.get_all
+            self._init_loader_next = init_loader_queue.get_all
     
     def __repr__(self) -> str:
         return f"<{type(self).__name__} for {self._wrapped_func} ({dict.__repr__(self)}) at {hex(id(self))}>"
@@ -178,7 +178,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         yielded = set()
         if self._init_loader:
             while not self._init_loader.done():
-                await self.__init_loader_next()
+                await self._init_loader_next()
                 while unyielded := [key for key in self if key not in yielded]:
                     if ready := {key: task for key in unyielded if (task:=self[key]).done()}:
                         for key, task in ready.items():
@@ -476,7 +476,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         if self.__mapping__._init_loader is None:
             return
         while not self.__mapping__._init_loader.done():
-            for key, fut in await self.__mapping__.__init_loader_next():
+            for key, fut in await self.__mapping__._init_loader_next():
                 if key not in yielded:
                     yielded.add(key)
                     yield key
