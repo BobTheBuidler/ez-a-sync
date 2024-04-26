@@ -87,3 +87,6 @@ class PersistedTaskException(Exception):
         super().__init__(f"{exc.__class__.__name__}: {exc}", task)
         self.exception = exc
         self.task = task
+
+class EmptySequenceError(ValueError):
+    ...
