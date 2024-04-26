@@ -76,7 +76,7 @@ class Queue(_Queue[T]):
 
 class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     _closed: bool = False
-    __slots__ = "func", "num_workers"
+    __slots__ = "func", "num_workers", "_worker_coro"
     def __init__(
         self, 
         func: Callable[P, Awaitable[V]], 
@@ -92,11 +92,16 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             raise NotImplementedError(f"You cannot pass a value for `loop` in python {sys.version_info}")
         else:
             super().__init__()
+            
         self.func = func
-        self._worker_coro.__name__ += f"_{func.__name__}"
         self.num_workers = num_workers
         self._name = name
         self._no_futs = not return_data
+        @functools.wraps(func)
+        async def _worker_coro():
+            # we use this little helper so we can have context of `func` in any err logs
+            return await self.__worker_coro()
+        self._worker_coro = _worker_coro
     def __repr__(self) -> str:
         repr_string = f"<{type(self).__name__}"
         if self._name:
@@ -161,7 +166,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         task = create_task(asyncio.gather(*workers), name=f"{self.name} worker main Task", log_destroy_pending=False)
         task._workers = workers
         return task
-    async def _worker_coro(self) -> NoReturn:
+    async def __worker_coro(self) -> NoReturn:
         args: P.args
         kwargs: P.kwargs
         if self._no_futs:
