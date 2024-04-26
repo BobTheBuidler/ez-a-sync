@@ -1579,16 +1579,6 @@ cancelled.</p></li>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.close">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.close" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -1735,6 +1725,11 @@ the queue.</p>
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._worker_coro">
+<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._workers">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._workers" title="Link to this definition"></a></dt>
@@ -1814,6 +1809,16 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.__worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._create_future">
 <span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._create_future" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -1862,16 +1867,6 @@ the queue.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._wakeup_next">
 <span class="sig-name descname"><span class="pre">_wakeup_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._wakeup_next" title="Link to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.close">
@@ -2016,6 +2011,11 @@ the queue.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._unfinished_tasks">
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._worker_coro">
+<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -2501,6 +2501,16 @@ InvalidStateError.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.__worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._create_future">
 <span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._create_future" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -2563,16 +2573,6 @@ InvalidStateError.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._wakeup_next">
 <span class="sig-name descname"><span class="pre">_wakeup_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._wakeup_next" title="Link to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.close">
@@ -2727,6 +2727,11 @@ the queue.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._unfinished_tasks">
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._worker_coro">
+<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -4287,6 +4292,16 @@ priority_semaphore = PrioritySemaphore(10)</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.__worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._create_future">
 <span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._create_future" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -4335,16 +4350,6 @@ priority_semaphore = PrioritySemaphore(10)</p>
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._wakeup_next">
 <span class="sig-name descname"><span class="pre">_wakeup_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._wakeup_next" title="Link to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.close">
@@ -4489,6 +4494,11 @@ the queue.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._unfinished_tasks">
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._worker_coro">
+<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -5220,6 +5230,16 @@ become larger than zero again, wake up that coroutine.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.__worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._create_future">
 <span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._create_future" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -5282,16 +5302,6 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._wakeup_next">
 <span class="sig-name descname"><span class="pre">_wakeup_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._wakeup_next" title="Link to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.close">
@@ -5446,6 +5456,11 @@ the queue.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._unfinished_tasks">
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._worker_coro">
+<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
