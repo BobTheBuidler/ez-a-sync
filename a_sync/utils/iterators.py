@@ -105,7 +105,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
     def _as_yielded_done_callback(t: asyncio.Task) -> None:
         if (e := t.exception()) and not next_fut.done(): 
             next_fut.set_exception(e)
-    task.add_done_callback(__as_yielded_done_callback)
+    task.add_done_callback(_as_yielded_done_callback)
     
     while not task.done():
         next_fut = asyncio.get_event_loop().create_future()
@@ -118,9 +118,10 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
         asyncio.futures._chain_future(get_task, next_fut)  # type: ignore [attr-defined]
         for item in (await next_fut, *_get_ready(queue)):
             if isinstance(item, _Done):
-                task.cancel()
                 return
             yield item
+            
+    # ensure it isn't done due to an exception
     if e := task.exception():
         raise e
 
