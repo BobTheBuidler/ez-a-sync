@@ -93,6 +93,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         else:
             super().__init__()
         self.func = func
+        self._worker_coro.__name__ += func.__name__
         self.num_workers = num_workers
         self._name = name
         self._no_futs = not return_data
