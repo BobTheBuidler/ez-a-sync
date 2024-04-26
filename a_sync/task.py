@@ -178,10 +178,14 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if self._init_loader:
             while not self._init_loader.done():
                 # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
-                await asyncio.wait(
-                    [self._init_loader_next(), self._init_loader],
+                done: Set[asyncio.Task]
+                done, pending = await asyncio.wait(
+                    [create_task(self._init_loader_next(), log_destroy_pending=False), self._init_loader],
                     return_when=asyncio.FIRST_COMPLETED
                 )
+                for task in done:
+                    # check for exceptions
+                    await task
                 while unyielded := [key for key in self if key not in yielded]:
                     if ready := {key: task for key in unyielded if (task:=self[key]).done()}:
                         for key, task in ready.items():
