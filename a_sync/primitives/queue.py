@@ -331,7 +331,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
     def _get(self):
         fut, args, kwargs = super()._get()
         return args, kwargs, fut
-    async def _worker_coro(self) -> NoReturn:
+    async def __worker_coro(self) -> NoReturn:
         args: P.args
         kwargs: P.kwargs
         fut: SmartFuture[V]
