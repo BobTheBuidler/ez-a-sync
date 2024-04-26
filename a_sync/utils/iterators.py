@@ -118,9 +118,10 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
         asyncio.futures._chain_future(get_task, next_fut)  # type: ignore [attr-defined]
         for item in (await next_fut, *_get_ready(queue)):
             if isinstance(item, _Done):
-                task.cancel()
                 return
             yield item
+            
+    # ensure it isn't done due to an exception
     if e := task.exception():
         raise e
 
