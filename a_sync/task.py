@@ -5,11 +5,10 @@ import functools
 import inspect
 import logging
 
-from a_sync import _kwargs
+from a_sync import _kwargs, exceptions
 from a_sync._bound import ASyncBoundMethod, ASyncMethodDescriptor, ASyncMethodDescriptorSyncDefault
 from a_sync._task import create_task
 from a_sync._typing import *
-from a_sync import exceptions
 from a_sync.base import ASyncGenericBase
 from a_sync.iter import ASyncIterator, ASyncGeneratorFunction
 from a_sync.modified import ASyncFunction
@@ -252,7 +251,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     await self.__if_pop_clear(pop)
                     return False
             return True
-        except IterableIsEmptyError:
+        except _EmptySequenceError:
             return True
     
     @ASyncMethodDescriptorSyncDefault
@@ -263,7 +262,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     await self.__if_pop_clear(pop)
                     return True
             return False
-        except IterableIsEmptyError:
+        except _EmptySequenceError:
             return False
     
     @ASyncMethodDescriptorSyncDefault
@@ -273,8 +272,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key, result in self.__aiter__(pop=pop):
                 if max is None or result > max:
                     max = result
-        except IterableIsEmptyError:
-            raise ValueError("max() arg is an empty sequence") from None
+        except _EmptySequenceError:
+            raise exceptions.EmptySequenceError("max() arg is an empty sequence") from None
         return max
     
     @ASyncMethodDescriptorSyncDefault
@@ -284,8 +283,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key, result in self.__aiter__(pop=pop):
                 if min is None or result < min:
                     min = result
-        except IterableIsEmptyError:
-            raise ValueError("min() arg is an empty sequence") from None
+        except _EmptySequenceError:
+            raise exceptions.EmptySequenceError("min() arg is an empty sequence") from None
         return min
             
     @ASyncMethodDescriptorSyncDefault
@@ -295,7 +294,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key, result in self.__aiter__(pop=pop):
                 retval += result
             return result
-        except IterableIsEmptyError:
+        except _EmptySequenceError:
             return 0
 
     @ASyncIterator.wrap
@@ -372,7 +371,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         try:
             async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
                 yield key, self[key]  # ensure task is running
-        except IterableIsEmptyError:
+        except _EmptySequenceError:
             if len(iterables) == 1:
                 raise
             raise RuntimeError("DEV: figure out how to handle this situation") from None
@@ -430,7 +429,7 @@ def _yield(key: K, value: V, yields: Literal['keys', 'both']) -> Union[K, Tuple[
     else:
         raise ValueError(f"`yields` must be 'keys' or 'both'. You passed {yields}")
 
-class IterableIsEmptyError(ValueError):
+class _EmptySequenceError(ValueError):
     ...
     
 async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncIterator[K]:
@@ -444,7 +443,7 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
         Keys extracted from the iterable.
     """
     if not iterable:
-        raise IterableIsEmptyError(iterable)
+        raise _EmptySequenceError(iterable)
     elif isinstance(iterable, AsyncIterable):
         async for key in iterable:
             yield key
