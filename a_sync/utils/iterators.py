@@ -97,30 +97,34 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
         This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability.
     """
     queue: Queue[T] = Queue()
-    def get_ready() -> List[T]:
-        try:
-            return queue.get_all_nowait()
-        except asyncio.QueueEmpty:
-            return []
-    task = asyncio.create_task(exhaust_iterators(iterators, queue=queue))
-    def done_callback(t: asyncio.Task) -> None:
+    task = asyncio.create_task(
+        coro=exhaust_iterators(iterators, queue=queue), 
+        name=f"a_sync.as_yielded queue populating task for {iterators}",
+    )
+    
+    def _as_yielded_done_callback(t: asyncio.Task) -> None:
         if (e := t.exception()) and not next_fut.done(): 
             next_fut.set_exception(e)
-    task.add_done_callback(done_callback)
+    task.add_done_callback(__as_yielded_done_callback)
+    
     while not task.done():
         next_fut = asyncio.get_event_loop().create_future()
-        get_task = asyncio.create_task(coro=queue.get(), name=str(queue))
+        get_task = asyncio.create_task(
+            coro=queue.get(), 
+            name=f"a_sync.as_yielded {queue} getter for {iterators}",
+        )
+        # if an exception occurs in this loop we don't need to see the task destroyed log
+        get_task._log_destroyed_pending = False
         asyncio.futures._chain_future(get_task, next_fut)  # type: ignore [attr-defined]
-        for item in (await next_fut, *get_ready()):
+        for item in (await next_fut, *_get_ready(queue)):
             if isinstance(item, _Done):
                 task.cancel()
                 return
             yield item
-            
     if e := task.exception():
-        get_task.cancel()
         raise e
 
+        
 class _Done:
     """
     A sentinel class used to signal the completion of processing in the as_yielded function.
@@ -128,3 +132,9 @@ class _Done:
     This class acts as a marker to indicate that all items have been processed and the asynchronous iteration can be concluded. It is used internally within the implementation of as_yielded to efficiently manage the termination of the iteration process once all source iterators have been exhausted.
     """
     pass
+
+def _get_ready(queue) -> List[T]:
+    try:
+        return queue.get_all_nowait()
+    except asyncio.QueueEmpty:
+        return []
