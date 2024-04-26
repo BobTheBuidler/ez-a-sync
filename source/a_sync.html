@@ -195,6 +195,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-a_sync.task">a_sync.task module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync.task.IterableIsEmptyError"><code class="docutils literal notranslate"><span class="pre">IterableIsEmptyError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.task._NoRunningLoop"><code class="docutils literal notranslate"><span class="pre">_NoRunningLoop</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.task.TaskMapping"><code class="docutils literal notranslate"><span class="pre">TaskMapping</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.task.TaskMappingItems"><code class="docutils literal notranslate"><span class="pre">TaskMappingItems</span></code></a></li>
@@ -9383,6 +9384,34 @@ They work kind of like a typical Singleton would, but you will have two instance
 </section>
 <section id="module-a_sync.task">
 <span id="id1"></span><h2>a_sync.task module<a class="headerlink" href="#module-a_sync.task" title="Link to this heading"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="a_sync.task.IterableIsEmptyError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.task.</span></span><span class="sig-name descname"><span class="pre">IterableIsEmptyError</span></span><a class="headerlink" href="#a_sync.task.IterableIsEmptyError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.IterableIsEmptyError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.IterableIsEmptyError.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.IterableIsEmptyError.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.IterableIsEmptyError.__new__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.IterableIsEmptyError.with_traceback">
+<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.IterableIsEmptyError.with_traceback" title="Link to this definition"></a></dt>
+<dd><p>Exception.with_traceback(tb) –
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.task.IterableIsEmptyError.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.task.IterableIsEmptyError.args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.task._NoRunningLoop">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.task.</span></span><span class="sig-name descname"><span class="pre">_NoRunningLoop</span></span><a class="headerlink" href="#a_sync.task._NoRunningLoop" title="Link to this definition"></a></dt>
