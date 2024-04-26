@@ -178,7 +178,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         yielded = set()
         if self._init_loader:
             while not self._init_loader.done():
-                await self._init_loader_next()
+                # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
+                await asyncio.wait(
+                    [self._init_loader_next(), self._init_loader],
+                    return_when=asyncio.FIRST_COMPLETED
+                )
                 while unyielded := [key for key in self if key not in yielded]:
                     if ready := {key: task for key in unyielded if (task:=self[key]).done()}:
                         for key, task in ready.items():
@@ -242,51 +246,57 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     
     @ASyncMethodDescriptorSyncDefault
     async def all(self, pop: bool = True) -> bool:
-        async for key, result in self.__aiter__(pop=pop):
-            if not bool(result):
-                await self.__if_pop_clear(pop)
-                return False
-        return True
+        try:
+            async for key, result in self.__aiter__(pop=pop):
+                if not bool(result):
+                    await self.__if_pop_clear(pop)
+                    return False
+            return True
+        except IterableIsEmptyError:
+            return True
     
     @ASyncMethodDescriptorSyncDefault
     async def any(self, pop: bool = True) -> bool:
-        async for key, result in self.__aiter__(pop=pop):
-            if bool(result):
-                await self.__if_pop_clear(pop)
-                return True
-        return False
+        try:
+            async for key, result in self.__aiter__(pop=pop):
+                if bool(result):
+                    await self.__if_pop_clear(pop)
+                    return True
+            return False
+        except IterableIsEmptyError:
+            return False
     
     @ASyncMethodDescriptorSyncDefault
     async def max(self, pop: bool = True) -> V:
         max = None
-        async for key, result in self.__aiter__(pop=pop):
-            if max is None or result > max:
-                max = result
-        if min is None:
-            raise ValueError("we should not get here")
+        try:
+            async for key, result in self.__aiter__(pop=pop):
+                if max is None or result > max:
+                    max = result
+        except IterableIsEmptyError:
+            raise ValueError("max() arg is an empty sequence") from None
         return max
     
     @ASyncMethodDescriptorSyncDefault
     async def min(self, pop: bool = True) -> V:
         min = None
-        async for key, result in self.__aiter__(pop=pop):
-            if min is None or result < min:
-                min = result
-        if min is None:
-            raise ValueError("we should not get here")
+        try:
+            async for key, result in self.__aiter__(pop=pop):
+                if min is None or result < min:
+                    min = result
+        except IterableIsEmptyError:
+            raise ValueError("min() arg is an empty sequence") from None
         return min
             
     @ASyncMethodDescriptorSyncDefault
     async def sum(self, pop: bool = False) -> V:
-        retval = None
-        async for key, result in self.__aiter__(pop=pop):
-            if retval is None:
-                retval = 0 + result
-            else:
+        retval = 0
+        try:
+            async for key, result in self.__aiter__(pop=pop):
                 retval += result
-        if retval is None:
-            raise ValueError("we should not get here")
-        return result
+            return result
+        except IterableIsEmptyError:
+            return 0
 
     @ASyncIterator.wrap
     async def yield_completed(self, pop: bool = True) -> AsyncIterator[Tuple[K, V]]:
@@ -359,8 +369,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     @ASyncGeneratorFunction
     async def _tasks_for_iterables(self, *iterables: AnyIterableOrAwaitableIterable[K]) -> AsyncIterator[Tuple[K, "asyncio.Task[V]"]]:
         """Ensure tasks are running for each key in the provided iterables."""
-        async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
-            yield key, self[key]  # ensure task is running
+        try:
+            async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
+                yield key, self[key]  # ensure task is running
+        except IterableIsEmptyError:
+            if len(iterables) == 1:
+                raise
+            raise RuntimeError("DEV: figure out how to handle this situation") from None
     
     def __if_pop_check_destroyed(self, pop: bool) -> None:
         if pop:
@@ -414,6 +429,9 @@ def _yield(key: K, value: V, yields: Literal['keys', 'both']) -> Union[K, Tuple[
         return key
     else:
         raise ValueError(f"`yields` must be 'keys' or 'both'. You passed {yields}")
+
+class IterableIsEmptyError(ValueError):
+    ...
     
 async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncIterator[K]:
     """
@@ -426,7 +444,7 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
         Keys extracted from the iterable.
     """
     if not iterable:
-        raise ValueError(iterable)
+        raise IterableIsEmptyError(iterable)
     elif isinstance(iterable, AsyncIterable):
         async for key in iterable:
             yield key
