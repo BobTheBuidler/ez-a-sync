@@ -1,5 +1,5 @@
 
-from a_sync import aliases
+from a_sync import aliases, exceptions
 from a_sync.base import ASyncGenericBase
 from a_sync.decorator import a_sync
 from a_sync.future import ASyncFuture, future  # type: ignore [attr-defined]
@@ -21,6 +21,9 @@ aka = alias = aliases
 ASyncBase = ASyncGenericBase
 
 __all__ = [
+    # modules
+    "exceptions",
+    # functions
     "all",
     "any",
     "as_completed",
@@ -30,6 +33,7 @@ __all__ = [
     "exhaust_iterators",
     "gather", 
     "map",
+    # classes
     "ASyncIterable",
     "ASyncIterator",
     "ASyncGenericSingleton",
