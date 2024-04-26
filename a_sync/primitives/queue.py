@@ -98,7 +98,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         self._name = name
         self._no_futs = not return_data
         @functools.wraps(func)
-        async def _worker_coro():
+        async def _worker_coro() -> NoReturn:
             # we use this little helper so we can have context of `func` in any err logs
             return await self.__worker_coro()
         self._worker_coro = _worker_coro
