@@ -38,10 +38,18 @@ class _SmartFutureMixin(Generic[T]):
         return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters)
 
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
+    _queue = None
     _key = None
-    def __init__(self, queue: "SmartProcessingQueue[Any, Any, T]", *, key: _Key = None, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
+    def __init__(
+        self, 
+        *, 
+        queue: Optional["SmartProcessingQueue[Any, Any, T]"], 
+        key: Optional[_Key] = None, 
+        loop: Optional[asyncio.AbstractEventLoop] = None,
+    ) -> None:
         super().__init__(loop=loop)
-        self._queue = weakref.proxy(queue)
+        if queue:
+            self._queue = weakref.proxy(queue)
         if key:
             self._key = key
         self._waiters = weakref.WeakSet()
