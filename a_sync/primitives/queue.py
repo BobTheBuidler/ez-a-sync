@@ -4,7 +4,7 @@ import heapq
 import logging
 import sys
 
-from a_sync._smart import _Key, SmartFuture
+from a_sync import _smart
 from a_sync._task import create_task
 from a_sync._typing import *
 
@@ -184,7 +184,8 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             while True:
                 try:
                     args, kwargs, fut = await self.get()
-                    fut.set_result(await self.func(*args, **kwargs))
+                    result = await self.func(*args, **kwargs)
+                    fut.set_result(result)
                 except asyncio.exceptions.InvalidStateError:
                     logger.error("cannot set result for %s %s: %s", self.func.__name__, fut, result)
                 except Exception as e:
@@ -256,10 +257,8 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
         heapify(self._queue)
         # take the job with the most waiters
         return heappop(self._queue)
-    def _get_key(self, *args, **kwargs) -> _Key:
+    def _get_key(self, *args, **kwargs) -> _smart._Key:
         return (args, tuple((kwarg, kwargs[kwarg]) for kwarg in sorted(kwargs)))
-    def _create_future(self, key: _Key) -> "asyncio.Future[V]":
-        return SmartFuture(self, key, loop=asyncio.get_event_loop())
 
 class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueue):
     """A PriorityQueue subclass that allows priorities to be updated (or computed) on the fly"""
@@ -277,8 +276,8 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ) -> None:
         super().__init__(func, num_workers, return_data=True, name=name, loop=loop)
-        self._futs: Dict[_Key[T], SmartFuture[T]] = {}
-    async def put(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
+        self._futs: Dict[_smart._Key[T], _smart.SmartFuture[T]] = {}
+    async def put(self, *args: P.args, **kwargs: P.kwargs) -> _smart.SmartFuture[V]:
         self._ensure_workers()
         key = self._get_key(*args, **kwargs)
         if fut := self._futs.get(key, None):
@@ -287,7 +286,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         self._futs[key] = fut
         await Queue.put(self, (fut, args, kwargs))
         return fut
-    def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
+    def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> _smart.SmartFuture[V]:
         self._ensure_workers()
         key = self._get_key(*args, **kwargs)
         if fut := self._futs.get(key, None):
@@ -296,13 +295,15 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         self._futs[key] = fut
         Queue.put_nowait(self, (fut, args, kwargs))
         return fut
+    def _create_future(self) -> "asyncio.Future[V]":
+        return _smart.create_future(queue=self, loop=self._loop)
     def _get(self):
         fut, args, kwargs = super()._get()
         return args, kwargs, fut
     async def __worker_coro(self) -> NoReturn:
         args: P.args
         kwargs: P.kwargs
-        fut: SmartFuture[V]
+        fut: _smart.SmartFuture[V]
         while True:
             try:
                 args, kwargs, fut = await self.get()

@@ -37,16 +37,26 @@ class _SmartFutureMixin(Generic[T]):
         return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters)
 
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
-    def __init__(self, queue: "SmartProcessingQueue[Any, Any, T]", key: _Key, *, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
+    _key = None
+    def __init__(self, queue: "SmartProcessingQueue[Any, Any, T]", *, key: _Key = None, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
         super().__init__(loop=loop)
         self._queue = queue
-        self._key = key
+        if key:
+            self._key = key
         self._waiters: Set["asyncio.Task[T]"] = set()
     def __repr__(self):
         return f"<{type(self).__name__} key={self._key} waiters={self.num_waiters} {self._state}>"
     def __lt__(self, other: "SmartFuture") -> bool:
         """heap considers lower values as higher priority so a future with more waiters will be 'less than' a future with less waiters."""
         return self.num_waiters > other.num_waiters
+
+def create_future(
+    *,
+    queue: Optional["SmartProcessingQueue"] = None, 
+    key: Optional[_Key] = None, 
+    loop: Optional[asyncio.AbstractEventLoop] = None,
+) -> SmartFuture[V]:
+    return SmartFuture(queue=queue, key=key, loop=loop or asyncio.get_event_loop())
 
 class SmartTask(_SmartFutureMixin[T], asyncio.Task):
     def __init__(
@@ -100,7 +110,7 @@ def shield(arg: Awaitable[T], *, loop: Optional[asyncio.AbstractEventLoop] = Non
         # Shortcut.
         return inner
     loop = asyncio.futures._get_loop(inner)
-    outer = SmartFuture(None, None, loop=loop)
+    outer = create_future(loop=loop)
     # special handling to connect SmartFutures to SmartTasks if enabled
     if (waiters := getattr(inner, "_waiters", None)) is not None:
         waiters.add(outer)
