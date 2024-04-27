@@ -4,7 +4,7 @@ import logging
 
 import async_property as ap  # type: ignore [import]
 
-from a_sync import _helpers, config, decorator, exceptions
+from a_sync import _helpers, _smart, config, exceptions
 from a_sync._bound import ASyncBoundMethodAsyncDefault, ASyncMethodDescriptorAsyncDefault
 from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
@@ -213,6 +213,28 @@ class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.cache
         self._fset = _fset
         self._fdel = _fdel
 
+    def get_lock(self, instance: I) -> "asyncio.Task[T]":
+        instance_state = self.get_instance_state(instance)
+        task = instance_state.lock[self.field_name]
+        if isinstance(task, asyncio.Lock):
+            # default behavior uses lock but we want to use a Task so all waiters wake up together
+            task = asyncio.create_task(self._fget(instance))
+            instance_state.lock[self.field_name] = task
+        return task
+    
+    def pop_lock(self, instance: I) -> None:
+        self.get_instance_state(instance).lock.pop(self.field_name, None)
+
+    def get_loader(self, instance: I) -> Callable[[], T]:
+        @functools.wraps(self._fget)
+        async def load_value():
+            inner_task = self.get_lock(instance)
+            value = await _smart.shield(inner_task)
+            self.__set__(instance, value)
+            self.pop_lock(instance)
+            return value
+        return load_value
+    
 class cached_property(ASyncCachedPropertyDescriptor[I, T]):...
 
 class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):

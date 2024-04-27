@@ -134,7 +134,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._init_loader_next = init_loader_queue.get_all
     
     def __repr__(self) -> str:
-        return f"<{type(self).__name__} for {self._wrapped_func} ({dict.__repr__(self)}) at {hex(id(self))}>"
+        return f"<{type(self).__name__} for {self._wrapped_func} kwargs={self._wrapped_func_kwargs} tasks={len(self)} at {hex(id(self))}>"
     
     def __hash__(self) -> int:
         return id(self)
@@ -239,9 +239,14 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             or tuples of key-value pairs representing the results of completed tasks.
         """
         self._check_not_empty()
+        # make sure the init loader is started if needed
+        init_loader = self._init_loader
         async for _ in self._tasks_for_iterables(*iterables):
             async for key, value in self.yield_completed(pop=pop):
                 yield _yield(key, value, yields)
+        if init_loader:
+            # check for exceptions if you passed an iterable(s) into the class init
+            await init_loader
         async for key, value in as_completed(self, aiter=True):
             self.__if_pop_pop(pop, key)
             yield _yield(key, value, yields)
@@ -348,7 +353,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return fut_or_task
     
     def clear(self, cancel: bool = False) -> None:
-        for k in self:
+        for k in tuple(self.keys()):
             self.pop(k, cancel=cancel)
 
     @functools.cached_property
