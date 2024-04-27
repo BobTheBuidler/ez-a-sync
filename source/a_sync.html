@@ -98,7 +98,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#a_sync._smart.SmartFuture"><code class="docutils literal notranslate"><span class="pre">SmartFuture</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync._smart.SmartTask"><code class="docutils literal notranslate"><span class="pre">SmartTask</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync._smart._SmartFutureMixin"><code class="docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync._smart.create_future"><code class="docutils literal notranslate"><span class="pre">create_future()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync._smart.set_smart_task_factory"><code class="docutils literal notranslate"><span class="pre">set_smart_task_factory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync._smart.shield"><code class="docutils literal notranslate"><span class="pre">shield()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync._smart.smart_task_factory"><code class="docutils literal notranslate"><span class="pre">smart_task_factory()</span></code></a></li>
 </ul>
 </li>
@@ -666,7 +668,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue"><code class="docutils literal notranslate"><span class="pre">VariablePriorityQueue</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue.__init__"><code class="docutils literal notranslate"><span class="pre">VariablePriorityQueue.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._create_future"><code class="docutils literal notranslate"><span class="pre">VariablePriorityQueue._create_future()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._format"><code class="docutils literal notranslate"><span class="pre">VariablePriorityQueue._format()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._get"><code class="docutils literal notranslate"><span class="pre">VariablePriorityQueue._get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.VariablePriorityQueue._get_key"><code class="docutils literal notranslate"><span class="pre">VariablePriorityQueue._get_key()</span></code></a></li>
@@ -722,7 +723,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin"><code class="docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._create_future"><code class="docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin._create_future()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._get"><code class="docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin._get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._get_key"><code class="docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin._get_key()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._init"><code class="docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin._init()</span></code></a></li>
@@ -3628,12 +3628,12 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dd><p>Bases: <a class="reference internal" href="#a_sync._smart._SmartFutureMixin" title="a_sync._smart._SmartFutureMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartFuture.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartFuture.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<a class="reference internal" href="#a_sync.SmartProcessingQueue" title="a_sync.SmartProcessingQueue"><em>SmartProcessingQueue</em></a><em>[</em><em>Any</em><em>, </em><em>Any</em><em>, </em><em>T</em><em>]</em>)</p></li>
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>queue</strong> (<a class="reference internal" href="#a_sync.SmartProcessingQueue" title="a_sync.SmartProcessingQueue"><em>SmartProcessingQueue</em></a><em>[</em><em>Any</em><em>, </em><em>Any</em><em>, </em><em>T</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -3666,6 +3666,20 @@ it erases the context exception value.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture._repr_info">
 <span class="sig-name descname"><span class="pre">_repr_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartFuture._repr_info" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync._smart.SmartFuture._waiter_done_callback">
+<span class="sig-name descname"><span class="pre">_waiter_done_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartFuture._waiter_done_callback" title="Link to this definition"></a></dt>
+<dd><p>Removes the waiter from _waiters, and _queue._futs if applicable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>waiter</strong> (<a class="reference internal" href="#a_sync._smart._SmartFutureMixin" title="a_sync._smart._SmartFutureMixin"><em>_SmartFutureMixin</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture.add_done_callback">
@@ -3773,6 +3787,11 @@ InvalidStateError.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync._smart.SmartFuture._key">
+<span class="sig-name descname"><span class="pre">_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">_Key</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync._smart.SmartFuture._key" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture._log_traceback">
 <span class="sig-name descname"><span class="pre">_log_traceback</span></span><a class="headerlink" href="#a_sync._smart.SmartFuture._log_traceback" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -3804,7 +3823,7 @@ InvalidStateError.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture._waiters">
-<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'asyncio.Task[T]'</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync._smart.SmartFuture._waiters" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/weakref.html#weakref.WeakSet" title="(in Python v3.12)"><span class="pre">weakref.WeakSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><span class="pre">SmartTask</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync._smart.SmartFuture._waiters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -3858,6 +3877,20 @@ it erases the context exception value.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask._repr_info">
 <span class="sig-name descname"><span class="pre">_repr_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartTask._repr_info" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync._smart.SmartTask._waiter_done_callback">
+<span class="sig-name descname"><span class="pre">_waiter_done_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartTask._waiter_done_callback" title="Link to this definition"></a></dt>
+<dd><p>Removes the waiter from _waiters, and _queue._futs if applicable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>waiter</strong> (<a class="reference internal" href="#a_sync._smart._SmartFutureMixin" title="a_sync._smart._SmartFutureMixin"><em>_SmartFutureMixin</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask.add_done_callback">
@@ -4032,6 +4065,11 @@ InvalidStateError.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync._smart.SmartTask._key">
+<span class="sig-name descname"><span class="pre">_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">_Key</span></em><a class="headerlink" href="#a_sync._smart.SmartTask._key" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask._log_destroy_pending">
 <span class="sig-name descname"><span class="pre">_log_destroy_pending</span></span><a class="headerlink" href="#a_sync._smart.SmartTask._log_destroy_pending" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -4087,9 +4125,28 @@ InvalidStateError.</p>
 <dt class="sig sig-object py" id="a_sync._smart._SmartFutureMixin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._smart.</span></span><span class="sig-name descname"><span class="pre">_SmartFutureMixin</span></span><a class="headerlink" href="#a_sync._smart._SmartFutureMixin" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync._smart._SmartFutureMixin._waiter_done_callback">
+<span class="sig-name descname"><span class="pre">_waiter_done_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart._SmartFutureMixin._waiter_done_callback" title="Link to this definition"></a></dt>
+<dd><p>Removes the waiter from _waiters, and _queue._futs if applicable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>waiter</strong> (<a class="reference internal" href="#a_sync._smart._SmartFutureMixin" title="a_sync._smart._SmartFutureMixin"><em>_SmartFutureMixin</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync._smart._SmartFutureMixin._is_protocol">
 <span class="sig-name descname"><span class="pre">_is_protocol</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync._smart._SmartFutureMixin._is_protocol" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync._smart._SmartFutureMixin._key">
+<span class="sig-name descname"><span class="pre">_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync._smart._SmartFutureMixin._key" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -4099,7 +4156,7 @@ InvalidStateError.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync._smart._SmartFutureMixin._waiters">
-<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.12)"><span class="pre">asyncio.Task</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync._smart._SmartFutureMixin._waiters" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/weakref.html#weakref.WeakSet" title="(in Python v3.12)"><span class="pre">weakref.WeakSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><span class="pre">SmartTask</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync._smart._SmartFutureMixin._waiters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -4107,6 +4164,23 @@ InvalidStateError.</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync._smart._SmartFutureMixin.num_waiters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync._smart.create_future">
+<span class="sig-prename descclassname"><span class="pre">a_sync._smart.</span></span><span class="sig-name descname"><span class="pre">create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.create_future" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> (<a class="reference internal" href="#a_sync.SmartProcessingQueue" title="a_sync.SmartProcessingQueue"><em>SmartProcessingQueue</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -4118,6 +4192,47 @@ InvalidStateError.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync._smart.shield">
+<span class="sig-prename descclassname"><span class="pre">a_sync._smart.</span></span><span class="sig-name descname"><span class="pre">shield</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.shield" title="Link to this definition"></a></dt>
+<dd><p>Wait for a future, shielding it from cancellation.</p>
+<p>The statement</p>
+<blockquote>
+<div><p>res = await shield(something())</p>
+</div></blockquote>
+<p>is exactly equivalent to the statement</p>
+<blockquote>
+<div><p>res = await something()</p>
+</div></blockquote>
+<p><em>except</em> that if the coroutine containing it is cancelled, the
+task running in something() is not cancelled.  From the POV of
+something(), the cancellation did not happen.  But its caller is
+still cancelled, so the yield-from expression still raises
+CancelledError.  Note: If something() is cancelled by other means
+this will still cancel shield().</p>
+<p>If you want to completely ignore cancellation (not recommended)
+you can combine shield() with a try/except clause, as follows:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>try:</dt><dd><p>res = await shield(something())</p>
+</dd>
+<dt>except CancelledError:</dt><dd><p>res = None</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arg</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>)</p></li>
+<li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7665,12 +7780,28 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptor.get_loader">
 <span class="sig-name descname"><span class="pre">get_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptor.get_loader" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[], <em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptor.get_lock">
 <span class="sig-name descname"><span class="pre">get_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptor.get_lock" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Task</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptor.has_cache_value">
@@ -7699,6 +7830,19 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptor.not_loaded">
 <span class="sig-name descname"><span class="pre">not_loaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptor.not_loaded" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptor.pop_lock">
+<span class="sig-name descname"><span class="pre">pop_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptor.pop_lock" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptor.set_cache_value">
@@ -7962,12 +8106,28 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.get_loader">
 <span class="sig-name descname"><span class="pre">get_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.get_loader" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[], <em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.get_lock">
 <span class="sig-name descname"><span class="pre">get_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.get_lock" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Task</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.has_cache_value">
@@ -7996,6 +8156,19 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.not_loaded">
 <span class="sig-name descname"><span class="pre">not_loaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.not_loaded" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.pop_lock">
+<span class="sig-name descname"><span class="pre">pop_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.pop_lock" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.set_cache_value">
@@ -8259,12 +8432,28 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.get_loader">
 <span class="sig-name descname"><span class="pre">get_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.get_loader" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[], <em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.get_lock">
 <span class="sig-name descname"><span class="pre">get_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.get_lock" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Task</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.has_cache_value">
@@ -8293,6 +8482,19 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.not_loaded">
 <span class="sig-name descname"><span class="pre">not_loaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.not_loaded" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.pop_lock">
+<span class="sig-name descname"><span class="pre">pop_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.pop_lock" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.set_cache_value">
@@ -9967,12 +10169,28 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.cached_property.get_loader">
 <span class="sig-name descname"><span class="pre">get_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.cached_property.get_loader" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[], <em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.cached_property.get_lock">
 <span class="sig-name descname"><span class="pre">get_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.cached_property.get_lock" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Task</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.cached_property.has_cache_value">
@@ -10001,6 +10219,19 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dt class="sig sig-object py" id="a_sync.property.cached_property.not_loaded">
 <span class="sig-name descname"><span class="pre">not_loaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.cached_property.not_loaded" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.property.cached_property.pop_lock">
+<span class="sig-name descname"><span class="pre">pop_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.property.cached_property.pop_lock" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.property.cached_property.set_cache_value">
@@ -11355,12 +11586,28 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.get_loader">
 <span class="sig-name descname"><span class="pre">get_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.get_loader" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[], <em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.get_lock">
 <span class="sig-name descname"><span class="pre">get_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.get_lock" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Task</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.has_cache_value">
@@ -11389,6 +11636,19 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.not_loaded">
 <span class="sig-name descname"><span class="pre">not_loaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.not_loaded" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.pop_lock">
+<span class="sig-name descname"><span class="pre">pop_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.pop_lock" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.set_cache_value">
@@ -14188,6 +14448,11 @@ the queue.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.SmartProcessingQueue._futs">
+<span class="sig-name descname"><span class="pre">_futs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/weakref.html#weakref.WeakValueDictionary" title="(in Python v3.12)"><span class="pre">WeakValueDictionary</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><span class="pre">SmartFuture</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.SmartProcessingQueue._futs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.SmartProcessingQueue._getters">
 <span class="sig-name descname"><span class="pre">_getters</span></span><a class="headerlink" href="#a_sync.SmartProcessingQueue._getters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -15092,12 +15357,28 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.cached_property.get_loader">
 <span class="sig-name descname"><span class="pre">get_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.cached_property.get_loader" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[], <em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.cached_property.get_lock">
 <span class="sig-name descname"><span class="pre">get_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.cached_property.get_lock" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Task</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.cached_property.has_cache_value">
@@ -15126,6 +15407,19 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="sig sig-object py" id="a_sync.cached_property.not_loaded">
 <span class="sig-name descname"><span class="pre">not_loaded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.cached_property.not_loaded" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.cached_property.pop_lock">
+<span class="sig-name descname"><span class="pre">pop_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.cached_property.pop_lock" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.cached_property.set_cache_value">
