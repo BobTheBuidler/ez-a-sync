@@ -137,7 +137,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         if self._no_futs:
             return super().put_nowait((args, kwargs))
         fut = self._create_future()
-        super().put_nowait((args, kwargs, weakref.proxy(fut, self._queue.remove)))
+        super().put_nowait((args, kwargs, weakref.proxy(fut)))
         return fut
     async def close(self) -> None:
         self.__stop_workers()
@@ -185,6 +185,10 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             while True:
                 try:
                     args, kwargs, fut = await self.get()
+                    if fut is None:
+                        # the weakref was already cleaned up, we don't need to process this item
+                        self.task_done()
+                        continue
                     result = await self.func(*args, **kwargs)
                     fut.set_result(result)
                 except asyncio.exceptions.InvalidStateError:
@@ -295,7 +299,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             return fut
         fut = self._create_future(key)
         self._futs[key] = fut
-        Queue.put_nowait(self, (weakref.proxy(fut, self._queue.remove), args, kwargs))
+        Queue.put_nowait(self, (weakref.proxy(fut), args, kwargs))
         return fut
     def _create_future(self, key: _smart._Key) -> "asyncio.Future[V]":
         return _smart.create_future(queue=self, key=key, loop=self._loop)
@@ -309,6 +313,10 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         while True:
             try:
                 args, kwargs, fut = await self.get()
+                if fut is None:
+                    # the weakref was already cleaned up, we don't need to process this item
+                    self.task_done()
+                    continue
                 logger.debug("processing %s", fut)
                 result = await self.func(*args, **kwargs)
                 fut.set_result(result)
