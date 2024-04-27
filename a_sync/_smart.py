@@ -34,7 +34,8 @@ class _SmartFutureMixin(Generic[T]):
         return self.result()  # May raise too.
     @property
     def num_waiters(self: "SmartFuture") -> int:
-        return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters)
+        # NOTE: we check .done() because the callback may not have ran yet and its very lightweight
+        return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters if not waiter.done())
     def _waiter_done_callback(self, waiter: "_SmartFutureMixin") -> None:
         "Removes the waiter from _waiters, and _queue._futs if applicable"
         self._waiters.remove(waiter)
