@@ -1,6 +1,5 @@
 
 import asyncio
-import functools
 import logging
 
 from a_sync._typing import *
@@ -34,15 +33,13 @@ class _SmartFutureMixin(Generic[T]):
     @property
     def num_waiters(self) -> int:
         return sum(getattr(waiter, 'num_waiters', 1) for waiter in self._waiters)
-    @functools.cached_property
-    def _waiters(self) -> Set["asyncio.Task[T]"]:
-        return set()
 
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
-    def __init__(self, queue: "SmartProcessingQueue", key: _Key, *, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
+    def __init__(self, queue: "SmartProcessingQueue[Any, Any, T]", key: _Key, *, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
         super().__init__(loop=loop)
         self._queue = queue
         self._key = key
+        self._waiters: Set["asyncio.Task[T]"] = set()
     def __repr__(self):
         return f"<{type(self).__name__} key={self._key} waiters={self.num_waiters} {self._state}>"
     def __lt__(self, other: "SmartFuture") -> bool:
@@ -50,7 +47,15 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         return self.num_waiters > other.num_waiters
 
 class SmartTask(_SmartFutureMixin[T], asyncio.Task):
-    ...
+    def __init__(
+        self, 
+        coro: Awaitable[T], 
+        *, 
+        loop: Optional[asyncio.AbstractEventLoop] = None, 
+        name: Optional[str] = None,
+    ) -> None:
+        super().__init__(coro, loop=loop, name=name)
+        self._waiters: Set["asyncio.Task[T]"] = set()
 
 def smart_task_factory(loop: asyncio.AbstractEventLoop, coro: Awaitable[T]) -> SmartTask[T]:
     return SmartTask(coro, loop=loop)
