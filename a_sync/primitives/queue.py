@@ -4,6 +4,7 @@ import heapq
 import logging
 import sys
 
+from a_sync._smart import _Key, SmartFuture
 from a_sync._task import create_task
 from a_sync._typing import *
 
@@ -222,39 +223,6 @@ def _validate_args(i: int, can_return_less: bool) -> None:
     if i <= 1:
         raise ValueError(f"`i` must be an integer greater than 1. You passed {i}")
 
-
-_Args = Tuple[Any]
-_Kwargs = Tuple[Tuple[str, Any]]
-_Key = Tuple[_Args, _Kwargs]
-
-class SmartFuture(asyncio.Future, Generic[T]):
-    def __init__(self, queue: "SmartProcessingQueue", key: _Key, *, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
-        super().__init__(loop=loop)
-        self._queue = queue
-        self._key = key
-        self._waiters: Set["asyncio.Task[T]"] = set()
-    def __repr__(self):
-        return f"<{type(self).__name__} key={self._key} waiters={self.num_waiters} {self._state}>"
-    def __await__(self):
-        logger.debug("entering %s", self)
-        if self.done():
-            return self.result()  # May raise too.
-        self._asyncio_future_blocking = True
-        self._waiters.add(current_task := asyncio.current_task(self._loop))
-        logger.debug("awaiting %s", self)
-        yield self  # This tells Task to wait for completion.
-        self._waiters.remove(current_task)
-        if self.num_waiters == 0:
-            self._queue._futs.pop(self._key)
-        if not self.done():
-            raise RuntimeError("await wasn't used with future")
-        return self.result()  # May raise too.
-    def __lt__(self, other: "SmartFuture") -> bool:
-        """heap considers lower values as higher priority so a future with more waiters will be 'less than' a future with less waiters."""
-        return self.num_waiters > other.num_waiters
-    @property
-    def num_waiters(self) -> int:
-        return len(self._waiters)
 
 
 class _PriorityQueueMixin(Generic[T]):
