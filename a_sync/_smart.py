@@ -41,7 +41,7 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     _key = None
     def __init__(self, queue: "SmartProcessingQueue[Any, Any, T]", *, key: _Key = None, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
         super().__init__(loop=loop)
-        self._queue = weakref.ref(queue)
+        self._queue = weakref.proxy(queue)
         if key:
             self._key = key
         self._waiters = weakref.WeakSet()
