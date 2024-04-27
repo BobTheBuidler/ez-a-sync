@@ -278,6 +278,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     max = result
         except _EmptySequenceError:
             raise exceptions.EmptySequenceError("max() arg is an empty sequence") from None
+        if max is None:
+            raise exceptions.EmptySequenceError("max() arg is an empty sequence") from None
         return max
     
     @ASyncMethodDescriptorSyncDefault
@@ -289,6 +291,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     min = result
         except _EmptySequenceError:
             raise exceptions.EmptySequenceError("min() arg is an empty sequence") from None
+        if min is None:
+            raise exceptions.EmptySequenceError("min() arg is an empty sequence") from None
         return min
             
     @ASyncMethodDescriptorSyncDefault
@@ -297,9 +301,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         try:
             async for key, result in self.__aiter__(pop=pop):
                 retval += result
-            return result
         except _EmptySequenceError:
             return 0
+        return retval
 
     @ASyncIterator.wrap
     async def yield_completed(self, pop: bool = True) -> AsyncIterator[Tuple[K, V]]:
