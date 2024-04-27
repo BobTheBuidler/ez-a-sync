@@ -297,8 +297,8 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         self._futs[key] = fut
         Queue.put_nowait(self, (weakref.ref(fut, self._queue.remove), args, kwargs))
         return fut
-    def _create_future(self) -> "asyncio.Future[V]":
-        return _smart.create_future(queue=self, loop=self._loop)
+    def _create_future(self, key: _smart._Key) -> "asyncio.Future[V]":
+        return _smart.create_future(queue=self, key=key, loop=self._loop)
     def _get(self):
         fut, args, kwargs = super()._get()
         return args, kwargs, fut
