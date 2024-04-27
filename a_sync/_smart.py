@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 class _SmartFutureMixin(Generic[T]):
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
+    _key: _Key
     _waiters: weakref.WeakSet["SmartTask[T]"]
     def __await__(self: "SmartFuture"):
         logger.debug("entering %s", self)
@@ -25,17 +26,21 @@ class _SmartFutureMixin(Generic[T]):
             return self.result()  # May raise too.
         self._asyncio_future_blocking = True
         self._waiters.add(current_task := asyncio.current_task(self._loop))
+        current_task.add_done_callback(self._waiter_done_callback)
         logger.debug("awaiting %s", self)
         yield self  # This tells Task to wait for completion.
-        self._waiters.remove(current_task)
-        if self._queue and not self._waiters:
-            self._queue._futs.pop(self._key)
         if not self.done():
             raise RuntimeError("await wasn't used with future")
         return self.result()  # May raise too.
     @property
     def num_waiters(self: "SmartFuture") -> int:
-        return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters if not waiter.done())
+        return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters)
+    def _waiter_done_callback(self, waiter: "_SmartFutureMixin") -> None:
+        "Removes the waiter from _waiters, and _queue._futs if applicable"
+        self._waiters.remove(waiter)
+        if self._queue and not self._waiters:
+            self._queue._futs.pop(self._key)
+
 
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     _queue = None
