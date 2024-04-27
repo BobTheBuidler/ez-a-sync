@@ -376,13 +376,20 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     @ASyncGeneratorFunction
     async def _tasks_for_iterables(self, *iterables: AnyIterableOrAwaitableIterable[K]) -> AsyncIterator[Tuple[K, "asyncio.Task[V]"]]:
         """Ensure tasks are running for each key in the provided iterables."""
-        try:
-            async for key in as_yielded(*[_yield_keys(iterable) for iterable in iterables]): # type: ignore [attr-defined]
-                yield key, self[key]  # ensure task is running
-        except _EmptySequenceError:
-            if len(iterables) == 1:
-                raise
-            raise RuntimeError("DEV: figure out how to handle this situation") from None
+        # if we have any regular containers we can yield their contents right away
+        containers = [iterable for iterable in iterables if not isinstance(iterable, AsyncIterable) and isinstance(iterable, Iterable)]
+        for iterable in containers:
+            async for key in _yield_keys(iterable):
+                yield key, self[key]
+        
+        if remaining := [iterable for iterable in iterables if iterable not in containers]:
+            try:
+                async for key in as_yielded(*[_yield_keys(iterable) for iterable in remaining]): # type: ignore [attr-defined]
+                    yield key, self[key]  # ensure task is running
+            except _EmptySequenceError:
+                if len(iterables) == 1:
+                    raise
+                raise RuntimeError("DEV: figure out how to handle this situation") from None
     
     def __if_pop_check_destroyed(self, pop: bool) -> None:
         if pop:
