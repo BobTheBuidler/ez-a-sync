@@ -272,7 +272,7 @@ class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueu
 class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]):
     """A PriorityProcessingQueue subclass that will execute jobs with the most waiters first"""
     _no_futs = False
-    _futs: weakref.WeakValueDictionary[_smart._Key, _smart.SmartFuture[T]]
+    _futs: "weakref.WeakValueDictionary[_smart._Key, _smart.SmartFuture[T]]"
     def __init__(
         self, 
         func: Callable[Concatenate[T, P], Awaitable[V]], 

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 class _SmartFutureMixin(Generic[T]):
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
     _key: _Key
-    _waiters: weakref.WeakSet["SmartTask[T]"]
+    _waiters: "weakref.WeakSet[SmartTask[T]]"
     def __await__(self: "SmartFuture"):
         logger.debug("entering %s", self)
         if self.done():
