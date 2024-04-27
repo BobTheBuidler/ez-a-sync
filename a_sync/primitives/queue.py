@@ -137,7 +137,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         if self._no_futs:
             return super().put_nowait((args, kwargs))
         fut = self._create_future()
-        super().put_nowait((args, kwargs, weakref.ref(fut, self._queue.remove)))
+        super().put_nowait((args, kwargs, weakref.proxy(fut, self._queue.remove)))
         return fut
     async def close(self) -> None:
         self.__stop_workers()
@@ -295,7 +295,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             return fut
         fut = self._create_future(key)
         self._futs[key] = fut
-        Queue.put_nowait(self, (weakref.ref(fut, self._queue.remove), args, kwargs))
+        Queue.put_nowait(self, (weakref.proxy(fut, self._queue.remove), args, kwargs))
         return fut
     def _create_future(self, key: _smart._Key) -> "asyncio.Future[V]":
         return _smart.create_future(queue=self, key=key, loop=self._loop)
