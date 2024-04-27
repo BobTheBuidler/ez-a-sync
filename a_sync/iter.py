@@ -3,6 +3,7 @@ import asyncio
 import functools
 import inspect
 import logging
+import sys
 
 from async_property import async_cached_property
 
@@ -11,6 +12,13 @@ from a_sync._typing import *
 
 
 logger = logging.getLogger(__name__)
+
+if sys.version_info < (3, 10):
+    SortKey = SyncFn[T, bool]
+    ViewFn = AnyFn[T, bool]
+else:
+    SortKey = SyncFn[[T], bool]
+    ViewFn = AnyFn[[T], bool]
 
 class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     """
@@ -27,9 +35,9 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     def materialized(self) -> List[T]:
         """Iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
         return _helpers._await(self._materialized)
-    def sort(self, *, key: SyncFn[T, bool] = None, reverse: bool = False) -> "ASyncSorter[T]":
+    def sort(self, *, key: SortKey[T] = None, reverse: bool = False) -> "ASyncSorter[T]":
         return ASyncSorter(self, key=key, reverse=reverse)
-    def filter(self, function: AnyFn[T, bool]) -> "ASyncFilter[T]":
+    def filter(self, function: ViewFn[T]) -> "ASyncFilter[T]":
         return ASyncFilter(function, self)
     @async_cached_property
     async def _materialized(self) -> List[T]:
@@ -135,14 +143,14 @@ class ASyncGeneratorFunction(Generic[P, T]):
             gen_func = ASyncGeneratorFunction(self.__wrapped__, instance)
             instance.__dict__[self.field_name] = gen_func
             return gen_func
-
+        
 
 class _ASyncView(ASyncIterator[T]):
     __aiterator__ = None
     __iterator__ = None
     def __init__(
         self, 
-        function: AnyFn[T, bool], 
+        function: ViewFn[T], 
         iterable: AsyncIterable[T],
     ) -> None:
         self._function = function
@@ -190,7 +198,7 @@ class ASyncSorter(_ASyncView[T]):
         self, 
         iterable: AsyncIterable[T],
         *,
-        key: SyncFn[T, bool] = None, 
+        key: SortKey[T] = None, 
         reverse: bool = False,
     ) -> None:
         super().__init__(key or _key_if_no_key, iterable)
