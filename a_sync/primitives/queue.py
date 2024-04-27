@@ -3,6 +3,7 @@ import functools
 import heapq
 import logging
 import sys
+import weakref
 
 from a_sync import _smart
 from a_sync._task import create_task
@@ -136,7 +137,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         if self._no_futs:
             return super().put_nowait((args, kwargs))
         fut = self._create_future()
-        super().put_nowait((args, kwargs, fut))
+        super().put_nowait((args, kwargs, weakref.ref(fut, self._queue.remove)))
         return fut
     async def close(self) -> None:
         self.__stop_workers()
@@ -267,6 +268,7 @@ class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueu
 class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]):
     """A PriorityProcessingQueue subclass that will execute jobs with the most waiters first"""
     _no_futs = False
+    _futs: weakref.WeakValueDictionary[_smart._Key[T], _smart.SmartFuture[T]]
     def __init__(
         self, 
         func: Callable[Concatenate[T, P], Awaitable[V]], 
@@ -276,7 +278,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ) -> None:
         super().__init__(func, num_workers, return_data=True, name=name, loop=loop)
-        self._futs: Dict[_smart._Key[T], _smart.SmartFuture[T]] = {}
+        self._futs: Dict[_smart._Key[T], _smart.SmartFuture[T]] = weakref.WeakValueDictionary()
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> _smart.SmartFuture[V]:
         self._ensure_workers()
         key = self._get_key(*args, **kwargs)
@@ -293,7 +295,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             return fut
         fut = self._create_future(key)
         self._futs[key] = fut
-        Queue.put_nowait(self, (fut, args, kwargs))
+        Queue.put_nowait(self, (weakref.ref(fut, self._queue.remove), args, kwargs))
         return fut
     def _create_future(self) -> "asyncio.Future[V]":
         return _smart.create_future(queue=self, loop=self._loop)

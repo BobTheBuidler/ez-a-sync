@@ -2,6 +2,7 @@
 import asyncio
 import logging
 import warnings
+import weakref
 
 from a_sync._typing import *
 
@@ -17,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 class _SmartFutureMixin(Generic[T]):
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
-    _waiters: Set["asyncio.Task[T]"]
-    def __await__(self):
+    _waiters: weakref.WeakSet["asyncio.Task[T]"]
+    def __await__(self: "SmartFuture"):
         logger.debug("entering %s", self)
         if self.done():
             return self.result()  # May raise too.
@@ -33,17 +34,17 @@ class _SmartFutureMixin(Generic[T]):
             raise RuntimeError("await wasn't used with future")
         return self.result()  # May raise too.
     @property
-    def num_waiters(self) -> int:
+    def num_waiters(self: "SmartFuture") -> int:
         return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters)
 
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     _key = None
     def __init__(self, queue: "SmartProcessingQueue[Any, Any, T]", *, key: _Key = None, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
         super().__init__(loop=loop)
-        self._queue = queue
+        self._queue = weakref.ref(queue)
         if key:
             self._key = key
-        self._waiters: Set["asyncio.Task[T]"] = set()
+        self._waiters = weakref.WeakSet()
     def __repr__(self):
         return f"<{type(self).__name__} key={self._key} waiters={self.num_waiters} {self._state}>"
     def __lt__(self, other: "SmartFuture") -> bool:
