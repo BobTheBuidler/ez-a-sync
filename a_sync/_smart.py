@@ -1,6 +1,7 @@
 
 import asyncio
 import logging
+import warnings
 
 from a_sync._typing import *
 
@@ -63,3 +64,66 @@ def smart_task_factory(loop: asyncio.AbstractEventLoop, coro: Awaitable[T]) -> S
 
 def set_smart_task_factory(loop: asyncio.AbstractEventLoop) -> None:
     asyncio.get_event_loop().set_task_factory(smart_task_factory)
+
+def shield(arg: Awaitable[T], *, loop: Optional[asyncio.AbstractEventLoop] = None) -> SmartFuture[T]:
+    """Wait for a future, shielding it from cancellation.
+
+    The statement
+
+        res = await shield(something())
+
+    is exactly equivalent to the statement
+
+        res = await something()
+
+    *except* that if the coroutine containing it is cancelled, the
+    task running in something() is not cancelled.  From the POV of
+    something(), the cancellation did not happen.  But its caller is
+    still cancelled, so the yield-from expression still raises
+    CancelledError.  Note: If something() is cancelled by other means
+    this will still cancel shield().
+
+    If you want to completely ignore cancellation (not recommended)
+    you can combine shield() with a try/except clause, as follows:
+
+        try:
+            res = await shield(something())
+        except CancelledError:
+            res = None
+    """
+    if loop is not None:
+        warnings.warn("The loop argument is deprecated since Python 3.8, "
+                      "and scheduled for removal in Python 3.10.",
+                      DeprecationWarning, stacklevel=2)
+    inner = asyncio.ensure_future(arg, loop=loop)
+    if inner.done():
+        # Shortcut.
+        return inner
+    loop = asyncio.futures._get_loop(inner)
+    outer = SmartFuture(None, None, loop=loop)
+    # special handling to connect SmartFutures to SmartTasks if enabled
+    if (waiters := getattr(inner, "_waiters", None)) is not None:
+        waiters.add(outer)
+    def _inner_done_callback(inner):
+        if outer.cancelled():
+            if not inner.cancelled():
+                # Mark inner's result as retrieved.
+                inner.exception()
+            return
+
+        if inner.cancelled():
+            outer.cancel()
+        else:
+            exc = inner.exception()
+            if exc is not None:
+                outer.set_exception(exc)
+            else:
+                outer.set_result(inner.result())
+
+    def _outer_done_callback(outer):
+        if not inner.done():
+            inner.remove_done_callback(_inner_done_callback)
+
+    inner.add_done_callback(_inner_done_callback)
+    outer.add_done_callback(_outer_done_callback)
+    return outer
