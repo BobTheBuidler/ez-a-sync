@@ -544,3 +544,6 @@ class _ASyncFutureInstanceMethod(Generic[P, T]):
         return f"<{self.__class__.__name__} for {self.__wrapper.callable} bound to {self.__instance}>"
     def __call__(self, /, *fn_args: P.args, **fn_kwargs: P.kwargs) -> T:
         return self.__wrapper(self.__instance, *fn_args, **fn_kwargs)
+
+
+__all__ = ["future", "ASyncFuture"]

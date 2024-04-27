@@ -20,6 +20,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.viewcode',
+    'a_sync.sphinx.ext',
 ]
 
 templates_path = ['_templates']
@@ -36,6 +38,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 autodoc_default_options = {
+    'undoc-members': True,
     'private-members': True,
     'special-members': ','.join([
         '__init__',
@@ -47,12 +50,20 @@ autodoc_default_options = {
         '__anext__',
         '_Done',
         '_AsyncExecutorMixin',
-        '_is_protocol',
     ]),
     'inherited-members': True,
     'member-order': 'groupwise',
     # hide private methods that aren't relevant to us here
-    'exclude-members': '_abc_impl,_fget,_fset,_fdel,_ASyncSingletonMeta__instances,_ASyncSingletonMeta__lock'
+    'exclude-members': ','.join([
+        '_abc_impl',
+        '_fget',
+        '_fset',
+        '_fdel',
+        '_ASyncSingletonMeta__instances',
+        '_ASyncSingletonMeta__lock',
+        '_is_protocol',
+        '_is_runtime_protocol',
+    ]),
 }
 autodoc_typehints = "description"
 # Don't show class signature with the class' name.

@@ -532,3 +532,6 @@ class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
     async def __aiter__(self) -> AsyncIterator[V]:
         async for key in self.__mapping__.keys():
             yield await self.__mapping__[key]
+
+
+__all__ = ["create_task", "TaskMapping", "TaskMappingKeys", "TaskMappingValues", "TaskMappingItems"]

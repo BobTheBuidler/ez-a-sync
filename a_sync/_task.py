@@ -92,3 +92,6 @@ async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
         return await task
     except Exception as e:
         raise exceptions.PersistedTaskException(e, task) from e
+
+
+__all__ = ["create_task"]
