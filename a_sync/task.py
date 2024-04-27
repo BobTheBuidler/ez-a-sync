@@ -353,7 +353,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return fut_or_task
     
     def clear(self, cancel: bool = False) -> None:
-        for k in self:
+        for k in tuple(self.keys()):
             self.pop(k, cancel=cancel)
 
     @functools.cached_property
