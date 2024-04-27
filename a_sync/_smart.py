@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class _SmartFutureMixin(Generic[T]):
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
-    _waiters: weakref.WeakSet["asyncio.Task[T]"]
+    _waiters: weakref.WeakSet["SmartTask[T]"]
     def __await__(self: "SmartFuture"):
         logger.debug("entering %s", self)
         if self.done():
@@ -35,7 +35,7 @@ class _SmartFutureMixin(Generic[T]):
         return self.result()  # May raise too.
     @property
     def num_waiters(self: "SmartFuture") -> int:
-        return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters)
+        return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters if not waiter.done())
 
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     _queue = None
