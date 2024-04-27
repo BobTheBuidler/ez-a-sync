@@ -3,6 +3,8 @@ from a_sync import aliases, exceptions
 from a_sync.base import ASyncGenericBase
 from a_sync.decorator import a_sync
 from a_sync.future import ASyncFuture, future  # type: ignore [attr-defined]
+from a_sync.iter import ASyncFilter as filter
+from a_sync.iter import ASyncSorter as sorted
 from a_sync.iter import ASyncIterable, ASyncIterator
 from a_sync.modifiers.semaphores import apply_semaphore
 from a_sync.primitives import *
@@ -23,37 +25,50 @@ ASyncBase = ASyncGenericBase
 __all__ = [
     # modules
     "exceptions",
+
+    # builtins
+    "sorted",
+    "filter",
+
+    # asyncio
+    "create_task",
+    "gather", 
+    "as_completed",
+
     # functions
     "all",
     "any",
-    "as_completed",
     "as_yielded",
-    "create_task",
     "exhaust_iterator",
     "exhaust_iterators",
-    "gather", 
     "map",
+
     # classes
     "ASyncIterable",
     "ASyncIterator",
     "ASyncGenericSingleton",
     "TaskMapping", 
+
     # property
     "cached_property",
     "property",
     "ASyncPropertyDescriptor",
     "ASyncCachedPropertyDescriptor",
+
     # semaphores
     "Semaphore",
     "PrioritySemaphore",
     "ThreadsafeSemaphore",
+
     # queues
     "Queue",
     "ProcessingQueue",
     "SmartProcessingQueue",
+
     # locks
     "CounterLock",
     "Event",
+
     # executors
     "AsyncThreadPoolExecutor",
     "ThreadPoolExecutor",

@@ -3,6 +3,7 @@ import asyncio
 import functools
 import inspect
 import logging
+import sys
 
 from async_property import async_cached_property
 
@@ -11,6 +12,13 @@ from a_sync._typing import *
 
 
 logger = logging.getLogger(__name__)
+
+if sys.version_info < (3, 10):
+    SortKey = SyncFn[T, bool]
+    ViewFn = AnyFn[T, bool]
+else:
+    SortKey = SyncFn[[T], bool]
+    ViewFn = AnyFn[[T], bool]
 
 class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     """
@@ -27,6 +35,10 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     def materialized(self) -> List[T]:
         """Iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
         return _helpers._await(self._materialized)
+    def sort(self, *, key: SortKey[T] = None, reverse: bool = False) -> "ASyncSorter[T]":
+        return ASyncSorter(self, key=key, reverse=reverse)
+    def filter(self, function: ViewFn[T]) -> "ASyncFilter[T]":
+        return ASyncFilter(function, self)
     @async_cached_property
     async def _materialized(self) -> List[T]:
         """Asynchronously iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
@@ -131,3 +143,106 @@ class ASyncGeneratorFunction(Generic[P, T]):
             gen_func = ASyncGeneratorFunction(self.__wrapped__, instance)
             instance.__dict__[self.field_name] = gen_func
             return gen_func
+        
+
+class _ASyncView(ASyncIterator[T]):
+    __aiterator__ = None
+    __iterator__ = None
+    def __init__(
+        self, 
+        function: ViewFn[T], 
+        iterable: AsyncIterable[T],
+    ) -> None:
+        self._function = function
+        self.__wrapped__ = iterable
+        if isinstance(iterable, AsyncIterable):
+            self.__aiterator__ = iterable.__aiter__()
+        elif isinstance(iterable, Iterable):
+            self.__iterator__ = iterable.__iter__()
+        else:
+            raise TypeError(f"`iterable` must be AsyncIterable or Iterabe, you passed {iterable}")
+
+@final  
+class ASyncFilter(_ASyncView[T]):
+    def __repr__(self) -> str:
+        return f"<ASyncFilter for iterator={self.__wrapped__} function={self._function.__name__} at {hex(id(self))}>"
+    async def __anext__(self) -> T:
+        if self.__aiterator__:
+            async for obj in self.__aiterator__:
+                if await self._check(obj):
+                    return obj
+        elif self.__iterator__:
+            try:
+                for obj in self.__iterator__:
+                    if await self._check(obj):
+                        return obj
+            except StopIteration:
+                pass
+        raise StopAsyncIteration from None
+    async def _check(self, obj: T) -> bool:
+        checked = self._function(obj)
+        print(f'checked {checked}')
+        if inspect.isawaitable(checked):
+            return bool(await checked)
+        return bool(checked)
+
+
+def _key_if_no_key(obj: T) -> T:
+    return obj
+
+@final
+class ASyncSorter(_ASyncView[T]):
+    reversed: bool = False
+    _consumed: bool = False
+    def __init__(
+        self, 
+        iterable: AsyncIterable[T],
+        *,
+        key: SortKey[T] = None, 
+        reverse: bool = False,
+    ) -> None:
+        super().__init__(key or _key_if_no_key, iterable)
+        self.__internal = self.__sort(reverse=reverse).__aiter__()
+        if reverse:
+            self.reversed = True
+    def __aiter__(self) -> AsyncIterator[T]:
+        if self._consumed:
+            raise RuntimeError(f"{self} has already been consumed")
+        return self
+    def __repr__(self) -> str:
+        rep = f"<ASyncSorter"
+        if self.reversed:
+            rep += " reversed"
+        rep += f" for iterator={self.__wrapped__}"
+        if self._function is not _key_if_no_key:
+            rep += f" key={self._function.__name__}"
+        rep += f" at {hex(id(self))}>"
+        return rep
+    def __anext__(self) -> T:
+        return self.__internal.__anext__()
+    async def __sort(self, reverse: bool) -> AsyncIterator[T]:
+        """
+        This method is internal so the original iterator can only ever be consumed once.
+        """
+        if asyncio.iscoroutinefunction(self._function):
+            items = []
+            sort_tasks = []
+            if self.__aiterator__:
+                async for obj in self.__aiterator__:
+                    items.append(obj)
+                    sort_tasks.append(asyncio.create_task(self._function(obj)))
+            elif self.__iterator__:
+                for obj in self.__iterator__:
+                    items.append(obj)
+                    sort_tasks.append(asyncio.create_task(self._function(obj)))
+                for sort_value, obj in sorted(zip(await asyncio.gather(*sort_tasks), items), reverse=reverse):
+                    yield obj
+        else:
+            if self.__aiterator__:
+                items = [obj async for obj in self.__aiterator__]
+            else:
+                items = [obj for obj in self.__iterator__]                
+            items.sort(key=self._function, reverse=reverse)
+            for obj in items:
+                yield obj
+        self._consumed = True
