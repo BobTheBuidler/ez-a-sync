@@ -140,7 +140,6 @@ class ASyncGeneratorFunction(Generic[P, T]):
 class _ASyncView(ASyncIterator[T]):
     __aiterator__ = None
     __iterator__ = None
-    __slots__ = "__dict__",
     def __init__(
         self, 
         function: AnyFn[T, bool], 
