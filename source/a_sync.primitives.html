@@ -63,6 +63,7 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._helpers">a_sync._helpers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._kwargs">a_sync._kwargs module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._meta">a_sync._meta module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._smart">a_sync._smart module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._task">a_sync._task module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._typing">a_sync._typing module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.abstract">a_sync.abstract module</a></li>
@@ -2279,188 +2280,6 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">SmartFuture</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>queue</strong> (<a class="reference internal" href="#a_sync.primitives.queue.SmartProcessingQueue" title="a_sync.primitives.queue.SmartProcessingQueue"><em>SmartProcessingQueue</em></a>)</p></li>
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p></li>
-<li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.__iter__" title="Link to this definition"></a></dt>
-<dd><p>Implement iter(self).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.__new__">
-<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.__new__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._make_cancelled_error">
-<span class="sig-name descname"><span class="pre">_make_cancelled_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._make_cancelled_error" title="Link to this definition"></a></dt>
-<dd><p>Create the CancelledError to raise if the Future is cancelled.</p>
-<p>This should only be called once when handling a cancellation since
-it erases the context exception value.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._repr_info">
-<span class="sig-name descname"><span class="pre">_repr_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._repr_info" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.add_done_callback">
-<span class="sig-name descname"><span class="pre">add_done_callback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.add_done_callback" title="Link to this definition"></a></dt>
-<dd><p>Add a callback to be run when the future becomes done.</p>
-<p>The callback is called with a single argument - the future object. If
-the future is already done when this is called, the callback is
-scheduled with call_soon.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.cancel">
-<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.cancel" title="Link to this definition"></a></dt>
-<dd><p>Cancel the future and schedule callbacks.</p>
-<p>If the future is already done or cancelled, return False.  Otherwise,
-change the future’s state to cancelled, schedule the callbacks and
-return True.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.cancelled">
-<span class="sig-name descname"><span class="pre">cancelled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.cancelled" title="Link to this definition"></a></dt>
-<dd><p>Return True if the future was cancelled.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.done">
-<span class="sig-name descname"><span class="pre">done</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.done" title="Link to this definition"></a></dt>
-<dd><p>Return True if the future is done.</p>
-<p>Done means either that a result / exception are available, or that the
-future was cancelled.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.exception">
-<span class="sig-name descname"><span class="pre">exception</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.exception" title="Link to this definition"></a></dt>
-<dd><p>Return the exception that was set on this future.</p>
-<p>The exception (or None if no exception was set) is returned only if
-the future is done.  If the future has been cancelled, raises
-CancelledError.  If the future isn’t done yet, raises
-InvalidStateError.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.get_loop">
-<span class="sig-name descname"><span class="pre">get_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.get_loop" title="Link to this definition"></a></dt>
-<dd><p>Return the event loop the Future is bound to.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.remove_done_callback">
-<span class="sig-name descname"><span class="pre">remove_done_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.remove_done_callback" title="Link to this definition"></a></dt>
-<dd><p>Remove all instances of a callback from the “call when done” list.</p>
-<p>Returns the number of callbacks removed.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.result">
-<span class="sig-name descname"><span class="pre">result</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.result" title="Link to this definition"></a></dt>
-<dd><p>Return the result this future represents.</p>
-<p>If the future has been cancelled, raises CancelledError.  If the
-future’s result isn’t yet available, raises InvalidStateError.  If
-the future is done and has an exception set, this exception is raised.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.set_exception">
-<span class="sig-name descname"><span class="pre">set_exception</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.set_exception" title="Link to this definition"></a></dt>
-<dd><p>Mark the future done and set an exception.</p>
-<p>If the future is already done when this method is called, raises
-InvalidStateError.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.set_result">
-<span class="sig-name descname"><span class="pre">set_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.set_result" title="Link to this definition"></a></dt>
-<dd><p>Mark the future done and set its result.</p>
-<p>If the future is already done when this method is called, raises
-InvalidStateError.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._asyncio_future_blocking">
-<span class="sig-name descname"><span class="pre">_asyncio_future_blocking</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._asyncio_future_blocking" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._callbacks">
-<span class="sig-name descname"><span class="pre">_callbacks</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._callbacks" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._cancel_message">
-<span class="sig-name descname"><span class="pre">_cancel_message</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._cancel_message" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._exception">
-<span class="sig-name descname"><span class="pre">_exception</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._exception" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._is_protocol">
-<span class="sig-name descname"><span class="pre">_is_protocol</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._is_protocol" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._log_traceback">
-<span class="sig-name descname"><span class="pre">_log_traceback</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._log_traceback" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._loop">
-<span class="sig-name descname"><span class="pre">_loop</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._loop" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._result">
-<span class="sig-name descname"><span class="pre">_result</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._result" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._source_traceback">
-<span class="sig-name descname"><span class="pre">_source_traceback</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._source_traceback" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture._state">
-<span class="sig-name descname"><span class="pre">_state</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture._state" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartFuture.num_waiters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.SmartFuture.num_waiters" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">SmartProcessingQueue</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._VariablePriorityQueueMixin" title="a_sync.primitives.queue._VariablePriorityQueueMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concatenate</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
@@ -2636,7 +2455,7 @@ slot is available before adding item.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.primitives.queue.SmartFuture" title="a_sync.primitives.queue.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
+<dd class="field-even"><p><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2654,7 +2473,7 @@ slot is available before adding item.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.primitives.queue.SmartFuture" title="a_sync.primitives.queue.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
+<dd class="field-even"><p><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2691,7 +2510,7 @@ the queue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._futs">
-<span class="sig-name descname"><span class="pre">_futs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">_Key</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#a_sync.primitives.queue.SmartFuture" title="a_sync.primitives.queue.SmartFuture"><span class="pre">SmartFuture</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._futs" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_futs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">_Key</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><span class="pre">SmartFuture</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._futs" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -5365,7 +5184,7 @@ slot is available before adding item.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.primitives.queue.SmartFuture" title="a_sync.primitives.queue.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
+<dd class="field-even"><p><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5383,7 +5202,7 @@ slot is available before adding item.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.primitives.queue.SmartFuture" title="a_sync.primitives.queue.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
+<dd class="field-even"><p><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5420,7 +5239,7 @@ the queue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._futs">
-<span class="sig-name descname"><span class="pre">_futs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">_Key</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#a_sync.primitives.queue.SmartFuture" title="a_sync.primitives.queue.SmartFuture"><span class="pre">SmartFuture</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._futs" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_futs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">_Key</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><span class="pre">SmartFuture</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._futs" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
