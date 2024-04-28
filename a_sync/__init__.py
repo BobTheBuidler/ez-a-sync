@@ -1,5 +1,5 @@
 
-from a_sync import aliases, exceptions
+from a_sync import aliases, exceptions, iter, task
 from a_sync.base import ASyncGenericBase
 from a_sync.decorator import a_sync
 from a_sync.future import ASyncFuture, future  # type: ignore [attr-defined]
@@ -25,6 +25,8 @@ ASyncBase = ASyncGenericBase
 __all__ = [
     # modules
     "exceptions",
+    "iter",
+    "task",
 
     # builtins
     "sorted",
