@@ -4,6 +4,9 @@ from a_sync.a_sync import ASyncGenericBase, ASyncGenericSingleton, a_sync
 from a_sync.a_sync.modifiers.semaphores import apply_semaphore
 from a_sync.a_sync.property import ASyncCachedPropertyDescriptor, ASyncPropertyDescriptor, cached_property, property
 from a_sync.asyncio import as_completed, create_task, gather
+from a_sync.executor import *
+from a_sync.executor import AsyncThreadPoolExecutor as ThreadPoolExecutor
+from a_sync.executor import AsyncProcessPoolExecutor as ProcessPoolExecutor
 from a_sync.future import ASyncFuture, future  # type: ignore [attr-defined]
 from a_sync.iter import ASyncFilter as filter
 from a_sync.iter import ASyncSorter as sorted
@@ -73,8 +76,9 @@ __all__ = [
 
     # executors
     "AsyncThreadPoolExecutor",
-    "ThreadPoolExecutor",
     "PruningThreadPoolExecutor",
     "AsyncProcessPoolExecutor",
+    # executor aliases
+    "ThreadPoolExecutor",
     "ProcessPoolExecutor",
 ]

@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from a_sync.primitives.executor import (AsyncProcessPoolExecutor,
+from a_sync.executor import (AsyncProcessPoolExecutor,
                                         ProcessPoolExecutor)
 
 
