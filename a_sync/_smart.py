@@ -152,3 +152,6 @@ def shield(arg: Awaitable[T], *, loop: Optional[asyncio.AbstractEventLoop] = Non
     inner.add_done_callback(_inner_done_callback)
     outer.add_done_callback(_outer_done_callback)
     return outer
+
+
+__all__ = ["create_future", "shield", "SmartFuture", "SmartTask", "smart_task_factory", "set_smart_task_factory"]
