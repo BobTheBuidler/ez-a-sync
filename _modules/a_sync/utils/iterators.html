@@ -209,25 +209,22 @@
 
 
         
-<div class="viewcode-block" id="_Done">
-<a class="viewcode-back" href="../../../source/a_sync.utils.html#a_sync._Done">[docs]</a>
 <span class="k">class</span> <span class="nc">_Done</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A sentinel class used to signal the completion of processing in the as_yielded function.</span>
 
 <span class="sd">    This class acts as a marker to indicate that all items have been processed and the asynchronous iteration can be concluded. It is used internally within the implementation of as_yielded to efficiently manage the termination of the iteration process once all source iterators have been exhausted.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span></div>
+    <span class="k">pass</span>
 
-
-<div class="viewcode-block" id="_get_ready">
-<a class="viewcode-back" href="../../../source/a_sync.utils.html#a_sync._get_ready">[docs]</a>
 <span class="k">def</span> <span class="nf">_get_ready</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">queue</span><span class="o">.</span><span class="n">get_all_nowait</span><span class="p">()</span>
     <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">QueueEmpty</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[]</span></div>
+        <span class="k">return</span> <span class="p">[]</span>
 
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;as_yielded&quot;</span><span class="p">,</span> <span class="s2">&quot;exhaust_iterator&quot;</span><span class="p">,</span> <span class="s2">&quot;exhaust_iterators&quot;</span><span class="p">]</span>
 </pre></div>
 
            </div>

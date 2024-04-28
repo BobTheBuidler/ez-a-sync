@@ -80,8 +80,8 @@
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;all&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;any&quot;</span><span class="p">,</span>
+    <span class="c1">#&quot;all&quot;,</span>
+    <span class="c1">#&quot;any&quot;,</span>
     <span class="s2">&quot;as_completed&quot;</span><span class="p">,</span>
     <span class="s2">&quot;as_yielded&quot;</span><span class="p">,</span>
     <span class="s2">&quot;gather&quot;</span><span class="p">,</span>
@@ -90,7 +90,7 @@
 <span class="p">]</span>
 
 <div class="viewcode-block" id="any">
-<a class="viewcode-back" href="../../source/a_sync.utils.html#a_sync.any">[docs]</a>
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.any">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="o">*</span><span class="n">awaitables</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">futs</span> <span class="o">=</span> <span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">awaitables</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">fut</span> <span class="ow">in</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">futs</span><span class="p">):</span>
@@ -109,7 +109,7 @@
 
     
 <div class="viewcode-block" id="all">
-<a class="viewcode-back" href="../../source/a_sync.utils.html#a_sync.all">[docs]</a>
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.all">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="o">*</span><span class="n">awaitables</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">futs</span> <span class="o">=</span> <span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">awaitables</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">fut</span> <span class="ow">in</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">awaitables</span><span class="p">):</span>
