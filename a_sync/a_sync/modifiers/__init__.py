@@ -1,7 +1,7 @@
 from aiolimiter import AsyncLimiter
 
 from a_sync._typing import *
-from a_sync.primitives import ThreadsafeSemaphore
+from a_sync.primitives.locks import ThreadsafeSemaphore
 from a_sync.a_sync.modifiers.manager import valid_modifiers
 
 
