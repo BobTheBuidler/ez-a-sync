@@ -29,6 +29,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
+    'typing_extensions': ('https://typing-extensions.readthedocs.io/en/latest/', None),
 }
 
 # -- Options for HTML output -------------------------------------------------
@@ -65,6 +66,7 @@ autodoc_default_options = {
         '_is_runtime_protocol',
     ]),
 }
+
 autodoc_typehints = "description"
 # Don't show class signature with the class' name.
 autodoc_class_signature = "separated"
