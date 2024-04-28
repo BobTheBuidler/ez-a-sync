@@ -110,7 +110,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
 class ASyncGeneratorFunction(Generic[P, T]):
     """
     Description:
-        Encapsulates an asynchronous generator function, providing a mechanism to use it as an asynchronous iterator with enhanced capabilities. This class wraps an async generator function, allowing it to be called with parameters and return an ASyncIterator object. It is particularly useful for situations where an async generator function needs to be used in a manner that is consistent with both synchronous and asynchronous execution contexts.
+        Encapsulates an asynchronous generator function, providing a mechanism to use it as an asynchronous iterator with enhanced capabilities. This class wraps an async generator function, allowing it to be called with parameters and return an :class:`~ASyncIterator` object. It is particularly useful for situations where an async generator function needs to be used in a manner that is consistent with both synchronous and asynchronous execution contexts.
 
         The ASyncGeneratorFunction class supports dynamic binding to instances, enabling it to be used as a method on class instances. When accessed as a descriptor, it automatically handles the binding to the instance, thereby allowing the wrapped async generator function to be invoked with instance context ('self') automatically provided. This feature is invaluable for designing classes that need to expose asynchronous generators as part of their interface while maintaining the ease of use and calling semantics similar to regular methods.
 
@@ -181,7 +181,6 @@ class ASyncFilter(_ASyncView[T]):
         raise StopAsyncIteration from None
     async def _check(self, obj: T) -> bool:
         checked = self._function(obj)
-        print(f'checked {checked}')
         if inspect.isawaitable(checked):
             return bool(await checked)
         return bool(checked)

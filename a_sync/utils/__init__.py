@@ -7,8 +7,8 @@ from a_sync.utils.gather import gather
 
 
 __all__ = [
-    "all",
-    "any",
+    #"all",
+    #"any",
     "as_completed",
     "as_yielded",
     "gather",

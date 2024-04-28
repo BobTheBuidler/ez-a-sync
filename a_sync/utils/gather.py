@@ -121,4 +121,7 @@ async def gather_mapping(
     # return data in same order as input mapping
     return {k: results[k] for k in mapping}  
 
+
 _is_mapping = lambda awaitables: len(awaitables) == 1 and isinstance(awaitables[0], Mapping)
+
+__all__ = ["gather", "gather_mapping"]
