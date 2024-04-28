@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>a_sync.exceptions &mdash; ez-a-sync  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ez-a-sync
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../source/modules.html">a_sync</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ez-a-sync</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">a_sync.exceptions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for a_sync.exceptions</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="ASyncFlagException">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncFlagException">[docs]</a>
+<span class="k">class</span> <span class="nc">ASyncFlagException</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">viable_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="kn">from</span> <span class="nn">a_sync._flags</span> <span class="kn">import</span> <span class="n">VIABLE_FLAGS</span>
+        <span class="k">return</span> <span class="n">VIABLE_FLAGS</span>
+
+<div class="viewcode-block" id="ASyncFlagException.desc">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncFlagException.desc">[docs]</a>
+    <span class="k">def</span> <span class="nf">desc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s1">&#39;kwargs&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;flags present in &#39;kwargs&#39;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;flag attributes defined on </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span></div>
+</div>
+
+
+<div class="viewcode-block" id="NoFlagsFound">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.NoFlagsFound">[docs]</a>
+<span class="k">class</span> <span class="nc">NoFlagsFound</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<div class="viewcode-block" id="NoFlagsFound.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.NoFlagsFound.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">kwargs_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;There are no viable a_sync </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">desc</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="si">}</span><span class="s2">:&quot;</span>
+        <span class="n">err</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Viable flags: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">viable_flags</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">kwargs_keys</span><span class="p">:</span>
+            <span class="n">err</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">kwargs keys: </span><span class="si">{</span><span class="n">kwargs_keys</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">err</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">This is likely an issue with a custom subclass definition.&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="TooManyFlags">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.TooManyFlags">[docs]</a>
+<span class="k">class</span> <span class="nc">TooManyFlags</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<div class="viewcode-block" id="TooManyFlags.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.TooManyFlags.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">present_flags</span><span class="p">):</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;There are multiple a_sync </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_desc</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="si">}</span><span class="s2"> and there should only be one.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">err</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Present flags: </span><span class="si">{</span><span class="n">present_flags</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">err</span> <span class="o">+=</span> <span class="s2">&quot;This is likely an issue with a custom subclass definition.&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="InvalidFlag">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlag">[docs]</a>
+<span class="k">class</span> <span class="nc">InvalidFlag</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<div class="viewcode-block" id="InvalidFlag.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlag.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;flag&#39; must be one of: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">viable_flags</span><span class="si">}</span><span class="s2">. You passed </span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="n">err</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">This code should not be reached and likely indicates an issue with a custom subclass definition.&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="InvalidFlagValue">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlagValue">[docs]</a>
+<span class="k">class</span> <span class="nc">InvalidFlagValue</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<div class="viewcode-block" id="InvalidFlagValue.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlagValue.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">&#39; should be boolean. You passed </span><span class="si">{</span><span class="n">flag_value</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="FlagNotDefined">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FlagNotDefined">[docs]</a>
+<span class="k">class</span> <span class="nc">FlagNotDefined</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<div class="viewcode-block" id="FlagNotDefined.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FlagNotDefined.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Type</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2"> flag </span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2"> is not defined.&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ImproperFunctionType">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ImproperFunctionType">[docs]</a>
+<span class="k">class</span> <span class="nc">ImproperFunctionType</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="FunctionNotAsync">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotAsync">[docs]</a>
+<span class="k">class</span> <span class="nc">FunctionNotAsync</span><span class="p">(</span><span class="n">ImproperFunctionType</span><span class="p">):</span>
+<div class="viewcode-block" id="FunctionNotAsync.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotAsync.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`coro_fn` must be a coroutine function defined with `async def`. You passed </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="FunctionNotSync">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotSync">[docs]</a>
+<span class="k">class</span> <span class="nc">FunctionNotSync</span><span class="p">(</span><span class="n">ImproperFunctionType</span><span class="p">):</span>
+<div class="viewcode-block" id="FunctionNotSync.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotSync.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`func` must be a coroutine function defined with `def`. You passed </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="KwargsUnsupportedError">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.KwargsUnsupportedError">[docs]</a>
+<span class="k">class</span> <span class="nc">KwargsUnsupportedError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<div class="viewcode-block" id="KwargsUnsupportedError.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.KwargsUnsupportedError.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;`run_in_executor` does not support keyword arguments, pass them as positional args instead if you&#39;re able&quot;</span><span class="p">)</span></div>
+</div>
+
+        
+<div class="viewcode-block" id="ASyncRuntimeError">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncRuntimeError">[docs]</a>
+<span class="k">class</span> <span class="nc">ASyncRuntimeError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<div class="viewcode-block" id="ASyncRuntimeError.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncRuntimeError.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="ne">RuntimeError</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+</div>
+
+
+<div class="viewcode-block" id="SyncModeInAsyncContextError">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.SyncModeInAsyncContextError">[docs]</a>
+<span class="k">class</span> <span class="nc">SyncModeInAsyncContextError</span><span class="p">(</span><span class="n">ASyncRuntimeError</span><span class="p">):</span>
+<div class="viewcode-block" id="SyncModeInAsyncContextError.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.SyncModeInAsyncContextError.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">_flags</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;The event loop is already running, which means you&#39;re trying to use an ASync function synchronously from within an async context.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">err</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">err</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_flags</span><span class="o">.</span><span class="n">VIABLE_FLAGS</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="MappingIsEmptyError">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingIsEmptyError">[docs]</a>
+<span class="k">class</span> <span class="nc">MappingIsEmptyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="MappingIsEmptyError.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingIsEmptyError.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;TaskMapping does not contain anything to yield&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="MappingNotEmptyError">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingNotEmptyError">[docs]</a>
+<span class="k">class</span> <span class="nc">MappingNotEmptyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="MappingNotEmptyError.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingNotEmptyError.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;TaskMapping already contains some data. In order to use `map`, you need a fresh one.&quot;</span><span class="p">)</span></div>
+</div>
+
+
+<div class="viewcode-block" id="PersistedTaskException">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.PersistedTaskException">[docs]</a>
+<span class="k">class</span> <span class="nc">PersistedTaskException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="PersistedTaskException.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.PersistedTaskException.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">exc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span></div>
+</div>
+
+
+<div class="viewcode-block" id="EmptySequenceError">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.EmptySequenceError">[docs]</a>
+<span class="k">class</span> <span class="nc">EmptySequenceError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+    <span class="o">...</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, BobTheBuidler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
