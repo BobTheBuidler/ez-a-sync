@@ -10,9 +10,10 @@ from async_property.base import \
 from async_property.cached import \
     AsyncCachedPropertyDescriptor  # type: ignore [import]
 
-from a_sync import _flags, exceptions
+from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.modified import ASyncFunction
+from a_sync.a_sync import _flags
+from a_sync.a_sync.function import ASyncFunction
 
 
 def get_event_loop() -> asyncio.AbstractEventLoop:

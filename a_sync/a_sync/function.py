@@ -4,9 +4,10 @@ import inspect
 import logging
 import sys
 
-from a_sync import _helpers, _kwargs
+from a_sync import _helpers
 from a_sync._typing import *
-from a_sync.modifiers.manager import ModifierManager
+from a_sync.a_sync import _kwargs
+from a_sync.a_sync.modifiers.manager import ModifierManager
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping

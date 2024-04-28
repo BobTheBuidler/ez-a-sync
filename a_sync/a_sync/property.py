@@ -4,11 +4,12 @@ import logging
 
 import async_property as ap  # type: ignore [import]
 
-from a_sync import _helpers, _smart, config, exceptions
-from a_sync._bound import ASyncBoundMethodAsyncDefault, ASyncMethodDescriptorAsyncDefault
-from a_sync._descriptor import ASyncDescriptor
+from a_sync import _helpers, _smart, exceptions
 from a_sync._typing import *
-from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
+from a_sync.a_sync import config
+from a_sync.a_sync._descriptor import ASyncDescriptor
+from a_sync.a_sync.function import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
+from a_sync.a_sync.method import ASyncBoundMethodAsyncDefault, ASyncMethodDescriptorAsyncDefault
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -239,6 +240,7 @@ class cached_property(ASyncCachedPropertyDescriptor[I, T]):...
 
 class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+    default: Literal["sync"]
     @overload
     def __get__(self, instance: None, owner: Any) -> Self:...
     @overload
@@ -249,6 +251,7 @@ class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
 
 class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[I, T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+    default: Literal["async"]
 
 ASyncCachedPropertyDecorator = Callable[[AnyGetterFunction[I, T]], cached_property[I, T]]
 ASyncCachedPropertyDecoratorSyncDefault = Callable[[AnyGetterFunction[I, T]], ASyncCachedPropertyDescriptorSyncDefault[I, T]]
@@ -372,7 +375,7 @@ def _is_a_sync_instance(instance: object) -> bool:
     try:
         return instance.__is_a_sync_instance__
     except AttributeError:
-        from a_sync.abstract import ASyncABC
+        from a_sync.a_sync.abstract import ASyncABC
         is_a_sync = isinstance(instance, ASyncABC)
         instance.__is_a_sync_instance__ = is_a_sync
         return is_a_sync

@@ -6,7 +6,7 @@ import sys
 import weakref
 
 from a_sync import _smart
-from a_sync._task import create_task
+from a_sync.asyncio.create_task import create_task
 from a_sync._typing import *
 
 logger = logging.getLogger(__name__)

@@ -4,8 +4,8 @@ import time
 
 import pytest
 
-from a_sync._bound import ASyncBoundMethodAsyncDefault
-from a_sync._meta import ASyncMeta
+from a_sync.a_sync._meta import ASyncMeta
+from a_sync.a_sync.method import ASyncBoundMethodAsyncDefault
 from tests.fixtures import TestClass, TestInheritor, TestMeta, increment, TestSync, WrongThreadError
 
 classes = pytest.mark.parametrize('cls', [TestClass, TestSync, TestInheritor, TestMeta])

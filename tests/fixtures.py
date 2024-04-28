@@ -8,8 +8,8 @@ import pytest
 
 import a_sync
 from a_sync import ASyncBase
-from a_sync._meta import ASyncMeta, ASyncSingletonMeta
-from a_sync.singleton import ASyncGenericSingleton
+from a_sync.a_sync._meta import ASyncMeta, ASyncSingletonMeta
+from a_sync.a_sync.singleton import ASyncGenericSingleton
 
 increment = pytest.mark.parametrize('i', range(10))
 

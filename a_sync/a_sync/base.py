@@ -4,9 +4,10 @@ import inspect
 import logging
 from contextlib import suppress
 
-from a_sync import _flags, exceptions
+from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.abstract import ASyncABC
+from a_sync.a_sync import _flags
+from a_sync.a_sync.abstract import ASyncABC
 
 
 logger = logging.getLogger(__name__)

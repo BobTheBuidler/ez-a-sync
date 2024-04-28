@@ -2,12 +2,13 @@
 import asyncio
 
 from a_sync._typing import *
+from a_sync.a_sync._flags import VIABLE_FLAGS
 
 
 class ASyncFlagException(ValueError):
     @property
     def viable_flags(self) -> Set[str]:
-        from a_sync._flags import VIABLE_FLAGS
+        
         return VIABLE_FLAGS
 
     def desc(self, target) -> str:
@@ -68,10 +69,9 @@ class ASyncRuntimeError(RuntimeError):
 
 class SyncModeInAsyncContextError(ASyncRuntimeError):
     def __init__(self):
-        from a_sync import _flags
         err = f"The event loop is already running, which means you're trying to use an ASync function synchronously from within an async context.\n"
         err += f"Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:\n"
-        err += f"{_flags.VIABLE_FLAGS}"
+        err += f"{VIABLE_FLAGS}"
         super().__init__(err)
 
 class MappingIsEmptyError(Exception):

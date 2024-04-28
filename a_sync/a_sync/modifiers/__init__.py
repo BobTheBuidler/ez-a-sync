@@ -2,7 +2,7 @@ from aiolimiter import AsyncLimiter
 
 from a_sync._typing import *
 from a_sync import primitives
-from a_sync.modifiers.manager import valid_modifiers
+from a_sync.a_sync.modifiers.manager import valid_modifiers
 
 
 def get_modifiers_from(thing: Union[dict, type, object]) -> ModifierKwargs:

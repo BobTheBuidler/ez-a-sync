@@ -5,12 +5,13 @@ import threading
 from abc import ABCMeta
 from typing import Any, Dict, Tuple
 
-from a_sync import ENVIRONMENT_VARIABLES, modifiers
-from a_sync._bound import ASyncMethodDescriptor
+from a_sync import ENVIRONMENT_VARIABLES
+from a_sync.a_sync import modifiers
+from a_sync.a_sync.function import ASyncFunction, ModifiedMixin
+from a_sync.a_sync.method import ASyncMethodDescriptor
+from a_sync.a_sync.property import ASyncPropertyDescriptor, ASyncCachedPropertyDescriptor
 from a_sync.future import _ASyncFutureWrappedFn  # type: ignore [attr-defined]
 from a_sync.iter import ASyncGeneratorFunction
-from a_sync.modified import ASyncFunction, ModifiedMixin
-from a_sync.property import ASyncPropertyDescriptor, ASyncCachedPropertyDescriptor
 from a_sync.primitives.locks.semaphore import Semaphore
 
 logger = logging.getLogger(__name__)
