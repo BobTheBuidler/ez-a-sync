@@ -74,3 +74,21 @@ autodoc_class_signature = "separated"
 automodule_generate_module_stub = True
 
 sys.path.insert(0, os.path.abspath('./a_sync'))
+
+SKIP_MODULES = [
+    "a_sync.a_sync._kwargs",
+    "a_sync.a_sync.aliases",
+    "a_sync.asyncio.as_completed",
+    "a_sync.asyncio.create_task",
+    "a_sync.asyncio.gather",
+    "a_sync.asyncio.utils",
+    "a_sync.utils.iterators",
+]
+
+def skip_submodules(app, what, name, obj, skip, options):
+    if what == "module" and name in :
+        skip = True
+    return skip
+
+def setup(sphinx):
+    sphinx.connect("autoapi-skip-member", skip_submodules)
