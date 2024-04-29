@@ -91,4 +91,4 @@ def skip_submodules(app, what, name, obj, skip, options):
     return skip
 
 def setup(sphinx):
-    sphinx.connect("autoapi-skip-member", skip_submodules)
+    sphinx.connect("autodoc-skip-member", skip_submodules)
