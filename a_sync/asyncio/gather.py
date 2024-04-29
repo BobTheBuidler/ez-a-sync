@@ -11,7 +11,7 @@ except ImportError as e:
             raise ImportError("You must have tqdm installed in order to use this feature")
 
 from a_sync._typing import *
-from a_sync.utils.as_completed import as_completed_mapping, _exc_wrap
+from a_sync.asyncio.as_completed import as_completed_mapping, _exc_wrap
 
 
 Excluder = Callable[[T], bool]

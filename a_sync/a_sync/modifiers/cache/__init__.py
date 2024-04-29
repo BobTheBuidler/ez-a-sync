@@ -4,7 +4,7 @@ import asyncio
 
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.modifiers.cache.memory import apply_async_memory_cache
+from a_sync.a_sync.modifiers.cache.memory import apply_async_memory_cache
 
 
 class CacheArgs(TypedDict):

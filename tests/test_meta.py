@@ -3,10 +3,10 @@ import time
 
 import pytest
 
-from a_sync._meta import ASyncMeta
-from a_sync.base import ASyncGenericBase
-from a_sync.property import HiddenMethod
-from a_sync.singleton import ASyncGenericSingleton
+from a_sync.a_sync._meta import ASyncMeta
+from a_sync.a_sync.base import ASyncGenericBase
+from a_sync.a_sync.property import HiddenMethod
+from a_sync.a_sync.singleton import ASyncGenericSingleton
 from tests.fixtures import TestSingleton, TestSingletonMeta, increment
 
 classes = pytest.mark.parametrize('cls', [TestSingleton, TestSingletonMeta])

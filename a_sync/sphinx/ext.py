@@ -38,9 +38,9 @@ from docutils import nodes
 from sphinx.domains.python import PyFunction, PyMethod
 from sphinx.ext.autodoc import FunctionDocumenter, MethodDocumenter
 
-from a_sync._descriptor import ASyncDescriptor
+from a_sync.a_sync._descriptor import ASyncDescriptor
+from a_sync.a_sync.function import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 from a_sync.iter import ASyncGeneratorFunction
-from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 
 
 

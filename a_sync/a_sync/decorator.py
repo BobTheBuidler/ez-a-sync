@@ -1,8 +1,8 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
-from a_sync import _flags, config
 from a_sync._typing import *
-from a_sync.modified import (ASyncDecorator, ASyncFunction, ASyncDecoratorAsyncDefault, 
+from a_sync.a_sync import _flags, config
+from a_sync.a_sync.function import (ASyncDecorator, ASyncFunction, ASyncDecoratorAsyncDefault, 
                              ASyncDecoratorSyncDefault, ASyncFunctionAsyncDefault, 
                              ASyncFunctionSyncDefault)
 

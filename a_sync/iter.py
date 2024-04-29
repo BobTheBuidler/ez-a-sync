@@ -7,8 +7,8 @@ import sys
 
 from async_property import async_cached_property
 
-from a_sync import _helpers
 from a_sync._typing import *
+from a_sync.a_sync import _helpers
 
 
 logger = logging.getLogger(__name__)

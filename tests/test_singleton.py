@@ -1,5 +1,5 @@
 
-from a_sync.singleton import ASyncGenericSingleton
+from a_sync.a_sync.singleton import ASyncGenericSingleton
 
 def test_flag_predefined():
     """We had a failure case where the subclass implementation assigned the flag value to the class and did not allow user to determine at init time"""

@@ -4,13 +4,13 @@ import functools
 import logging
 from inspect import isawaitable
 
-from a_sync import _helpers, _kwargs
-from a_sync._descriptor import ASyncDescriptor
 from a_sync._typing import *
-from a_sync.modified import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
+from a_sync.a_sync import _helpers, _kwargs
+from a_sync.a_sync._descriptor import ASyncDescriptor
+from a_sync.a_sync.function import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 
 if TYPE_CHECKING:
-    from a_sync.abstract import ASyncABC
+    from a_sync.a_sync.abstract import ASyncABC
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         try:
             return instance.__dict__[self.field_name]
         except KeyError:
-            from a_sync.abstract import ASyncABC
+            from a_sync.a_sync.abstract import ASyncABC
             if self.default == "sync":
                 bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
             elif self.default == "async":
@@ -142,7 +142,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         return retval  # type: ignore [call-overload, return-value]
     @functools.cached_property
     def __bound_to_a_sync_instance__(self) -> bool:
-        from a_sync.abstract import ASyncABC
+        from a_sync.a_sync.abstract import ASyncABC
         return isinstance(self.__self__, ASyncABC)
     @functools.cached_property
     def __is_async_def__(self) -> bool:

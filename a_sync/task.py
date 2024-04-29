@@ -5,18 +5,19 @@ import functools
 import inspect
 import logging
 
-from a_sync import _kwargs, exceptions
-from a_sync._bound import ASyncBoundMethod, ASyncMethodDescriptor, ASyncMethodDescriptorSyncDefault
-from a_sync._task import create_task
+from a_sync import exceptions
+from a_sync.asyncio.create_task import create_task
 from a_sync._typing import *
-from a_sync.base import ASyncGenericBase
+from a_sync.a_sync import _kwargs
+from a_sync.a_sync.base import ASyncGenericBase
+from a_sync.a_sync.function import ASyncFunction
+from a_sync.a_sync.method import ASyncBoundMethod, ASyncMethodDescriptor, ASyncMethodDescriptorSyncDefault
+from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
+from a_sync.asyncio.as_completed import as_completed
+from a_sync.asyncio.gather import Excluder, gather
 from a_sync.iter import ASyncIterator, ASyncGeneratorFunction
-from a_sync.modified import ASyncFunction
 from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.primitives.locks.event import Event
-from a_sync.property import _ASyncPropertyDescriptorBase
-from a_sync.utils.as_completed import as_completed
-from a_sync.utils.gather import Excluder, gather
 from a_sync.utils.iterators import as_yielded, exhaust_iterator
 
 

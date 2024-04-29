@@ -1,7 +1,8 @@
 
 from typing import Optional
 
-from a_sync import _flags, exceptions
+from a_sync import exceptions
+from a_sync.a_sync import _flags
 
 
 def get_flag_name(kwargs: dict) -> Optional[str]:

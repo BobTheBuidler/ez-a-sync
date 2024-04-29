@@ -2,7 +2,7 @@
 
 import pytest
 
-from a_sync.base import ASyncGenericBase
+from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.iter import ASyncIterable, ASyncIterator
 
 

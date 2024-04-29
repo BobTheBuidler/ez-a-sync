@@ -7,4 +7,5 @@ build/
 dist/
 .eggs/
 *.egg-info
-cache/
+cache/**/*.json
+cache/**/*.pkl
