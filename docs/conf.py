@@ -86,7 +86,7 @@ SKIP_MODULES = [
 ]
 
 def skip_submodules(app, what, name, obj, skip, options):
-    if what == "module" and name in SKIP_MODULES:
+    if what == "module" and obj.__name__ in SKIP_MODULES:
         skip = True
     return skip
 
