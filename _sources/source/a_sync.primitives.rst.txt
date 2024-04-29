@@ -30,15 +30,6 @@ a\_sync.primitives.\_loggable module
    :show-inheritance:
    :private-members:
 
-a\_sync.primitives.executor module
-----------------------------------
-
-.. automodule:: a_sync.primitives.executor
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
 a\_sync.primitives.queue module
 -------------------------------
 

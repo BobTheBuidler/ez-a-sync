@@ -7,7 +7,8 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   a_sync.modifiers
+   a_sync.a_sync
+   a_sync.asyncio
    a_sync.primitives
    a_sync.sphinx
    a_sync.utils
@@ -24,73 +25,10 @@ a\_sync.ENVIRONMENT\_VARIABLES module
    :show-inheritance:
    :private-members:
 
-a\_sync.\_bound module
-----------------------
-
-.. automodule:: a_sync._bound
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.\_descriptor module
----------------------------
-
-.. automodule:: a_sync._descriptor
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.\_flags module
-----------------------
-
-.. automodule:: a_sync._flags
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.\_helpers module
-------------------------
-
-.. automodule:: a_sync._helpers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.\_kwargs module
------------------------
-
-.. automodule:: a_sync._kwargs
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.\_meta module
----------------------
-
-.. automodule:: a_sync._meta
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
 a\_sync.\_smart module
 ----------------------
 
 .. automodule:: a_sync._smart
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.\_task module
----------------------
-
-.. automodule:: a_sync._task
    :members:
    :undoc-members:
    :show-inheritance:
@@ -105,15 +43,6 @@ a\_sync.\_typing module
    :show-inheritance:
    :private-members:
 
-a\_sync.abstract module
------------------------
-
-.. automodule:: a_sync.abstract
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
 a\_sync.aliases module
 ----------------------
 
@@ -123,37 +52,19 @@ a\_sync.aliases module
    :show-inheritance:
    :private-members:
 
-a\_sync.base module
--------------------
-
-.. automodule:: a_sync.base
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.config module
----------------------
-
-.. automodule:: a_sync.config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.decorator module
-------------------------
-
-.. automodule:: a_sync.decorator
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
 a\_sync.exceptions module
 -------------------------
 
 .. automodule:: a_sync.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.executor module
+-----------------------
+
+.. automodule:: a_sync.executor
    :members:
    :undoc-members:
    :show-inheritance:
@@ -172,33 +83,6 @@ a\_sync.iter module
 -------------------
 
 .. automodule:: a_sync.iter
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.modified module
------------------------
-
-.. automodule:: a_sync.modified
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.property module
------------------------
-
-.. automodule:: a_sync.property
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.singleton module
-------------------------
-
-.. automodule:: a_sync.singleton
    :members:
    :undoc-members:
    :show-inheritance:

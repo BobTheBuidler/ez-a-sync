@@ -1,0 +1,139 @@
+a\_sync.a\_sync package
+=======================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   a_sync.a_sync.modifiers
+
+Submodules
+----------
+
+a\_sync.a\_sync.\_descriptor module
+-----------------------------------
+
+.. automodule:: a_sync.a_sync._descriptor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.\_flags module
+------------------------------
+
+.. automodule:: a_sync.a_sync._flags
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.\_helpers module
+--------------------------------
+
+.. automodule:: a_sync.a_sync._helpers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.\_kwargs module
+-------------------------------
+
+.. automodule:: a_sync.a_sync._kwargs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.\_meta module
+-----------------------------
+
+.. automodule:: a_sync.a_sync._meta
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.abstract module
+-------------------------------
+
+.. automodule:: a_sync.a_sync.abstract
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.base module
+---------------------------
+
+.. automodule:: a_sync.a_sync.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.config module
+-----------------------------
+
+.. automodule:: a_sync.a_sync.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.decorator module
+--------------------------------
+
+.. automodule:: a_sync.a_sync.decorator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.function module
+-------------------------------
+
+.. automodule:: a_sync.a_sync.function
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.method module
+-----------------------------
+
+.. automodule:: a_sync.a_sync.method
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.property module
+-------------------------------
+
+.. automodule:: a_sync.a_sync.property
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+a\_sync.a\_sync.singleton module
+--------------------------------
+
+.. automodule:: a_sync.a_sync.singleton
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
+Module contents
+---------------
+
+.. automodule:: a_sync.a_sync
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:

@@ -4,24 +4,6 @@ a\_sync.utils package
 Submodules
 ----------
 
-a\_sync.utils.as\_completed module
-----------------------------------
-
-.. automodule:: a_sync.utils.as_completed
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.utils.gather module
----------------------------
-
-.. automodule:: a_sync.utils.gather
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
 a\_sync.utils.iterators module
 ------------------------------
 

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>a_sync.a_sync.decorator &mdash; ez-a-sync  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ez-a-sync
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/modules.html">a_sync</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ez-a-sync</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">a_sync.a_sync.decorator</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for a_sync.a_sync.decorator</h1><div class="highlight"><pre>
+<span></span><span class="c1"># mypy: disable-error-code=valid-type</span>
+<span class="c1"># mypy: disable-error-code=misc</span>
+<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">_flags</span><span class="p">,</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ASyncDecorator</span><span class="p">,</span> <span class="n">ASyncFunction</span><span class="p">,</span> <span class="n">ASyncDecoratorAsyncDefault</span><span class="p">,</span> 
+                             <span class="n">ASyncDecoratorSyncDefault</span><span class="p">,</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">,</span> 
+                             <span class="n">ASyncFunctionSyncDefault</span><span class="p">)</span>
+
+<span class="c1">########################</span>
+<span class="c1"># The a_sync decorator #</span>
+<span class="c1">########################</span>
+
+<span class="c1"># @a_sync</span>
+<span class="c1"># def some_fn():</span>
+<span class="c1">#     pass</span>
+<span class="c1">#</span>
+<span class="c1"># @a_sync</span>
+<span class="c1"># async def some_fn():</span>
+<span class="c1">#     pass</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorAsyncDefault</span><span class="p">:</span><span class="o">...</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorSyncDefault</span><span class="p">:</span><span class="o">...</span>
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecorator</span><span class="p">:</span><span class="o">...</span>
+
+<span class="nd">@overload</span> <span class="c1"># async def, None default</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+
+<span class="nd">@overload</span> <span class="c1"># sync def none default</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+
+<span class="c1"># @a_sync(default=&#39;async&#39;)</span>
+<span class="c1"># def some_fn():</span>
+<span class="c1">#     pass</span>
+<span class="c1">#</span>
+<span class="c1"># @a_sync(default=&#39;async&#39;)</span>
+<span class="c1"># async def some_fn():</span>
+<span class="c1">#     pass</span>
+<span class="c1">#</span>
+<span class="c1"># NOTE These should output a decorator that will be applied to &#39;some_fn&#39;</span>
+
+<span class="nd">@overload</span> 
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;async&#39;</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorAsyncDefault</span><span class="p">:</span><span class="o">...</span>
+
+<span class="nd">@overload</span> <span class="c1"># if you try to use default as the only arg</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;async&#39;</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorAsyncDefault</span><span class="p">:</span><span class="o">...</span>
+
+<span class="c1"># a_sync(some_fn, default=&#39;async&#39;)</span>
+
+<span class="nd">@overload</span> <span class="c1"># async def, async default</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;async&#39;</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+
+<span class="nd">@overload</span> <span class="c1"># sync def async default</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;async&#39;</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+
+<span class="c1"># a_sync(some_fn, default=&#39;sync&#39;)</span>
+
+<span class="nd">@overload</span> <span class="c1"># async def, sync default</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;sync&#39;</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">:</span><span class="o">...</span>
+
+<span class="nd">@overload</span> <span class="c1"># sync def sync default</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;sync&#39;</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">:</span><span class="o">...</span>
+
+<span class="c1"># @a_sync(default=&#39;sync&#39;)</span>
+<span class="c1"># def some_fn():</span>
+<span class="c1">#     pass</span>
+<span class="c1">#</span>
+<span class="c1"># @a_sync(default=&#39;sync&#39;)</span>
+<span class="c1"># async def some_fn():</span>
+<span class="c1">#     pass</span>
+<span class="c1">#</span>
+<span class="c1"># NOTE These should output a decorator that will be applied to &#39;some_fn&#39;</span>
+
+<span class="nd">@overload</span> 
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;sync&#39;</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorSyncDefault</span><span class="p">:</span><span class="o">...</span>
+
+<span class="nd">@overload</span> <span class="c1"># if you try to use default as the only arg</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;sync&#39;</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorSyncDefault</span><span class="p">:</span><span class="o">...</span>
+
+<span class="nd">@overload</span> <span class="c1"># if you try to use default as the only arg</span>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;sync&#39;</span><span class="p">],</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorSyncDefault</span><span class="p">:</span><span class="o">...</span>
+    
+<span class="c1"># catchall</span>
+<div class="viewcode-block" id="a_sync">
+<a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync">[docs]</a>
+<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>  
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AnyFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_MODE</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>  <span class="c1"># default values are set by passing these kwargs into a ModifierManager object.</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ASyncDecorator</span><span class="p">,</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]:</span>
+    <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    A coroutine function decorated with this decorator can be called as a sync function by passing a boolean value for any of these kwargs: </span><span class="si">{</span><span class="n">_flags</span><span class="o">.</span><span class="n">VIABLE_FLAGS</span><span class="si">}</span>
+<span class="s2">    </span>
+<span class="s2">    lib defaults:</span>
+<span class="s2">    async settings</span>
+<span class="s2">        cache_type: CacheType = None,            - This can be None or &#39;memory&#39;. &#39;memory&#39; is a lru cache which can be modified with the &#39;cache_typed&#39;,&#39;ram_cache_maxsize&#39;,&#39;ram_cache_ttl&#39; modifiers.</span>
+<span class="s2">        cache_typed: bool = False,               - Set to True if you want types considered treated for cache keys. ie with cache_typed=True, Decimal(0) and 0 will be considered separate keys.</span>
+<span class="s2">        ram_cache_maxsize: Optional[int] = -1,   - The maxsize for your lru cache. None if cache is unbounded. If you set this value without specifying a cache type, &#39;memory&#39; will automatically be applied.</span>
+<span class="s2">        ram_cache_ttl: Optional[int] = None,     - The ttl for items in your lru cache. Set to None. If you set this value without specifying a cache type, &#39;memory&#39; will automatically be applied.</span>
+<span class="s2">        runs_per_minute: Optional[int] = None,   - Setting this value enables a rate limiter for the decorated function.</span>
+<span class="s2">        semaphore: SemaphoreSpec = None,         - drop in a Semaphore for your async defined functions.</span>
+<span class="s2">    sync settings</span>
+<span class="s2">        executor: Executor = config.default_sync_executor</span>
+
+<span class="s2">    ######################</span>
+<span class="s2">    # async def examples #</span>
+<span class="s2">    ######################</span>
+
+<span class="s2">    @a_sync</span>
+<span class="s2">    async def some_fn():</span>
+<span class="s2">        reurn True</span>
+<span class="s2">    </span>
+<span class="s2">    await some_fn() == True</span>
+<span class="s2">    some_fn(sync=True) == True</span>
+
+<span class="s2">    </span>
+<span class="s2">    @a_sync(default=None)</span>
+<span class="s2">    async def some_fn():</span>
+<span class="s2">        reurn True</span>
+<span class="s2">    </span>
+<span class="s2">    await some_fn() == True</span>
+<span class="s2">    some_fn(sync=True) == True</span>
+
+<span class="s2">    </span>
+<span class="s2">    @a_sync(default=&#39;async&#39;)</span>
+<span class="s2">    async def some_fn():</span>
+<span class="s2">        reurn True</span>
+<span class="s2">    </span>
+<span class="s2">    await some_fn() == True</span>
+<span class="s2">    some_fn(sync=True) == True</span>
+<span class="s2">    </span>
+
+<span class="s2">    @a_sync(default=&#39;sync&#39;)</span>
+<span class="s2">    async def some_fn():</span>
+<span class="s2">        reurn True</span>
+<span class="s2">    </span>
+<span class="s2">    some_fn() == True</span>
+<span class="s2">    await some_fn(sync=False) == True</span>
+
+<span class="s2">    </span>
+<span class="s2">    # TODO: in a future release, I will make this usable with sync functions as well</span>
+
+<span class="s2">    ################</span>
+<span class="s2">    # def examples #</span>
+<span class="s2">    ################</span>
+
+<span class="s2">    @a_sync</span>
+<span class="s2">    def some_fn():</span>
+<span class="s2">        reurn True</span>
+<span class="s2">    </span>
+<span class="s2">    some_fn() == True</span>
+<span class="s2">    await some_fn(sync=False) == True</span>
+<span class="s2">    </span>
+
+<span class="s2">    @a_sync(default=None)</span>
+<span class="s2">    def some_fn():</span>
+<span class="s2">        reurn True</span>
+<span class="s2">    </span>
+<span class="s2">    some_fn() == True</span>
+<span class="s2">    await some_fn(sync=False) == True</span>
+
+
+<span class="s2">    @a_sync(default=&#39;async&#39;)</span>
+<span class="s2">    def some_fn():</span>
+<span class="s2">        reurn True</span>
+<span class="s2">    </span>
+<span class="s2">    await some_fn() == True</span>
+<span class="s2">    some_fn(sync=True) == True</span>
+
+
+<span class="s2">    @a_sync(default=&#39;sync&#39;)</span>
+<span class="s2">    def some_fn():</span>
+<span class="s2">        reurn True</span>
+<span class="s2">    </span>
+<span class="s2">    some_fn() == True</span>
+<span class="s2">    await some_fn(sync=False) == True</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync(&#39;sync&#39;)...</span>
+    <span class="k">if</span> <span class="n">coro_fn</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;async&#39;</span><span class="p">,</span> <span class="s1">&#39;sync&#39;</span><span class="p">]:</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="n">coro_fn</span>  <span class="c1"># type: ignore [assignment]</span>
+        <span class="n">coro_fn</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="k">if</span> <span class="n">default</span> <span class="o">==</span> <span class="s2">&quot;sync&quot;</span><span class="p">:</span>
+        <span class="n">deco</span> <span class="o">=</span> <span class="n">ASyncDecoratorSyncDefault</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">modifiers</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">default</span> <span class="o">==</span> <span class="s2">&quot;async&quot;</span><span class="p">:</span>
+        <span class="n">deco</span> <span class="o">=</span> <span class="n">ASyncDecoratorAsyncDefault</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">modifiers</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">deco</span> <span class="o">=</span> <span class="n">ASyncDecorator</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">modifiers</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">deco</span> <span class="k">if</span> <span class="n">coro_fn</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">deco</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, BobTheBuidler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

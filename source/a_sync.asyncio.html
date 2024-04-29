@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>a_sync.asyncio package &mdash; ez-a-sync  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="a_sync.primitives package" href="a_sync.primitives.html" />
+    <link rel="prev" title="a_sync.a_sync.modifiers.cache package" href="a_sync.a_sync.modifiers.cache.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            ez-a-sync
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">a_sync</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="a_sync.html">a_sync package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="a_sync.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.html">a_sync.a_sync package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">a_sync.asyncio package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html">a_sync.primitives package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html">a_sync.sphinx package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.utils.html">a_sync.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.ENVIRONMENT_VARIABLES">a_sync.ENVIRONMENT_VARIABLES module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._smart">a_sync._smart module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync._typing">a_sync._typing module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.aliases">a_sync.aliases module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.exceptions">a_sync.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.executor">a_sync.executor module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.future">a_sync.future module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.iter">a_sync.iter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync.task">a_sync.task module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.html#module-a_sync">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ez-a-sync</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">a_sync</a></li>
+          <li class="breadcrumb-item"><a href="a_sync.html">a_sync package</a></li>
+      <li class="breadcrumb-item active">a_sync.asyncio package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/a_sync.asyncio.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="a-sync-asyncio-package">
+<h1>a_sync.asyncio package<a class="headerlink" href="#a-sync-asyncio-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-a_sync.asyncio.as_completed">
+<span id="a-sync-asyncio-as-completed-module"></span><h2>a_sync.asyncio.as_completed module<a class="headerlink" href="#module-a_sync.asyncio.as_completed" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.as_completed.as_completed">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.as_completed.</span></span><span class="sig-name descname"><span class="pre">as_completed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/as_completed.html#as_completed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.as_completed.as_completed" title="Link to this definition"></a></dt>
+<dd><p>Concurrently awaits a list of awaitable objects or mappings of awaitables and returns an iterator of results.</p>
+<p>This function extends Python’s asyncio.as_completed, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.</p>
+<p>Differences from asyncio.as_completed:
+- Uses type hints for use with static type checkers.
+- Supports either individual awaitables or a k:v mapping of awaitables.
+- Can be used as an async iterator which yields the result values. Example below.
+- Provides progress reporting using tqdm if ‘tqdm’ is set to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fs</strong> (<em>Iterable</em><em>[</em><em>Awaitable</em><em>[</em><em>T</em><em>] or </em><em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em><em>]</em>) – The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An iterator of results when awaiting individual awaitables or an async iterator when awaiting mappings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Iterator[Coroutine[None, None, T] or <a class="reference internal" href="a_sync.html#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator">ASyncIterator</a>[Tuple[K, V]]]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Awaiting individual awaitables:
+<a href="#id1"><span class="problematic" id="id2">``</span></a>`
+awaitables = [async_function1(), async_function2()]
+for coro in as_completed(awaitables):</p>
+<blockquote>
+<div><p>val = await coro
+…</p>
+</div></blockquote>
+<dl class="simple">
+<dt>async for val in as_completed(awaitables, aiter=True):</dt><dd><p>…</p>
+</dd>
+</dl>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<p>Awaiting mappings of awaitables:
+<a href="#id7"><span class="problematic" id="id8">``</span></a>`
+mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
+<dl class="simple">
+<dt>for coro in as_completed(mapping):</dt><dd><p>k, v = await coro
+…</p>
+</dd>
+<dt>async for k, v in as_completed(mapping, aiter=True):</dt><dd><p>…</p>
+</dd>
+</dl>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.as_completed.as_completed_mapping">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.as_completed.</span></span><span class="sig-name descname"><span class="pre">as_completed_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/as_completed.html#as_completed_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.as_completed.as_completed_mapping" title="Link to this definition"></a></dt>
+<dd><p>Concurrently awaits a mapping of awaitable objects and returns an iterator or async iterator of results.</p>
+<p>This function is designed to await a mapping of awaitable objects, where each key-value pair represents a unique awaitable. It enables concurrent execution and gathers results into an iterator or an async iterator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em>) – A dictionary-like object where keys are of type K and values are awaitable objects of type V.</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An iterator of results or an async iterator when awaiting mappings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[Iterator[Coroutine[None, None, Tuple[K, V]]] or <a class="reference internal" href="a_sync.html#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator">ASyncIterator</a>[Tuple[K, V]]]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p><a href="#id13"><span class="problematic" id="id14">``</span></a>`
+mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
+<dl class="simple">
+<dt>for coro in as_completed_mapping(mapping):</dt><dd><p>k, v = await coro
+…</p>
+</dd>
+<dt>async for k, v in as_completed_mapping(mapping, aiter=True):</dt><dd><p>…</p>
+</dd>
+</dl>
+<p><a href="#id15"><span class="problematic" id="id16">``</span></a><a href="#id17"><span class="problematic" id="id18">`</span></a></p>
+</dd></dl>
+
+</section>
+<section id="module-a_sync.asyncio.create_task">
+<span id="a-sync-asyncio-create-task-module"></span><h2>a_sync.asyncio.create_task module<a class="headerlink" href="#module-a_sync.asyncio.create_task" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.create_task.create_task">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.create_task.</span></span><span class="sig-name descname"><span class="pre">create_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coro</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_gc_until_done</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_destroy_pending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/create_task.html#create_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.create_task.create_task" title="Link to this definition"></a></dt>
+<dd><p>Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.</p>
+<p>Unlike asyncio.create_task, which requires a coroutine, this function accepts any Awaitable, ensuring broader
+compatibility. It optionally prevents the task from being garbage-collected until completion and provides
+enhanced error management by wrapping exceptions in a custom exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – An Awaitable object from which to create the task.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>) – Optional name for the task, aiding in debugging.</p></li>
+<li><p><strong>skip_gc_until_done</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, the task is kept alive until it completes, preventing garbage collection.</p></li>
+<li><p><strong>log_destroyed_pending</strong> – If False, asyncio’s default error log when a pending task is destroyed is suppressed.</p></li>
+<li><p><strong>log_destroy_pending</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An asyncio.Task object created from the provided Awaitable.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Task</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-a_sync.asyncio.gather">
+<span id="a-sync-asyncio-gather-module"></span><h2>a_sync.asyncio.gather module<a class="headerlink" href="#module-a_sync.asyncio.gather" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.gather.gather">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.gather.</span></span><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.12)"><span class="pre">Mapping</span></a><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><span class="pre">Awaitable</span></a><span class="p"><span class="pre">[</span></span><span class="pre">V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_if</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">V</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">V</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/a_sync/asyncio/gather.html#gather"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.gather.gather" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.gather.</span></span><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><span class="pre">Awaitable</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_if</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span></dt>
+<dd><p>Concurrently awaits a list of awaitable objects or mappings of awaitables and returns the results.</p>
+<p>This function extends Python’s asyncio.gather, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.</p>
+<p>Differences from asyncio.gather:
+- Uses type hints for use with static type checkers.
+- Supports gathering either individual awaitables or a k:v mapping of awaitables.
+- Provides progress reporting using tqdm if ‘tqdm’ is set to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*awaitables</strong> (<em>Union</em><em>[</em><em>Awaitable</em><em>[</em><em>T</em><em>]</em><em>, </em><em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em><em>]</em>) – The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of results when awaiting individual awaitables or a dictionary of results when awaiting mappings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[List[T], Dict[K, V]]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Awaiting individual awaitables:
+results will be a list containing the result of each awaitable in sequential order
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">results</span> <span class="pre">=</span> <span class="pre">await</span> <span class="pre">gather(thing1(),</span> <span class="pre">thing2())</span>
+<span class="pre">`</span></code></p>
+<p>Awaiting mappings of awaitables
+results will be a dictionary with ‘key1’ mapped to the result of thing1() and ‘key2’ mapped to the result of thing2.
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">mapping</span> <span class="pre">=</span> <span class="pre">{'key1':</span> <span class="pre">thing1(),</span> <span class="pre">'key2':</span> <span class="pre">thing2()}</span>
+<span class="pre">results</span> <span class="pre">=</span> <span class="pre">await</span> <span class="pre">gather(mapping)</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.gather.gather_mapping">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.gather.</span></span><span class="sig-name descname"><span class="pre">gather_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_if</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/gather.html#gather_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.gather.gather_mapping" title="Link to this definition"></a></dt>
+<dd><p>Concurrently awaits a mapping of awaitable objects and returns a dictionary of results.</p>
+<p>This function is designed to await a mapping of awaitable objects, where each key-value pair represents a unique awaitable. It enables concurrent execution and gathers results into a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em>) – A dictionary-like object where keys are of type K and values are awaitable objects of type V.</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
+<li><p><strong>exclude_if</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>V</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with keys corresponding to the keys of the input mapping and values containing the results of the corresponding awaitables.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[K, V]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>The ‘results’ dictionary will contain the awaited results, where keys match the keys in the ‘mapping’ and values contain the results of the corresponding awaitables.
+<a href="#id19"><span class="problematic" id="id20">``</span></a>`
+mapping = {‘task1’: async_function1(), ‘task2’: async_function2(), ‘task3’: async_function3()}</p>
+<p>results = await gather_mapping(mapping)
+<a href="#id21"><span class="problematic" id="id22">``</span></a><a href="#id23"><span class="problematic" id="id24">`</span></a></p>
+</dd></dl>
+
+</section>
+<section id="module-a_sync.asyncio.utils">
+<span id="a-sync-asyncio-utils-module"></span><h2>a_sync.asyncio.utils module<a class="headerlink" href="#module-a_sync.asyncio.utils" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.utils.get_event_loop">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.utils.</span></span><span class="sig-name descname"><span class="pre">get_event_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/utils.html#get_event_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.utils.get_event_loop" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>AbstractEventLoop</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-a_sync.asyncio">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-a_sync.asyncio" title="Link to this heading"></a></h2>
+<p>This package contains buffed versions of the objects found in the builtin <cite>asyncio</cite> package.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.as_completed">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.</span></span><span class="sig-name descname"><span class="pre">as_completed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/as_completed.html#as_completed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.as_completed" title="Link to this definition"></a></dt>
+<dd><p>Concurrently awaits a list of awaitable objects or mappings of awaitables and returns an iterator of results.</p>
+<p>This function extends Python’s asyncio.as_completed, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.</p>
+<p>Differences from asyncio.as_completed:
+- Uses type hints for use with static type checkers.
+- Supports either individual awaitables or a k:v mapping of awaitables.
+- Can be used as an async iterator which yields the result values. Example below.
+- Provides progress reporting using tqdm if ‘tqdm’ is set to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fs</strong> (<em>Iterable</em><em>[</em><em>Awaitable</em><em>[</em><em>T</em><em>] or </em><em>Mapping</em><em>[</em><em>K</em><em>, </em><em>Awaitable</em><em>[</em><em>V</em><em>]</em><em>]</em><em>]</em>) – The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An iterator of results when awaiting individual awaitables or an async iterator when awaiting mappings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Iterator[Coroutine[None, None, T] or <a class="reference internal" href="a_sync.html#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator">ASyncIterator</a>[Tuple[K, V]]]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Awaiting individual awaitables:
+<a href="#id25"><span class="problematic" id="id26">``</span></a>`
+awaitables = [async_function1(), async_function2()]
+for coro in as_completed(awaitables):</p>
+<blockquote>
+<div><p>val = await coro
+…</p>
+</div></blockquote>
+<dl class="simple">
+<dt>async for val in as_completed(awaitables, aiter=True):</dt><dd><p>…</p>
+</dd>
+</dl>
+<p><a href="#id27"><span class="problematic" id="id28">``</span></a><a href="#id29"><span class="problematic" id="id30">`</span></a></p>
+<p>Awaiting mappings of awaitables:
+<a href="#id31"><span class="problematic" id="id32">``</span></a>`
+mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
+<dl class="simple">
+<dt>for coro in as_completed(mapping):</dt><dd><p>k, v = await coro
+…</p>
+</dd>
+<dt>async for k, v in as_completed(mapping, aiter=True):</dt><dd><p>…</p>
+</dd>
+</dl>
+<p><a href="#id33"><span class="problematic" id="id34">``</span></a><a href="#id35"><span class="problematic" id="id36">`</span></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.create_task">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.</span></span><span class="sig-name descname"><span class="pre">create_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coro</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_gc_until_done</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_destroy_pending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/create_task.html#create_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.create_task" title="Link to this definition"></a></dt>
+<dd><p>Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.</p>
+<p>Unlike asyncio.create_task, which requires a coroutine, this function accepts any Awaitable, ensuring broader
+compatibility. It optionally prevents the task from being garbage-collected until completion and provides
+enhanced error management by wrapping exceptions in a custom exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – An Awaitable object from which to create the task.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>) – Optional name for the task, aiding in debugging.</p></li>
+<li><p><strong>skip_gc_until_done</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, the task is kept alive until it completes, preventing garbage collection.</p></li>
+<li><p><strong>log_destroyed_pending</strong> – If False, asyncio’s default error log when a pending task is destroyed is suppressed.</p></li>
+<li><p><strong>log_destroy_pending</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An asyncio.Task object created from the provided Awaitable.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Task</em>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.gather">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.</span></span><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_if</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tqdm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">tqdm_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/gather.html#gather"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.gather" title="Link to this definition"></a></dt>
+<dd><p>Concurrently awaits a list of awaitable objects or mappings of awaitables and returns the results.</p>
+<p>This function extends Python’s asyncio.gather, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.</p>
+<p>Differences from asyncio.gather:
+- Uses type hints for use with static type checkers.
+- Supports gathering either individual awaitables or a k:v mapping of awaitables.
+- Provides progress reporting using tqdm if ‘tqdm’ is set to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*awaitables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.12)"><em>Mapping</em></a><em>[</em><em>K</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>) – The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, exceptions are returned as results instead of raising them. Defaults to False.</p></li>
+<li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, enables progress reporting using tqdm. Defaults to False.</p></li>
+<li><p><strong>**tqdm_kwargs</strong> – Additional keyword arguments for tqdm if progress reporting is enabled.</p></li>
+<li><p><strong>exclude_if</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of results when awaiting individual awaitables or a dictionary of results when awaiting mappings.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[List[T], Dict[K, V]]</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Awaiting individual awaitables:
+results will be a list containing the result of each awaitable in sequential order
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">results</span> <span class="pre">=</span> <span class="pre">await</span> <span class="pre">gather(thing1(),</span> <span class="pre">thing2())</span>
+<span class="pre">`</span></code></p>
+<p>Awaiting mappings of awaitables
+results will be a dictionary with ‘key1’ mapped to the result of thing1() and ‘key2’ mapped to the result of thing2.
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">mapping</span> <span class="pre">=</span> <span class="pre">{'key1':</span> <span class="pre">thing1(),</span> <span class="pre">'key2':</span> <span class="pre">thing2()}</span>
+<span class="pre">results</span> <span class="pre">=</span> <span class="pre">await</span> <span class="pre">gather(mapping)</span>
+<span class="pre">`</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.get_event_loop">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.</span></span><span class="sig-name descname"><span class="pre">get_event_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/utils.html#get_event_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.asyncio.get_event_loop" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>AbstractEventLoop</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="a_sync.a_sync.modifiers.cache.html" class="btn btn-neutral float-left" title="a_sync.a_sync.modifiers.cache package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="a_sync.primitives.html" class="btn btn-neutral float-right" title="a_sync.primitives package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, BobTheBuidler.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
