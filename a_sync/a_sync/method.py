@@ -4,9 +4,8 @@ import functools
 import logging
 from inspect import isawaitable
 
-from a_sync import _helpers
 from a_sync._typing import *
-from a_sync.a_sync import _kwargs
+from a_sync.a_sync import _helpers, _kwargs
 from a_sync.a_sync._descriptor import ASyncDescriptor
 from a_sync.a_sync.function import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 

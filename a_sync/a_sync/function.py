@@ -4,9 +4,14 @@ import inspect
 import logging
 import sys
 
-from a_sync import _helpers
+from async_lru import _LRUCacheWrapper
+from async_property.base import \
+    AsyncPropertyDescriptor  # type: ignore [import]
+from async_property.cached import \
+    AsyncCachedPropertyDescriptor  # type: ignore [import]
+
 from a_sync._typing import *
-from a_sync.a_sync import _kwargs
+from a_sync.a_sync import _flags, _helpers, _kwargs
 from a_sync.a_sync.modifiers.manager import ModifierManager
 
 if TYPE_CHECKING:
@@ -29,7 +34,21 @@ class ModifiedMixin:
     def default(self) -> DefaultMode:
         return self.modifiers.default
     
-        
+
+def _validate_wrapped_fn(fn: Callable) -> None:
+    """Ensures 'fn' is an appropriate function for wrapping with a_sync."""
+    if isinstance(fn, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
+        return # These are always valid
+    if not callable(fn):
+        raise TypeError(f'Input is not callable. Unable to decorate {fn}')
+    if isinstance(fn, _LRUCacheWrapper):
+        fn = fn.__wrapped__
+    _check_not_genfunc(fn)
+    fn_args = inspect.getfullargspec(fn)[0]
+    for flag in _flags.VIABLE_FLAGS:
+        if flag in fn_args:
+            raise RuntimeError(f"{fn} must not have any arguments with the following names: {_flags.VIABLE_FLAGS}")
+
 class ASyncFunction(ModifiedMixin, Generic[P, T]):
     # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
     @overload
@@ -37,8 +56,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     @overload
     def __init__(self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:...
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
-        _helpers._validate_wrapped_fn(fn)
-        _check_not_genfunc(fn)
+        _validate_wrapped_fn(fn)
         self.modifiers = ModifierManager(modifiers)
         self.__wrapped__ = fn
         functools.update_wrapper(self, self.__wrapped__)

@@ -1,6 +1,6 @@
 import asyncio
 
-from a_sync._helpers import get_event_loop
+from a_sync.asyncio import get_event_loop
 
 
 def test_get_event_loop():
