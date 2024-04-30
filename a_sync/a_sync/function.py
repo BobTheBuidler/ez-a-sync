@@ -61,6 +61,10 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         self.__wrapped__ = fn
         functools.update_wrapper(self, self.__wrapped__)
     
+    def __post_init__(self) -> None:
+        self.__doc__ += "\n\n"
+        self.__doc__ += f"Since {self.__name__} is an `~a_sync.a_sync.function.ASyncFunction`, you can optionally pass either a `sync` or `asynchronous` kwarg with a boolean value."
+    
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
     @overload
@@ -195,6 +199,9 @@ def _check_not_genfunc(func: Callable) -> None:
 # Mypy helper classes
 
 class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
+    def __post_init__(self) -> None:
+        self.__doc__ += "\n\n"
+        self.__doc__ += f"Since {self.__name__} is an `~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously."
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
     @overload
@@ -209,6 +216,9 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
         return self.fn(*args, **kwargs)
     
 class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
+    def __post_init__(self) -> None:
+        self.__doc__ += "\n\n"
+        self.__doc__ += f"Since {self.__name__} is an `~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
     @overload
