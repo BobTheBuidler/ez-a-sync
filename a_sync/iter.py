@@ -142,7 +142,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
         if self.__weakself__ is None:
             return ASyncIterator(self.__wrapped__(*args, **kwargs))
         return ASyncIterator(self.__wrapped__(self.__self__, *args, **kwargs))
-    def __get__(self, instance: object, owner: Type["ASyncGeneratorFunction"]) -> "ASyncGeneratorFunction[P, T]":
+    def __get__(self, instance: V, owner: Type[V]) -> "ASyncGeneratorFunction[P, T]":
         "Descriptor method to make the function act like a non-data descriptor."
         if instance is None:
             return self
