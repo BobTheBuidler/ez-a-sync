@@ -122,7 +122,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     _cache_handle: asyncio.TimerHandle
     "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
 
-    __slots__ = "_is_async_def", "__self__"
+    __slots__ = "_is_async_def", "__weakself__"
     def __init__(
         self, 
         instance: I, 
@@ -130,8 +130,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         async_def: bool,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
-        self.__self__ = instance
-        #self.__weakself__ = weakref.ref(instance, self.__cancel_cache_handle)
+        self.__weakself__ = weakref.ref(instance, self.__cancel_cache_handle)
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
@@ -170,12 +169,12 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             retval = _helpers._await(coro)
         logger.debug("returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs)
         return retval  # type: ignore [call-overload, return-value]
-    #@property
-    #def __self__(self) -> I:
-    #    instance = self.__weakself__()
-    #    if instance is None:
-    #        raise ReferenceError(self)
-    #    return instance
+    @property
+    def __self__(self) -> I:
+        instance = self.__weakself__()
+        if instance is not None:
+            return instance
+        raise ReferenceError(self)
     @functools.cached_property
     def __bound_to_a_sync_instance__(self) -> bool:
         from a_sync.a_sync.abstract import ASyncABC
