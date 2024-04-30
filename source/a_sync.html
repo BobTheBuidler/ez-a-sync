@@ -87,6 +87,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.InvalidFlag"><code class="docutils literal notranslate"><span class="pre">InvalidFlag</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.InvalidFlagValue"><code class="docutils literal notranslate"><span class="pre">InvalidFlagValue</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.KwargsUnsupportedError"><code class="docutils literal notranslate"><span class="pre">KwargsUnsupportedError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.MappingError"><code class="docutils literal notranslate"><span class="pre">MappingError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.MappingIsEmptyError"><code class="docutils literal notranslate"><span class="pre">MappingIsEmptyError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.MappingNotEmptyError"><code class="docutils literal notranslate"><span class="pre">MappingNotEmptyError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.NoFlagsFound"><code class="docutils literal notranslate"><span class="pre">NoFlagsFound</span></code></a></li>
@@ -3396,13 +3397,56 @@ set self.__traceback__ to tb and return self.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingIsEmptyError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingIsEmptyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingIsEmptyError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.__init__" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingError.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.__new__">
+<span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingError.__new__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.with_traceback">
+<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingError.with_traceback" title="Link to this definition"></a></dt>
+<dd><p>Exception.with_traceback(tb) –
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingError.args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.msg">
+<span class="sig-name descname"><span class="pre">msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.exceptions.MappingError.msg" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingIsEmptyError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingIsEmptyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.MappingError" title="a_sync.exceptions.MappingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingError</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.__new__">
@@ -3421,16 +3465,26 @@ set self.__traceback__ to tb and return self.</p>
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.msg">
+<span class="sig-name descname"><span class="pre">msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TaskMapping</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">contain</span> <span class="pre">anything</span> <span class="pre">to</span> <span class="pre">yield'</span></em><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.msg" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingNotEmptyError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingNotEmptyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.MappingError" title="a_sync.exceptions.MappingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingError</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingNotEmptyError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.__init__" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.__new__">
@@ -3447,6 +3501,11 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.msg">
+<span class="sig-name descname"><span class="pre">msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TaskMapping</span> <span class="pre">already</span> <span class="pre">contains</span> <span class="pre">some</span> <span class="pre">data.</span> <span class="pre">In</span> <span class="pre">order</span> <span class="pre">to</span> <span class="pre">use</span> <span class="pre">`map`,</span> <span class="pre">you</span> <span class="pre">need</span> <span class="pre">a</span> <span class="pre">fresh</span> <span class="pre">one'</span></em><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.msg" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -5453,49 +5512,6 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.task.TaskMapping.__if_pop_check_destroyed">
-<span class="sig-name descname"><span class="pre">__if_pop_check_destroyed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMapping.__if_pop_check_destroyed" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.task.TaskMapping.__if_pop_clear">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__if_pop_clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMapping.__if_pop_clear" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.task.TaskMapping.__if_pop_pop">
-<span class="sig-name descname"><span class="pre">__if_pop_pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cancel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMapping.__if_pop_pop" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
-<li><p><strong>args</strong> (<em>K</em>)</p></li>
-<li><p><strong>cancel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wrapped_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">iterables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">wrapped_func_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -5527,8 +5543,34 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.task.TaskMapping._check_empty">
-<span class="sig-name descname"><span class="pre">_check_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._check_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping._check_empty" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping._if_pop_check_destroyed">
+<span class="sig-name descname"><span class="pre">_if_pop_check_destroyed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._if_pop_check_destroyed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping._if_pop_check_destroyed" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping._if_pop_clear">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_if_pop_clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._if_pop_clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping._if_pop_clear" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping._raise_if_empty">
+<span class="sig-name descname"><span class="pre">_raise_if_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._raise_if_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping._raise_if_empty" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -5537,8 +5579,8 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.task.TaskMapping._check_not_empty">
-<span class="sig-name descname"><span class="pre">_check_not_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._check_not_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping._check_not_empty" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping._raise_if_not_empty">
+<span class="sig-name descname"><span class="pre">_raise_if_not_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._raise_if_not_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping._raise_if_not_empty" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -5604,8 +5646,11 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping.items">
 <span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">items</span></span></span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping.items" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#a_sync.task.TaskMappingValues" title="a_sync.task.TaskMappingValues"><em>TaskMappingValues</em></a>[<em>K</em>, <em>V</em>]</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.task.TaskMappingValues" title="a_sync.task.TaskMappingValues"><em>TaskMappingValues</em></a>[<em>K</em>, <em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5614,8 +5659,11 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping.keys">
 <span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">keys</span></span></span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping.keys" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#a_sync.task.TaskMappingKeys" title="a_sync.task.TaskMappingKeys"><em>TaskMappingKeys</em></a>[<em>K</em>, <em>V</em>]</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.task.TaskMappingKeys" title="a_sync.task.TaskMappingKeys"><em>TaskMappingKeys</em></a>[<em>K</em>, <em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5690,8 +5738,11 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping.values">
 <span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">an</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">values</span></span></span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping.values" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#a_sync.task.TaskMappingValues" title="a_sync.task.TaskMappingValues"><em>TaskMappingValues</em></a>[<em>K</em>, <em>V</em>]</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.task.TaskMappingValues" title="a_sync.task.TaskMappingValues"><em>TaskMappingValues</em></a>[<em>K</em>, <em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5880,12 +5931,13 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMappingItems.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_mapping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingItems.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingItems.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>view</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><em>T</em><em>]</em>)</p></li>
 <li><p><strong>task_mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a><em>[</em><em>K</em><em>, </em><em>V</em><em>]</em>)</p></li>
+<li><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -5914,6 +5966,42 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingItems._get_from_item">
+<span class="sig-name descname"><span class="pre">_get_from_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingItems._get_from_item" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingItems.aiterbykeys">
+<span class="sig-name descname"><span class="pre">aiterbykeys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingItems.aiterbykeys" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><em>ASyncIterator</em></a>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingItems.aiterbyvalues">
+<span class="sig-name descname"><span class="pre">aiterbyvalues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingItems.aiterbyvalues" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><em>ASyncIterator</em></a>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingItems._pop">
+<span class="sig-name descname"><span class="pre">_pop</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.task.TaskMappingItems._pop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -5932,12 +6020,13 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMappingKeys.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_mapping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingKeys.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingKeys.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>view</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><em>T</em><em>]</em>)</p></li>
 <li><p><strong>task_mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a><em>[</em><em>K</em><em>, </em><em>V</em><em>]</em>)</p></li>
+<li><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -5957,6 +6046,29 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingKeys.__load_existing">
+<span class="sig-name descname"><span class="pre">__load_existing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingKeys.__load_existing" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.12)"><em>Iterator</em></a>[<em>K</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingKeys.__load_init_loader">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__load_init_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yielded</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingKeys.__load_init_loader" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>yielded</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><em>Set</em></a><em>[</em><em>K</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<em>K</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMappingKeys._await">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_await</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingKeys._await" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -5965,6 +6077,42 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingKeys._get_from_item">
+<span class="sig-name descname"><span class="pre">_get_from_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingKeys._get_from_item" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingKeys.aiterbykeys">
+<span class="sig-name descname"><span class="pre">aiterbykeys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingKeys.aiterbykeys" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><em>ASyncIterator</em></a>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingKeys.aiterbyvalues">
+<span class="sig-name descname"><span class="pre">aiterbyvalues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingKeys.aiterbyvalues" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><em>ASyncIterator</em></a>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingKeys._pop">
+<span class="sig-name descname"><span class="pre">_pop</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.task.TaskMappingKeys._pop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -5984,12 +6132,13 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMappingValues.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_mapping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingValues.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingValues.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>view</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><em>T</em><em>]</em>)</p></li>
 <li><p><strong>task_mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a><em>[</em><em>K</em><em>, </em><em>V</em><em>]</em>)</p></li>
+<li><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -6017,6 +6166,42 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingValues._get_from_item">
+<span class="sig-name descname"><span class="pre">_get_from_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingValues._get_from_item" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingValues.aiterbykeys">
+<span class="sig-name descname"><span class="pre">aiterbykeys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingValues.aiterbykeys" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><em>ASyncIterator</em></a>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingValues.aiterbyvalues">
+<span class="sig-name descname"><span class="pre">aiterbyvalues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingValues.aiterbyvalues" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><em>ASyncIterator</em></a>[<em>T</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.task.TaskMappingValues._pop">
+<span class="sig-name descname"><span class="pre">_pop</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.task.TaskMappingValues._pop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -9164,49 +9349,6 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.TaskMapping.__if_pop_check_destroyed">
-<span class="sig-name descname"><span class="pre">__if_pop_check_destroyed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.TaskMapping.__if_pop_check_destroyed" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.TaskMapping.__if_pop_clear">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__if_pop_clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.TaskMapping.__if_pop_clear" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.TaskMapping.__if_pop_pop">
-<span class="sig-name descname"><span class="pre">__if_pop_pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cancel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.TaskMapping.__if_pop_pop" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
-<li><p><strong>args</strong> (<em>K</em>)</p></li>
-<li><p><strong>cancel</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.TaskMapping.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wrapped_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">iterables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">wrapped_func_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -9238,8 +9380,34 @@ the queue.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.TaskMapping._check_empty">
-<span class="sig-name descname"><span class="pre">_check_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._check_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping._check_empty" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync.TaskMapping._if_pop_check_destroyed">
+<span class="sig-name descname"><span class="pre">_if_pop_check_destroyed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._if_pop_check_destroyed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping._if_pop_check_destroyed" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.TaskMapping._if_pop_clear">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_if_pop_clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._if_pop_clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping._if_pop_clear" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.TaskMapping._raise_if_empty">
+<span class="sig-name descname"><span class="pre">_raise_if_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._raise_if_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping._raise_if_empty" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -9248,8 +9416,8 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.TaskMapping._check_not_empty">
-<span class="sig-name descname"><span class="pre">_check_not_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._check_not_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping._check_not_empty" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync.TaskMapping._raise_if_not_empty">
+<span class="sig-name descname"><span class="pre">_raise_if_not_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._raise_if_not_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping._raise_if_not_empty" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -9315,8 +9483,11 @@ the queue.</p>
 <dt class="sig sig-object py" id="a_sync.TaskMapping.items">
 <span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">items</span></span></span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping.items" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#a_sync.task.TaskMappingValues" title="a_sync.task.TaskMappingValues"><em>TaskMappingValues</em></a>[<em>K</em>, <em>V</em>]</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.task.TaskMappingValues" title="a_sync.task.TaskMappingValues"><em>TaskMappingValues</em></a>[<em>K</em>, <em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -9325,8 +9496,11 @@ the queue.</p>
 <dt class="sig sig-object py" id="a_sync.TaskMapping.keys">
 <span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">keys</span></span></span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping.keys" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#a_sync.task.TaskMappingKeys" title="a_sync.task.TaskMappingKeys"><em>TaskMappingKeys</em></a>[<em>K</em>, <em>V</em>]</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.task.TaskMappingKeys" title="a_sync.task.TaskMappingKeys"><em>TaskMappingKeys</em></a>[<em>K</em>, <em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -9401,8 +9575,11 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dt class="sig sig-object py" id="a_sync.TaskMapping.values">
 <span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">an</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D's</span> <span class="pre">values</span></span></span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping.values" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#a_sync.task.TaskMappingValues" title="a_sync.task.TaskMappingValues"><em>TaskMappingValues</em></a>[<em>K</em>, <em>V</em>]</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.task.TaskMappingValues" title="a_sync.task.TaskMappingValues"><em>TaskMappingValues</em></a>[<em>K</em>, <em>V</em>]</p>
 </dd>
 </dl>
 </dd></dl>

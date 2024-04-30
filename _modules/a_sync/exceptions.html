@@ -77,6 +77,9 @@
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync._flags</span> <span class="kn">import</span> <span class="n">VIABLE_FLAGS</span>
 
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
+
 
 <div class="viewcode-block" id="ASyncFlagException">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncFlagException">[docs]</a>
@@ -216,24 +219,31 @@
 </div>
 
 
+<div class="viewcode-block" id="MappingError">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingError">[docs]</a>
+<span class="k">class</span> <span class="nc">MappingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span>
+<div class="viewcode-block" id="MappingError.__init__">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingError.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="s2">&quot;TaskMapping&quot;</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;:</span><span class="se">\n</span><span class="si">{</span><span class="n">mapping</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">mapping</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="nb">dict</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping</span> <span class="o">=</span> <span class="n">mapping</span></div>
+</div>
+
+
 <div class="viewcode-block" id="MappingIsEmptyError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingIsEmptyError">[docs]</a>
-<span class="k">class</span> <span class="nc">MappingIsEmptyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<div class="viewcode-block" id="MappingIsEmptyError.__init__">
-<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingIsEmptyError.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;TaskMapping does not contain anything to yield&quot;</span><span class="p">)</span></div>
-</div>
+<span class="k">class</span> <span class="nc">MappingIsEmptyError</span><span class="p">(</span><span class="n">MappingError</span><span class="p">):</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;TaskMapping does not contain anything to yield&quot;</span></div>
 
 
 <div class="viewcode-block" id="MappingNotEmptyError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingNotEmptyError">[docs]</a>
-<span class="k">class</span> <span class="nc">MappingNotEmptyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<div class="viewcode-block" id="MappingNotEmptyError.__init__">
-<a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingNotEmptyError.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;TaskMapping already contains some data. In order to use `map`, you need a fresh one.&quot;</span><span class="p">)</span></div>
-</div>
+<span class="k">class</span> <span class="nc">MappingNotEmptyError</span><span class="p">(</span><span class="n">MappingError</span><span class="p">):</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;TaskMapping already contains some data. In order to use `map`, you need a fresh one&quot;</span></div>
 
 
 <div class="viewcode-block" id="PersistedTaskException">

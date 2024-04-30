@@ -299,24 +299,6 @@
 </li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.__iadd">__iadd() (a_sync.future.ASyncFuture method)</a>
 </li>
-      <li><a href="source/a_sync.html#a_sync.task.TaskMapping.__if_pop_check_destroyed">__if_pop_check_destroyed() (a_sync.task.TaskMapping method)</a>
-
-      <ul>
-        <li><a href="source/a_sync.html#a_sync.TaskMapping.__if_pop_check_destroyed">(a_sync.TaskMapping method)</a>
-</li>
-      </ul></li>
-      <li><a href="source/a_sync.html#a_sync.task.TaskMapping.__if_pop_clear">__if_pop_clear() (a_sync.task.TaskMapping method)</a>
-
-      <ul>
-        <li><a href="source/a_sync.html#a_sync.TaskMapping.__if_pop_clear">(a_sync.TaskMapping method)</a>
-</li>
-      </ul></li>
-      <li><a href="source/a_sync.html#a_sync.task.TaskMapping.__if_pop_pop">__if_pop_pop() (a_sync.task.TaskMapping method)</a>
-
-      <ul>
-        <li><a href="source/a_sync.html#a_sync.TaskMapping.__if_pop_pop">(a_sync.TaskMapping method)</a>
-</li>
-      </ul></li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.__ifloordiv">__ifloordiv() (a_sync.future.ASyncFuture method)</a>
 </li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.__imul">__imul() (a_sync.future.ASyncFuture method)</a>
@@ -445,6 +427,8 @@
         <li><a href="source/a_sync.html#a_sync.exceptions.InvalidFlagValue.__init__">(a_sync.exceptions.InvalidFlagValue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.exceptions.KwargsUnsupportedError.__init__">(a_sync.exceptions.KwargsUnsupportedError method)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.exceptions.MappingError.__init__">(a_sync.exceptions.MappingError method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.exceptions.MappingIsEmptyError.__init__">(a_sync.exceptions.MappingIsEmptyError method)</a>
 </li>
@@ -635,6 +619,10 @@
 </li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.__list_dependencies">__list_dependencies() (a_sync.future.ASyncFuture method)</a>
 </li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMappingKeys.__load_existing">__load_existing() (a_sync.task.TaskMappingKeys method)</a>
+</li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMappingKeys.__load_init_loader">__load_init_loader() (a_sync.task.TaskMappingKeys method)</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.__lt">__lt() (a_sync.future.ASyncFuture method)</a>
 </li>
       <li><a href="source/a_sync.html#a_sync.future.ASyncFuture.__mul">__mul() (a_sync.future.ASyncFuture method)</a>
@@ -675,6 +663,8 @@
         <li><a href="source/a_sync.html#a_sync.exceptions.InvalidFlagValue.__new__">(a_sync.exceptions.InvalidFlagValue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.exceptions.KwargsUnsupportedError.__new__">(a_sync.exceptions.KwargsUnsupportedError method)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.exceptions.MappingError.__new__">(a_sync.exceptions.MappingError method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.exceptions.MappingIsEmptyError.__new__">(a_sync.exceptions.MappingIsEmptyError method)</a>
 </li>
@@ -1203,12 +1193,6 @@
       </ul></li>
       <li><a href="source/a_sync.html#a_sync.iter.ASyncFilter._check">_check() (a_sync.iter.ASyncFilter method)</a>
 </li>
-      <li><a href="source/a_sync.html#a_sync.task.TaskMapping._check_empty">_check_empty() (a_sync.task.TaskMapping method)</a>
-
-      <ul>
-        <li><a href="source/a_sync.html#a_sync.TaskMapping._check_empty">(a_sync.TaskMapping method)</a>
-</li>
-      </ul></li>
       <li><a href="source/a_sync.a_sync.html#a_sync.a_sync.ASyncCachedPropertyDescriptor._check_method_name">_check_method_name() (a_sync.a_sync.ASyncCachedPropertyDescriptor method)</a>
 
       <ul>
@@ -1243,12 +1227,6 @@
         <li><a href="source/a_sync.html#a_sync.ASyncCachedPropertyDescriptor._check_method_sync">(a_sync.ASyncCachedPropertyDescriptor method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.cached_property._check_method_sync">(a_sync.cached_property method)</a>
-</li>
-      </ul></li>
-      <li><a href="source/a_sync.html#a_sync.task.TaskMapping._check_not_empty">_check_not_empty() (a_sync.task.TaskMapping method)</a>
-
-      <ul>
-        <li><a href="source/a_sync.html#a_sync.TaskMapping._check_not_empty">(a_sync.TaskMapping method)</a>
 </li>
       </ul></li>
       <li><a href="source/a_sync.a_sync.html#a_sync.a_sync.function._check_not_genfunc">_check_not_genfunc() (in module a_sync.a_sync.function)</a>
@@ -1699,6 +1677,14 @@
         <li><a href="source/a_sync.a_sync.html#a_sync.a_sync.property.HiddenMethodDescriptor._get_cache_handle">(a_sync.a_sync.property.HiddenMethodDescriptor method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMappingItems._get_from_item">_get_from_item() (a_sync.task.TaskMappingItems method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.html#a_sync.task.TaskMappingKeys._get_from_item">(a_sync.task.TaskMappingKeys method)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.task.TaskMappingValues._get_from_item">(a_sync.task.TaskMappingValues method)</a>
+</li>
+      </ul></li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._get_key">_get_key() (a_sync.primitives.queue._VariablePriorityQueueMixin method)</a>
 
       <ul>
@@ -1801,6 +1787,18 @@
         <li><a href="source/a_sync.html#a_sync.executor.PruningThreadPoolExecutor._idle_semaphore">(a_sync.executor.PruningThreadPoolExecutor attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.PruningThreadPoolExecutor._idle_semaphore">(a_sync.PruningThreadPoolExecutor attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMapping._if_pop_check_destroyed">_if_pop_check_destroyed() (a_sync.task.TaskMapping method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.html#a_sync.TaskMapping._if_pop_check_destroyed">(a_sync.TaskMapping method)</a>
+</li>
+      </ul></li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMapping._if_pop_clear">_if_pop_clear() (a_sync.task.TaskMapping method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.html#a_sync.TaskMapping._if_pop_clear">(a_sync.TaskMapping method)</a>
 </li>
       </ul></li>
       <li><a href="source/a_sync.primitives.html#a_sync.primitives.ProcessingQueue._init">_init() (a_sync.primitives.ProcessingQueue method)</a>
@@ -2239,6 +2237,14 @@
         <li><a href="source/a_sync.html#a_sync.executor.AsyncProcessPoolExecutor._pending_work_items">(a_sync.executor.AsyncProcessPoolExecutor attribute)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMappingItems._pop">_pop (a_sync.task.TaskMappingItems attribute)</a>
+
+      <ul>
+        <li><a href="source/a_sync.html#a_sync.task.TaskMappingKeys._pop">(a_sync.task.TaskMappingKeys attribute)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.task.TaskMappingValues._pop">(a_sync.task.TaskMappingValues attribute)</a>
+</li>
+      </ul></li>
       <li><a href="source/a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._potential_lost_waiters">_potential_lost_waiters (a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore attribute)</a>
 
       <ul>
@@ -2353,6 +2359,18 @@
 
       <ul>
         <li><a href="source/a_sync.html#a_sync.executor.AsyncProcessPoolExecutor._queue_management_thread_wakeup">(a_sync.executor.AsyncProcessPoolExecutor attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMapping._raise_if_empty">_raise_if_empty() (a_sync.task.TaskMapping method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.html#a_sync.TaskMapping._raise_if_empty">(a_sync.TaskMapping method)</a>
+</li>
+      </ul></li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMapping._raise_if_not_empty">_raise_if_not_empty() (a_sync.task.TaskMapping method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.html#a_sync.TaskMapping._raise_if_not_empty">(a_sync.TaskMapping method)</a>
 </li>
       </ul></li>
       <li><a href="source/a_sync.html#a_sync._smart.SmartFuture._repr_info">_repr_info() (a_sync._smart.SmartFuture method)</a>
@@ -3455,6 +3473,22 @@
         <li><a href="source/a_sync.sphinx.html#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.after_content">(a_sync.sphinx.ext.ASyncGeneratorFunctionDirective method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMappingItems.aiterbykeys">aiterbykeys() (a_sync.task.TaskMappingItems method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.html#a_sync.task.TaskMappingKeys.aiterbykeys">(a_sync.task.TaskMappingKeys method)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.task.TaskMappingValues.aiterbykeys">(a_sync.task.TaskMappingValues method)</a>
+</li>
+      </ul></li>
+      <li><a href="source/a_sync.html#a_sync.task.TaskMappingItems.aiterbyvalues">aiterbyvalues() (a_sync.task.TaskMappingItems method)</a>
+
+      <ul>
+        <li><a href="source/a_sync.html#a_sync.task.TaskMappingKeys.aiterbyvalues">(a_sync.task.TaskMappingKeys method)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.task.TaskMappingValues.aiterbyvalues">(a_sync.task.TaskMappingValues method)</a>
+</li>
+      </ul></li>
       <li><a href="source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor.all">all (a_sync.a_sync._descriptor.ASyncDescriptor property)</a>
 
       <ul>
@@ -3689,6 +3723,8 @@
         <li><a href="source/a_sync.html#a_sync.exceptions.InvalidFlagValue.args">(a_sync.exceptions.InvalidFlagValue attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.exceptions.KwargsUnsupportedError.args">(a_sync.exceptions.KwargsUnsupportedError attribute)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.exceptions.MappingError.args">(a_sync.exceptions.MappingError attribute)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.exceptions.MappingIsEmptyError.args">(a_sync.exceptions.MappingIsEmptyError attribute)</a>
 </li>
@@ -5755,6 +5791,8 @@
         <li><a href="source/a_sync.html#a_sync.TaskMapping.map">(a_sync.TaskMapping method)</a>
 </li>
       </ul></li>
+      <li><a href="source/a_sync.html#a_sync.exceptions.MappingError">MappingError</a>
+</li>
       <li><a href="source/a_sync.html#a_sync.exceptions.MappingIsEmptyError">MappingIsEmptyError</a>
 </li>
       <li><a href="source/a_sync.html#a_sync.exceptions.MappingNotEmptyError">MappingNotEmptyError</a>
@@ -6164,6 +6202,14 @@
 
       <ul>
         <li><a href="source/a_sync.a_sync.html#a_sync.a_sync._meta.ASyncSingletonMeta.mro">(a_sync.a_sync._meta.ASyncSingletonMeta method)</a>
+</li>
+      </ul></li>
+      <li><a href="source/a_sync.html#a_sync.exceptions.MappingError.msg">msg (a_sync.exceptions.MappingError attribute)</a>
+
+      <ul>
+        <li><a href="source/a_sync.html#a_sync.exceptions.MappingIsEmptyError.msg">(a_sync.exceptions.MappingIsEmptyError attribute)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.exceptions.MappingNotEmptyError.msg">(a_sync.exceptions.MappingNotEmptyError attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -7350,6 +7396,8 @@
         <li><a href="source/a_sync.html#a_sync.exceptions.InvalidFlagValue.with_traceback">(a_sync.exceptions.InvalidFlagValue method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.exceptions.KwargsUnsupportedError.with_traceback">(a_sync.exceptions.KwargsUnsupportedError method)</a>
+</li>
+        <li><a href="source/a_sync.html#a_sync.exceptions.MappingError.with_traceback">(a_sync.exceptions.MappingError method)</a>
 </li>
         <li><a href="source/a_sync.html#a_sync.exceptions.MappingIsEmptyError.with_traceback">(a_sync.exceptions.MappingIsEmptyError method)</a>
 </li>

@@ -77,6 +77,7 @@
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
 
 <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">exceptions</span>
 <span class="kn">from</span> <span class="nn">a_sync.asyncio.create_task</span> <span class="kn">import</span> <span class="n">create_task</span>
@@ -88,7 +89,7 @@
 <span class="kn">from</span> <span class="nn">a_sync.a_sync.property</span> <span class="kn">import</span> <span class="n">_ASyncPropertyDescriptorBase</span>
 <span class="kn">from</span> <span class="nn">a_sync.asyncio.as_completed</span> <span class="kn">import</span> <span class="n">as_completed</span>
 <span class="kn">from</span> <span class="nn">a_sync.asyncio.gather</span> <span class="kn">import</span> <span class="n">Excluder</span><span class="p">,</span> <span class="n">gather</span>
-<span class="kn">from</span> <span class="nn">a_sync.iter</span> <span class="kn">import</span> <span class="n">ASyncIterator</span><span class="p">,</span> <span class="n">ASyncGeneratorFunction</span>
+<span class="kn">from</span> <span class="nn">a_sync.iter</span> <span class="kn">import</span> <span class="n">ASyncIterator</span><span class="p">,</span> <span class="n">ASyncGeneratorFunction</span><span class="p">,</span> <span class="n">ASyncSorter</span>
 <span class="kn">from</span> <span class="nn">a_sync.primitives.queue</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">ProcessingQueue</span>
 <span class="kn">from</span> <span class="nn">a_sync.primitives.locks.event</span> <span class="kn">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">a_sync.utils.iterators</span> <span class="kn">import</span> <span class="n">as_yielded</span><span class="p">,</span> <span class="n">exhaust_iterator</span>
@@ -255,7 +256,7 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.__aiter__">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aiter__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;aiterate thru all key-task pairs, yielding the key-result pair as each task completes&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_check_destroyed</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_check_destroyed</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
 
         <span class="c1"># if you inited the TaskMapping with some iterators, we will load those</span>
         <span class="n">yielded</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -272,23 +273,28 @@
                     <span class="k">await</span> <span class="n">task</span>
                 <span class="k">while</span> <span class="n">unyielded</span> <span class="o">:=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">]:</span>
                     <span class="k">if</span> <span class="n">ready</span> <span class="o">:=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">task</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">unyielded</span> <span class="k">if</span> <span class="p">(</span><span class="n">task</span><span class="o">:=</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">])</span><span class="o">.</span><span class="n">done</span><span class="p">()}:</span>
-                        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">ready</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_pop</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-                            <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="k">await</span> <span class="n">task</span>
-                            <span class="n">yielded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">ready</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                                <span class="n">yielded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">ready</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="k">await</span> <span class="n">task</span>
+                                <span class="n">yielded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
             <span class="c1"># loader is already done by this point, but we need to check for exceptions</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># if you didn&#39;t init the TaskMapping with iterators and you didn&#39;t start any tasks manually, we should fail</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_check_empty</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_empty</span><span class="p">()</span>
         <span class="c1"># if there are any tasks that still need to complete, we need to await them and yield them</span>
         <span class="k">if</span> <span class="n">unyielded</span> <span class="o">:=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">}:</span>
-            <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">unyielded</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_pop</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
+                <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">unyielded</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">K</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -299,26 +305,26 @@
 
 <div class="viewcode-block" id="TaskMapping.keys">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.keys">[docs]</a>
-    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMappingKeys[K, V]&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">TaskMappingKeys</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="bp">self</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMappingKeys[K, V]&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TaskMappingKeys</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TaskMapping.values">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.values">[docs]</a>
-    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMappingValues[K, V]&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">TaskMappingValues</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="bp">self</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMappingValues[K, V]&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TaskMappingValues</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="TaskMapping.items">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.items">[docs]</a>
-    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMappingValues[K, V]&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">TaskMappingItems</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="bp">self</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMappingValues[K, V]&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">TaskMappingItems</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="TaskMapping.close">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.close">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TaskMapping.map">
@@ -337,12 +343,23 @@
 <span class="sd">            Depending on `yields`, either keys, values,</span>
 <span class="sd">            or tuples of key-value pairs representing the results of completed tasks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_not_empty</span><span class="p">()</span>
         <span class="c1"># make sure the init loader is started if needed</span>
         <span class="n">init_loader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span>
-        <span class="k">async</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tasks_for_iterables</span><span class="p">(</span><span class="o">*</span><span class="n">iterables</span><span class="p">):</span>
-            <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">yield_completed</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">):</span>
-                <span class="k">yield</span> <span class="n">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">yields</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">iterables</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">init_loader</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You cannot pass `iterables` to map if the TaskMapping was initialized with an (a)iterable.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_not_empty</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">init_loader</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_empty</span><span class="p">()</span>
+                
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tasks_for_iterables</span><span class="p">(</span><span class="o">*</span><span class="n">iterables</span><span class="p">):</span>
+                <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">yield_completed</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">yields</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">_EmptySequenceError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iterables</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># TODO gotta handle this situation</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">EmptySequenceError</span><span class="p">(</span><span class="s2">&quot;bob needs to code something so you can do this, go tell him&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">init_loader</span><span class="p">:</span>
             <span class="c1"># check for exceptions if you passed an iterable(s) into the class init</span>
             <span class="k">await</span> <span class="n">init_loader</span>
@@ -354,7 +371,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                     <span class="k">yield</span> <span class="n">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">yields</span><span class="p">)</span>
-        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span></div>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span></div>
 
     
 <div class="viewcode-block" id="TaskMapping.all">
@@ -364,7 +381,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__aiter__</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
-                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
                     <span class="k">return</span> <span class="kc">False</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">except</span> <span class="n">_EmptySequenceError</span><span class="p">:</span>
@@ -378,7 +395,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__aiter__</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
-                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
                     <span class="k">return</span> <span class="kc">True</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">except</span> <span class="n">_EmptySequenceError</span><span class="p">:</span>
@@ -443,10 +460,14 @@
 <span class="sd">        Yields:</span>
 <span class="sd">            Tuples of key-value pairs representing the results of completed tasks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">task</span> <span class="ow">in</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_pop</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-                <span class="k">yield</span> <span class="n">k</span><span class="p">,</span> <span class="k">await</span> <span class="n">task</span></div>
+        <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">task</span> <span class="ow">in</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+                    <span class="k">yield</span> <span class="n">k</span><span class="p">,</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">task</span> <span class="ow">in</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+                    <span class="k">yield</span> <span class="n">k</span><span class="p">,</span> <span class="k">await</span> <span class="n">task</span></div>
 
     
 <div class="viewcode-block" id="TaskMapping.gather">
@@ -462,7 +483,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Wait for all tasks to complete and return a dictionary of the results.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_empty</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_empty</span><span class="p">()</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">gather</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span> <span class="n">exclude_if</span><span class="o">=</span><span class="n">exclude_if</span><span class="p">,</span> <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">)</span></div>
 
     
@@ -502,18 +523,18 @@
         <span class="n">fn</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func_kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ProcessingQueue</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
     
-<div class="viewcode-block" id="TaskMapping._check_empty">
-<a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping._check_empty">[docs]</a>
-    <span class="k">def</span> <span class="nf">_check_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="TaskMapping._raise_if_empty">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping._raise_if_empty">[docs]</a>
+    <span class="k">def</span> <span class="nf">_raise_if_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MappingIsEmptyError</span></div>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MappingIsEmptyError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
     
-<div class="viewcode-block" id="TaskMapping._check_not_empty">
-<a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping._check_not_empty">[docs]</a>
-    <span class="k">def</span> <span class="nf">_check_not_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="TaskMapping._raise_if_not_empty">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping._raise_if_not_empty">[docs]</a>
+    <span class="k">def</span> <span class="nf">_raise_if_not_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MappingNotEmptyError</span></div>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">MappingNotEmptyError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TaskMapping._tasks_for_iterables">
@@ -537,13 +558,18 @@
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;DEV: figure out how to handle this situation&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span></div>
 
     
-    <span class="k">def</span> <span class="nf">__if_pop_check_destroyed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="TaskMapping._if_pop_check_destroyed">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping._if_pop_check_destroyed">[docs]</a>
+    <span class="k">def</span> <span class="nf">_if_pop_check_destroyed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_destroyed</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> has already been consumed&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_destroyed</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_destroyed</span> <span class="o">=</span> <span class="kc">True</span></div>
+
     
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__if_pop_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="TaskMapping._if_pop_clear">
+<a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping._if_pop_clear">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_if_pop_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_destroyed</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="n">cancel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -553,15 +579,8 @@
                 <span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># we need to let the loop run once so the tasks can fully cancel</span>
-                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    
-    <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="nf">__if_pop_pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">cancel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span><span class="o">...</span>
-    <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="nf">__if_pop_pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">cancel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span><span class="o">...</span>
-    <span class="k">def</span> <span class="nf">__if_pop_pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">cancel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">cancel</span><span class="o">=</span><span class="n">cancel</span><span class="p">)</span></div>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
 
 
 
@@ -618,78 +637,137 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
 
-<span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">__unwrapped</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">WeakKeyDictionary</span><span class="p">()</span>
+
 <span class="k">def</span> <span class="nf">_unwrap</span><span class="p">(</span><span class="n">wrapped_func</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">AnyFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="s2">&quot;ASyncMethodDescriptor[P, T]&quot;</span><span class="p">,</span> <span class="n">_ASyncPropertyDescriptorBase</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
+    <span class="k">if</span> <span class="n">unwrapped</span> <span class="o">:=</span> <span class="n">__unwrapped</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">wrapped_func</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">unwrapped</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wrapped_func</span><span class="p">,</span> <span class="p">(</span><span class="n">ASyncBoundMethod</span><span class="p">,</span> <span class="n">ASyncMethodDescriptor</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="n">wrapped_func</span>
+        <span class="n">unwrapped</span> <span class="o">=</span> <span class="n">wrapped_func</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wrapped_func</span><span class="p">,</span> <span class="n">_ASyncPropertyDescriptorBase</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">get</span>
+        <span class="n">unwrapped</span> <span class="o">=</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">get</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wrapped_func</span><span class="p">,</span> <span class="n">ASyncFunction</span><span class="p">):</span>
         <span class="c1"># this speeds things up a bit by bypassing some logic</span>
         <span class="c1"># TODO implement it like this elsewhere if profilers suggest</span>
-        <span class="k">return</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_modified_fn</span> <span class="k">if</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_async_def</span> <span class="k">else</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_asyncified</span>
-    <span class="k">return</span> <span class="n">wrapped_func</span>
+        <span class="n">unwrapped</span> <span class="o">=</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_modified_fn</span> <span class="k">if</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_async_def</span> <span class="k">else</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_asyncified</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">unwrapped</span> <span class="o">=</span> <span class="n">wrapped_func</span>
+    <span class="n">__unwrapped</span><span class="p">[</span><span class="n">wrapped_func</span><span class="p">]</span> <span class="o">=</span> <span class="n">unwrapped</span>
+    <span class="k">return</span> <span class="n">unwrapped</span>
 
+
+<span class="n">_get_key</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]],</span> <span class="n">K</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k_and_v</span><span class="p">:</span> <span class="n">k_and_v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">_get_value</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]],</span> <span class="n">V</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k_and_v</span><span class="p">:</span> <span class="n">k_and_v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
 <span class="k">class</span> <span class="nc">_TaskMappingView</span><span class="p">(</span><span class="n">ASyncGenericBase</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">view</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">task_mapping</span><span class="p">:</span> <span class="n">TaskMapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">_get_from_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]],</span> <span class="n">T</span><span class="p">]</span>
+    <span class="n">_pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">view</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">task_mapping</span><span class="p">:</span> <span class="n">TaskMapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__view__</span> <span class="o">=</span> <span class="n">view</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span> <span class="o">=</span> <span class="n">task_mapping</span>
+        <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pop</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__view__</span><span class="p">)</span>
-    <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_await</span><span class="p">()</span><span class="o">.</span><span class="fm">__await__</span><span class="p">()</span>
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__view__</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_await</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">result</span> <span class="k">async</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;__view__&quot;</span><span class="p">,</span> <span class="s2">&quot;__mapping__&quot;</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">aiterbykeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">ASyncSorter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">_get_key</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_from_item</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">aiterbyvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">ASyncSorter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">_get_value</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_from_item</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="TaskMappingKeys">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMappingKeys">[docs]</a>
 <span class="k">class</span> <span class="nc">TaskMappingKeys</span><span class="p">(</span><span class="n">_TaskMappingView</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
+    <span class="n">_get_from_item</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">_get_key</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <div class="viewcode-block" id="TaskMappingKeys.__aiter__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMappingKeys.__aiter__">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aiter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">K</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_if_pop_check_destroyed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">)</span>
         <span class="n">yielded</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__load_existing</span><span class="p">():</span>
             <span class="n">yielded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="c1"># there is no chance of duplicate keys here</span>
             <span class="k">yield</span> <span class="n">key</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_init_loader</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_init_loader</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">fut</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_init_loader_next</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">:</span>
-                    <span class="n">yielded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-                    <span class="k">yield</span> <span class="n">key</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__load_init_loader</span><span class="p">(</span><span class="n">yielded</span><span class="p">):</span>
+            <span class="n">yielded</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">key</span>
         <span class="k">if</span> <span class="n">e</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_init_loader</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
             <span class="k">raise</span> <span class="n">e</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">key</span></div>
-</div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__load_existing</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">key</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_if_pop_clear</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__load_existing</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="n">key</span></div>
+
+        
+    <span class="k">def</span> <span class="nf">__load_existing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">K</span><span class="p">]:</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">key</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">key</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__load_init_loader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yielded</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">K</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">K</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">:</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_init_loader</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">fut</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_init_loader_next</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                        <span class="k">yield</span> <span class="n">key</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_init_loader</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">fut</span> <span class="ow">in</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_init_loader_next</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="n">key</span></div>
 
 
 <div class="viewcode-block" id="TaskMappingItems">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMappingItems">[docs]</a>
 <span class="k">class</span> <span class="nc">TaskMappingItems</span><span class="p">(</span><span class="n">_TaskMappingView</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
+    <span class="n">_get_from_item</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span>
 <div class="viewcode-block" id="TaskMappingItems.__aiter__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMappingItems.__aiter__">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aiter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span>
-        <span class="k">async</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_if_pop_check_destroyed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
 </div>
 
     
 <div class="viewcode-block" id="TaskMappingValues">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMappingValues">[docs]</a>
 <span class="k">class</span> <span class="nc">TaskMappingValues</span><span class="p">(</span><span class="n">_TaskMappingView</span><span class="p">[</span><span class="n">V</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
+    <span class="n">_get_from_item</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">_get_value</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 <div class="viewcode-block" id="TaskMappingValues.__aiter__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMappingValues.__aiter__">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aiter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">V</span><span class="p">]:</span>
-        <span class="k">async</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="k">yield</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">_if_pop_check_destroyed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">async</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">yield</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
 </div>
 
 
