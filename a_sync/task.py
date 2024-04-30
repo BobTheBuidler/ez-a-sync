@@ -4,6 +4,7 @@ import contextlib
 import functools
 import inspect
 import logging
+import weakref
 
 from a_sync import exceptions
 from a_sync.asyncio.create_task import create_task
@@ -494,17 +495,23 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
     else:
         raise TypeError(iterable)
 
-@functools.lru_cache(maxsize=None)
+__unwrapped = weakref.WeakKeyDictionary()
+
 def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[I, T]]) -> Callable[P, Awaitable[T]]:
+    if unwrapped := __unwrapped.get(wrapped_func):
+        return unwrapped
     if isinstance(wrapped_func, (ASyncBoundMethod, ASyncMethodDescriptor)):
-        return wrapped_func
+        unwrapped = wrapped_func
     elif isinstance(wrapped_func, _ASyncPropertyDescriptorBase):
-        return wrapped_func.get
+        unwrapped = wrapped_func.get
     elif isinstance(wrapped_func, ASyncFunction):
         # this speeds things up a bit by bypassing some logic
         # TODO implement it like this elsewhere if profilers suggest
-        return wrapped_func._modified_fn if wrapped_func._async_def else wrapped_func._asyncified
-    return wrapped_func
+        unwrapped = wrapped_func._modified_fn if wrapped_func._async_def else wrapped_func._asyncified
+    else:
+        unwrapped = wrapped_func
+    __unwrapped[wrapped_func] = unwrapped
+    return unwrapped
 
 
 _get_key: Callable[[Tuple[K, V]], K] = lambda k_and_v: k_and_v[0]
