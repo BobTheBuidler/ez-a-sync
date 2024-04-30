@@ -122,6 +122,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     _cache_handle: asyncio.TimerHandle
     "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
 
+    __weakself__: "weakref.ref[I]"
+    "A weak reference to the instance the function is bound to."
+
     __slots__ = "_is_async_def", "__weakself__"
     def __init__(
         self, 
@@ -137,6 +140,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             unbound = unbound.__wrapped__
         ASyncFunction.__init__(self, unbound, **modifiers)
         self._is_async_def = async_def
+        "True if `self.__wrapped__` is a coroutine function, False otherwise."
         functools.update_wrapper(self, unbound)
     def __repr__(self) -> str:
         try:

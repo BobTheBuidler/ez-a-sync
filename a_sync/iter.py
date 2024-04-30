@@ -4,6 +4,7 @@ import functools
 import inspect
 import logging
 import sys
+import weakref
 
 from async_property import async_cached_property
 
@@ -117,33 +118,53 @@ class ASyncGeneratorFunction(Generic[P, T]):
         By providing a unified interface to asynchronous generator functions, this class facilitates the creation of APIs that are flexible and easy to use in a wide range of asynchronous programming scenarios. It abstracts away the complexities involved in managing asynchronous generator lifecycles and invocation semantics, making it easier for developers to integrate asynchronous iteration patterns into their applications.
     
     """
+
+    _cache_handle: asyncio.TimerHandle
+    "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
+
+    __weakself__: "weakref.ref[object]" = None
+    "A weak reference to the instance the function is bound to, if any."
+
     def __init__(self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None) -> None:
         "Initializes the ASyncGeneratorFunction with the given async generator function and optionally an instance."
         self.field_name = async_gen_func.__name__
         "The name of the async generator function."
         self.__wrapped__ = async_gen_func
         "The actual async generator function."
-        self.__instance__ = instance
-        "The instance the function is bound to, if any."
+        if instance is not None:
+            self._cache_handle = self.__get_cache_handle(instance)
+            self.__weakself__ = weakref.ref(instance, self._cache_handle.cancel)
         functools.update_wrapper(self, self.__wrapped__)
     def __repr__(self) -> str:
         return f"<{type(self).__name__} for {self.__wrapped__} at {hex(id(self))}>"
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> ASyncIterator[T]:
         "Calls the wrapped async generator function with the given arguments and keyword arguments, returning an ASyncIterator."
-        if self.__instance__ is None:
+        if self.__weakself__ is None:
             return ASyncIterator(self.__wrapped__(*args, **kwargs))
-        return ASyncIterator(self.__wrapped__(self.__instance__, *args, **kwargs))
-    def __get__(self, instance: Any, owner: Any) -> "ASyncGeneratorFunction[P, T]":
+        return ASyncIterator(self.__wrapped__(self.__self__, *args, **kwargs))
+    def __get__(self, instance: object, owner: Type["ASyncGeneratorFunction"]) -> "ASyncGeneratorFunction[P, T]":
         "Descriptor method to make the function act like a non-data descriptor."
         if instance is None:
             return self
         try:
-            return instance.__dict__[self.field_name]
+            gen_func = instance.__dict__[self.field_name]
         except KeyError:
             gen_func = ASyncGeneratorFunction(self.__wrapped__, instance)
             instance.__dict__[self.field_name] = gen_func
-            return gen_func
-        
+        gen_func._cache_handle.cancel()
+        gen_func._cache_handle = self.__get_cache_handle(instance)
+        return gen_func
+    @property
+    def __self__(self) -> object:
+        try:
+            instance = self.__weakself__()
+        except TypeError:
+            raise AttributeError(f"{self} has no attribute '__self__'") from None
+        if instance is None:
+            raise ReferenceError(self)
+        return instance
+    def __get_cache_handle(self, instance: object) -> asyncio.TimerHandle:
+        return asyncio.get_event_loop().call_later(300, instance.__dict__.pop, self.field_name)
 
 class _ASyncView(ASyncIterator[T]):
     __aiterator__ = None
