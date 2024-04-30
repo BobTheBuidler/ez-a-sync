@@ -346,9 +346,14 @@
         <span class="k">if</span> <span class="n">init_loader</span><span class="p">:</span>
             <span class="c1"># check for exceptions if you passed an iterable(s) into the class init</span>
             <span class="k">await</span> <span class="n">init_loader</span>
-        <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_pop</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-            <span class="k">yield</span> <span class="n">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">yields</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
+                <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                    <span class="k">yield</span> <span class="n">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">yields</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">yields</span><span class="p">)</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span></div>
 
     
