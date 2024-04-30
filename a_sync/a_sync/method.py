@@ -118,6 +118,9 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
+    _cache_handle: asyncio.TimerHandle
+    "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
+
     __slots__ = "_is_async_def", "__weakself__"
     def __init__(
         self, 
@@ -139,7 +142,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             instance_type = type(self.__self__)
             return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.__self__}>"
         except ReferenceError:
-            return f"<{self.__class__.__name__} for function COLLECTED.COLLECTED.{self.__name__} bound to {self.__self__}>"
+            return f"<{self.__class__.__name__} for function COLLECTED.COLLECTED.{self.__name__} bound to {self.__weakself__}>"
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
     @overload
