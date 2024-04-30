@@ -133,7 +133,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
         "The actual async generator function."
         if instance is not None:
             self._cache_handle = self.__get_cache_handle(instance)
-            self.__weakself__ = weakref.ref(instance, self._cache_handle.cancel)
+            self.__weakself__ = weakref.ref(instance, self.__cancel_cache_handle)
         functools.update_wrapper(self, self.__wrapped__)
     def __repr__(self) -> str:
         return f"<{type(self).__name__} for {self.__wrapped__} at {hex(id(self))}>"
@@ -164,7 +164,10 @@ class ASyncGeneratorFunction(Generic[P, T]):
             raise ReferenceError(self)
         return instance
     def __get_cache_handle(self, instance: object) -> asyncio.TimerHandle:
-        return asyncio.get_event_loop().call_later(300, instance.__dict__.pop, self.field_name)
+        # NOTE: we create a strong reference to instance here. I'm not sure if this is good or not but its necessary for now.
+        return asyncio.get_event_loop().call_later(300, delattr, instance, self.field_name)
+    def __cancel_cache_handle(self, instance: object) -> None:
+        self._cache_handle.cancel()
 
 class _ASyncView(ASyncIterator[T]):
     __aiterator__ = None

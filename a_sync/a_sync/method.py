@@ -61,6 +61,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     def __is_async_def__(self) -> bool:
         return asyncio.iscoroutinefunction(self.__wrapped__)
     def _get_cache_handle(self, instance: I) -> asyncio.TimerHandle:
+        # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
         return asyncio.get_event_loop().call_later(300, instance.__dict__.pop, self.field_name)
 
 @final
@@ -175,6 +176,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         return retval  # type: ignore [call-overload, return-value]
     @property
     def __self__(self) -> I:
+        "The instance the function is bound to."
         instance = self.__weakself__()
         if instance is not None:
             return instance
