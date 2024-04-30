@@ -59,7 +59,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     __init_loader_coro: Optional[Awaitable[None]] = None
     """An optional asyncio Coroutine to be run by the `_init_loader`"""
 
-    __slots__ = "_wrapped_func", "__wrapped__", "__dict__"
+    __slots__ = "_wrapped_func", "__wrapped__", "__dict__", "__weakref__"
     # NOTE: maybe since we use so many classvars here we are better off getting rid of slots
     def __init__(
         self, 

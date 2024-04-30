@@ -50,10 +50,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                 bound = ASyncBoundMethod(instance, self.__wrapped__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        finally:
-            # Handler for popping unused bound methods from bound method cache
-            bound._cache_handle = self._get_cache_handle(instance)
-            return bound
+        # Handler for popping unused bound methods from bound method cache
+        bound._cache_handle = self._get_cache_handle(instance)
+        return bound
     def __set__(self, instance, value):
         raise RuntimeError(f"cannot set {self.field_name}, {self} is what you get. sorry.")
     def __delete__(self, instance):
@@ -84,10 +83,9 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
             bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        finally:
-            # Handler for popping unused bound methods from bound method cache
-            bound._cache_handle = self._get_cache_handle(instance)
-            return bound
+        # Handler for popping unused bound methods from bound method cache
+        bound._cache_handle = self._get_cache_handle(instance)
+        return bound
 
 @final
 class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
@@ -112,10 +110,9 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
             bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        finally:
-            # Handler for popping unused bound methods from bound method cache
-            bound._cache_handle = self._get_cache_handle(instance)
-            return bound
+        # Handler for popping unused bound methods from bound method cache
+        bound._cache_handle = self._get_cache_handle(instance)
+        return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     __slots__ = "__weakself__",
