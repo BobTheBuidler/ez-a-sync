@@ -16,6 +16,8 @@ from a_sync.a_sync.modifiers.manager import ModifierManager
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
+    from a_sync.a_sync.method import (ASyncBoundMethod, ASyncBoundMethodAsyncDefault, 
+                                      ASyncBoundMethodSyncDefault)
 
 logger = logging.getLogger(__name__)
 
@@ -176,10 +178,10 @@ class ASyncDecorator(ModifiedMixin):
             raise ValueError(f"'default' must be either 'sync', 'async', or None. You passed {self.modifiers.default}.")
         
     @overload
-    def __call__(self, func: CoroFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
+    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethod[B, P, T]":  # type: ignore [override]
         ...
     @overload
-    def __call__(self, func: SyncFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
         ...
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
         if self.default == "async":
@@ -234,6 +236,9 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
 
 class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
+    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodSyncDefault[P, T]":  # type: ignore [override]
+        ...
+    @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
         ...
     @overload
@@ -243,6 +248,9 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
         return ASyncFunctionSyncDefault(func, **self.modifiers)
 
 class ASyncDecoratorAsyncDefault(ASyncDecorator):
+    @overload
+    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodAsyncDefault[P, T]":  # type: ignore [override]
+        ...
     @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
         ...

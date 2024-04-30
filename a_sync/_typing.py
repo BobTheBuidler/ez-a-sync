@@ -10,6 +10,11 @@ from typing import (TYPE_CHECKING, Any, AsyncGenerator, AsyncIterable, AsyncIter
 
 from typing_extensions import Concatenate, ParamSpec, Self, Unpack
 
+if TYPE_CHECKING:
+    from a_sync import ASyncGenericBase
+    B = TypeVar("B", bound=ASyncGenericBase)
+else:
+    B = TypeVar("B")
 
 T = TypeVar("T")
 K = TypeVar("K")
@@ -37,10 +42,10 @@ AnyBoundMethod = Union[CoroBoundMethod[Any, P, T], SyncBoundMethod[Any, P, T]]
 
 @runtime_checkable
 class AsyncUnboundMethod(Protocol[I, P, T]):
-    __get__: Callable[[I, None], CoroBoundMethod[I, P, T]]
+    __get__: Callable[[I, Type], CoroBoundMethod[I, P, T]]
 @runtime_checkable
 class SyncUnboundMethod(Protocol[I, P, T]):
-    __get__: Callable[[I, None], SyncBoundMethod[I, P, T]]
+    __get__: Callable[[I, Type], SyncBoundMethod[I, P, T]]
 AnyUnboundMethod = Union[AsyncUnboundMethod[I, P, T], SyncUnboundMethod[I, P, T]]
 
 AsyncGetterFunction = Callable[[I], Awaitable[T]]
