@@ -15,7 +15,7 @@ from a_sync.a_sync.method import ASyncBoundMethod, ASyncMethodDescriptor, ASyncM
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio.as_completed import as_completed
 from a_sync.asyncio.gather import Excluder, gather
-from a_sync.iter import ASyncIterator, ASyncGeneratorFunction
+from a_sync.iter import ASyncIterator, ASyncGeneratorFunction, ASyncSorter
 from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.primitives.locks.event import Event
 from a_sync.utils.iterators import as_yielded, exhaust_iterator
@@ -506,7 +506,11 @@ def _unwrap(wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASy
     return wrapped_func
 
 
+_get_key: Callable[[Tuple[K, V]], K] = lambda k_and_v: k_and_v[0]
+_get_value: Callable[[Tuple[K, V]], V] = lambda k_and_v: k_and_v[1]
+
 class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
+    _get_from_item: Callable[[Tuple[K, V]], T]
     def __init__(self, view: Iterable[T], task_mapping: TaskMapping[K, V]) -> None:
         self.__view__ = view
         self.__mapping__ = task_mapping
@@ -519,12 +523,19 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
     async def _await(self) -> List[T]:
         return [result async for result in self]
     __slots__ = "__view__", "__mapping__"
+    async def aiterbykeys(self, reverse: bool = False) -> ASyncIterator[T]:
+        async for tup in ASyncSorter(self.__mapping__.items(), key=_get_key, reverse=reverse):
+            yield self._get_from_item(tup)
+    async def aiterbyvalues(self, reverse: bool = False) -> ASyncIterator[T]:
+        async for tup in ASyncSorter(self.__mapping__.items(), key=_get_value, reverse=reverse):
+            yield self._get_from_item(tup)
 
 
 class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
+    _get_from_item = lambda self, item: _get_key(item)
     async def __aiter__(self) -> AsyncIterator[K]:
         yielded = set()
-        for key in self.__mapping__:
+        for key in tuple(self.__mapping__):
             yielded.add(key)
             yield key
         if self.__mapping__._init_loader is None:
@@ -536,16 +547,18 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
                     yield key
         if e := self.__mapping__._init_loader.exception():
             raise e
-        for key in self.__mapping__:
+        for key in tuple(self.__mapping__):
             if key not in yielded:
                 yield key
 
 class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
+    _get_from_item = lambda self, item: item
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
         async for key in self.__mapping__.keys():
             yield key, await self.__mapping__[key]
     
 class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
+    _get_from_item = lambda self, item: _get_value(item)
     async def __aiter__(self) -> AsyncIterator[V]:
         async for key in self.__mapping__.keys():
             yield await self.__mapping__[key]
