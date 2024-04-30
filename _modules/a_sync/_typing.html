@@ -83,6 +83,11 @@
 
 <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Concatenate</span><span class="p">,</span> <span class="n">ParamSpec</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Unpack</span>
 
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">ASyncGenericBase</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">ASyncGenericBase</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
 
 <span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
 <span class="n">K</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
@@ -118,13 +123,13 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.AsyncUnboundMethod">[docs]</a>
 <span class="nd">@runtime_checkable</span>
 <span class="k">class</span> <span class="nc">AsyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
-    <span class="fm">__get__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">I</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">CoroBoundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span></div>
+    <span class="fm">__get__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">I</span><span class="p">,</span> <span class="n">Type</span><span class="p">],</span> <span class="n">CoroBoundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span></div>
 
 <div class="viewcode-block" id="SyncUnboundMethod">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.SyncUnboundMethod">[docs]</a>
 <span class="nd">@runtime_checkable</span>
 <span class="k">class</span> <span class="nc">SyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
-    <span class="fm">__get__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">I</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">SyncBoundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span></div>
+    <span class="fm">__get__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">I</span><span class="p">,</span> <span class="n">Type</span><span class="p">],</span> <span class="n">SyncBoundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span></div>
 
 <span class="n">AnyUnboundMethod</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">AsyncUnboundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">SyncUnboundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
 
