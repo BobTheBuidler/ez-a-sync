@@ -77,6 +77,7 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 
+<span class="kn">import</span> <span class="nn">a_sync.asyncio</span>
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -180,8 +181,10 @@
 
 <div class="viewcode-block" id="set_smart_task_factory">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.set_smart_task_factory">[docs]</a>
-<span class="k">def</span> <span class="nf">set_smart_task_factory</span><span class="p">(</span><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">set_task_factory</span><span class="p">(</span><span class="n">smart_task_factory</span><span class="p">)</span></div>
+<span class="k">def</span> <span class="nf">set_smart_task_factory</span><span class="p">(</span><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">loop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+    <span class="n">loop</span><span class="o">.</span><span class="n">set_task_factory</span><span class="p">(</span><span class="n">smart_task_factory</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="shield">

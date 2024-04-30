@@ -101,7 +101,7 @@
 <span class="sd">        coro: An Awaitable object from which to create the task.</span>
 <span class="sd">        name: Optional name for the task, aiding in debugging.</span>
 <span class="sd">        skip_gc_until_done: If True, the task is kept alive until it completes, preventing garbage collection.</span>
-<span class="sd">        log_destroyed_pending: If False, asyncio&#39;s default error log when a pending task is destroyed is suppressed.</span>
+<span class="sd">        log_destroy_pending: If False, asyncio&#39;s default error log when a pending task is destroyed is suppressed.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        An asyncio.Task object created from the provided Awaitable.</span>
@@ -113,6 +113,7 @@
     <span class="k">if</span> <span class="n">skip_gc_until_done</span><span class="p">:</span>
         <span class="n">__persisted_tasks</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">__persisted_task_exc_wrap</span><span class="p">(</span><span class="n">task</span><span class="p">)))</span>
     <span class="k">if</span> <span class="n">log_destroy_pending</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="fm">__del__</span>
         <span class="n">task</span><span class="o">.</span><span class="n">_log_destroy_pending</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">__prune_persisted_tasks</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">task</span></div>

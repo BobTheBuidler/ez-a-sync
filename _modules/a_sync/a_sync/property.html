@@ -169,6 +169,7 @@
 
 <div class="viewcode-block" id="ASyncPropertyDescriptorSyncDefault">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncPropertyDescriptorSyncDefault">[docs]</a>
+<span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">ASyncPropertyDescriptorSyncDefault</span><span class="p">(</span><span class="nb">property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
     <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;sync&quot;</span>
     <span class="nb">any</span><span class="p">:</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
@@ -186,6 +187,7 @@
 
 <div class="viewcode-block" id="ASyncPropertyDescriptorAsyncDefault">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncPropertyDescriptorAsyncDefault">[docs]</a>
+<span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">ASyncPropertyDescriptorAsyncDefault</span><span class="p">(</span><span class="nb">property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
     <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;async&quot;</span>
     <span class="nb">any</span><span class="p">:</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
@@ -358,6 +360,7 @@
 
 <div class="viewcode-block" id="ASyncCachedPropertyDescriptorSyncDefault">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncCachedPropertyDescriptorSyncDefault">[docs]</a>
+<span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">ASyncCachedPropertyDescriptorSyncDefault</span><span class="p">(</span><span class="n">cached_property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a helper class used for type checking. You will not run into any instance of this in prod.&quot;&quot;&quot;</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">]</span>
@@ -372,6 +375,7 @@
 
 <div class="viewcode-block" id="ASyncCachedPropertyDescriptorAsyncDefault">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncCachedPropertyDescriptorAsyncDefault">[docs]</a>
+<span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">ASyncCachedPropertyDescriptorAsyncDefault</span><span class="p">(</span><span class="n">cached_property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a helper class used for type checking. You will not run into any instance of this in prod.&quot;&quot;&quot;</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">]</span></div>
@@ -473,6 +477,7 @@
 
 <div class="viewcode-block" id="HiddenMethod">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.HiddenMethod">[docs]</a>
+<span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">HiddenMethod</span><span class="p">(</span><span class="n">ASyncBoundMethodAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[()],</span> <span class="n">T</span><span class="p">]):</span>
 <div class="viewcode-block" id="HiddenMethod.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.HiddenMethod.__init__">[docs]</a>
@@ -497,6 +502,7 @@
 
 <div class="viewcode-block" id="HiddenMethodDescriptor">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.HiddenMethodDescriptor">[docs]</a>
+<span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">HiddenMethodDescriptor</span><span class="p">(</span><span class="n">ASyncMethodDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[()],</span> <span class="n">T</span><span class="p">]):</span>
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HiddenMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

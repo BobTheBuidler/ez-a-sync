@@ -213,8 +213,7 @@ enhanced error management by wrapping exceptions in a custom exception.</p>
 <li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – An Awaitable object from which to create the task.</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>) – Optional name for the task, aiding in debugging.</p></li>
 <li><p><strong>skip_gc_until_done</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, the task is kept alive until it completes, preventing garbage collection.</p></li>
-<li><p><strong>log_destroyed_pending</strong> – If False, asyncio’s default error log when a pending task is destroyed is suppressed.</p></li>
-<li><p><strong>log_destroy_pending</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>log_destroy_pending</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If False, asyncio’s default error log when a pending task is destroyed is suppressed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -385,8 +384,7 @@ enhanced error management by wrapping exceptions in a custom exception.</p>
 <li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – An Awaitable object from which to create the task.</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>) – Optional name for the task, aiding in debugging.</p></li>
 <li><p><strong>skip_gc_until_done</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, the task is kept alive until it completes, preventing garbage collection.</p></li>
-<li><p><strong>log_destroyed_pending</strong> – If False, asyncio’s default error log when a pending task is destroyed is suppressed.</p></li>
-<li><p><strong>log_destroy_pending</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>log_destroy_pending</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If False, asyncio’s default error log when a pending task is destroyed is suppressed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
