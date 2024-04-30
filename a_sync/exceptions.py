@@ -4,6 +4,9 @@ import asyncio
 from a_sync._typing import *
 from a_sync.a_sync._flags import VIABLE_FLAGS
 
+if TYPE_CHECKING:
+    from a_sync import TaskMapping
+
 
 class ASyncFlagException(ValueError):
     @property
@@ -74,13 +77,20 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
         err += f"{VIABLE_FLAGS}"
         super().__init__(err)
 
-class MappingIsEmptyError(Exception):
-    def __init__(self):
-        super().__init__("TaskMapping does not contain anything to yield")
+class MappingError(Exception):
+    msg: str
+    def __init__(self, mapping: "TaskMapping"):
+        msg = self.msg + f":\n\n{mapping}"
+        if mapping:
+            msg += f"\n\n{dict(mapping)}"
+        super().__init__(msg)
+        self.mapping = mapping
 
-class MappingNotEmptyError(Exception):
-    def __init__(self):
-        super().__init__("TaskMapping already contains some data. In order to use `map`, you need a fresh one.")
+class MappingIsEmptyError(MappingError):
+    msg = "TaskMapping does not contain anything to yield"
+
+class MappingNotEmptyError(MappingError):
+    msg = "TaskMapping already contains some data. In order to use `map`, you need a fresh one."
 
 class PersistedTaskException(Exception):
     def __init__(self, exc: E, task: asyncio.Task) -> None:
