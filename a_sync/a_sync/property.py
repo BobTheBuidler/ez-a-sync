@@ -76,6 +76,7 @@ class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncP
 
 class property(ASyncPropertyDescriptor[I, T]):...
 
+@final
 class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     default = "sync"
     any: ASyncFunctionSyncDefault[AnyIterable[I], bool]
@@ -90,6 +91,7 @@ class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     def __get__(self, instance: Optional[I], owner: Any) -> Union[Self, T]:
         return _ASyncPropertyDescriptorBase.__get__(self, instance, owner)
 
+@final
 class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
     default = "async"
     any: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
@@ -238,6 +240,7 @@ class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.cache
     
 class cached_property(ASyncCachedPropertyDescriptor[I, T]):...
 
+@final
 class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
     default: Literal["sync"]
@@ -249,6 +252,7 @@ class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
         return _ASyncPropertyDescriptorBase.__get__(self, instance, owner)
 
 
+@final
 class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[I, T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
     default: Literal["async"]
@@ -344,6 +348,7 @@ def a_sync_cached_property(  # type: ignore [misc]
     decorator = functools.partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
+@final
 class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     def __init__(self, instance: I, unbound: AnyFn[Concatenate[I, P], T], field_name: str, **modifiers: _helpers.ModifierKwargs) -> None:
         super().__init__(instance, unbound, **modifiers)
@@ -359,6 +364,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     def __await__(self) -> Generator[Any, None, T]:
         return self(sync=False).__await__()
 
+@final
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
     def __get__(self, instance: I, owner: Any) -> HiddenMethod[I, T]:
         if instance is None:
