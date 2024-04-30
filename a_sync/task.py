@@ -199,7 +199,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             await self._init_loader
         else:
             # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
-            self._check_empty()
+            self._raise_if_empty()
         # if there are any tasks that still need to complete, we need to await them and yield them
         if unyielded := {key: self[key] for key in self if key not in yielded}:
             async for key, value in as_completed(unyielded, aiter=True):
@@ -239,9 +239,15 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             Depending on `yields`, either keys, values,
             or tuples of key-value pairs representing the results of completed tasks.
         """
-        self._check_not_empty()
         # make sure the init loader is started if needed
         init_loader = self._init_loader
+        if iterables:
+            if init_loader:
+                raise ValueError("You cannot pass `iterables` to map if the TaskMapping was initialized with an (a)iterable.")
+            self._raise_if_not_empty()
+        elif not init_loader:
+            self._raise_if_empty()
+                
         try:
             async for _ in self._tasks_for_iterables(*iterables):
                 async for key, value in self.yield_completed(pop=pop):
@@ -261,7 +267,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             else:
                 async for key, value in as_completed(self, aiter=True):
                     yield _yield(key, value, yields)
-        await self.__if_pop_clear(pop)
+            await self.__if_pop_clear(pop)
     
     @ASyncMethodDescriptorSyncDefault
     async def all(self, pop: bool = True) -> bool:
@@ -348,7 +354,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         """Wait for all tasks to complete and return a dictionary of the results."""
         if self._init_loader:
             await self._init_loader
-        self._check_empty()
+        self._raise_if_empty()
         return await gather(self, return_exceptions=return_exceptions, exclude_if=exclude_if, tqdm=tqdm, **tqdm_kwargs)
     
     @overload
@@ -381,11 +387,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
         return ProcessingQueue(fn, self.concurrency, name=self._name)
     
-    def _check_empty(self) -> None:
+    def _raise_if_empty(self) -> None:
         if not self:
             raise exceptions.MappingIsEmptyError(self)
     
-    def _check_not_empty(self) -> None:
+    def _raise_if_not_empty(self) -> None:
         if self:
             raise exceptions.MappingNotEmptyError(self)
 

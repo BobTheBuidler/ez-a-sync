@@ -80,9 +80,9 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
 class MappingError(Exception):
     msg: str
     def __init__(self, mapping: "TaskMapping"):
-        msg = self.msg + f":\n\n{mapping}"
+        msg = self.msg + f":\n{mapping}"
         if mapping:
-            msg += f"\n\n{dict(mapping)}"
+            msg += f"\n{dict(mapping)}"
         super().__init__(msg)
         self.mapping = mapping
 
@@ -90,7 +90,7 @@ class MappingIsEmptyError(MappingError):
     msg = "TaskMapping does not contain anything to yield"
 
 class MappingNotEmptyError(MappingError):
-    msg = "TaskMapping already contains some data. In order to use `map`, you need a fresh one."
+    msg = "TaskMapping already contains some data. In order to use `map`, you need a fresh one"
 
 class PersistedTaskException(Exception):
     def __init__(self, exc: E, task: asyncio.Task) -> None:
