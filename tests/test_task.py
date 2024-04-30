@@ -136,6 +136,10 @@ async def test_task_mapping_map_with_async_iter():
         assert isinstance(k, int)
     async for k in tasks.keys():
         assert isinstance(k, int)
+    assert await tasks.keys().aiterbykeys() == list(range(5))
+    assert await tasks.keys().aiterbyvalues() == list(range(5))
+    assert await tasks.keys().aiterbykeys(reverse=True) == sorted(range(5), reverse=True)
+    assert await tasks.keys().aiterbyvalues(reverse=True) == sorted(range(5), reverse=True)
     
     # test values
     for v in tasks.values():
@@ -147,6 +151,10 @@ async def test_task_mapping_map_with_async_iter():
         assert isinstance(v, str)
     async for v in tasks.values():
         assert isinstance(v, str)
+    assert await tasks.values().aiterbykeys() == [str(i) * i for i in range(1, 6)]
+    assert await tasks.values().aiterbyvalues() == [str(i) * i for i in range(1, 6)]
+    assert await tasks.values().aiterbykeys(reverse=True) == [str(i) * i for i in sorted(range(1, 6), reverse=True)]
+    assert await tasks.values().aiterbyvalues(reverse=True) == [str(i) * i for i in sorted(range(1, 6), reverse=True)]
     
     # test items
     for k, v in tasks.items():
@@ -161,6 +169,11 @@ async def test_task_mapping_map_with_async_iter():
     async for k, v in tasks.items():
         assert isinstance(k, int)
         assert isinstance(v, str)
+    assert await tasks.items().aiterbykeys() == [(i, str(i+1) * (i+1)) for i in range(5)]
+    assert await tasks.items().aiterbyvalues() == [(i, str(i+1) * (i+1)) for i in range(5)]
+    assert await tasks.items().aiterbykeys(reverse=True) == [(i, str(i+1) * (i+1)) for i in sorted(range(5), reverse=True)]
+    assert await tasks.items(pop=True).aiterbyvalues(reverse=True) == [(i, str(i+1) * (i+1)) for i in sorted(range(5), reverse=True)]
+    assert not tasks  # did pop work?
 
 def test_taskmapping_views_sync():
     tasks = TaskMapping(_coro_fn, range(5))
