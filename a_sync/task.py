@@ -242,9 +242,14 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._check_not_empty()
         # make sure the init loader is started if needed
         init_loader = self._init_loader
-        async for _ in self._tasks_for_iterables(*iterables):
-            async for key, value in self.yield_completed(pop=pop):
-                yield _yield(key, value, yields)
+        try:
+            async for _ in self._tasks_for_iterables(*iterables):
+                async for key, value in self.yield_completed(pop=pop):
+                    yield _yield(key, value, yields)
+        except _EmptySequenceError:
+            if len(iterables) > 1:
+                # TODO gotta handle this situation
+                raise exceptions.EmptySequenceError("bob needs to code something so you can do this, go tell him") from None
         if init_loader:
             # check for exceptions if you passed an iterable(s) into the class init
             await init_loader
@@ -378,11 +383,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     
     def _check_empty(self) -> None:
         if not self:
-            raise exceptions.MappingIsEmptyError
+            raise exceptions.MappingIsEmptyError(self)
     
     def _check_not_empty(self) -> None:
         if self:
-            raise exceptions.MappingNotEmptyError
+            raise exceptions.MappingNotEmptyError(self)
 
     @ASyncGeneratorFunction
     async def _tasks_for_iterables(self, *iterables: AnyIterableOrAwaitableIterable[K]) -> AsyncIterator[Tuple[K, "asyncio.Task[V]"]]:
