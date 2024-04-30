@@ -4,7 +4,6 @@ import logging
 import warnings
 import weakref
 
-import a_sync.asyncio
 from a_sync._typing import *
 
 if TYPE_CHECKING:
@@ -88,10 +87,8 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
 def smart_task_factory(loop: asyncio.AbstractEventLoop, coro: Awaitable[T]) -> SmartTask[T]:
     return SmartTask(coro, loop=loop)
 
-def set_smart_task_factory(loop: asyncio.AbstractEventLoop = None) -> None:
-    if loop is None:
-        loop = a_sync.asyncio.get_event_loop()
-    loop.set_task_factory(smart_task_factory)
+def set_smart_task_factory(loop: asyncio.AbstractEventLoop) -> None:
+    asyncio.get_event_loop().set_task_factory(smart_task_factory)
 
 def shield(arg: Awaitable[T], *, loop: Optional[asyncio.AbstractEventLoop] = None) -> SmartFuture[T]:
     """Wait for a future, shielding it from cancellation.
