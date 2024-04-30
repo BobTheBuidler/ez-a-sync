@@ -261,7 +261,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             else:
                 async for key, value in as_completed(self, aiter=True):
                     yield _yield(key, value, yields)
-        await self.__if_pop_clear(pop)
+            await self.__if_pop_clear(pop)
     
     @ASyncMethodDescriptorSyncDefault
     async def all(self, pop: bool = True) -> bool:
