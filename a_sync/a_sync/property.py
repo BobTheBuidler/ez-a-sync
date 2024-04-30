@@ -350,8 +350,8 @@ def a_sync_cached_property(  # type: ignore [misc]
 
 @final
 class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
-    def __init__(self, instance: I, unbound: AnyFn[Concatenate[I, P], T], field_name: str, **modifiers: _helpers.ModifierKwargs) -> None:
-        super().__init__(instance, unbound, **modifiers)
+    def __init__(self, instance: I, unbound: AnyFn[Concatenate[I, P], T], async_def: bool, field_name: str, **modifiers: _helpers.ModifierKwargs) -> None:
+        super().__init__(instance, unbound, async_def, **modifiers)
         self.__name__ = field_name
     def __repr__(self) -> str:
         instance_type = type(self.__self__)
@@ -366,16 +366,18 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
 
 @final
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
-    def __get__(self, instance: I, owner: Any) -> HiddenMethod[I, T]:
+    def __get__(self, instance: I, owner: Type["HiddenMethodDescriptor"]) -> HiddenMethod[I, T]:
         if instance is None:
             return self
         try:
-            return instance.__dict__[self.field_name]
+            bound = instance.__dict__[self.field_name]
+            bound._cache_handle.cancel()
         except KeyError:
-            bound = HiddenMethod(instance, self.__wrapped__, self.field_name, **self.modifiers)
+            bound = HiddenMethod(instance, self.__wrapped__, self.__is_async_def__, self.field_name, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new hidden method: %s", bound)
-            return bound
+        bound._cache_handle = self._get_cache_handle(instance)
+        return bound
 
 def _is_a_sync_instance(instance: object) -> bool:
     try:

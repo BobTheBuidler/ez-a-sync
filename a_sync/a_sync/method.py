@@ -35,19 +35,19 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         except KeyError:
             from a_sync.a_sync.abstract import ASyncABC
             if self.default == "sync":
-                bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
+                bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
             elif self.default == "async":
-                bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
+                bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
             elif isinstance(instance, ASyncABC):
                 try:
                     if instance.__a_sync_instance_should_await__:
-                        bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
+                        bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
                     else:
-                        bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
+                        bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
                 except AttributeError:
-                    bound = ASyncBoundMethod(instance, self.__wrapped__, **self.modifiers)
+                    bound = ASyncBoundMethod(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
             else:
-                bound = ASyncBoundMethod(instance, self.__wrapped__, **self.modifiers)
+                bound = ASyncBoundMethod(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
         # Handler for popping unused bound methods from bound method cache
@@ -57,6 +57,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         raise RuntimeError(f"cannot set {self.field_name}, {self} is what you get. sorry.")
     def __delete__(self, instance):
         raise RuntimeError(f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry.")
+    @functools.cached_property
+    def __is_async_def__(self) -> bool:
+        return asyncio.iscoroutinefunction(self.__wrapped__)
     def _get_cache_handle(self, instance: I) -> asyncio.TimerHandle:
         return asyncio.get_event_loop().call_later(300, instance.__dict__.pop, self.field_name)
 
@@ -80,7 +83,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
             # we will set a new one in the finally block
             bound._cache_handle.cancel()
         except KeyError:
-            bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, **self.modifiers)
+            bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
         # Handler for popping unused bound methods from bound method cache
@@ -107,7 +110,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
             # we will set a new one in the finally block
             bound._cache_handle.cancel()
         except KeyError:
-            bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, **self.modifiers)
+            bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
         # Handler for popping unused bound methods from bound method cache
@@ -115,23 +118,28 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         return bound
 
 class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
-    __slots__ = "__weakself__",
+    __slots__ = "_is_async_def", "__weakself__"
     def __init__(
         self, 
         instance: I, 
         unbound: AnyFn[Concatenate[I, P], T], 
+        async_def: bool,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
-        self.__weakself__ = weakref.ref(instance)
+        self.__weakself__ = weakref.ref(instance, self.__cancel_cache_handle)
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
             unbound = unbound.__wrapped__
         ASyncFunction.__init__(self, unbound, **modifiers)
+        self._is_async_def = async_def
         functools.update_wrapper(self, unbound)
     def __repr__(self) -> str:
-        instance_type = type(self.__self__)
-        return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.__self__}>"
+        try:
+            instance_type = type(self.__self__)
+            return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.__self__}>"
+        except ReferenceError:
+            return f"<{self.__class__.__name__} for function COLLECTED.COLLECTED.{self.__name__} bound to {self.__self__}>"
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
     @overload
@@ -167,9 +175,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     def __bound_to_a_sync_instance__(self) -> bool:
         from a_sync.a_sync.abstract import ASyncABC
         return isinstance(self.__self__, ASyncABC)
-    @functools.cached_property
-    def __is_async_def__(self) -> bool:
-        return asyncio.iscoroutinefunction(self.__wrapped__)
     def _should_await(self, kwargs: dict) -> bool:
         if flag := _kwargs.get_flag_name(kwargs):
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
@@ -178,7 +183,10 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         elif self.__bound_to_a_sync_instance__:
             self.__self__: "ASyncABC"
             return self.__self__.__a_sync_should_await__(kwargs)
-        return self.__is_async_def__
+        return self._is_async_def
+    def __cancel_cache_handle(self, instance: I) -> None:
+        cache_handle: asyncio.TimerHandle = self._cache_handle
+        cache_handle.cancel()
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
