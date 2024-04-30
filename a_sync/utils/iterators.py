@@ -114,7 +114,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
             name=f"a_sync.as_yielded {queue} getter for {iterators}",
         )
         # if an exception occurs in this loop we don't need to see the task destroyed log
-        get_task._log_destroyed_pending = False
+        get_task._log_destroy_pending = False
         asyncio.futures._chain_future(get_task, next_fut)  # type: ignore [attr-defined]
         for item in (await next_fut, *_get_ready(queue)):
             if isinstance(item, _Done):
