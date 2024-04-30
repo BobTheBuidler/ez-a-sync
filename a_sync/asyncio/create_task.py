@@ -26,7 +26,7 @@ def create_task(
         coro: An Awaitable object from which to create the task.
         name: Optional name for the task, aiding in debugging.
         skip_gc_until_done: If True, the task is kept alive until it completes, preventing garbage collection.
-        log_destroyed_pending: If False, asyncio's default error log when a pending task is destroyed is suppressed.
+        log_destroy_pending: If False, asyncio's default error log when a pending task is destroyed is suppressed.
 
     Returns:
         An asyncio.Task object created from the provided Awaitable.
@@ -38,6 +38,7 @@ def create_task(
     if skip_gc_until_done:
         __persisted_tasks.add(asyncio.create_task(__persisted_task_exc_wrap(task)))
     if log_destroy_pending is False:
+        asyncio.Task.__del__
         task._log_destroy_pending = False
     __prune_persisted_tasks()
     return task
