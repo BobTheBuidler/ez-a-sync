@@ -248,9 +248,14 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if init_loader:
             # check for exceptions if you passed an iterable(s) into the class init
             await init_loader
-        async for key, value in as_completed(self, aiter=True):
-            self.__if_pop_pop(pop, key)
-            yield _yield(key, value, yields)
+        if self:
+            if pop:
+                async for key, value in as_completed(self, aiter=True):
+                    self.pop(key)
+                    yield _yield(key, value, yields)
+            else:
+                async for key, value in as_completed(self, aiter=True):
+                    yield _yield(key, value, yields)
         await self.__if_pop_clear(pop)
     
     @ASyncMethodDescriptorSyncDefault
