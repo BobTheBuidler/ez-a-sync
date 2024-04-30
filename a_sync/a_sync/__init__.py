@@ -7,7 +7,7 @@ from a_sync.a_sync.modifiers.semaphores import apply_semaphore
 from a_sync.a_sync.property import (ASyncCachedPropertyDescriptor, ASyncCachedPropertyDescriptorAsyncDefault,
                                     ASyncCachedPropertyDescriptorSyncDefault, ASyncPropertyDescriptor, 
                                     ASyncPropertyDescriptorAsyncDefault, ASyncPropertyDescriptorSyncDefault, 
-                                    cached_property, property)
+                                    HiddenMethod, HiddenMethodDescriptor, cached_property, property)
 from a_sync.a_sync.singleton import ASyncGenericSingleton
 
 
@@ -23,4 +23,6 @@ __all__ = [
     "cached_property",
     "ASyncPropertyDescriptor",
     "ASyncCachedPropertyDescriptor",
+    "HiddenMethod",
+    "HiddenMethodDescriptor",
 ]
