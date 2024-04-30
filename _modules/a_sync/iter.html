@@ -77,6 +77,7 @@
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
 
 <span class="kn">from</span> <span class="nn">async_property</span> <span class="kn">import</span> <span class="n">async_cached_property</span>
 
@@ -219,6 +220,13 @@
 <span class="sd">        By providing a unified interface to asynchronous generator functions, this class facilitates the creation of APIs that are flexible and easy to use in a wide range of asynchronous programming scenarios. It abstracts away the complexities involved in managing asynchronous generator lifecycles and invocation semantics, making it easier for developers to integrate asynchronous iteration patterns into their applications.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_cache_handle</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimerHandle</span>
+    <span class="s2">&quot;An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use.&quot;</span>
+
+    <span class="n">__weakself__</span><span class="p">:</span> <span class="s2">&quot;weakref.ref[object]&quot;</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="s2">&quot;A weak reference to the instance the function is bound to, if any.&quot;</span>
+
 <div class="viewcode-block" id="ASyncGeneratorFunction.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncGeneratorFunction.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">async_gen_func</span><span class="p">:</span> <span class="n">AsyncGenFunc</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -227,8 +235,9 @@
         <span class="s2">&quot;The name of the async generator function.&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="n">async_gen_func</span>
         <span class="s2">&quot;The actual async generator function.&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__instance__</span> <span class="o">=</span> <span class="n">instance</span>
-        <span class="s2">&quot;The instance the function is bound to, if any.&quot;</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cache_handle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_cache_handle</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__weakself__</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cancel_cache_handle</span><span class="p">)</span>
         <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -237,22 +246,37 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncGeneratorFunction.__call__">[docs]</a>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
         <span class="s2">&quot;Calls the wrapped async generator function with the given arguments and keyword arguments, returning an ASyncIterator.&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__instance__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weakself__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ASyncIterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">ASyncIterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__instance__</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">ASyncIterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__self__</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
 
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncGeneratorFunction[P, T]&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;ASyncGeneratorFunction&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncGeneratorFunction[P, T]&quot;</span><span class="p">:</span>
         <span class="s2">&quot;Descriptor method to make the function act like a non-data descriptor.&quot;</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">]</span>
+            <span class="n">gen_func</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="n">gen_func</span> <span class="o">=</span> <span class="n">ASyncGeneratorFunction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
             <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">gen_func</span>
-            <span class="k">return</span> <span class="n">gen_func</span></div>
+        <span class="n">gen_func</span><span class="o">.</span><span class="n">_cache_handle</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+        <span class="n">gen_func</span><span class="o">.</span><span class="n">_cache_handle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_cache_handle</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gen_func</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">__self__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__weakself__</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> has no attribute &#39;__self__&#39;&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ReferenceError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instance</span>
+    <span class="k">def</span> <span class="nf">__get_cache_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">TimerHandle</span><span class="p">:</span>
+        <span class="c1"># NOTE: we create a strong reference to instance here. I&#39;m not sure if this is good or not but its necessary for now.</span>
+        <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">call_later</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="nb">delattr</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__cancel_cache_handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cache_handle</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span></div>
 
-        
 
 <span class="k">class</span> <span class="nc">_ASyncView</span><span class="p">(</span><span class="n">ASyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
     <span class="n">__aiterator__</span> <span class="o">=</span> <span class="kc">None</span>

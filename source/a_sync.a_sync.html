@@ -1746,13 +1746,27 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod.__cancel_cache_handle">
+<span class="sig-name descname"><span class="pre">__cancel_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod.__cancel_cache_handle" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/method.html#ASyncBoundMethod.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_def</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/method.html#ASyncBoundMethod.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<em>I</em>)</p></li>
 <li><p><strong>unbound</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>T</em><em>]</em>)</p></li>
+<li><p><strong>async_def</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
 <li><p><strong>modifiers</strong> (<em>Unpack</em>)</p></li>
 </ul>
 </dd>
@@ -1933,6 +1947,18 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dd><p>Applies only sync modifiers.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod._cache_handle">
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TimerHandle</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._cache_handle" title="Link to this definition"></a></dt>
+<dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod._is_async_def">
+<span class="sig-name descname"><span class="pre">_is_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._is_async_def" title="Link to this definition"></a></dt>
+<dd><p>True if <cite>self.__wrapped__</cite> is a coroutine function, False otherwise.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod._modified_fn">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_modified_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><span class="pre">Awaitable</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._modified_fn" title="Link to this definition"></a></dt>
@@ -1998,12 +2024,13 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_def</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<em>I</em>)</p></li>
 <li><p><strong>unbound</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>T</em><em>]</em>)</p></li>
+<li><p><strong>async_def</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
 <li><p><strong>modifiers</strong> (<em>Unpack</em>)</p></li>
 </ul>
 </dd>
@@ -2184,6 +2211,18 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dd><p>Applies only sync modifiers.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._cache_handle">
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.12)"><span class="pre">asyncio.TimerHandle</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._cache_handle" title="Link to this definition"></a></dt>
+<dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._is_async_def">
+<span class="sig-name descname"><span class="pre">_is_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._is_async_def" title="Link to this definition"></a></dt>
+<dd><p>True if <cite>self.__wrapped__</cite> is a coroutine function, False otherwise.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._modified_fn">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_modified_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><span class="pre">Awaitable</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._modified_fn" title="Link to this definition"></a></dt>
@@ -2249,12 +2288,13 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_def</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<em>I</em>)</p></li>
 <li><p><strong>unbound</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>T</em><em>]</em>)</p></li>
+<li><p><strong>async_def</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
 <li><p><strong>modifiers</strong> (<em>Unpack</em>)</p></li>
 </ul>
 </dd>
@@ -2435,6 +2475,18 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dd><p>Applies only sync modifiers.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault._cache_handle">
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.12)"><span class="pre">asyncio.TimerHandle</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._cache_handle" title="Link to this definition"></a></dt>
+<dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault._is_async_def">
+<span class="sig-name descname"><span class="pre">_is_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._is_async_def" title="Link to this definition"></a></dt>
+<dd><p>True if <cite>self.__wrapped__</cite> is a coroutine function, False otherwise.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault._modified_fn">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_modified_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><span class="pre">Awaitable</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._modified_fn" title="Link to this definition"></a></dt>
@@ -2562,6 +2614,19 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptor._get_cache_handle">
+<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/method.html#ASyncMethodDescriptor._get_cache_handle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptor._get_cache_handle" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>TimerHandle</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2779,6 +2844,19 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._get_cache_handle">
+<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._get_cache_handle" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>TimerHandle</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._max">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._max" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -2986,6 +3064,19 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptorSyncDefault._get_cache_handle">
+<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptorSyncDefault._get_cache_handle" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>TimerHandle</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4797,12 +4888,13 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/property.html#HiddenMethod.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_def</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/property.html#HiddenMethod.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<em>I</em>)</p></li>
 <li><p><strong>unbound</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>T</em><em>]</em>)</p></li>
+<li><p><strong>async_def</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
 <li><p><strong>field_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
 <li><p><strong>modifiers</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a>)</p></li>
 </ul>
@@ -4984,6 +5076,18 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 <dd><p>Applies only sync modifiers.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod._cache_handle">
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.12)"><span class="pre">asyncio.TimerHandle</span></a></em><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._cache_handle" title="Link to this definition"></a></dt>
+<dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod._is_async_def">
+<span class="sig-name descname"><span class="pre">_is_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._is_async_def" title="Link to this definition"></a></dt>
+<dd><p>True if <cite>self.__wrapped__</cite> is a coroutine function, False otherwise.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod._modified_fn">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_modified_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><span class="pre">Awaitable</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._modified_fn" title="Link to this definition"></a></dt>
@@ -5111,6 +5215,19 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethodDescriptor._get_cache_handle">
+<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethodDescriptor._get_cache_handle" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>TimerHandle</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -6966,12 +7083,13 @@ You can choose which flag(s) work best for your subclass implementation.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/property.html#HiddenMethod.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.HiddenMethod.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unbound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_def</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/property.html#HiddenMethod.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.HiddenMethod.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<em>I</em>)</p></li>
 <li><p><strong>unbound</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>I</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>T</em><em>]</em>)</p></li>
+<li><p><strong>async_def</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
 <li><p><strong>field_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
 <li><p><strong>modifiers</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a>)</p></li>
 </ul>
@@ -7153,6 +7271,18 @@ You can choose which flag(s) work best for your subclass implementation.</p>
 <dd><p>Applies only sync modifiers.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod._cache_handle">
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.12)"><span class="pre">asyncio.TimerHandle</span></a></em><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._cache_handle" title="Link to this definition"></a></dt>
+<dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod._is_async_def">
+<span class="sig-name descname"><span class="pre">_is_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._is_async_def" title="Link to this definition"></a></dt>
+<dd><p>True if <cite>self.__wrapped__</cite> is a coroutine function, False otherwise.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod._modified_fn">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_modified_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><span class="pre">Awaitable</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._modified_fn" title="Link to this definition"></a></dt>
@@ -7280,6 +7410,19 @@ Applies async modifiers to ‘self._fn’ if ‘self._fn’ is a sync function.<
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethodDescriptor._get_cache_handle">
+<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.HiddenMethodDescriptor._get_cache_handle" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>instance</strong> (<em>I</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>TimerHandle</em></p>
 </dd>
 </dl>
 </dd></dl>
