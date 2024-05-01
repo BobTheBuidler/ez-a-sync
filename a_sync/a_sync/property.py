@@ -231,7 +231,15 @@ class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.cache
         @functools.wraps(self._fget)
         async def load_value():
             inner_task = self.get_lock(instance)
-            value = await _smart.shield(inner_task)
+            try:
+                value = await _smart.shield(inner_task)
+            except Exception as e:
+                context = {"property": self, "instance": instance}
+                try:
+                    context_added = type(e)(*e.args, context).with_traceback(e.__traceback__)
+                except TypeError:
+                    raise
+                raise context_added
             self.__set__(instance, value)
             self.pop_lock(instance)
             return value
