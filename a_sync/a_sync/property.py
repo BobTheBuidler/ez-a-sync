@@ -238,7 +238,7 @@ class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.cache
                 try:
                     context_added = type(e)(*e.args, context).with_traceback(e.__traceback__)
                 except TypeError:
-                    raise
+                    raise e.with_traceback(e.__traceback__)
                 raise context_added
             self.__set__(instance, value)
             self.pop_lock(instance)
