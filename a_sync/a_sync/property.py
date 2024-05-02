@@ -41,13 +41,12 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         else:
             self._fget = _helpers._asyncify(self.__wrapped__, self.modifiers.executor)
     @overload
-    def __get__(self, instance: None, owner: Any) -> Self:...
+    def __get__(self, instance: None, owner: Type[I]) -> Self:...
     @overload
-    def __get__(self, instance: I, owner: Any) -> Awaitable[T]:...
-    def __get__(self, instance: Optional[I], owner: Any) -> Union[Self, Awaitable[T]]:
+    def __get__(self, instance: I, owner: Type[I]) -> Awaitable[T]:...
+    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[Self, Awaitable[T]]:
         if instance is None:
             return self
-        logger.debug("getting awaitable for %s for instance: %s owner: %s", self, instance, owner)
         awaitable = super().__get__(instance, owner)
         # if the user didn't specify a default behavior, we will defer to the instance
         if _is_a_sync_instance(instance):
@@ -61,12 +60,12 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             retval = awaitable
         logger.debug("returning %s for %s for instance: %s owner: %s", retval, self, instance, owner)
         return retval
-    async def get(self, instance: I, owner: Any = None) -> T:
+    async def get(self, instance: I, owner: Optional[Type[I]] = None) -> T:
         if instance is None:
             raise ValueError(instance)
         logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, owner)
-    def map(self, instances: AnyIterable[I], owner: Any = None, concurrency: Optional[int] = None, name: str = "") -> "TaskMapping[I, T]":
+    def map(self, instances: AnyIterable[I], owner: Optional[Type[I]] = None, concurrency: Optional[int] = None, name: str = "") -> "TaskMapping[I, T]":
         from a_sync.task import TaskMapping
         logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
         return TaskMapping(self, instances, owner=owner, name=name or self.field_name, concurrency=concurrency)
@@ -85,10 +84,10 @@ class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     max: ASyncFunctionSyncDefault[AnyIterable[I], T]
     sum: ASyncFunctionSyncDefault[AnyIterable[I], T]
     @overload
-    def __get__(self, instance: None, owner: Any) -> Self:...
+    def __get__(self, instance: None, owner: Type[I]) -> Self:...
     @overload
-    def __get__(self, instance: I, owner: Any) -> T:...
-    def __get__(self, instance: Optional[I], owner: Any) -> Union[Self, T]:
+    def __get__(self, instance: I, owner: Type[I]) -> T:...
+    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[Self, T]:
         return _ASyncPropertyDescriptorBase.__get__(self, instance, owner)
 
 @final
@@ -245,10 +244,10 @@ class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
     """This is a helper class used for type checking. You will not run into any instance of this in prod."""
     default: Literal["sync"]
     @overload
-    def __get__(self, instance: None, owner: Any) -> Self:...
+    def __get__(self, instance: None, owner: Type[I]) -> Self:...
     @overload
-    def __get__(self, instance: I, owner: Any) -> T:...
-    def __get__(self, instance: Optional[I], owner: Any) -> Union[Self, T]:
+    def __get__(self, instance: I, owner: Type[I]) -> T:...
+    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[Self, T]:
         return _ASyncPropertyDescriptorBase.__get__(self, instance, owner)
 
 
@@ -366,7 +365,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
 
 @final
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
-    def __get__(self, instance: I, owner: Type["HiddenMethodDescriptor"]) -> HiddenMethod[I, T]:
+    def __get__(self, instance: I, owner: Type[I]) -> HiddenMethod[I, T]:
         if instance is None:
             return self
         try:

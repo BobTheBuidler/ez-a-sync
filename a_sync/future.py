@@ -499,19 +499,19 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
         return self.wrapped(*args, **kwargs)
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} {self.callable}>"
-    def __get__(self, instance: object, owner: Optional) -> Union[Self, "_ASyncFutureInstanceMethod[P, T]"]:
+    def __get__(self, instance: I, owner: Type[I]) -> Union[Self, "_ASyncFutureInstanceMethod[I, P, T]"]:
         if owner is None:
             return self
         else:
             return _ASyncFutureInstanceMethod(self, instance)
 
 @final
-class _ASyncFutureInstanceMethod(Generic[P, T]):
+class _ASyncFutureInstanceMethod(Generic[I, P, T]):
     # NOTE: probably could just replace this with functools.partial
     def __init__(
         self,
         wrapper: _ASyncFutureWrappedFn[P, T],
-        instance: object,
+        instance: I,
     ) -> None:
         try:
             self.__module__ = wrapper.__module__

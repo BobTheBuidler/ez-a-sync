@@ -22,10 +22,10 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         logger.debug("awaiting %s for instance: %s args: %s kwargs: %s", self, instance, args, kwargs)
         return await self.__get__(instance, None)(*args, **kwargs)
     @overload
-    def __get__(self, instance: None, owner: Type["ASyncMethodDescriptor"]) -> Self:...
+    def __get__(self, instance: None, owner: Type[I]) -> Self:...
     @overload
-    def __get__(self, instance: I, owner: Type["ASyncMethodDescriptor"]) -> "ASyncBoundMethod[I, P, T]":...
-    def __get__(self, instance: Optional[I], owner: Type["ASyncMethodDescriptor"]) -> Union[Self, "ASyncBoundMethod[I, P, T]"]:
+    def __get__(self, instance: I, owner: Type[I]) -> "ASyncBoundMethod[I, P, T]":...
+    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[Self, "ASyncBoundMethod[I, P, T]"]:
         if instance is None:
             return self
         try:
@@ -73,10 +73,10 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
     max: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], P], T]
     sum: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], P], T]
     @overload
-    def __get__(self, instance: None, owner: Type["ASyncMethodDescriptorSyncDefault"] = None) -> "ASyncMethodDescriptorSyncDefault[I, P, T]":...
+    def __get__(self, instance: None, owner: Type[I] = None) -> "ASyncMethodDescriptorSyncDefault[I, P, T]":...
     @overload
-    def __get__(self, instance: I, owner: Type["ASyncMethodDescriptorSyncDefault"] = None) -> "ASyncBoundMethodSyncDefault[I, P, T]":...
-    def __get__(self, instance: Optional[I], owner: Type["ASyncMethodDescriptorSyncDefault"] = None) -> "Union[ASyncMethodDescriptorSyncDefault, ASyncBoundMethodSyncDefault[I, P, T]]":
+    def __get__(self, instance: I, owner: Type[I] = None) -> "ASyncBoundMethodSyncDefault[I, P, T]":...
+    def __get__(self, instance: Optional[I], owner: Type[I] = None) -> "Union[ASyncMethodDescriptorSyncDefault, ASyncBoundMethodSyncDefault[I, P, T]]":
         if instance is None:
             return self
         try:
@@ -100,10 +100,10 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
     max: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], T]
     sum: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], T]
     @overload
-    def __get__(self, instance: None, owner: Type["ASyncMethodDescriptorAsyncDefault"]) -> "ASyncMethodDescriptorAsyncDefault[I, P, T]":...
+    def __get__(self, instance: None, owner: Type[I]) -> "ASyncMethodDescriptorAsyncDefault[I, P, T]":...
     @overload
-    def __get__(self, instance: I, owner: Type["ASyncMethodDescriptorAsyncDefault"]) -> "ASyncBoundMethodAsyncDefault[I, P, T]":...
-    def __get__(self, instance: Optional[I], owner: Type["ASyncMethodDescriptorAsyncDefault"]) -> "Union[ASyncMethodDescriptorAsyncDefault, ASyncBoundMethodAsyncDefault[I, P, T]]":
+    def __get__(self, instance: I, owner: Type[I]) -> "ASyncBoundMethodAsyncDefault[I, P, T]":...
+    def __get__(self, instance: Optional[I], owner: Type[I]) -> "Union[ASyncMethodDescriptorAsyncDefault, ASyncBoundMethodAsyncDefault[I, P, T]]":
         if instance is None:
             return self
         try:
@@ -200,7 +200,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
-    def __get__(self, instance: Any, owner: Any) -> ASyncFunctionSyncDefault[P, T]:
+    def __get__(self, instance: Optional[I], owner: Type[I]) -> ASyncFunctionSyncDefault[P, T]:
         return ASyncBoundMethod.__get__(self, instance, owner)
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
@@ -216,7 +216,7 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
         return ASyncBoundMethod.__call__(self, *args, **kwargs)
 
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
-    def __get__(self, instance: I, owner: Any) -> ASyncFunctionAsyncDefault[P, T]:
+    def __get__(self, instance: I, owner: Type[I]) -> ASyncFunctionAsyncDefault[P, T]:
         return ASyncBoundMethod.__get__(self, instance, owner)
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
