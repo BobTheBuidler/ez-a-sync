@@ -2,6 +2,8 @@
 import asyncio
 import asyncio.futures
 import logging
+import traceback
+from types import TracebackType
 
 from a_sync._typing import *
 from a_sync.primitives.queue import Queue
@@ -29,7 +31,7 @@ async def exhaust_iterator(iterator: AsyncIterator[T], *, queue: Optional[asynci
             queue.put_nowait(thing)
 
 
-async def exhaust_iterators(iterators, *, queue: Optional[asyncio.Queue] = None) -> None:
+async def exhaust_iterators(iterators, *, queue: Optional[asyncio.Queue] = None, join: bool = False) -> None:
     """    
     Description:
         Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.
@@ -39,6 +41,7 @@ async def exhaust_iterators(iterators, *, queue: Optional[asyncio.Queue] = None)
     Args:
         iterators: A sequence of async iterators to be exhausted concurrently.
         queue (Optional[asyncio.Queue]): An optional queue where items from all iterators will be placed. If None, items are simply consumed.
+        join (Optional[bool]): If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.
 
     Returns:
         None
@@ -48,6 +51,10 @@ async def exhaust_iterators(iterators, *, queue: Optional[asyncio.Queue] = None)
             raise x
     if queue:
         queue.put_nowait(_Done())
+        if join:
+            await queue.join()
+    elif join:
+        raise ValueError("You must provide a `queue` to use kwarg `join`")
 
     
 T0 = TypeVar('T0')
@@ -101,30 +108,45 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
     Note:
         This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability.
     """
+    # hypothesis idea: _Done should never be exposed to user, works for all desired input types
     queue: Queue[Union[T, _Done]] = Queue()
     
     def _as_yielded_done_callback(t: asyncio.Task) -> None:
+        if t.cancelled():
+            return
         if e := t.exception(): 
+            traceback.extract_stack
+            traceback.clear_frames(e.__traceback__)
             queue.put_nowait(_Done(e))
 
     task = asyncio.create_task(
-        coro=exhaust_iterators(iterators, queue=queue), 
+        coro=exhaust_iterators(iterators, queue=queue, join=True), 
         name=f"a_sync.as_yielded queue populating task for {iterators}",
     )
     
     task.add_done_callback(_as_yielded_done_callback)
 
     while not task.done():
-        for item in await queue.get_all():
+        try:
+            items = await queue.get_all()
+        except asyncio.CancelledError:
+            # cleanup lingering objects and reraise
+            del task
+            del queue
+            raise
+        for item in items:
+            queue.task_done()
             if isinstance(item, _Done):
+                assert queue.empty()
+                del task
+                del queue
                 if item._exc:
-                    raise item._exc
+                    raise type(item._exc)(*item._exc.args).with_traceback(item._tb) from item._exc.__cause__
                 return
             yield item
-            
-    # ensure it isn't done due to an exception
-    if e := task.exception():
-        raise e
+
+    # ensure it isn't done due to an internal exception
+    await task
 
         
 class _Done:
@@ -135,12 +157,8 @@ class _Done:
     """
     def __init__(self, exc: Optional[Exception] = None) -> None:
         self._exc = exc
-
-def _get_ready(queue) -> List[T]:
-    try:
-        return queue.get_all_nowait()
-    except asyncio.QueueEmpty:
-        return []
-
+    @property
+    def _tb(self) -> TracebackType:
+        return self._exc.__traceback__
 
 __all__ = ["as_yielded", "exhaust_iterator", "exhaust_iterators"]
