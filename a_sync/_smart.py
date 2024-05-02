@@ -27,7 +27,7 @@ class _SmartFutureMixin(Generic[T]):
             return self.result()  # May raise too.
         self._asyncio_future_blocking = True
         self._waiters.add(current_task := asyncio.current_task(self._loop))
-        current_task.add_done_callback(self._waiter_done_callback)
+        current_task.add_done_callback(self._waiter_done_cleanup_callback)
         logger.debug("awaiting %s", self)
         yield self  # This tells Task to wait for completion.
         if not self.done():
@@ -36,12 +36,17 @@ class _SmartFutureMixin(Generic[T]):
     @property
     def num_waiters(self: "SmartFuture") -> int:
         # NOTE: we check .done() because the callback may not have ran yet and its very lightweight
-        return sum(getattr(waiter, 'num_waiters', 0) + 1 for waiter in self._waiters if not waiter.done())
-    def _waiter_done_callback(self, waiter: "_SmartFutureMixin") -> None:
+        if self.done():
+            return 0
+        return sum(getattr(waiter, 'num_waiters', 1) for waiter in self._waiters)
+    def _waiter_done_cleanup_callback(self: "SmartFuture", waiter: "SmartTask") -> None:
         "Removes the waiter from _waiters, and _queue._futs if applicable"
-        self._waiters.remove(waiter)
-        if self._queue and not self._waiters:
-            self._queue._futs.pop(self._key)
+        if not self.done():
+            self._waiters.remove(waiter)
+    def _self_done_cleanup_callback(self: "SmartFuture") -> None:
+        self._waiters.clear()
+        if queue := self._queue:
+            queue._futs.pop(self._key)
 
 
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
@@ -60,6 +65,7 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         if key:
             self._key = key
         self._waiters = weakref.WeakSet()
+        self.add_done_callback(SmartFuture._self_done_cleanup_callback)
     def __repr__(self):
         return f"<{type(self).__name__} key={self._key} waiters={self.num_waiters} {self._state}>"
     def __lt__(self, other: "SmartFuture[T]") -> bool:
@@ -88,6 +94,7 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
     ) -> None:
         super().__init__(coro, loop=loop, name=name)
         self._waiters: Set["asyncio.Task[T]"] = set()
+        self.add_done_callback(SmartTask._self_done_cleanup_callback)
 
 def smart_task_factory(loop: asyncio.AbstractEventLoop, coro: Awaitable[T]) -> SmartTask[T]:
     return SmartTask(coro, loop=loop)
