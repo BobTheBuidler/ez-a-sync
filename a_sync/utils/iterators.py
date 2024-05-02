@@ -8,6 +8,7 @@ from a_sync.primitives.queue import Queue
 
 logger = logging.getLogger(__name__)
 
+
 async def exhaust_iterator(iterator: AsyncIterator[T], *, queue: Optional[asyncio.Queue] = None) -> None:
     """
     Description:
@@ -26,7 +27,8 @@ async def exhaust_iterator(iterator: AsyncIterator[T], *, queue: Optional[asynci
         if queue:
             logger.debug('putting %s from %s to queue %s', thing, iterator, queue)
             queue.put_nowait(thing)
-        
+
+
 async def exhaust_iterators(iterators, *, queue: Optional[asyncio.Queue] = None) -> None:
     """    
     Description:
@@ -41,9 +43,12 @@ async def exhaust_iterators(iterators, *, queue: Optional[asyncio.Queue] = None)
     Returns:
         None
     """
-    await asyncio.gather(*[exhaust_iterator(iterator, queue=queue) for iterator in iterators]) 
+    for x in await asyncio.gather(*[exhaust_iterator(iterator, queue=queue) for iterator in iterators], return_exceptions=True):
+        if isinstance(x, Exception):
+            raise x
     if queue:
         queue.put_nowait(_Done())
+
     
 T0 = TypeVar('T0')
 T1 = TypeVar('T1')
@@ -96,28 +101,29 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
     Note:
         This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability.
     """
-    queue: Queue[T] = Queue()
+    queue: Queue[Union[T, _Done]] = Queue()
     task = asyncio.create_task(
         coro=exhaust_iterators(iterators, queue=queue), 
         name=f"a_sync.as_yielded queue populating task for {iterators}",
     )
     
     def _as_yielded_done_callback(t: asyncio.Task) -> None:
-        if (e := t.exception()) and not next_fut.done(): 
-            next_fut.set_exception(e)
+        if e := t.exception(): 
+            queue.put_nowait(_Done(e))
+
     task.add_done_callback(_as_yielded_done_callback)
     
     while not task.done():
-        next_fut = asyncio.get_event_loop().create_future()
         get_task = asyncio.create_task(
             coro=queue.get(), 
             name=f"a_sync.as_yielded {queue} getter for {iterators}",
         )
         # if an exception occurs in this loop we don't need to see the task destroyed log
         get_task._log_destroy_pending = False
-        asyncio.futures._chain_future(get_task, next_fut)  # type: ignore [attr-defined]
-        for item in (await next_fut, *_get_ready(queue)):
+        for item in await queue.get_all():
             if isinstance(item, _Done):
+                if item._exc:
+                    raise item._exc
                 return
             yield item
             
@@ -132,7 +138,8 @@ class _Done:
 
     This class acts as a marker to indicate that all items have been processed and the asynchronous iteration can be concluded. It is used internally within the implementation of as_yielded to efficiently manage the termination of the iteration process once all source iterators have been exhausted.
     """
-    pass
+    def __init__(self, exc: Optional[Exception] = None) -> None:
+        self._exc = exc
 
 def _get_ready(queue) -> List[T]:
     try:
