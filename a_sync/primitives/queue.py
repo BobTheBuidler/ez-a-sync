@@ -151,10 +151,14 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         if self._workers.done():
             worker_subtasks: List["asyncio.Task[NoReturn]"] = self._workers._workers
             for worker in worker_subtasks:
-                if worker.done():
-                    raise worker.exception()
+                if worker.done():  # its only done if its broken
+                    exc = worker.exception()
+                    # re-raise with clean traceback
+                    raise type(exc)(*exc.args).with_traceback(exc.__traceback__)
             # this should never be reached, but just in case
-            raise self._workers.exception()
+            exc = self._workers.exception()
+            # re-raise with clean traceback
+            raise type(exc)(*exc.args).with_traceback(exc.__traceback__)
     @functools.cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
         logger.debug("starting worker task for %s", self)
