@@ -320,10 +320,6 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
     def _get(self):
         fut, args, kwargs = super()._get()
         return args, kwargs, fut()
-    #def _put(self, item: Tuple["weakref.ref[_smart.SmartFuture[T]]", tuple, dict], heappush=heapq.heappush):
-    #    fut = item[0]()
-    #    heappush(self._queue, fut)
-    #    self._queue.index(fut)
     async def __worker_coro(self) -> NoReturn:
         args: P.args
         kwargs: P.kwargs
