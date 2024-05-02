@@ -62,8 +62,12 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         self._waiters = weakref.WeakSet()
     def __repr__(self):
         return f"<{type(self).__name__} key={self._key} waiters={self.num_waiters} {self._state}>"
-    def __lt__(self, other: "SmartFuture") -> bool:
+    def __lt__(self, other: "SmartFuture[T]") -> bool:
         """heap considers lower values as higher priority so a future with more waiters will be 'less than' a future with less waiters."""
+        #other = other_ref()
+        #if other is None:
+        #    # garbage collected refs should always process first so they can be popped from the queue
+        #    return False
         return self.num_waiters > other.num_waiters
 
 def create_future(

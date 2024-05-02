@@ -231,6 +231,16 @@ def _validate_args(i: int, can_return_less: bool) -> None:
 
 
 
+class _SmartFutureRef(weakref.ref, Generic[T]):
+    def __lt__(self, other: "_SmartFutureRef[T]") -> bool:
+        strong_self = self()
+        if strong_self is None:
+            return True
+        strong_other = other()
+        if strong_other is None:
+            return False
+        return strong_self < strong_other
+
 class _PriorityQueueMixin(Generic[T]):
     def _init(self, maxsize):
         self._queue: List[T] = []
@@ -290,7 +300,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             return fut
         fut = self._create_future(key)
         self._futs[key] = fut
-        await Queue.put(self, (fut, args, kwargs))
+        await Queue.put(self, (_SmartFutureRef(fut), args, kwargs))
         return fut
     def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> _smart.SmartFuture[V]:
         self._ensure_workers()
@@ -299,40 +309,47 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             return fut
         fut = self._create_future(key)
         self._futs[key] = fut
-        Queue.put_nowait(self, (weakref.proxy(fut), args, kwargs))
+        Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
         return fut
     def _create_future(self, key: _smart._Key) -> "asyncio.Future[V]":
         return _smart.create_future(queue=self, key=key, loop=self._loop)
     def _get(self):
         fut, args, kwargs = super()._get()
-        return args, kwargs, fut
+        return args, kwargs, fut()
+    #def _put(self, item: Tuple["weakref.ref[_smart.SmartFuture[T]]", tuple, dict], heappush=heapq.heappush):
+    #    fut = item[0]()
+    #    heappush(self._queue, fut)
+    #    self._queue.index(fut)
     async def __worker_coro(self) -> NoReturn:
         args: P.args
         kwargs: P.kwargs
         fut: _smart.SmartFuture[V]
         while True:
             try:
-                args, kwargs, fut = await self.get()
-                if fut is None:
-                    # the weakref was already cleaned up, we don't need to process this item
-                    self.task_done()
-                    continue
-                logger.debug("processing %s", fut)
-                result = await self.func(*args, **kwargs)
-                fut.set_result(result)
-            except asyncio.exceptions.InvalidStateError:
-                logger.error("cannot set result for %s %s: %s", self.func.__name__, fut, result)
-            except Exception as e:
-                logger.debug("%s: %s", type(e).__name__, e)
                 try:
-                    fut.set_exception(e)
+                    args, kwargs, fut = await self.get()
+                    if fut is None:
+                        # the weakref was already cleaned up, we don't need to process this item
+                        self.task_done()
+                        continue
+                    logger.debug("processing %s", fut)
+                    result = await self.func(*args, **kwargs)
+                    fut.set_result(result)
                 except asyncio.exceptions.InvalidStateError:
-                    logger.error("cannot set exception for %s %s: %s", self.func.__name__, fut, e)
-                except UnboundLocalError as u:
-                    logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
-                    if str(e) != "local variable 'fut' referenced before assignment":
-                        logger.exception(u)
-                        raise u
-                    logger.exception(e)
-                    raise e
-            self.task_done()
+                    logger.error("cannot set result for %s %s: %s", self.func.__name__, fut, result)
+                except Exception as e:
+                    logger.debug("%s: %s", type(e).__name__, e)
+                    try:
+                        fut.set_exception(e)
+                    except asyncio.exceptions.InvalidStateError:
+                        logger.error("cannot set exception for %s %s: %s", self.func.__name__, fut, e)
+                    except UnboundLocalError as u:
+                        if str(e) != "local variable 'fut' referenced before assignment":
+                            logger.exception(u)
+                            raise u
+                        raise e
+                self.task_done()
+            except Exception as e:
+                logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
+                logger.exception(e)
+                raise e
