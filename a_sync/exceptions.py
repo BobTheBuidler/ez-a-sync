@@ -87,10 +87,10 @@ class MappingError(Exception):
         self.mapping = mapping
 
 class MappingIsEmptyError(MappingError):
-    msg = "TaskMapping does not contain anything to yield"
+    _msg = "TaskMapping does not contain anything to yield"
 
 class MappingNotEmptyError(MappingError):
-    msg = "TaskMapping already contains some data. In order to use `map`, you need a fresh one"
+    _msg = "TaskMapping already contains some data. In order to use `map`, you need a fresh one"
 
 class PersistedTaskException(Exception):
     def __init__(self, exc: E, task: asyncio.Task) -> None:
