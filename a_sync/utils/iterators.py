@@ -102,24 +102,19 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
         This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability.
     """
     queue: Queue[Union[T, _Done]] = Queue()
-    task = asyncio.create_task(
-        coro=exhaust_iterators(iterators, queue=queue), 
-        name=f"a_sync.as_yielded queue populating task for {iterators}",
-    )
     
     def _as_yielded_done_callback(t: asyncio.Task) -> None:
         if e := t.exception(): 
             queue.put_nowait(_Done(e))
 
-    task.add_done_callback(_as_yielded_done_callback)
+    task = asyncio.create_task(
+        coro=exhaust_iterators(iterators, queue=queue), 
+        name=f"a_sync.as_yielded queue populating task for {iterators}",
+    )
     
+    task.add_done_callback(_as_yielded_done_callback)
+
     while not task.done():
-        get_task = asyncio.create_task(
-            coro=queue.get(), 
-            name=f"a_sync.as_yielded {queue} getter for {iterators}",
-        )
-        # if an exception occurs in this loop we don't need to see the task destroyed log
-        get_task._log_destroy_pending = False
         for item in await queue.get_all():
             if isinstance(item, _Done):
                 if item._exc:
