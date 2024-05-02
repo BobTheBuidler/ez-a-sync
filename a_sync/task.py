@@ -141,12 +141,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     def __hash__(self) -> int:
         return id(self)
     
-    async def __aenter__(self) -> Self:
-        return self
-
-    async def __aexit__(self, *_) -> None:
-        await self.close()
-    
     def __setitem__(self, item: Any, value: Any) -> None:
         raise NotImplementedError("You cannot manually set items in a TaskMapping")
     
@@ -434,9 +428,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._destroyed = True
             self.clear(cancel=True)
             # _queue is a cached_property, we don't want to create it if it doesn't exist
-            if queue := self.__dict__.pop("_queue", None):
-                queue: ProcessingQueue
-                await queue.close()
+            if self._queue:
+                del self._queue
             else:
                 # we need to let the loop run once so the tasks can fully cancel
                 await asyncio.sleep(0)
