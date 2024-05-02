@@ -100,7 +100,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>  <span class="c1"># May raise too.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_asyncio_future_blocking</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">current_task</span> <span class="o">:=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">current_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loop</span><span class="p">))</span>
-        <span class="n">current_task</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waiter_done_callback</span><span class="p">)</span>
+        <span class="n">current_task</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waiter_done_cleanup_callback</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;awaiting </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="k">yield</span> <span class="bp">self</span>  <span class="c1"># This tells Task to wait for completion.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
@@ -109,12 +109,17 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">num_waiters</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;SmartFuture&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># NOTE: we check .done() because the callback may not have ran yet and its very lightweight</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">waiter</span><span class="p">,</span> <span class="s1">&#39;num_waiters&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">waiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">waiter</span><span class="o">.</span><span class="n">done</span><span class="p">())</span>
-    <span class="k">def</span> <span class="nf">_waiter_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waiter</span><span class="p">:</span> <span class="s2">&quot;_SmartFutureMixin&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">waiter</span><span class="p">,</span> <span class="s1">&#39;num_waiters&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">waiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_waiter_done_cleanup_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="n">waiter</span><span class="p">:</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="s2">&quot;Removes the waiter from _waiters, and _queue._futs if applicable&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">waiter</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">_futs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">waiter</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_self_done_cleanup_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;SmartFuture&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">queue</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">:</span>
+            <span class="n">queue</span><span class="o">.</span><span class="n">_futs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="SmartFuture">
@@ -136,12 +141,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_key</span> <span class="o">=</span> <span class="n">key</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">WeakSet</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">WeakSet</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="n">SmartFuture</span><span class="o">.</span><span class="n">_self_done_cleanup_callback</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> key=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="si">}</span><span class="s2"> waiters=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_waiters</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
-    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;SmartFuture&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;SmartFuture[T]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;heap considers lower values as higher priority so a future with more waiters will be &#39;less than&#39; a future with less waiters.&quot;&quot;&quot;</span>
+        <span class="c1">#other = other_ref()</span>
+        <span class="c1">#if other is None:</span>
+        <span class="c1">#    # garbage collected refs should always process first so they can be popped from the queue</span>
+        <span class="c1">#    return False</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_waiters</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">num_waiters</span></div>
 
 
@@ -169,7 +179,8 @@
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">coro</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;asyncio.Task[T]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;asyncio.Task[T]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="n">SmartTask</span><span class="o">.</span><span class="n">_self_done_cleanup_callback</span><span class="p">)</span></div>
 </div>
 
 

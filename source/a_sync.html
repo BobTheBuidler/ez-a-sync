@@ -1393,6 +1393,12 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._Queue.maxsize"><code class="docutils literal notranslate"><span class="pre">_Queue.maxsize</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._SmartFutureRef"><code class="docutils literal notranslate"><span class="pre">_SmartFutureRef</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._SmartFutureRef.__call__"><code class="docutils literal notranslate"><span class="pre">_SmartFutureRef.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._SmartFutureRef.__init__"><code class="docutils literal notranslate"><span class="pre">_SmartFutureRef.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._SmartFutureRef.__new__"><code class="docutils literal notranslate"><span class="pre">_SmartFutureRef.__new__()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin"><code class="docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._get"><code class="docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin._get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue._VariablePriorityQueueMixin._get_key"><code class="docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin._get_key()</span></code></a></li>
@@ -2302,12 +2308,28 @@ it erases the context exception value.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync._smart.SmartFuture._waiter_done_callback">
-<span class="sig-name descname"><span class="pre">_waiter_done_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartFuture._waiter_done_callback" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync._smart.SmartFuture._self_done_cleanup_callback">
+<span class="sig-name descname"><span class="pre">_self_done_cleanup_callback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartFuture._self_done_cleanup_callback" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> (<a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync._smart.SmartFuture._waiter_done_cleanup_callback">
+<span class="sig-name descname"><span class="pre">_waiter_done_cleanup_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartFuture._waiter_done_cleanup_callback" title="Link to this definition"></a></dt>
 <dd><p>Removes the waiter from _waiters, and _queue._futs if applicable</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>waiter</strong> (<em>_SmartFutureMixin</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>)</p></li>
+<li><p><strong>waiter</strong> (<a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -2508,12 +2530,28 @@ it erases the context exception value.</p>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync._smart.SmartTask._waiter_done_callback">
-<span class="sig-name descname"><span class="pre">_waiter_done_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartTask._waiter_done_callback" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync._smart.SmartTask._self_done_cleanup_callback">
+<span class="sig-name descname"><span class="pre">_self_done_cleanup_callback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartTask._self_done_cleanup_callback" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> (<a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync._smart.SmartTask._waiter_done_cleanup_callback">
+<span class="sig-name descname"><span class="pre">_waiter_done_cleanup_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartTask._waiter_done_cleanup_callback" title="Link to this definition"></a></dt>
 <dd><p>Removes the waiter from _waiters, and _queue._futs if applicable</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>waiter</strong> (<em>_SmartFutureMixin</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>self</strong> (<a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>)</p></li>
+<li><p><strong>waiter</strong> (<a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -6389,7 +6427,7 @@ enhanced error management by wrapping exceptions in a custom exception.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<em>I</em>)</p></li>
-<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a><em>[</em><em>I</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -6451,7 +6489,7 @@ enhanced error management by wrapping exceptions in a custom exception.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instances</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.12)"><em>AsyncIterable</em></a><em>[</em><em>I</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><em>I</em><em>]</em>)</p></li>
-<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>)</p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a><em>[</em><em>I</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
 </ul>
@@ -6907,7 +6945,7 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<em>I</em>)</p></li>
-<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a><em>[</em><em>I</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -6928,7 +6966,7 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instances</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.12)"><em>AsyncIterable</em></a><em>[</em><em>I</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><em>I</em><em>]</em>)</p></li>
-<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>)</p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a><em>[</em><em>I</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
 </ul>
@@ -10112,7 +10150,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<em>I</em>)</p></li>
-<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a><em>[</em><em>I</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -10174,7 +10212,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instances</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.12)"><em>AsyncIterable</em></a><em>[</em><em>I</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><em>I</em><em>]</em>)</p></li>
-<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>)</p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a><em>[</em><em>I</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
 </ul>
@@ -10425,7 +10463,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<em>I</em>)</p></li>
-<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a><em>[</em><em>I</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -10446,7 +10484,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instances</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.12)"><em>AsyncIterable</em></a><em>[</em><em>I</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><em>I</em><em>]</em>)</p></li>
-<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>)</p></li>
+<li><p><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a><em>[</em><em>I</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
 </ul>
