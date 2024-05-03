@@ -171,15 +171,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         try:
             if self._init_loader:
                 while not self._init_loader.done():
-                    # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
-                    done: Set[asyncio.Task]
-                    done, pending = await asyncio.wait(
-                        [create_task(self._init_loader_next(), log_destroy_pending=False), self._init_loader],
-                        return_when=asyncio.FIRST_COMPLETED
-                    )
-                    for task in done:
-                        # check for exceptions
-                        await task
+                    await self._wait_for_next_key()
                     while unyielded := [key for key in self if key not in yielded]:
                         if ready := {key: task for key in unyielded if (task:=self[key]).done()}:
                             if pop:
@@ -445,6 +437,16 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self.clear(cancel=True)
             # we need to let the loop run once so the tasks can fully cancel
             await asyncio.sleep(0)
+    
+    async def _wait_for_next_key(self) -> None:
+        # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
+        done, pending = await asyncio.wait(
+            [create_task(self._init_loader_next(), log_destroy_pending=False), self._init_loader],
+            return_when=asyncio.FIRST_COMPLETED
+        )
+        for task in done:
+            # check for exceptions
+            await task
 
 
 class _NoRunningLoop(Exception):
@@ -527,8 +529,8 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
     _pop: bool = False
     def __init__(self, view: Iterable[T], task_mapping: TaskMapping[K, V], pop: bool = False) -> None:
         self.__view__ = view
-        # "weakref.ProxyType[TaskMapping]"
         self.__mapping__: TaskMapping = weakref.proxy(task_mapping)
+        "actually a weakref.ProxyType[TaskMapping] but then type hints weren't working"
         if pop:
             self._pop = True
     def __iter__(self) -> Iterator[T]:
@@ -551,93 +553,81 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
 class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
     _get_from_item = lambda self, item: _get_key(item)
     async def __aiter__(self) -> AsyncIterator[K]:
-        self.__mapping__._if_pop_check_destroyed(self._pop)
+        # strongref
+        mapping = self.__mapping__
+        mapping._if_pop_check_destroyed(self._pop)
         yielded = set()
         for key in self.__load_existing():
             yielded.add(key)
             # there is no chance of duplicate keys here
             yield key
-        if self.__mapping__._init_loader is None:
+        if mapping._init_loader is None:
+            await mapping._if_pop_clear(self._pop)
             return
         async for key in self.__load_init_loader(yielded):
             yielded.add(key)
             yield key
         if self._pop:
+            # don't need to check yielded since we've been popping them as we go
             for key in self.__load_existing():
                 yield key
-            await self.__mapping__._if_pop_clear(True)
+            await mapping._if_pop_clear(True)
         else:
             for key in self.__load_existing():
                 if key not in yielded:
                     yield key
-        
     def __load_existing(self) -> Iterator[K]:
-        keys = tuple(self.__mapping__)
+        # strongref
+        mapping = self.__mapping__
         if self._pop:
-            for key in keys:
-                self.__mapping__.pop(key)
+            for key in tuple(mapping):
+                mapping.pop(key)
                 yield key
         else:
-            for key in keys:
+            for key in tuple(mapping):
                 yield key
     async def __load_init_loader(self, yielded: Set[K]) -> AsyncIterator[K]:
+        # strongref
+        mapping = self.__mapping__
         if self._pop:
-            while not self.__mapping__._init_loader.done():
-                awaitables = [
-                    # returns first when new keys are ready
-                    self.__mapping__._init_loader_next(),
-                    # returns first on exception
-                    self.__mapping__._init_loader,
-                ]
-                done, pending = await asyncio.wait(awaitables, return_when=asyncio.FIRST_COMPLETED)
-                for fut in done:
-                    # NOTE: this fut will either return items from _init_loader_next, 
-                    #      None from init loader successful completion or will raise something
-                    #      In any case we don't need the results
-                    await fut
-                for key in [k for k in self.__mapping__ if k not in yielded]:
-                    self.__mapping__.pop(key)
+            while not mapping._init_loader.done():
+                await mapping._wait_for_next_key()
+                for key in [k for k in mapping if k not in yielded]:
+                    mapping.pop(key)
                     yield key
         else:
-            while not self.__mapping__._init_loader.done():
-                awaitables = [
-                    # returns first when new keys are ready
-                    self.__mapping__._init_loader_next(),
-                    # returns first on exception
-                    self.__mapping__._init_loader,
-                ]
-                done, pending = await asyncio.wait(awaitables, return_when=asyncio.FIRST_COMPLETED)
-                for fut in done:
-                    # NOTE: this fut will either return items from _init_loader_next, 
-                    #      None from init loader successful completion or will raise something.
-                    #      In any case we don't need the results
-                    await fut
-                for key in [k for k in self.__mapping__ if k not in yielded]:
+            while not mapping._init_loader.done():
+                await mapping._wait_for_next_key()
+                for key in [k for k in mapping if k not in yielded]:
                     yield key
         # check for any exceptions
-        await self.__mapping__._init_loader
+        await mapping._init_loader
 
 class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
     _get_from_item = lambda self, item: item
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
-        self.__mapping__._if_pop_check_destroyed(self._pop)
+        # strongref
+        mapping = self.__mapping__
+        mapping._if_pop_check_destroyed(self._pop)
         if self._pop:
-            async for key in self.__mapping__.keys():
-                yield key, await self.__mapping__.pop(key)
+            async for key in mapping.keys():
+                yield key, await mapping.pop(key)
         else:
-            async for key in self.__mapping__.keys():
-                yield key, await self.__mapping__[key]
+            async for key in mapping.keys():
+                yield key, await mapping[key]
     
 class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
     _get_from_item = lambda self, item: _get_value(item)
     async def __aiter__(self) -> AsyncIterator[V]:
-        self.__mapping__._if_pop_check_destroyed(self._pop)
+        # strongref
+        mapping = self.__mapping__
+        mapping._if_pop_check_destroyed(self._pop)
         if self._pop:
-            async for key in self.__mapping__.keys():
-                yield await self.__mapping__.pop(key)
+            async for key in mapping.keys():
+                yield await mapping.pop(key)
         else:
-            async for key in self.__mapping__.keys():
-                yield await self.__mapping__[key]
+            async for key in mapping.keys():
+                yield await mapping[key]
 
 
 __all__ = ["create_task", "TaskMapping", "TaskMappingKeys", "TaskMappingValues", "TaskMappingItems"]
