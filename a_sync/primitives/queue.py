@@ -115,6 +115,8 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         return self.put_nowait(*args, **kwargs)
     def __del__(self) -> None:
+        if self._closed:
+            return
         if self._unfinished_tasks > 0:
             context = {
                 'message': f'{self} was destroyed but has work pending!',
@@ -123,6 +125,8 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     @property
     def name(self) -> str:
         return self._name or repr(self)
+    def close(self) -> None:
+        self._closed = True
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         self._ensure_workers()
         if self._no_futs:
