@@ -562,8 +562,6 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         async for key in self.__load_init_loader(yielded):
             yielded.add(key)
             yield key
-        if e := self.__mapping__._init_loader.exception():
-            raise e
         if self._pop:
             for key in self.__load_existing():
                 yield key
@@ -585,15 +583,39 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
     async def __load_init_loader(self, yielded: Set[K]) -> AsyncIterator[K]:
         if self._pop:
             while not self.__mapping__._init_loader.done():
-                for key, fut in await self.__mapping__._init_loader_next():
-                    if key not in yielded:
-                        self.__mapping__.pop(key)
-                        yield key
+                awaitables = [
+                    # returns first when new keys are ready
+                    self.__mapping__._init_loader_next(),
+                    # returns first on exception
+                    self.__mapping__._init_loader,
+                ]
+                done, pending = await asyncio.wait(awaitables, return_when=asyncio.FIRST_COMPLETED)
+                for fut in done:
+                    # NOTE: this fut will either return items from _init_loader_next, 
+                    #      None from init loader successful completion or will raise something
+                    #      In any case we don't need the results
+                    await fut
+                for key in [k for k in self.__mapping__ if k not in yielded]:
+                    self.__mapping__.pop(key)
+                    yield key
         else:
             while not self.__mapping__._init_loader.done():
-                for key, fut in await self.__mapping__._init_loader_next():
-                    if key not in yielded:
-                        yield key
+                awaitables = [
+                    # returns first when new keys are ready
+                    self.__mapping__._init_loader_next(),
+                    # returns first on exception
+                    self.__mapping__._init_loader,
+                ]
+                done, pending = await asyncio.wait(awaitables, return_when=asyncio.FIRST_COMPLETED)
+                for fut in done:
+                    # NOTE: this fut will either return items from _init_loader_next, 
+                    #      None from init loader successful completion or will raise something.
+                    #      In any case we don't need the results
+                    await fut
+                for key in [k for k in self.__mapping__ if k not in yielded]:
+                    yield key
+        # check for any exceptions
+        await self.__mapping__._init_loader
 
 class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
     _get_from_item = lambda self, item: item
