@@ -1234,7 +1234,6 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.__call__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__call__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.__init__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.__stop_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__stop_workers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue.__worker_coro"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__worker_coro()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._create_future"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._create_future()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue._ensure_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._ensure_workers()</span></code></a></li>
@@ -1481,7 +1480,6 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__call__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__call__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__init__"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__init__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__stop_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__stop_workers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue.__worker_coro"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue.__worker_coro()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._create_future"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._create_future()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ProcessingQueue._ensure_workers"><code class="docutils literal notranslate"><span class="pre">ProcessingQueue._ensure_workers()</span></code></a></li>
@@ -3440,10 +3438,13 @@ set self.__traceback__ to tb and return self.</p>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingError.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingError.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p></li>
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -3461,13 +3462,13 @@ set self.__traceback__ to tb and return self.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingError.args" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingError._msg">
+<span class="sig-name descname"><span class="pre">_msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.exceptions.MappingError._msg" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.msg">
-<span class="sig-name descname"><span class="pre">msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.exceptions.MappingError.msg" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.args">
+<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingError.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3478,10 +3479,13 @@ set self.__traceback__ to tb and return self.</p>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.MappingError" title="a_sync.exceptions.MappingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingError</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p></li>
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -3500,17 +3504,12 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError._msg">
-<span class="sig-name descname"><span class="pre">_msg</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TaskMapping</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">contain</span> <span class="pre">anything</span> <span class="pre">to</span> <span class="pre">yield'</span></em><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError._msg" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TaskMapping</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">contain</span> <span class="pre">anything</span> <span class="pre">to</span> <span class="pre">yield'</span></em><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError._msg" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.msg">
-<span class="sig-name descname"><span class="pre">msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.msg" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3521,10 +3520,13 @@ set self.__traceback__ to tb and return self.</p>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.MappingError" title="a_sync.exceptions.MappingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingError</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p></li>
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -3543,17 +3545,12 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError._msg">
-<span class="sig-name descname"><span class="pre">_msg</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TaskMapping</span> <span class="pre">already</span> <span class="pre">contains</span> <span class="pre">some</span> <span class="pre">data.</span> <span class="pre">In</span> <span class="pre">order</span> <span class="pre">to</span> <span class="pre">use</span> <span class="pre">`map`,</span> <span class="pre">you</span> <span class="pre">need</span> <span class="pre">a</span> <span class="pre">fresh</span> <span class="pre">one'</span></em><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError._msg" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TaskMapping</span> <span class="pre">already</span> <span class="pre">contains</span> <span class="pre">some</span> <span class="pre">data.</span> <span class="pre">In</span> <span class="pre">order</span> <span class="pre">to</span> <span class="pre">use</span> <span class="pre">`map`,</span> <span class="pre">you</span> <span class="pre">need</span> <span class="pre">a</span> <span class="pre">fresh</span> <span class="pre">one'</span></em><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError._msg" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.msg">
-<span class="sig-name descname"><span class="pre">msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.msg" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -5546,6 +5543,19 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping.__cleanup">
+<span class="sig-name descname"><span class="pre">__cleanup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMapping.__cleanup" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em>[</em><em>None</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping.__getitem__">
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping.__getitem__" title="Link to this definition"></a></dt>
 <dd><p>x.__getitem__(y) &lt;==&gt; x[y]</p>
@@ -5618,10 +5628,13 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping._raise_if_empty">
-<span class="sig-name descname"><span class="pre">_raise_if_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._raise_if_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping._raise_if_empty" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_raise_if_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._raise_if_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping._raise_if_empty" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5646,6 +5659,16 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<em>K</em>, <em>Task</em>[<em>V</em>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.task.TaskMapping._wait_for_next_key">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_wait_for_next_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._wait_for_next_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping._wait_for_next_key" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -8164,16 +8187,6 @@ priority_semaphore = PrioritySemaphore(10)</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.ProcessingQueue.__stop_workers">
-<span class="sig-name descname"><span class="pre">__stop_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ProcessingQueue.__stop_workers" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ProcessingQueue.__worker_coro">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
@@ -8235,7 +8248,7 @@ priority_semaphore = PrioritySemaphore(10)</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ProcessingQueue.close">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ProcessingQueue.close" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ProcessingQueue.close" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -9182,7 +9195,7 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.SmartProcessingQueue.close">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.SmartProcessingQueue.close" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.SmartProcessingQueue.close" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -9383,6 +9396,19 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.TaskMapping.__cleanup">
+<span class="sig-name descname"><span class="pre">__cleanup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.TaskMapping.__cleanup" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em>[</em><em>None</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.TaskMapping.__getitem__">
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping.__getitem__" title="Link to this definition"></a></dt>
 <dd><p>x.__getitem__(y) &lt;==&gt; x[y]</p>
@@ -9455,10 +9481,13 @@ the queue.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.TaskMapping._raise_if_empty">
-<span class="sig-name descname"><span class="pre">_raise_if_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._raise_if_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping._raise_if_empty" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_raise_if_empty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._raise_if_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping._raise_if_empty" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -9483,6 +9512,16 @@ the queue.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<em>K</em>, <em>Task</em>[<em>V</em>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.TaskMapping._wait_for_next_key">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_wait_for_next_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping._wait_for_next_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping._wait_for_next_key" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
