@@ -11,6 +11,7 @@ from a_sync.a_sync._descriptor import ASyncDescriptor
 from a_sync.a_sync.function import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
 
 if TYPE_CHECKING:
+    from a_sync import TaskMapping
     from a_sync.a_sync.abstract import ASyncABC
 
 logger = logging.getLogger(__name__)
@@ -185,6 +186,19 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     def __bound_to_a_sync_instance__(self) -> bool:
         from a_sync.a_sync.abstract import ASyncABC
         return isinstance(self.__self__, ASyncABC)
+    def map(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> "TaskMapping[I, T]":
+        from a_sync import TaskMapping
+        return TaskMapping(self, *iterables, concurrency=concurrency, name=task_name, **kwargs)
+    async def any(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> bool:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).any(pop=True, sync=False)
+    async def all(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> bool:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).all(pop=True, sync=False)
+    async def min(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> T:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).min(pop=True, sync=False)
+    async def max(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> T:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).max(pop=True, sync=False)
+    async def sum(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> T:
+        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).sum(pop=True, sync=False)
     def _should_await(self, kwargs: dict) -> bool:
         if flag := _kwargs.get_flag_name(kwargs):
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
