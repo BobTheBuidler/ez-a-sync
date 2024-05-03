@@ -210,8 +210,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             await self._if_pop_clear(pop)
 
     def __delitem__(self, item: K) -> None:
-        task_or_fut = super().__getitem__(item)
-        if task_or_fut.done():
+        task_or_fut = dict.__getitem__(self, item)
+        if not task_or_fut.done():
             task_or_fut.cancel()
         super().__delitem__(item)
 
