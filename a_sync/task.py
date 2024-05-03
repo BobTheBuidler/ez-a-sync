@@ -126,7 +126,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                                 break
                         return await _wrapped_set_next(*new_args, **new_kwargs, __a_sync_recursion=__a_sync_recursion+1)
                     except TypeError as e2:
-                        raise e if str(e2) == "unsupported callable" else e2
+                        raise e.with_traceback(e.__traceback__) if str(e2) == "unsupported callable" else e2.with_traceback(e2.__traceback__)
             self._wrapped_func = _wrapped_set_next
             init_loader_queue: Queue[Tuple[K, "asyncio.Future[V]"]] = Queue()
             self.__init_loader_coro = exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue)
@@ -148,18 +148,15 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         try:
             return super().__getitem__(item)
         except KeyError:
-            try:
-                if self.concurrency:
-                    # NOTE: we use a queue instead of a Semaphore to reduce memory use for use cases involving many many tasks
-                    fut = self._queue.put_nowait(item)
-                else:
-                    coro = self._wrapped_func(item, **self._wrapped_func_kwargs)
-                    name = f"{self._name}[{item}]" if self._name else f"{item}",
-                    fut = create_task(coro=coro, name=name)
-                super().__setitem__(item, fut)
-                return fut
-            except Exception as e:
-                raise e from None
+            if self.concurrency:
+                # NOTE: we use a queue instead of a Semaphore to reduce memory use for use cases involving many many tasks
+                fut = self._queue.put_nowait(item)
+            else:
+                coro = self._wrapped_func(item, **self._wrapped_func_kwargs)
+                name = f"{self._name}[{item}]" if self._name else f"{item}",
+                fut = create_task(coro=coro, name=name)
+            super().__setitem__(item, fut)
+            return fut
         
     def __await__(self) -> Generator[Any, None, Dict[K, V]]:
         """Wait for all tasks to complete and return a dictionary of the results."""
@@ -372,20 +369,29 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     @overload
     def pop(self, item: K, default: K, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":...
     def pop(self, *args: K, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
-        if not cancel:
-            return super().pop(*args)
         fut_or_task = super().pop(*args)
-        if isinstance(fut_or_task, asyncio.Future) and not fut_or_task.done():
+        if cancel:
             fut_or_task.cancel()
         return fut_or_task
     
     def clear(self, cancel: bool = False) -> None:
-        for k in tuple(self.keys()):
-            self.pop(k, cancel=cancel)
+        if cancel and self._init_loader and not self._init_loader.done():
+            logger.debug("cancelling %s", self._init_loader)
+            # temporary, remove later
+            try:
+                raise Exception
+            except Exception as e:
+                logger.exception(e)
+            self._init_loader.cancel()
+        if keys := tuple(self.keys()):
+            logger.debug("popping remaining %s tasks", self)
+            for k in keys:
+                self.pop(k, cancel=cancel)
 
     @functools.cached_property
     def _init_loader(self) -> Optional["asyncio.Task[None]"]:
         if self.__init_loader_coro:
+            logger.debug("starting %s init loader", self)
             name=f"{type(self).__name__} init loader loading {self.__iterables__} for {self}"
             try:
                 return create_task(coro=self.__init_loader_coro, name=name)
@@ -436,10 +442,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             if self.concurrency and '_queue' in self.__dict__:
                 self._queue.close()
                 del self._queue
-            elif self:
-                self.clear(cancel=True)
-                # we need to let the loop run once so the tasks can fully cancel
-                await asyncio.sleep(0)
+            self.clear(cancel=True)
+            # we need to let the loop run once so the tasks can fully cancel
+            await asyncio.sleep(0)
 
 
 class _NoRunningLoop(Exception):
