@@ -120,8 +120,6 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                 'message': f'{self} was destroyed but has work pending!',
             }
             asyncio.get_event_loop().call_exception_handler(context)
-        if not self._closed:
-            self.__stop_workers()
     @property
     def name(self) -> str:
         return self._name or repr(self)
@@ -139,10 +137,6 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         fut = self._create_future()
         super().put_nowait((args, kwargs, weakref.proxy(fut)))
         return fut
-    async def close(self) -> None:
-        self.__stop_workers()
-        # let the loop run once so the tasks can be stopped fully
-        await asyncio.sleep(0)
     def _create_future(self) -> "asyncio.Future[V]":
         return asyncio.get_event_loop().create_future()
     def _ensure_workers(self) -> None:
@@ -210,19 +204,6 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                         logger.exception(e)
                         raise e
                 self.task_done()
-    def __stop_workers(self) -> None:
-        self._closed = True
-        # since _workers is a cached property we want to pop it from instance.__dict__ so we dont accidentally create it
-        if main_worker := self.__dict__.pop("_workers", None):
-            try:
-                main_worker.cancel()
-            except ImportError as e:
-                # workers have not yet been started, and getting the property fails since
-                # tasks cannot (and dont need to) be created as python is shutting down
-                if str(e) == "sys.meta_path is None, Python is likely shutting down":
-                    return
-            for child_worker in main_worker._workers:
-                child_worker.cancel()
 
 
 def _validate_args(i: int, can_return_less: bool) -> None:
