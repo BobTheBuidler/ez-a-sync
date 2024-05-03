@@ -78,9 +78,9 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
         super().__init__(err)
 
 class MappingError(Exception):
-    msg: str
-    def __init__(self, mapping: "TaskMapping"):
-        msg = self.msg + f":\n{mapping}"
+    _msg: str
+    def __init__(self, mapping: "TaskMapping", msg: str = ''):
+        msg = msg or self._msg + f":\n{mapping}"
         if mapping:
             msg += f"\n{dict(mapping)}"
         super().__init__(msg)

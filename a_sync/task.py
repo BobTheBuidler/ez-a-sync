@@ -132,7 +132,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self.__init_loader_coro = exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue)
             with contextlib.suppress(_NoRunningLoop):
                 # its okay if we get this exception, we can start the task as soon as the loop starts
-                self._init_loader                
+                self._init_loader
             self._init_loader_next = init_loader_queue.get_all
     
     def __repr__(self) -> str:
@@ -230,27 +230,33 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             Depending on `yields`, either keys, values,
             or tuples of key-value pairs representing the results of completed tasks.
         """
+        self._if_pop_check_destroyed(pop)
+        
+        # make sure the init loader is started if needed
+        init_loader = self._init_loader
+        if iterables and init_loader:
+            raise ValueError("You cannot pass `iterables` to map if the TaskMapping was initialized with an (a)iterable.")
+        
         try:
-            # make sure the init loader is started if needed
-            init_loader = self._init_loader
             if iterables:
-                if init_loader:
-                    raise ValueError("You cannot pass `iterables` to map if the TaskMapping was initialized with an (a)iterable.")
                 self._raise_if_not_empty()
-            elif not init_loader:
-                self._raise_if_empty()
-                    
-            try:
-                async for _ in self._tasks_for_iterables(*iterables):
-                    async for key, value in self.yield_completed(pop=pop):
-                        yield _yield(key, value, yields)
-            except _EmptySequenceError:
-                if len(iterables) > 1:
-                    # TODO gotta handle this situation
-                    raise exceptions.EmptySequenceError("bob needs to code something so you can do this, go tell him") from None
-            if init_loader:
+                try:
+                    async for _ in self._tasks_for_iterables(*iterables):
+                        async for key, value in self.yield_completed(pop=pop):
+                            yield _yield(key, value, yields)
+                except _EmptySequenceError:
+                    if len(iterables) > 1:
+                        # TODO gotta handle this situation
+                        raise exceptions.EmptySequenceError("bob needs to code something so you can do this, go tell him") from None
+                    # just pass thru
+                 
+            elif init_loader:
                 # check for exceptions if you passed an iterable(s) into the class init
                 await init_loader
+            
+            else:
+                self._raise_if_empty("You must either initialize your TaskMapping with an iterable(s) or provide them during your call to map")
+
             if self:
                 if pop:
                     async for key, value in as_completed(self, aiter=True):
@@ -386,18 +392,20 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             logger.debug("starting %s init loader", self)
             name=f"{type(self).__name__} init loader loading {self.__iterables__} for {self}"
             try:
-                return create_task(coro=self.__init_loader_coro, name=name)
+                task = create_task(coro=self.__init_loader_coro, name=name)
             except RuntimeError as e:
                 raise _NoRunningLoop if str(e) == "no running event loop" else e
+            task.add_done_callback(self.__cleanup)
+            return task
     
     @functools.cached_property
     def _queue(self) -> ProcessingQueue:
         fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
         return ProcessingQueue(fn, self.concurrency, name=self._name)
     
-    def _raise_if_empty(self) -> None:
+    def _raise_if_empty(self, msg: str = '') -> None:
         if not self:
-            raise exceptions.MappingIsEmptyError(self)
+            raise exceptions.MappingIsEmptyError(self, msg)
     
     def _raise_if_not_empty(self) -> None:
         if self:
@@ -447,6 +455,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         for task in done:
             # check for exceptions
             await task
+    
+    def __cleanup(self, t: "asyncio.Task[None]") -> None:
+        # clear the slot and let the bound Queue die
+        del self.__init_loader_coro
 
 
 class _NoRunningLoop(Exception):
