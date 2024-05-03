@@ -64,7 +64,7 @@ async def test_task_mapping_map_with_sync_iter():
         assert isinstance(v, str)
         if i < 4:
             # this shouldn't work since there is a mapping in progress
-            with pytest.raises(exceptions.MappingNotEmptyError):
+            with pytest.raises(RuntimeError):
                 async for k in tasks.map(range(5)):
                     ...
         i += 1
@@ -119,7 +119,7 @@ async def test_task_mapping_map_with_async_iter():
         assert isinstance(v, str)
         if i < 4:
             # this shouldn't work since there is a mapping in progress
-            with pytest.raises(exceptions.MappingNotEmptyError):
+            with pytest.raises(RuntimeError):
                 async for k in tasks.map(async_iter()):
                     ...
         i += 1
