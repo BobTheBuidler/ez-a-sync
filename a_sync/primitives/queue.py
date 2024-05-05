@@ -196,27 +196,25 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             while True:
                 try:
                     args, kwargs, fut = await self.get()
-                    if fut is None:
-                        # the weakref was already cleaned up, we don't need to process this item
-                        self.task_done()
-                        continue
-                    result = await self.func(*args, **kwargs)
-                    fut.set_result(result)
-                except asyncio.exceptions.InvalidStateError:
-                    logger.error("cannot set result for %s %s: %s", self.func.__name__, fut, result)
-                except Exception as e:
                     try:
-                        fut.set_exception(e)
+                        if fut is None:
+                            # the weakref was already cleaned up, we don't need to process this item
+                            self.task_done()
+                            continue
+                        result = await self.func(*args, **kwargs)
+                        fut.set_result(result)
                     except asyncio.exceptions.InvalidStateError:
-                        logger.error("cannot set exception for %s %s: %s", self.func.__name__, fut, e)
-                    except UnboundLocalError as u:
-                        logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
-                        if str(e) != "local variable 'fut' referenced before assignment":
-                            logger.exception(u)
-                            raise u
-                        logger.exception(e)
-                        raise e
-                self.task_done()
+                        logger.error("cannot set result for %s %s: %s", self.func.__name__, fut, result)
+                    except Exception as e:
+                        try:
+                            fut.set_exception(e)
+                        except asyncio.exceptions.InvalidStateError:
+                            logger.error("cannot set exception for %s %s: %s", self.func.__name__, fut, e)
+                    self.task_done()
+                except Exception as e:
+                    logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
+                    logger.exception(e)
+                    raise
 
 
 def _validate_args(i: int, can_return_less: bool) -> None:
@@ -337,11 +335,6 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                         fut.set_exception(e)
                     except asyncio.exceptions.InvalidStateError:
                         logger.error("cannot set exception for %s %s: %s", self.func.__name__, fut, e)
-                    except UnboundLocalError as u:
-                        if str(e) != "local variable 'fut' referenced before assignment":
-                            logger.exception(u)
-                            raise u
-                        raise e
                 self.task_done()
             except Exception as e:
                 logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
