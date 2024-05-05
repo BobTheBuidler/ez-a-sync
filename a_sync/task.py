@@ -169,7 +169,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         # if you inited the TaskMapping with some iterators, we will load those
         yielded = set()
         try:
-            if self._init_loader:
+            if self._init_loader is None:
+                # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
+                self._raise_if_empty()
+            else:
                 while not self._init_loader.done():
                     await self._wait_for_next_key()
                     while unyielded := [key for key in self if key not in yielded]:
@@ -186,14 +189,14 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                             await self._next.wait()
                 # loader is already done by this point, but we need to check for exceptions
                 await self._init_loader
-            else:
-                # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
-                self._raise_if_empty()
             # if there are any tasks that still need to complete, we need to await them and yield them
             if unyielded := {key: self[key] for key in self if key not in yielded}:
                 if pop:
                     async for key, value in as_completed(unyielded, aiter=True):
                         self.pop(key)
+                        yield key, value
+                else:
+                    async for key, value in as_completed(unyielded, aiter=True):
                         yield key, value
         finally:
             await self._if_pop_clear(pop)
