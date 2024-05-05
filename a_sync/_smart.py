@@ -22,7 +22,6 @@ class _SmartFutureMixin(Generic[T]):
     _key: _Key
     _waiters: "weakref.WeakSet[SmartTask[T]]"
     def __await__(self: "SmartFuture"):
-        logger.debug("entering %s", self)
         if self.done():
             return self.result()  # May raise too.
         self._asyncio_future_blocking = True
@@ -37,8 +36,9 @@ class _SmartFutureMixin(Generic[T]):
     def num_waiters(self: "SmartFuture") -> int:
         # NOTE: we check .done() because the callback may not have ran yet and its very lightweight
         if self.done():
+            # if there are any waiters left, there won't be once the event loop runs once
             return 0
-        return sum(getattr(waiter, 'num_waiters', 1) for waiter in self._waiters)
+        return sum(getattr(waiter, 'num_waiters', 1) or 1 for waiter in self._waiters)
     def _waiter_done_cleanup_callback(self: "SmartFuture", waiter: "SmartTask") -> None:
         "Removes the waiter from _waiters, and _queue._futs if applicable"
         if not self.done():
