@@ -95,7 +95,6 @@
     <span class="n">_key</span><span class="p">:</span> <span class="n">_Key</span>
     <span class="n">_waiters</span><span class="p">:</span> <span class="s2">&quot;weakref.WeakSet[SmartTask[T]]&quot;</span>
     <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;SmartFuture&quot;</span><span class="p">):</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;entering </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>  <span class="c1"># May raise too.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_asyncio_future_blocking</span> <span class="o">=</span> <span class="kc">True</span>
@@ -110,8 +109,9 @@
     <span class="k">def</span> <span class="nf">num_waiters</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;SmartFuture&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># NOTE: we check .done() because the callback may not have ran yet and its very lightweight</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
+            <span class="c1"># if there are any waiters left, there won&#39;t be once the event loop runs once</span>
             <span class="k">return</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">waiter</span><span class="p">,</span> <span class="s1">&#39;num_waiters&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">waiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">waiter</span><span class="p">,</span> <span class="s1">&#39;num_waiters&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">waiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_waiter_done_cleanup_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="n">waiter</span><span class="p">:</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="s2">&quot;Removes the waiter from _waiters, and _queue._futs if applicable&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>

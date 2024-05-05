@@ -252,7 +252,10 @@
         <span class="c1"># if you inited the TaskMapping with some iterators, we will load those</span>
         <span class="n">yielded</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># if you didn&#39;t init the TaskMapping with iterators and you didn&#39;t start any tasks manually, we should fail</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_empty</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
                 <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
                     <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_next_key</span><span class="p">()</span>
                     <span class="k">while</span> <span class="n">unyielded</span> <span class="o">:=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">]:</span>
@@ -269,14 +272,14 @@
                             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
                 <span class="c1"># loader is already done by this point, but we need to check for exceptions</span>
                 <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># if you didn&#39;t init the TaskMapping with iterators and you didn&#39;t start any tasks manually, we should fail</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_empty</span><span class="p">()</span>
             <span class="c1"># if there are any tasks that still need to complete, we need to await them and yield them</span>
             <span class="k">if</span> <span class="n">unyielded</span> <span class="o">:=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">}:</span>
                 <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
                     <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">unyielded</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                        <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">unyielded</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                         <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span></div>
