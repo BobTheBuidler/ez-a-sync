@@ -170,12 +170,12 @@ class ASyncGeneratorFunction(Generic[P, T]):
         self._cache_handle.cancel()
 
 class _ASyncView(ASyncIterator[T]):
-    __aiterator__ = None
-    __iterator__ = None
+    __aiterator__: Optional[AsyncIterator[T]] = None
+    __iterator__: Optional[Iterator[T]] = None
     def __init__(
         self, 
         function: ViewFn[T], 
-        iterable: AsyncIterable[T],
+        iterable: AnyIterable[T],
     ) -> None:
         self._function = function
         self.__wrapped__ = iterable
@@ -184,7 +184,7 @@ class _ASyncView(ASyncIterator[T]):
         elif isinstance(iterable, Iterable):
             self.__iterator__ = iterable.__iter__()
         else:
-            raise TypeError(f"`iterable` must be AsyncIterable or Iterabe, you passed {iterable}")
+            raise TypeError(f"`iterable` must be AsyncIterable or Iterable, you passed {iterable}")
 
 @final  
 class ASyncFilter(_ASyncView[T]):
@@ -202,6 +202,8 @@ class ASyncFilter(_ASyncView[T]):
                         return obj
             except StopIteration:
                 pass
+        else:
+            raise TypeError(self.__wrapped__)
         raise StopAsyncIteration from None
     async def _check(self, obj: T) -> bool:
         checked = self._function(obj)
