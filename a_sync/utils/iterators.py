@@ -48,7 +48,8 @@ async def exhaust_iterators(iterators, *, queue: Optional[asyncio.Queue] = None,
     """
     for x in await asyncio.gather(*[exhaust_iterator(iterator, queue=queue) for iterator in iterators], return_exceptions=True):
         if isinstance(x, Exception):
-            raise x
+            # raise it with its original traceback instead of from here
+            raise x.with_traceback(x.__traceback__)
     if queue:
         queue.put_nowait(_Done())
         if join:
