@@ -104,7 +104,16 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             # we use this little helper so we can have context of `func` in any err logs
             return await self.__worker_coro()
         self._worker_coro = _worker_coro
+    # NOTE: asyncio defines both this and __str__
     def __repr__(self) -> str:
+        repr_string = f"<{type(self).__name__} at {hex(id(self))}"
+        if self._name:
+            repr_string += f" name={self._name}"
+        repr_string += f" func={self.func} num_workers={self.num_workers}"
+        if self._unfinished_tasks:
+            repr_string += f" pending={self._unfinished_tasks}"
+        return f"{repr_string}>"
+    def __str__(self) -> str:
         repr_string = f"<{type(self).__name__}"
         if self._name:
             repr_string += f" name={self._name}"
