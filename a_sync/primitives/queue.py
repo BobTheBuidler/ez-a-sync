@@ -340,4 +340,4 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             except Exception as e:
                 logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
                 logger.exception(e)
-                raise e
+                raise

@@ -137,6 +137,6 @@ async def __mapping_wrap(k: K, v: Awaitable[V], return_exceptions: bool = False)
     except Exception as e:
         if return_exceptions:
             return k, e
-        raise e
+        raise
 
 __all__ = ["as_completed", "as_completed_mapping"]

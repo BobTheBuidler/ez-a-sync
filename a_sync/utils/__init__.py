@@ -21,7 +21,7 @@ async def any(*awaitables) -> bool:
             if str(e) == "cannot reuse already awaited coroutine":
                 raise RuntimeError(str(e), fut) from e
             else:
-                raise e
+                raise
         if bool(result):
             for fut in futs:
                 fut.cancel()
@@ -37,7 +37,7 @@ async def all(*awaitables) -> bool:
             if str(e) == "cannot reuse already awaited coroutine":
                 raise RuntimeError(str(e), fut) from e
             else:
-                raise e
+                raise
         if not result:
             for fut in futs:
                 fut.cancel()
