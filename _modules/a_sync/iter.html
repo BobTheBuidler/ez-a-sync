@@ -279,12 +279,12 @@
 
 
 <span class="k">class</span> <span class="nc">_ASyncView</span><span class="p">(</span><span class="n">ASyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
-    <span class="n">__aiterator__</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">__iterator__</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">__aiterator__</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">__iterator__</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterator</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> 
         <span class="n">function</span><span class="p">:</span> <span class="n">ViewFn</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> 
-        <span class="n">iterable</span><span class="p">:</span> <span class="n">AsyncIterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
+        <span class="n">iterable</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_function</span> <span class="o">=</span> <span class="n">function</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="n">iterable</span>
@@ -293,7 +293,7 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__iterator__</span> <span class="o">=</span> <span class="n">iterable</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`iterable` must be AsyncIterable or Iterabe, you passed </span><span class="si">{</span><span class="n">iterable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`iterable` must be AsyncIterable or Iterable, you passed </span><span class="si">{</span><span class="n">iterable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ASyncFilter">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncFilter">[docs]</a>
@@ -315,6 +315,8 @@
                         <span class="k">return</span> <span class="n">obj</span>
             <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
                 <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">StopAsyncIteration</span> <span class="kn">from</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="ASyncFilter._check">

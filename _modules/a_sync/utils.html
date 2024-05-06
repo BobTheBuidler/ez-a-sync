@@ -96,7 +96,7 @@
             <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;cannot reuse already awaited coroutine&quot;</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">fut</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">e</span>
+                <span class="k">raise</span>
         <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">fut</span> <span class="ow">in</span> <span class="n">futs</span><span class="p">:</span>
                 <span class="n">fut</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
@@ -115,7 +115,7 @@
             <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;cannot reuse already awaited coroutine&quot;</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">fut</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">e</span>
+                <span class="k">raise</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">fut</span> <span class="ow">in</span> <span class="n">futs</span><span class="p">:</span>
                 <span class="n">fut</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
