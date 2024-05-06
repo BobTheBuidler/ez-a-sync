@@ -110,7 +110,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     raise Exception(e, self.__wrapped__)
                 except TypeError as e:
                     if __a_sync_recursion > 2 or not (str(e).startswith(wrapped_func.__name__) and "got multiple values for argument" in str(e)):
-                        raise e
+                        raise
                     # NOTE: args ordering is clashing with provided kwargs. We can handle this in a hacky way.
                     # TODO: perform this check earlier and pre-prepare the args/kwargs ordering
                     new_args = list(args)
