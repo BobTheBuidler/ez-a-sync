@@ -6,7 +6,6 @@ from concurrent.futures import Executor
 import a_sync.asyncio
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync.function import ASyncFunction
 
 
 def _await(awaitable: Awaitable[T]) -> T:
@@ -18,6 +17,7 @@ def _await(awaitable: Awaitable[T]) -> T:
         raise
 
 def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: ignore [misc]
+    from a_sync.a_sync.function import ASyncFunction
     if asyncio.iscoroutinefunction(func) or isinstance(func, ASyncFunction):
         raise exceptions.FunctionNotSync(func)
     @functools.wraps(func)
