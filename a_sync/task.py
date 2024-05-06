@@ -105,10 +105,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             @functools.wraps(wrapped_func)
             async def _wrapped_set_next(*args: P.args, __a_sync_recursion: int = 0, **kwargs: P.kwargs) -> V:
                 try:
-                    retval = await wrapped_func(*args, **kwargs)
-                    self._next.set()
-                    self._next.clear()
-                    return retval
+                    return await wrapped_func(*args, **kwargs)
                 except exceptions.SyncModeInAsyncContextError as e:
                     raise Exception(e, self.__wrapped__)
                 except TypeError as e:
@@ -127,6 +124,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                         return await _wrapped_set_next(*new_args, **new_kwargs, __a_sync_recursion=__a_sync_recursion+1)
                     except TypeError as e2:
                         raise e.with_traceback(e.__traceback__) if str(e2) == "unsupported callable" else e2.with_traceback(e2.__traceback__)
+                finally:
+                    self._next.set()
+                    self._next.clear()
             self._wrapped_func = _wrapped_set_next
             init_loader_queue: Queue[Tuple[K, "asyncio.Future[V]"]] = Queue()
             self.__init_loader_coro = exhaust_iterator(self._tasks_for_iterables(*iterables), queue=init_loader_queue)
