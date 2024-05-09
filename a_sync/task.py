@@ -550,7 +550,7 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
             self._pop = True
     def __iter__(self) -> Iterator[T]:
         return iter(self.__view__)
-    def __await__(self) -> Generator[Any, None, T]:
+    def __await__(self) -> Generator[Any, None, List[T]]:
         return self._await().__await__()
     def __len__(self) -> int:
         return len(self.__view__)
