@@ -37,7 +37,10 @@ class Event(asyncio.Event, _DebugDaemonMixin):
         self._ensure_debug_daemon()
         return await super().wait()
     async def _debug_daemon(self) -> None:
-        while not self.is_set():
+        weakself = weakref.ref(self)
+        del self  # no need to hold a reference here
+        while (self := weakself()) and not self.is_set():
+            del self  # no need to hold a reference here
             await asyncio.sleep(self._debug_daemon_interval)
-            if not self.is_set():
-                self.logger.debug("Waiting for %s", self)
+            if (self := weakself()) and not self.is_set():
+                self.logger.debug("Waiting for %s for %sm", self, round((time() - start) / 60, 2))
