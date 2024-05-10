@@ -388,7 +388,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
 
 def _is_a_sync_instance(instance: object) -> bool:
     try:
-        return instance.__is_a_sync_instance__
+        return instance.__is_a_sync_instance__  # type: ignore [attr-defined]
     except AttributeError:
         from a_sync.a_sync.abstract import ASyncABC
         is_a_sync = isinstance(instance, ASyncABC)
