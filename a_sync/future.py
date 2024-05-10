@@ -73,7 +73,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     # not sure what to call these
     def __contains__(self, key: Any) -> bool:
         return _materialize(ASyncFuture(self.__contains(key), dependencies=self.__list_dependencies(key)))
-    def __await__(self) -> Awaitable[T]:
+    def __await__(self) -> Generator[Any, None, T]:
         return self.__await().__await__()
     async def __await(self) -> T:
         if not self.done():

@@ -21,7 +21,7 @@ class _SmartFutureMixin(Generic[T]):
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
     _key: _Key
     _waiters: "weakref.WeakSet[SmartTask[T]]"
-    def __await__(self: "SmartFuture"):
+    def __await__(self: "SmartFuture") -> Generator[Any, None, T]:
         if self.done():
             return self.result()  # May raise too.
         self._asyncio_future_blocking = True
