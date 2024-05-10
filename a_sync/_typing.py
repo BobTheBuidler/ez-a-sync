@@ -27,6 +27,7 @@ P = ParamSpec("P")
 Numeric = Union[int, float, Decimal]
 
 MaybeAwaitable = Union[Awaitable[T], T]
+MaybeCoro = Union[Coroutine[Any, Any, T], T]
 
 CoroFn = Callable[P, Awaitable[T]]
 SyncFn = Callable[P, T]
