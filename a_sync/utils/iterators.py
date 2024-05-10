@@ -160,6 +160,6 @@ class _Done:
         self._exc = exc
     @property
     def _tb(self) -> TracebackType:
-        return self._exc.__traceback__
+        return self._exc.__traceback__  # type: ignore [union-attr]
 
 __all__ = ["as_yielded", "exhaust_iterator", "exhaust_iterators"]

@@ -266,7 +266,7 @@ class ASyncSorter(_ASyncView[T]):
             if self.__aiterator__:
                 items = [obj async for obj in self.__aiterator__]
             else:
-                items = [obj for obj in self.__iterator__]                
+                items = [obj for obj in self.__iterator__]  # type: ignore [union-attr]
             items.sort(key=self._function, reverse=reverse)
             for obj in items:
                 yield obj
