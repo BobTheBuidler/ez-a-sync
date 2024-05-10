@@ -529,7 +529,7 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync._is_a_sync_instance">[docs]</a>
 <span class="k">def</span> <span class="nf">_is_a_sync_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">instance</span><span class="o">.</span><span class="n">__is_a_sync_instance__</span>
+        <span class="k">return</span> <span class="n">instance</span><span class="o">.</span><span class="n">__is_a_sync_instance__</span>  <span class="c1"># type: ignore [attr-defined]</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">a_sync.a_sync.abstract</span> <span class="kn">import</span> <span class="n">ASyncABC</span>
         <span class="n">is_a_sync</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">ASyncABC</span><span class="p">)</span>

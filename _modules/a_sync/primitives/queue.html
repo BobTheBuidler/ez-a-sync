@@ -287,11 +287,17 @@
                 <span class="k">if</span> <span class="n">worker</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>  <span class="c1"># its only done if its broken</span>
                     <span class="n">exc</span> <span class="o">=</span> <span class="n">worker</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
                     <span class="c1"># re-raise with clean traceback</span>
-                    <span class="k">raise</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)(</span><span class="o">*</span><span class="n">exc</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)(</span><span class="o">*</span><span class="n">exc</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>  <span class="c1"># type: ignore [union-attr]</span>
+                    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
             <span class="c1"># this should never be reached, but just in case</span>
             <span class="n">exc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
-            <span class="c1"># re-raise with clean traceback</span>
-            <span class="k">raise</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)(</span><span class="o">*</span><span class="n">exc</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span></div>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># re-raise with clean traceback</span>
+                <span class="k">raise</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)(</span><span class="o">*</span><span class="n">exc</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>  <span class="c1"># type: ignore [union-attr]</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span></div>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
     <span class="k">def</span> <span class="nf">_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Task[NoReturn]&quot;</span><span class="p">:</span>
