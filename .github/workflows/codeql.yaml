@@ -23,8 +23,6 @@ on:
     paths:
       - '**.py'
       - '**/codeql-analysis.yml'
-  schedule:
-    - cron: '41 4 * * 2'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
