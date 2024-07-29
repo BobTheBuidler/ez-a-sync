@@ -1,3 +1,7 @@
+"""
+This module extends asyncio.create_task to support any Awaitable,
+manage task lifecycle, and enhance error handling.
+"""
 
 import asyncio
 import logging

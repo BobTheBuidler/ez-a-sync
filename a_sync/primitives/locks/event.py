@@ -1,3 +1,6 @@
+"""
+This module provides an enhanced version of asyncio.Event with additional debug logging to help detect deadlocks.
+"""
 
 import asyncio
 import sys
@@ -5,9 +8,14 @@ import sys
 from a_sync._typing import *
 from a_sync.primitives._debug import _DebugDaemonMixin
 
-
 class Event(asyncio.Event, _DebugDaemonMixin):
-    """asyncio.Event but with some additional debug logging to help detect deadlocks."""
+    """
+    An asyncio.Event with additional debug logging to help detect deadlocks.
+    
+    This event class extends asyncio.Event by adding debug logging capabilities. It logs
+    detailed information about the event state and waiters, which can be useful for 
+    diagnosing and debugging potential deadlocks.
+    """
     _value: bool
     _loop: asyncio.AbstractEventLoop
     _waiters: Deque["asyncio.Future[None]"]
@@ -16,6 +24,14 @@ class Event(asyncio.Event, _DebugDaemonMixin):
     else:
         __slots__ = "_value", "_loop", "_waiters", "_debug_daemon_interval"
     def __init__(self, name: str = "", debug_daemon_interval: int = 300, *, loop: Optional[asyncio.AbstractEventLoop] = None):
+        """
+        Initializes the Event.
+
+        Args:
+            name (str): An optional name for the event, used in debug logs.
+            debug_daemon_interval (int): The interval in seconds for the debug daemon to log information.
+            loop (Optional[asyncio.AbstractEventLoop]): The event loop to use.
+        """
         if sys.version_info >= (3, 10):
             super().__init__()
         else:
@@ -32,11 +48,20 @@ class Event(asyncio.Event, _DebugDaemonMixin):
             status += f', waiters:{len(self._waiters)}'
         return f"<{self.__class__.__module__}.{self.__class__.__name__} {label} at {hex(id(self))} [{status}]>"
     async def wait(self) -> Literal[True]:
+        """
+        Wait until the event is set.
+
+        Returns:
+            True when the event is set.
+        """
         if self.is_set():
             return True
         self._ensure_debug_daemon()
         return await super().wait()
     async def _debug_daemon(self) -> None:
+        """
+        Periodically logs debug information about the event state and waiters.
+        """
         weakself = weakref.ref(self)
         del self  # no need to hold a reference here
         while (self := weakself()) and not self.is_set():
