@@ -1,3 +1,6 @@
+"""
+This module extends Python's asyncio.as_completed, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.
+"""
 
 import asyncio
 
