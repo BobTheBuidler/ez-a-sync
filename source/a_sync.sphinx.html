@@ -389,6 +389,79 @@ the document contains none.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDirective.parse_content_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_content_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDirective.parse_content_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse the directive’s content into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in the directive’s content?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDirective.parse_inline">
+<span class="sig-name descname"><span class="pre">parse_inline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDirective.parse_inline" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> as inline elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The text to parse, which should be a single line or paragraph.
+This cannot contain any structural elements (headings,
+transitions, directives, etc).</p></li>
+<li><p><strong>lineno</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The line number where the interpreted text begins.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes (text and inline elements) and a list of system_messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[system_message]]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDirective.parse_text_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_text_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDirective.parse_text_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Text, in string form. <code class="docutils literal notranslate"><span class="pre">StringList</span></code> is also accepted.</p></li>
+<li><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in <em>text</em>?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The offset of the content.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDirective.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDirective.run" title="Link to this definition"></a></dt>
 <dd><p>Main directive entry function, called by docutils upon encountering the
@@ -434,14 +507,14 @@ or raise ValueError</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDirective.transform_content">
-<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contentnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDirective.transform_content" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDirective.transform_content" title="Link to this definition"></a></dt>
 <dd><p>Called after creating the content through nested parsing,
 but before the <code class="docutils literal notranslate"><span class="pre">object-description-transform</span></code> event is emitted,
 and before the info-fields are transformed.
 Can be used to manipulate the content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>contentnode</strong> (<em>desc_content</em>)</p>
+<dd class="field-odd"><p><strong>content_node</strong> (<em>desc_content</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1241,6 +1314,79 @@ the document contains none.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDirective.parse_content_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_content_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.parse_content_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse the directive’s content into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in the directive’s content?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDirective.parse_inline">
+<span class="sig-name descname"><span class="pre">parse_inline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.parse_inline" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> as inline elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The text to parse, which should be a single line or paragraph.
+This cannot contain any structural elements (headings,
+transitions, directives, etc).</p></li>
+<li><p><strong>lineno</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The line number where the interpreted text begins.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes (text and inline elements) and a list of system_messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[system_message]]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDirective.parse_text_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_text_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.parse_text_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Text, in string form. <code class="docutils literal notranslate"><span class="pre">StringList</span></code> is also accepted.</p></li>
+<li><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in <em>text</em>?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The offset of the content.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDirective.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.run" title="Link to this definition"></a></dt>
 <dd><p>Main directive entry function, called by docutils upon encountering the
@@ -1286,14 +1432,14 @@ or raise ValueError</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDirective.transform_content">
-<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contentnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.transform_content" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.transform_content" title="Link to this definition"></a></dt>
 <dd><p>Called after creating the content through nested parsing,
 but before the <code class="docutils literal notranslate"><span class="pre">object-description-transform</span></code> event is emitted,
 and before the info-fields are transformed.
 Can be used to manipulate the content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>contentnode</strong> (<em>desc_content</em>)</p>
+<dd class="field-odd"><p><strong>content_node</strong> (<em>desc_content</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -2088,6 +2234,79 @@ the document contains none.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDirective.parse_content_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_content_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDirective.parse_content_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse the directive’s content into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in the directive’s content?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDirective.parse_inline">
+<span class="sig-name descname"><span class="pre">parse_inline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDirective.parse_inline" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> as inline elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The text to parse, which should be a single line or paragraph.
+This cannot contain any structural elements (headings,
+transitions, directives, etc).</p></li>
+<li><p><strong>lineno</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The line number where the interpreted text begins.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes (text and inline elements) and a list of system_messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[system_message]]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDirective.parse_text_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_text_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDirective.parse_text_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Text, in string form. <code class="docutils literal notranslate"><span class="pre">StringList</span></code> is also accepted.</p></li>
+<li><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in <em>text</em>?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The offset of the content.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDirective.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDirective.run" title="Link to this definition"></a></dt>
 <dd><p>Main directive entry function, called by docutils upon encountering the
@@ -2133,14 +2352,14 @@ or raise ValueError</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDirective.transform_content">
-<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contentnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDirective.transform_content" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDirective.transform_content" title="Link to this definition"></a></dt>
 <dd><p>Called after creating the content through nested parsing,
 but before the <code class="docutils literal notranslate"><span class="pre">object-description-transform</span></code> event is emitted,
 and before the info-fields are transformed.
 Can be used to manipulate the content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>contentnode</strong> (<em>desc_content</em>)</p>
+<dd class="field-odd"><p><strong>content_node</strong> (<em>desc_content</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -2935,6 +3154,79 @@ the document contains none.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDirective.parse_content_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_content_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDirective.parse_content_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse the directive’s content into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in the directive’s content?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDirective.parse_inline">
+<span class="sig-name descname"><span class="pre">parse_inline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDirective.parse_inline" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> as inline elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The text to parse, which should be a single line or paragraph.
+This cannot contain any structural elements (headings,
+transitions, directives, etc).</p></li>
+<li><p><strong>lineno</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The line number where the interpreted text begins.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes (text and inline elements) and a list of system_messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[system_message]]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDirective.parse_text_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_text_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDirective.parse_text_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Text, in string form. <code class="docutils literal notranslate"><span class="pre">StringList</span></code> is also accepted.</p></li>
+<li><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in <em>text</em>?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The offset of the content.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDirective.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDirective.run" title="Link to this definition"></a></dt>
 <dd><p>Main directive entry function, called by docutils upon encountering the
@@ -2980,14 +3272,14 @@ or raise ValueError</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDirective.transform_content">
-<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contentnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDirective.transform_content" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDirective.transform_content" title="Link to this definition"></a></dt>
 <dd><p>Called after creating the content through nested parsing,
 but before the <code class="docutils literal notranslate"><span class="pre">object-description-transform</span></code> event is emitted,
 and before the info-fields are transformed.
 Can be used to manipulate the content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>contentnode</strong> (<em>desc_content</em>)</p>
+<dd class="field-odd"><p><strong>content_node</strong> (<em>desc_content</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -3783,6 +4075,79 @@ the document contains none.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.parse_content_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_content_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.parse_content_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse the directive’s content into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in the directive’s content?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.parse_inline">
+<span class="sig-name descname"><span class="pre">parse_inline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.parse_inline" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> as inline elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The text to parse, which should be a single line or paragraph.
+This cannot contain any structural elements (headings,
+transitions, directives, etc).</p></li>
+<li><p><strong>lineno</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The line number where the interpreted text begins.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes (text and inline elements) and a list of system_messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[system_message]]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.parse_text_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_text_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.parse_text_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Text, in string form. <code class="docutils literal notranslate"><span class="pre">StringList</span></code> is also accepted.</p></li>
+<li><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in <em>text</em>?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The offset of the content.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.run" title="Link to this definition"></a></dt>
 <dd><p>Main directive entry function, called by docutils upon encountering the
@@ -3828,14 +4193,14 @@ or raise ValueError</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.transform_content">
-<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contentnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.transform_content" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.transform_content" title="Link to this definition"></a></dt>
 <dd><p>Called after creating the content through nested parsing,
 but before the <code class="docutils literal notranslate"><span class="pre">object-description-transform</span></code> event is emitted,
 and before the info-fields are transformed.
 Can be used to manipulate the content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>contentnode</strong> (<em>desc_content</em>)</p>
+<dd class="field-odd"><p><strong>content_node</strong> (<em>desc_content</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -4646,6 +5011,79 @@ the document contains none.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDirective.parse_content_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_content_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDirective.parse_content_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse the directive’s content into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in the directive’s content?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDirective.parse_inline">
+<span class="sig-name descname"><span class="pre">parse_inline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDirective.parse_inline" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> as inline elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The text to parse, which should be a single line or paragraph.
+This cannot contain any structural elements (headings,
+transitions, directives, etc).</p></li>
+<li><p><strong>lineno</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The line number where the interpreted text begins.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes (text and inline elements) and a list of system_messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[system_message]]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDirective.parse_text_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_text_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDirective.parse_text_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Text, in string form. <code class="docutils literal notranslate"><span class="pre">StringList</span></code> is also accepted.</p></li>
+<li><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in <em>text</em>?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The offset of the content.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDirective.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDirective.run" title="Link to this definition"></a></dt>
 <dd><p>Main directive entry function, called by docutils upon encountering the
@@ -4691,14 +5129,14 @@ or raise ValueError</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDirective.transform_content">
-<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contentnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDirective.transform_content" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDirective.transform_content" title="Link to this definition"></a></dt>
 <dd><p>Called after creating the content through nested parsing,
 but before the <code class="docutils literal notranslate"><span class="pre">object-description-transform</span></code> event is emitted,
 and before the info-fields are transformed.
 Can be used to manipulate the content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>contentnode</strong> (<em>desc_content</em>)</p>
+<dd class="field-odd"><p><strong>content_node</strong> (<em>desc_content</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -5491,6 +5929,79 @@ the document contains none.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDirective.parse_content_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_content_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDirective.parse_content_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse the directive’s content into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in the directive’s content?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDirective.parse_inline">
+<span class="sig-name descname"><span class="pre">parse_inline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDirective.parse_inline" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> as inline elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The text to parse, which should be a single line or paragraph.
+This cannot contain any structural elements (headings,
+transitions, directives, etc).</p></li>
+<li><p><strong>lineno</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The line number where the interpreted text begins.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes (text and inline elements) and a list of system_messages.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[system_message]]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDirective.parse_text_to_nodes">
+<span class="sig-name descname"><span class="pre">parse_text_to_nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_section_headings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDirective.parse_text_to_nodes" title="Link to this definition"></a></dt>
+<dd><p>Parse <em>text</em> into nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Text, in string form. <code class="docutils literal notranslate"><span class="pre">StringList</span></code> is also accepted.</p></li>
+<li><p><strong>allow_section_headings</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Are titles (sections) allowed in <em>text</em>?
+Note that this option bypasses Docutils’ usual checks on
+doctree structure, and misuse of this option can lead to
+an incoherent doctree. In Docutils, section nodes should
+only be children of <code class="docutils literal notranslate"><span class="pre">Structural</span></code> nodes, which includes
+<code class="docutils literal notranslate"><span class="pre">document</span></code>, <code class="docutils literal notranslate"><span class="pre">section</span></code>, and <code class="docutils literal notranslate"><span class="pre">sidebar</span></code> nodes.</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The offset of the content.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a>[Node]</p>
+</dd>
+</dl>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 7.4.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDirective.run">
 <span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDirective.run" title="Link to this definition"></a></dt>
 <dd><p>Main directive entry function, called by docutils upon encountering the
@@ -5536,14 +6047,14 @@ or raise ValueError</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDirective.transform_content">
-<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contentnode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDirective.transform_content" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">transform_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content_node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDirective.transform_content" title="Link to this definition"></a></dt>
 <dd><p>Called after creating the content through nested parsing,
 but before the <code class="docutils literal notranslate"><span class="pre">object-description-transform</span></code> event is emitted,
 and before the info-fields are transformed.
 Can be used to manipulate the content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>contentnode</strong> (<em>desc_content</em>)</p>
+<dd class="field-odd"><p><strong>content_node</strong> (<em>desc_content</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>

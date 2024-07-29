@@ -71,18 +71,26 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.primitives.locks.event</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides an enhanced version of asyncio.Event with additional debug logging to help detect deadlocks.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.primitives._debug</span> <span class="kn">import</span> <span class="n">_DebugDaemonMixin</span>
 
-
 <div class="viewcode-block" id="Event">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Event">[docs]</a>
 <span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Event</span><span class="p">,</span> <span class="n">_DebugDaemonMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;asyncio.Event but with some additional debug logging to help detect deadlocks.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An asyncio.Event with additional debug logging to help detect deadlocks.</span>
+<span class="sd">    </span>
+<span class="sd">    This event class extends asyncio.Event by adding debug logging capabilities. It logs</span>
+<span class="sd">    detailed information about the event state and waiters, which can be useful for </span>
+<span class="sd">    diagnosing and debugging potential deadlocks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_value</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">_loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span>
     <span class="n">_waiters</span><span class="p">:</span> <span class="n">Deque</span><span class="p">[</span><span class="s2">&quot;asyncio.Future[None]&quot;</span><span class="p">]</span>
@@ -93,6 +101,14 @@
 <div class="viewcode-block" id="Event.__init__">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Event.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">debug_daemon_interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Event.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): An optional name for the event, used in debug logs.</span>
+<span class="sd">            debug_daemon_interval (int): The interval in seconds for the debug daemon to log information.</span>
+<span class="sd">            loop (Optional[asyncio.AbstractEventLoop]): The event loop to use.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -112,6 +128,12 @@
 <div class="viewcode-block" id="Event.wait">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Event.wait">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wait until the event is set.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True when the event is set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_debug_daemon</span><span class="p">()</span>
@@ -120,6 +142,9 @@
 <div class="viewcode-block" id="Event._debug_daemon">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Event._debug_daemon">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Periodically logs debug information about the event state and waiters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">weakself</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">del</span> <span class="bp">self</span>  <span class="c1"># no need to hold a reference here</span>
         <span class="k">while</span> <span class="p">(</span><span class="bp">self</span> <span class="o">:=</span> <span class="n">weakself</span><span class="p">())</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>

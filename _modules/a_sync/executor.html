@@ -71,11 +71,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.executor</h1><div class="highlight"><pre>
-<span></span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">With these executors, you can simply run sync fns in your executor with `await executor.run(fn, *args)`</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">With these executors, you can simply run sync functions in your executor with `await executor.run(fn, *args)`.</span>
 
 <span class="sd">`executor.submit(fn, *args)` will work the same as the concurrent.futures implementation, but will return an asyncio.Future instead of a concurrent.futures.Future</span>
+
+<span class="sd">This module provides several executor classes:</span>
+<span class="sd">- _AsyncExecutorMixin: A mixin providing asynchronous run and submit methods.</span>
+<span class="sd">- AsyncProcessPoolExecutor: An async process pool executor.</span>
+<span class="sd">- AsyncThreadPoolExecutor: An async thread pool executor.</span>
+<span class="sd">- PruningThreadPoolExecutor: A thread pool executor that prunes inactive threads after a timeout.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
@@ -96,19 +101,42 @@
 <span class="n">Initializer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span>
 
 <span class="k">class</span> <span class="nc">_AsyncExecutorMixin</span><span class="p">(</span><span class="n">cf</span><span class="o">.</span><span class="n">Executor</span><span class="p">,</span> <span class="n">_DebugDaemonMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A mixin for Executors to provide asynchronous run and submit methods.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_max_workers</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">_workers</span><span class="p">:</span> <span class="nb">str</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;_max_workers&quot;</span><span class="p">,</span> <span class="s2">&quot;_initializer&quot;</span><span class="p">,</span> <span class="s2">&quot;_initargs&quot;</span><span class="p">,</span> <span class="s2">&quot;_broken&quot;</span><span class="p">,</span> <span class="s2">&quot;_shutdown_lock&quot;</span>
+
     <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`</span>
 <span class="sd">        Doesn&#39;t `await this_executor.run(fn, *args)` look so much better?</span>
 <span class="sd">        </span>
 <span class="sd">        Oh, and you can also use kwargs!</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fn (Callable[P, T]): The function to run.</span>
+<span class="sd">            *args: Positional arguments for the function.</span>
+<span class="sd">            **kwargs: Keyword arguments for the function.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            T: The result of the function.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span> <span class="k">else</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[T]&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore [override]</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fn (Callable[P, T]): The function to submit.</span>
+<span class="sd">            *args: Positional arguments for the function.</span>
+<span class="sd">            **kwargs: Keyword arguments for the function.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            asyncio.Future[T]: The future representing the result of the function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
             <span class="n">fut</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
@@ -119,19 +147,44 @@
             <span class="n">fut</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">wrap_future</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>  <span class="c1"># type: ignore [assignment]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_start_debug_daemon</span><span class="p">(</span><span class="n">fut</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fut</span>
+
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> object at </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">worker_count_current</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="si">}</span><span class="s2">]&gt;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># NOTE: should this be queue length instead? probably</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">worker_count_current</span>
+
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">sync_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Indicates if the executor is in synchronous mode (max_workers == 0).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if in synchronous mode, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">==</span> <span class="mi">0</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">worker_count_current</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the current number of workers.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: The current number of workers.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs until manually cancelled by the finished work item&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs until manually cancelled by the finished work item.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fut (asyncio.Future): The future being debugged.</span>
+<span class="sd">            fn: The function being executed.</span>
+<span class="sd">            *args: Positional arguments for the function.</span>
+<span class="sd">            **kwargs: Keyword arguments for the function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="n">fut</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">fut</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
@@ -142,10 +195,14 @@
 <div class="viewcode-block" id="AsyncProcessPoolExecutor">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncProcessPoolExecutor">[docs]</a>
 <span class="k">class</span> <span class="nc">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">ProcessPoolExecutor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An async process pool executor that allows use of kwargs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_workers</span> <span class="o">=</span> <span class="s2">&quot;processes&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;_mp_context&quot;</span><span class="p">,</span> <span class="s2">&quot;_processes&quot;</span><span class="p">,</span> <span class="s2">&quot;_pending_work_items&quot;</span><span class="p">,</span> <span class="s2">&quot;_call_queue&quot;</span><span class="p">,</span> <span class="s2">&quot;_result_queue&quot;</span><span class="p">,</span>
                  <span class="s2">&quot;_queue_management_thread&quot;</span><span class="p">,</span> <span class="s2">&quot;_queue_count&quot;</span><span class="p">,</span> <span class="s2">&quot;_shutdown_thread&quot;</span><span class="p">,</span> <span class="s2">&quot;_work_ids&quot;</span><span class="p">,</span>
                  <span class="s2">&quot;_queue_management_thread_wakeup&quot;</span><span class="p">)</span>
+
 <div class="viewcode-block" id="AsyncProcessPoolExecutor.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncProcessPoolExecutor.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -155,6 +212,15 @@
         <span class="n">initializer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Initializer</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">initargs</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the AsyncProcessPoolExecutor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_workers (Optional[int], optional): The maximum number of workers. Defaults to None.</span>
+<span class="sd">            mp_context (Optional[multiprocessing.context.BaseContext], optional): The multiprocessing context. Defaults to None.</span>
+<span class="sd">            initializer (Optional[Initializer], optional): An initializer callable. Defaults to None.</span>
+<span class="sd">            initargs (Tuple[Any, ...], optional): Arguments for the initializer. Defaults to ().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_workers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mp_context</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">=</span> <span class="mi">0</span>
@@ -168,8 +234,12 @@
 <div class="viewcode-block" id="AsyncThreadPoolExecutor">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncThreadPoolExecutor">[docs]</a>
 <span class="k">class</span> <span class="nc">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An async thread pool executor that allows use of kwargs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_workers</span> <span class="o">=</span> <span class="s2">&quot;threads&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;_work_queue&quot;</span><span class="p">,</span> <span class="s2">&quot;_idle_semaphore&quot;</span><span class="p">,</span> <span class="s2">&quot;_threads&quot;</span><span class="p">,</span> <span class="s2">&quot;_shutdown&quot;</span><span class="p">,</span> <span class="s2">&quot;_thread_name_prefix&quot;</span>
+
 <div class="viewcode-block" id="AsyncThreadPoolExecutor.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncThreadPoolExecutor.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -179,6 +249,15 @@
         <span class="n">initializer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Initializer</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">initargs</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the AsyncThreadPoolExecutor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_workers (Optional[int], optional): The maximum number of workers. Defaults to None.</span>
+<span class="sd">            thread_name_prefix (str, optional): Prefix for thread names. Defaults to &#39;&#39;.</span>
+<span class="sd">            initializer (Optional[Initializer], optional): An initializer callable. Defaults to None.</span>
+<span class="sd">            initargs (Tuple[Any, ...], optional): Arguments for the initializer. Defaults to ().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_workers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">=</span> <span class="mi">0</span>
@@ -194,6 +273,16 @@
 <span class="c1"># Pruning thread pool</span>
 
 <span class="k">def</span> <span class="nf">_worker</span><span class="p">(</span><span class="n">executor_reference</span><span class="p">,</span> <span class="n">work_queue</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>  <span class="c1"># NOTE: NEW &#39;timeout&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Worker function for the PruningThreadPoolExecutor.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        executor_reference: A weak reference to the executor.</span>
+<span class="sd">        work_queue: The work queue.</span>
+<span class="sd">        initializer: The initializer function.</span>
+<span class="sd">        initargs: Arguments for the initializer.</span>
+<span class="sd">        timeout: Timeout duration for pruning inactive threads.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">initializer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">initializer</span><span class="p">(</span><span class="o">*</span><span class="n">initargs</span><span class="p">)</span>
@@ -243,8 +332,7 @@
             <span class="c1">#   - The executor that owns the worker has been collected OR</span>
             <span class="c1">#   - The executor that owns the worker has been shutdown OR</span>
             <span class="k">if</span> <span class="n">thread</span><span class="o">.</span><span class="n">_shutdown</span> <span class="ow">or</span> <span class="n">executor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">executor</span><span class="o">.</span><span class="n">_shutdown</span><span class="p">:</span>
-                <span class="c1"># Flag the executor as shutting down as early as possible if it</span>
-                <span class="c1"># is not gc-ed yet.</span>
+                <span class="c1"># Flag the executor as shutting down as early as possible if it is not gc-ed yet.</span>
                 <span class="k">if</span> <span class="n">executor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">executor</span><span class="o">.</span><span class="n">_shutdown</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="c1"># Notice other workers</span>
@@ -258,14 +346,25 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.PruningThreadPoolExecutor">[docs]</a>
 <span class="k">class</span> <span class="nc">PruningThreadPoolExecutor</span><span class="p">(</span><span class="n">AsyncThreadPoolExecutor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This ThreadPoolExecutor implementation prunes inactive threads after &#39;timeout&#39; seconds without a work item.</span>
-<span class="sd">    Pruned threads will be automatically recreated as needed for future workloads. up to &#39;max_threads&#39; can be active at any one time.</span>
+<span class="sd">    This `AsyncThreadPoolExecutor` implementation prunes inactive threads after &#39;timeout&#39; seconds without a work item.</span>
+<span class="sd">    Pruned threads will be automatically recreated as needed for future workloads. Up to &#39;max_threads&#39; can be active at any one time.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;_timeout&quot;</span><span class="p">,</span> <span class="s2">&quot;_adjusting_lock&quot;</span>
+
 <div class="viewcode-block" id="PruningThreadPoolExecutor.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.PruningThreadPoolExecutor.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
                  <span class="n">initializer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initargs</span><span class="o">=</span><span class="p">(),</span> <span class="n">timeout</span><span class="o">=</span><span class="n">TEN_MINUTES</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the PruningThreadPoolExecutor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_workers (Optional[int], optional): The maximum number of workers. Defaults to None.</span>
+<span class="sd">            thread_name_prefix (str, optional): Prefix for thread names. Defaults to &#39;&#39;.</span>
+<span class="sd">            initializer (Optional[Initializer], optional): An initializer callable. Defaults to None.</span>
+<span class="sd">            initargs (Tuple[Any, ...], optional): Arguments for the initializer. Defaults to ().</span>
+<span class="sd">            timeout (int, optional): Timeout duration for pruning inactive threads. Defaults to TEN_MINUTES.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span><span class="o">=</span><span class="n">timeout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_adjusting_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_workers</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span></div>
@@ -277,6 +376,9 @@
 <div class="viewcode-block" id="PruningThreadPoolExecutor._adjust_thread_count">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.PruningThreadPoolExecutor._adjust_thread_count">[docs]</a>
     <span class="k">def</span> <span class="nf">_adjust_thread_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adjusts the number of threads based on workload and idle threads.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adjusting_lock</span><span class="p">:</span>
             <span class="c1"># if idle threads are available, don&#39;t spin new threads</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_idle_semaphore</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>

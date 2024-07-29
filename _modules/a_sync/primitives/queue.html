@@ -71,7 +71,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.primitives.queue</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides various queue implementations for managing asynchronous tasks, including standard FIFO queues,</span>
+<span class="sd">priority queues, and processing queues. These queues support advanced features like waiting for multiple items,</span>
+<span class="sd">handling priority tasks, and processing tasks with multiple workers.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">heapq</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -354,6 +360,17 @@
 <div class="viewcode-block" id="_validate_args">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._validate_args">[docs]</a>
 <span class="k">def</span> <span class="nf">_validate_args</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">can_return_less</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validates the arguments for methods that retrieve multiple items from the queue.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        i (int): The number of items to retrieve.</span>
+<span class="sd">        can_return_less (bool): Whether the method is allowed to return fewer than `i` items.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: If `i` is not an integer or `can_return_less` is not a boolean.</span>
+<span class="sd">        ValueError: If `i` is not greater than 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`i` must be an integer greater than 1. You passed </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">can_return_less</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
@@ -368,6 +385,18 @@
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._SmartFutureRef">[docs]</a>
 <span class="k">class</span> <span class="nc">_SmartFutureRef</span><span class="p">(</span><span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
     <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;_SmartFutureRef[T]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compares two weak references to SmartFuture objects for ordering.</span>
+
+<span class="sd">        This comparison is used in priority queues to determine the order of processing. A SmartFuture </span>
+<span class="sd">        reference is considered less than another if it has more waiters or if it has been garbage collected.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            other (_SmartFutureRef[T]): The other SmartFuture reference to compare with.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if this reference is less than the other, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">strong_self</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">strong_self</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
