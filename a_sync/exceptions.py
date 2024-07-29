@@ -121,7 +121,6 @@ class ImproperFunctionType(ValueError):
     """
     Raised when a function has an improper type for an a_sync operation.
     """
-    pass
 
 class FunctionNotAsync(ImproperFunctionType):
     """
@@ -237,4 +236,3 @@ class EmptySequenceError(ValueError):
     """
     Raised when an operation is performed on an empty sequence.
     """
-    ...
