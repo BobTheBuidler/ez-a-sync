@@ -1,3 +1,9 @@
+"""
+This module provides various queue implementations for managing asynchronous tasks, including standard FIFO queues,
+priority queues, and processing queues. These queues support advanced features like waiting for multiple items,
+handling priority tasks, and processing tasks with multiple workers.
+"""
+
 import asyncio
 import functools
 import heapq
@@ -225,6 +231,17 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
 
 
 def _validate_args(i: int, can_return_less: bool) -> None:
+    """
+    Validates the arguments for methods that retrieve multiple items from the queue.
+
+    Args:
+        i (int): The number of items to retrieve.
+        can_return_less (bool): Whether the method is allowed to return fewer than `i` items.
+
+    Raises:
+        TypeError: If `i` is not an integer or `can_return_less` is not a boolean.
+        ValueError: If `i` is not greater than 1.
+    """
     if not isinstance(i, int):
         raise TypeError(f"`i` must be an integer greater than 1. You passed {i}")
     if not isinstance(can_return_less, bool):
@@ -236,6 +253,18 @@ def _validate_args(i: int, can_return_less: bool) -> None:
 
 class _SmartFutureRef(weakref.ref, Generic[T]):
     def __lt__(self, other: "_SmartFutureRef[T]") -> bool:
+        """
+        Compares two weak references to SmartFuture objects for ordering.
+
+        This comparison is used in priority queues to determine the order of processing. A SmartFuture 
+        reference is considered less than another if it has more waiters or if it has been garbage collected.
+
+        Args:
+            other (_SmartFutureRef[T]): The other SmartFuture reference to compare with.
+
+        Returns:
+            bool: True if this reference is less than the other, False otherwise.
+        """
         strong_self = self()
         if strong_self is None:
             return True
