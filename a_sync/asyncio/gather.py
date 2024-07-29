@@ -1,3 +1,8 @@
+"""
+This module provides enhanced versions of gather and gather_mapping,
+asynchronous functions for concurrently awaiting a list of awaitables or mappings of awaitables,
+with optional progress reporting using tqdm.
+"""
 
 import asyncio
 from typing import (Any, Awaitable, Dict, List, Mapping, TypeVar, Union,
