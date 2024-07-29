@@ -1,6 +1,5 @@
 """
-This module provides a mixin class to add logging capabilities to other classes.
-It includes a logger property for creating a logger specific to the class and a property to check if debug logging is enabled.
+This module provides a mixin class to add debug logging capabilities to other classes.
 """
 
 from functools import cached_property
