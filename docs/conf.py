@@ -85,10 +85,16 @@ SKIP_MODULES = [
     "a_sync.utils.iterators",
 ]
 
-def skip_submodules(app, what, name, obj, skip, options):
+def skip_undesired_members(app, what, name, obj, skip, options):
+    # skip some submodules (not sure if this works right or if its even desired)
     if what == "module" and obj.__name__ in SKIP_MODULES:
         skip = True
+    
+    # Skip the __init__, __str__, __getattribute__, args, and with_traceback members of all Exceptions
+    if issubclass(getattr(obj, '__objclass__', type), BaseException) and name in ["__init__", "__str__", "__getattribute__", "args", "with_traceback"]:
+        return True
+    
     return skip
 
 def setup(sphinx):
-    sphinx.connect("autodoc-skip-member", skip_submodules)
+    sphinx.connect("autodoc-skip-member", skip_undesired_members)
