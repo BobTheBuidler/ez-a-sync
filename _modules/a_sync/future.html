@@ -105,6 +105,7 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.future.ASyncFuture">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncFuture</span><span class="p">(</span><span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;__awaitable__&quot;</span><span class="p">,</span> <span class="s2">&quot;__dependencies&quot;</span><span class="p">,</span> <span class="s2">&quot;__dependants&quot;</span><span class="p">,</span> <span class="s2">&quot;__task&quot;</span>
+    
 <div class="viewcode-block" id="ASyncFuture.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.future.ASyncFuture.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">awaitable</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">dependencies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ASyncFuture&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

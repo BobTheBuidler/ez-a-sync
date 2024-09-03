@@ -2840,9 +2840,10 @@ InvalidStateError.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync._smart.set_smart_task_factory">
 <span class="sig-prename descclassname"><span class="pre">a_sync._smart.</span></span><span class="sig-name descname"><span class="pre">set_smart_task_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/_smart.html#set_smart_task_factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync._smart.set_smart_task_factory" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Set the event loop’s task factory to <a class="reference internal" href="#a_sync._smart.smart_task_factory" title="a_sync._smart.smart_task_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">smart_task_factory()</span></code></a> so all tasks will be SmartTask instances.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>) – Optional; the event loop. If None, the current event loop is used.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -2894,15 +2895,20 @@ you can combine shield() with a try/except clause, as follows:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync._smart.smart_task_factory">
 <span class="sig-prename descclassname"><span class="pre">a_sync._smart.</span></span><span class="sig-name descname"><span class="pre">smart_task_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coro</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/_smart.html#smart_task_factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync._smart.smart_task_factory" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Task factory function that an event loop calls to create new tasks.</p>
+<p>This factory function utilizes ez-a-sync’s custom <a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmartTask</span></code></a> implementation.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loop</strong> (<em>AbstractEventLoop</em>)</p></li>
-<li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>)</p></li>
+<li><p><strong>loop</strong> (<em>AbstractEventLoop</em>) – The event loop.</p></li>
+<li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – The coroutine to run in the task.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A SmartTask instance running the provided coroutine.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3242,11 +3248,7 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ASyncFlagException</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ASyncFlagException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+<p>Base exception class for flag-related errors in the a_sync library.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException.__new__">
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.__new__" title="Link to this definition"></a></dt>
@@ -3262,22 +3264,11 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException.viable_flags">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.viable_flags" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the set of viable flags.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -3288,9 +3279,10 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncRuntimeError.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ASyncRuntimeError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ASyncRuntimeError.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initializes the ASyncRuntimeError exception.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>e</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><em>RuntimeError</em></a>)</p>
+<dd class="field-odd"><p><strong>e</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><em>RuntimeError</em></a>) – The original runtime error.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3300,18 +3292,6 @@ set self.__traceback__ to tb and return self.</p>
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.ASyncRuntimeError.__new__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.ASyncRuntimeError.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.ASyncRuntimeError.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.ASyncRuntimeError.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.ASyncRuntimeError.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py exception">
@@ -3319,25 +3299,8 @@ set self.__traceback__ to tb and return self.</p>
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">EmptySequenceError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#EmptySequenceError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.EmptySequenceError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.EmptySequenceError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.EmptySequenceError.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.EmptySequenceError.__new__">
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.EmptySequenceError.__new__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.EmptySequenceError.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.EmptySequenceError.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.EmptySequenceError.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.EmptySequenceError.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3346,14 +3309,16 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">FlagNotDefined</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FlagNotDefined"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
+<p>Raised when a flag is not defined on an object.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FlagNotDefined.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initializes the FlagNotDefined exception.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a>)</p></li>
-<li><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>obj</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.12)"><em>Type</em></a>) – The object where the flag is not defined.</p></li>
+<li><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The undefined flag.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3374,22 +3339,11 @@ set self.__traceback__ to tb and return self.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined.viable_flags">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.viable_flags" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the set of viable flags.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -3397,26 +3351,21 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotAsync">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">FunctionNotAsync</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FunctionNotAsync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FunctionNotAsync" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ImproperFunctionType" title="a_sync.exceptions.ImproperFunctionType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImproperFunctionType</span></code></a></p>
+<p>Raised when a function expected to be async is not.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotAsync.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FunctionNotAsync.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FunctionNotAsync.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the FunctionNotAsync exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn</strong> – The function that is not async.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotAsync.__new__">
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.FunctionNotAsync.__new__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotAsync.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.FunctionNotAsync.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotAsync.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.FunctionNotAsync.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3425,26 +3374,21 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotSync">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">FunctionNotSync</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FunctionNotSync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FunctionNotSync" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ImproperFunctionType" title="a_sync.exceptions.ImproperFunctionType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImproperFunctionType</span></code></a></p>
+<p>Raised when a function expected to be sync is not.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotSync.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FunctionNotSync.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FunctionNotSync.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the FunctionNotSync exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fn</strong> – The function that is not sync.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotSync.__new__">
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.FunctionNotSync.__new__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotSync.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.FunctionNotSync.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotSync.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.FunctionNotSync.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3454,25 +3398,8 @@ set self.__traceback__ to tb and return self.</p>
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ImproperFunctionType</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ImproperFunctionType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ImproperFunctionType" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.ImproperFunctionType.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.ImproperFunctionType.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.ImproperFunctionType.__new__">
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.ImproperFunctionType.__new__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.ImproperFunctionType.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.ImproperFunctionType.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.ImproperFunctionType.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.ImproperFunctionType.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3481,12 +3408,14 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidFlag</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#InvalidFlag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.InvalidFlag" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
+<p>Raised when an invalid flag is encountered.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#InvalidFlag.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initializes the InvalidFlag exception.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>) – The invalid flag.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3506,22 +3435,11 @@ set self.__traceback__ to tb and return self.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag.viable_flags">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.viable_flags" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the set of viable flags.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -3529,14 +3447,16 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidFlagValue</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#InvalidFlagValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
+<p>Raised when a flag has an invalid value.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#InvalidFlagValue.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initializes the InvalidFlagValue exception.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
-<li><p><strong>flag_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>)</p></li>
+<li><p><strong>flag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The flag with an invalid value.</p></li>
+<li><p><strong>flag_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>) – The invalid value of the flag.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3557,22 +3477,11 @@ set self.__traceback__ to tb and return self.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue.viable_flags">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.viable_flags" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the set of viable flags.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -3590,32 +3499,22 @@ set self.__traceback__ to tb and return self.</p>
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.KwargsUnsupportedError.__new__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.KwargsUnsupportedError.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.KwargsUnsupportedError.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.KwargsUnsupportedError.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.KwargsUnsupportedError.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Base class for errors related to <code class="xref py py-class docutils literal notranslate"><span class="pre">TaskMapping</span></code>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingError.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingError.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initializes the MappingError exception.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p></li>
-<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>) – The TaskMapping where the error occurred.</p></li>
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – An optional message describing the error.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3626,21 +3525,9 @@ set self.__traceback__ to tb and return self.</p>
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingError.__new__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingError.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingError._msg">
 <span class="sig-name descname"><span class="pre">_msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.exceptions.MappingError._msg" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingError.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingError.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3649,14 +3536,16 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingIsEmptyError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingIsEmptyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.MappingError" title="a_sync.exceptions.MappingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingError</span></code></a></p>
+<p>Raised when a TaskMapping is empty and an operation requires it to have items.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initializes the MappingError exception.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p></li>
-<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>) – The TaskMapping where the error occurred.</p></li>
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – An optional message describing the error.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3667,21 +3556,9 @@ set self.__traceback__ to tb and return self.</p>
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.__new__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError._msg">
 <span class="sig-name descname"><span class="pre">_msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TaskMapping</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">contain</span> <span class="pre">anything</span> <span class="pre">to</span> <span class="pre">yield'</span></em><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError._msg" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3690,14 +3567,16 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingNotEmptyError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingNotEmptyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.MappingError" title="a_sync.exceptions.MappingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingError</span></code></a></p>
+<p>Raised when a TaskMapping is not empty and an operation requires it to be empty.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initializes the MappingError exception.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>)</p></li>
-<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>mapping</strong> (<a class="reference internal" href="#a_sync.task.TaskMapping" title="a_sync.task.TaskMapping"><em>TaskMapping</em></a>) – The TaskMapping where the error occurred.</p></li>
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – An optional message describing the error.</p></li>
 </ul>
 </dd>
 </dl>
@@ -3708,21 +3587,9 @@ set self.__traceback__ to tb and return self.</p>
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.__new__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError._msg">
 <span class="sig-name descname"><span class="pre">_msg</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TaskMapping</span> <span class="pre">already</span> <span class="pre">contains</span> <span class="pre">some</span> <span class="pre">data.</span> <span class="pre">In</span> <span class="pre">order</span> <span class="pre">to</span> <span class="pre">use</span> <span class="pre">`map`,</span> <span class="pre">you</span> <span class="pre">need</span> <span class="pre">a</span> <span class="pre">fresh</span> <span class="pre">one'</span></em><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError._msg" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3731,10 +3598,20 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">NoFlagsFound</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#NoFlagsFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
+<p>Raised when no viable flags are found in the target.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#NoFlagsFound.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the NoFlagsFound exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – The target object where flags were expected.</p></li>
+<li><p><strong>kwargs_keys</strong> – Optional; keys in the kwargs if applicable.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound.__new__">
@@ -3751,22 +3628,11 @@ set self.__traceback__ to tb and return self.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound.viable_flags">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.viable_flags" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the set of viable flags.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -3795,18 +3661,6 @@ set self.__traceback__ to tb and return self.</p>
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.PersistedTaskException.__new__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.PersistedTaskException.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.PersistedTaskException.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.PersistedTaskException.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.PersistedTaskException.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py exception">
@@ -3816,23 +3670,17 @@ set self.__traceback__ to tb and return self.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.SyncModeInAsyncContextError.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#SyncModeInAsyncContextError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the ASyncRuntimeError exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>e</strong> – The original runtime error.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.SyncModeInAsyncContextError.__new__">
 <span class="sig-name descname"><span class="pre">__new__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError.__new__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.SyncModeInAsyncContextError.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.SyncModeInAsyncContextError.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError.args" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3841,10 +3689,20 @@ set self.__traceback__ to tb and return self.</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">TooManyFlags</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#TooManyFlags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.TooManyFlags" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
+<p>Raised when multiple flags are found, but only one was expected.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">present_flags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#TooManyFlags.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the TooManyFlags exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> – The target object where flags were found.</p></li>
+<li><p><strong>present_flags</strong> – The flags that were found.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags.__new__">
@@ -3861,22 +3719,11 @@ set self.__traceback__ to tb and return self.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags.with_traceback">
-<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.with_traceback" title="Link to this definition"></a></dt>
-<dd><p>Exception.with_traceback(tb) –
-set self.__traceback__ to tb and return self.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.args" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags.viable_flags">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.viable_flags" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the set of viable flags.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -4171,12 +4018,31 @@ cancelled.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor.sync_mode">
@@ -4460,12 +4326,31 @@ cancelled.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor.sync_mode">
@@ -4759,12 +4644,31 @@ cancelled.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor.sync_mode">
@@ -7635,12 +7539,31 @@ cancelled.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor.sync_mode">
@@ -7924,12 +7847,31 @@ cancelled.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor.sync_mode">
@@ -8075,7 +8017,16 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.CounterLock.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.CounterLock.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.CounterLock.is_ready">
@@ -8085,7 +8036,17 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.CounterLock.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.CounterLock.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.CounterLock.value">
@@ -8230,12 +8191,31 @@ true will not block at all.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.Event.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.Event.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.Event.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.Event.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -8474,12 +8454,31 @@ priority_semaphore = PrioritySemaphore(10)</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.PrioritySemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.PrioritySemaphore.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore.name">
@@ -9029,12 +9028,31 @@ cancelled.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor.sync_mode">
@@ -9455,12 +9473,31 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.Semaphore.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.Semaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.Semaphore.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.Semaphore.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.Semaphore.name">
@@ -10399,7 +10436,16 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.dummy">
@@ -10409,7 +10455,17 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.name">
@@ -11023,7 +11079,16 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.all">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils.html#all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.all" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Asynchronously evaluates whether all of the given awaitables evaluate to True.</p>
+<p>This function takes multiple awaitable objects and returns True if all of them evaluate to True. It cancels
+the remaining awaitables once a False result is found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*awaitables</strong> – A variable length list of awaitable objects.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all of the awaitables evaluate to True, otherwise False.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>
@@ -11033,7 +11098,16 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.any">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">awaitables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils.html#any"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.any" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Asynchronously evaluates whether any of the given awaitables evaluates to True.</p>
+<p>This function takes multiple awaitable objects and returns True if at least one of them evaluates to True. It cancels
+the remaining awaitables once a True result is found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*awaitables</strong> – A variable length list of awaitable objects.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if any of the awaitables evaluates to True, otherwise False.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>

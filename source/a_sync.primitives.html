@@ -416,31 +416,72 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-a_sync.primitives._loggable">
 <span id="a-sync-primitives-loggable-module"></span><h2>a_sync.primitives._loggable module<a class="headerlink" href="#module-a_sync.primitives._loggable" title="Link to this heading"></a></h2>
+<p>This module provides a mixin class to add debug logging capabilities to other classes.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives._loggable._LoggerMixin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives._loggable.</span></span><span class="sig-name descname"><span class="pre">_LoggerMixin</span></span><a class="reference internal" href="../_modules/a_sync/primitives/_loggable.html#_LoggerMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A mixin class that adds logging capabilities to other classes.</p>
+<p>This mixin provides a cached property for accessing a logger instance and a property to check if debug logging is enabled.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives._loggable._LoggerMixin.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives._loggable._LoggerMixin.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -2020,7 +2061,16 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.CounterLock.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.is_ready">
@@ -2030,7 +2080,17 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.CounterLock.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.value">
@@ -2175,12 +2235,31 @@ true will not block at all.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.Event.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.Event.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.Event.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.Event.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -2419,12 +2498,31 @@ priority_semaphore = PrioritySemaphore(10)</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.name">
@@ -3095,12 +3193,31 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.Semaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.Semaphore.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore.name">
@@ -3570,7 +3687,16 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.debug_logs_enabled">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Checks if debug logging is enabled for the logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.dummy">
@@ -3580,7 +3706,17 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.logger">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.logger" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns a logger instance specific to the class using this mixin.</p>
+<p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A logger instance for the class.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Logger</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.name">

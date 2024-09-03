@@ -88,6 +88,18 @@
 <div class="viewcode-block" id="any">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.any">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="o">*</span><span class="n">awaitables</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Asynchronously evaluates whether any of the given awaitables evaluates to True.</span>
+
+<span class="sd">    This function takes multiple awaitable objects and returns True if at least one of them evaluates to True. It cancels </span>
+<span class="sd">    the remaining awaitables once a True result is found.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        *awaitables: A variable length list of awaitable objects.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if any of the awaitables evaluates to True, otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">futs</span> <span class="o">=</span> <span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">awaitables</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">fut</span> <span class="ow">in</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">futs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
@@ -107,6 +119,18 @@
 <div class="viewcode-block" id="all">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.all">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="o">*</span><span class="n">awaitables</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Asynchronously evaluates whether all of the given awaitables evaluate to True.</span>
+
+<span class="sd">    This function takes multiple awaitable objects and returns True if all of them evaluate to True. It cancels </span>
+<span class="sd">    the remaining awaitables once a False result is found.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        *awaitables: A variable length list of awaitable objects.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if all of the awaitables evaluate to True, otherwise False.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">futs</span> <span class="o">=</span> <span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">awaitables</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">fut</span> <span class="ow">in</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">awaitables</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
