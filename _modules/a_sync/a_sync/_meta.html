@@ -93,8 +93,6 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._meta.ASyncMeta">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncMeta</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Any class with metaclass ASyncMeta will have its functions wrapped with a_sync upon class instantiation.&quot;&quot;&quot;</span>
-<div class="viewcode-block" id="ASyncMeta.__new__">
-<a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._meta.ASyncMeta.__new__">[docs]</a>
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">new_class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
         <span class="n">_update_logger</span><span class="p">(</span><span class="n">new_class_name</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;woah, you&#39;re defining a new ASync class `</span><span class="si">%s</span><span class="s2">`! let&#39;s walk thru it together&quot;</span><span class="p">,</span> <span class="n">new_class_name</span><span class="p">)</span>
@@ -146,7 +144,6 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;`</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">` is not callable, we will take no action with it&quot;</span><span class="p">,</span> <span class="n">new_class_name</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">ASyncMeta</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">new_class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">)</span>    </div>
-</div>
 
 
 
