@@ -27,6 +27,7 @@ MetaNumeric = Union[Numeric, "ASyncFuture[int]", "ASyncFuture[float]", "ASyncFut
 
 class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     __slots__ = "__awaitable__", "__dependencies", "__dependants", "__task"
+    
     def __init__(self, awaitable: Awaitable[T], dependencies: List["ASyncFuture"] = []) -> None:
         self.__awaitable__ = awaitable
         self.__dependencies = dependencies

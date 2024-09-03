@@ -97,15 +97,34 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
         self.add_done_callback(SmartTask._self_done_cleanup_callback)
 
 def smart_task_factory(loop: asyncio.AbstractEventLoop, coro: Awaitable[T]) -> SmartTask[T]:
+    """
+    Task factory function that an event loop calls to create new tasks.
+     
+    This factory function utilizes ez-a-sync's custom :class:`~SmartTask` implementation.
+    
+    Args:
+        loop: The event loop.
+        coro: The coroutine to run in the task.
+        
+    Returns:
+        A SmartTask instance running the provided coroutine.
+    """
     return SmartTask(coro, loop=loop)
 
 def set_smart_task_factory(loop: asyncio.AbstractEventLoop = None) -> None:
+    """
+    Set the event loop's task factory to :func:`~smart_task_factory` so all tasks will be SmartTask instances.
+    
+    Args:
+        loop: Optional; the event loop. If None, the current event loop is used.
+    """
     if loop is None:
         loop = a_sync.asyncio.get_event_loop()
     loop.set_task_factory(smart_task_factory)
 
 def shield(arg: Awaitable[T], *, loop: Optional[asyncio.AbstractEventLoop] = None) -> SmartFuture[T]:
-    """Wait for a future, shielding it from cancellation.
+    """
+    Wait for a future, shielding it from cancellation.
 
     The statement
 
