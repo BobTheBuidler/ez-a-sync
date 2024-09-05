@@ -147,13 +147,12 @@
         <span class="n">_validate_wrapped_fn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">modifiers</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="n">fn</span>
-        <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span></div>
+        <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Since `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">` is an </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__docstring_append__</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Since `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">` is an </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__docstring_append__</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
-    
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Since </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an `~a_sync.a_sync.function.ASyncFunction`, you can optionally pass either a `sync` or `asynchronous` kwarg with a boolean value.&quot;</span>
-    
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">sync</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span><span class="o">...</span>
     <span class="nd">@overload</span>
@@ -293,7 +292,9 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_sync</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asyncified</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>            
-        <span class="k">return</span> <span class="n">sync_wrap</span></div>
+        <span class="k">return</span> <span class="n">sync_wrap</span>
+
+    <span class="n">__docstring_append__</span> <span class="o">=</span> <span class="s2">&quot;:class:`~a_sync.a_sync.function.ASyncFunction`, you can optionally pass either a `sync` or `asynchronous` kwarg with a boolean value.&quot;</span></div>
 
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
@@ -352,9 +353,6 @@
 <div class="viewcode-block" id="ASyncFunctionSyncDefault">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncFunctionSyncDefault">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncFunctionSyncDefault</span><span class="p">(</span><span class="n">ASyncFunction</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Since </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an `~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously.&quot;</span>
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">sync</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span><span class="o">...</span>
     <span class="nd">@overload</span>
@@ -369,15 +367,13 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncFunctionSyncDefault.__call__">[docs]</a>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MaybeCoro</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-</div>
+
+    <span class="n">__docstring_append__</span> <span class="o">=</span> <span class="s2">&quot;:class:`~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously.&quot;</span></div>
 
     
 <div class="viewcode-block" id="ASyncFunctionAsyncDefault">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncFunctionAsyncDefault">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncFunctionAsyncDefault</span><span class="p">(</span><span class="n">ASyncFunction</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Since </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is an `~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await.&quot;</span>
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">sync</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span><span class="o">...</span>
     <span class="nd">@overload</span>
@@ -392,7 +388,8 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncFunctionAsyncDefault.__call__">[docs]</a>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MaybeCoro</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-</div>
+
+    <span class="n">__docstring_append__</span> <span class="o">=</span> <span class="s2">&quot;:class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await.&quot;</span></div>
 
 
 <div class="viewcode-block" id="ASyncDecoratorSyncDefault">
