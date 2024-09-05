@@ -64,9 +64,9 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         self.__wrapped__ = fn
         functools.update_wrapper(self, self.__wrapped__)
         if self.__doc__ is None:
-            self.__doc__ = f"\n\nSince `{self.__name__}` is an {self.__docstring_append}"
+            self.__doc__ = f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
         else:
-            self.__doc__ += f"\n\nSince `{self.__name__}` is an {self.__docstring_append}"
+            self.__doc__ += f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
     @overload
@@ -184,7 +184,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             return self._asyncified(*args, **kwargs)            
         return sync_wrap
 
-    __docstring_append = ":class:`~a_sync.a_sync.function.ASyncFunction`, you can optionally pass either a `sync` or `asynchronous` kwarg with a boolean value."
+    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunction`, you can optionally pass either a `sync` or `asynchronous` kwarg with a boolean value."
 
 if sys.version_info < (3, 10):
     _inherit = ASyncFunction[AnyFn[P, T], ASyncFunction[P, T]]
@@ -237,7 +237,7 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         return self.fn(*args, **kwargs)
-    __docstring_append = ":class:`~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously."
+    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously."
     
 class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
     @overload
@@ -252,7 +252,7 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         return self.fn(*args, **kwargs)
-    __docstring_append = ":class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
+    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
 
 class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
