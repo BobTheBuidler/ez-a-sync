@@ -22,7 +22,7 @@ class _LoggerMixin:
         Returns:
             Logger: A logger instance for the class.
         """
-        logger_id = self.__qualname__
+        logger_id = type(self).__qualname__
         if hasattr(self, '_name') and self._name:
             logger_id += f'.{self._name}'
         return getLogger(logger_id)
