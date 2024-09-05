@@ -52,7 +52,6 @@ def _validate_wrapped_fn(fn: Callable) -> None:
             raise RuntimeError(f"{fn} must not have any arguments with the following names: {_flags.VIABLE_FLAGS}")
 
 class ASyncFunction(ModifiedMixin, Generic[P, T]):
-    
     # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
     @overload
     def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:...
