@@ -63,8 +63,10 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         self.modifiers = ModifierManager(modifiers)
         self.__wrapped__ = fn
         functools.update_wrapper(self, self.__wrapped__)
-        self.__doc__ += f"\n\nSince `{self.__name__}` is an {self.__docstring_append}"
-    
+        if self.__doc__ is None:
+            self.__doc__ = f"\n\nSince `{self.__name__}` is an {self.__docstring_append}"
+        else:
+            self.__doc__ += f"\n\nSince `{self.__name__}` is an {self.__docstring_append}"
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
     @overload
