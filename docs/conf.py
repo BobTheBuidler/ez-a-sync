@@ -89,7 +89,7 @@ SKIP_MODULES = [
 
 def skip_undesired_members(app, what, name, obj, skip, options):
     # skip some submodules (not sure if this works right or if its even desired)
-    if what == "module" and obj.__name__ in SKIP_MODULES:
+    if what == "module" and getattr(obj, '__name__', None) in SKIP_MODULES:
         skip = True
     
     # Skip the __init__, __str__, __getattribute__, args, and with_traceback members of all Exceptions
