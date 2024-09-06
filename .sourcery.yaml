@@ -31,7 +31,11 @@ ignore: # A list of paths or files which Sourcery will ignore.
 rule_settings:
   enable:
   - default
-  disable: [no-conditionals-in-tests, no-loop-in-tests]  # A list of rule IDs Sourcery will never suggest.
+  disable: [
+    no-conditionals-in-tests, 
+    no-loop-in-tests, 
+    dict-assign-update-to-union, # we want to be backward compatible with many pythons
+  ]  # A list of rule IDs Sourcery will never suggest.
   rule_types:
   - refactoring
   - suggestion

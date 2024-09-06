@@ -25,9 +25,13 @@ T = TypeVar("T")
 K = TypeVar("K")
 V = TypeVar("V")
 I = TypeVar("I")
+"""A :class:`TypeVar` that is used to represent instances of a common class."""
+
 E = TypeVar('E', bound=Exception)
 TYPE = TypeVar("TYPE", bound=Type)
+
 P = ParamSpec("P")
+"""A :class:`ParamSpec` used everywhere in the lib."""
 
 Numeric = Union[int, float, Decimal]
 """Type alias for numeric values of types int, float, or Decimal."""
