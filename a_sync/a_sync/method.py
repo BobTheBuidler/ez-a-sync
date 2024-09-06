@@ -31,7 +31,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     """
 
     __wrapped__: AnyFn[P, T]
-    """The wrapped function."""
+    """The unbound function which will be bound to an instance when :meth:`__get__` is called."""
 
     async def __call__(self, instance: I, *args: P.args, **kwargs: P.kwargs) -> T:
         """
@@ -266,6 +266,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
     __weakself__: "weakref.ref[I]"
     "A weak reference to the instance the function is bound to."
+
+    __wrapped__: AnyFn[Concatenate[I, P], T]
+    """The original unbound method that was wrapped."""
 
     __slots__ = "_is_async_def", "__weakself__"
 
