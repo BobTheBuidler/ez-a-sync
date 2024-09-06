@@ -1,18 +1,38 @@
+"""
+This module provides functionality for handling synchronous and asynchronous flags
+in the ez-a-sync library.
+
+ez-a-sync uses 'flags' to indicate whether objects / function calls will be sync or async.
+
+You can use any of the provided flags, whichever makes most sense for your use case.
+"""
 
 from typing import Any
 
 from a_sync import exceptions
 
 AFFIRMATIVE_FLAGS = {'sync'}
+"""Set of flags indicating synchronous behavior."""
+
 NEGATIVE_FLAGS = {'asynchronous'}
+"""Set of flags indicating asynchronous behavior."""
+
 VIABLE_FLAGS = AFFIRMATIVE_FLAGS | NEGATIVE_FLAGS
+"""Set of all valid flags."""
 
-"""
-A-Sync uses 'flags' to indicate whether objects / fn calls will be sync or async.
-You can use any of the provided flags, whichever makes most sense for your use case.
-"""
+def negate_if_necessary(flag: str, flag_value: bool) -> bool:
+    """Negate the flag value if necessary based on the flag type.
 
-def negate_if_necessary(flag: str, flag_value: bool):
+    Args:
+        flag: The flag to check.
+        flag_value: The value of the flag.
+
+    Returns:
+        The potentially negated flag value.
+
+    Raises:
+        :class:`exceptions.InvalidFlag`: If the flag is not recognized.
+    """
     validate_flag_value(flag, flag_value)
     if flag in AFFIRMATIVE_FLAGS:
         return bool(flag_value)
@@ -21,6 +41,19 @@ def negate_if_necessary(flag: str, flag_value: bool):
     raise exceptions.InvalidFlag(flag)
 
 def validate_flag_value(flag: str, flag_value: Any) -> bool:
+    """
+    Validate that the flag value is a boolean.
+
+    Args:
+        flag: The flag being validated.
+        flag_value: The value to validate.
+
+    Returns:
+        The validated flag value.
+
+    Raises:
+        :class:`exceptions.InvalidFlagValue`: If the flag value is not a boolean.
+    """
     if not isinstance(flag_value, bool):
         raise exceptions.InvalidFlagValue(flag, flag_value)
     return flag_value

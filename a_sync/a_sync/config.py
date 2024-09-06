@@ -1,3 +1,10 @@
+"""
+Configuration module for a_sync library.
+
+This module provides configuration options and default settings for the a_sync library.
+It includes functionality for setting up executors, defining default modifiers,
+and handling environment variable configurations.
+"""
 
 import functools
 import os
@@ -11,6 +18,15 @@ EXECUTOR_VALUE = int(os.environ.get("A_SYNC_EXECUTOR_VALUE", 8))
 
 @functools.lru_cache(maxsize=1)
 def get_default_executor() -> Executor:
+    """
+    Get the default executor based on the :obj:`EXECUTOR_TYPE` environment variable.
+
+    Returns:
+        Executor: An instance of either ProcessPoolExecutor or ThreadPoolExecutor.
+
+    Raises:
+        :class:`ValueError`: If an invalid EXECUTOR_TYPE is specified.
+    """
     if EXECUTOR_TYPE.lower().startswith('p'): # p, P, proc, Processes, etc
         return ProcessPoolExecutor(EXECUTOR_VALUE)
     elif EXECUTOR_TYPE.lower().startswith('t'): # t, T, thread, THREADS, etc
