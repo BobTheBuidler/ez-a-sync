@@ -34,7 +34,7 @@ class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
         **modifiers: ModifierKwargs,
     ) -> None:
         """
-        Initialize the ASyncDescriptor.
+        Initialize the {cls}.
 
         Args:
             _fget: The function to be wrapped.
@@ -56,7 +56,7 @@ class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
             self.__wrapped__ = _fget
 
         self.field_name = field_name or _fget.__name__
-        """The name of the field this descriptor is bound to."""
+        """The name of the field the {cls} is bound to."""
         
         functools.update_wrapper(self, self.__wrapped__)
 
@@ -65,7 +65,7 @@ class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
 
     def __set_name__(self, owner, name):
         """
-        Set the field name when the descriptor is assigned to a class.
+        Set the field name when the {cls} is assigned to a class.
 
         Args:
             owner: The class owning this descriptor.
@@ -211,3 +211,9 @@ class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
             The sum of the results.
         """
         return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).sum(pop=True, sync=False)
+
+    def __init_subclass__(cls) -> None:
+        for attr in cls.__dict__.values():
+            if attr.__doc__ and "{cls}" in attr.__doc__:
+                attr.__doc__ = attr.__doc__.replace("{cls}", f":class:`{cls.__name__}`")
+        return super().__init_subclass__()

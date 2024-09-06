@@ -65,6 +65,7 @@ autodoc_default_options = {
         '_ASyncSingletonMeta__lock',
         '_is_protocol',
         '_is_runtime_protocol',
+        '_materialized',
     ]),
 }
 
