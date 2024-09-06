@@ -30,9 +30,11 @@ def async_generator_empty():
 
 @pytest.fixture
 def async_error_generator():
-    yield 0
-    yield 1
-    raise ValueError("Simulated error")
+    async def async_err_gen():
+        yield 0
+        yield 1
+        raise ValueError("Simulated error")
+    return async_err_gen
 
 
 @test_both
@@ -160,72 +162,76 @@ async def test_stop_iteration_async(cls_to_test, async_generator):
 
 # Test decorator
 
-@test_both
-def test_decorated_func_sync(cls_to_test):
-    @cls_to_test.wrap
-    async def decorated():
-        yield 0
-        yield 1
-        yield 2
-    for _ in decorated():
-        assert isinstance(_, int)
+def test_aiterable_decorated_func_sync():
+    with pytest.raises(TypeError, match="`async_iterable` must be an AsyncIterable. You passed "):
+        @ASyncIterable.wrap
+        async def decorated():
+            yield 0
         
-@test_both
 @pytest.mark.asyncio_cooperative
-async def test_decorated_func_async(cls_to_test):
-    @cls_to_test.wrap
+async def test_aiterable_decorated_func_async(async_generator):
+    with pytest.raises(TypeError, match="`async_iterable` must be an AsyncIterable. You passed "):
+        @ASyncIterable.wrap
+        async def decorated():
+            yield 0
+
+
+def test_aiterator_decorated_func_sync(async_generator):
+    @ASyncIterator.wrap
     async def decorated():
-        yield 0
-        yield 1
-        yield 2
-    async for _ in decorated():
-        assert isinstance(_, int)
+        async for i in async_generator():
+            yield i
+    retval = decorated()
+    assert isinstance(retval, ASyncIterator)
+    assert list(retval) == [0, 1, 2]
+        
+@pytest.mark.asyncio_cooperative
+async def test_aiterator_decorated_func_async(async_generator):
+    @ASyncIterator.wrap
+    async def decorated():
+        async for i in async_generator():
+            yield i
+    retval = decorated()
+    assert isinstance(retval, ASyncIterator)
+    assert await retval == [0, 1, 2]
 
 
-@test_both
 def test_aiterable_decorated_method_sync():
-    with pytest.raises(NotImplemented):
+    with pytest.raises(TypeError, match=""):
         class Test:
             @ASyncIterable.wrap
             async def decorated(self):
                 yield 0
-                yield 1
-                yield 2
         
-@test_both
 @pytest.mark.asyncio_cooperative
 async def test_aiterable_decorated_method_async():
-    with pytest.raises(NotImplemented):
+    with pytest.raises(TypeError, match=""):
         class Test:
             @ASyncIterable.wrap
             async def decorated(self):
                 yield 0
-                yield 1
-                yield 2
 
 
-@test_both
-def test_aiterator_decorated_method_sync():
+def test_aiterator_decorated_method_sync(async_generator):
     class Test:
         @ASyncIterator.wrap
         async def decorated(self):
-            yield 0
-            yield 1
-            yield 2
-    for _ in Test().decorated():
-        assert isinstance(_, int)
+            async for i in async_generator():
+                yield i
+    retval = Test().decorated()
+    assert isinstance(retval, ASyncIterator)
+    assert list(retval) == [0, 1, 2]
         
-@test_both
 @pytest.mark.asyncio_cooperative
-async def test_aiterator_decorated_method_async():
+async def test_aiterator_decorated_method_async(async_generator):
     class Test:
         @ASyncIterator.wrap
         async def decorated(self):
-            yield 0
-            yield 1
-            yield 2
-    async for _ in Test().decorated():
-        assert isinstance(_, int)
+            async for i in async_generator():
+                yield i
+    retval = Test().decorated()
+    assert isinstance(retval, ASyncIterator)
+    assert await retval == [0, 1, 2]
         
 
 @test_both
@@ -252,15 +258,15 @@ async def test_async_error_handling(cls_to_test, async_error_generator):
 # Test failures
 
 @test_both
-def test_sync_with_iterable(cls_to_test, async_generator):
+def test_sync_with_iterable(cls_to_test):
     with pytest.raises(TypeError):
-        ASyncIterable([0, 1, 2])
+        cls_to_test([0, 1, 2])
 
 @test_both
 @pytest.mark.asyncio_cooperative
-async def test_async_with_iterable(cls_to_test, async_generator):
+async def test_async_with_iterable(cls_to_test):
     with pytest.raises(TypeError):
-        ASyncIterable([0, 1, 2])
+        cls_to_test([0, 1, 2])
 
 
 # Type check dunder methods
