@@ -132,7 +132,9 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     
     # Everything below just adds some debug logs
     async def _debug_daemon(self) -> None:
-        """Daemon task that will emit a debug log every minute while the semaphore has waiters."""
+        """
+        Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.
+        """
         while self._waiters:
             await asyncio.sleep(60)
             self.logger.debug(f"{self} has {len(self)} waiters for any of: {self._decorated}")
