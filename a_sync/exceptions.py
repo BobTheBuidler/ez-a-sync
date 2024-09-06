@@ -149,10 +149,17 @@ class ASyncRuntimeError(RuntimeError):
         super().__init__(str(e))
 
 class SyncModeInAsyncContextError(ASyncRuntimeError):
-    def __init__(self):
-        err = f"The event loop is already running, which means you're trying to use an ASync function synchronously from within an async context.\n"
-        err += f"Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:\n"
-        err += f"{VIABLE_FLAGS}"
+    """
+    Raised when synchronous code is used within an asynchronous context.
+    """
+    def __init__(self, err: str = ''):
+        """
+        Initializes the SyncModeInAsyncContextError exception.
+        """
+        if not err:
+            err = "The event loop is already running, which means you're trying to use an `ASyncFunction` synchronously from within an async context.\n"
+            err += f"Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:\n"
+            err += f"{VIABLE_FLAGS}"
         super().__init__(err)
 
 class MappingError(Exception):

@@ -10,6 +10,7 @@ from async_property import async_cached_property
 
 from a_sync._typing import *
 from a_sync.a_sync import _helpers
+from a_sync.exceptions import SyncModeInAsyncContextError
 
 
 logger = logging.getLogger(__name__)
@@ -26,9 +27,6 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     A mixin class defining logic for awaiting an AsyncIterable
     """
     __wrapped__: AsyncIterable[T]
-    def __aiter__(self) -> AsyncIterator[T]:
-        "Returns an async iterator for the wrapped async iterable."
-        return self.__wrapped__.__aiter__()
     def __await__(self) -> Generator[Any, Any, List[T]]:
         """Asynchronously iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
         return self._materialized.__await__()
@@ -61,10 +59,17 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
         return cls(wrapped)
     def __init__(self, async_iterable: AsyncIterable[T]):
         "Initializes the ASyncIterable with an async iterable."
+        if not isinstance(async_iterable, AsyncIterable):
+            raise TypeError(f"`async_iterable` must be an AsyncIterable. You passed {async_iterable}")
         self.__wrapped__ = async_iterable
         "The wrapped async iterable object."
     def __repr__(self) -> str:
         return f"<{type(self).__name__} for {self.__wrapped__} at {hex(id(self))}>"
+
+    def __aiter__(self) -> AsyncIterator[T]:
+        "Returns an async iterator for the wrapped async iterable."
+        return self.__wrapped__.__aiter__()
+
     def __iter__(self) -> Iterator[T]:
         "Returns an iterator for the wrapped async iterable."
         yield from ASyncIterator(self.__aiter__())
@@ -87,6 +92,11 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
             return asyncio.get_event_loop().run_until_complete(self.__anext__())
         except StopAsyncIteration as e:
             raise StopIteration from e
+        except RuntimeError as e:
+            if str(e) == "This event loop is already running":
+                raise SyncModeInAsyncContextError("The event loop is already running. Try iterating using `async for` instead of `for`.") from e
+            raise
+
     @overload
     def wrap(cls, aiterator: AsyncIterator[T]) -> "ASyncIterator[T]":...
     @overload
@@ -102,11 +112,17 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         raise TypeError(f"`wrapped` must be an AsyncIterator or an async generator function. You passed {wrapped}")
     def __init__(self, async_iterator: AsyncIterator[T]):
         "Initializes the ASyncIterator with an async iterator."
+        if not isinstance(async_iterator, AsyncIterator):
+            raise TypeError(f"`async_iterator` must be an AsyncIterator. You passed {async_iterator}")
         self.__wrapped__ = async_iterator
         "The wrapped async iterator object."
     async def __anext__(self) -> T:
         "Asynchronously fetches the next item from the async iterator."
         return await self.__wrapped__.__anext__()
+
+    def __aiter__(self) -> AsyncIterator[T]:
+        "Returns self."
+        return self
 
 class ASyncGeneratorFunction(Generic[P, T]):
     """
@@ -207,9 +223,7 @@ class ASyncFilter(_ASyncView[T]):
         raise StopAsyncIteration from None
     async def _check(self, obj: T) -> bool:
         checked = self._function(obj)
-        if inspect.isawaitable(checked):
-            return bool(await checked)
-        return bool(checked)
+        return bool(await checked) if inspect.isawaitable(checked) else bool(checked)
 
 
 def _key_if_no_key(obj: T) -> T:
@@ -235,7 +249,7 @@ class ASyncSorter(_ASyncView[T]):
             raise RuntimeError(f"{self} has already been consumed")
         return self
     def __repr__(self) -> str:
-        rep = f"<ASyncSorter"
+        rep = "<ASyncSorter"
         if self.reversed:
             rep += " reversed"
         rep += f" for iterator={self.__wrapped__}"
@@ -266,7 +280,7 @@ class ASyncSorter(_ASyncView[T]):
             if self.__aiterator__:
                 items = [obj async for obj in self.__aiterator__]
             else:
-                items = [obj for obj in self.__iterator__]  # type: ignore [union-attr]
+                items = list(self.__iterator__)
             items.sort(key=self._function, reverse=reverse)
             for obj in items:
                 yield obj

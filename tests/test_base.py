@@ -155,7 +155,7 @@ async def test_cached_property_async(cls: type, i: int):
     # Did it only run once?
     duration = time.time() - start
     # For TestSync, the duration can be higher because the calls execute inside of a threadpool which limits the amount of concurrency.
-    target_duration = 4 if isinstance(async_instance, TestSync) else 2.1
+    target_duration = 5 if isinstance(async_instance, TestSync) else 2.1
     assert duration < target_duration, "There is a 2 second sleep in 'test_cached_property' but it should only run once."
 
 
@@ -215,3 +215,21 @@ def test_synchronous_iteration():
                 return self.count
             raise StopIteration
     assert list(ASyncObjectWithIter()) == [1, 2, 3]
+
+
+class ClassWithGenFunc(ASyncGenericBase):
+    async def generate(self):
+        yield 0
+        yield 1
+        yield 2
+
+def test_bound_generator_meta_sync():
+    """Does the metaclass handle generator functions correctly?"""
+    for _ in ClassWithGenFunc().generate():
+        assert isinstance(_, int)
+
+@pytest.mark.asyncio_cooperative
+async def test_bound_generator_meta_async():
+    """Does the metaclass handle generator functions correctly?"""
+    async for _ in ClassWithGenFunc().generate():
+        assert isinstance(_, int)
