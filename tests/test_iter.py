@@ -29,8 +29,10 @@ def async_generator_empty():
     yield async_gen_empty
 
 @pytest.fixture
-def generator_wrapped(async_generator):
-    return ASyncIterator.wrap(async_generator())
+def async_error_generator():
+    yield 0
+    yield 1
+    raise ValueError("Simulated error")
 
 
 @test_both
@@ -169,6 +171,7 @@ def test_decorated_func_sync(cls_to_test):
         assert isinstance(_, int)
         
 @test_both
+@pytest.mark.asyncio_cooperative
 async def test_decorated_func_async(cls_to_test):
     @cls_to_test.wrap
     async def decorated():
@@ -180,9 +183,31 @@ async def test_decorated_func_async(cls_to_test):
 
 
 @test_both
-def test_decorated_method_sync(cls_to_test):
+def test_aiterable_decorated_method_sync():
+    with pytest.raises(NotImplemented):
+        class Test:
+            @ASyncIterable.wrap
+            async def decorated(self):
+                yield 0
+                yield 1
+                yield 2
+        
+@test_both
+@pytest.mark.asyncio_cooperative
+async def test_aiterable_decorated_method_async():
+    with pytest.raises(NotImplemented):
+        class Test:
+            @ASyncIterable.wrap
+            async def decorated(self):
+                yield 0
+                yield 1
+                yield 2
+
+
+@test_both
+def test_aiterator_decorated_method_sync():
     class Test:
-        @cls_to_test.wrap
+        @ASyncIterator.wrap
         async def decorated(self):
             yield 0
             yield 1
@@ -191,9 +216,10 @@ def test_decorated_method_sync(cls_to_test):
         assert isinstance(_, int)
         
 @test_both
-async def test_decorated_method_async(cls_to_test):
+@pytest.mark.asyncio_cooperative
+async def test_aiterator_decorated_method_async():
     class Test:
-        @cls_to_test.wrap
+        @ASyncIterator.wrap
         async def decorated(self):
             yield 0
             yield 1
@@ -202,20 +228,9 @@ async def test_decorated_method_async(cls_to_test):
         assert isinstance(_, int)
         
 
-class AsyncErrorGenerator(ASyncIterator):
-    def __init__(self):
-        self.value = 0
-    async def __anext__(self):
-        if self.value > 1:
-            raise ValueError("Simulated error")
-        retval = self.value
-        self.value += 1
-        return retval
-
 @test_both
-def test_sync_error_handling(cls_to_test):
-    error_gen = AsyncErrorGenerator()
-    ait = cls_to_test(error_gen)
+def test_sync_error_handling(cls_to_test, async_error_generator):
+    ait = cls_to_test(async_error_generator())
     results = []
     with pytest.raises(ValueError, match="Simulated error"):
         results.extend(iter(ait))
@@ -224,9 +239,8 @@ def test_sync_error_handling(cls_to_test):
 
 @test_both
 @pytest.mark.asyncio_cooperative
-async def test_async_error_handling(cls_to_test):
-    error_gen = AsyncErrorGenerator()
-    ait = cls_to_test(error_gen)
+async def test_async_error_handling(cls_to_test, async_error_generator):
+    ait = cls_to_test(async_error_generator())
     results = []
     with pytest.raises(ValueError, match="Simulated error"):
         async for item in ait:
