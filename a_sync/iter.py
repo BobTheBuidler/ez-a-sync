@@ -108,7 +108,8 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
             cls.__doc__ += f"\n\n{new}"
     
         # format the member docstrings
-        for attr in cls.__dict__.values():
+        for attr_name in dir(cls):
+            attr = getattr(cls, attr_name)
             if attr.__doc__ and "{cls}" in attr.__doc__:
                 attr.__doc__ = attr.__doc__.replace("{cls}", f":class:`{cls.__name__}`")
 
