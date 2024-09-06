@@ -16,14 +16,31 @@ async def any(*awaitables) -> bool:
     """
     Asynchronously evaluates whether any of the given awaitables evaluates to True.
 
-    This function takes multiple awaitable objects and returns True if at least one of them evaluates to True. It cancels 
-    the remaining awaitables once a True result is found.
+    This function returns True if any element in the asynchronous iterable is truthy.
+    It short-circuits on the first truthy value. If the iterable is empty, it returns False.
 
     Args:
         *awaitables: A variable length list of awaitable objects.
 
     Returns:
-        bool: True if any of the awaitables evaluates to True, otherwise False.
+        bool: True if any element is truthy, False if all are falsy or the iterable is empty.
+
+    Example:
+        >>> async def is_odd(x):
+        ...     await asyncio.sleep(0.1)  # Simulate some async work
+        ...     return x % 2 != 0
+        ...
+        >>> numbers = [2, 4, 6, 7]
+        >>> result = await any(*[is_odd(x) for x in numbers])
+        >>> result
+        True
+        >>> numbers = [2, 4, 6, 8]
+        >>> result = await any(*[is_odd(x) for x in numbers])
+        >>> result
+        False
+
+    Note:
+        This function will stop iterating as soon as it encounters a truthy value.
     """
     futs = [asyncio.ensure_future(a) for a in awaitables]
     for fut in asyncio.as_completed(futs):
@@ -51,10 +68,23 @@ async def all(*awaitables) -> bool:
         *awaitables: A variable length list of awaitable objects.
 
     Returns:
-        bool: True if all of the awaitables evaluate to True, otherwise False.
+        bool: True if all elements are truthy or the iterable is empty, False otherwise.
+
+    Example:
+        >>> async def is_even(x):
+        ...    return x % 2 == 0
+        ...
+        >>> numbers = [2, 4, 6, 8]
+        >>> result = await all(*[is_even(x) for x in numbers])
+        >>> result
+        True
+        >>> numbers = [2, 3, 4, 6]
+        >>> result = await all(*[is_even(x) for x in numbers])
+        >>> result
+        False
     """
     futs = [asyncio.ensure_future(a) for a in awaitables]
-    for fut in asyncio.as_completed(awaitables):
+    for fut in asyncio.as_completed(futs):
         try:
             result = bool(await fut)
         except RuntimeError as e:

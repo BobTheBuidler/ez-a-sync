@@ -1,6 +1,7 @@
 """
 This module provides type definitions and type-related utilities for the a_sync library.
-It includes various type aliases, protocols, and TypedDicts used throughout the library.
+It includes various type aliases, protocols, and TypedDicts used throughout the library
+to enhance type checking and provide better IDE support.
 """
 
 import asyncio
@@ -29,10 +30,10 @@ TYPE = TypeVar("TYPE", bound=Type)
 P = ParamSpec("P")
 
 Numeric = Union[int, float, Decimal]
-"Type alias for numeric values int, float, and Decimal."
+"""Type alias for numeric values of types int, float, or Decimal."""
 
 MaybeAwaitable = Union[Awaitable[T], T]
-"Type alias for values that may or may not be awaitable."
+"""Type alias for values that may or may not be awaitable. Useful for functions that can return either an awaitable or a direct value."""
 
 MaybeCoro = Union[Coroutine[Any, Any, T], T]
 "Type alias for values that may or may not be coroutine."
@@ -41,7 +42,7 @@ CoroFn = Callable[P, Awaitable[T]]
 "Type alias for any function that returns an awaitable."
 
 SyncFn = Callable[P, T]
-"Type alias for synchronous functions."
+"""Type alias for synchronous functions."""
 
 AnyFn = Union[CoroFn[P, T], SyncFn[P, T]]
 "Type alias for any function, whether synchronous or asynchronous."
@@ -49,6 +50,14 @@ AnyFn = Union[CoroFn[P, T], SyncFn[P, T]]
 class CoroBoundMethod(Protocol[I, P, T]):
     """
     Protocol for coroutine bound methods.
+
+    Example:
+        class MyClass:
+            async def my_method(self, x: int) -> str:
+                return str(x)
+        
+        instance = MyClass()
+        bound_method: CoroBoundMethod[MyClass, [int], str] = instance.my_method
     """
     __self__: I
     __call__: Callable[P, Awaitable[T]]
@@ -56,6 +65,14 @@ class CoroBoundMethod(Protocol[I, P, T]):
 class SyncBoundMethod(Protocol[I, P, T]):
     """
     Protocol for synchronous bound methods.
+
+    Example:
+        class MyClass:
+            def my_method(self, x: int) -> str:
+                return str(x)
+        
+        instance = MyClass()
+        bound_method: SyncBoundMethod[MyClass, [int], str] = instance.my_method
     """
     __self__: I
     __call__: Callable[P, T]
@@ -67,6 +84,9 @@ AnyBoundMethod = Union[CoroBoundMethod[Any, P, T], SyncBoundMethod[Any, P, T]]
 class AsyncUnboundMethod(Protocol[I, P, T]):
     """
     Protocol for unbound asynchronous methods.
+    
+    An unbound method is a method that hasn't been bound to an instance of a class yet.
+    It's essentially the function object itself, before it's accessed through an instance.
     """
     __get__: Callable[[I, Type], CoroBoundMethod[I, P, T]]
 
@@ -74,6 +94,9 @@ class AsyncUnboundMethod(Protocol[I, P, T]):
 class SyncUnboundMethod(Protocol[I, P, T]):
     """
     Protocol for unbound synchronous methods.
+    
+    An unbound method is a method that hasn't been bound to an instance of a class yet.
+    It's essentially the function object itself, before it's accessed through an instance.
     """
     __get__: Callable[[I, Type], SyncBoundMethod[I, P, T]]
 
@@ -122,4 +145,7 @@ AnyIterable = Union[AsyncIterable[K], Iterable[K]]
 "Type alias for any iterable, whether synchronous or asynchronous."
 
 AnyIterableOrAwaitableIterable = Union[AnyIterable[K], Awaitable[AnyIterable[K]]]
-"Type alias for any iterable, whether synchronous or asynchronous, or an awaitable that resolves to any iterable, whether synchronous or asynchronous."
+"""
+Type alias for any iterable, whether synchronous or asynchronous, 
+or an awaitable that resolves to any iterable, whether synchronous or asynchronous.
+"""

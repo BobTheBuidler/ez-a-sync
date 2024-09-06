@@ -77,6 +77,13 @@ class property(ASyncPropertyDescriptor[I, T]):...
 
 @final
 class ASyncPropertyDescriptorSyncDefault(property[I, T]):
+    """
+    A variant of :class:`~ASyncPropertyDescriptor` that defaults to synchronous behavior.
+
+    This class is used when the property is primarily intended to be accessed
+    synchronously but can also be used asynchronously if needed.
+    """
+
     default = "sync"
     any: ASyncFunctionSyncDefault[AnyIterable[I], bool]
     all: ASyncFunctionSyncDefault[AnyIterable[I], bool]
@@ -92,6 +99,13 @@ class ASyncPropertyDescriptorSyncDefault(property[I, T]):
 
 @final
 class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
+    """
+    A variant of :class:`~ASyncPropertyDescriptor` that defaults to asynchronous behavior.
+
+    This class is used when the property is primarily intended to be accessed
+    asynchronously but can also be used synchronously if needed.
+    """
+
     default = "async"
     any: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
     all: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
@@ -200,6 +214,13 @@ def a_sync_property(  # type: ignore [misc]
 
 
 class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.cached.AsyncCachedPropertyDescriptor):
+    """
+    A descriptor class for dual-function sync/async cached properties.
+
+    This class extends the API of ASyncPropertyDescriptor to provide
+    caching functionality, storing the computed value after the first access.
+    """
+
     __slots__ = "_fset", "_fdel", "__async_property__"
     def __init__(
         self, 
@@ -249,7 +270,13 @@ class cached_property(ASyncCachedPropertyDescriptor[I, T]):...
 
 @final
 class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
-    """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+    """
+    A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to synchronous behavior.
+
+    This class is used for cached properties that are primarily intended to be
+    accessed synchronously but can also be used asynchronously if needed.
+    """
+
     default: Literal["sync"]
     @overload
     def __get__(self, instance: None, owner: Type[I]) -> Self:...
@@ -261,7 +288,13 @@ class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
 
 @final
 class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[I, T]):
-    """This is a helper class used for type checking. You will not run into any instance of this in prod."""
+    """
+    A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to asynchronous behavior.
+
+    This class is used for cached properties that are primarily intended to be
+    accessed asynchronously but can also be used synchronously if needed.
+    """
+
     default: Literal["async"]
 
 ASyncCachedPropertyDecorator = Callable[[AnyGetterFunction[I, T]], cached_property[I, T]]
