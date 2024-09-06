@@ -1,3 +1,6 @@
+"""
+This module extends Python's :func:`asyncio.as_completed` with additional functionality.
+"""
 
 import asyncio
 

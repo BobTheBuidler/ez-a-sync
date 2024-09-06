@@ -1,3 +1,6 @@
+"""
+This module provides an enhanced version of :func:`asyncio.gather`.
+"""
 
 import asyncio
 from typing import (Any, Awaitable, Dict, List, Mapping, TypeVar, Union,

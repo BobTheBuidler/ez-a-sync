@@ -1,3 +1,6 @@
+"""
+This module defines custom exceptions for the a_sync library.
+"""
 
 import asyncio
 
@@ -106,7 +109,9 @@ class FlagNotDefined(ASyncFlagException):
 
 
 class ImproperFunctionType(ValueError):
-    pass
+    """
+    Raised when a function that should be sync is async or vice-versa.
+    """
 
 class FunctionNotAsync(ImproperFunctionType):
     """
@@ -133,10 +138,6 @@ class FunctionNotSync(ImproperFunctionType):
             fn: The function that is not sync.
         """
         super().__init__(f"`func` must be a coroutine function defined with `def`. You passed {fn}.")
-
-class KwargsUnsupportedError(ValueError):
-    def __init__(self):
-        super().__init__("`run_in_executor` does not support keyword arguments, pass them as positional args instead if you're able")
         
 class ASyncRuntimeError(RuntimeError):
     def __init__(self, e: RuntimeError):
@@ -201,4 +202,6 @@ class PersistedTaskException(Exception):
         self.task = task
 
 class EmptySequenceError(ValueError):
-    ...
+    """
+    Raised when an operation is attempted on an empty sequence but items are expected.
+    """
