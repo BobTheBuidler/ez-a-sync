@@ -38,12 +38,13 @@ def async_error_generator():
 
 
 @test_both
-def test_init(cls_to_test, async_generator):
+def test_wrap_types(cls_to_test, async_generator):
     assert isinstance(cls_to_test(async_generator()), cls_to_test)
+    assert isinstance(cls_to_test.wrap(async_generator()), cls_to_test)
 
 @test_both
 def test_sync(cls_to_test, async_generator):
-    # sourcery skip: for-append-to-extend, identity-comprehension, list-comprehension, simplify-generator
+    # sourcery skip: identity-comprehension, list-comprehension
     # comprehension
     assert [i for i in cls_to_test(async_generator())] == [0, 1, 2]
 
@@ -53,11 +54,15 @@ def test_sync(cls_to_test, async_generator):
         result.append(item)
     assert result == [0, 1, 2]
 
+    # wrap
+    assert list(cls_to_test.wrap(async_generator())) == [0, 1, 2]
+
     # list
     assert list(cls_to_test(async_generator())) == [0, 1, 2]
 
     # helper method
     assert cls_to_test(async_generator()).materialized == [0, 1, 2]
+    assert cls_to_test.wrap(async_generator()).materialized == [0, 1, 2]
 
 @test_both
 @pytest.mark.asyncio_cooperative
@@ -80,6 +85,10 @@ async def test_async(cls_to_test, async_generator):
 
     # await
     assert await cls_to_test(async_generator()) == [0, 1, 2]
+
+    # wrap
+    assert [i async for i in cls_to_test.wrap(async_generator())] == [0, 1, 2]
+    assert await cls_to_test.wrap(async_generator()) == [0, 1, 2]
 
 
 @test_both
@@ -153,6 +162,20 @@ async def test_stop_iteration_async(cls_to_test, async_generator):
 
 # Test decorator
 
+def test_aiterable_decorated_func_sync():
+    with pytest.raises(TypeError, match="`async_iterable` must be an AsyncIterable. You passed "):
+        @ASyncIterable.wrap
+        async def decorated():
+            yield 0
+        
+@pytest.mark.asyncio_cooperative
+async def test_aiterable_decorated_func_async(async_generator):
+    with pytest.raises(TypeError, match="`async_iterable` must be an AsyncIterable. You passed "):
+        @ASyncIterable.wrap
+        async def decorated():
+            yield 0
+
+
 def test_aiterator_decorated_func_sync(async_generator):
     @ASyncIterator.wrap
     async def decorated():
@@ -171,6 +194,22 @@ async def test_aiterator_decorated_func_async(async_generator):
     retval = decorated()
     assert isinstance(retval, ASyncIterator)
     assert await retval == [0, 1, 2]
+
+
+def test_aiterable_decorated_method_sync():
+    with pytest.raises(TypeError, match=""):
+        class Test:
+            @ASyncIterable.wrap
+            async def decorated(self):
+                yield 0
+        
+@pytest.mark.asyncio_cooperative
+async def test_aiterable_decorated_method_async():
+    with pytest.raises(TypeError, match=""):
+        class Test:
+            @ASyncIterable.wrap
+            async def decorated(self):
+                yield 0
 
 
 def test_aiterator_decorated_method_sync(async_generator):

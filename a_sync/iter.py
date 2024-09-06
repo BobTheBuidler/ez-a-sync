@@ -101,17 +101,17 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
 
     The class achieves this by implementing both `__iter__` and `__aiter__` methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. This dual functionality is particularly useful in codebases that are transitioning between synchronous and asynchronous code, or in libraries that aim to support both synchronous and asynchronous usage patterns without requiring the user to manage different types of iterable objects.
     """
-    
+    @classmethod
+    def wrap(cls, wrapped: AsyncIterable[T]) -> "ASyncIterable[T]":
+        "Class method to wrap an AsyncIterable for backward compatibility."
+        logger.warning("ASyncIterable.wrap will be removed soon. Please replace uses with simple instantiation ie `ASyncIterable(wrapped)`")
+        return cls(wrapped)
     def __init__(self, async_iterable: AsyncIterable[T]):
-        """
-        Initializes the ASyncIterable with an async iterable.
-        """
+        "Initializes the ASyncIterable with an async iterable."
         if not isinstance(async_iterable, AsyncIterable):
             raise TypeError(f"`async_iterable` must be an AsyncIterable. You passed {async_iterable}")
-        
         self.__wrapped__ = async_iterable
         "The wrapped async iterable object."
-
     def __repr__(self) -> str:
         return f"<{type(self).__name__} for {self.__wrapped__} at {hex(id(self))}>"
 
@@ -122,7 +122,6 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     def __iter__(self) -> Iterator[T]:
         "Returns an iterator for the wrapped async iterable."
         yield from ASyncIterator(self.__aiter__())
-        
     __slots__ = "__wrapped__", 
 
 AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
