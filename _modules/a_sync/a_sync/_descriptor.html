@@ -111,7 +111,7 @@
         <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">ModifierKwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the ASyncDescriptor.</span>
+<span class="sd">        Initialize the {cls}.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            _fget: The function to be wrapped.</span>
@@ -133,7 +133,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="n">_fget</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span> <span class="o">=</span> <span class="n">field_name</span> <span class="ow">or</span> <span class="n">_fget</span><span class="o">.</span><span class="vm">__name__</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The name of the field this descriptor is bound to.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The name of the field the {cls} is bound to.&quot;&quot;&quot;</span>
         
         <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span></div>
 
@@ -143,7 +143,7 @@
 
     <span class="k">def</span> <span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the field name when the descriptor is assigned to a class.</span>
+<span class="sd">        Set the field name when the {cls} is assigned to a class.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            owner: The class owning this descriptor.</span>
@@ -306,7 +306,13 @@
 <span class="sd">            The sum of the results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
-</div>
+
+
+    <span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">and</span> <span class="s2">&quot;</span><span class="si">{cls}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">:</span>
+                <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{cls}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;:class:`</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init_subclass__</span><span class="p">()</span></div>
 
 </pre></div>
 

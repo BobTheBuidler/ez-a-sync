@@ -89,10 +89,9 @@
 <a class="viewcode-back" href="../../../source/a_sync.utils.html#a_sync.exhaust_iterator">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">exhaust_iterator</span><span class="p">(</span><span class="n">iterator</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description:</span>
-<span class="sd">        Asynchronously iterates over items from the given async iterator and optionally places them into a queue.</span>
-<span class="sd">    </span>
-<span class="sd">        This function is a utility to exhaust an async iterator, with an option to forward the iterated items to a provided asyncio.Queue. It&#39;s particularly useful when dealing with asynchronous operations that produce items to be consumed by other parts of an application, enabling a producer-consumer pattern.</span>
+<span class="sd">    Asynchronously iterates over items from the given async iterator and optionally places them into a queue.</span>
+
+<span class="sd">    This function is a utility to exhaust an async iterator, with an option to forward the iterated items to a provided asyncio.Queue. It&#39;s particularly useful when dealing with asynchronous operations that produce items to be consumed by other parts of an application, enabling a producer-consumer pattern.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        iterator (AsyncIterator[T]): The async iterator to exhaust.</span>
@@ -112,10 +111,9 @@
 <a class="viewcode-back" href="../../../source/a_sync.utils.html#a_sync.exhaust_iterators">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">exhaust_iterators</span><span class="p">(</span><span class="n">iterators</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">join</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;    </span>
-<span class="sd">    Description:</span>
-<span class="sd">        Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.</span>
-<span class="sd">    </span>
-<span class="sd">        This function leverages asyncio.gather to concurrently exhaust multiple async iterators. It&#39;s useful in scenarios where items from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.</span>
+<span class="sd">    Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.</span>
+
+<span class="sd">    This function leverages asyncio.gather to concurrently exhaust multiple async iterators. It&#39;s useful in scenarios where items from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        iterators: A sequence of async iterators to be exhausted concurrently.</span>
@@ -175,12 +173,11 @@
 <a class="viewcode-back" href="../../../source/a_sync.utils.html#a_sync.as_yielded">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span><span class="o">*</span><span class="n">iterators</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>  <span class="c1"># type: ignore [misc]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description:</span>
-<span class="sd">        Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.</span>
+<span class="sd">    Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.</span>
 
-<span class="sd">        This function is designed to streamline the handling of multiple asynchronous data streams by consolidating them into a single asynchronous iteration context. It enables concurrent fetching and processing of items from multiple sources, improving efficiency and simplifying code structure when dealing with asynchronous operations.</span>
+<span class="sd">    This function is designed to streamline the handling of multiple asynchronous data streams by consolidating them into a single asynchronous iteration context. It enables concurrent fetching and processing of items from multiple sources, improving efficiency and simplifying code structure when dealing with asynchronous operations.</span>
 
-<span class="sd">        The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.</span>
+<span class="sd">    The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        *iterators: Variable length list of AsyncIterator objects to be merged.</span>
