@@ -27,8 +27,30 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     A mixin class defining logic for making an AsyncIterable awaitable.
 
     When awaited, a list of all elements will be returned.
+
+    Example:
+        You must subclass this mixin class and define your own `__aiter__` method as shown below.
+        ```
+        >>> class MyAwaitableAIterable(_AwaitableAsyncIterableMixin):
+        ...    def __aiter__(self):
+        ...        for i in range(4):
+        ...            yield i
+        ... 
+        >>> aiterable = MyAwaitableAIterable()
+        >>> await aiterable
+        [0, 1, 2, 3, 4]
+
+        ```
     """
     __wrapped__: AsyncIterable[T]
+
+    def __init_subclass__(cls, **kwargs) -> None:
+        new = "When awaited, a list of all elements will be returned."
+        if cls.__doc__ is None:
+            cls.__doc__ = new
+        else:
+            cls.__doc__ += f"\n\n{new}"
+        return super().__init_subclass__(**kwargs)
     
     def __await__(self) -> Generator[Any, Any, List[T]]:
         """Asynchronously iterates through all contents of ``Self`` and returns a ``list`` containing the results."""
@@ -73,10 +95,11 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     
 class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     """
-    Description:
-        A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols. This class allows objects to be iterated over using either a standard `for` loop or an `async for` loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.
+    A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols.
+    
+    This class allows objects to be iterated over using either a standard `for` loop or an `async for` loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.
 
-        The class achieves this by implementing both `__iter__` and `__aiter__` methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. This dual functionality is particularly useful in codebases that are transitioning between synchronous and asynchronous code, or in libraries that aim to support both synchronous and asynchronous usage patterns without requiring the user to manage different types of iterable objects.
+    The class achieves this by implementing both `__iter__` and `__aiter__` methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. This dual functionality is particularly useful in codebases that are transitioning between synchronous and asynchronous code, or in libraries that aim to support both synchronous and asynchronous usage patterns without requiring the user to manage different types of iterable objects.
     """
     
     def __init__(self, async_iterable: AsyncIterable[T]):
@@ -224,10 +247,10 @@ class _ASyncView(ASyncIterator[T]):
     """
 
     __aiterator__: Optional[AsyncIterator[T]] = None
-    """An optional async iterator. If None, `self.__iterator__` will have a value."""
+    """An optional async iterator. If None, :attr:`~_ASyncView.__iterator__` will have a value."""
 
     __iterator__: Optional[Iterator[T]] = None
-    """An optional iterator. If None, `self.__aiterator__` will have a value."""
+    """An optional iterator. If None, :attr:`~_ASyncView.__aiterator__` will have a value."""
 
     def __init__(
         self, 
@@ -259,6 +282,7 @@ class ASyncFilter(_ASyncView[T]):
     iterate over items, applying the filter function to each item to determine if it should be
     included in the result.
     """
+    
     def __repr__(self) -> str:
         return f"<ASyncFilter for iterator={self.__wrapped__} function={self._function.__name__} at {hex(id(self))}>"
 
