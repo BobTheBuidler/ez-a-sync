@@ -52,26 +52,34 @@ async def gather(
     - Provides progress reporting using tqdm if 'tqdm' is set to True.
     
     Args:
-        *awaitables (Union[Awaitable[T], Mapping[K, Awaitable[V]]]): The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.
-        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
+        *awaitables: The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.
+        return_exceptions (optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
+        tqdm (optional): If True, enables progress reporting using tqdm. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
 
     Returns:
-        Union[List[T], Dict[K, V]]: A list of results when awaiting individual awaitables or a dictionary of results when awaiting mappings.
+        A list of results when awaiting individual awaitables or a dictionary of results when awaiting mappings.
 
     Examples:
         Awaiting individual awaitables:
-        results will be a list containing the result of each awaitable in sequential order
+        
+        - Results will be a list containing the result of each awaitable in sequential order.
+
         ```
-        results = await gather(thing1(), thing2())
+        >>> results = await gather(thing1(), thing2())
+        >>> results
+        ['result', 123]
         ```
 
-        Awaiting mappings of awaitables
-        results will be a dictionary with 'key1' mapped to the result of thing1() and 'key2' mapped to the result of thing2.
+        Awaiting mappings of awaitables:
+        
+        - Results will be a dictionary with 'key1' mapped to the result of thing1() and 'key2' mapped to the result of thing2.
+        
         ```
-        mapping = {'key1': thing1(), 'key2': thing2()}
-        results = await gather(mapping)
+        >>> mapping = {'key1': thing1(), 'key2': thing2()}
+        >>> results = await gather(mapping)
+        >>> results
+        {'key1': 'result', 'key2': 123}
         ```
     """
     is_mapping = _is_mapping(awaitables)
@@ -97,20 +105,21 @@ async def gather_mapping(
     This function is designed to await a mapping of awaitable objects, where each key-value pair represents a unique awaitable. It enables concurrent execution and gathers results into a dictionary.
 
     Args:
-        mapping (Mapping[K, Awaitable[V]]): A dictionary-like object where keys are of type K and values are awaitable objects of type V.
-        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
+        mapping: A dictionary-like object where keys are of type K and values are awaitable objects of type V.
+        return_exceptions (optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
+        tqdm (optional): If True, enables progress reporting using tqdm. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
 
     Returns:
-        Dict[K, V]: A dictionary with keys corresponding to the keys of the input mapping and values containing the results of the corresponding awaitables.
+        A dictionary with keys corresponding to the keys of the input mapping and values containing the results of the corresponding awaitables.
 
     Example:
         The 'results' dictionary will contain the awaited results, where keys match the keys in the 'mapping' and values contain the results of the corresponding awaitables.
         ```
-        mapping = {'task1': async_function1(), 'task2': async_function2(), 'task3': async_function3()}
-
-        results = await gather_mapping(mapping)
+        >>> mapping = {'task1': async_function1(), 'task2': async_function2(), 'task3': async_function3()}
+        >>> results = await gather_mapping(mapping)
+        >>> results
+        {'task1': "result", 'task2': 123, 'task3': None}
         ```
     """
     results = {
