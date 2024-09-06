@@ -4,9 +4,16 @@ import time
 
 import pytest
 
+from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync._meta import ASyncMeta
 from a_sync.a_sync.method import ASyncBoundMethodAsyncDefault
 from tests.fixtures import TestClass, TestInheritor, TestMeta, increment, TestSync, WrongThreadError
+
+
+def test_base_direct_init():
+    with pytest.raises(NotImplementedError, match=""):
+        ASyncGenericBase()
+
 
 classes = pytest.mark.parametrize('cls', [TestClass, TestSync, TestInheritor, TestMeta])
 
@@ -14,6 +21,7 @@ classes = pytest.mark.parametrize('cls', [TestClass, TestSync, TestInheritor, Te
 @increment
 def test_base_sync(cls: type, i: int):
     sync_instance = cls(i, True)
+    assert isinstance(sync_instance, ASyncGenericBase)
     assert isinstance(sync_instance.__class__, ASyncMeta)
 
     assert sync_instance.test_fn() == i

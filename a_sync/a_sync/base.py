@@ -18,6 +18,12 @@ class ASyncGenericBase(ASyncABC):
     Allows for the use of a variety of flags out-of-box.
     You can choose which flag(s) work best for your subclass implementation.
     """
+
+    def __init__(self):
+        if type(self) is ASyncGenericBase:
+            cls_name = type(self).__name__
+            raise NotImplementedError(f"You should not create instances of `{cls_name}` directly, you should subclass `ASyncGenericBase` instead.")
+                                  
     @functools.cached_property
     def __a_sync_flag_name__(self) -> str:
         logger.debug("checking a_sync flag for %s", self)
