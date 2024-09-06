@@ -29,6 +29,8 @@ class ASyncABC(metaclass=ASyncMeta):
     @functools.cached_property
     def __a_sync_instance_should_await__(self) -> bool:
         """
+        A flag indicating whether the instance should default to asynchronous execution.
+        
         You can override this if you want. 
         If you want to be able to hotswap instance modes, you can redefine this as a non-cached property.
         """

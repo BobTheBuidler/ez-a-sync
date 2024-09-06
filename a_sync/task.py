@@ -30,7 +30,23 @@ MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
 
 class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]]):
     """
-    A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.
+    A mapping of keys to asynchronous tasks with additional functionality.
+
+    TaskMapping is a specialized dictionary that maps keys to asyncio Tasks. It provides
+    convenient methods for creating, managing, and iterating over these tasks asynchronously.
+
+    Example:
+        async def fetch_data(url: str) -> str:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    return await response.text()
+
+        tasks = TaskMapping(fetch_data, name='url_fetcher', concurrency=5)
+        tasks['example.com'] = 'http://example.com'
+        tasks['python.org'] = 'https://www.python.org'
+
+        async for key, result in tasks:
+            print(f"Data for {key}: {result}")
     """
     
     concurrency: Optional[int] = None
@@ -71,11 +87,14 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         **wrapped_func_kwargs: P.kwargs,
     ) -> None:
         """
+        Initialize a TaskMapping instance.
+
         Args:
             wrapped_func: A function that takes a key (and optional parameters) and returns an Awaitable.
             *iterables: Any number of iterables whose elements will be used as keys for task generation.
             name: An optional name for the tasks created by this mapping.
-            **wrapped_func_kwargs: Keyword arguments that will be passed to `wrapped_func`.
+            concurrency: Maximum number of tasks to run concurrently.
+            **wrapped_func_kwargs: Additional keyword arguments to be passed to wrapped_func.
         """
 
         if concurrency:
