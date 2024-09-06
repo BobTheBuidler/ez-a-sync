@@ -35,10 +35,10 @@ class ASyncGenericBase(ASyncABC):
             # Let's check the instance's atributes
             logger.debug("unable to find flag name using `%s.__init__` signature, checking for flag attributes defined on %s", self.__class__.__name__, self)
             present_flags = [flag for flag in _flags.VIABLE_FLAGS if hasattr(self, flag)]
-            if len(present_flags) == 0:
-                raise exceptions.NoFlagsFound(self)
+            if not present_flags:
+                raise exceptions.NoFlagsFound(self) from None
             if len(present_flags) > 1:
-                raise exceptions.TooManyFlags(self, present_flags)
+                raise exceptions.TooManyFlags(self, present_flags) from None
             flag = present_flags[0]
         if not isinstance(flag, str):
             raise exceptions.InvalidFlag(flag)
@@ -112,7 +112,7 @@ class ASyncGenericBase(ASyncABC):
     @classmethod
     def __parse_flag_name_from_list(cls, items: Dict[str, Any]) -> str:
         present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in items]
-        if len(present_flags) == 0:
+        if not present_flags:
             logger.debug("There are too many flags defined on %s", cls)
             raise exceptions.NoFlagsFound(cls, items.keys())
         if len(present_flags) > 1:
