@@ -106,7 +106,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__wrapped__</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The wrapped function.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The unbound function which will be bound to an instance when :meth:`__get__` is called.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ASyncMethodDescriptor.__call__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.method.ASyncMethodDescriptor.__call__">[docs]</a>
@@ -356,6 +356,9 @@
 
     <span class="n">__weakself__</span><span class="p">:</span> <span class="s2">&quot;weakref.ref[I]&quot;</span>
     <span class="s2">&quot;A weak reference to the instance the function is bound to.&quot;</span>
+
+    <span class="n">__wrapped__</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The original unbound method that was wrapped.&quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;_is_async_def&quot;</span><span class="p">,</span> <span class="s2">&quot;__weakself__&quot;</span>
 
