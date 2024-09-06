@@ -109,8 +109,8 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     
         # format the member docstrings
         for attr_name in dir(cls):
-            attr = getattr(cls, attr_name)
-            if attr.__doc__ and "{cls}" in attr.__doc__:
+            attr = getattr(cls, attr_name, None)
+            if attr is not None and attr.__doc__ and "{cls}" in attr.__doc__:
                 attr.__doc__ = attr.__doc__.replace("{cls}", f":class:`{cls.__name__}`")
 
         return super().__init_subclass__(**kwargs)
