@@ -71,20 +71,44 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.a_sync.singleton</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync._meta</span> <span class="kn">import</span> <span class="n">ASyncSingletonMeta</span>
+<span></span><span class="kn">from</span> <span class="nn">a_sync.a_sync._meta</span> <span class="kn">import</span> <span class="n">ASyncSingletonMeta</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync.base</span> <span class="kn">import</span> <span class="n">ASyncGenericBase</span>
 
 <div class="viewcode-block" id="ASyncGenericSingleton">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncGenericSingleton">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncGenericSingleton</span><span class="p">(</span><span class="n">ASyncGenericBase</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ASyncSingletonMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Subclass this class if you want Singleton-esque ASync objects.</span>
-<span class="sd">    They work kind of like a typical Singleton would, but you will have two instances instead of one:</span>
-<span class="sd">    - one sync instance</span>
-<span class="sd">    - one async instance</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span></div>
+<span class="sd">    A base class for creating singleton-esque ASync classes.</span>
+
+<span class="sd">    This class combines the functionality of ASyncGenericBase with a singleton pattern,</span>
+<span class="sd">    ensuring that only one instance of the class exists per execution mode (sync/async).</span>
+<span class="sd">    It uses a custom metaclass to manage instance creation and caching.</span>
+
+<span class="sd">    Subclasses of ASyncGenericSingleton will have two instances instead of one:</span>
+<span class="sd">    - one synchronous instance</span>
+<span class="sd">    - one asynchronous instance</span>
+
+<span class="sd">    This allows for proper behavior in both synchronous and asynchronous contexts</span>
+<span class="sd">    while maintaining the singleton pattern within each context.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        class MyAsyncSingleton(ASyncGenericSingleton):</span>
+<span class="sd">            @a_sync</span>
+<span class="sd">            def my_method(self):</span>
+<span class="sd">                # Method implementation</span>
+
+<span class="sd">        # These will return the same synchronous instance</span>
+<span class="sd">        sync_instance1 = MyAsyncSingleton(sync=True)</span>
+<span class="sd">        sync_instance2 = MyAsyncSingleton(sync=True)</span>
+
+<span class="sd">        # These will return the same asynchronous instance</span>
+<span class="sd">        async_instance1 = MyAsyncSingleton(asynchronous=True)</span>
+<span class="sd">        async_instance2 = MyAsyncSingleton(asynchronous=True)</span>
+
+<span class="sd">        assert sync_instance1 is sync_instance2</span>
+<span class="sd">        assert async_instance1 is async_instance2</span>
+<span class="sd">        assert sync_instance1 is not async_instance1</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 </pre></div>
 

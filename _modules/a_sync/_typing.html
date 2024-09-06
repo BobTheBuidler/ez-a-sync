@@ -73,7 +73,8 @@
   <h1>Source code for a_sync._typing</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module provides type definitions and type-related utilities for the a_sync library.</span>
-<span class="sd">It includes various type aliases, protocols, and TypedDicts used throughout the library.</span>
+<span class="sd">It includes various type aliases, protocols, and TypedDicts used throughout the library</span>
+<span class="sd">to enhance type checking and provide better IDE support.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
@@ -102,10 +103,10 @@
 <span class="n">P</span> <span class="o">=</span> <span class="n">ParamSpec</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">)</span>
 
 <span class="n">Numeric</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">]</span>
-<span class="s2">&quot;Type alias for numeric values int, float, and Decimal.&quot;</span>
+<span class="sd">&quot;&quot;&quot;Type alias for numeric values of types int, float, or Decimal.&quot;&quot;&quot;</span>
 
 <span class="n">MaybeAwaitable</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
-<span class="s2">&quot;Type alias for values that may or may not be awaitable.&quot;</span>
+<span class="sd">&quot;&quot;&quot;Type alias for values that may or may not be awaitable. Useful for functions that can return either an awaitable or a direct value.&quot;&quot;&quot;</span>
 
 <span class="n">MaybeCoro</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Coroutine</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
 <span class="s2">&quot;Type alias for values that may or may not be coroutine.&quot;</span>
@@ -114,7 +115,7 @@
 <span class="s2">&quot;Type alias for any function that returns an awaitable.&quot;</span>
 
 <span class="n">SyncFn</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
-<span class="s2">&quot;Type alias for synchronous functions.&quot;</span>
+<span class="sd">&quot;&quot;&quot;Type alias for synchronous functions.&quot;&quot;&quot;</span>
 
 <span class="n">AnyFn</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
 <span class="s2">&quot;Type alias for any function, whether synchronous or asynchronous.&quot;</span>
@@ -124,6 +125,14 @@
 <span class="k">class</span> <span class="nc">CoroBoundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for coroutine bound methods.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        class MyClass:</span>
+<span class="sd">            async def my_method(self, x: int) -&gt; str:</span>
+<span class="sd">                return str(x)</span>
+<span class="sd">        </span>
+<span class="sd">        instance = MyClass()</span>
+<span class="sd">        bound_method: CoroBoundMethod[MyClass, [int], str] = instance.my_method</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__self__</span><span class="p">:</span> <span class="n">I</span>
     <span class="fm">__call__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span></div>
@@ -134,6 +143,14 @@
 <span class="k">class</span> <span class="nc">SyncBoundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for synchronous bound methods.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        class MyClass:</span>
+<span class="sd">            def my_method(self, x: int) -&gt; str:</span>
+<span class="sd">                return str(x)</span>
+<span class="sd">        </span>
+<span class="sd">        instance = MyClass()</span>
+<span class="sd">        bound_method: SyncBoundMethod[MyClass, [int], str] = instance.my_method</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__self__</span><span class="p">:</span> <span class="n">I</span>
     <span class="fm">__call__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span></div>
@@ -148,6 +165,9 @@
 <span class="k">class</span> <span class="nc">AsyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for unbound asynchronous methods.</span>
+<span class="sd">    </span>
+<span class="sd">    An unbound method is a method that hasn&#39;t been bound to an instance of a class yet.</span>
+<span class="sd">    It&#39;s essentially the function object itself, before it&#39;s accessed through an instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="fm">__get__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">I</span><span class="p">,</span> <span class="n">Type</span><span class="p">],</span> <span class="n">CoroBoundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span></div>
 
@@ -158,6 +178,9 @@
 <span class="k">class</span> <span class="nc">SyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for unbound synchronous methods.</span>
+<span class="sd">    </span>
+<span class="sd">    An unbound method is a method that hasn&#39;t been bound to an instance of a class yet.</span>
+<span class="sd">    It&#39;s essentially the function object itself, before it&#39;s accessed through an instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="fm">__get__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">I</span><span class="p">,</span> <span class="n">Type</span><span class="p">],</span> <span class="n">SyncBoundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span></div>
 
@@ -210,7 +233,10 @@
 <span class="s2">&quot;Type alias for any iterable, whether synchronous or asynchronous.&quot;</span>
 
 <span class="n">AnyIterableOrAwaitableIterable</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">K</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">K</span><span class="p">]]]</span>
-<span class="s2">&quot;Type alias for any iterable, whether synchronous or asynchronous, or an awaitable that resolves to any iterable, whether synchronous or asynchronous.&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Type alias for any iterable, whether synchronous or asynchronous, </span>
+<span class="sd">or an awaitable that resolves to any iterable, whether synchronous or asynchronous.</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
            </div>

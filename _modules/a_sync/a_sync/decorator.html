@@ -217,93 +217,104 @@
     <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_MODE</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>  <span class="c1"># default values are set by passing these kwargs into a ModifierManager object.</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ASyncDecorator</span><span class="p">,</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]:</span>
-    <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    A coroutine function decorated with this decorator can be called as a sync function by passing a boolean value for any of these kwargs: </span><span class="si">{</span><span class="n">_flags</span><span class="o">.</span><span class="n">VIABLE_FLAGS</span><span class="si">}</span>
-<span class="s2">    </span>
-<span class="s2">    lib defaults:</span>
-<span class="s2">    async settings</span>
-<span class="s2">        cache_type: CacheType = None,            - This can be None or &#39;memory&#39;. &#39;memory&#39; is a lru cache which can be modified with the &#39;cache_typed&#39;,&#39;ram_cache_maxsize&#39;,&#39;ram_cache_ttl&#39; modifiers.</span>
-<span class="s2">        cache_typed: bool = False,               - Set to True if you want types considered treated for cache keys. ie with cache_typed=True, Decimal(0) and 0 will be considered separate keys.</span>
-<span class="s2">        ram_cache_maxsize: Optional[int] = -1,   - The maxsize for your lru cache. None if cache is unbounded. If you set this value without specifying a cache type, &#39;memory&#39; will automatically be applied.</span>
-<span class="s2">        ram_cache_ttl: Optional[int] = None,     - The ttl for items in your lru cache. Set to None. If you set this value without specifying a cache type, &#39;memory&#39; will automatically be applied.</span>
-<span class="s2">        runs_per_minute: Optional[int] = None,   - Setting this value enables a rate limiter for the decorated function.</span>
-<span class="s2">        semaphore: SemaphoreSpec = None,         - drop in a Semaphore for your async defined functions.</span>
-<span class="s2">    sync settings</span>
-<span class="s2">        executor: Executor = config.default_sync_executor</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A versatile decorator that enables both synchronous and asynchronous execution of functions.</span>
 
-<span class="s2">    ######################</span>
-<span class="s2">    # async def examples #</span>
-<span class="s2">    ######################</span>
+<span class="sd">    This decorator allows a function to be called either synchronously or asynchronously,</span>
+<span class="sd">    depending on the context and parameters. It provides a powerful way to write code</span>
+<span class="sd">    that can be used in both synchronous and asynchronous environments.</span>
 
-<span class="s2">    @a_sync</span>
-<span class="s2">    async def some_fn():</span>
-<span class="s2">        reurn True</span>
-<span class="s2">    </span>
-<span class="s2">    await some_fn() == True</span>
-<span class="s2">    some_fn(sync=True) == True</span>
+<span class="sd">    Args:</span>
+<span class="sd">        coro_fn: The function to be decorated. Can be either a coroutine function or a regular function.</span>
+<span class="sd">        default: Determines the default execution mode. Can be &#39;async&#39;, &#39;sync&#39;, or None.</span>
+<span class="sd">                 If None, the mode is inferred from the decorated function type.</span>
+<span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
+<span class="sd">                     See :class:`ModifierKwargs` for available options.</span>
+<span class="sd">    </span>
+<span class="sd">    Modifiers:</span>
+<span class="sd">        lib defaults:</span>
+<span class="sd">            async settings</span>
+<span class="sd">                cache_type: CacheType = None,            - This can be None or &#39;memory&#39;. &#39;memory&#39; is a lru cache which can be modified with the &#39;cache_typed&#39;,&#39;ram_cache_maxsize&#39;,&#39;ram_cache_ttl&#39; modifiers.</span>
+<span class="sd">                cache_typed: bool = False,               - Set to True if you want types considered treated for cache keys. ie with cache_typed=True, Decimal(0) and 0 will be considered separate keys.</span>
+<span class="sd">                ram_cache_maxsize: Optional[int] = -1,   - The maxsize for your lru cache. None if cache is unbounded. If you set this value without specifying a cache type, &#39;memory&#39; will automatically be applied.</span>
+<span class="sd">                ram_cache_ttl: Optional[int] = None,     - The ttl for items in your lru cache. Set to None. If you set this value without specifying a cache type, &#39;memory&#39; will automatically be applied.</span>
+<span class="sd">                runs_per_minute: Optional[int] = None,   - Setting this value enables a rate limiter for the decorated function.</span>
+<span class="sd">                semaphore: SemaphoreSpec = None,         - drop in a Semaphore for your async defined functions.</span>
+<span class="sd">            sync settings</span>
+<span class="sd">                executor: Executor = config.default_sync_executor</span>
 
-<span class="s2">    </span>
-<span class="s2">    @a_sync(default=None)</span>
-<span class="s2">    async def some_fn():</span>
-<span class="s2">        reurn True</span>
-<span class="s2">    </span>
-<span class="s2">    await some_fn() == True</span>
-<span class="s2">    some_fn(sync=True) == True</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        An :class:`~ASyncDecorator` if used as a decorator factory, or an :class:`~ASyncFunction`</span>
+<span class="sd">        if used directly on a function.</span>
 
-<span class="s2">    </span>
-<span class="s2">    @a_sync(default=&#39;async&#39;)</span>
-<span class="s2">    async def some_fn():</span>
-<span class="s2">        reurn True</span>
-<span class="s2">    </span>
-<span class="s2">    await some_fn() == True</span>
-<span class="s2">    some_fn(sync=True) == True</span>
-<span class="s2">    </span>
+<span class="sd">    Examples:</span>
+<span class="sd">        The decorator can be used in several ways.</span>
 
-<span class="s2">    @a_sync(default=&#39;sync&#39;)</span>
-<span class="s2">    async def some_fn():</span>
-<span class="s2">        reurn True</span>
-<span class="s2">    </span>
-<span class="s2">    some_fn() == True</span>
-<span class="s2">    await some_fn(sync=False) == True</span>
+<span class="sd">        1. As a simple decorator:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        &gt;&gt;&gt; @a_sync</span>
+<span class="sd">        ... async def some_async_fn():</span>
+<span class="sd">        ...     return True</span>
+<span class="sd">        &gt;&gt;&gt; await some_fn()</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; some_fn(sync=True)</span>
+<span class="sd">        True</span>
+<span class="sd">        ```</span>
+<span class="sd">        ```</span>
+<span class="sd">        &gt;&gt;&gt; @a_sync</span>
+<span class="sd">        ... def some_sync_fn():</span>
+<span class="sd">        ...     return True</span>
+<span class="sd">        &gt;&gt;&gt; some_sync_fn()</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; some_sync_fn(sync=False)</span>
+<span class="sd">        &lt;coroutine object some_sync_fn at 0x12345678&gt;</span>
+<span class="sd">        ```</span>
 
-<span class="s2">    </span>
-<span class="s2">    # TODO: in a future release, I will make this usable with sync functions as well</span>
+<span class="sd">        2. As a decorator with default mode specified:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        &gt;&gt;&gt; @a_sync(default=&#39;sync&#39;)</span>
+<span class="sd">        ... async def some_fn():</span>
+<span class="sd">        ...     return True</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; some_fn()</span>
+<span class="sd">        True</span>
+<span class="sd">        ```</span>
 
-<span class="s2">    ################</span>
-<span class="s2">    # def examples #</span>
-<span class="s2">    ################</span>
+<span class="sd">        3. As a decorator with modifiers:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        &gt;&gt;&gt; @a_sync(cache_type=&#39;memory&#39;, runs_per_minute=60)</span>
+<span class="sd">        ... async def some_fn():</span>
+<span class="sd">        ...    return True</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; some_fn(sync=True)</span>
+<span class="sd">        True</span>
+<span class="sd">        ```</span>
 
-<span class="s2">    @a_sync</span>
-<span class="s2">    def some_fn():</span>
-<span class="s2">        reurn True</span>
-<span class="s2">    </span>
-<span class="s2">    some_fn() == True</span>
-<span class="s2">    await some_fn(sync=False) == True</span>
-<span class="s2">    </span>
+<span class="sd">        4. Applied directly to a function:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        &gt;&gt;&gt; some_fn = a_sync(some_existing_function, default=&#39;sync&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; some_fn()</span>
+<span class="sd">        &quot;some return value&quot;</span>
+<span class="sd">        ```</span>
 
-<span class="s2">    @a_sync(default=None)</span>
-<span class="s2">    def some_fn():</span>
-<span class="s2">        reurn True</span>
-<span class="s2">    </span>
-<span class="s2">    some_fn() == True</span>
-<span class="s2">    await some_fn(sync=False) == True</span>
+<span class="sd">    The decorated function can then be called either synchronously or asynchronously:</span>
 
+<span class="sd">    ```python</span>
+<span class="sd">    result = some_fn()  # Synchronous call</span>
+<span class="sd">    result = await some_fn()  # Asynchronous call</span>
+<span class="sd">    ```</span>
 
-<span class="s2">    @a_sync(default=&#39;async&#39;)</span>
-<span class="s2">    def some_fn():</span>
-<span class="s2">        reurn True</span>
-<span class="s2">    </span>
-<span class="s2">    await some_fn() == True</span>
-<span class="s2">    some_fn(sync=True) == True</span>
+<span class="sd">    The execution mode can also be explicitly specified during the call:</span>
 
+<span class="sd">    ```python</span>
+<span class="sd">    result = some_fn(sync=True)  # Force synchronous execution</span>
+<span class="sd">    result = await some_fn(sync=False)  # Force asynchronous execution</span>
+<span class="sd">    ```</span>
 
-<span class="s2">    @a_sync(default=&#39;sync&#39;)</span>
-<span class="s2">    def some_fn():</span>
-<span class="s2">        reurn True</span>
-<span class="s2">    </span>
-<span class="s2">    some_fn() == True</span>
-<span class="s2">    await some_fn(sync=False) == True</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+<span class="sd">    This decorator is particularly useful for libraries that need to support</span>
+<span class="sd">    both synchronous and asynchronous usage, or for gradually migrating</span>
+<span class="sd">    synchronous code to asynchronous without breaking existing interfaces.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="c1"># If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync(&#39;sync&#39;)...</span>
     <span class="k">if</span> <span class="n">coro_fn</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;async&#39;</span><span class="p">,</span> <span class="s1">&#39;sync&#39;</span><span class="p">]:</span>
@@ -318,6 +329,8 @@
         <span class="n">deco</span> <span class="o">=</span> <span class="n">ASyncDecorator</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span> <span class="o">**</span><span class="n">modifiers</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">deco</span> <span class="k">if</span> <span class="n">coro_fn</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">deco</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span></div>
 
+
+<span class="c1"># TODO: in a future release, I will make this usable with sync functions as well</span>
 </pre></div>
 
            </div>

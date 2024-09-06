@@ -105,7 +105,23 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping">[docs]</a>
 <span class="k">class</span> <span class="nc">TaskMapping</span><span class="p">(</span><span class="n">DefaultDict</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="s2">&quot;asyncio.Task[V]&quot;</span><span class="p">],</span> <span class="n">AsyncIterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A mapping from keys to asyncio Tasks that asynchronously generates and manages tasks based on input iterables.</span>
+<span class="sd">    A mapping of keys to asynchronous tasks with additional functionality.</span>
+
+<span class="sd">    TaskMapping is a specialized dictionary that maps keys to asyncio Tasks. It provides</span>
+<span class="sd">    convenient methods for creating, managing, and iterating over these tasks asynchronously.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        async def fetch_data(url: str) -&gt; str:</span>
+<span class="sd">            async with aiohttp.ClientSession() as session:</span>
+<span class="sd">                async with session.get(url) as response:</span>
+<span class="sd">                    return await response.text()</span>
+
+<span class="sd">        tasks = TaskMapping(fetch_data, name=&#39;url_fetcher&#39;, concurrency=5)</span>
+<span class="sd">        tasks[&#39;example.com&#39;] = &#39;http://example.com&#39;</span>
+<span class="sd">        tasks[&#39;python.org&#39;] = &#39;https://www.python.org&#39;</span>
+
+<span class="sd">        async for key, result in tasks:</span>
+<span class="sd">            print(f&quot;Data for {key}: {result}&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -148,11 +164,14 @@
         <span class="o">**</span><span class="n">wrapped_func_kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a TaskMapping instance.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            wrapped_func: A function that takes a key (and optional parameters) and returns an Awaitable.</span>
 <span class="sd">            *iterables: Any number of iterables whose elements will be used as keys for task generation.</span>
 <span class="sd">            name: An optional name for the tasks created by this mapping.</span>
-<span class="sd">            **wrapped_func_kwargs: Keyword arguments that will be passed to `wrapped_func`.</span>
+<span class="sd">            concurrency: Maximum number of tasks to run concurrently.</span>
+<span class="sd">            **wrapped_func_kwargs: Additional keyword arguments to be passed to wrapped_func.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">concurrency</span><span class="p">:</span>

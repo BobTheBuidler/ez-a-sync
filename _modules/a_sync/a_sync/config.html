@@ -71,7 +71,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.a_sync.config</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Configuration module for a_sync library.</span>
+
+<span class="sd">This module provides configuration options and default settings for the a_sync library.</span>
+<span class="sd">It includes functionality for setting up executors, defining default modifiers,</span>
+<span class="sd">and handling environment variable configurations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ProcessPoolExecutor</span><span class="p">,</span> <span class="n">ThreadPoolExecutor</span>
@@ -86,6 +93,15 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.config.get_default_executor">[docs]</a>
 <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_default_executor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Executor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the default executor based on the :obj:`EXECUTOR_TYPE` environment variable.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Executor: An instance of either ProcessPoolExecutor or ThreadPoolExecutor.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        :class:`ValueError`: If an invalid EXECUTOR_TYPE is specified.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">EXECUTOR_TYPE</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">):</span> <span class="c1"># p, P, proc, Processes, etc</span>
         <span class="k">return</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">EXECUTOR_VALUE</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">EXECUTOR_TYPE</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">):</span> <span class="c1"># t, T, thread, THREADS, etc</span>

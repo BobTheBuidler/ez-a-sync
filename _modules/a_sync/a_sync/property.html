@@ -170,6 +170,13 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncPropertyDescriptorSyncDefault">[docs]</a>
 <span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">ASyncPropertyDescriptorSyncDefault</span><span class="p">(</span><span class="nb">property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A variant of :class:`~ASyncPropertyDescriptor` that defaults to synchronous behavior.</span>
+
+<span class="sd">    This class is used when the property is primarily intended to be accessed</span>
+<span class="sd">    synchronously but can also be used asynchronously if needed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;sync&quot;</span>
     <span class="nb">any</span><span class="p">:</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
     <span class="nb">all</span><span class="p">:</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
@@ -188,6 +195,13 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncPropertyDescriptorAsyncDefault">[docs]</a>
 <span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">ASyncPropertyDescriptorAsyncDefault</span><span class="p">(</span><span class="nb">property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A variant of :class:`~ASyncPropertyDescriptor` that defaults to asynchronous behavior.</span>
+
+<span class="sd">    This class is used when the property is primarily intended to be accessed</span>
+<span class="sd">    asynchronously but can also be used synchronously if needed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;async&quot;</span>
     <span class="nb">any</span><span class="p">:</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
     <span class="nb">all</span><span class="p">:</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
@@ -302,6 +316,13 @@
 <div class="viewcode-block" id="ASyncCachedPropertyDescriptor">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncCachedPropertyDescriptor">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncCachedPropertyDescriptor</span><span class="p">(</span><span class="n">_ASyncPropertyDescriptorBase</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">ap</span><span class="o">.</span><span class="n">cached</span><span class="o">.</span><span class="n">AsyncCachedPropertyDescriptor</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A descriptor class for dual-function sync/async cached properties.</span>
+
+<span class="sd">    This class extends the API of ASyncPropertyDescriptor to provide</span>
+<span class="sd">    caching functionality, storing the computed value after the first access.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;_fset&quot;</span><span class="p">,</span> <span class="s2">&quot;_fdel&quot;</span><span class="p">,</span> <span class="s2">&quot;__async_property__&quot;</span>
 <div class="viewcode-block" id="ASyncCachedPropertyDescriptor.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncCachedPropertyDescriptor.__init__">[docs]</a>
@@ -369,7 +390,13 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncCachedPropertyDescriptorSyncDefault">[docs]</a>
 <span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">ASyncCachedPropertyDescriptorSyncDefault</span><span class="p">(</span><span class="n">cached_property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a helper class used for type checking. You will not run into any instance of this in prod.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to synchronous behavior.</span>
+
+<span class="sd">    This class is used for cached properties that are primarily intended to be</span>
+<span class="sd">    accessed synchronously but can also be used asynchronously if needed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">]</span>
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span><span class="o">...</span>
@@ -384,7 +411,13 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncCachedPropertyDescriptorAsyncDefault">[docs]</a>
 <span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">ASyncCachedPropertyDescriptorAsyncDefault</span><span class="p">(</span><span class="n">cached_property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a helper class used for type checking. You will not run into any instance of this in prod.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to asynchronous behavior.</span>
+
+<span class="sd">    This class is used for cached properties that are primarily intended to be</span>
+<span class="sd">    accessed asynchronously but can also be used synchronously if needed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">]</span></div>
 
 

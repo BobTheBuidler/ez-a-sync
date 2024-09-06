@@ -71,8 +71,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.a_sync.base</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">import</span> <span class="nn">functools</span>
+<span></span><span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
@@ -89,9 +88,44 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.base.ASyncGenericBase">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncGenericBase</span><span class="p">(</span><span class="n">ASyncABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Inherit from this class to a-syncify all of your bound methods.</span>
-<span class="sd">    Allows for the use of a variety of flags out-of-box.</span>
-<span class="sd">    You can choose which flag(s) work best for your subclass implementation.</span>
+<span class="sd">    Base class for creating dual-function sync/async-capable classes without writing all your code twice.</span>
+
+<span class="sd">    This class provides the foundation for creating hybrid sync/async classes. It allows methods</span>
+<span class="sd">    and properties to be defined once and used in both synchronous and asynchronous contexts.</span>
+
+<span class="sd">    The class uses the :func:`a_sync` decorator internally to create dual-mode methods and properties.</span>
+<span class="sd">    Subclasses should define their methods as coroutines (using `async def`) where possible, and</span>
+<span class="sd">    use the `@a_sync.property` or `@a_sync.cached_property` decorators for properties that need to support both modes.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        ```python</span>
+<span class="sd">        class MyClass(ASyncGenericBase):</span>
+<span class="sd">            def __init__(self, sync: bool):</span>
+<span class="sd">                self.sync = sync</span>
+
+<span class="sd">            @a_sync.property</span>
+<span class="sd">            async def my_property(self):</span>
+<span class="sd">                return await some_async_operation()</span>
+
+<span class="sd">            @a_sync</span>
+<span class="sd">            async def my_method(self):</span>
+<span class="sd">                return await another_async_operation()</span>
+<span class="sd">        </span>
+<span class="sd">        # Synchronous usage</span>
+<span class="sd">        obj = MyClass(sync=True)</span>
+<span class="sd">        sync_result = obj.my_property</span>
+<span class="sd">        sync_method_result = obj.my_method()</span>
+
+<span class="sd">        # Asynchronous usage</span>
+<span class="sd">        obj = MyClass(sync=False)</span>
+<span class="sd">        async_result = await obj.my_property</span>
+<span class="sd">        async_method_result = await obj.my_method()</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        When subclassing, be aware that all async methods and properties will be</span>
+<span class="sd">        automatically wrapped to support both sync and async calls. This allows for</span>
+<span class="sd">        seamless usage in different contexts without changing the underlying implementation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ASyncGenericBase.__init__">

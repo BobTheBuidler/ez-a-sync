@@ -71,23 +71,43 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.a_sync._flags</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides functionality for handling synchronous and asynchronous flags</span>
+<span class="sd">in the ez-a-sync library.</span>
+
+<span class="sd">ez-a-sync uses &#39;flags&#39; to indicate whether objects / function calls will be sync or async.</span>
+
+<span class="sd">You can use any of the provided flags, whichever makes most sense for your use case.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">exceptions</span>
 
 <span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sync&#39;</span><span class="p">}</span>
-<span class="n">NEGATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;asynchronous&#39;</span><span class="p">}</span>
-<span class="n">VIABLE_FLAGS</span> <span class="o">=</span> <span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">|</span> <span class="n">NEGATIVE_FLAGS</span>
+<span class="sd">&quot;&quot;&quot;Set of flags indicating synchronous behavior.&quot;&quot;&quot;</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">A-Sync uses &#39;flags&#39; to indicate whether objects / fn calls will be sync or async.</span>
-<span class="sd">You can use any of the provided flags, whichever makes most sense for your use case.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">NEGATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;asynchronous&#39;</span><span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Set of flags indicating asynchronous behavior.&quot;&quot;&quot;</span>
+
+<span class="n">VIABLE_FLAGS</span> <span class="o">=</span> <span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">|</span> <span class="n">NEGATIVE_FLAGS</span>
+<span class="sd">&quot;&quot;&quot;Set of all valid flags.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="negate_if_necessary">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._flags.negate_if_necessary">[docs]</a>
-<span class="k">def</span> <span class="nf">negate_if_necessary</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">negate_if_necessary</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Negate the flag value if necessary based on the flag type.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        flag: The flag to check.</span>
+<span class="sd">        flag_value: The value of the flag.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The potentially negated flag value.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        :class:`exceptions.InvalidFlag`: If the flag is not recognized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">validate_flag_value</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">AFFIRMATIVE_FLAGS</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">flag_value</span><span class="p">)</span>
@@ -99,6 +119,19 @@
 <div class="viewcode-block" id="validate_flag_value">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._flags.validate_flag_value">[docs]</a>
 <span class="k">def</span> <span class="nf">validate_flag_value</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate that the flag value is a boolean.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        flag: The flag being validated.</span>
+<span class="sd">        flag_value: The value to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The validated flag value.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        :class:`exceptions.InvalidFlagValue`: If the flag value is not a boolean.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flag_value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidFlagValue</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">flag_value</span></div>
