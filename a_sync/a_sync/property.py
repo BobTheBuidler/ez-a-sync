@@ -390,7 +390,14 @@ def a_sync_cached_property(  # type: ignore [misc]
 
 @final
 class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
-    def __init__(self, instance: I, unbound: AnyFn[Concatenate[I, P], T], async_def: bool, field_name: str, **modifiers: _helpers.ModifierKwargs) -> None:
+    def __init__(
+        self, 
+        instance: I, 
+        unbound: AnyFn[Concatenate[I, P], T], 
+        async_def: bool,
+        field_name: str,
+        **modifiers: _helpers.ModifierKwargs,
+    ) -> None:
         super().__init__(instance, unbound, async_def, **modifiers)
         self.__name__ = field_name
     def __repr__(self) -> str:
@@ -406,6 +413,30 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
 
 @final
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
+    def __init__(
+        self, 
+        _fget: AnyFn[Concatenate[I, P], Awaitable[T]], 
+        field_name: Optional[str] = None, 
+        **modifiers: _smart.ModifierKwargs,
+    ) -> None:
+        """
+        Initialize the HiddenMethodDescriptor.
+
+        Args:
+            _fget: The function to be wrapped.
+            field_name: Optional name for the field. If not provided, the function's name will be used.
+            **modifiers: Additional modifier arguments.
+
+        Raises:
+            ValueError: If _fget is not callable.
+        """
+        super().__init__(_fget, field_name, **modifiers)
+        if self.__doc__ is None:
+            self.__doc__ = f"A :class:`HiddenMethodDescriptor` for :meth:`{self.__wrapped__.__qualname__}`."
+        elif not self.__doc__:
+            self.__doc__ += f"A :class:`HiddenMethodDescriptor` for :meth:`{self.__wrapped__.__qualname__}`."
+        if self.__wrapped__.__doc__:
+            self.__doc__ += f"\n\nThe original docstring for :meth:`~{self.__wrapped__.__qualname__}` is shown below:\n\n{self.__wrapped__.__doc__}"
     def __get__(self, instance: I, owner: Type[I]) -> HiddenMethod[I, T]:
         if instance is None:
             return self
