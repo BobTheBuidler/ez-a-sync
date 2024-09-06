@@ -1,3 +1,8 @@
+"""
+This module provides priority-based semaphore implementations. These semaphores allow 
+waiters to be assigned priorities, ensuring that higher priority waiters are 
+processed before lower priority ones.
+"""
 
 import asyncio
 import heapq
@@ -20,6 +25,12 @@ PT = TypeVar('PT', bound=Priority)
 CM = TypeVar('CM', bound="_AbstractPrioritySemaphoreContextManager[Priority]")
 
 class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
+    """
+    A semaphore that allows prioritization of waiters.
+    
+    This semaphore manages waiters with associated priorities, ensuring that waiters with higher
+    priorities are processed before those with lower priorities.
+    """
     name: Optional[str]
     _value: int
     _waiters: List["_AbstractPrioritySemaphoreContextManager[PT]"]  # type: ignore [assignment]
@@ -126,6 +137,12 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         logger.debug("%s has no waiters to wake", self)
 
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
+    """
+    A context manager for priority semaphore waiters.
+    
+    This context manager is associated with a specific priority and handles
+    the acquisition and release of the semaphore for waiters with that priority.
+    """
     _loop: asyncio.AbstractEventLoop
     _waiters: Deque[asyncio.Future]  # type: ignore [assignment]
     __slots__ = "_parent", "_priority"
@@ -185,13 +202,16 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
                 raise
         self._parent._value -= 1
         return True
+
     def release(self) -> None:
         self._parent.release()
-    
+
 class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager[Numeric]):
+    """Context manager for numeric priority semaphores."""
     _priority_name = "priority"
 
 class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreContextManager]):  # type: ignore [type-var]
+    """Semaphore that uses numeric priorities for waiters."""
     _context_manager_class = _PrioritySemaphoreContextManager
     _top_priority = -1
     """
