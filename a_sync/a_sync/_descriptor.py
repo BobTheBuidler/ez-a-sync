@@ -59,7 +59,11 @@ class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
         """The name of the field this descriptor is bound to."""
         
         functools.update_wrapper(self, self.__wrapped__)
-
+        if self.__doc__ is None:
+            self.__doc__ = "Since {self.__name__} is a {self.__docstring_append__}"
+        else:
+            self.__doc__ += "\n\nSince {self.__name__} is a {self.__docstring_append__}"
+            
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} for {self.__wrapped__}>"
 
