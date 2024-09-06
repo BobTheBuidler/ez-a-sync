@@ -93,6 +93,15 @@
 <span class="sd">    Allows for the use of a variety of flags out-of-box.</span>
 <span class="sd">    You can choose which flag(s) work best for your subclass implementation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ASyncGenericBase.__init__">
+<a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.base.ASyncGenericBase.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ASyncGenericBase</span><span class="p">:</span>
+            <span class="n">cls_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;You should not create instances of `</span><span class="si">{</span><span class="n">cls_name</span><span class="si">}</span><span class="s2">` directly, you should subclass `ASyncGenericBase` instead.&quot;</span><span class="p">)</span></div>
+
+                                  
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
     <span class="k">def</span> <span class="nf">__a_sync_flag_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;checking a_sync flag for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
