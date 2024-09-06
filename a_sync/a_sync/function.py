@@ -374,7 +374,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         """
         return True if self.default == 'sync' else False if self.default == 'async' else not self._async_def
 
-    @cached_property
+    @functools.cached_property
     def _async_def(self) -> bool:
         """
         Check if the wrapped function is an asynchronous function.
