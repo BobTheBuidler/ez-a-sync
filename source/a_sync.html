@@ -5130,10 +5130,13 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncFilter</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncFilter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncView</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
-<p>An async filter class that filters items of an async iterable based on a provided function.</p>
+<blockquote>
+<div><p>An async filter class that filters items of an async iterable based on a provided function.</p>
 <p>This class inherits from <code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncView</span></code> and provides the functionality to asynchronously
 iterate over items, applying the filter function to each item to determine if it should be
 included in the result.</p>
+</div></blockquote>
+<p>When awaited, a list of all elements will be returned.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__aiter__" title="Link to this definition"></a></dt>
@@ -5351,11 +5354,12 @@ included in the result.</p>
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncIterable</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterable" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AwaitableAsyncIterableMixin</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
-<dl>
-<dt>Description:</dt><dd><p>A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols. This class allows objects to be iterated over using either a standard <cite>for</cite> loop or an <cite>async for</cite> loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.</p>
+<blockquote>
+<div><p>A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols.</p>
+<p>This class allows objects to be iterated over using either a standard <cite>for</cite> loop or an <cite>async for</cite> loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.</p>
 <p>The class achieves this by implementing both <cite>__iter__</cite> and <cite>__aiter__</cite> methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. This dual functionality is particularly useful in codebases that are transitioning between synchronous and asynchronous code, or in libraries that aim to support both synchronous and asynchronous usage patterns without requiring the user to manage different types of iterable objects.</p>
-</dd>
-</dl>
+</div></blockquote>
+<p>When awaited, a list of all elements will be returned.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
@@ -5444,12 +5448,15 @@ included in the result.</p>
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncIterator</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AwaitableAsyncIterableMixin</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
-<dl>
+<blockquote>
+<div><dl>
 <dt>Description:</dt><dd><p>A hybrid Iterator/AsyncIterator implementation that bridges the gap between synchronous and asynchronous iteration. This class provides a unified interface for iteration that can seamlessly operate in both synchronous (<cite>for</cite> loop) and asynchronous (<cite>async for</cite> loop) contexts. It allows the wrapping of asynchronous iterable objects or async generator functions, making them usable in synchronous code without explicitly managing event loops or asynchronous context switches.</p>
 <p>By implementing both <cite>__next__</cite> and <cite>__anext__</cite> methods, ASyncIterator enables objects to be iterated using standard iteration protocols while internally managing the complexities of asynchronous iteration. This design simplifies the use of asynchronous iterables in environments or frameworks that are not inherently asynchronous, such as standard synchronous functions or older codebases being gradually migrated to asynchronous IO.</p>
 <p>This class is particularly useful for library developers seeking to provide a consistent iteration interface across synchronous and asynchronous code, reducing the cognitive load on users and promoting code reusability and simplicity.</p>
 </dd>
 </dl>
+</div></blockquote>
+<p>When awaited, a list of all elements will be returned.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
@@ -5560,9 +5567,12 @@ included in the result.</p>
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncSorter</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncSorter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncSorter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncView</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
-<p>An async sorter class that sorts items of an async iterable based on a provided key function.</p>
+<blockquote>
+<div><p>An async sorter class that sorts items of an async iterable based on a provided key function.</p>
 <p>This class inherits from <code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncView</span></code> and provides the functionality to asynchronously
 iterate over items, applying the key function to each item for sorting.</p>
+</div></blockquote>
+<p>When awaited, a list of all elements will be returned.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncSorter.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncSorter.__aiter__" title="Link to this definition"></a></dt>
@@ -6827,11 +6837,12 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dt class="sig sig-object py" id="a_sync.ASyncIterable">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">ASyncIterable</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterable" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AwaitableAsyncIterableMixin</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
-<dl>
-<dt>Description:</dt><dd><p>A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols. This class allows objects to be iterated over using either a standard <cite>for</cite> loop or an <cite>async for</cite> loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.</p>
+<blockquote>
+<div><p>A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols.</p>
+<p>This class allows objects to be iterated over using either a standard <cite>for</cite> loop or an <cite>async for</cite> loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.</p>
 <p>The class achieves this by implementing both <cite>__iter__</cite> and <cite>__aiter__</cite> methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. This dual functionality is particularly useful in codebases that are transitioning between synchronous and asynchronous code, or in libraries that aim to support both synchronous and asynchronous usage patterns without requiring the user to manage different types of iterable objects.</p>
-</dd>
-</dl>
+</div></blockquote>
+<p>When awaited, a list of all elements will be returned.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
@@ -6920,12 +6931,15 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dt class="sig sig-object py" id="a_sync.ASyncIterator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">ASyncIterator</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AwaitableAsyncIterableMixin</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
-<dl>
+<blockquote>
+<div><dl>
 <dt>Description:</dt><dd><p>A hybrid Iterator/AsyncIterator implementation that bridges the gap between synchronous and asynchronous iteration. This class provides a unified interface for iteration that can seamlessly operate in both synchronous (<cite>for</cite> loop) and asynchronous (<cite>async for</cite> loop) contexts. It allows the wrapping of asynchronous iterable objects or async generator functions, making them usable in synchronous code without explicitly managing event loops or asynchronous context switches.</p>
 <p>By implementing both <cite>__next__</cite> and <cite>__anext__</cite> methods, ASyncIterator enables objects to be iterated using standard iteration protocols while internally managing the complexities of asynchronous iteration. This design simplifies the use of asynchronous iterables in environments or frameworks that are not inherently asynchronous, such as standard synchronous functions or older codebases being gradually migrated to asynchronous IO.</p>
 <p>This class is particularly useful for library developers seeking to provide a consistent iteration interface across synchronous and asynchronous code, reducing the cognitive load on users and promoting code reusability and simplicity.</p>
 </dd>
 </dl>
+</div></blockquote>
+<p>When awaited, a list of all elements will be returned.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
@@ -8426,7 +8440,7 @@ async def limited():</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dd><p>Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -9606,7 +9620,7 @@ async def limited():</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore._debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.Semaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dd><p>Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -10630,7 +10644,7 @@ async def limited():</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dd><p>Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>

@@ -221,7 +221,9 @@
 <div class="viewcode-block" id="Semaphore._debug_daemon">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Semaphore._debug_daemon">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Daemon task that will emit a debug log every minute while the semaphore has waiters.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span>
             <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> waiters for any of: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_decorated</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>

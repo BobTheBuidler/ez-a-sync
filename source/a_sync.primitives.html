@@ -2445,7 +2445,7 @@ async def limited():</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dd><p>Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -3277,7 +3277,7 @@ async def limited():</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore._debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.Semaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dd><p>Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -3837,7 +3837,7 @@ async def limited():</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dd><p>Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
