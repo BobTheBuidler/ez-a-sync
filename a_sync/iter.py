@@ -312,7 +312,7 @@ class _ASyncView(ASyncIterator[T]):
         iterable: AnyIterable[T],
     ) -> None:
         """
-        Initializes the `_ASyncView` with a function and an iterable.
+        Initializes the {cls} with a function and an iterable.
 
         Args:
             function: A function to apply to the items in the iterable.
