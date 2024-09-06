@@ -232,7 +232,7 @@ async def test_async_error_handling(cls_to_test):
         async for item in ait:
             results.append(item)
     # we still got some results though
-    assert results == [1, 2]
+    assert results == [0, 1]
 
 
 # Test failures
