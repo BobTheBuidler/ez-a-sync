@@ -30,7 +30,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         self, 
         _fget: AsyncGetterFunction[I, T], 
         field_name: Optional[str] = None,
-        **modifiers: config.ModifierKwargs,
+        **modifiers: Unpack[ModifierKwargs],
     ) -> None:
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
