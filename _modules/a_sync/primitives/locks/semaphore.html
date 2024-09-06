@@ -86,15 +86,46 @@
 <div class="viewcode-block" id="Semaphore">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Semaphore">[docs]</a>
 <span class="k">class</span> <span class="nc">Semaphore</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">,</span> <span class="n">_DebugDaemonMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A semaphore with additional debugging capabilities.</span>
+<span class="sd">    </span>
+<span class="sd">    This semaphore includes debug logging.</span>
+<span class="sd">    </span>
+<span class="sd">    Also, it can be used to decorate coroutine functions so you can rewrite this pattern:</span>
+
+<span class="sd">    ```</span>
+<span class="sd">    semaphore = Semaphore(5)</span>
+<span class="sd">    </span>
+<span class="sd">    async def limited():</span>
+<span class="sd">        async with semaphore:</span>
+<span class="sd">            return 1</span>
+
+<span class="sd">    ```</span>
+
+<span class="sd">    like this:</span>
+
+<span class="sd">    ```</span>
+<span class="sd">    semaphore = Semaphore(5)</span>
+
+<span class="sd">    @semaphore</span>
+<span class="sd">    async def limited():</span>
+<span class="sd">        return 1</span>
+<span class="sd">    ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
         <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;_value&quot;</span><span class="p">,</span> <span class="s2">&quot;_waiters&quot;</span><span class="p">,</span> <span class="s2">&quot;_decorated&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;_value&quot;</span><span class="p">,</span> <span class="s2">&quot;_waiters&quot;</span><span class="p">,</span> <span class="s2">&quot;_loop&quot;</span><span class="p">,</span> <span class="s2">&quot;_decorated&quot;</span>
+        
 <div class="viewcode-block" id="Semaphore.__init__">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Semaphore.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        `name` is used only in debug logs to provide useful context</span>
+<span class="sd">        Initialize the semaphore with a given value and optional name for debugging.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            value: The initial value for the semaphore.</span>
+<span class="sd">            name (optional): An optional name used only to provide useful context in debug logs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__origin__</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;__origin__&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
@@ -102,9 +133,32 @@
 
     
     <span class="c1"># Dank new functionality</span>
+
 <div class="viewcode-block" id="Semaphore.__call__">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Semaphore.__call__">[docs]</a>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenient decorator method to wrap coroutine functions with the semaphore so you can rewrite this pattern:</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        semaphore = Semaphore(5)</span>
+<span class="sd">        </span>
+<span class="sd">        async def limited():</span>
+<span class="sd">            async with semaphore:</span>
+<span class="sd">                return 1</span>
+
+<span class="sd">        ```</span>
+
+<span class="sd">        like this:</span>
+
+<span class="sd">        ```</span>
+<span class="sd">        semaphore = Semaphore(5)</span>
+
+<span class="sd">        @semaphore</span>
+<span class="sd">        async def limited():</span>
+<span class="sd">            return 1</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decorate</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type, return-value]</span></div>
 
     
@@ -120,6 +174,31 @@
 <div class="viewcode-block" id="Semaphore.decorate">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Semaphore.decorate">[docs]</a>
     <span class="k">def</span> <span class="nf">decorate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wrap a coroutine function to ensure it runs with the semaphore.</span>
+<span class="sd">        </span>
+<span class="sd">        Example:</span>
+<span class="sd">            Now you can rewrite this pattern:</span>
+
+<span class="sd">            ```</span>
+<span class="sd">            semaphore = Semaphore(5)</span>
+<span class="sd">            </span>
+<span class="sd">            async def limited():</span>
+<span class="sd">                async with semaphore:</span>
+<span class="sd">                    return 1</span>
+
+<span class="sd">            ```</span>
+
+<span class="sd">            like this:</span>
+
+<span class="sd">            ```</span>
+<span class="sd">            semaphore = Semaphore(5)</span>
+
+<span class="sd">            @semaphore</span>
+<span class="sd">            async def limited():</span>
+<span class="sd">                return 1</span>
+<span class="sd">            ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2"> must be a coroutine function&quot;</span><span class="p">)</span>
         <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
@@ -129,7 +208,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_decorated</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fn</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">semaphore_wrapper</span></div>
 
-    
+
 <div class="viewcode-block" id="Semaphore.acquire">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Semaphore.acquire">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]:</span>
@@ -142,38 +221,48 @@
 <div class="viewcode-block" id="Semaphore._debug_daemon">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.Semaphore._debug_daemon">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Daemon task that will emit a debug log every minute while the semaphore has waiters.&quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span>
             <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> waiters for any of: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_decorated</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 </div>
 
-  
+          
         
 <div class="viewcode-block" id="DummySemaphore">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.DummySemaphore">[docs]</a>
 <span class="k">class</span> <span class="nc">DummySemaphore</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;It can go where a semaphore goes, but it does nothing.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A dummy semaphore that implements the standard :class:`asyncio.Semaphore` API but does nothing.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;_value&quot;</span>
+    
 <div class="viewcode-block" id="DummySemaphore.__init__">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.DummySemaphore.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="mi">0</span></div>
 
+    
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+    
 <div class="viewcode-block" id="DummySemaphore.acquire">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.DummySemaphore.acquire">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]:</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
+    
 <div class="viewcode-block" id="DummySemaphore.release">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.DummySemaphore.release">[docs]</a>
     <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="o">...</span></div>
 
+    
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aenter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="o">...</span>
+    
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aexit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="o">...</span></div>
 
@@ -190,6 +279,7 @@
 <span class="sd">    # TL;DR it&#39;s a janky fix for an edge case problem and will otherwise function as a normal a_sync.Semaphore (which is just an asyncio.Semaphore with extra bells and whistles).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;semaphores&quot;</span><span class="p">,</span> <span class="s2">&quot;dummy&quot;</span>
+    
 <div class="viewcode-block" id="ThreadsafeSemaphore.__init__">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync.ThreadsafeSemaphore.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -208,7 +298,11 @@
     
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Semaphore</span><span class="p">:</span>
-        <span class="c1"># NOTE: we can&#39;t cache this value because we need to check the current thread every time</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the appropriate semaphore for the current thread.</span>
+<span class="sd">        </span>
+<span class="sd">        NOTE: We can&#39;t cache this property because we need to check the current thread every time we access it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dummy</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_dummy</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">semaphores</span><span class="p">[</span><span class="n">current_thread</span><span class="p">()]</span>
     
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aenter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

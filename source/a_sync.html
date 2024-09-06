@@ -104,7 +104,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.ImproperFunctionType"><code class="docutils literal notranslate"><span class="pre">ImproperFunctionType</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.InvalidFlag"><code class="docutils literal notranslate"><span class="pre">InvalidFlag</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.InvalidFlagValue"><code class="docutils literal notranslate"><span class="pre">InvalidFlagValue</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.KwargsUnsupportedError"><code class="docutils literal notranslate"><span class="pre">KwargsUnsupportedError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.MappingError"><code class="docutils literal notranslate"><span class="pre">MappingError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.MappingIsEmptyError"><code class="docutils literal notranslate"><span class="pre">MappingIsEmptyError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.exceptions.MappingNotEmptyError"><code class="docutils literal notranslate"><span class="pre">MappingNotEmptyError</span></code></a></li>
@@ -3231,6 +3230,7 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 </section>
 <section id="module-a_sync.exceptions">
 <span id="a-sync-exceptions-module"></span><h2>a_sync.exceptions module<a class="headerlink" href="#module-a_sync.exceptions" title="Link to this heading"></a></h2>
+<p>This module defines custom exceptions for the a_sync library.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ASyncFlagException</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ASyncFlagException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException" title="Link to this definition"></a></dt>
@@ -3275,6 +3275,7 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.EmptySequenceError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">EmptySequenceError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#EmptySequenceError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.EmptySequenceError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<p>Raised when an operation is attempted on an empty sequence but items are expected.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -3354,6 +3355,7 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.ImproperFunctionType">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ImproperFunctionType</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ImproperFunctionType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ImproperFunctionType" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<p>Raised when a function that should be sync is async or vice-versa.</p>
 </dd></dl>
 
 <dl class="py exception">
@@ -3424,17 +3426,6 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.viable_flags" title="Link to this definition"></a></dt>
 <dd><p>Returns the set of viable flags.</p>
 </dd></dl>
-
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="a_sync.exceptions.KwargsUnsupportedError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">KwargsUnsupportedError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#KwargsUnsupportedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.KwargsUnsupportedError" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.exceptions.KwargsUnsupportedError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#KwargsUnsupportedError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.KwargsUnsupportedError.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -3691,7 +3682,17 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -3711,7 +3712,17 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -3726,12 +3737,16 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -4028,7 +4043,17 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -4043,7 +4068,17 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -4053,12 +4088,16 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -4336,7 +4375,17 @@ Pruned threads will be automatically recreated as needed for future workloads. U
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -4351,7 +4400,17 @@ Pruned threads will be automatically recreated as needed for future workloads. U
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -4361,12 +4420,16 @@ Pruned threads will be automatically recreated as needed for future workloads. U
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5067,6 +5130,10 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncFilter</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncFilter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncView</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<p>An async filter class that filters items of an async iterable based on a provided function.</p>
+<p>This class inherits from <code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncView</span></code> and provides the functionality to asynchronously
+iterate over items, applying the filter function to each item to determine if it should be
+included in the result.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__aiter__" title="Link to this definition"></a></dt>
@@ -5092,12 +5159,12 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the ASyncIterator with an async iterator.</p>
+<dd><p>Initializes the <cite>_ASyncView</cite> with a function and an iterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>)</p></li>
-<li><p><strong>iterable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.12)"><em>AsyncIterable</em></a><em>[</em><em>T</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><em>T</em><em>]</em>)</p></li>
+<li><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>) – A function to apply to the items in the iterable.</p></li>
+<li><p><strong>iterable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.12)"><em>AsyncIterable</em></a><em>[</em><em>T</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.12)"><em>Iterable</em></a><em>[</em><em>T</em><em>]</em>) – An iterable or an async iterable yielding objects to which <cite>function</cite> will be applied.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -5125,12 +5192,16 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter._check">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncFilter._check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncFilter._check" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Checks if an object passes the filter function.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> (<em>T</em>)</p>
+<dd class="field-odd"><p><strong>obj</strong> (<em>T</em>) – The object to check.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the object passes the filter, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -5138,12 +5209,16 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.filter" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Filters the contents of the async iterable based on a function.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that will yield the filtered objects yielded from this instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5151,15 +5226,19 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.sort" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Sorts the contents of the {cls}.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>key</strong> (<em>optional</em>) – A function of one argument that is used to extract a comparison key from each list element. If None, the elements themselves will be sorted. Defaults to None.</p></li>
+<li><p><strong>reverse</strong> (<em>optional</em>) – If True, the yielded elements will be sorted in reverse order. Defaults to False.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the objects yielded from this {cls}, but sorted.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5313,12 +5392,16 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterable.filter" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Filters the contents of the async iterable based on a function.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that will yield the filtered objects yielded from this instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5326,15 +5409,19 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterable.sort" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Sorts the contents of the {cls}.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>key</strong> (<em>optional</em>) – A function of one argument that is used to extract a comparison key from each list element. If None, the elements themselves will be sorted. Defaults to None.</p></li>
+<li><p><strong>reverse</strong> (<em>optional</em>) – If True, the yielded elements will be sorted in reverse order. Defaults to False.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the objects yielded from this {cls}, but sorted.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5415,12 +5502,16 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.filter" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Filters the contents of the async iterable based on a function.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that will yield the filtered objects yielded from this instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5428,15 +5519,19 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.sort" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Sorts the contents of the {cls}.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>key</strong> (<em>optional</em>) – A function of one argument that is used to extract a comparison key from each list element. If None, the elements themselves will be sorted. Defaults to None.</p></li>
+<li><p><strong>reverse</strong> (<em>optional</em>) – If True, the yielded elements will be sorted in reverse order. Defaults to False.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the objects yielded from this {cls}, but sorted.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5465,11 +5560,20 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncSorter</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncSorter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncSorter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncView</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<p>An async sorter class that sorts items of an async iterable based on a provided key function.</p>
+<p>This class inherits from <code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncView</span></code> and provides the functionality to asynchronously
+iterate over items, applying the key function to each item for sorting.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncSorter.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncSorter.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Returns self.</p>
+<dd><p>Returns an async iterator for the sorted iterable.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><strong>RuntimeError</strong></a> – If the ASyncSorter instance has already been consumed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An async iterator that will yield the sorting results.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
 </dd>
@@ -5490,13 +5594,13 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncSorter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncSorter.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the ASyncIterator with an async iterator.</p>
+<dd><p>Initializes the ASyncSorter with an iterable and an optional sorting configuration (key function, and reverse flag).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>iterable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.12)"><em>AsyncIterable</em></a><em>[</em><em>T</em><em>]</em>)</p></li>
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>iterable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.12)"><em>AsyncIterable</em></a><em>[</em><em>T</em><em>]</em>) – The async iterable to sort.</p></li>
+<li><p><strong>key</strong> (<em>optional</em>) – A function of one argument that is used to extract a comparison key from each list element. If none is provided, elements themselves will be sorted. Defaults to None.</p></li>
+<li><p><strong>reverse</strong> (<em>optional</em>) – If True, the list elements will be sorted in reverse order. Defaults to False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -5527,10 +5631,13 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dd><p>This method is internal so the original iterator can only ever be consumed once.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p>
+<dd class="field-odd"><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – If True, the list elements will be sorted in reverse order.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An async iterator that will yield the sorted items.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5538,12 +5645,16 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncSorter.filter" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Filters the contents of the async iterable based on a function.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that will yield the filtered objects yielded from this instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5551,15 +5662,19 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncSorter.sort" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Sorts the contents of the {cls}.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>key</strong> (<em>optional</em>) – A function of one argument that is used to extract a comparison key from each list element. If None, the elements themselves will be sorted. Defaults to None.</p></li>
+<li><p><strong>reverse</strong> (<em>optional</em>) – If True, the yielded elements will be sorted in reverse order. Defaults to False.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the objects yielded from this {cls}, but sorted.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6753,12 +6868,16 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterable.filter" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Filters the contents of the async iterable based on a function.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code> that will yield the filtered objects yielded from this instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6766,15 +6885,19 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterable.sort" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Sorts the contents of the {cls}.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>key</strong> (<em>optional</em>) – A function of one argument that is used to extract a comparison key from each list element. If None, the elements themselves will be sorted. Defaults to None.</p></li>
+<li><p><strong>reverse</strong> (<em>optional</em>) – If True, the yielded elements will be sorted in reverse order. Defaults to False.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code> that will yield the objects yielded from this {cls}, but sorted.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6855,12 +6978,16 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterator.filter" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Filters the contents of the async iterable based on a function.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code> that will yield the filtered objects yielded from this instance.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6868,15 +6995,19 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterator.sort" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Sorts the contents of the {cls}.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
-<li><p><strong>reverse</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>key</strong> (<em>optional</em>) – A function of one argument that is used to extract a comparison key from each list element. If None, the elements themselves will be sorted. Defaults to None.</p></li>
+<li><p><strong>reverse</strong> (<em>optional</em>) – If True, the yielded elements will be sorted in reverse order. Defaults to False.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code> that will yield the objects yielded from this {cls}, but sorted.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7184,7 +7315,17 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -7204,7 +7345,17 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -7219,12 +7370,16 @@ They work kind of like a typical Singleton would, but you will have two instance
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7521,7 +7676,17 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -7536,7 +7701,17 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -7546,12 +7721,16 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7782,19 +7961,19 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.CounterLock">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">CounterLock</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.CounterLock" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="a_sync.primitives.html#a_sync.primitives._debug._DebugDaemonMixin" title="a_sync.primitives._debug._DebugDaemonMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a></p>
-<p>A asyncio primative that blocks until the internal counter has reached a specific value.</p>
-<p>counter = CounterLock()
-A coroutine can now <cite>await counter.wait_for(3)</cite> and it will block until the internal counter &gt;= 3.
-Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(5)</cite>, the first coroutine will unblock as 5 &gt;= 3.</p>
+<p>An async primitive that blocks until the internal counter has reached a specific value.</p>
+<p>A coroutine can <cite>await counter.wait_for(3)</cite> and it will block until the internal counter &gt;= 3.
+If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(5)</cite>, the first coroutine will unblock as 5 &gt;= 3.</p>
 <p>The internal counter can only increase.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.CounterLock.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.CounterLock.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initializes the CounterLock with a starting value and an optional name.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>start_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The initial value of the counter.</p></li>
+<li><p><strong>name</strong> (<em>optional</em>) – An optional name for the counter, used in debug logs.</p></li>
 </ul>
 </dd>
 </dl>
@@ -7803,7 +7982,8 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.CounterLock._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock._debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.CounterLock._debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Periodically logs debug information about the counter state and waiters.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
@@ -7813,7 +7993,17 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.CounterLock._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.CounterLock._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -7823,7 +8013,17 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.CounterLock._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.CounterLock._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -7833,12 +8033,16 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.CounterLock._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.CounterLock._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7846,12 +8050,16 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.CounterLock.set">
 <span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.CounterLock.set" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Sets the counter to the specified value.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The value to set the counter to. Must be &gt;= the current value.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If the new value is less than the current value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7859,12 +8067,16 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.CounterLock.wait_for">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock.wait_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.CounterLock.wait_for" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Waits until the counter reaches or exceeds the specified value.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The value to wait for.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True when the counter reaches or exceeds the specified value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7877,17 +8089,20 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.CounterLock._events">
 <span class="sig-name descname"><span class="pre">_events</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.12)"><span class="pre">DefaultDict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.event.Event" title="a_sync.primitives.locks.event.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.CounterLock._events" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>A defaultdict that maps each awaited value to an <a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Event" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Event</span></code></a> that manages the waiters for that value.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.CounterLock._name">
 <span class="sig-name descname"><span class="pre">_name</span></span><a class="headerlink" href="#a_sync.CounterLock._name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>An optional name for the counter, used in debug logs.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.CounterLock._value">
 <span class="sig-name descname"><span class="pre">_value</span></span><a class="headerlink" href="#a_sync.CounterLock._value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The current value of the counter.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.CounterLock.debug_logs_enabled">
@@ -7906,7 +8121,8 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.CounterLock.is_ready">
 <span class="sig-name descname"><span class="pre">is_ready</span></span><a class="headerlink" href="#a_sync.CounterLock.is_ready" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>A lambda function that indicates whether a given value has already been surpassed.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.CounterLock.logger">
@@ -7926,7 +8142,13 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.CounterLock.value">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.CounterLock.value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Gets the current value of the counter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current value of the counter.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -7967,7 +8189,17 @@ diagnosing and debugging potential deadlocks.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Event._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Event._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -7982,7 +8214,17 @@ diagnosing and debugging potential deadlocks.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Event._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Event._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -7992,12 +8234,16 @@ diagnosing and debugging potential deadlocks.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Event._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Event._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -8107,7 +8353,26 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore.__call__" title="Link to this definition"></a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Convenient decorator method to wrap coroutine functions with the semaphore so you can rewrite this pattern:</p>
+<p><a href="#id23"><span class="problematic" id="id24">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id25"><span class="problematic" id="id26">``</span></a><a href="#id27"><span class="problematic" id="id28">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id29"><span class="problematic" id="id30">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id31"><span class="problematic" id="id32">``</span></a><a href="#id33"><span class="problematic" id="id34">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
@@ -8134,12 +8399,12 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore.__init__" title="Link to this definition"></a></dt>
-<dd><p><cite>name</cite> is used only in debug logs to provide useful context</p>
+<dd><p>Initialize the semaphore with a given value and optional name for debugging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The initial value for the semaphore.</p></li>
+<li><p><strong>name</strong> (<em>optional</em>) – An optional name used only to provide useful context in debug logs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -8161,7 +8426,8 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
@@ -8171,7 +8437,17 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -8186,7 +8462,17 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -8196,12 +8482,16 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -8236,7 +8526,29 @@ True.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore.decorate">
 <span class="sig-name descname"><span class="pre">decorate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore.decorate" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Wrap a coroutine function to ensure it runs with the semaphore.</p>
+<p class="rubric">Example</p>
+<p>Now you can rewrite this pattern:</p>
+<p><a href="#id35"><span class="problematic" id="id36">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id37"><span class="problematic" id="id38">``</span></a><a href="#id39"><span class="problematic" id="id40">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id41"><span class="problematic" id="id42">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id43"><span class="problematic" id="id44">``</span></a><a href="#id45"><span class="problematic" id="id46">`</span></a></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
@@ -8299,21 +8611,21 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore._top_priority">
 <span class="sig-name descname"><span class="pre">_top_priority</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#a_sync.PrioritySemaphore._top_priority" title="Link to this definition"></a></dt>
 <dd><p>It’s kinda like a regular Semaphore but you must give each waiter a priority:</p>
-<p><a href="#id23"><span class="problematic" id="id24">``</span></a>`
+<p><a href="#id47"><span class="problematic" id="id48">``</span></a>`
 priority_semaphore = PrioritySemaphore(10)</p>
 <dl class="simple">
 <dt>async with priority_semaphore[priority]:</dt><dd><p>await do_stuff()</p>
 </dd>
 </dl>
-<p><a href="#id25"><span class="problematic" id="id26">``</span></a><a href="#id27"><span class="problematic" id="id28">`</span></a></p>
+<p><a href="#id49"><span class="problematic" id="id50">``</span></a><a href="#id51"><span class="problematic" id="id52">`</span></a></p>
 <p>You can aenter and aexit this semaphore without a priority and it will process those first. Like so:</p>
-<p><a href="#id29"><span class="problematic" id="id30">``</span></a>`
+<p><a href="#id53"><span class="problematic" id="id54">``</span></a>`
 priority_semaphore = PrioritySemaphore(10)</p>
 <dl class="simple">
 <dt>async with priority_semaphore:</dt><dd><p>await do_stuff()</p>
 </dd>
 </dl>
-<p><a href="#id31"><span class="problematic" id="id32">``</span></a><a href="#id33"><span class="problematic" id="id34">`</span></a></p>
+<p><a href="#id55"><span class="problematic" id="id56">``</span></a><a href="#id57"><span class="problematic" id="id58">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -8692,7 +9004,17 @@ Pruned threads will be automatically recreated as needed for future workloads. U
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -8707,7 +9029,17 @@ Pruned threads will be automatically recreated as needed for future workloads. U
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -8717,12 +9049,16 @@ Pruned threads will be automatically recreated as needed for future workloads. U
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -8745,7 +9081,7 @@ ThreadPoolExecutor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id35"><span class="problematic" id="id36">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id59"><span class="problematic" id="id60">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -8755,7 +9091,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.12)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><strong>Exception</strong></a> – If fn(<a href="#id37"><span class="problematic" id="id38">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><strong>Exception</strong></a> – If fn(<a href="#id61"><span class="problematic" id="id62">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -9195,10 +9531,51 @@ the queue.</p>
 <dt class="sig sig-object py" id="a_sync.Semaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">Semaphore</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.Semaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code>, <a class="reference internal" href="a_sync.primitives.html#a_sync.primitives._debug._DebugDaemonMixin" title="a_sync.primitives._debug._DebugDaemonMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a></p>
+<p>A semaphore with additional debugging capabilities.</p>
+<p>This semaphore includes debug logging.</p>
+<p>Also, it can be used to decorate coroutine functions so you can rewrite this pattern:</p>
+<p><a href="#id63"><span class="problematic" id="id64">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id65"><span class="problematic" id="id66">``</span></a><a href="#id67"><span class="problematic" id="id68">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id69"><span class="problematic" id="id70">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id71"><span class="problematic" id="id72">``</span></a><a href="#id73"><span class="problematic" id="id74">`</span></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.Semaphore.__call__" title="Link to this definition"></a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Convenient decorator method to wrap coroutine functions with the semaphore so you can rewrite this pattern:</p>
+<p><a href="#id75"><span class="problematic" id="id76">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id77"><span class="problematic" id="id78">``</span></a><a href="#id79"><span class="problematic" id="id80">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id81"><span class="problematic" id="id82">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id83"><span class="problematic" id="id84">``</span></a><a href="#id85"><span class="problematic" id="id86">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
@@ -9212,10 +9589,13 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.Semaphore.__init__" title="Link to this definition"></a></dt>
-<dd><p><cite>name</cite> is used only in debug logs to provide useful context</p>
+<dd><p>Initialize the semaphore with a given value and optional name for debugging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The initial value for the semaphore.</p></li>
+<li><p><strong>name</strong> (<em>optional</em>) – An optional name used only to provide useful context in debug logs.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -9226,7 +9606,8 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore._debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.Semaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
@@ -9236,7 +9617,17 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Semaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -9251,7 +9642,17 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Semaphore._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -9261,12 +9662,16 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Semaphore._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -9296,7 +9701,29 @@ True.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore.decorate">
 <span class="sig-name descname"><span class="pre">decorate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore.decorate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.Semaphore.decorate" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Wrap a coroutine function to ensure it runs with the semaphore.</p>
+<p class="rubric">Example</p>
+<p>Now you can rewrite this pattern:</p>
+<p><a href="#id87"><span class="problematic" id="id88">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id89"><span class="problematic" id="id90">``</span></a><a href="#id91"><span class="problematic" id="id92">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id93"><span class="problematic" id="id94">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id95"><span class="problematic" id="id96">``</span></a><a href="#id97"><span class="problematic" id="id98">`</span></a></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
@@ -9894,7 +10321,7 @@ the queue.</p>
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">iterables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping.map" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously map iterables to tasks and yield their results.</p>
 <p>Args:
-<a href="#id39"><span class="problematic" id="id40">*</span></a>iterables: Iterables to map over.
+<a href="#id99"><span class="problematic" id="id100">*</span></a>iterables: Iterables to map over.
 pop: Whether to remove tasks from the internal storage once they are completed.
 yields: Whether to yield ‘keys’, ‘values’, or ‘both’ (key-value pairs).</p>
 <p>Yields:
@@ -10153,7 +10580,26 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.__call__" title="Link to this definition"></a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Convenient decorator method to wrap coroutine functions with the semaphore so you can rewrite this pattern:</p>
+<p><a href="#id101"><span class="problematic" id="id102">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id103"><span class="problematic" id="id104">``</span></a><a href="#id105"><span class="problematic" id="id106">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id107"><span class="problematic" id="id108">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id109"><span class="problematic" id="id110">``</span></a><a href="#id111"><span class="problematic" id="id112">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
@@ -10167,12 +10613,12 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#ThreadsafeSemaphore.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.__init__" title="Link to this definition"></a></dt>
-<dd><p><cite>name</cite> is used only in debug logs to provide useful context</p>
+<dd><p>Initialize the semaphore with a given value and optional name for debugging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>) – The initial value for the semaphore.</p></li>
+<li><p><strong>name</strong> (<em>optional</em>) – An optional name used only to provide useful context in debug logs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -10184,7 +10630,8 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
@@ -10194,7 +10641,17 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -10209,7 +10666,17 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -10219,12 +10686,16 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10254,7 +10725,29 @@ True.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.decorate">
 <span class="sig-name descname"><span class="pre">decorate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.decorate" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Wrap a coroutine function to ensure it runs with the semaphore.</p>
+<p class="rubric">Example</p>
+<p>Now you can rewrite this pattern:</p>
+<p><a href="#id113"><span class="problematic" id="id114">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id115"><span class="problematic" id="id116">``</span></a><a href="#id117"><span class="problematic" id="id118">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id119"><span class="problematic" id="id120">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id121"><span class="problematic" id="id122">``</span></a><a href="#id123"><span class="problematic" id="id124">`</span></a></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
@@ -10345,7 +10838,9 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.semaphore">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">semaphore</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><span class="pre">Semaphore</span></a></em><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.semaphore" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the appropriate semaphore for the current thread.</p>
+<p>NOTE: We can’t cache this property because we need to check the current thread every time we access it.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.semaphores">
@@ -11014,7 +11509,7 @@ the remaining awaitables once a True result is found.</p>
 </dl>
 <p class="rubric">Examples</p>
 <p>Awaiting individual awaitables:
-<a href="#id41"><span class="problematic" id="id42">``</span></a>`
+<a href="#id125"><span class="problematic" id="id126">``</span></a>`
 awaitables = [async_function1(), async_function2()]
 for coro in as_completed(awaitables):</p>
 <blockquote>
@@ -11025,9 +11520,9 @@ for coro in as_completed(awaitables):</p>
 <dt>async for val in as_completed(awaitables, aiter=True):</dt><dd><p>…</p>
 </dd>
 </dl>
-<p><a href="#id43"><span class="problematic" id="id44">``</span></a><a href="#id45"><span class="problematic" id="id46">`</span></a></p>
+<p><a href="#id127"><span class="problematic" id="id128">``</span></a><a href="#id129"><span class="problematic" id="id130">`</span></a></p>
 <p>Awaiting mappings of awaitables:
-<a href="#id47"><span class="problematic" id="id48">``</span></a>`
+<a href="#id131"><span class="problematic" id="id132">``</span></a>`
 mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dl class="simple">
 <dt>for coro in as_completed(mapping):</dt><dd><p>k, v = await coro
@@ -11036,7 +11531,7 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dt>async for k, v in as_completed(mapping, aiter=True):</dt><dd><p>…</p>
 </dd>
 </dl>
-<p><a href="#id49"><span class="problematic" id="id50">``</span></a><a href="#id51"><span class="problematic" id="id52">`</span></a></p>
+<p><a href="#id133"><span class="problematic" id="id134">``</span></a><a href="#id135"><span class="problematic" id="id136">`</span></a></p>
 </dd></dl>
 
 <dl class="py function">

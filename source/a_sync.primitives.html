@@ -358,16 +358,26 @@
 </section>
 <section id="module-a_sync.primitives._debug">
 <span id="a-sync-primitives-debug-module"></span><h2>a_sync.primitives._debug module<a class="headerlink" href="#module-a_sync.primitives._debug" title="Link to this heading"></a></h2>
+<p>This module provides a mixin class used to provide helpful information to developers during the debugging process.</p>
+<p>The mixin ensures that rich debug logs are automagically emitted from subclass instances whenever debug logging is enabled.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives._debug.</span></span><span class="sig-name descname"><span class="pre">_DebugDaemonMixin</span></span><a class="reference internal" href="../_modules/a_sync/primitives/_debug.html#_DebugDaemonMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives._loggable._LoggerMixin" title="a_sync.primitives._loggable._LoggerMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_LoggerMixin</span></code></a></p>
+<p>A mixin class that provides debugging capabilities using a daemon task.</p>
+<p>This mixin ensures that rich debug logs are automagically emitted from subclass instances whenever debug logging is enabled.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._debug_daemon">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/_debug.html#_DebugDaemonMixin._debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Abstract method to define the debug daemon’s behavior.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fut</strong> (<em>Future</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fut</strong> (<em>Future</em>) – The future associated with the daemon.</p></li>
+<li><p><strong>fn</strong> – The function to be debugged.</p></li>
+<li><p><strong>*args</strong> – Positional arguments for the function.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the function.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -378,7 +388,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/_debug.html#_DebugDaemonMixin._ensure_debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -388,7 +408,17 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/_debug.html#_DebugDaemonMixin._start_debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -398,12 +428,16 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/_debug.html#_DebugDaemonMixin._stop_debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1946,19 +1980,19 @@ the queue.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.</span></span><span class="sig-name descname"><span class="pre">CounterLock</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.CounterLock" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin" title="a_sync.primitives._debug._DebugDaemonMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a></p>
-<p>A asyncio primative that blocks until the internal counter has reached a specific value.</p>
-<p>counter = CounterLock()
-A coroutine can now <cite>await counter.wait_for(3)</cite> and it will block until the internal counter &gt;= 3.
-Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(5)</cite>, the first coroutine will unblock as 5 &gt;= 3.</p>
+<p>An async primitive that blocks until the internal counter has reached a specific value.</p>
+<p>A coroutine can <cite>await counter.wait_for(3)</cite> and it will block until the internal counter &gt;= 3.
+If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(5)</cite>, the first coroutine will unblock as 5 &gt;= 3.</p>
 <p>The internal counter can only increase.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.CounterLock.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initializes the CounterLock with a starting value and an optional name.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>start_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The initial value of the counter.</p></li>
+<li><p><strong>name</strong> (<em>optional</em>) – An optional name for the counter, used in debug logs.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1967,7 +2001,8 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock._debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.CounterLock._debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Periodically logs debug information about the counter state and waiters.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
@@ -1977,7 +2012,17 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.CounterLock._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -1987,7 +2032,17 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.CounterLock._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -1997,12 +2052,16 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.CounterLock._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2010,12 +2069,16 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.set">
 <span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.CounterLock.set" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Sets the counter to the specified value.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The value to set the counter to. Must be &gt;= the current value.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If the new value is less than the current value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2023,12 +2086,16 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.wait_for">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock.wait_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.CounterLock.wait_for" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Waits until the counter reaches or exceeds the specified value.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The value to wait for.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True when the counter reaches or exceeds the specified value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2041,17 +2108,20 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._events">
 <span class="sig-name descname"><span class="pre">_events</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.12)"><span class="pre">DefaultDict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.event.Event" title="a_sync.primitives.locks.event.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.CounterLock._events" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>A defaultdict that maps each awaited value to an <a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Event" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Event</span></code></a> that manages the waiters for that value.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._name">
 <span class="sig-name descname"><span class="pre">_name</span></span><a class="headerlink" href="#a_sync.primitives.CounterLock._name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>An optional name for the counter, used in debug logs.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._value">
 <span class="sig-name descname"><span class="pre">_value</span></span><a class="headerlink" href="#a_sync.primitives.CounterLock._value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The current value of the counter.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.debug_logs_enabled">
@@ -2070,7 +2140,8 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.is_ready">
 <span class="sig-name descname"><span class="pre">is_ready</span></span><a class="headerlink" href="#a_sync.primitives.CounterLock.is_ready" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>A lambda function that indicates whether a given value has already been surpassed.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.logger">
@@ -2090,7 +2161,13 @@ Now if some other task executes <cite>counter.value = 5</cite> or <cite>counter.
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.value">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.primitives.CounterLock.value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Gets the current value of the counter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current value of the counter.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -2131,7 +2208,17 @@ diagnosing and debugging potential deadlocks.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Event._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.Event._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -2146,7 +2233,17 @@ diagnosing and debugging potential deadlocks.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Event._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.Event._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -2156,12 +2253,16 @@ diagnosing and debugging potential deadlocks.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Event._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.Event._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2271,7 +2372,26 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.__call__" title="Link to this definition"></a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Convenient decorator method to wrap coroutine functions with the semaphore so you can rewrite this pattern:</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id7"><span class="problematic" id="id8">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
@@ -2298,12 +2418,12 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.__init__" title="Link to this definition"></a></dt>
-<dd><p><cite>name</cite> is used only in debug logs to provide useful context</p>
+<dd><p>Initialize the semaphore with a given value and optional name for debugging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The initial value for the semaphore.</p></li>
+<li><p><strong>name</strong> (<em>optional</em>) – An optional name used only to provide useful context in debug logs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2325,7 +2445,8 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
@@ -2335,7 +2456,17 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -2350,7 +2481,17 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -2360,12 +2501,16 @@ true will not block at all.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2400,7 +2545,29 @@ True.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.decorate">
 <span class="sig-name descname"><span class="pre">decorate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.decorate" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Wrap a coroutine function to ensure it runs with the semaphore.</p>
+<p class="rubric">Example</p>
+<p>Now you can rewrite this pattern:</p>
+<p><a href="#id13"><span class="problematic" id="id14">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id15"><span class="problematic" id="id16">``</span></a><a href="#id17"><span class="problematic" id="id18">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id19"><span class="problematic" id="id20">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id21"><span class="problematic" id="id22">``</span></a><a href="#id23"><span class="problematic" id="id24">`</span></a></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
@@ -2463,21 +2630,21 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._top_priority">
 <span class="sig-name descname"><span class="pre">_top_priority</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._top_priority" title="Link to this definition"></a></dt>
 <dd><p>It’s kinda like a regular Semaphore but you must give each waiter a priority:</p>
-<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+<p><a href="#id25"><span class="problematic" id="id26">``</span></a>`
 priority_semaphore = PrioritySemaphore(10)</p>
 <dl class="simple">
 <dt>async with priority_semaphore[priority]:</dt><dd><p>await do_stuff()</p>
 </dd>
 </dl>
-<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<p><a href="#id27"><span class="problematic" id="id28">``</span></a><a href="#id29"><span class="problematic" id="id30">`</span></a></p>
 <p>You can aenter and aexit this semaphore without a priority and it will process those first. Like so:</p>
-<p><a href="#id7"><span class="problematic" id="id8">``</span></a>`
+<p><a href="#id31"><span class="problematic" id="id32">``</span></a>`
 priority_semaphore = PrioritySemaphore(10)</p>
 <dl class="simple">
 <dt>async with priority_semaphore:</dt><dd><p>await do_stuff()</p>
 </dd>
 </dl>
-<p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
+<p><a href="#id33"><span class="problematic" id="id34">``</span></a><a href="#id35"><span class="problematic" id="id36">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -3035,10 +3202,51 @@ the queue.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.</span></span><span class="sig-name descname"><span class="pre">Semaphore</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.Semaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code>, <a class="reference internal" href="#a_sync.primitives._debug._DebugDaemonMixin" title="a_sync.primitives._debug._DebugDaemonMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a></p>
+<p>A semaphore with additional debugging capabilities.</p>
+<p>This semaphore includes debug logging.</p>
+<p>Also, it can be used to decorate coroutine functions so you can rewrite this pattern:</p>
+<p><a href="#id37"><span class="problematic" id="id38">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id39"><span class="problematic" id="id40">``</span></a><a href="#id41"><span class="problematic" id="id42">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id43"><span class="problematic" id="id44">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id45"><span class="problematic" id="id46">``</span></a><a href="#id47"><span class="problematic" id="id48">`</span></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.Semaphore.__call__" title="Link to this definition"></a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Convenient decorator method to wrap coroutine functions with the semaphore so you can rewrite this pattern:</p>
+<p><a href="#id49"><span class="problematic" id="id50">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id51"><span class="problematic" id="id52">``</span></a><a href="#id53"><span class="problematic" id="id54">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id55"><span class="problematic" id="id56">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id57"><span class="problematic" id="id58">``</span></a><a href="#id59"><span class="problematic" id="id60">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
@@ -3052,10 +3260,13 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.Semaphore.__init__" title="Link to this definition"></a></dt>
-<dd><p><cite>name</cite> is used only in debug logs to provide useful context</p>
+<dd><p>Initialize the semaphore with a given value and optional name for debugging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The initial value for the semaphore.</p></li>
+<li><p><strong>name</strong> (<em>optional</em>) – An optional name used only to provide useful context in debug logs.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -3066,7 +3277,8 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore._debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.Semaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
@@ -3076,7 +3288,17 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.Semaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -3091,7 +3313,17 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.Semaphore._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -3101,12 +3333,16 @@ the queue.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.Semaphore._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3136,7 +3372,29 @@ True.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore.decorate">
 <span class="sig-name descname"><span class="pre">decorate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore.decorate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.Semaphore.decorate" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Wrap a coroutine function to ensure it runs with the semaphore.</p>
+<p class="rubric">Example</p>
+<p>Now you can rewrite this pattern:</p>
+<p><a href="#id61"><span class="problematic" id="id62">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id63"><span class="problematic" id="id64">``</span></a><a href="#id65"><span class="problematic" id="id66">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id67"><span class="problematic" id="id68">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id69"><span class="problematic" id="id70">``</span></a><a href="#id71"><span class="problematic" id="id72">`</span></a></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
@@ -3529,7 +3787,26 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.__call__" title="Link to this definition"></a></dt>
-<dd><p>Call self as a function.</p>
+<dd><p>Convenient decorator method to wrap coroutine functions with the semaphore so you can rewrite this pattern:</p>
+<p><a href="#id73"><span class="problematic" id="id74">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id75"><span class="problematic" id="id76">``</span></a><a href="#id77"><span class="problematic" id="id78">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id79"><span class="problematic" id="id80">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id81"><span class="problematic" id="id82">``</span></a><a href="#id83"><span class="problematic" id="id84">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
@@ -3543,12 +3820,12 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#ThreadsafeSemaphore.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.__init__" title="Link to this definition"></a></dt>
-<dd><p><cite>name</cite> is used only in debug logs to provide useful context</p>
+<dd><p>Initialize the semaphore with a given value and optional name for debugging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>) – The initial value for the semaphore.</p></li>
+<li><p><strong>name</strong> (<em>optional</em>) – An optional name used only to provide useful context in debug logs.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -3560,7 +3837,8 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore._debug_daemon">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore._debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Daemon task that will emit a debug log every minute while the semaphore has waiters.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
@@ -3570,7 +3848,17 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Ensures that the debug daemon task is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -3585,7 +3873,17 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore._start_debug_daemon">
 <span class="sig-name descname"><span class="pre">_start_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore._start_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Starts the debug daemon task if debug logging is enabled and the event loop is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Positional arguments for the debug daemon.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the debug daemon.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Future</em>[None]</p>
 </dd>
@@ -3595,12 +3893,16 @@ You may need to reduce the semaphore value for multi-threaded applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore._stop_debug_daemon">
 <span class="sig-name descname"><span class="pre">_stop_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore._stop_debug_daemon" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Stops the debug daemon task.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>Task</em><em> | </em><em>None</em>)</p>
+<dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3630,7 +3932,29 @@ True.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.decorate">
 <span class="sig-name descname"><span class="pre">decorate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.decorate" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Wrap a coroutine function to ensure it runs with the semaphore.</p>
+<p class="rubric">Example</p>
+<p>Now you can rewrite this pattern:</p>
+<p><a href="#id85"><span class="problematic" id="id86">``</span></a>`
+semaphore = Semaphore(5)</p>
+<dl class="simple">
+<dt>async def limited():</dt><dd><dl class="simple">
+<dt>async with semaphore:</dt><dd><p>return 1</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id87"><span class="problematic" id="id88">``</span></a><a href="#id89"><span class="problematic" id="id90">`</span></a></p>
+<p>like this:</p>
+<p><a href="#id91"><span class="problematic" id="id92">``</span></a>`
+semaphore = Semaphore(5)</p>
+<p>&#64;semaphore
+async def limited():</p>
+<blockquote>
+<div><p>return 1</p>
+</div></blockquote>
+<p><a href="#id93"><span class="problematic" id="id94">``</span></a><a href="#id95"><span class="problematic" id="id96">`</span></a></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
@@ -3721,7 +4045,9 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.semaphore">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">semaphore</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><span class="pre">Semaphore</span></a></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.semaphore" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the appropriate semaphore for the current thread.</p>
+<p>NOTE: We can’t cache this property because we need to check the current thread every time we access it.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.semaphores">
