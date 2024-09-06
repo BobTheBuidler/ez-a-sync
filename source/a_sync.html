@@ -3579,13 +3579,14 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dt class="sig sig-object py" id="a_sync.exceptions.SyncModeInAsyncContextError">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">SyncModeInAsyncContextError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#SyncModeInAsyncContextError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncRuntimeError" title="a_sync.exceptions.ASyncRuntimeError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncRuntimeError</span></code></a></p>
+<p>Raised when synchronous code is used within an asynchronous context.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.SyncModeInAsyncContextError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#SyncModeInAsyncContextError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the ASyncRuntimeError exception.</p>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#SyncModeInAsyncContextError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError.__init__" title="Link to this definition"></a></dt>
+<dd><p>Initializes the SyncModeInAsyncContextError exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>e</strong> – The original runtime error.</p>
+<dd class="field-odd"><p><strong>err</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5069,7 +5070,7 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Returns an async iterator for the wrapped async iterable.</p>
+<dd><p>Returns self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
@@ -5278,7 +5279,7 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__aiter__">
-<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
 <dd><p>Returns an async iterator for the wrapped async iterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -5378,8 +5379,8 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__aiter__">
-<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Returns an async iterator for the wrapped async iterable.</p>
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
+<dd><p>Returns self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
@@ -5481,7 +5482,7 @@ If this future is done and the result does NOT have attribute <cite>results</cit
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncSorter.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncSorter.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Returns an async iterator for the wrapped async iterable.</p>
+<dd><p>Returns self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
@@ -6732,7 +6733,7 @@ They work kind of like a typical Singleton would, but you will have two instance
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.__aiter__">
-<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
 <dd><p>Returns an async iterator for the wrapped async iterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -6832,8 +6833,8 @@ They work kind of like a typical Singleton would, but you will have two instance
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.__aiter__">
-<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Returns an async iterator for the wrapped async iterable.</p>
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
+<dd><p>Returns self.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
