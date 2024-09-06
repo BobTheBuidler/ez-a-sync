@@ -140,11 +140,13 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
         return f"<{type(self).__name__} for {self.__wrapped__} at {hex(id(self))}>"
 
     def __aiter__(self) -> AsyncIterator[T]:
-        "Returns an async iterator for the wrapped async iterable."
+        """
+        Return an async iterator that yields :obj:`T` objects from the {cls}.
+        """
         return self.__wrapped__.__aiter__()
 
     def __iter__(self) -> Iterator[T]:
-        "Returns an iterator for the wrapped async iterable."
+        "Return an iterator that yields :obj:`T` objects from the {cls}."
         yield from ASyncIterator(self.__aiter__())
     __slots__ = "__wrapped__", 
 
@@ -416,7 +418,7 @@ class ASyncSorter(_ASyncView[T]):
 
     def __aiter__(self) -> AsyncIterator[T]:
         """
-        Returns an async iterator for the sorted iterable.
+        Return an async iterator for the {cls}.
 
         Raises:
             RuntimeError: If the ASyncSorter instance has already been consumed.
