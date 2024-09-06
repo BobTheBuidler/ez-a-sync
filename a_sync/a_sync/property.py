@@ -3,6 +3,7 @@ import functools
 import logging
 
 import async_property as ap  # type: ignore [import]
+from typing_extensions import Unpack
 
 from a_sync import _smart, exceptions
 from a_sync._typing import *
@@ -396,7 +397,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
         unbound: AnyFn[Concatenate[I, P], T], 
         async_def: bool,
         field_name: str,
-        **modifiers: _helpers.ModifierKwargs,
+        **modifiers: Unpack[ModifierKwargs],
     ) -> None:
         super().__init__(instance, unbound, async_def, **modifiers)
         self.__name__ = field_name
@@ -417,7 +418,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
         self, 
         _fget: AnyFn[Concatenate[I, P], Awaitable[T]], 
         field_name: Optional[str] = None, 
-        **modifiers: _smart.ModifierKwargs,
+        **modifiers: Unpack[ModifierKwargs],
     ) -> None:
         """
         Initialize the HiddenMethodDescriptor.
