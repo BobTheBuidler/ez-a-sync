@@ -3,7 +3,14 @@ This module provides various queue implementations for managing asynchronous tas
 including standard FIFO queues, priority queues, and processing queues. 
 
 These queues support advanced features like waiting for multiple items, handling priority tasks, 
-and processing tasks with multiple workers.
+and processing tasks with multiple workers. They are designed to enhance asynchronous 
+programming patterns and optimize task management in concurrent environments.
+
+Key features:
+- FIFO and priority-based queueing
+- Multi-item retrieval
+- Task processing with customizable worker counts
+- Dynamic priority updates for tasks
 
 Dependencies:
     - asyncio: For asynchronous task and event management.
@@ -35,24 +42,33 @@ else:
 class Queue(_Queue[T]):
     # for type hint support, no functional difference
     """
-    A generic asynchronous queue that supports retrieving multiple items 
-    at once and handling task processing in both FIFO and LIFO order.
+    A generic asynchronous queue that extends the functionality of asyncio.Queue.
+
+    This implementation supports retrieving multiple items at once and handling 
+    task processing in both FIFO and LIFO order. It provides enhanced type hinting 
+    support and additional methods for bulk operations.
 
     Inherits from:
         - :class:`~asyncio.Queue`
 
     Example:
         >>> queue = Queue()
-        >>> await queue.put(item='task')
+        >>> await queue.put(item='task1')
+        >>> await queue.put(item='task2')
         >>> result = await queue.get()
         >>> print(result)
-        task
+        task1
+        >>> all_tasks = await queue.get_all()
+        >>> print(all_tasks)
+        ['task2']
     """
 
     async def get(self) -> T:
         self._queue
         """
-        Asynchronously retrieves the next item from the queue.
+        Asynchronously retrieves and removes the next item from the queue.
+
+        If the queue is empty, this method will block until an item is available.
 
         Returns:
             T: The next item in the queue.
@@ -65,13 +81,16 @@ class Queue(_Queue[T]):
 
     def get_nowait(self) -> T:
         """
-        Retrieves the next item from the queue without blocking.
+        Retrieves and removes the next item from the queue without blocking.
+
+        This method does not wait for an item to be available and will raise
+        an exception if the queue is empty.
 
         Raises:
             :exc:`~asyncio.QueueEmpty`: If the queue is empty.
         
         Returns:
-            T: The next item in the queue, or raises an exception if the queue is empty.
+            T: The next item in the queue.
 
         Example:
             >>> result = queue.get_nowait()
@@ -81,7 +100,9 @@ class Queue(_Queue[T]):
 
     async def put(self, item: T) -> None:
         """
-        Asynchronously places an item into the queue.
+        Asynchronously adds an item to the queue.
+
+        If the queue is full, this method will block until space is available.
 
         Args:
             item: The item to add to the queue.
@@ -93,7 +114,10 @@ class Queue(_Queue[T]):
 
     def put_nowait(self, item: T) -> None:
         """
-        Immediately places an item into the queue without waiting.
+        Adds an item to the queue without blocking.
+
+        This method does not wait for space to be available and will raise
+        an exception if the queue is full.
 
         Args:
             item: The item to add to the queue.
@@ -108,11 +132,13 @@ class Queue(_Queue[T]):
     
     async def get_all(self) -> List[T]:
         """
-        Asynchronously retrieves all available items from the queue, 
-        waiting if no items are present.
+        Asynchronously retrieves and removes all available items from the queue.
+
+        If the queue is empty, this method will wait until at least one item 
+        is available before returning.
 
         Returns:
-            List[T]: A list of all items in the queue.
+            List[T]: A list of all items that were in the queue.
 
         Example:
             >>> tasks = await queue.get_all()
@@ -125,14 +151,16 @@ class Queue(_Queue[T]):
 
     def get_all_nowait(self) -> List[T]:
         """
-        Retrieves all available items from the queue without waiting, 
-        raising an exception if the queue is empty.
+        Retrieves and removes all available items from the queue without waiting.
+
+        This method does not wait for items to be available and will raise
+        an exception if the queue is empty.
 
         Raises:
-            :exc:`~asyncio.QueueEmpty`: If the queue has no items.
+            :exc:`~asyncio.QueueEmpty`: If the queue is empty.
 
         Returns:
-            List[T]: A list of all items in the queue.
+            List[T]: A list of all items that were in the queue.
 
         Example:
             >>> tasks = queue.get_all_nowait()
@@ -149,12 +177,11 @@ class Queue(_Queue[T]):
             
     async def get_multi(self, i: int, can_return_less: bool = False) -> List[T]:
         """
-        Asynchronously retrieves up to `i` items from the queue, 
-        optionally allowing fewer than `i` items to be returned.
+        Asynchronously retrieves up to `i` items from the queue.
 
         Args:
             i: The number of items to retrieve.
-            can_return_less: If True, the method may return fewer than `i` items.
+            can_return_less: If True, may return fewer than `i` items if queue is emptied.
 
         Returns:
             List[T]: A list containing the retrieved items.
@@ -179,12 +206,11 @@ class Queue(_Queue[T]):
         # Just like `asyncio.Queue.get_nowait`, but will return `i` items instead of 1.
         # Set `can_return_less` to True if you want to receive up to `i` items.
         """
-        Retrieves up to `i` items from the queue without waiting, 
-        optionally returning fewer than `i` items.
+        Retrieves up to `i` items from the queue without waiting.
 
         Args:
             i: The number of items to retrieve.
-            can_return_less: If True, may return fewer than `i` items.
+            can_return_less: If True, may return fewer than `i` items if queue is emptied.
 
         Raises:
             :exc:`~asyncio.QueueEmpty`: If no items are available and fewer items cannot be returned.
@@ -216,19 +242,19 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     A queue designed for processing tasks asynchronously with multiple workers.
 
     Each item in the queue is processed by a worker, and tasks can return results 
-    via asynchronous futures.
+    via asynchronous futures. This queue is ideal for scenarios where tasks need
+    to be processed concurrently with a fixed number of workers.
 
     Example:
-        >>> async def process_task(data): return data
+        >>> async def process_task(data): return data.upper()
         >>> queue = ProcessingQueue(func=process_task, num_workers=5)
-        >>> await queue.put(item='task')
-        >>> print(await queue.get())
+        >>> fut = await queue.put(item='task')
+        >>> print(await fut)
+        TASK
     """
 
     _closed: bool = False
-    """
-    Indicates whether the queue is closed.
-    """
+    """Indicates whether the queue is closed."""
 
     __slots__ = "func", "num_workers", "_worker_coro"
 
@@ -262,36 +288,26 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             super().__init__()
             
         self.func = func
-        """
-        The function that each worker will process.
-        """
+        """The function that each worker will process."""
 
         self.num_workers = num_workers
-        """
-        The number of worker tasks for processing.
-        """
+        """The number of worker tasks for processing."""
 
         self._name = name
-        """
-        Optional name for the queue.
-        """
+        """Optional name for the queue."""
 
         self._no_futs = not return_data
-        """
-        Indicates whether tasks will return data via futures.
-        """
+        """Indicates whether tasks will return data via futures."""
 
         @functools.wraps(func)
         async def _worker_coro() -> NoReturn:
-            # we use this little helper so we can have context of `func` in any err logs
-            """
-            Worker coroutine for processing tasks.
-            """
+            """Worker coroutine for processing tasks."""
             return await self.__worker_coro()
         self._worker_coro = _worker_coro
     # NOTE: asyncio defines both this and __str__
     def __repr__(self) -> str:
-        """Provides a detailed string representation of the queue.
+        """
+        Provides a detailed string representation of the queue.
 
         Example:
             >>> print(queue)
@@ -373,6 +389,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
 
         Example:
             >>> fut = await queue.put(item='task')
+            >>> print(await fut)
         """
         self._ensure_workers()
         if self._no_futs:
@@ -394,7 +411,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
 
         Example:
             >>> fut = queue.put_nowait(item='task')
-            >>> print(fut)
+            >>> print(await fut)
         """
         self._ensure_workers()
         if self._no_futs:
@@ -404,15 +421,11 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         return fut
 
     def _create_future(self) -> "asyncio.Future[V]":
-        """
-        Creates a future for the task.
-        """
+        """Creates a future for the task."""
         return asyncio.get_event_loop().create_future()
 
     def _ensure_workers(self) -> None:
-        """
-        Ensures that the worker tasks are running.
-        """
+        """Ensures that the worker tasks are running."""
         if self._closed:
             raise RuntimeError(f"{type(self).__name__} is closed: ", self) from None
         if self._workers.done():
@@ -435,9 +448,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
 
     @functools.cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
-        """
-        Creates and manages the worker tasks for the queue.
-        """
+        """Creates and manages the worker tasks for the queue."""
         logger.debug("starting worker task for %s", self)
         workers = [
             create_task(
@@ -570,7 +581,8 @@ class _PriorityQueueMixin(Generic[T]):
         heappush(self._queue, item)
 
     def _get(self, heappop=heapq.heappop):
-        """Retrieves the highest priority item from the queue.
+        """
+        Retrieves the highest priority item from the queue.
 
         Example:
             >>> task = queue._get()
@@ -597,7 +609,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
 
         Example:
             >>> fut = await queue.put(priority=1, item='task')
-            >>> print(fut)
+            >>> print(await fut)
         """
         self._ensure_workers()
         fut = asyncio.get_event_loop().create_future()
@@ -618,7 +630,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
 
         Example:
             >>> fut = queue.put_nowait(priority=1, item='task')
-            >>> print(fut)
+            >>> print(await fut)
         """
         self._ensure_workers()
         fut = self._create_future()
@@ -665,7 +677,8 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
         return heappop(self._queue)
 
     def _get_key(self, *args, **kwargs) -> _smart._Key:
-        """Generates a unique key for task identification based on arguments.
+        """
+        Generates a unique key for task identification based on arguments.
 
         Args:
             args: Positional arguments for the task.
@@ -679,25 +692,23 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
             >>> print(key)
         """
         return (args, tuple((kwarg, kwargs[kwarg]) for kwarg in sorted(kwargs)))
+
 class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueue):
     # NOTE: WIP
     """
     A :class:`~asyncio.PriorityQueue` subclass that allows priorities to be updated (or computed) on the fly.
     """
     pass
+
 class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]):
     """
     A PriorityProcessingQueue subclass that will execute jobs with the most waiters first
     """
     _no_futs = False
-    """
-    Whether smart futures are used.
-    """
+    """Whether smart futures are used."""
 
     _futs: "weakref.WeakValueDictionary[_smart._Key, _smart.SmartFuture[T]]"
-    """
-    Weak reference dictionary for managing smart futures.
-    """
+    """Weak reference dictionary for managing smart futures."""
 
     def __init__(
         self, 
@@ -735,7 +746,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
 
         Example:
             >>> fut = await queue.put(item='task')
-            >>> print(fut)
+            >>> print(await fut)
         """
         self._ensure_workers()
         key = self._get_key(*args, **kwargs)
@@ -759,7 +770,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
 
         Example:
             >>> fut = queue.put_nowait(item='task')
-            >>> print(fut)
+            >>> print(await fut)
         """
         self._ensure_workers()
         key = self._get_key(*args, **kwargs)
@@ -771,9 +782,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         return fut
 
     def _create_future(self, key: _smart._Key) -> "asyncio.Future[V]":
-        """
-        Creates a smart future for the task.
-        """
+        """Creates a smart future for the task."""
         return _smart.create_future(queue=self, key=key, loop=self._loop)
 
     def _get(self):
