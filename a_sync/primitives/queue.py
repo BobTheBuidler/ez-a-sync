@@ -12,11 +12,14 @@ Key features:
 - Task processing with customizable worker counts
 - Dynamic priority updates for tasks
 
-Dependencies:
-    - asyncio: For asynchronous task and event management.
-    - weakref: To manage weak references for asynchronous futures.
-    - heapq: For implementing priority-based queueing.
-    - toolcache: Internal caching mechanism from the :mod:`~a_sync` library.
+Example usage:
+    >>> from a_sync.primitives.queue import Queue, ProcessingQueue
+    >>> queue, proc_queue = Queue(), ProcessingQueue(func=str.upper, num_workers=2)
+    >>> await queue.put(item='task1')
+    >>> print(await queue.get())
+    task1
+    >>> print(await (await proc_queue.put(item='hello')))
+    HELLO
 """
 
 import asyncio
