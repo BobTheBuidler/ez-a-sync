@@ -137,7 +137,10 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
         self.__wrapped__ = async_iterable
         "The wrapped async iterable object."
     def __repr__(self) -> str:
-        return f"<{type(self).__name__} for {self.__wrapped__} at {hex(id(self))}>"
+        start = f"<{type(self).__name__}"
+        if wrapped := getattr(self, "__wrapped__", None):
+            start += f" for {self.__wrapped__}"
+        return f"{start} at {hex(id(self))}>"
 
     def __aiter__(self) -> AsyncIterator[T]:
         """
