@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -6,18 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.primitives package &mdash; ez-a-sync  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -434,7 +432,7 @@
 <dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -449,21 +447,21 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin.debug_logs_enabled">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin.debug_logs_enabled" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>Checks if debug logging is enabled for the logger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin.logger">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin.logger" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin.logger" title="Link to this definition"></a></dt>
 <dd><p>Returns a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <dl class="field-list simple">
@@ -485,26 +483,26 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives._loggable._LoggerMixin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives._loggable.</span></span><span class="sig-name descname"><span class="pre">_LoggerMixin</span></span><a class="reference internal" href="../_modules/a_sync/primitives/_loggable.html#_LoggerMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A mixin class that adds logging capabilities to other classes.</p>
 <p>This mixin provides a cached property for accessing a logger instance and a property to check if debug logging is enabled.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives._loggable._LoggerMixin.debug_logs_enabled">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin.debug_logs_enabled" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>Checks if debug logging is enabled for the logger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives._loggable._LoggerMixin.logger">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin.logger" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives._loggable._LoggerMixin.logger" title="Link to this definition"></a></dt>
 <dd><p>Returns a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <dl class="field-list simple">
@@ -552,10 +550,10 @@ handling priority tasks, and processing tasks with multiple workers.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
-<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>return_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>return_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
 <li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -672,7 +670,7 @@ slot is available before adding item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>)</p></li>
+<li><p><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p></li>
 <li><p><strong>args</strong> (<em>~P</em>)</p></li>
 <li><p><strong>kwargs</strong> (<em>~P</em>)</p></li>
 </ul>
@@ -691,7 +689,7 @@ slot is available before adding item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>)</p></li>
+<li><p><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p></li>
 <li><p><strong>args</strong> (<em>~P</em>)</p></li>
 <li><p><strong>kwargs</strong> (<em>~P</em>)</p></li>
 </ul>
@@ -724,7 +722,7 @@ the queue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._closed">
-<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._closed" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._closed" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -764,7 +762,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._workers">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._workers" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -780,7 +778,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.name" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -793,7 +791,7 @@ the queue.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.__call__" title="Link to this definition"></a></dt>
@@ -817,10 +815,10 @@ the queue.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
-<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>return_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>return_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
 <li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -835,7 +833,7 @@ the queue.</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -997,7 +995,7 @@ the queue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._closed">
-<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._closed" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._closed" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1037,7 +1035,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._workers">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._workers" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1053,7 +1051,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.name" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1134,7 +1132,7 @@ then full() is never True.</p>
 <dd><p>returns 1 or more items</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a>[<em>T</em>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1145,7 +1143,7 @@ then full() is never True.</p>
 <dd><p>returns 1 or more items, or raises asyncio.QueueEmpty</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a>[<em>T</em>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1156,12 +1154,12 @@ then full() is never True.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1174,12 +1172,12 @@ Set <cite>can_return_less</cite> to True if you want to receive up to <cite>i</c
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1298,7 +1296,7 @@ the queue.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">SmartProcessingQueue</span></span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#SmartProcessingQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._VariablePriorityQueueMixin" title="a_sync.primitives.queue._VariablePriorityQueueMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concatenate</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._VariablePriorityQueueMixin" title="a_sync.primitives.queue._VariablePriorityQueueMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concatenate</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
 <p>A PriorityProcessingQueue subclass that will execute jobs with the most waiters first</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.__call__">
@@ -1323,9 +1321,9 @@ the queue.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>T</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
-<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><em>Concatenate</em></a><em>[</em><em>T</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
 <li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -1340,7 +1338,7 @@ the queue.</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1350,7 +1348,7 @@ the queue.</p>
 <span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#SmartProcessingQueue._create_future"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._create_future" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
@@ -1384,7 +1382,7 @@ the queue.</p>
 <span class="sig-name descname"><span class="pre">_get_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._get_key" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>]]]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1516,7 +1514,7 @@ the queue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._closed">
-<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._closed" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._closed" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1526,7 +1524,7 @@ the queue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._futs">
-<span class="sig-name descname"><span class="pre">_futs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/weakref.html#weakref.WeakValueDictionary" title="(in Python v3.12)"><span class="pre">WeakValueDictionary</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><span class="pre">SmartFuture</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._futs" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_futs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/weakref.html#weakref.WeakValueDictionary" title="(in Python v3.13)"><span class="pre">WeakValueDictionary</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><span class="pre">SmartFuture</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._futs" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1566,7 +1564,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._workers">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._workers" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1582,7 +1580,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.name" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1618,7 +1616,7 @@ the queue.</p>
 <span class="sig-name descname"><span class="pre">_get_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._get_key" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>]]]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1732,7 +1730,7 @@ the queue.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._PriorityQueueMixin">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_PriorityQueueMixin</span></span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#_PriorityQueueMixin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue._PriorityQueueMixin" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._PriorityQueueMixin._get">
 <span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heappop=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappop&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#_PriorityQueueMixin._get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue._PriorityQueueMixin._get" title="Link to this definition"></a></dt>
@@ -1903,7 +1901,7 @@ the queue.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._SmartFutureRef">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_SmartFutureRef</span></span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#_SmartFutureRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue._SmartFutureRef" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ReferenceType</span></code>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ReferenceType</span></code>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._SmartFutureRef.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue._SmartFutureRef.__call__" title="Link to this definition"></a></dt>
@@ -1932,7 +1930,7 @@ the queue.</p>
 <span class="sig-name descname"><span class="pre">_get_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#_VariablePriorityQueueMixin._get_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin._get_key" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>]]]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1956,14 +1954,14 @@ the queue.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The number of items to retrieve.</p></li>
-<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Whether the method is allowed to return fewer than <cite>i</cite> items.</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The number of items to retrieve.</p></li>
+<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether the method is allowed to return fewer than <cite>i</cite> items.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.12)"><strong>TypeError</strong></a> – If <cite>i</cite> is not an integer or <cite>can_return_less</cite> is not a boolean.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>i</cite> is not greater than 1.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If <cite>i</cite> is not an integer or <cite>can_return_less</cite> is not a boolean.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>i</cite> is not greater than 1.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1991,7 +1989,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The initial value of the counter.</p></li>
+<li><p><strong>start_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The initial value of the counter.</p></li>
 <li><p><strong>name</strong> (<em>optional</em>) – An optional name for the counter, used in debug logs.</p></li>
 </ul>
 </dd>
@@ -2058,7 +2056,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -2072,10 +2070,10 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dd><p>Sets the counter to the specified value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The value to set the counter to. Must be &gt;= the current value.</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The value to set the counter to. Must be &gt;= the current value.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If the new value is less than the current value.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the new value is less than the current value.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -2089,13 +2087,13 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dd><p>Waits until the counter reaches or exceeds the specified value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The value to wait for.</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The value to wait for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True when the counter reaches or exceeds the specified value.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2107,8 +2105,8 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._events">
-<span class="sig-name descname"><span class="pre">_events</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.12)"><span class="pre">DefaultDict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.event.Event" title="a_sync.primitives.locks.event.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.CounterLock._events" title="Link to this definition"></a></dt>
-<dd><p>A defaultdict that maps each awaited value to an <a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Event" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Event</span></code></a> that manages the waiters for that value.</p>
+<span class="sig-name descname"><span class="pre">_events</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.13)"><span class="pre">DefaultDict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.event.Event" title="a_sync.primitives.locks.event.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.CounterLock._events" title="Link to this definition"></a></dt>
+<dd><p>A defaultdict that maps each awaited value to an <a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Event" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Event</span></code></a> that manages the waiters for that value.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -2125,14 +2123,14 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.debug_logs_enabled">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.CounterLock.debug_logs_enabled" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.CounterLock.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>Checks if debug logging is enabled for the logger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2145,7 +2143,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.logger">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.CounterLock.logger" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.CounterLock.logger" title="Link to this definition"></a></dt>
 <dd><p>Returns a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <dl class="field-list simple">
@@ -2160,7 +2158,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.value">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.primitives.CounterLock.value" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.primitives.CounterLock.value" title="Link to this definition"></a></dt>
 <dd><p>Gets the current value of the counter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2186,9 +2184,9 @@ diagnosing and debugging potential deadlocks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – An optional name for the event, used in debug logs.</p></li>
-<li><p><strong>debug_daemon_interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The interval in seconds for the debug daemon to log information.</p></li>
-<li><p><strong>loop</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.AbstractEventLoop" title="(in Python v3.12)"><em>asyncio.AbstractEventLoop</em></a><em>]</em>) – The event loop to use.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – An optional name for the event, used in debug logs.</p></li>
+<li><p><strong>debug_daemon_interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The interval in seconds for the debug daemon to log information.</p></li>
+<li><p><strong>loop</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.AbstractEventLoop" title="(in Python v3.13)"><em>asyncio.AbstractEventLoop</em></a><em>]</em>) – The event loop to use.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2259,7 +2257,7 @@ diagnosing and debugging potential deadlocks.</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -2298,7 +2296,7 @@ true will not block at all.</p>
 <dd class="field-odd"><p>True when the event is set.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.12)"><em>Literal</em></a>[True]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2320,31 +2318,31 @@ true will not block at all.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.Event._value">
-<span class="sig-name descname"><span class="pre">_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.Event._value" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.Event._value" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.Event._waiters">
-<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Deque" title="(in Python v3.12)"><span class="pre">Deque</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.Event._waiters" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Deque" title="(in Python v3.13)"><span class="pre">Deque</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.Event._waiters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.Event.debug_logs_enabled">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.Event.debug_logs_enabled" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.Event.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>Checks if debug logging is enabled for the logger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.Event.logger">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.Event.logger" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.Event.logger" title="Link to this definition"></a></dt>
 <dd><p>Returns a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <dl class="field-list simple">
@@ -2362,7 +2360,7 @@ true will not block at all.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.</span></span><span class="sig-name descname"><span class="pre">PrioritySemaphore</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#PrioritySemaphore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Decimal</span></code></a>, <a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager</span></code></a>]</p>
+<dd><p>Bases: <a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Decimal</span></code></a>, <a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager</span></code></a>]</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._context_manager_class">
 <span class="sig-name descname"><span class="pre">_context_manager_class</span></span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._context_manager_class" title="Link to this definition"></a></dt>
@@ -2394,10 +2392,10 @@ async def limited():</p>
 <p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2422,7 +2420,7 @@ async def limited():</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The initial value for the semaphore.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The initial value for the semaphore.</p></li>
 <li><p><strong>name</strong> (<em>optional</em>) – An optional name used only to provide useful context in debug logs.</p></li>
 </ul>
 </dd>
@@ -2437,7 +2435,7 @@ async def limited():</p>
 <span class="sig-name descname"><span class="pre">_count_waiters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._count_waiters" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><em>Dict</em></a>[<em>PT</em>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><em>Dict</em></a>[<em>PT</em>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2507,7 +2505,7 @@ async def limited():</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -2537,7 +2535,7 @@ called release() to make it larger than 0, and then return
 True.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.12)"><em>Literal</em></a>[True]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2569,10 +2567,10 @@ async def limited():</p>
 <p><a href="#id21"><span class="problematic" id="id22">``</span></a><a href="#id23"><span class="problematic" id="id24">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2583,7 +2581,7 @@ async def limited():</p>
 <dd><p>Returns True if semaphore cannot be acquired immediately.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2603,7 +2601,7 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._context_managers">
-<span class="sig-name descname"><span class="pre">_context_managers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._context_managers" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_context_managers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._context_managers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2613,7 +2611,7 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._decorated">
-<span class="sig-name descname"><span class="pre">_decorated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._decorated" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_decorated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.13)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._decorated" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2623,7 +2621,7 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._potential_lost_waiters">
-<span class="sig-name descname"><span class="pre">_potential_lost_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._potential_lost_waiters" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_potential_lost_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._potential_lost_waiters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2649,31 +2647,31 @@ priority_semaphore = PrioritySemaphore(10)</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._value">
-<span class="sig-name descname"><span class="pre">_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._value" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._value" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._waiters">
-<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._waiters" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._waiters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.debug_logs_enabled">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>Checks if debug logging is enabled for the logger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.logger">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.logger" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.logger" title="Link to this definition"></a></dt>
 <dd><p>Returns a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <dl class="field-list simple">
@@ -2688,7 +2686,7 @@ priority_semaphore = PrioritySemaphore(10)</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.name" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2696,7 +2694,7 @@ priority_semaphore = PrioritySemaphore(10)</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.ProcessingQueue" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.__call__" title="Link to this definition"></a></dt>
@@ -2720,10 +2718,10 @@ priority_semaphore = PrioritySemaphore(10)</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
-<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>return_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>return_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
 <li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -2738,7 +2736,7 @@ priority_semaphore = PrioritySemaphore(10)</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2900,7 +2898,7 @@ the queue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._closed">
-<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._closed" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._closed" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2940,7 +2938,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._workers">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._workers" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2956,7 +2954,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.name" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -3037,7 +3035,7 @@ then full() is never True.</p>
 <dd><p>returns 1 or more items</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a>[<em>T</em>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3048,7 +3046,7 @@ then full() is never True.</p>
 <dd><p>returns 1 or more items, or raises asyncio.QueueEmpty</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a>[<em>T</em>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3059,12 +3057,12 @@ then full() is never True.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3077,12 +3075,12 @@ Set <cite>can_return_less</cite> to True if you want to receive up to <cite>i</c
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>)</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>can_return_less</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><em>List</em></a>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3249,10 +3247,10 @@ async def limited():</p>
 <p><a href="#id57"><span class="problematic" id="id58">``</span></a><a href="#id59"><span class="problematic" id="id60">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3264,7 +3262,7 @@ async def limited():</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The initial value for the semaphore.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The initial value for the semaphore.</p></li>
 <li><p><strong>name</strong> (<em>optional</em>) – An optional name used only to provide useful context in debug logs.</p></li>
 </ul>
 </dd>
@@ -3339,7 +3337,7 @@ async def limited():</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -3364,7 +3362,7 @@ called release() to make it larger than 0, and then return
 True.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.12)"><em>Literal</em></a>[True]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3396,10 +3394,10 @@ async def limited():</p>
 <p><a href="#id69"><span class="problematic" id="id70">``</span></a><a href="#id71"><span class="problematic" id="id72">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3425,7 +3423,7 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore._decorated">
-<span class="sig-name descname"><span class="pre">_decorated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.Semaphore._decorated" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_decorated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.13)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.Semaphore._decorated" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -3445,21 +3443,21 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore.debug_logs_enabled">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.Semaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.Semaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>Checks if debug logging is enabled for the logger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore.logger">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.Semaphore.logger" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.Semaphore.logger" title="Link to this definition"></a></dt>
 <dd><p>Returns a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <dl class="field-list simple">
@@ -3482,7 +3480,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.</span></span><span class="sig-name descname"><span class="pre">SmartProcessingQueue</span></span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#SmartProcessingQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._VariablePriorityQueueMixin" title="a_sync.primitives.queue._VariablePriorityQueueMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concatenate</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._VariablePriorityQueueMixin" title="a_sync.primitives.queue._VariablePriorityQueueMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_VariablePriorityQueueMixin</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concatenate</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>, <a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
 <p>A PriorityProcessingQueue subclass that will execute jobs with the most waiters first</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.__call__">
@@ -3507,9 +3505,9 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.12)"><em>Concatenate</em></a><em>[</em><em>T</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
-<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
+<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><em>Concatenate</em></a><em>[</em><em>T</em><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>num_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>)</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
 <li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -3524,7 +3522,7 @@ become larger than zero again, wake up that coroutine.</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><em>NoReturn</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3534,7 +3532,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#SmartProcessingQueue._create_future"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._create_future" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
@@ -3568,7 +3566,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="sig-name descname"><span class="pre">_get_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._get_key" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a>]]]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3700,7 +3698,7 @@ the queue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._closed">
-<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._closed" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_closed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._closed" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -3710,7 +3708,7 @@ the queue.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._futs">
-<span class="sig-name descname"><span class="pre">_futs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/weakref.html#weakref.WeakValueDictionary" title="(in Python v3.12)"><span class="pre">WeakValueDictionary</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.12)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><span class="pre">SmartFuture</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._futs" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_futs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/weakref.html#weakref.WeakValueDictionary" title="(in Python v3.13)"><span class="pre">WeakValueDictionary</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.html#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><span class="pre">SmartFuture</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._futs" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -3750,7 +3748,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._workers">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.12)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._workers" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._workers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -3766,7 +3764,7 @@ the queue.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.name" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -3809,10 +3807,10 @@ async def limited():</p>
 <p><a href="#id81"><span class="problematic" id="id82">``</span></a><a href="#id83"><span class="problematic" id="id84">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3824,7 +3822,7 @@ async def limited():</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>) – The initial value for the semaphore.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – The initial value for the semaphore.</p></li>
 <li><p><strong>name</strong> (<em>optional</em>) – An optional name used only to provide useful context in debug logs.</p></li>
 </ul>
 </dd>
@@ -3899,7 +3897,7 @@ async def limited():</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>optional</em>) – The task to be stopped, if any.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>t</cite> is not the current daemon.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -3924,7 +3922,7 @@ called release() to make it larger than 0, and then return
 True.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.12)"><em>Literal</em></a>[True]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3956,10 +3954,10 @@ async def limited():</p>
 <p><a href="#id93"><span class="problematic" id="id94">``</span></a><a href="#id95"><span class="problematic" id="id96">`</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.12)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.12)"><em>Awaitable</em></a>[<em>T</em>]]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3985,7 +3983,7 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore._decorated">
-<span class="sig-name descname"><span class="pre">_decorated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.12)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore._decorated" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_decorated</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.13)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore._decorated" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -4005,14 +4003,14 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.debug_logs_enabled">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>Checks if debug logging is enabled for the logger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if debug logging is enabled, False otherwise.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)">bool</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -4024,7 +4022,7 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.logger">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.12)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.logger" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logger</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><span class="pre">Logger</span></a></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.logger" title="Link to this definition"></a></dt>
 <dd><p>Returns a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <dl class="field-list simple">
@@ -4051,12 +4049,12 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.semaphores">
-<span class="sig-name descname"><span class="pre">semaphores</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.12)"><span class="pre">DefaultDict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/threading.html#threading.Thread" title="(in Python v3.12)"><span class="pre">Thread</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><span class="pre">Semaphore</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.semaphores" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">semaphores</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.13)"><span class="pre">DefaultDict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/threading.html#threading.Thread" title="(in Python v3.13)"><span class="pre">Thread</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><span class="pre">Semaphore</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.semaphores" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore.use_dummy">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_dummy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.use_dummy" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_dummy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore.use_dummy" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

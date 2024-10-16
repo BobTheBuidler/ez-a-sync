@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -6,18 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.utils package &mdash; ez-a-sync  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -113,7 +111,7 @@
 <p>The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
+<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An async iterator that yields items from the input async iterators as they become available.</p>
@@ -137,7 +135,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to exhaust.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.12)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -158,8 +156,8 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterators</strong> – A sequence of async iterators to be exhausted concurrently.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.12)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
-<li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -182,7 +180,7 @@
 <p>The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.12)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
+<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An async iterator that yields items from the input async iterators as they become available.</p>
@@ -206,7 +204,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to exhaust.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.12)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -227,8 +225,8 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterators</strong> – A sequence of async iterators to be exhausted concurrently.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.12)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
-<li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
