@@ -183,10 +183,16 @@
 <span class="sd">            *args: Positional arguments for the function.</span>
 <span class="sd">            **kwargs: Keyword arguments for the function.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: make prettier strings for other types</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;function&quot;</span><span class="p">:</span>
+            <span class="n">fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;__qualname__&#39;</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;%s processing %s</span><span class="si">{</span><span class="n">args</span><span class="si">}{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span>
+        
         <span class="k">while</span> <span class="ow">not</span> <span class="n">fut</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">fut</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s1"> processing </span><span class="si">{</span><span class="n">fn</span><span class="si">}{</span><span class="n">args</span><span class="si">}{</span><span class="n">kwargs</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
     
 <span class="c1"># Process</span>
 
