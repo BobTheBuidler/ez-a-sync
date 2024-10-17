@@ -112,10 +112,16 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
         """
+        # TODO: make prettier strings for other types
+        if type(fn).__name__ == "function":
+            fn = getattr(fn, '__qualname__', fn)
+
+        msg = f"%s processing %s{args}{kwargs}"
+        
         while not fut.done():
             await asyncio.sleep(15)
             if not fut.done():
-                self.logger.debug(f'{self} processing {fn}{args}{kwargs}')
+                self.logger.debug(msg, self, fn)
     
 # Process
 
