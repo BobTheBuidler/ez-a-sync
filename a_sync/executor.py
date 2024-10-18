@@ -114,7 +114,9 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         """
         # TODO: make prettier strings for other types
         if type(fn).__name__ == "function":
-            fn = getattr(fn, '__qualname__', fn)
+            fnid = getattr(fn, '__qualname__', fn.__name__)
+            if fn.__module__:
+                fnid = f"{fn.__module__}.{fnid}"
 
         msg = f"%s processing %s{args}"
         if kwargs:
@@ -125,7 +127,7 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         while not fut.done():
             await asyncio.sleep(15)
             if not fut.done():
-                self.logger.debug(msg, self, fn)
+                self.logger.debug(msg, self, fnid)
     
 # Process
 
