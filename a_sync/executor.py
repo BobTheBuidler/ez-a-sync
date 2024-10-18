@@ -116,7 +116,8 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         if type(fn).__name__ == "function":
             fn = getattr(fn, '__qualname__', fn)
 
-        msg = f"%s processing %s{args}{kwargs}"
+        msg = f"%s processing %s{args}"
+        msg = f"{msg[-1:]} {', '.join(f'{k}={v}' for k, v in kwargs.items())})"
         
         while not fut.done():
             await asyncio.sleep(15)
