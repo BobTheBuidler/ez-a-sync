@@ -118,9 +118,9 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
 
         msg = f"%s processing %s{args}"
         if kwargs:
-            msg = f"{msg[-1:]} {', '.join(f'{k}={v}' for k, v in kwargs.items())})"
+            msg = f"{msg[:-1]} {', '.join(f'{k}={v}' for k, v in kwargs.items())})"
         else:
-            msg = f"{msg[-2:]})"
+            msg = f"{msg[:-2]})"
         
         while not fut.done():
             await asyncio.sleep(15)
