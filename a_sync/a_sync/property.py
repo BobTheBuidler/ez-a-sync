@@ -256,12 +256,8 @@ class ASyncCachedPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.cache
             try:
                 value = await _smart.shield(inner_task)
             except Exception as e:
-                context = {"property": self, "instance": instance}
-                try:
-                    context_added = type(e)(*e.args, context)
-                except TypeError:
-                    raise e.with_traceback(e.__traceback__)
-                raise context_added.with_traceback(e.__traceback__)
+                e.args = *e.args, {"property": self, "instance": instance}
+                raise
             self.__set__(instance, value)
             self.pop_lock(instance)
             return value
