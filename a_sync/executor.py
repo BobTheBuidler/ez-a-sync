@@ -117,6 +117,8 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
             fnid = getattr(fn, '__qualname__', fn.__name__)
             if fn.__module__:
                 fnid = f"{fn.__module__}.{fnid}"
+        else:
+            fnid = fn
 
         msg = f"%s processing %s{args}"
         if kwargs:
