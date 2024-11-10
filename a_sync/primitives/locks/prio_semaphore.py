@@ -23,6 +23,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     name: Optional[str]
     _value: int
     _waiters: List["_AbstractPrioritySemaphoreContextManager[PT]"]  # type: ignore [assignment]
+    _context_managers: Dict[PT, _AbstractPrioritySemaphoreContextManager[PT]]
     __slots__ = (
         "name",
         "_value",
@@ -44,9 +45,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         raise NotImplementedError
 
     def __init__(self, value: int = 1, *, name: Optional[str] = None) -> None:
-        self._context_managers: Dict[
-            PT, _AbstractPrioritySemaphoreContextManager[PT]
-        ] = {}
+        self._context_managers = {}
         self._capacity = value
         super().__init__(value, name=name)
         self._waiters = []
