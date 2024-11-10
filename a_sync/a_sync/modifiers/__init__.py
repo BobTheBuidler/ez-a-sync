@@ -13,11 +13,7 @@ def get_modifiers_from(thing: Union[dict, type, object]) -> ModifierKwargs:
 
 
 def apply_class_defined_modifiers(attrs_from_metaclass: dict):
-    if "semaphore" in attrs_from_metaclass and isinstance(
-        val := attrs_from_metaclass["semaphore"], int
-    ):
+    if isinstance(val := attrs_from_metaclass.get("semaphore"), int):
         attrs_from_metaclass["semaphore"] = ThreadsafeSemaphore(val)
-    if "runs_per_minute" in attrs_from_metaclass and isinstance(
-        val := attrs_from_metaclass["runs_per_minute"], int
-    ):
+    if isinstance(val := attrs_from_metaclass.get("runs_per_minute"), int):
         attrs_from_metaclass["runs_per_minute"] = AsyncLimiter(val)
