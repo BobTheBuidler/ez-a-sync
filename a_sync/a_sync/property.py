@@ -45,9 +45,9 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
         hidden_modifiers["default"] = "async"
-        self.hidden_method_descriptor=HiddenMethodDescriptor(
-                self.get, self.hidden_method_name, **hidden_modifiers
-            )
+        self.hidden_method_descriptor = HiddenMethodDescriptor(
+            self.get, self.hidden_method_name, **hidden_modifiers
+        )
         if asyncio.iscoroutinefunction(_fget):
             self._fget = self.__wrapped__
         else:
