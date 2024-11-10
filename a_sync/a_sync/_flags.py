@@ -11,14 +11,15 @@ from typing import Any
 
 from a_sync import exceptions
 
-AFFIRMATIVE_FLAGS = {'sync'}
+AFFIRMATIVE_FLAGS = {"sync"}
 """Set of flags indicating synchronous behavior."""
 
-NEGATIVE_FLAGS = {'asynchronous'}
+NEGATIVE_FLAGS = {"asynchronous"}
 """Set of flags indicating asynchronous behavior."""
 
 VIABLE_FLAGS = AFFIRMATIVE_FLAGS | NEGATIVE_FLAGS
 """Set of all valid flags."""
+
 
 def negate_if_necessary(flag: str, flag_value: bool) -> bool:
     """Negate the flag value if necessary based on the flag type.
@@ -39,6 +40,7 @@ def negate_if_necessary(flag: str, flag_value: bool) -> bool:
     elif flag in NEGATIVE_FLAGS:
         return bool(not flag_value)
     raise exceptions.InvalidFlag(flag)
+
 
 def validate_flag_value(flag: str, flag_value: Any) -> bool:
     """

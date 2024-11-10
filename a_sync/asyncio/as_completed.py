@@ -7,26 +7,65 @@ import asyncio
 try:
     from tqdm.asyncio import tqdm_asyncio
 except ImportError as e:
+
     class tqdm_asyncio:  # type: ignore [no-redef]
         def as_completed(*args, **kwargs):
             raise ImportError("You must have tqdm installed to use this feature")
-        
+
+
 from a_sync._typing import *
 from a_sync.iter import ASyncIterator
 
+
 @overload
-def as_completed(fs: Iterable[Awaitable[T]], *, timeout: Optional[float] = None, return_exceptions: bool = False, aiter: Literal[False] = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Iterator[Coroutine[Any, Any, T]]:
-    ...
+def as_completed(
+    fs: Iterable[Awaitable[T]],
+    *,
+    timeout: Optional[float] = None,
+    return_exceptions: bool = False,
+    aiter: Literal[False] = False,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> Iterator[Coroutine[Any, Any, T]]: ...
 @overload
-def as_completed(fs: Iterable[Awaitable[T]], *, timeout: Optional[float] = None, return_exceptions: bool = False, aiter: Literal[True] = True, tqdm: bool = False, **tqdm_kwargs: Any) -> ASyncIterator[T]:
-    ...
+def as_completed(
+    fs: Iterable[Awaitable[T]],
+    *,
+    timeout: Optional[float] = None,
+    return_exceptions: bool = False,
+    aiter: Literal[True] = True,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> ASyncIterator[T]: ...
 @overload
-def as_completed(fs: Mapping[K, Awaitable[V]], *, timeout: Optional[float] = None, return_exceptions: bool = False, aiter: Literal[False] = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Iterator[Coroutine[Any, Any, Tuple[K, V]]]:
-    ...
+def as_completed(
+    fs: Mapping[K, Awaitable[V]],
+    *,
+    timeout: Optional[float] = None,
+    return_exceptions: bool = False,
+    aiter: Literal[False] = False,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> Iterator[Coroutine[Any, Any, Tuple[K, V]]]: ...
 @overload
-def as_completed(fs: Mapping[K, Awaitable[V]], *, timeout: Optional[float] = None, return_exceptions: bool = False, aiter: Literal[True] = True, tqdm: bool = False, **tqdm_kwargs: Any) -> ASyncIterator[Tuple[K, V]]:
-    ...
-def as_completed(fs, *, timeout: Optional[float] = None, return_exceptions: bool = False, aiter: bool = False, tqdm: bool = False, **tqdm_kwargs: Any):
+def as_completed(
+    fs: Mapping[K, Awaitable[V]],
+    *,
+    timeout: Optional[float] = None,
+    return_exceptions: bool = False,
+    aiter: Literal[True] = True,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> ASyncIterator[Tuple[K, V]]: ...
+def as_completed(
+    fs,
+    *,
+    timeout: Optional[float] = None,
+    return_exceptions: bool = False,
+    aiter: bool = False,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+):
     """
     Concurrently awaits a list of awaitable objects or mappings of awaitables and returns an iterator of results.
 
@@ -56,40 +95,76 @@ def as_completed(fs, *, timeout: Optional[float] = None, return_exceptions: bool
         for coro in as_completed(awaitables):
             val = await coro
             ...
-            
+
         async for val in as_completed(awaitables, aiter=True):
             ...
         ```
-        
+
         Awaiting mappings of awaitables:
         ```
         mapping = {'key1': async_function1(), 'key2': async_function2()}
-        
+
         for coro in as_completed(mapping):
             k, v = await coro
             ...
-            
+
         async for k, v in as_completed(mapping, aiter=True):
             ...
         ```
     """
     if isinstance(fs, Mapping):
-        return as_completed_mapping(fs, timeout=timeout, return_exceptions=return_exceptions, aiter=aiter, tqdm=tqdm, **tqdm_kwargs) 
+        return as_completed_mapping(
+            fs,
+            timeout=timeout,
+            return_exceptions=return_exceptions,
+            aiter=aiter,
+            tqdm=tqdm,
+            **tqdm_kwargs
+        )
     if return_exceptions:
         fs = [_exc_wrap(f) for f in fs]
     return (
-        ASyncIterator(__yield_as_completed(fs, timeout=timeout, tqdm=tqdm, **tqdm_kwargs)) if aiter 
-        else tqdm_asyncio.as_completed(fs, timeout=timeout, **tqdm_kwargs) if tqdm 
-        else asyncio.as_completed(fs, timeout=timeout)
+        ASyncIterator(
+            __yield_as_completed(fs, timeout=timeout, tqdm=tqdm, **tqdm_kwargs)
+        )
+        if aiter
+        else (
+            tqdm_asyncio.as_completed(fs, timeout=timeout, **tqdm_kwargs)
+            if tqdm
+            else asyncio.as_completed(fs, timeout=timeout)
+        )
     )
 
+
 @overload
-def as_completed_mapping(mapping: Mapping[K, Awaitable[V]], *, timeout: Optional[float] = None, return_exceptions: bool = False, aiter: Literal[True] = True, tqdm: bool = False, **tqdm_kwargs: Any) -> ASyncIterator[Tuple[K, V]]:
-    ...
+def as_completed_mapping(
+    mapping: Mapping[K, Awaitable[V]],
+    *,
+    timeout: Optional[float] = None,
+    return_exceptions: bool = False,
+    aiter: Literal[True] = True,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> ASyncIterator[Tuple[K, V]]: ...
 @overload
-def as_completed_mapping(mapping: Mapping[K, Awaitable[V]], *, timeout: Optional[float] = None, return_exceptions: bool = False, aiter: Literal[False] = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Iterator[Coroutine[Any, Any, Tuple[K, V]]]:
-    ...
-def as_completed_mapping(mapping: Mapping[K, Awaitable[V]], *, timeout: Optional[float] = None, return_exceptions: bool = False, aiter: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> Union[Iterator[Coroutine[Any, Any, Tuple[K, V]]], ASyncIterator[Tuple[K, V]]]:
+def as_completed_mapping(
+    mapping: Mapping[K, Awaitable[V]],
+    *,
+    timeout: Optional[float] = None,
+    return_exceptions: bool = False,
+    aiter: Literal[False] = False,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> Iterator[Coroutine[Any, Any, Tuple[K, V]]]: ...
+def as_completed_mapping(
+    mapping: Mapping[K, Awaitable[V]],
+    *,
+    timeout: Optional[float] = None,
+    return_exceptions: bool = False,
+    aiter: bool = False,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> Union[Iterator[Coroutine[Any, Any, Tuple[K, V]]], ASyncIterator[Tuple[K, V]]]:
     """
     Concurrently awaits a mapping of awaitable objects and returns an iterator or async iterator of results.
 
@@ -109,37 +184,69 @@ def as_completed_mapping(mapping: Mapping[K, Awaitable[V]], *, timeout: Optional
     Example:
         ```
         mapping = {'key1': async_function1(), 'key2': async_function2()}
-        
+
         for coro in as_completed_mapping(mapping):
             k, v = await coro
             ...
-            
+
         async for k, v in as_completed_mapping(mapping, aiter=True):
             ...
         ```
     """
-    return as_completed([__mapping_wrap(k, v, return_exceptions=return_exceptions) for k, v in mapping.items()], timeout=timeout, aiter=aiter, tqdm=tqdm, **tqdm_kwargs)
+    return as_completed(
+        [
+            __mapping_wrap(k, v, return_exceptions=return_exceptions)
+            for k, v in mapping.items()
+        ],
+        timeout=timeout,
+        aiter=aiter,
+        tqdm=tqdm,
+        **tqdm_kwargs
+    )
+
 
 async def _exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
     try:
         return await awaitable
     except Exception as e:
         return e
-    
-async def __yield_as_completed(futs: Iterable[Awaitable[T]], *, timeout: Optional[float] = None, return_exceptions: bool = False, tqdm: bool = False, **tqdm_kwargs: Any) -> AsyncIterator[T]:
-    for fut in as_completed(futs, timeout=timeout, return_exceptions=return_exceptions, tqdm=tqdm, **tqdm_kwargs):
+
+
+async def __yield_as_completed(
+    futs: Iterable[Awaitable[T]],
+    *,
+    timeout: Optional[float] = None,
+    return_exceptions: bool = False,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> AsyncIterator[T]:
+    for fut in as_completed(
+        futs,
+        timeout=timeout,
+        return_exceptions=return_exceptions,
+        tqdm=tqdm,
+        **tqdm_kwargs
+    ):
         yield await fut
 
+
 @overload
-async def __mapping_wrap(k: K, v: Awaitable[V], return_exceptions: Literal[True] = True) -> Union[V, Exception]:...
+async def __mapping_wrap(
+    k: K, v: Awaitable[V], return_exceptions: Literal[True] = True
+) -> Union[V, Exception]: ...
 @overload
-async def __mapping_wrap(k: K, v: Awaitable[V], return_exceptions: Literal[False] = False) -> V:...
-async def __mapping_wrap(k: K, v: Awaitable[V], return_exceptions: bool = False) -> Union[V, Exception]:
+async def __mapping_wrap(
+    k: K, v: Awaitable[V], return_exceptions: Literal[False] = False
+) -> V: ...
+async def __mapping_wrap(
+    k: K, v: Awaitable[V], return_exceptions: bool = False
+) -> Union[V, Exception]:
     try:
         return k, await v
     except Exception as e:
         if return_exceptions:
             return k, e
         raise
+
 
 __all__ = ["as_completed", "as_completed_mapping"]

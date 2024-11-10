@@ -27,10 +27,12 @@ TEN_MINUTES = 60 * 10
 
 Initializer = Callable[..., object]
 
+
 class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     """
     A mixin for Executors to provide asynchronous run and submit methods.
     """
+
     _max_workers: int
     _workers: str
     __slots__ = "_max_workers", "_initializer", "_initargs", "_broken", "_shutdown_lock"
@@ -39,7 +41,7 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         """
         A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`
         Doesn't `await this_executor.run(fn, *args)` look so much better?
-        
+
         Oh, and you can also use kwargs!
 
         Args:
@@ -50,7 +52,11 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         Returns:
             T: The result of the function.
         """
-        return fn(*args, **kwargs) if self.sync_mode else await self.submit(fn, *args, **kwargs)
+        return (
+            fn(*args, **kwargs)
+            if self.sync_mode
+            else await self.submit(fn, *args, **kwargs)
+        )
 
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
         """
@@ -114,7 +120,7 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         """
         # TODO: make prettier strings for other types
         if type(fn).__name__ == "function":
-            fnid = getattr(fn, '__qualname__', fn.__name__)
+            fnid = getattr(fn, "__qualname__", fn.__name__)
             if fn.__module__:
                 fnid = f"{fn.__module__}.{fnid}"
         else:
@@ -125,27 +131,39 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
             msg = f"{msg[:-1]} {', '.join(f'{k}={v}' for k, v in kwargs.items())})"
         else:
             msg = f"{msg[:-2]})"
-        
+
         while not fut.done():
             await asyncio.sleep(15)
             if not fut.done():
                 self.logger.debug(msg, self, fnid)
-    
+
+
 # Process
+
 
 class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
     """
     An async process pool executor that allows use of kwargs.
     """
+
     _workers = "processes"
-    __slots__ = ("_mp_context", "_processes", "_pending_work_items", "_call_queue", "_result_queue",
-                 "_queue_management_thread", "_queue_count", "_shutdown_thread", "_work_ids",
-                 "_queue_management_thread_wakeup")
+    __slots__ = (
+        "_mp_context",
+        "_processes",
+        "_pending_work_items",
+        "_call_queue",
+        "_result_queue",
+        "_queue_management_thread",
+        "_queue_count",
+        "_shutdown_thread",
+        "_work_ids",
+        "_queue_management_thread_wakeup",
+    )
 
     def __init__(
-        self, 
-        max_workers: Optional[int] = None, 
-        mp_context: Optional[multiprocessing.context.BaseContext] = None, 
+        self,
+        max_workers: Optional[int] = None,
+        mp_context: Optional[multiprocessing.context.BaseContext] = None,
         initializer: Optional[Initializer] = None,
         initargs: Tuple[Any, ...] = (),
     ) -> None:
@@ -164,19 +182,28 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
         else:
             super().__init__(max_workers, mp_context, initializer, initargs)
 
+
 # Thread
+
 
 class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
     """
     An async thread pool executor that allows use of kwargs.
     """
+
     _workers = "threads"
-    __slots__ = "_work_queue", "_idle_semaphore", "_threads", "_shutdown", "_thread_name_prefix"
+    __slots__ = (
+        "_work_queue",
+        "_idle_semaphore",
+        "_threads",
+        "_shutdown",
+        "_thread_name_prefix",
+    )
 
     def __init__(
-        self, 
-        max_workers: Optional[int] = None, 
-        thread_name_prefix: str = '', 
+        self,
+        max_workers: Optional[int] = None,
+        thread_name_prefix: str = "",
         initializer: Optional[Initializer] = None,
         initargs: Tuple[Any, ...] = (),
     ) -> None:
@@ -194,14 +221,18 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
             self._max_workers = 0
         else:
             super().__init__(max_workers, thread_name_prefix, initializer, initargs)
-    
+
+
 # For backward-compatibility
 ProcessPoolExecutor = AsyncProcessPoolExecutor
 ThreadPoolExecutor = AsyncThreadPoolExecutor
 
 # Pruning thread pool
 
-def _worker(executor_reference, work_queue, initializer, initargs, timeout):  # NOTE: NEW 'timeout'
+
+def _worker(
+    executor_reference, work_queue, initializer, initargs, timeout
+):  # NOTE: NEW 'timeout'
     """
     Worker function for the PruningThreadPoolExecutor.
 
@@ -216,22 +247,21 @@ def _worker(executor_reference, work_queue, initializer, initargs, timeout):  # 
         try:
             initializer(*initargs)
         except BaseException:
-            _base.LOGGER.critical('Exception in initializer:', exc_info=True)
+            _base.LOGGER.critical("Exception in initializer:", exc_info=True)
             executor = executor_reference()
             if executor is not None:
                 executor._initializer_failed()
             return
-        
+
     try:
         while True:
             try:  # NOTE: NEW
-                work_item = work_queue.get(block=True, 
-                                           timeout=timeout)  # NOTE: NEW
+                work_item = work_queue.get(block=True, timeout=timeout)  # NOTE: NEW
             except queue.Empty:  # NOTE: NEW
                 # Its been 'timeout' seconds and there are no new work items.  # NOTE: NEW
                 # Let's suicide the thread.  # NOTE: NEW
                 executor = executor_reference()  # NOTE: NEW
-                
+
                 with executor._adjusting_lock:  # NOTE: NEW
                     # NOTE: We keep a minimum of one thread active to prevent locks
                     if len(executor) > 1:  # NOTE: NEW
@@ -240,9 +270,9 @@ def _worker(executor_reference, work_queue, initializer, initargs, timeout):  # 
                         thread._threads_queues.pop(t)  # NOTE: NEW
                         # Let the executor know we have one less idle thread available
                         executor._idle_semaphore.acquire(blocking=False)  # NOTE: NEW
-                        return  # NOTE: NEW 
+                        return  # NOTE: NEW
                 continue
-                
+
             if work_item is not None:
                 work_item.run()
                 # Delete references to object. See issue16284
@@ -269,17 +299,25 @@ def _worker(executor_reference, work_queue, initializer, initargs, timeout):  # 
                 return
             del executor
     except BaseException:
-        _base.LOGGER.critical('Exception in worker', exc_info=True)
+        _base.LOGGER.critical("Exception in worker", exc_info=True)
+
 
 class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
     """
     This `AsyncThreadPoolExecutor` implementation prunes inactive threads after 'timeout' seconds without a work item.
     Pruned threads will be automatically recreated as needed for future workloads. Up to 'max_threads' can be active at any one time.
     """
+
     __slots__ = "_timeout", "_adjusting_lock"
 
-    def __init__(self, max_workers=None, thread_name_prefix='',
-                 initializer=None, initargs=(), timeout=TEN_MINUTES):
+    def __init__(
+        self,
+        max_workers=None,
+        thread_name_prefix="",
+        initializer=None,
+        initargs=(),
+        timeout=TEN_MINUTES,
+    ):
         """
         Initializes the PruningThreadPoolExecutor.
 
@@ -290,13 +328,13 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
             initargs (Tuple[Any, ...], optional): Arguments for the initializer. Defaults to ().
             timeout (int, optional): Timeout duration for pruning inactive threads. Defaults to TEN_MINUTES.
         """
-        self._timeout=timeout
+        self._timeout = timeout
         self._adjusting_lock = threading.Lock()
         super().__init__(max_workers, thread_name_prefix, initializer, initargs)
-    
+
     def __len__(self) -> int:
         return len(self._threads)
-        
+
     def _adjust_thread_count(self):
         """
         Adjusts the number of threads based on workload and idle threads.
@@ -313,18 +351,23 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
 
             num_threads = len(self._threads)
             if num_threads < self._max_workers:
-                thread_name = '%s_%d' % (self._thread_name_prefix or self,
-                                         num_threads)
-                t = threading.Thread(name=thread_name, target=_worker,
-                                     args=(weakref.ref(self, weakref_cb),
-                                           self._work_queue,
-                                           self._initializer,
-                                           self._initargs,
-                                           self._timeout))
+                thread_name = "%s_%d" % (self._thread_name_prefix or self, num_threads)
+                t = threading.Thread(
+                    name=thread_name,
+                    target=_worker,
+                    args=(
+                        weakref.ref(self, weakref_cb),
+                        self._work_queue,
+                        self._initializer,
+                        self._initargs,
+                        self._timeout,
+                    ),
+                )
                 t.daemon = True
                 t.start()
                 self._threads.add(t)
                 thread._threads_queues[t] = self._work_queue
+
 
 executor = PruningThreadPoolExecutor(128)
 

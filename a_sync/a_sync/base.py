@@ -11,6 +11,7 @@ from a_sync.a_sync.abstract import ASyncABC
 
 logger = logging.getLogger(__name__)
 
+
 class ASyncGenericBase(ASyncABC):
     """
     Base class for creating dual-function sync/async-capable classes without writing all your code twice.
@@ -35,7 +36,7 @@ class ASyncGenericBase(ASyncABC):
             @a_sync
             async def my_method(self):
                 return await another_async_operation()
-        
+
         # Synchronous usage
         obj = MyClass(sync=True)
         sync_result = obj.my_property
@@ -56,8 +57,10 @@ class ASyncGenericBase(ASyncABC):
     def __init__(self):
         if type(self) is ASyncGenericBase:
             cls_name = type(self).__name__
-            raise NotImplementedError(f"You should not create instances of `{cls_name}` directly, you should subclass `ASyncGenericBase` instead.")
-                                  
+            raise NotImplementedError(
+                f"You should not create instances of `{cls_name}` directly, you should subclass `ASyncGenericBase` instead."
+            )
+
     @functools.cached_property
     def __a_sync_flag_name__(self) -> str:
         logger.debug("checking a_sync flag for %s", self)
@@ -67,8 +70,14 @@ class ASyncGenericBase(ASyncABC):
             # We can't get the flag name from the __init__ signature,
             # but maybe the implementation sets the flag somewhere else.
             # Let's check the instance's atributes
-            logger.debug("unable to find flag name using `%s.__init__` signature, checking for flag attributes defined on %s", self.__class__.__name__, self)
-            present_flags = [flag for flag in _flags.VIABLE_FLAGS if hasattr(self, flag)]
+            logger.debug(
+                "unable to find flag name using `%s.__init__` signature, checking for flag attributes defined on %s",
+                self.__class__.__name__,
+                self,
+            )
+            present_flags = [
+                flag for flag in _flags.VIABLE_FLAGS if hasattr(self, flag)
+            ]
             if not present_flags:
                 raise exceptions.NoFlagsFound(self) from None
             if len(present_flags) > 1:
@@ -77,7 +86,7 @@ class ASyncGenericBase(ASyncABC):
         if not isinstance(flag, str):
             raise exceptions.InvalidFlag(flag)
         return flag
-        
+
     @functools.cached_property
     def __a_sync_flag_value__(self) -> bool:
         """If you wish to be able to hotswap default modes, just duplicate this def as a non-cached property."""
@@ -85,7 +94,7 @@ class ASyncGenericBase(ASyncABC):
         flag_value = getattr(self, flag)
         if not isinstance(flag_value, bool):
             raise exceptions.InvalidFlagValue(flag, flag_value)
-        logger.debug('`%s.%s` is currently %s', self, flag, flag_value)
+        logger.debug("`%s.%s` is currently %s", self, flag, flag_value)
         return flag_value
 
     @classmethod  # type: ignore [misc]
@@ -97,14 +106,21 @@ class ASyncGenericBase(ASyncABC):
             flag = cls.__get_a_sync_flag_name_from_class_def()
             flag_value = cls.__get_a_sync_flag_value_from_class_def(flag)
         sync = _flags.negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
-        logger.debug("`%s.%s` indicates default mode is %ssynchronous", cls, flag, 'a' if sync is False else '')
+        logger.debug(
+            "`%s.%s` indicates default mode is %ssynchronous",
+            cls,
+            flag,
+            "a" if sync is False else "",
+        )
         return sync
-    
+
     @classmethod
     def __get_a_sync_flag_name_from_signature(cls) -> Optional[str]:
         logger.debug("Searching for flags defined on %s.__init__", cls)
         if cls.__name__ == "ASyncGenericBase":
-            logger.debug("There are no flags defined on the base class, this is expected. Skipping.")
+            logger.debug(
+                "There are no flags defined on the base class, this is expected. Skipping."
+            )
             return None
         parameters = inspect.signature(cls.__init__).parameters
         logger.debug("parameters: %s", parameters)
@@ -115,17 +131,19 @@ class ASyncGenericBase(ASyncABC):
         logger.debug("Searching for flags defined on %s", cls)
         try:
             return cls.__parse_flag_name_from_list(cls.__dict__)  # type: ignore [arg-type]
-                                                                    # idk why __dict__ doesn't type check as a dict
+            # idk why __dict__ doesn't type check as a dict
         except exceptions.NoFlagsFound:
             for base in cls.__bases__:
                 with suppress(exceptions.NoFlagsFound):
-                    return cls.__parse_flag_name_from_list(base.__dict__)  # type: ignore [arg-type]  
-                                                                            # idk why __dict__ doesn't type check as a dict
+                    return cls.__parse_flag_name_from_list(base.__dict__)  # type: ignore [arg-type]
+                    # idk why __dict__ doesn't type check as a dict
         raise exceptions.NoFlagsFound(cls, list(cls.__dict__.keys()))
 
     @classmethod  # type: ignore [misc]
     def __a_sync_flag_default_value_from_signature(cls) -> bool:
-        logger.debug("checking `__init__` signature for default %s a_sync flag value", cls)
+        logger.debug(
+            "checking `__init__` signature for default %s a_sync flag value", cls
+        )
         signature = inspect.signature(cls.__init__)
         flag = cls.__get_a_sync_flag_name_from_signature()
         flag_value = signature.parameters[flag].default
@@ -133,7 +151,7 @@ class ASyncGenericBase(ASyncABC):
             raise NotImplementedError(
                 "The implementation for 'cls' uses an arg to specify sync mode, instead of a kwarg. We are unable to proceed. I suppose we can extend the code to accept positional arg flags if necessary"
             )
-        logger.debug('%s defines %s, default value %s', cls, flag, flag_value)
+        logger.debug("%s defines %s, default value %s", cls, flag, flag_value)
         return flag_value
 
     @classmethod

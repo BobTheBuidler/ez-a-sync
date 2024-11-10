@@ -15,6 +15,7 @@ class ASyncFlagException(ValueError):
     """
     Base exception class for flag-related errors in the a_sync library.
     """
+
     @property
     def viable_flags(self) -> Set[str]:
         """
@@ -23,19 +24,21 @@ class ASyncFlagException(ValueError):
         return VIABLE_FLAGS
 
     def desc(self, target) -> str:
-        if target == 'kwargs':
+        if target == "kwargs":
             return "flags present in 'kwargs'"
         else:
-            return f'flag attributes defined on {target}'
+            return f"flag attributes defined on {target}"
+
 
 class NoFlagsFound(ASyncFlagException):
     """
     Raised when no viable flags are found in the target.
     """
+
     def __init__(self, target, kwargs_keys=None):
         """
         Initializes the NoFlagsFound exception.
-        
+
         Args:
             target: The target object where flags were expected.
             kwargs_keys: Optional; keys in the kwargs if applicable.
@@ -47,14 +50,16 @@ class NoFlagsFound(ASyncFlagException):
         err += "\nThis is likely an issue with a custom subclass definition."
         super().__init__(err)
 
+
 class TooManyFlags(ASyncFlagException):
     """
     Raised when multiple flags are found, but only one was expected.
     """
+
     def __init__(self, target, present_flags):
         """
         Initializes the TooManyFlags exception.
-        
+
         Args:
             target: The target object where flags were found.
             present_flags: The flags that were found.
@@ -64,14 +69,16 @@ class TooManyFlags(ASyncFlagException):
         err += "This is likely an issue with a custom subclass definition."
         super().__init__(err)
 
+
 class InvalidFlag(ASyncFlagException):
     """
     Raised when an invalid flag is encountered.
     """
+
     def __init__(self, flag: Optional[str]):
         """
         Initializes the InvalidFlag exception.
-        
+
         Args:
             flag: The invalid flag.
         """
@@ -79,28 +86,32 @@ class InvalidFlag(ASyncFlagException):
         err += "\nThis code should not be reached and likely indicates an issue with a custom subclass definition."
         super().__init__(err)
 
+
 class InvalidFlagValue(ASyncFlagException):
     """
     Raised when a flag has an invalid value.
     """
+
     def __init__(self, flag: str, flag_value: Any):
         """
         Initializes the InvalidFlagValue exception.
-        
+
         Args:
             flag: The flag with an invalid value.
             flag_value: The invalid value of the flag.
         """
         super().__init__(f"'{flag}' should be boolean. You passed {flag_value}.")
 
+
 class FlagNotDefined(ASyncFlagException):
     """
     Raised when a flag is not defined on an object.
     """
+
     def __init__(self, obj: Type, flag: str):
         """
         Initializes the FlagNotDefined exception.
-        
+
         Args:
             obj: The object where the flag is not defined.
             flag: The undefined flag.
@@ -113,47 +124,58 @@ class ImproperFunctionType(ValueError):
     Raised when a function that should be sync is async or vice-versa.
     """
 
+
 class FunctionNotAsync(ImproperFunctionType):
     """
     Raised when a function expected to be async is not.
     """
+
     def __init__(self, fn):
         """
         Initializes the FunctionNotAsync exception.
-        
+
         Args:
             fn: The function that is not async.
         """
-        super().__init__(f"`coro_fn` must be a coroutine function defined with `async def`. You passed {fn}.")
+        super().__init__(
+            f"`coro_fn` must be a coroutine function defined with `async def`. You passed {fn}."
+        )
+
 
 class FunctionNotSync(ImproperFunctionType):
     """
     Raised when a function expected to be sync is not.
     """
+
     def __init__(self, fn):
         """
         Initializes the FunctionNotSync exception.
-        
+
         Args:
             fn: The function that is not sync.
         """
-        super().__init__(f"`func` must be a coroutine function defined with `def`. You passed {fn}.")
-        
+        super().__init__(
+            f"`func` must be a coroutine function defined with `def`. You passed {fn}."
+        )
+
+
 class ASyncRuntimeError(RuntimeError):
     def __init__(self, e: RuntimeError):
         """
         Initializes the ASyncRuntimeError exception.
-        
+
         Args:
             e: The original runtime error.
         """
         super().__init__(str(e))
 
+
 class SyncModeInAsyncContextError(ASyncRuntimeError):
     """
     Raised when synchronous code is used within an asynchronous context.
     """
-    def __init__(self, err: str = ''):
+
+    def __init__(self, err: str = ""):
         """
         Initializes the SyncModeInAsyncContextError exception.
         """
@@ -163,16 +185,18 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
             err += f"{VIABLE_FLAGS}"
         super().__init__(err)
 
+
 class MappingError(Exception):
     """
     Base class for errors related to :class:`~TaskMapping`.
     """
+
     _msg: str
 
-    def __init__(self, mapping: "TaskMapping", msg: str = ''):
+    def __init__(self, mapping: "TaskMapping", msg: str = ""):
         """
         Initializes the MappingError exception.
-        
+
         Args:
             mapping: The TaskMapping where the error occurred.
             msg: An optional message describing the error.
@@ -183,23 +207,29 @@ class MappingError(Exception):
         super().__init__(msg)
         self.mapping = mapping
 
+
 class MappingIsEmptyError(MappingError):
     """
     Raised when a TaskMapping is empty and an operation requires it to have items.
     """
+
     _msg = "TaskMapping does not contain anything to yield"
+
 
 class MappingNotEmptyError(MappingError):
     """
     Raised when a TaskMapping is not empty and an operation requires it to be empty.
     """
+
     _msg = "TaskMapping already contains some data. In order to use `map`, you need a fresh one"
+
 
 class PersistedTaskException(Exception):
     def __init__(self, exc: E, task: asyncio.Task) -> None:
         super().__init__(f"{exc.__class__.__name__}: {exc}", task)
         self.exception = exc
         self.task = task
+
 
 class EmptySequenceError(ValueError):
     """

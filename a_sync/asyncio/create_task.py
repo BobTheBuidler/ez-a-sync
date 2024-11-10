@@ -12,10 +12,11 @@ from a_sync._typing import *
 
 logger = logging.getLogger(__name__)
 
+
 def create_task(
-    coro: Awaitable[T], 
-    *, 
-    name: Optional[str] = None, 
+    coro: Awaitable[T],
+    *,
+    name: Optional[str] = None,
     skip_gc_until_done: bool = False,
     log_destroy_pending: bool = True,
 ) -> "asyncio.Task[T]":
@@ -50,6 +51,7 @@ def create_task(
 
 __persisted_tasks: Set["asyncio.Task[Any]"] = set()
 
+
 async def __await(awaitable: Awaitable[T]) -> T:
     """Wait for the completion of an Awaitable."""
     try:
@@ -60,6 +62,7 @@ async def __await(awaitable: Awaitable[T]) -> T:
             args.append(awaitable._children)
         raise RuntimeError(*args) from None
 
+
 def __prune_persisted_tasks():
     """Remove completed tasks from the set of persisted tasks."""
     for task in tuple(__persisted_tasks):
@@ -68,17 +71,18 @@ def __prune_persisted_tasks():
             if not isinstance(e, exceptions.PersistedTaskException):
                 logger.exception(e)
                 raise e
-            # we have to manually log the traceback that asyncio would usually log 
+            # we have to manually log the traceback that asyncio would usually log
             # since we already got the exception from the task and the usual handler will now not run
             context = {
-                'message': f'{task.__class__.__name__} exception was never retrieved',
-                'exception': e,
-                'future': task,
+                "message": f"{task.__class__.__name__} exception was never retrieved",
+                "exception": e,
+                "future": task,
             }
             if task._source_traceback:
-                context['source_traceback'] = task._source_traceback
+                context["source_traceback"] = task._source_traceback
             task._loop.call_exception_handler(context)
             __persisted_tasks.discard(task)
+
 
 async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
     """

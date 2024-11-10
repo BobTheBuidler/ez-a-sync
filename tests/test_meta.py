@@ -9,7 +9,8 @@ from a_sync.a_sync.property import HiddenMethod
 from a_sync.a_sync.singleton import ASyncGenericSingleton
 from tests.fixtures import TestSingleton, TestSingletonMeta, increment
 
-classes = pytest.mark.parametrize('cls', [TestSingleton, TestSingletonMeta])
+classes = pytest.mark.parametrize("cls", [TestSingleton, TestSingletonMeta])
+
 
 @classes
 @increment
@@ -24,7 +25,9 @@ def test_singleton_meta_sync(cls: type, i: int):
     assert sync_instance.test_cached_property == 0
     assert isinstance(sync_instance.test_cached_property, int)
     duration = time.time() - start
-    assert duration < 3, "There is a 2 second sleep in 'test_cached_property' but it should only run once."
+    assert (
+        duration < 3
+    ), "There is a 2 second sleep in 'test_cached_property' but it should only run once."
 
     # Can we override with kwargs?
     val = asyncio.get_event_loop().run_until_complete(sync_instance.test_fn(sync=False))
@@ -41,9 +44,17 @@ def test_singleton_meta_sync(cls: type, i: int):
     getter_coro = getter()
     assert asyncio.get_event_loop().run_until_complete(getter_coro) == 0
     # Can we override them too?
-    assert asyncio.get_event_loop().run_until_complete(sync_instance.__test_cached_property__(sync=False)) == 0
+    assert (
+        asyncio.get_event_loop().run_until_complete(
+            sync_instance.__test_cached_property__(sync=False)
+        )
+        == 0
+    )
     duration = time.time() - start
-    assert duration < 3, "There is a 2 second sleep in 'test_cached_property' but it should only run once."
+    assert (
+        duration < 3
+    ), "There is a 2 second sleep in 'test_cached_property' but it should only run once."
+
 
 @classes
 @increment
@@ -59,12 +70,14 @@ async def test_singleton_meta_async(cls: type, i: int):
     assert await async_instance.test_cached_property == 0
     assert isinstance(await async_instance.test_cached_property, int)
     duration = time.time() - start
-    assert duration < 3, "There is a 2 second sleep in 'test_cached_property' but it should only run once."
+    assert (
+        duration < 3
+    ), "There is a 2 second sleep in 'test_cached_property' but it should only run once."
 
     # Can we override with kwargs?
     with pytest.raises(RuntimeError):
         async_instance.test_fn(sync=True)
-    
+
     # Can we access hidden methods for properties?
     assert await async_instance.__test_property__() == 0
     assert await async_instance.__test_cached_property__() == 0
@@ -73,24 +86,25 @@ async def test_singleton_meta_async(cls: type, i: int):
         async_instance.__test_cached_property__(sync=True)
 
 
-
 class TestUnspecified(ASyncGenericSingleton):
     def __init__(self, sync=True):
         self.sync = sync
+
 
 def test_singleton_unspecified():
     obj = TestUnspecified()
     assert obj.sync == True
     obj.test_attr = True
     newobj = TestUnspecified()
-    assert hasattr(newobj, 'test_attr')
+    assert hasattr(newobj, "test_attr")
 
     assert TestUnspecified(sync=True).sync == True
     assert TestUnspecified(sync=False).sync == False
+
 
 def test_singleton_switching():
     obj = TestUnspecified()
     assert obj.sync == True
     obj.test_attr = True
     newobj = TestUnspecified(sync=False)
-    assert not hasattr(newobj, 'test_attr')
+    assert not hasattr(newobj, "test_attr")

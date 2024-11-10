@@ -1,4 +1,3 @@
-
 import asyncio
 import functools
 import inspect
@@ -22,6 +21,7 @@ else:
     SortKey = SyncFn[[T], bool]
     ViewFn = AnyFn[[T], bool]
 
+
 class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     """
     A mixin class defining logic for making an AsyncIterable awaitable.
@@ -35,19 +35,20 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         ...    def __aiter__(self):
         ...        for i in range(4):
         ...            yield i
-        ... 
+        ...
         >>> aiterable = MyAwaitableAIterable()
         >>> await aiterable
         [0, 1, 2, 3, 4]
 
         ```
     """
+
     __wrapped__: AsyncIterable[T]
-    
+
     def __await__(self) -> Generator[Any, Any, List[T]]:
         """
         Asynchronously iterate through the {cls} and return all objects.
-        
+
         Returns:
             A list of the objects yielded by the {cls}.
         """
@@ -57,13 +58,15 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     def materialized(self) -> List[T]:
         """
         Synchronously iterate through the {cls} and return all objects.
-        
+
         Returns:
             A list of the objects yielded by the {cls}.
         """
         return _helpers._await(self._materialized)
 
-    def sort(self, *, key: SortKey[T] = None, reverse: bool = False) -> "ASyncSorter[T]":
+    def sort(
+        self, *, key: SortKey[T] = None, reverse: bool = False
+    ) -> "ASyncSorter[T]":
         """
         Sort the contents of the {cls}.
 
@@ -92,7 +95,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     async def _materialized(self) -> List[T]:
         """
         Asynchronously iterate through the {cls} and return all objects.
-        
+
         Returns:
             A list of the objects yielded by the {cls}.
         """
@@ -106,7 +109,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
             cls.__doc__ = new
         else:
             cls.__doc__ += f"\n\n{new}"
-    
+
         # format the member docstrings
         for attr_name in dir(cls):
             attr = getattr(cls, attr_name, None)
@@ -115,27 +118,35 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
 
         return super().__init_subclass__(**kwargs)
 
-    __slots__ = '__async_property__', 
-    
+    __slots__ = ("__async_property__",)
+
+
 class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     """
     A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols.
-    
+
     This class allows objects to be iterated over using either a standard `for` loop or an `async for` loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.
 
     The class achieves this by implementing both `__iter__` and `__aiter__` methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. This dual functionality is particularly useful in codebases that are transitioning between synchronous and asynchronous code, or in libraries that aim to support both synchronous and asynchronous usage patterns without requiring the user to manage different types of iterable objects.
     """
+
     @classmethod
     def wrap(cls, wrapped: AsyncIterable[T]) -> "ASyncIterable[T]":
         "Class method to wrap an AsyncIterable for backward compatibility."
-        logger.warning("ASyncIterable.wrap will be removed soon. Please replace uses with simple instantiation ie `ASyncIterable(wrapped)`")
+        logger.warning(
+            "ASyncIterable.wrap will be removed soon. Please replace uses with simple instantiation ie `ASyncIterable(wrapped)`"
+        )
         return cls(wrapped)
+
     def __init__(self, async_iterable: AsyncIterable[T]):
         "Initializes the ASyncIterable with an async iterable."
         if not isinstance(async_iterable, AsyncIterable):
-            raise TypeError(f"`async_iterable` must be an AsyncIterable. You passed {async_iterable}")
+            raise TypeError(
+                f"`async_iterable` must be an AsyncIterable. You passed {async_iterable}"
+            )
         self.__wrapped__ = async_iterable
         "The wrapped async iterable object."
+
     def __repr__(self) -> str:
         start = f"<{type(self).__name__}"
         if wrapped := getattr(self, "__wrapped__", None):
@@ -151,9 +162,12 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     def __iter__(self) -> Iterator[T]:
         "Return an iterator that yields :obj:`T` objects from the {cls}."
         yield from ASyncIterator(self.__aiter__())
-    __slots__ = "__wrapped__", 
+
+    __slots__ = ("__wrapped__",)
+
 
 AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
+
 
 class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
     """
@@ -163,11 +177,11 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
 
     This class is particularly useful for library developers seeking to provide a consistent iteration interface across synchronous and asynchronous code, reducing the cognitive load on users and promoting code reusability and simplicity.
     """
-    
+
     def __next__(self) -> T:
         """
         Synchronously fetch the next item from the {cls}.
-        
+
         Raises:
             :class:`StopIteration`: Once all items have been fetched from the {cls}.
         """
@@ -177,34 +191,44 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
             raise StopIteration from e
         except RuntimeError as e:
             if str(e) == "This event loop is already running":
-                raise SyncModeInAsyncContextError("The event loop is already running. Try iterating using `async for` instead of `for`.") from e
+                raise SyncModeInAsyncContextError(
+                    "The event loop is already running. Try iterating using `async for` instead of `for`."
+                ) from e
             raise
 
     @overload
-    def wrap(cls, aiterator: AsyncIterator[T]) -> "ASyncIterator[T]":...
+    def wrap(cls, aiterator: AsyncIterator[T]) -> "ASyncIterator[T]": ...
     @overload
-    def wrap(cls, async_gen_func: AsyncGenFunc[P, T]) -> "ASyncGeneratorFunction[P, T]":...
+    def wrap(
+        cls, async_gen_func: AsyncGenFunc[P, T]
+    ) -> "ASyncGeneratorFunction[P, T]": ...
     @classmethod
     def wrap(cls, wrapped):
         "Class method to wrap either an AsyncIterator or an async generator function."
         if isinstance(wrapped, AsyncIterator):
-            logger.warning("This use case for ASyncIterator.wrap will be removed soon. Please replace uses with simple instantiation ie `ASyncIterator(wrapped)`")
+            logger.warning(
+                "This use case for ASyncIterator.wrap will be removed soon. Please replace uses with simple instantiation ie `ASyncIterator(wrapped)`"
+            )
             return cls(wrapped)
         elif inspect.isasyncgenfunction(wrapped):
             return ASyncGeneratorFunction(wrapped)
-        raise TypeError(f"`wrapped` must be an AsyncIterator or an async generator function. You passed {wrapped}")
+        raise TypeError(
+            f"`wrapped` must be an AsyncIterator or an async generator function. You passed {wrapped}"
+        )
 
     def __init__(self, async_iterator: AsyncIterator[T]):
         "Initializes the ASyncIterator with an async iterator."
         if not isinstance(async_iterator, AsyncIterator):
-            raise TypeError(f"`async_iterator` must be an AsyncIterator. You passed {async_iterator}")
+            raise TypeError(
+                f"`async_iterator` must be an AsyncIterator. You passed {async_iterator}"
+            )
         self.__wrapped__ = async_iterator
         "The wrapped :class:`AsyncIterator`."
 
     async def __anext__(self) -> T:
         """
         Asynchronously fetch the next item from the {cls}.
-        
+
         Raises:
             :class:`StopAsyncIteration`: Once all items have been fetched from the {cls}.
         """
@@ -217,6 +241,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
     def __aiter__(self) -> Self:
         "Return the {cls} for aiteration."
         return self
+
 
 class ASyncGeneratorFunction(Generic[P, T]):
     """
@@ -233,7 +258,9 @@ class ASyncGeneratorFunction(Generic[P, T]):
     __weakself__: "weakref.ref[object]" = None
     "A weak reference to the instance the function is bound to, if any."
 
-    def __init__(self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None) -> None:
+    def __init__(
+        self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None
+    ) -> None:
         """
         Initializes the ASyncGeneratorFunction with the given async generator function and optionally an instance.
 
@@ -241,7 +268,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
             async_gen_func: The async generator function to wrap.
             instance (optional): The object to bind to the function, if applicable.
         """
-        
+
         self.field_name = async_gen_func.__name__
         "The name of the async generator function."
 
@@ -263,7 +290,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
         Args:
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
-    
+
         Returns:
             An :class:`ASyncIterator` wrapping the :class:`AsyncIterator` returned from the wrapped function call.
         """
@@ -296,10 +323,13 @@ class ASyncGeneratorFunction(Generic[P, T]):
 
     def __get_cache_handle(self, instance: object) -> asyncio.TimerHandle:
         # NOTE: we create a strong reference to instance here. I'm not sure if this is good or not but its necessary for now.
-        return asyncio.get_event_loop().call_later(300, delattr, instance, self.field_name)
+        return asyncio.get_event_loop().call_later(
+            300, delattr, instance, self.field_name
+        )
 
     def __cancel_cache_handle(self, instance: object) -> None:
         self._cache_handle.cancel()
+
 
 class _ASyncView(ASyncIterator[T]):
     """
@@ -313,8 +343,8 @@ class _ASyncView(ASyncIterator[T]):
     """An optional iterator. If None, :attr:`~_ASyncView.__aiterator__` will have a value."""
 
     def __init__(
-        self, 
-        function: ViewFn[T], 
+        self,
+        function: ViewFn[T],
         iterable: AnyIterable[T],
     ) -> None:
         """
@@ -331,18 +361,21 @@ class _ASyncView(ASyncIterator[T]):
         elif isinstance(iterable, Iterable):
             self.__iterator__ = iterable.__iter__()
         else:
-            raise TypeError(f"`iterable` must be AsyncIterable or Iterable, you passed {iterable}")
+            raise TypeError(
+                f"`iterable` must be AsyncIterable or Iterable, you passed {iterable}"
+            )
 
-@final  
+
+@final
 class ASyncFilter(_ASyncView[T]):
     """
-    An async filter class that filters items of an async iterable based on a provided function. 
-    
+    An async filter class that filters items of an async iterable based on a provided function.
+
     This class inherits from :class:`~_ASyncView` and provides the functionality to asynchronously
     iterate over items, applying the filter function to each item to determine if it should be
     included in the result.
     """
-    
+
     def __repr__(self) -> str:
         return f"<ASyncFilter for iterator={self.__wrapped__} function={self._function.__name__} at {hex(id(self))}>"
 
@@ -388,22 +421,24 @@ def _key_if_no_key(obj: T) -> T:
     """
     return obj
 
+
 @final
 class ASyncSorter(_ASyncView[T]):
     """
-    An async sorter class that sorts items of an async iterable based on a provided key function. 
-    
+    An async sorter class that sorts items of an async iterable based on a provided key function.
+
     This class inherits from :class:`~_ASyncView` and provides the functionality to asynchronously
     iterate over items, applying the key function to each item for sorting.
     """
+
     reversed: bool = False
     _consumed: bool = False
 
     def __init__(
-        self, 
+        self,
         iterable: AsyncIterable[T],
         *,
-        key: SortKey[T] = None, 
+        key: SortKey[T] = None,
         reverse: bool = False,
     ) -> None:
         """
@@ -467,7 +502,9 @@ class ASyncSorter(_ASyncView[T]):
                 for obj in self.__iterator__:
                     items.append(obj)
                     sort_tasks.append(asyncio.create_task(self._function(obj)))
-                for sort_value, obj in sorted(zip(await asyncio.gather(*sort_tasks), items), reverse=reverse):
+                for sort_value, obj in sorted(
+                    zip(await asyncio.gather(*sort_tasks), items), reverse=reverse
+                ):
                     yield obj
         else:
             if self.__aiterator__:
@@ -480,4 +517,10 @@ class ASyncSorter(_ASyncView[T]):
         self._consumed = True
 
 
-__all__ = ["ASyncIterable", "ASyncIterator", "ASyncFilter", "ASyncSorter", "ASyncGeneratorFunction"]
+__all__ = [
+    "ASyncIterable",
+    "ASyncIterator",
+    "ASyncFilter",
+    "ASyncSorter",
+    "ASyncGeneratorFunction",
+]

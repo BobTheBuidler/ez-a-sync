@@ -3,15 +3,18 @@ This module provides an enhanced version of :func:`asyncio.gather`.
 """
 
 import asyncio
-from typing import (Any, Awaitable, Dict, List, Mapping, TypeVar, Union,
-                    overload)
+from typing import Any, Awaitable, Dict, List, Mapping, TypeVar, Union, overload
 
 try:
     from tqdm.asyncio import tqdm_asyncio
 except ImportError as e:
+
     class tqdm_asyncio:  # type: ignore [no-redef]
         async def gather(*args, **kwargs):
-            raise ImportError("You must have tqdm installed in order to use this feature")
+            raise ImportError(
+                "You must have tqdm installed in order to use this feature"
+            )
+
 
 from a_sync._typing import *
 from a_sync.asyncio.as_completed import as_completed_mapping, _exc_wrap
@@ -19,29 +22,28 @@ from a_sync.asyncio.as_completed import as_completed_mapping, _exc_wrap
 
 Excluder = Callable[[T], bool]
 
+
 @overload
 async def gather(
-    *awaitables: Mapping[K, Awaitable[V]], 
-    return_exceptions: bool = False, 
-    exclude_if: Optional[Excluder[V]] = None, 
-    tqdm: bool = False, 
+    *awaitables: Mapping[K, Awaitable[V]],
+    return_exceptions: bool = False,
+    exclude_if: Optional[Excluder[V]] = None,
+    tqdm: bool = False,
     **tqdm_kwargs: Any,
-) -> Dict[K, V]:
-    ...
+) -> Dict[K, V]: ...
 @overload
 async def gather(
-    *awaitables: Awaitable[T], 
-    return_exceptions: bool = False, 
+    *awaitables: Awaitable[T],
+    return_exceptions: bool = False,
     exclude_if: Optional[Excluder[T]] = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any,
-) -> List[T]:
-    ...
+) -> List[T]: ...
 async def gather(
-    *awaitables: Union[Awaitable[T], Mapping[K, Awaitable[V]]], 
-    return_exceptions: bool = False, 
-    exclude_if: Optional[Excluder[T]] = None, 
-    tqdm: bool = False, 
+    *awaitables: Union[Awaitable[T], Mapping[K, Awaitable[V]]],
+    return_exceptions: bool = False,
+    exclude_if: Optional[Excluder[T]] = None,
+    tqdm: bool = False,
     **tqdm_kwargs: Any,
 ) -> Union[List[T], Dict[K, V]]:
     """
@@ -53,7 +55,7 @@ async def gather(
     - Uses type hints for use with static type checkers.
     - Supports gathering either individual awaitables or a k:v mapping of awaitables.
     - Provides progress reporting using tqdm if 'tqdm' is set to True.
-    
+
     Args:
         *awaitables: The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.
         return_exceptions (optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
@@ -65,7 +67,7 @@ async def gather(
 
     Examples:
         Awaiting individual awaitables:
-        
+
         - Results will be a list containing the result of each awaitable in sequential order.
 
         ```
@@ -75,9 +77,9 @@ async def gather(
         ```
 
         Awaiting mappings of awaitables:
-        
+
         - Results will be a dictionary with 'key1' mapped to the result of thing1() and 'key2' mapped to the result of thing2.
-        
+
         ```
         >>> mapping = {'key1': thing1(), 'key2': thing2()}
         >>> results = await gather(mapping)
@@ -87,19 +89,37 @@ async def gather(
     """
     is_mapping = _is_mapping(awaitables)
     results = await (
-        gather_mapping(awaitables[0], return_exceptions=return_exceptions, exclude_if=exclude_if, tqdm=tqdm, **tqdm_kwargs) if is_mapping
-        else tqdm_asyncio.gather(*(_exc_wrap(a) for a in awaitables) if return_exceptions else awaitables, **tqdm_kwargs) if tqdm
-        else asyncio.gather(*awaitables, return_exceptions=return_exceptions)  # type: ignore [arg-type]
+        gather_mapping(
+            awaitables[0],
+            return_exceptions=return_exceptions,
+            exclude_if=exclude_if,
+            tqdm=tqdm,
+            **tqdm_kwargs,
+        )
+        if is_mapping
+        else (
+            tqdm_asyncio.gather(
+                *(
+                    (_exc_wrap(a) for a in awaitables)
+                    if return_exceptions
+                    else awaitables
+                ),
+                **tqdm_kwargs,
+            )
+            if tqdm
+            else asyncio.gather(*awaitables, return_exceptions=return_exceptions)
+        )  # type: ignore [arg-type]
     )
     if exclude_if and not is_mapping:
         results = [r for r in results if not exclude_if(r)]
     return results
-    
+
+
 async def gather_mapping(
-    mapping: Mapping[K, Awaitable[V]], 
-    return_exceptions: bool = False, 
+    mapping: Mapping[K, Awaitable[V]],
+    return_exceptions: bool = False,
     exclude_if: Optional[Excluder[V]] = None,
-    tqdm: bool = False, 
+    tqdm: bool = False,
     **tqdm_kwargs: Any,
 ) -> Dict[K, V]:
     """
@@ -126,14 +146,22 @@ async def gather_mapping(
         ```
     """
     results = {
-        k: v 
-        async for k, v in as_completed_mapping(mapping, return_exceptions=return_exceptions, aiter=True, tqdm=tqdm, **tqdm_kwargs)
+        k: v
+        async for k, v in as_completed_mapping(
+            mapping,
+            return_exceptions=return_exceptions,
+            aiter=True,
+            tqdm=tqdm,
+            **tqdm_kwargs,
+        )
         if exclude_if is None or not exclude_if(v)
     }
     # return data in same order as input mapping
-    return {k: results[k] for k in mapping}  
+    return {k: results[k] for k in mapping}
 
 
-_is_mapping = lambda awaitables: len(awaitables) == 1 and isinstance(awaitables[0], Mapping)
+_is_mapping = lambda awaitables: len(awaitables) == 1 and isinstance(
+    awaitables[0], Mapping
+)
 
 __all__ = ["gather", "gather_mapping"]
