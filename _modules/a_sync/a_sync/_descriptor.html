@@ -85,6 +85,7 @@
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
 
+
 <div class="viewcode-block" id="ASyncDescriptor">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncDescriptor</span><span class="p">(</span><span class="n">ModifiedMixin</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
@@ -103,9 +104,9 @@
 <div class="viewcode-block" id="ASyncDescriptor.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> 
-        <span class="n">_fget</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">],</span> 
-        <span class="n">field_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">_fget</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">],</span>
+        <span class="n">field_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">ModifierKwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -120,19 +121,21 @@
 <span class="sd">            ValueError: If _fget is not callable.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">_fget</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to decorate </span><span class="si">{</span><span class="n">_fget</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unable to decorate </span><span class="si">{</span><span class="n">_fget</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">modifiers</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_fget</span><span class="p">,</span> <span class="n">ASyncFunction</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_fget</span><span class="o">.</span><span class="n">modifiers</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="n">_fget</span>
         <span class="k">elif</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">_fget</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">:</span> <span class="n">AsyncUnboundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">apply_async_modifiers</span><span class="p">(</span><span class="n">_fget</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">:</span> <span class="n">AsyncUnboundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">apply_async_modifiers</span><span class="p">(</span><span class="n">_fget</span><span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="n">_fget</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span> <span class="o">=</span> <span class="n">field_name</span> <span class="ow">or</span> <span class="n">_fget</span><span class="o">.</span><span class="vm">__name__</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The name of the field the {cls} is bound to.&quot;&quot;&quot;</span>
-        
+
         <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span></div>
 
 
@@ -151,7 +154,9 @@
 
 <div class="viewcode-block" id="ASyncDescriptor.map">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor.map">[docs]</a>
-    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="o">**</span><span class="n">bound_method_kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMapping[I, T]&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="o">**</span><span class="n">bound_method_kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMapping[I, T]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a TaskMapping for the given instances.</span>
 
@@ -163,6 +168,7 @@
 <span class="sd">            A TaskMapping object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">a_sync.task</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
+
         <span class="k">return</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="o">**</span><span class="n">bound_method_kwargs</span><span class="p">)</span></div>
 
 
@@ -218,7 +224,13 @@
 
 <div class="viewcode-block" id="ASyncDescriptor._all">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._all">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_all</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
+        <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if all results are truthy.</span>
 
@@ -231,12 +243,20 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A boolean indicating if all results are truthy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ASyncDescriptor._any">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._any">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_any</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_any</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
+        <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if any result is truthy.</span>
 
@@ -249,12 +269,20 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A boolean indicating if any result is truthy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ASyncDescriptor._min">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._min">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_min</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_min</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
+        <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the minimum result.</span>
 
@@ -267,12 +295,20 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The minimum result.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ASyncDescriptor._max">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._max">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_max</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
+        <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the maximum result.</span>
 
@@ -285,12 +321,20 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The maximum result.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ASyncDescriptor._sum">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._sum">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_sum</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
+        <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the sum of results.</span>
 
@@ -303,7 +347,9 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The sum of the results.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>

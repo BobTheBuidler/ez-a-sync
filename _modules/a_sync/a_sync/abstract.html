@@ -69,8 +69,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.a_sync.abstract</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">import</span> <span class="nn">abc</span>
+<span></span><span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -81,6 +80,7 @@
 <span class="kn">from</span> <span class="nn">a_sync.exceptions</span> <span class="kn">import</span> <span class="n">NoFlagsFound</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="ASyncABC">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.abstract.ASyncABC">[docs]</a>
@@ -103,33 +103,46 @@
     <span class="k">def</span> <span class="nf">__a_sync_instance_should_await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A flag indicating whether the instance should default to asynchronous execution.</span>
-<span class="sd">        </span>
-<span class="sd">        You can override this if you want. </span>
+
+<span class="sd">        You can override this if you want.</span>
 <span class="sd">        If you want to be able to hotswap instance modes, you can redefine this as a non-cached property.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_flags</span><span class="o">.</span><span class="n">negate_if_necessary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__a_sync_flag_name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__a_sync_flag_value__</span><span class="p">)</span>
-    
+        <span class="k">return</span> <span class="n">_flags</span><span class="o">.</span><span class="n">negate_if_necessary</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__a_sync_flag_name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__a_sync_flag_value__</span>
+        <span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">__a_sync_should_await_from_kwargs__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;You can override this if you want.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">flag</span> <span class="o">:=</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">get_flag_name</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">is_sync</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">pop_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span>
         <span class="k">raise</span> <span class="n">NoFlagsFound</span><span class="p">(</span><span class="s2">&quot;kwargs&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    
+
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">__a_sync_instance_will_be_sync__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;You can override this if you want.&quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;checking `</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">.__init__` signature against provided kwargs to determine a_sync mode for the new instance&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;checking `</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">.__init__` signature against provided kwargs to determine a_sync mode for the new instance&quot;</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">flag</span> <span class="o">:=</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">get_flag_name</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="n">sync</span> <span class="o">=</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">is_sync</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;kwargs indicate the new instance created with args </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> is </span><span class="si">%s</span><span class="s2">synchronous&quot;</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span> <span class="k">if</span> <span class="n">sync</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;kwargs indicate the new instance created with args </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> is </span><span class="si">%s</span><span class="s2">synchronous&quot;</span><span class="p">,</span>
+                <span class="n">args</span><span class="p">,</span>
+                <span class="n">kwargs</span><span class="p">,</span>
+                <span class="s2">&quot;a&quot;</span> <span class="k">if</span> <span class="n">sync</span> <span class="ow">is</span> <span class="kc">False</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="n">sync</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No valid flags found in kwargs, checking class definition for defined default&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;No valid flags found in kwargs, checking class definition for defined default&quot;</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__a_sync_default_mode__</span><span class="p">()</span>  <span class="c1"># type: ignore [arg-type]</span>
 
     <span class="c1">######################################</span>
     <span class="c1"># Concrete Methods (non-overridable) #</span>
     <span class="c1">######################################</span>
-    
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">__a_sync_modifiers__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncABC&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModifierKwargs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;You should not override this.&quot;&quot;&quot;</span>
@@ -142,14 +155,14 @@
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractproperty</span>
     <span class="k">def</span> <span class="nf">__a_sync_flag_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">pass</span>
-    
+
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractproperty</span>
     <span class="k">def</span> <span class="nf">__a_sync_flag_value__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">pass</span>
-    
+
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractclassmethod</span>  <span class="c1"># type: ignore [arg-type, misc]</span>
-    <span class="k">def</span> <span class="nf">__a_sync_default_mode__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># type: ignore [empty-body] </span>
-                                                <span class="c1"># mypy doesnt recognize this abc member</span>
+    <span class="k">def</span> <span class="nf">__a_sync_default_mode__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># type: ignore [empty-body]</span>
+        <span class="c1"># mypy doesnt recognize this abc member</span>
         <span class="k">pass</span></div>
 
 </pre></div>

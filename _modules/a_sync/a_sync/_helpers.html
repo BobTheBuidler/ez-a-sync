@@ -106,6 +106,7 @@
         <span class="k">raise</span></div>
 
 
+
 <div class="viewcode-block" id="_asyncify">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._helpers._asyncify">[docs]</a>
 <span class="k">def</span> <span class="nf">_asyncify</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">executor</span><span class="p">:</span> <span class="n">Executor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>  <span class="c1"># type: ignore [misc]</span>
@@ -123,14 +124,17 @@
 <span class="sd">        :class:`exceptions.FunctionNotSync`: If the input function is already asynchronous.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="n">ASyncFunction</span>
+
     <span class="k">if</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">ASyncFunction</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FunctionNotSync</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_asyncify_wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">wrap_future</span><span class="p">(</span>
-            <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> 
+            <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
             <span class="n">loop</span><span class="o">=</span><span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">(),</span>
         <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">_asyncify_wrap</span></div>
 
 </pre></div>

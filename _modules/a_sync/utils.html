@@ -71,17 +71,17 @@
   <h1>Source code for a_sync.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">asyncio</span>
 
-<span class="kn">from</span> <span class="nn">a_sync.utils.iterators</span> <span class="kn">import</span> <span class="p">(</span><span class="n">as_yielded</span><span class="p">,</span> <span class="n">exhaust_iterator</span><span class="p">,</span>
-                                    <span class="n">exhaust_iterators</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">a_sync.utils.iterators</span> <span class="kn">import</span> <span class="n">as_yielded</span><span class="p">,</span> <span class="n">exhaust_iterator</span><span class="p">,</span> <span class="n">exhaust_iterators</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="c1">#&quot;all&quot;,</span>
-    <span class="c1">#&quot;any&quot;,</span>
+    <span class="c1"># &quot;all&quot;,</span>
+    <span class="c1"># &quot;any&quot;,</span>
     <span class="s2">&quot;as_yielded&quot;</span><span class="p">,</span>
     <span class="s2">&quot;exhaust_iterator&quot;</span><span class="p">,</span>
     <span class="s2">&quot;exhaust_iterators&quot;</span><span class="p">,</span>
 <span class="p">]</span>
+
 
 <div class="viewcode-block" id="any">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.any">[docs]</a>
@@ -130,14 +130,15 @@
             <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span></div>
 
-    
+
+
 <div class="viewcode-block" id="all">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.all">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="o">*</span><span class="n">awaitables</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Asynchronously evaluates whether all of the given awaitables evaluate to True.</span>
 
-<span class="sd">    This function takes multiple awaitable objects and returns True if all of them evaluate to True. It cancels </span>
+<span class="sd">    This function takes multiple awaitable objects and returns True if all of them evaluate to True. It cancels</span>
 <span class="sd">    the remaining awaitables once a False result is found.</span>
 
 <span class="sd">    Args:</span>

@@ -87,6 +87,7 @@
 <span class="n">EXECUTOR_TYPE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_EXECUTOR_TYPE&quot;</span><span class="p">,</span> <span class="s2">&quot;threads&quot;</span><span class="p">)</span>
 <span class="n">EXECUTOR_VALUE</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_EXECUTOR_VALUE&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 
+
 <div class="viewcode-block" id="get_default_executor">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.config.get_default_executor">[docs]</a>
 <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -100,11 +101,14 @@
 <span class="sd">    Raises:</span>
 <span class="sd">        :class:`ValueError`: If an invalid EXECUTOR_TYPE is specified.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">EXECUTOR_TYPE</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">):</span> <span class="c1"># p, P, proc, Processes, etc</span>
+    <span class="k">if</span> <span class="n">EXECUTOR_TYPE</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">):</span>  <span class="c1"># p, P, proc, Processes, etc</span>
         <span class="k">return</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">EXECUTOR_VALUE</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">EXECUTOR_TYPE</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">):</span> <span class="c1"># t, T, thread, THREADS, etc</span>
+    <span class="k">elif</span> <span class="n">EXECUTOR_TYPE</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">):</span>  <span class="c1"># t, T, thread, THREADS, etc</span>
         <span class="k">return</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">EXECUTOR_VALUE</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid value for A_SYNC_EXECUTOR_TYPE. Please use &#39;threads&#39; or &#39;processes&#39;.&quot;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="s2">&quot;Invalid value for A_SYNC_EXECUTOR_TYPE. Please use &#39;threads&#39; or &#39;processes&#39;.&quot;</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="n">default_sync_executor</span> <span class="o">=</span> <span class="n">get_default_executor</span><span class="p">()</span>
@@ -127,13 +131,29 @@
 <span class="c1"># User configurable default modifiers to be applied to any a_sync decorated function if you do not specify kwarg values for each modifier.</span>
 
 <span class="n">DEFAULT_MODE</span><span class="p">:</span> <span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_DEFAULT_MODE&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore [assignment]</span>
-<span class="n">CACHE_TYPE</span><span class="p">:</span> <span class="n">CacheType</span> <span class="o">=</span> <span class="n">typ</span> <span class="k">if</span> <span class="p">(</span><span class="n">typ</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_CACHE_TYPE&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s1">&#39;cache_type&#39;</span><span class="p">]</span>
+<span class="n">CACHE_TYPE</span><span class="p">:</span> <span class="n">CacheType</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">typ</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">typ</span> <span class="o">:=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_CACHE_TYPE&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s2">&quot;cache_type&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 <span class="n">CACHE_TYPED</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_CACHE_TYPED&quot;</span><span class="p">))</span>
-<span class="n">RAM_CACHE_MAXSIZE</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_RAM_CACHE_MAXSIZE&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> 
-<span class="n">RAM_CACHE_TTL</span> <span class="o">=</span> <span class="n">ttl</span> <span class="k">if</span> <span class="p">(</span><span class="n">ttl</span> <span class="o">:=</span> <span class="nb">float</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_RAM_CACHE_TTL&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span> <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s1">&#39;ram_cache_ttl&#39;</span><span class="p">]</span>
+<span class="n">RAM_CACHE_MAXSIZE</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_RAM_CACHE_MAXSIZE&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">RAM_CACHE_TTL</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">ttl</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ttl</span> <span class="o">:=</span> <span class="nb">float</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_RAM_CACHE_TTL&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+    <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s2">&quot;ram_cache_ttl&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 
-<span class="n">RUNS_PER_MINUTE</span> <span class="o">=</span> <span class="n">rpm</span> <span class="k">if</span> <span class="p">(</span><span class="n">rpm</span> <span class="o">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_RUNS_PER_MINUTE&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span> <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s1">&#39;runs_per_minute&#39;</span><span class="p">]</span>
-<span class="n">SEMAPHORE</span> <span class="o">=</span> <span class="n">rpm</span> <span class="k">if</span> <span class="p">(</span><span class="n">rpm</span> <span class="o">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_SEMAPHORE&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span> <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s1">&#39;semaphore&#39;</span><span class="p">]</span>
+<span class="n">RUNS_PER_MINUTE</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">rpm</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rpm</span> <span class="o">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_RUNS_PER_MINUTE&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+    <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s2">&quot;runs_per_minute&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">SEMAPHORE</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">rpm</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rpm</span> <span class="o">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_SEMAPHORE&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+    <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s2">&quot;semaphore&quot;</span><span class="p">]</span>
+<span class="p">)</span>
 
 <span class="n">user_set_default_modifiers</span> <span class="o">=</span> <span class="n">ModifierKwargs</span><span class="p">(</span>
     <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_MODE</span><span class="p">,</span>

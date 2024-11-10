@@ -88,6 +88,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base exception class for flag-related errors in the a_sync library.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">viable_flags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -98,11 +99,12 @@
 <div class="viewcode-block" id="ASyncFlagException.desc">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncFlagException.desc">[docs]</a>
     <span class="k">def</span> <span class="nf">desc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s1">&#39;kwargs&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;kwargs&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;flags present in &#39;kwargs&#39;&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;flag attributes defined on </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">&#39;</span></div>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;flag attributes defined on </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="NoFlagsFound">
@@ -111,12 +113,13 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when no viable flags are found in the target.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="NoFlagsFound.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.NoFlagsFound.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">kwargs_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the NoFlagsFound exception.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            target: The target object where flags were expected.</span>
 <span class="sd">            kwargs_keys: Optional; keys in the kwargs if applicable.</span>
@@ -130,18 +133,20 @@
 </div>
 
 
+
 <div class="viewcode-block" id="TooManyFlags">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.TooManyFlags">[docs]</a>
 <span class="k">class</span> <span class="nc">TooManyFlags</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when multiple flags are found, but only one was expected.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="TooManyFlags.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.TooManyFlags.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">present_flags</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the TooManyFlags exception.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            target: The target object where flags were found.</span>
 <span class="sd">            present_flags: The flags that were found.</span>
@@ -153,18 +158,20 @@
 </div>
 
 
+
 <div class="viewcode-block" id="InvalidFlag">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlag">[docs]</a>
 <span class="k">class</span> <span class="nc">InvalidFlag</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when an invalid flag is encountered.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="InvalidFlag.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlag.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the InvalidFlag exception.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            flag: The invalid flag.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -174,18 +181,20 @@
 </div>
 
 
+
 <div class="viewcode-block" id="InvalidFlagValue">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlagValue">[docs]</a>
 <span class="k">class</span> <span class="nc">InvalidFlagValue</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a flag has an invalid value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="InvalidFlagValue.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlagValue.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the InvalidFlagValue exception.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            flag: The flag with an invalid value.</span>
 <span class="sd">            flag_value: The invalid value of the flag.</span>
@@ -194,18 +203,20 @@
 </div>
 
 
+
 <div class="viewcode-block" id="FlagNotDefined">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FlagNotDefined">[docs]</a>
 <span class="k">class</span> <span class="nc">FlagNotDefined</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a flag is not defined on an object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="FlagNotDefined.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FlagNotDefined.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Type</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the FlagNotDefined exception.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            obj: The object where the flag is not defined.</span>
 <span class="sd">            flag: The undefined flag.</span>
@@ -223,23 +234,28 @@
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
+
 <div class="viewcode-block" id="FunctionNotAsync">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotAsync">[docs]</a>
 <span class="k">class</span> <span class="nc">FunctionNotAsync</span><span class="p">(</span><span class="n">ImproperFunctionType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a function expected to be async is not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="FunctionNotAsync.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotAsync.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the FunctionNotAsync exception.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            fn: The function that is not async.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`coro_fn` must be a coroutine function defined with `async def`. You passed </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`coro_fn` must be a coroutine function defined with `async def`. You passed </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="FunctionNotSync">
@@ -248,19 +264,23 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a function expected to be sync is not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="FunctionNotSync.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotSync.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the FunctionNotSync exception.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            fn: The function that is not sync.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`func` must be a coroutine function defined with `def`. You passed </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;`func` must be a coroutine function defined with `def`. You passed </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span></div>
 </div>
 
-        
+
+
 <div class="viewcode-block" id="ASyncRuntimeError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncRuntimeError">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncRuntimeError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
@@ -269,12 +289,13 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="ne">RuntimeError</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the ASyncRuntimeError exception.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            e: The original runtime error.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="SyncModeInAsyncContextError">
@@ -283,9 +304,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when synchronous code is used within an asynchronous context.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="SyncModeInAsyncContextError.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.SyncModeInAsyncContextError.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the SyncModeInAsyncContextError exception.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -297,20 +319,22 @@
 </div>
 
 
+
 <div class="viewcode-block" id="MappingError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingError">[docs]</a>
 <span class="k">class</span> <span class="nc">MappingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for errors related to :class:`~TaskMapping`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_msg</span><span class="p">:</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="MappingError.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingError.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="s2">&quot;TaskMapping&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="s2">&quot;TaskMapping&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the MappingError exception.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            mapping: The TaskMapping where the error occurred.</span>
 <span class="sd">            msg: An optional message describing the error.</span>
@@ -323,13 +347,16 @@
 </div>
 
 
+
 <div class="viewcode-block" id="MappingIsEmptyError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingIsEmptyError">[docs]</a>
 <span class="k">class</span> <span class="nc">MappingIsEmptyError</span><span class="p">(</span><span class="n">MappingError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a TaskMapping is empty and an operation requires it to have items.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_msg</span> <span class="o">=</span> <span class="s2">&quot;TaskMapping does not contain anything to yield&quot;</span></div>
+
 
 
 <div class="viewcode-block" id="MappingNotEmptyError">
@@ -338,7 +365,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a TaskMapping is not empty and an operation requires it to be empty.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_msg</span> <span class="o">=</span> <span class="s2">&quot;TaskMapping already contains some data. In order to use `map`, you need a fresh one&quot;</span></div>
+
 
 
 <div class="viewcode-block" id="PersistedTaskException">
@@ -351,6 +380,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">exc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="EmptySequenceError">

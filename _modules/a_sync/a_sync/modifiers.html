@@ -85,15 +85,15 @@
     <span class="k">return</span> <span class="n">ModifierKwargs</span><span class="p">({</span><span class="n">modifier</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">thing</span><span class="p">,</span> <span class="n">modifier</span><span class="p">)</span> <span class="k">for</span> <span class="n">modifier</span> <span class="ow">in</span> <span class="n">valid_modifiers</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">thing</span><span class="p">,</span> <span class="n">modifier</span><span class="p">)})</span>  <span class="c1"># type: ignore [misc]</span></div>
 
 
+
 <div class="viewcode-block" id="apply_class_defined_modifiers">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.apply_class_defined_modifiers">[docs]</a>
 <span class="k">def</span> <span class="nf">apply_class_defined_modifiers</span><span class="p">(</span><span class="n">attrs_from_metaclass</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s1">&#39;semaphore&#39;</span> <span class="ow">in</span> <span class="n">attrs_from_metaclass</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span> <span class="o">:=</span> <span class="n">attrs_from_metaclass</span><span class="p">[</span><span class="s1">&#39;semaphore&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="n">attrs_from_metaclass</span><span class="p">[</span><span class="s1">&#39;semaphore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ThreadsafeSemaphore</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s2">&quot;runs_per_minute&quot;</span> <span class="ow">in</span> <span class="n">attrs_from_metaclass</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span> <span class="o">:=</span> <span class="n">attrs_from_metaclass</span><span class="p">[</span><span class="s1">&#39;runs_per_minute&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">):</span>
-        <span class="n">attrs_from_metaclass</span><span class="p">[</span><span class="s1">&#39;runs_per_minute&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AsyncLimiter</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span> <span class="o">:=</span> <span class="n">attrs_from_metaclass</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;semaphore&quot;</span><span class="p">),</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">attrs_from_metaclass</span><span class="p">[</span><span class="s2">&quot;semaphore&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ThreadsafeSemaphore</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span> <span class="o">:=</span> <span class="n">attrs_from_metaclass</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;runs_per_minute&quot;</span><span class="p">),</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">attrs_from_metaclass</span><span class="p">[</span><span class="s2">&quot;runs_per_minute&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AsyncLimiter</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
 
-        
 </pre></div>
 
            </div>

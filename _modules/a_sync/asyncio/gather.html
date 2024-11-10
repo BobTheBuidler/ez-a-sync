@@ -74,15 +74,18 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Any</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span>
-                    <span class="n">overload</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">tqdm.asyncio</span> <span class="kn">import</span> <span class="n">tqdm_asyncio</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
     <span class="k">class</span> <span class="nc">tqdm_asyncio</span><span class="p">:</span>  <span class="c1"># type: ignore [no-redef]</span>
         <span class="k">async</span> <span class="k">def</span> <span class="nf">gather</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;You must have tqdm installed in order to use this feature&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="s2">&quot;You must have tqdm installed in order to use this feature&quot;</span>
+            <span class="p">)</span>
+
 
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.asyncio.as_completed</span> <span class="kn">import</span> <span class="n">as_completed_mapping</span><span class="p">,</span> <span class="n">_exc_wrap</span>
@@ -90,31 +93,30 @@
 
 <span class="n">Excluder</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
 
+
 <span class="nd">@overload</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">gather</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">awaitables</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span> 
-    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
-    <span class="n">exclude_if</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Excluder</span><span class="p">[</span><span class="n">V</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+    <span class="o">*</span><span class="n">awaitables</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">exclude_if</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Excluder</span><span class="p">[</span><span class="n">V</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]:</span>
-    <span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">gather</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">awaitables</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> 
-    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+    <span class="o">*</span><span class="n">awaitables</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">exclude_if</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Excluder</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-    <span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
 <div class="viewcode-block" id="gather">
 <a class="viewcode-back" href="../../../source/a_sync.asyncio.html#a_sync.gather">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">gather</span><span class="p">(</span>
-    <span class="o">*</span><span class="n">awaitables</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]]],</span> 
-    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
-    <span class="n">exclude_if</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Excluder</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+    <span class="o">*</span><span class="n">awaitables</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]]],</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">exclude_if</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Excluder</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -126,7 +128,7 @@
 <span class="sd">    - Uses type hints for use with static type checkers.</span>
 <span class="sd">    - Supports gathering either individual awaitables or a k:v mapping of awaitables.</span>
 <span class="sd">    - Provides progress reporting using tqdm if &#39;tqdm&#39; is set to True.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        *awaitables: The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.</span>
 <span class="sd">        return_exceptions (optional): If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
@@ -138,7 +140,7 @@
 
 <span class="sd">    Examples:</span>
 <span class="sd">        Awaiting individual awaitables:</span>
-<span class="sd">        </span>
+
 <span class="sd">        - Results will be a list containing the result of each awaitable in sequential order.</span>
 
 <span class="sd">        ```</span>
@@ -148,9 +150,9 @@
 <span class="sd">        ```</span>
 
 <span class="sd">        Awaiting mappings of awaitables:</span>
-<span class="sd">        </span>
+
 <span class="sd">        - Results will be a dictionary with &#39;key1&#39; mapped to the result of thing1() and &#39;key2&#39; mapped to the result of thing2.</span>
-<span class="sd">        </span>
+
 <span class="sd">        ```</span>
 <span class="sd">        &gt;&gt;&gt; mapping = {&#39;key1&#39;: thing1(), &#39;key2&#39;: thing2()}</span>
 <span class="sd">        &gt;&gt;&gt; results = await gather(mapping)</span>
@@ -160,22 +162,40 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">is_mapping</span> <span class="o">=</span> <span class="n">_is_mapping</span><span class="p">(</span><span class="n">awaitables</span><span class="p">)</span>
     <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="p">(</span>
-        <span class="n">gather_mapping</span><span class="p">(</span><span class="n">awaitables</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span> <span class="n">exclude_if</span><span class="o">=</span><span class="n">exclude_if</span><span class="p">,</span> <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">is_mapping</span>
-        <span class="k">else</span> <span class="n">tqdm_asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">_exc_wrap</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">awaitables</span><span class="p">)</span> <span class="k">if</span> <span class="n">return_exceptions</span> <span class="k">else</span> <span class="n">awaitables</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">tqdm</span>
-        <span class="k">else</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">awaitables</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span>
+        <span class="n">gather_mapping</span><span class="p">(</span>
+            <span class="n">awaitables</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span>
+            <span class="n">exclude_if</span><span class="o">=</span><span class="n">exclude_if</span><span class="p">,</span>
+            <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_mapping</span>
+        <span class="k">else</span> <span class="p">(</span>
+            <span class="n">tqdm_asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+                <span class="o">*</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">_exc_wrap</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">awaitables</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">return_exceptions</span>
+                    <span class="k">else</span> <span class="n">awaitables</span>
+                <span class="p">),</span>
+                <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">tqdm</span>
+            <span class="k">else</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">awaitables</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">exclude_if</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_mapping</span><span class="p">:</span>
         <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">exclude_if</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">results</span></div>
 
-    
+
+
 <div class="viewcode-block" id="gather_mapping">
 <a class="viewcode-back" href="../../../source/a_sync.asyncio.html#a_sync.gather_mapping">[docs]</a>
 <span class="k">async</span> <span class="k">def</span> <span class="nf">gather_mapping</span><span class="p">(</span>
-    <span class="n">mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span> 
-    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+    <span class="n">mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">exclude_if</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Excluder</span><span class="p">[</span><span class="n">V</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -202,16 +222,24 @@
 <span class="sd">        ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">k</span><span class="p">:</span> <span class="n">v</span> 
-        <span class="k">async</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">as_completed_mapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">)</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">as_completed_mapping</span><span class="p">(</span>
+            <span class="n">mapping</span><span class="p">,</span>
+            <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span>
+            <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">exclude_if</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">exclude_if</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="c1"># return data in same order as input mapping</span>
-    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">}</span>  </div>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">}</span></div>
 
 
 
-<span class="n">_is_mapping</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">awaitables</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">awaitables</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">awaitables</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Mapping</span><span class="p">)</span>
+<span class="n">_is_mapping</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">awaitables</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">awaitables</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+    <span class="n">awaitables</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Mapping</span>
+<span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gather&quot;</span><span class="p">,</span> <span class="s2">&quot;gather_mapping&quot;</span><span class="p">]</span>
 </pre></div>

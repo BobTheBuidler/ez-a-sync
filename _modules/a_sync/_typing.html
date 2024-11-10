@@ -78,16 +78,47 @@
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures._base</span> <span class="kn">import</span> <span class="n">Executor</span>
 <span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">AsyncGenerator</span><span class="p">,</span> <span class="n">AsyncIterable</span><span class="p">,</span> <span class="n">AsyncIterator</span><span class="p">,</span> 
-                    <span class="n">Awaitable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Coroutine</span><span class="p">,</span> <span class="n">DefaultDict</span><span class="p">,</span> <span class="n">Deque</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> 
-                    <span class="n">Generic</span><span class="p">,</span> <span class="n">ItemsView</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">KeysView</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span>
-                    <span class="n">Mapping</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span>
-                    <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">ValuesView</span><span class="p">,</span> <span class="n">final</span><span class="p">,</span> <span class="n">overload</span><span class="p">,</span> <span class="n">runtime_checkable</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">AsyncGenerator</span><span class="p">,</span>
+    <span class="n">AsyncIterable</span><span class="p">,</span>
+    <span class="n">AsyncIterator</span><span class="p">,</span>
+    <span class="n">Awaitable</span><span class="p">,</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Coroutine</span><span class="p">,</span>
+    <span class="n">DefaultDict</span><span class="p">,</span>
+    <span class="n">Deque</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Generator</span><span class="p">,</span>
+    <span class="n">Generic</span><span class="p">,</span>
+    <span class="n">ItemsView</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">Iterator</span><span class="p">,</span>
+    <span class="n">KeysView</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Literal</span><span class="p">,</span>
+    <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">NoReturn</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Protocol</span><span class="p">,</span>
+    <span class="n">Set</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">Type</span><span class="p">,</span>
+    <span class="n">TypedDict</span><span class="p">,</span>
+    <span class="n">TypeVar</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">ValuesView</span><span class="p">,</span>
+    <span class="n">final</span><span class="p">,</span>
+    <span class="n">overload</span><span class="p">,</span>
+    <span class="n">runtime_checkable</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Concatenate</span><span class="p">,</span> <span class="n">ParamSpec</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Unpack</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">ASyncGenericBase</span>
+
     <span class="n">B</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">ASyncGenericBase</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">B</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
@@ -98,7 +129,7 @@
 <span class="n">I</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">)</span>
 <span class="sd">&quot;&quot;&quot;A :class:`TypeVar` that is used to represent instances of a common class.&quot;&quot;&quot;</span>
 
-<span class="n">E</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="ne">Exception</span><span class="p">)</span>
+<span class="n">E</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="ne">Exception</span><span class="p">)</span>
 <span class="n">TYPE</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;TYPE&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Type</span><span class="p">)</span>
 
 <span class="n">P</span> <span class="o">=</span> <span class="n">ParamSpec</span><span class="p">(</span><span class="s2">&quot;P&quot;</span><span class="p">)</span>
@@ -122,6 +153,7 @@
 <span class="n">AnyFn</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
 <span class="s2">&quot;Type alias for any function, whether synchronous or asynchronous.&quot;</span>
 
+
 <div class="viewcode-block" id="CoroBoundMethod">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.CoroBoundMethod">[docs]</a>
 <span class="k">class</span> <span class="nc">CoroBoundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
@@ -132,12 +164,14 @@
 <span class="sd">        class MyClass:</span>
 <span class="sd">            async def my_method(self, x: int) -&gt; str:</span>
 <span class="sd">                return str(x)</span>
-<span class="sd">        </span>
+
 <span class="sd">        instance = MyClass()</span>
 <span class="sd">        bound_method: CoroBoundMethod[MyClass, [int], str] = instance.my_method</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__self__</span><span class="p">:</span> <span class="n">I</span>
     <span class="fm">__call__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span></div>
+
 
 
 <div class="viewcode-block" id="SyncBoundMethod">
@@ -150,16 +184,19 @@
 <span class="sd">        class MyClass:</span>
 <span class="sd">            def my_method(self, x: int) -&gt; str:</span>
 <span class="sd">                return str(x)</span>
-<span class="sd">        </span>
+
 <span class="sd">        instance = MyClass()</span>
 <span class="sd">        bound_method: SyncBoundMethod[MyClass, [int], str] = instance.my_method</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__self__</span><span class="p">:</span> <span class="n">I</span>
     <span class="fm">__call__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span></div>
 
 
+
 <span class="n">AnyBoundMethod</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">CoroBoundMethod</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">SyncBoundMethod</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
 <span class="s2">&quot;Type alias for any bound method, whether synchronous or asynchronous.&quot;</span>
+
 
 <div class="viewcode-block" id="AsyncUnboundMethod">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.AsyncUnboundMethod">[docs]</a>
@@ -167,11 +204,13 @@
 <span class="k">class</span> <span class="nc">AsyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for unbound asynchronous methods.</span>
-<span class="sd">    </span>
+
 <span class="sd">    An unbound method is a method that hasn&#39;t been bound to an instance of a class yet.</span>
 <span class="sd">    It&#39;s essentially the function object itself, before it&#39;s accessed through an instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="fm">__get__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">I</span><span class="p">,</span> <span class="n">Type</span><span class="p">],</span> <span class="n">CoroBoundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span></div>
+
 
 
 <div class="viewcode-block" id="SyncUnboundMethod">
@@ -180,11 +219,13 @@
 <span class="k">class</span> <span class="nc">SyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for unbound synchronous methods.</span>
-<span class="sd">    </span>
+
 <span class="sd">    An unbound method is a method that hasn&#39;t been bound to an instance of a class yet.</span>
 <span class="sd">    It&#39;s essentially the function object itself, before it&#39;s accessed through an instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="fm">__get__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">I</span><span class="p">,</span> <span class="n">Type</span><span class="p">],</span> <span class="n">SyncBoundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span></div>
+
 
 
 <span class="n">AnyUnboundMethod</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">AsyncUnboundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">SyncUnboundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
@@ -205,14 +246,15 @@
 <span class="n">AsyncDecoratorOrCoroFn</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
 <span class="s2">&quot;Type alias for either an asynchronous decorator or a coroutine function.&quot;</span>
 
-<span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;sync&#39;</span><span class="p">,</span> <span class="s1">&#39;async&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">,</span> <span class="s2">&quot;async&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 <span class="s2">&quot;Type alias for default modes of operation.&quot;</span>
 
-<span class="n">CacheType</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">CacheType</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;memory&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 <span class="s2">&quot;Type alias for cache types.&quot;</span>
 
 <span class="n">SemaphoreSpec</span> <span class="o">=</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
 <span class="s2">&quot;Type alias for semaphore specifications.&quot;</span>
+
 
 <div class="viewcode-block" id="ModifierKwargs">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.ModifierKwargs">[docs]</a>
@@ -220,6 +262,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TypedDict for keyword arguments that modify the behavior of asynchronous operations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span>
     <span class="n">cache_type</span><span class="p">:</span> <span class="n">CacheType</span>
     <span class="n">cache_typed</span><span class="p">:</span> <span class="nb">bool</span>
@@ -229,6 +272,7 @@
     <span class="n">semaphore</span><span class="p">:</span> <span class="n">SemaphoreSpec</span>
     <span class="c1"># sync modifiers</span>
     <span class="n">executor</span><span class="p">:</span> <span class="n">Executor</span></div>
+
 
 
 <span class="n">AnyIterable</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">AsyncIterable</span><span class="p">[</span><span class="n">K</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">K</span><span class="p">]]</span>

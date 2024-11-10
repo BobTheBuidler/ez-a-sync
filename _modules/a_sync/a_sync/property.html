@@ -69,8 +69,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.a_sync.property</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">import</span> <span class="nn">functools</span>
+<span></span><span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">async_property</span> <span class="k">as</span> <span class="nn">ap</span>  <span class="c1"># type: ignore [import]</span>
@@ -80,14 +79,22 @@
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">_helpers</span><span class="p">,</span> <span class="n">config</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync._descriptor</span> <span class="kn">import</span> <span class="n">ASyncDescriptor</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="n">ASyncFunction</span><span class="p">,</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">,</span> <span class="n">ASyncFunctionSyncDefault</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync.method</span> <span class="kn">import</span> <span class="n">ASyncBoundMethodAsyncDefault</span><span class="p">,</span> <span class="n">ASyncMethodDescriptorAsyncDefault</span>
+<span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ASyncFunction</span><span class="p">,</span>
+    <span class="n">ASyncFunctionAsyncDefault</span><span class="p">,</span>
+    <span class="n">ASyncFunctionSyncDefault</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">a_sync.a_sync.method</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ASyncBoundMethodAsyncDefault</span><span class="p">,</span>
+    <span class="n">ASyncMethodDescriptorAsyncDefault</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">a_sync.task</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="_ASyncPropertyDescriptorBase">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync._ASyncPropertyDescriptorBase">[docs]</a>
@@ -97,13 +104,15 @@
     <span class="nb">min</span><span class="p">:</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
     <span class="nb">max</span><span class="p">:</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
     <span class="nb">sum</span><span class="p">:</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
+    <span class="n">hidden_method_descriptor</span><span class="p">:</span> <span class="s2">&quot;HiddenMethodDescriptor[T]&quot;</span>
     <span class="n">__wrapped__</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">I</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;hidden_method_name&quot;</span><span class="p">,</span> <span class="s2">&quot;hidden_method_descriptor&quot;</span><span class="p">,</span> <span class="s2">&quot;_fget&quot;</span>
+
 <div class="viewcode-block" id="_ASyncPropertyDescriptorBase.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync._ASyncPropertyDescriptorBase.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> 
-        <span class="n">_fget</span><span class="p">:</span> <span class="n">AsyncGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> 
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">_fget</span><span class="p">:</span> <span class="n">AsyncGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
         <span class="n">field_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -111,32 +120,58 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hidden_method_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;__</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="si">}</span><span class="s2">__&quot;</span>
         <span class="n">hidden_modifiers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="p">)</span>
         <span class="n">hidden_modifiers</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;async&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_method_descriptor</span><span class="p">:</span> <span class="n">HiddenMethodDescriptor</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span>  <span class="n">HiddenMethodDescriptor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_method_name</span><span class="p">,</span> <span class="o">**</span><span class="n">hidden_modifiers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_method_descriptor</span> <span class="o">=</span> <span class="n">HiddenMethodDescriptor</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden_method_name</span><span class="p">,</span> <span class="o">**</span><span class="n">hidden_modifiers</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">_fget</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fget</span> <span class="o">=</span> <span class="n">_helpers</span><span class="o">.</span><span class="n">_asyncify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">executor</span><span class="p">)</span></div>
 
+
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span><span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Self</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Self</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="n">awaitable</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span>
         <span class="c1"># if the user didn&#39;t specify a default behavior, we will defer to the instance</span>
         <span class="k">if</span> <span class="n">_is_a_sync_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">):</span>
-            <span class="n">should_await</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="s2">&quot;sync&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="k">else</span> <span class="n">instance</span><span class="o">.</span><span class="n">__a_sync_instance_should_await__</span>
+            <span class="n">should_await</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="s2">&quot;sync&quot;</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span>
+                <span class="k">else</span> <span class="n">instance</span><span class="o">.</span><span class="n">__a_sync_instance_should_await__</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">should_await</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="s2">&quot;sync&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="k">else</span> <span class="ow">not</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">is_running</span><span class="p">()</span>  
+            <span class="n">should_await</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="s2">&quot;sync&quot;</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span>
+                <span class="k">else</span> <span class="ow">not</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">is_running</span><span class="p">()</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">should_await</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;awaiting awaitable for </span><span class="si">%s</span><span class="s2"> for instance: </span><span class="si">%s</span><span class="s2"> owner: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">awaitable</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;awaiting awaitable for </span><span class="si">%s</span><span class="s2"> for instance: </span><span class="si">%s</span><span class="s2"> owner: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">awaitable</span><span class="p">,</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">instance</span><span class="p">,</span>
+                <span class="n">owner</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">retval</span> <span class="o">=</span> <span class="n">_helpers</span><span class="o">.</span><span class="n">_await</span><span class="p">(</span><span class="n">awaitable</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">retval</span> <span class="o">=</span> <span class="n">awaitable</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;returning </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%s</span><span class="s2"> for instance: </span><span class="si">%s</span><span class="s2"> owner: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">retval</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;returning </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%s</span><span class="s2"> for instance: </span><span class="si">%s</span><span class="s2"> owner: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">retval</span><span class="p">,</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">instance</span><span class="p">,</span>
+            <span class="n">owner</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">retval</span>
+
 <div class="viewcode-block" id="_ASyncPropertyDescriptorBase.get">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync._ASyncPropertyDescriptorBase.get">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
@@ -145,24 +180,43 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;awaiting </span><span class="si">%s</span><span class="s2"> for instance </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span>
         <span class="k">return</span> <span class="k">await</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span></div>
 
+
 <div class="viewcode-block" id="_ASyncPropertyDescriptorBase.map">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync._ASyncPropertyDescriptorBase.map">[docs]</a>
-    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMapping[I, T]&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
+        <span class="n">owner</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMapping[I, T]&quot;</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">a_sync.task</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
+
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;mapping </span><span class="si">%s</span><span class="s2"> to instances: </span><span class="si">%s</span><span class="s2"> owner: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instances</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">TaskMapping</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">instances</span><span class="p">,</span>
+            <span class="n">owner</span><span class="o">=</span><span class="n">owner</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">,</span>
+            <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span>
+        <span class="p">)</span></div>
 </div>
+
 
 
 <div class="viewcode-block" id="ASyncPropertyDescriptor">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncPropertyDescriptor">[docs]</a>
-<span class="k">class</span> <span class="nc">ASyncPropertyDescriptor</span><span class="p">(</span><span class="n">_ASyncPropertyDescriptorBase</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">ap</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">AsyncPropertyDescriptor</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ASyncPropertyDescriptor</span><span class="p">(</span>
+    <span class="n">_ASyncPropertyDescriptorBase</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">ap</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">AsyncPropertyDescriptor</span>
+<span class="p">):</span>
     <span class="k">pass</span></div>
+
 
 
 <div class="viewcode-block" id="property">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.property">[docs]</a>
-<span class="k">class</span> <span class="nc">property</span><span class="p">(</span><span class="n">ASyncPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span><span class="o">...</span></div>
+<span class="k">class</span> <span class="nc">property</span><span class="p">(</span><span class="n">ASyncPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span> <span class="o">...</span></div>
+
 
 
 <div class="viewcode-block" id="ASyncPropertyDescriptorSyncDefault">
@@ -182,12 +236,14 @@
     <span class="nb">min</span><span class="p">:</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
     <span class="nb">max</span><span class="p">:</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
     <span class="nb">sum</span><span class="p">:</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
+
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span><span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span><span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span> <span class="o">...</span>
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Self</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">_ASyncPropertyDescriptorBase</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="ASyncPropertyDescriptorAsyncDefault">
@@ -211,82 +267,98 @@
 
 
 <span class="n">ASyncPropertyDecorator</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="nb">property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
-<span class="n">ASyncPropertyDecoratorSyncDefault</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ASyncPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
-<span class="n">ASyncPropertyDecoratorAsyncDefault</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ASyncPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
+<span class="n">ASyncPropertyDecoratorSyncDefault</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
+    <span class="p">[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ASyncPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
+<span class="p">]</span>
+<span class="n">ASyncPropertyDecoratorAsyncDefault</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
+    <span class="p">[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ASyncPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
+<span class="p">]</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_MODE</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_MODE</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
 <div class="viewcode-block" id="a_sync_property">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync_property">[docs]</a>
 <span class="k">def</span> <span class="nf">a_sync_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
@@ -294,8 +366,8 @@
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span>
     <span class="n">ASyncPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
-    <span class="n">ASyncPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> 
-    <span class="n">ASyncPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> 
+    <span class="n">ASyncPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
+    <span class="n">ASyncPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">ASyncPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">ASyncPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">ASyncPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
@@ -314,7 +386,9 @@
 
 <div class="viewcode-block" id="ASyncCachedPropertyDescriptor">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncCachedPropertyDescriptor">[docs]</a>
-<span class="k">class</span> <span class="nc">ASyncCachedPropertyDescriptor</span><span class="p">(</span><span class="n">_ASyncPropertyDescriptorBase</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">ap</span><span class="o">.</span><span class="n">cached</span><span class="o">.</span><span class="n">AsyncCachedPropertyDescriptor</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ASyncCachedPropertyDescriptor</span><span class="p">(</span>
+    <span class="n">_ASyncPropertyDescriptorBase</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">ap</span><span class="o">.</span><span class="n">cached</span><span class="o">.</span><span class="n">AsyncCachedPropertyDescriptor</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A descriptor class for dual-function sync/async cached properties.</span>
 
@@ -323,19 +397,20 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;_fset&quot;</span><span class="p">,</span> <span class="s2">&quot;_fdel&quot;</span><span class="p">,</span> <span class="s2">&quot;__async_property__&quot;</span>
+
 <div class="viewcode-block" id="ASyncCachedPropertyDescriptor.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncCachedPropertyDescriptor.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> 
-        <span class="n">_fget</span><span class="p">:</span> <span class="n">AsyncGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> 
-        <span class="n">_fset</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-        <span class="n">_fdel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-        <span class="n">field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">_fget</span><span class="p">:</span> <span class="n">AsyncGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
+        <span class="n">_fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">_fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_fget</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="o">**</span><span class="n">modifiers</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_method_sync</span><span class="p">(</span><span class="n">_fset</span><span class="p">,</span> <span class="s1">&#39;setter&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_check_method_sync</span><span class="p">(</span><span class="n">_fdel</span><span class="p">,</span> <span class="s1">&#39;deleter&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_method_sync</span><span class="p">(</span><span class="n">_fset</span><span class="p">,</span> <span class="s2">&quot;setter&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_method_sync</span><span class="p">(</span><span class="n">_fdel</span><span class="p">,</span> <span class="s2">&quot;deleter&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fset</span> <span class="o">=</span> <span class="n">_fset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fdel</span> <span class="o">=</span> <span class="n">_fdel</span></div>
 
@@ -351,7 +426,7 @@
             <span class="n">instance_state</span><span class="o">.</span><span class="n">lock</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">task</span>
         <span class="k">return</span> <span class="n">task</span></div>
 
-    
+
 <div class="viewcode-block" id="ASyncCachedPropertyDescriptor.pop_lock">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.ASyncCachedPropertyDescriptor.pop_lock">[docs]</a>
     <span class="k">def</span> <span class="nf">pop_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -372,13 +447,16 @@
             <span class="bp">self</span><span class="o">.</span><span class="fm">__set__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pop_lock</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">value</span>
+
         <span class="k">return</span> <span class="n">load_value</span></div>
 </div>
 
-    
+
+
 <div class="viewcode-block" id="cached_property">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.cached_property">[docs]</a>
-<span class="k">class</span> <span class="nc">cached_property</span><span class="p">(</span><span class="n">ASyncCachedPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span><span class="o">...</span></div>
+<span class="k">class</span> <span class="nc">cached_property</span><span class="p">(</span><span class="n">ASyncCachedPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span> <span class="o">...</span></div>
+
 
 
 <div class="viewcode-block" id="ASyncCachedPropertyDescriptorSyncDefault">
@@ -393,10 +471,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">]</span>
+
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span><span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span><span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span> <span class="o">...</span>
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Self</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
         <span class="k">return</span> <span class="n">_ASyncPropertyDescriptorBase</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span></div>
 
@@ -416,76 +495,94 @@
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">]</span></div>
 
 
-<span class="n">ASyncCachedPropertyDecorator</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">cached_property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
-<span class="n">ASyncCachedPropertyDecoratorSyncDefault</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ASyncCachedPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
-<span class="n">ASyncCachedPropertyDecoratorAsyncDefault</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ASyncCachedPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
+
+<span class="n">ASyncCachedPropertyDecorator</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
+    <span class="p">[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">cached_property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
+<span class="p">]</span>
+<span class="n">ASyncCachedPropertyDecoratorSyncDefault</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
+    <span class="p">[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ASyncCachedPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
+<span class="p">]</span>
+<span class="n">ASyncCachedPropertyDecoratorAsyncDefault</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
+    <span class="p">[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ASyncCachedPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
+<span class="p">]</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span> 
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span> 
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_MODE</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncCachedPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
 <div class="viewcode-block" id="a_sync_cached_property">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync_cached_property">[docs]</a>
 <span class="k">def</span> <span class="nf">a_sync_cached_property</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
@@ -493,8 +590,8 @@
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span>
     <span class="n">ASyncCachedPropertyDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
-    <span class="n">ASyncCachedPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> 
-    <span class="n">ASyncCachedPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> 
+    <span class="n">ASyncCachedPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
+    <span class="n">ASyncCachedPropertyDescriptorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">ASyncCachedPropertyDecorator</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">ASyncCachedPropertyDecoratorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">ASyncCachedPropertyDecoratorAsyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
@@ -510,6 +607,7 @@
     <span class="k">return</span> <span class="n">decorator</span> <span class="k">if</span> <span class="n">func</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="HiddenMethod">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.HiddenMethod">[docs]</a>
 <span class="nd">@final</span>
@@ -517,9 +615,9 @@
 <div class="viewcode-block" id="HiddenMethod.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.HiddenMethod.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> 
-        <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> 
-        <span class="n">unbound</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">],</span> 
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span>
+        <span class="n">unbound</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">],</span>
         <span class="n">async_def</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -527,9 +625,11 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">unbound</span><span class="p">,</span> <span class="n">async_def</span><span class="p">,</span> <span class="o">**</span><span class="n">modifiers</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">field_name</span></div>
 
+
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">instance_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__self__</span><span class="p">)</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> for property </span><span class="si">{</span><span class="n">instance_type</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">instance_type</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> bound to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__self__</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
 <div class="viewcode-block" id="HiddenMethod._should_await">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.HiddenMethod._should_await">[docs]</a>
     <span class="k">def</span> <span class="nf">_should_await</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -538,8 +638,10 @@
         <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoFlagsFound</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
+
     <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="fm">__await__</span><span class="p">()</span></div>
+
 
 
 <div class="viewcode-block" id="HiddenMethodDescriptor">
@@ -549,9 +651,9 @@
 <div class="viewcode-block" id="HiddenMethodDescriptor.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.HiddenMethodDescriptor.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> 
-        <span class="n">_fget</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span> 
-        <span class="n">field_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">_fget</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span>
+        <span class="n">field_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -573,6 +675,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">The original docstring for :meth:`~</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">` is shown below:</span><span class="se">\n\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="o">.</span><span class="vm">__doc__</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
+
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">HiddenMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span>
@@ -580,11 +683,18 @@
             <span class="n">bound</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">]</span>
             <span class="n">bound</span><span class="o">.</span><span class="n">_cache_handle</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="n">bound</span> <span class="o">=</span> <span class="n">HiddenMethod</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__is_async_def__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="p">)</span>
+            <span class="n">bound</span> <span class="o">=</span> <span class="n">HiddenMethod</span><span class="p">(</span>
+                <span class="n">instance</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__is_async_def__</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">,</span>
+                <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bound</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;new hidden method: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="p">)</span>
         <span class="n">bound</span><span class="o">.</span><span class="n">_cache_handle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cache_handle</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">bound</span></div>
+
 
 
 <div class="viewcode-block" id="_is_a_sync_instance">
@@ -594,16 +704,20 @@
         <span class="k">return</span> <span class="n">instance</span><span class="o">.</span><span class="n">__is_a_sync_instance__</span>  <span class="c1"># type: ignore [attr-defined]</span>
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
         <span class="kn">from</span> <span class="nn">a_sync.a_sync.abstract</span> <span class="kn">import</span> <span class="n">ASyncABC</span>
+
         <span class="n">is_a_sync</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">ASyncABC</span><span class="p">)</span>
         <span class="n">instance</span><span class="o">.</span><span class="n">__is_a_sync_instance__</span> <span class="o">=</span> <span class="n">is_a_sync</span>
         <span class="k">return</span> <span class="n">is_a_sync</span></div>
 
 
+
 <div class="viewcode-block" id="_parse_args">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync._parse_args">[docs]</a>
-<span class="k">def</span> <span class="nf">_parse_args</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">DefaultMode</span><span class="p">,</span> <span class="n">AsyncGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">modifiers</span><span class="p">:</span> <span class="n">ModifierKwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">AsyncGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ModifierKwargs</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="n">func</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;sync&#39;</span><span class="p">,</span> <span class="s1">&#39;async&#39;</span><span class="p">]:</span>
-        <span class="n">modifiers</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+<span class="k">def</span> <span class="nf">_parse_args</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">DefaultMode</span><span class="p">,</span> <span class="n">AsyncGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">modifiers</span><span class="p">:</span> <span class="n">ModifierKwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">AsyncGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ModifierKwargs</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">func</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">,</span> <span class="s2">&quot;async&quot;</span><span class="p">]:</span>
+        <span class="n">modifiers</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
         <span class="n">func</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">func</span><span class="p">,</span> <span class="n">modifiers</span></div>
 

@@ -82,14 +82,15 @@
 
 <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">exceptions</span>
 
-<span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sync&#39;</span><span class="p">}</span>
+<span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sync&quot;</span><span class="p">}</span>
 <span class="sd">&quot;&quot;&quot;Set of flags indicating synchronous behavior.&quot;&quot;&quot;</span>
 
-<span class="n">NEGATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;asynchronous&#39;</span><span class="p">}</span>
+<span class="n">NEGATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;asynchronous&quot;</span><span class="p">}</span>
 <span class="sd">&quot;&quot;&quot;Set of flags indicating asynchronous behavior.&quot;&quot;&quot;</span>
 
 <span class="n">VIABLE_FLAGS</span> <span class="o">=</span> <span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">|</span> <span class="n">NEGATIVE_FLAGS</span>
 <span class="sd">&quot;&quot;&quot;Set of all valid flags.&quot;&quot;&quot;</span>
+
 
 <div class="viewcode-block" id="negate_if_necessary">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._flags.negate_if_necessary">[docs]</a>
@@ -112,6 +113,7 @@
     <span class="k">elif</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">NEGATIVE_FLAGS</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="ow">not</span> <span class="n">flag_value</span><span class="p">)</span>
     <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidFlag</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="validate_flag_value">

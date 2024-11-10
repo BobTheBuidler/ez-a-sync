@@ -80,6 +80,7 @@
 <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">exceptions</span>
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 
+
 <div class="viewcode-block" id="CacheKwargs">
 <a class="viewcode-back" href="../../../../../source/a_sync.a_sync.modifiers.cache.html#a_sync.a_sync.modifiers.cache.memory.CacheKwargs">[docs]</a>
 <span class="k">class</span> <span class="nc">CacheKwargs</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
@@ -88,29 +89,30 @@
     <span class="n">typed</span><span class="p">:</span> <span class="nb">bool</span></div>
 
 
-<span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span>
-    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
-<span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span>
-    <span class="n">coro_fn</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
-<span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span>
-    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span>
-    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
-    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span>
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span>
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span>
+    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <div class="viewcode-block" id="apply_async_memory_cache">
 <a class="viewcode-back" href="../../../../../source/a_sync.a_sync.modifiers.cache.html#a_sync.a_sync.modifiers.cache.memory.apply_async_memory_cache">[docs]</a>
@@ -125,14 +127,16 @@
         <span class="k">assert</span> <span class="n">maxsize</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="n">maxsize</span> <span class="o">=</span> <span class="n">coro_fn</span>
         <span class="n">coro_fn</span> <span class="o">=</span> <span class="kc">None</span>
-    
-    <span class="c1"># Validate </span>
+
+    <span class="c1"># Validate</span>
     <span class="k">elif</span> <span class="n">coro_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">maxsize</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">maxsize</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;lru_cache_maxsize&#39; must be a positive integer or None.&quot;</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;&#39;lru_cache_maxsize&#39; must be a positive integer or None.&quot;</span><span class="p">,</span> <span class="n">maxsize</span>
+            <span class="p">)</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FunctionNotAsync</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">maxsize</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">maxsize</span> <span class="o">=</span> <span class="kc">None</span>
 

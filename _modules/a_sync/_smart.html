@@ -69,8 +69,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync._smart</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">import</span> <span class="nn">asyncio</span>
+<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
@@ -88,10 +87,12 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
+
 <span class="k">class</span> <span class="nc">_SmartFutureMixin</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
     <span class="n">_queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;SmartProcessingQueue[Any, Any, T]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_key</span><span class="p">:</span> <span class="n">_Key</span>
     <span class="n">_waiters</span><span class="p">:</span> <span class="s2">&quot;weakref.WeakSet[SmartTask[T]]&quot;</span>
+
     <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>  <span class="c1"># May raise too.</span>
@@ -103,17 +104,22 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;await wasn&#39;t used with future&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>  <span class="c1"># May raise too.</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">num_waiters</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># NOTE: we check .done() because the callback may not have ran yet and its very lightweight</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="c1"># if there are any waiters left, there won&#39;t be once the event loop runs once</span>
             <span class="k">return</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">waiter</span><span class="p">,</span> <span class="s1">&#39;num_waiters&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">waiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">_waiter_done_cleanup_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">],</span> <span class="n">waiter</span><span class="p">:</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">waiter</span><span class="p">,</span> <span class="s2">&quot;num_waiters&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">waiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_waiter_done_cleanup_callback</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">],</span> <span class="n">waiter</span><span class="p">:</span> <span class="s2">&quot;SmartTask&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="s2">&quot;Removes the waiter from _waiters, and _queue._futs if applicable&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">waiter</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">_self_done_cleanup_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">queue</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">:</span>
@@ -125,13 +131,14 @@
 <span class="k">class</span> <span class="nc">SmartFuture</span><span class="p">(</span><span class="n">_SmartFutureMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">):</span>
     <span class="n">_queue</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_key</span> <span class="o">=</span> <span class="kc">None</span>
+
 <div class="viewcode-block" id="SmartFuture.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.SmartFuture.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> 
-        <span class="o">*</span><span class="p">,</span> 
-        <span class="n">queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;SmartProcessingQueue[Any, Any, T]&quot;</span><span class="p">],</span> 
-        <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_Key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;SmartProcessingQueue[Any, Any, T]&quot;</span><span class="p">],</span>
+        <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_Key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
@@ -142,26 +149,30 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">WeakSet</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="n">SmartFuture</span><span class="o">.</span><span class="n">_self_done_cleanup_callback</span><span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> key=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="si">}</span><span class="s2"> waiters=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_waiters</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;SmartFuture[T]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;heap considers lower values as higher priority so a future with more waiters will be &#39;less than&#39; a future with less waiters.&quot;&quot;&quot;</span>
-        <span class="c1">#other = other_ref()</span>
-        <span class="c1">#if other is None:</span>
+        <span class="c1"># other = other_ref()</span>
+        <span class="c1"># if other is None:</span>
         <span class="c1">#    # garbage collected refs should always process first so they can be popped from the queue</span>
         <span class="c1">#    return False</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_waiters</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">num_waiters</span></div>
+
 
 
 <div class="viewcode-block" id="create_future">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.create_future">[docs]</a>
 <span class="k">def</span> <span class="nf">create_future</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;SmartProcessingQueue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-    <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_Key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+    <span class="n">queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;SmartProcessingQueue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_Key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartFuture</span><span class="p">[</span><span class="n">V</span><span class="p">]:</span>
     <span class="k">return</span> <span class="n">SmartFuture</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span> <span class="ow">or</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">())</span></div>
+
 
 
 <div class="viewcode-block" id="SmartTask">
@@ -170,10 +181,10 @@
 <div class="viewcode-block" id="SmartTask.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.SmartTask.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> 
-        <span class="n">coro</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> 
-        <span class="o">*</span><span class="p">,</span> 
-        <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">coro</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">coro</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
@@ -182,22 +193,26 @@
 </div>
 
 
+
 <div class="viewcode-block" id="smart_task_factory">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.smart_task_factory">[docs]</a>
-<span class="k">def</span> <span class="nf">smart_task_factory</span><span class="p">(</span><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">,</span> <span class="n">coro</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SmartTask</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">smart_task_factory</span><span class="p">(</span>
+    <span class="n">loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">,</span> <span class="n">coro</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartTask</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Task factory function that an event loop calls to create new tasks.</span>
-<span class="sd">     </span>
+
 <span class="sd">    This factory function utilizes ez-a-sync&#39;s custom :class:`~SmartTask` implementation.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        loop: The event loop.</span>
 <span class="sd">        coro: The coroutine to run in the task.</span>
-<span class="sd">        </span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        A SmartTask instance running the provided coroutine.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">SmartTask</span><span class="p">(</span><span class="n">coro</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="set_smart_task_factory">
@@ -205,7 +220,7 @@
 <span class="k">def</span> <span class="nf">set_smart_task_factory</span><span class="p">(</span><span class="n">loop</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set the event loop&#39;s task factory to :func:`~smart_task_factory` so all tasks will be SmartTask instances.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        loop: Optional; the event loop. If None, the current event loop is used.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -214,9 +229,12 @@
     <span class="n">loop</span><span class="o">.</span><span class="n">set_task_factory</span><span class="p">(</span><span class="n">smart_task_factory</span><span class="p">)</span></div>
 
 
+
 <div class="viewcode-block" id="shield">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.shield">[docs]</a>
-<span class="k">def</span> <span class="nf">shield</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartFuture</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">shield</span><span class="p">(</span>
+    <span class="n">arg</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartFuture</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wait for a future, shielding it from cancellation.</span>
 
@@ -244,9 +262,12 @@
 <span class="sd">            res = None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">loop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;The loop argument is deprecated since Python 3.8, &quot;</span>
-                      <span class="s2">&quot;and scheduled for removal in Python 3.10.&quot;</span><span class="p">,</span>
-                      <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;The loop argument is deprecated since Python 3.8, &quot;</span>
+            <span class="s2">&quot;and scheduled for removal in Python 3.10.&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
     <span class="n">inner</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">ensure_future</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">inner</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
         <span class="c1"># Shortcut.</span>
@@ -256,6 +277,7 @@
     <span class="c1"># special handling to connect SmartFutures to SmartTasks if enabled</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">waiters</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="s2">&quot;_waiters&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">waiters</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">outer</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">_inner_done_callback</span><span class="p">(</span><span class="n">inner</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">outer</span><span class="o">.</span><span class="n">cancelled</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">inner</span><span class="o">.</span><span class="n">cancelled</span><span class="p">():</span>
@@ -282,7 +304,14 @@
 
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;create_future&quot;</span><span class="p">,</span> <span class="s2">&quot;shield&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">,</span> <span class="s2">&quot;smart_task_factory&quot;</span><span class="p">,</span> <span class="s2">&quot;set_smart_task_factory&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;create_future&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;shield&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SmartTask&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;smart_task_factory&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;set_smart_task_factory&quot;</span><span class="p">,</span>
+<span class="p">]</span>
 </pre></div>
 
            </div>

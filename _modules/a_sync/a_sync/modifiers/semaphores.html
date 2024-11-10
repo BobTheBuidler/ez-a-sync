@@ -86,20 +86,23 @@
 <span class="k">def</span> <span class="nf">apply_semaphore</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">semaphore</span><span class="p">:</span> <span class="n">SemaphoreSpec</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">apply_semaphore</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">SemaphoreSpec</span><span class="p">,</span>
     <span class="n">semaphore</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">apply_semaphore</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">semaphore</span><span class="p">:</span> <span class="n">SemaphoreSpec</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span><span class="o">...</span>
-    
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+
+
 <div class="viewcode-block" id="apply_semaphore">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.semaphores.apply_semaphore">[docs]</a>
 <span class="k">def</span> <span class="nf">apply_semaphore</span><span class="p">(</span>
@@ -112,31 +115,35 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You can only pass in one arg.&quot;</span><span class="p">)</span>
         <span class="n">semaphore</span> <span class="o">=</span> <span class="n">coro_fn</span>
         <span class="n">coro_fn</span> <span class="o">=</span> <span class="kc">None</span>
-        
+
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FunctionNotAsync</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">)</span>
-        
+
     <span class="c1"># Create the semaphore if necessary</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">semaphore</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">semaphore</span> <span class="o">=</span> <span class="n">primitives</span><span class="o">.</span><span class="n">ThreadsafeSemaphore</span><span class="p">(</span><span class="n">semaphore</span><span class="p">)</span>
     <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">semaphore</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;semaphore&#39; must either be an integer or a Semaphore object. You passed </span><span class="si">{</span><span class="n">semaphore</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&#39;semaphore&#39; must either be an integer or a Semaphore object. You passed </span><span class="si">{</span><span class="n">semaphore</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
     <span class="c1"># Create and return the decorator</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">semaphore</span><span class="p">,</span> <span class="n">primitives</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">):</span>
         <span class="c1"># NOTE: Our `Semaphore` primitive can be used as a decorator.</span>
         <span class="c1">#       While you can use it the `async with` way like any other semaphore and we could make this code section cleaner,</span>
         <span class="c1">#       applying it as a decorator adds some useful info to its debug logs so we do that here if we can.</span>
         <span class="n">semaphore_decorator</span> <span class="o">=</span> <span class="n">semaphore</span>
-    
+
     <span class="k">else</span><span class="p">:</span>
+
         <span class="k">def</span> <span class="nf">semaphore_decorator</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
             <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">def</span> <span class="nf">semaphore_wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
                 <span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>  <span class="c1"># type: ignore [union-attr]</span>
                     <span class="k">return</span> <span class="k">await</span> <span class="n">coro_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
             <span class="k">return</span> <span class="n">semaphore_wrap</span>
-        
+
     <span class="k">return</span> <span class="n">semaphore_decorator</span> <span class="k">if</span> <span class="n">coro_fn</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">semaphore_decorator</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">)</span></div>
 
 

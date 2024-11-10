@@ -78,28 +78,67 @@
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">tqdm.asyncio</span> <span class="kn">import</span> <span class="n">tqdm_asyncio</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
     <span class="k">class</span> <span class="nc">tqdm_asyncio</span><span class="p">:</span>  <span class="c1"># type: ignore [no-redef]</span>
         <span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s2">&quot;You must have tqdm installed to use this feature&quot;</span><span class="p">)</span>
-        
+
+
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.iter</span> <span class="kn">import</span> <span class="n">ASyncIterator</span>
 
+
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Coroutine</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">T</span><span class="p">]]:</span>
-    <span class="o">...</span>
+<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span>
+    <span class="n">fs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Coroutine</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">T</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-    <span class="o">...</span>
+<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span>
+    <span class="n">fs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Coroutine</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]]:</span>
-    <span class="o">...</span>
+<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span>
+    <span class="n">fs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Coroutine</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span>
-    <span class="o">...</span>
+<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span>
+    <span class="n">fs</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span> <span class="o">...</span>
 <div class="viewcode-block" id="as_completed">
 <a class="viewcode-back" href="../../../source/a_sync.asyncio.html#a_sync.as_completed">[docs]</a>
-<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">aiter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">as_completed</span><span class="p">(</span>
+    <span class="n">fs</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">aiter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Concurrently awaits a list of awaitable objects or mappings of awaitables and returns an iterator of results.</span>
 
@@ -129,43 +168,79 @@
 <span class="sd">        for coro in as_completed(awaitables):</span>
 <span class="sd">            val = await coro</span>
 <span class="sd">            ...</span>
-<span class="sd">            </span>
+
 <span class="sd">        async for val in as_completed(awaitables, aiter=True):</span>
 <span class="sd">            ...</span>
 <span class="sd">        ```</span>
-<span class="sd">        </span>
+
 <span class="sd">        Awaiting mappings of awaitables:</span>
 <span class="sd">        ```</span>
 <span class="sd">        mapping = {&#39;key1&#39;: async_function1(), &#39;key2&#39;: async_function2()}</span>
-<span class="sd">        </span>
+
 <span class="sd">        for coro in as_completed(mapping):</span>
 <span class="sd">            k, v = await coro</span>
 <span class="sd">            ...</span>
-<span class="sd">            </span>
+
 <span class="sd">        async for k, v in as_completed(mapping, aiter=True):</span>
 <span class="sd">            ...</span>
 <span class="sd">        ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">as_completed_mapping</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="nb">aiter</span><span class="p">,</span> <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">)</span> 
+        <span class="k">return</span> <span class="n">as_completed_mapping</span><span class="p">(</span>
+            <span class="n">fs</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+            <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span>
+            <span class="nb">aiter</span><span class="o">=</span><span class="nb">aiter</span><span class="p">,</span>
+            <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">tqdm_kwargs</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">return_exceptions</span><span class="p">:</span>
         <span class="n">fs</span> <span class="o">=</span> <span class="p">[</span><span class="n">_exc_wrap</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fs</span><span class="p">]</span>
     <span class="k">return</span> <span class="p">(</span>
-        <span class="n">ASyncIterator</span><span class="p">(</span><span class="n">__yield_as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">))</span> <span class="k">if</span> <span class="nb">aiter</span> 
-        <span class="k">else</span> <span class="n">tqdm_asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="n">tqdm</span> 
-        <span class="k">else</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="n">ASyncIterator</span><span class="p">(</span>
+            <span class="n">__yield_as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">aiter</span>
+        <span class="k">else</span> <span class="p">(</span>
+            <span class="n">tqdm_asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tqdm</span>
+            <span class="k">else</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="p">)</span>
     <span class="p">)</span></div>
 
 
+
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_completed_mapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span>
-    <span class="o">...</span>
+<span class="k">def</span> <span class="nf">as_completed_mapping</span><span class="p">(</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_completed_mapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Coroutine</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]]:</span>
-    <span class="o">...</span>
+<span class="k">def</span> <span class="nf">as_completed_mapping</span><span class="p">(</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">aiter</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Coroutine</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]]:</span> <span class="o">...</span>
 <div class="viewcode-block" id="as_completed_mapping">
 <a class="viewcode-back" href="../../../source/a_sync.asyncio.html#a_sync.as_completed_mapping">[docs]</a>
-<span class="k">def</span> <span class="nf">as_completed_mapping</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">aiter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterator</span><span class="p">[</span><span class="n">Coroutine</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]],</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]]:</span>
+<span class="k">def</span> <span class="nf">as_completed_mapping</span><span class="p">(</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">aiter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterator</span><span class="p">[</span><span class="n">Coroutine</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]],</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Concurrently awaits a mapping of awaitable objects and returns an iterator or async iterator of results.</span>
 
@@ -185,16 +260,26 @@
 <span class="sd">    Example:</span>
 <span class="sd">        ```</span>
 <span class="sd">        mapping = {&#39;key1&#39;: async_function1(), &#39;key2&#39;: async_function2()}</span>
-<span class="sd">        </span>
+
 <span class="sd">        for coro in as_completed_mapping(mapping):</span>
 <span class="sd">            k, v = await coro</span>
 <span class="sd">            ...</span>
-<span class="sd">            </span>
+
 <span class="sd">        async for k, v in as_completed_mapping(mapping, aiter=True):</span>
 <span class="sd">            ...</span>
 <span class="sd">        ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">as_completed</span><span class="p">([</span><span class="n">__mapping_wrap</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()],</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="nb">aiter</span><span class="p">,</span> <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">as_completed</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">__mapping_wrap</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">],</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+        <span class="nb">aiter</span><span class="o">=</span><span class="nb">aiter</span><span class="p">,</span>
+        <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">tqdm_kwargs</span>
+    <span class="p">)</span></div>
+
 
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">_exc_wrap</span><span class="p">(</span><span class="n">awaitable</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">]:</span>
@@ -202,22 +287,44 @@
         <span class="k">return</span> <span class="k">await</span> <span class="n">awaitable</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">e</span>
-    
-<span class="k">async</span> <span class="k">def</span> <span class="nf">__yield_as_completed</span><span class="p">(</span><span class="n">futs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-    <span class="k">for</span> <span class="n">fut</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span> <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span> <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">):</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">__yield_as_completed</span><span class="p">(</span>
+    <span class="n">futs</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">fut</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span>
+        <span class="n">futs</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+        <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span>
+        <span class="n">tqdm</span><span class="o">=</span><span class="n">tqdm</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">tqdm_kwargs</span>
+    <span class="p">):</span>
         <span class="k">yield</span> <span class="k">await</span> <span class="n">fut</span>
 
+
 <span class="nd">@overload</span>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">__mapping_wrap</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">],</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">V</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">]:</span><span class="o">...</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">__mapping_wrap</span><span class="p">(</span>
+    <span class="n">k</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">],</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">V</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">__mapping_wrap</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">],</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">V</span><span class="p">:</span><span class="o">...</span>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">__mapping_wrap</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">],</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">V</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">]:</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">__mapping_wrap</span><span class="p">(</span>
+    <span class="n">k</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">],</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">False</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">V</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">__mapping_wrap</span><span class="p">(</span>
+    <span class="n">k</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">],</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">V</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">]:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">k</span><span class="p">,</span> <span class="k">await</span> <span class="n">v</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">return_exceptions</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">k</span><span class="p">,</span> <span class="n">e</span>
         <span class="k">raise</span>
+
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;as_completed&quot;</span><span class="p">,</span> <span class="s2">&quot;as_completed_mapping&quot;</span><span class="p">]</span>
 </pre></div>
