@@ -31,6 +31,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     min: ASyncFunction[AnyIterable[I], T]
     max: ASyncFunction[AnyIterable[I], T]
     sum: ASyncFunction[AnyIterable[I], T]
+    hidden_method_descriptor: HiddenMethodDescriptor[T]
     __wrapped__: Callable[[I], T]
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
 
@@ -44,11 +45,9 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
         hidden_modifiers["default"] = "async"
-        self.hidden_method_descriptor: HiddenMethodDescriptor[T] = (
-            HiddenMethodDescriptor(
+        self.hidden_method_descriptor=HiddenMethodDescriptor(
                 self.get, self.hidden_method_name, **hidden_modifiers
             )
-        )
         if asyncio.iscoroutinefunction(_fget):
             self._fget = self.__wrapped__
         else:
