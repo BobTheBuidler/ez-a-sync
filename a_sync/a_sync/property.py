@@ -31,7 +31,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     min: ASyncFunction[AnyIterable[I], T]
     max: ASyncFunction[AnyIterable[I], T]
     sum: ASyncFunction[AnyIterable[I], T]
-    hidden_method_descriptor: HiddenMethodDescriptor[T]
+    hidden_method_descriptor: "HiddenMethodDescriptor[T]"
     __wrapped__: Callable[[I], T]
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
 
