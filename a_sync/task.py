@@ -107,7 +107,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self.concurrency = concurrency
 
         self.__wrapped__ = wrapped_func
-        "The original callable used to initialize this mapping without any modifications." ""
+        "The original callable used to initialize this mapping without any modifications."
 
         if iterables:
             self.__iterables__ = iterables
