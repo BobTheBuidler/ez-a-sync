@@ -23,7 +23,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     name: Optional[str]
     _value: int
     _waiters: List["_AbstractPrioritySemaphoreContextManager[PT]"]  # type: ignore [assignment]
-    _context_managers: Dict[PT, '_AbstractPrioritySemaphoreContextManager[PT]']
+    _context_managers: Dict[PT, "_AbstractPrioritySemaphoreContextManager[PT]"]
     __slots__ = (
         "name",
         "_value",
