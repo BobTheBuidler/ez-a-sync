@@ -9,7 +9,7 @@ from a_sync._typing import *
 
 
 def future(
-    callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None,
+    callable: AnyFn[P, T] = None,
     **kwargs: Unpack[ModifierKwargs],
 ) -> Callable[P, Union[T, "ASyncFuture[T]"]]:
     return _ASyncFutureWrappedFn(callable, **kwargs)
@@ -771,7 +771,7 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
 
     def __init__(
         self,
-        callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None,
+        callable: AnyFn[P, T] = None,
         **kwargs: Unpack[ModifierKwargs],
     ):
         from a_sync import a_sync
