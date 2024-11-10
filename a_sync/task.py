@@ -76,7 +76,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     "Additional keyword arguments passed to `_wrapped_func`."
 
     __iterables__: Tuple[AnyIterableOrAwaitableIterable[K], ...] = ()
-    "The original iterables, if any, used to initialize this mapping." ""
+    "The original iterables, if any, used to initialize this mapping."
 
     __init_loader_coro: Optional[Awaitable[None]] = None
     """An optional asyncio Coroutine to be run by the `_init_loader`"""
