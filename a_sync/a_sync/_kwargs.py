@@ -25,8 +25,9 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
     if len(present_flags) == 0:
         return None
     if len(present_flags) != 1:
-        raise exceptions.TooManyFlags('kwargs', present_flags)
+        raise exceptions.TooManyFlags("kwargs", present_flags)
     return present_flags[0]
+
 
 def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:
     """

@@ -16,7 +16,11 @@ from inspect import isawaitable
 from a_sync._typing import *
 from a_sync.a_sync import _helpers, _kwargs
 from a_sync.a_sync._descriptor import ASyncDescriptor
-from a_sync.a_sync.function import ASyncFunction, ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault
+from a_sync.a_sync.function import (
+    ASyncFunction,
+    ASyncFunctionAsyncDefault,
+    ASyncFunctionSyncDefault,
+)
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
@@ -24,9 +28,10 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+
 class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     """
-    This class provides the core functionality for creating :class:`ASyncBoundMethod` objects, 
+    This class provides the core functionality for creating :class:`ASyncBoundMethod` objects,
     which can be used to define methods that can be called both synchronously and asynchronously.
     """
 
@@ -46,14 +51,22 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             The result of the method call.
         """
         # NOTE: This is only used by TaskMapping atm  # TODO: use it elsewhere
-        logger.debug("awaiting %s for instance: %s args: %s kwargs: %s", self, instance, args, kwargs)
+        logger.debug(
+            "awaiting %s for instance: %s args: %s kwargs: %s",
+            self,
+            instance,
+            args,
+            kwargs,
+        )
         return await self.__get__(instance, None)(*args, **kwargs)
 
     @overload
-    def __get__(self, instance: None, owner: Type[I]) -> Self:...
+    def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
-    def __get__(self, instance: I, owner: Type[I]) -> "ASyncBoundMethod[I, P, T]":...
-    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[Self, "ASyncBoundMethod[I, P, T]"]:
+    def __get__(self, instance: I, owner: Type[I]) -> "ASyncBoundMethod[I, P, T]": ...
+    def __get__(
+        self, instance: Optional[I], owner: Type[I]
+    ) -> Union[Self, "ASyncBoundMethod[I, P, T]"]:
         """
         Get the bound method or the descriptor itself.
 
@@ -72,20 +85,42 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             bound._cache_handle.cancel()
         except KeyError:
             from a_sync.a_sync.abstract import ASyncABC
+
             if self.default == "sync":
-                bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
+                bound = ASyncBoundMethodSyncDefault(
+                    instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+                )
             elif self.default == "async":
-                bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
+                bound = ASyncBoundMethodAsyncDefault(
+                    instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+                )
             elif isinstance(instance, ASyncABC):
                 try:
                     if instance.__a_sync_instance_should_await__:
-                        bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
+                        bound = ASyncBoundMethodSyncDefault(
+                            instance,
+                            self.__wrapped__,
+                            self.__is_async_def__,
+                            **self.modifiers,
+                        )
                     else:
-                        bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
+                        bound = ASyncBoundMethodAsyncDefault(
+                            instance,
+                            self.__wrapped__,
+                            self.__is_async_def__,
+                            **self.modifiers,
+                        )
                 except AttributeError:
-                    bound = ASyncBoundMethod(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
+                    bound = ASyncBoundMethod(
+                        instance,
+                        self.__wrapped__,
+                        self.__is_async_def__,
+                        **self.modifiers,
+                    )
             else:
-                bound = ASyncBoundMethod(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
+                bound = ASyncBoundMethod(
+                    instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+                )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
         # Handler for popping unused bound methods from bound method cache
@@ -103,7 +138,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         Raises:
             :class:`RuntimeError`: Always raised to prevent setting.
         """
-        raise RuntimeError(f"cannot set {self.field_name}, {self} is what you get. sorry.")
+        raise RuntimeError(
+            f"cannot set {self.field_name}, {self} is what you get. sorry."
+        )
 
     def __delete__(self, instance):
         """
@@ -115,7 +152,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         Raises:
             :class:`RuntimeError`: Always raised to prevent deletion.
         """
-        raise RuntimeError(f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry.")
+        raise RuntimeError(
+            f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry."
+        )
 
     @functools.cached_property
     def __is_async_def__(self) -> bool:
@@ -138,7 +177,10 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             A timer handle for cache management.
         """
         # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
-        return asyncio.get_event_loop().call_later(300, instance.__dict__.pop, self.field_name)
+        return asyncio.get_event_loop().call_later(
+            300, instance.__dict__.pop, self.field_name
+        )
+
 
 @final
 class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
@@ -168,10 +210,18 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
     """Synchronous default version of the :meth:`~ASyncMethodDescriptor.sum` method."""
 
     @overload
-    def __get__(self, instance: None, owner: Type[I] = None) -> "ASyncMethodDescriptorSyncDefault[I, P, T]":...
+    def __get__(
+        self, instance: None, owner: Type[I] = None
+    ) -> "ASyncMethodDescriptorSyncDefault[I, P, T]": ...
     @overload
-    def __get__(self, instance: I, owner: Type[I] = None) -> "ASyncBoundMethodSyncDefault[I, P, T]":...
-    def __get__(self, instance: Optional[I], owner: Type[I] = None) -> "Union[ASyncMethodDescriptorSyncDefault, ASyncBoundMethodSyncDefault[I, P, T]]":
+    def __get__(
+        self, instance: I, owner: Type[I] = None
+    ) -> "ASyncBoundMethodSyncDefault[I, P, T]": ...
+    def __get__(
+        self, instance: Optional[I], owner: Type[I] = None
+    ) -> (
+        "Union[ASyncMethodDescriptorSyncDefault, ASyncBoundMethodSyncDefault[I, P, T]]"
+    ):
         """
         Get the bound method or the descriptor itself.
 
@@ -189,12 +239,15 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
             # we will set a new one in the finally block
             bound._cache_handle.cancel()
         except KeyError:
-            bound = ASyncBoundMethodSyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
+            bound = ASyncBoundMethodSyncDefault(
+                instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+            )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
         # Handler for popping unused bound methods from bound method cache
         bound._cache_handle = self._get_cache_handle(instance)
         return bound
+
 
 @final
 class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
@@ -213,21 +266,27 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
 
     all: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], bool]
     """Asynchronous default version of the :meth:`~ASyncMethodDescriptor.all` method."""
-    
+
     min: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], T]
     """Asynchronous default version of the :meth:`~ASyncMethodDescriptor.min` method."""
-    
+
     max: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], T]
     """Asynchronous default version of the :meth:`~ASyncMethodDescriptor.max` method."""
-    
+
     sum: ASyncFunctionAsyncDefault[Concatenate[AnyIterable[I], P], T]
     """Asynchronous default version of the :meth:`~ASyncMethodDescriptor.sum` method."""
 
     @overload
-    def __get__(self, instance: None, owner: Type[I]) -> "ASyncMethodDescriptorAsyncDefault[I, P, T]":...
+    def __get__(
+        self, instance: None, owner: Type[I]
+    ) -> "ASyncMethodDescriptorAsyncDefault[I, P, T]": ...
     @overload
-    def __get__(self, instance: I, owner: Type[I]) -> "ASyncBoundMethodAsyncDefault[I, P, T]":...
-    def __get__(self, instance: Optional[I], owner: Type[I]) -> "Union[ASyncMethodDescriptorAsyncDefault, ASyncBoundMethodAsyncDefault[I, P, T]]":
+    def __get__(
+        self, instance: I, owner: Type[I]
+    ) -> "ASyncBoundMethodAsyncDefault[I, P, T]": ...
+    def __get__(
+        self, instance: Optional[I], owner: Type[I]
+    ) -> "Union[ASyncMethodDescriptorAsyncDefault, ASyncBoundMethodAsyncDefault[I, P, T]]":
         """
         Get the bound method or the descriptor itself.
 
@@ -245,12 +304,15 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
             # we will set a new one in the finally block
             bound._cache_handle.cancel()
         except KeyError:
-            bound = ASyncBoundMethodAsyncDefault(instance, self.__wrapped__, self.__is_async_def__, **self.modifiers)
+            bound = ASyncBoundMethodAsyncDefault(
+                instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+            )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
         # Handler for popping unused bound methods from bound method cache
         bound._cache_handle = self._get_cache_handle(instance)
         return bound
+
 
 class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     """
@@ -259,6 +321,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     This class represents a method bound to an instance, which can be called
     either synchronously or asynchronously based on various conditions.
     """
+
     # NOTE: this is created by the Descriptor
 
     _cache_handle: asyncio.TimerHandle
@@ -273,9 +336,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     __slots__ = "_is_async_def", "__weakself__"
 
     def __init__(
-        self, 
-        instance: I, 
-        unbound: AnyFn[Concatenate[I, P], T], 
+        self,
+        instance: I,
+        unbound: AnyFn[Concatenate[I, P], T],
         async_def: bool,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
@@ -312,15 +375,21 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             return f"<{self.__class__.__name__} for function COLLECTED.COLLECTED.{self.__name__} bound to {self.__weakself__}>"
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
     @overload
-    def __call__(self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:...
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T:...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: ...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """
         Call the bound method.
@@ -345,9 +414,13 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             pass
         elif self._should_await(kwargs):
             # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-            logger.debug("awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs)
+            logger.debug(
+                "awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs
+            )
             retval = _helpers._await(coro)
-        logger.debug("returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs)
+        logger.debug(
+            "returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs
+        )
         return retval  # type: ignore [call-overload, return-value]
 
     @property
@@ -375,9 +448,16 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             True if bound to an ASyncABC instance, False otherwise.
         """
         from a_sync.a_sync.abstract import ASyncABC
+
         return isinstance(self.__self__, ASyncABC)
 
-    def map(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> "TaskMapping[I, T]":
+    def map(
+        self,
+        *iterables: AnyIterable[I],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **kwargs: P.kwargs,
+    ) -> "TaskMapping[I, T]":
         """
         Create a TaskMapping for this method.
 
@@ -391,9 +471,18 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             A TaskMapping instance for this method.
         """
         from a_sync import TaskMapping
-        return TaskMapping(self, *iterables, concurrency=concurrency, name=task_name, **kwargs)
 
-    async def any(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> bool:
+        return TaskMapping(
+            self, *iterables, concurrency=concurrency, name=task_name, **kwargs
+        )
+
+    async def any(
+        self,
+        *iterables: AnyIterable[I],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **kwargs: P.kwargs,
+    ) -> bool:
         """
         Check if any of the results are truthy.
 
@@ -406,9 +495,17 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         Returns:
             True if any result is truthy, False otherwise.
         """
-        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).any(pop=True, sync=False)
+        return await self.map(
+            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
+        ).any(pop=True, sync=False)
 
-    async def all(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> bool:
+    async def all(
+        self,
+        *iterables: AnyIterable[I],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **kwargs: P.kwargs,
+    ) -> bool:
         """
         Check if all of the results are truthy.
 
@@ -421,9 +518,17 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         Returns:
             True if all results are truthy, False otherwise.
         """
-        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).all(pop=True, sync=False)
+        return await self.map(
+            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
+        ).all(pop=True, sync=False)
 
-    async def min(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> T:
+    async def min(
+        self,
+        *iterables: AnyIterable[I],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **kwargs: P.kwargs,
+    ) -> T:
         """
         Find the minimum result.
 
@@ -436,9 +541,17 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         Returns:
             The minimum result.
         """
-        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).min(pop=True, sync=False)
+        return await self.map(
+            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
+        ).min(pop=True, sync=False)
 
-    async def max(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> T:
+    async def max(
+        self,
+        *iterables: AnyIterable[I],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **kwargs: P.kwargs,
+    ) -> T:
         """
         Find the maximum result.
 
@@ -451,9 +564,17 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         Returns:
             The maximum result.
         """
-        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).max(pop=True, sync=False)
+        return await self.map(
+            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
+        ).max(pop=True, sync=False)
 
-    async def sum(self, *iterables: AnyIterable[I], concurrency: Optional[int] = None, task_name: str = "", **kwargs: P.kwargs) -> T:
+    async def sum(
+        self,
+        *iterables: AnyIterable[I],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **kwargs: P.kwargs,
+    ) -> T:
         """
         Calculate the sum of the results.
 
@@ -466,7 +587,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         Returns:
             The sum of the results.
         """
-        return await self.map(*iterables, concurrency=concurrency, task_name=task_name, **kwargs).sum(pop=True, sync=False)
+        return await self.map(
+            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
+        ).sum(pop=True, sync=False)
 
     def _should_await(self, kwargs: dict) -> bool:
         """
@@ -503,7 +626,9 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     A bound method with synchronous default behavior.
     """
 
-    def __get__(self, instance: Optional[I], owner: Type[I]) -> ASyncFunctionSyncDefault[P, T]:
+    def __get__(
+        self, instance: Optional[I], owner: Type[I]
+    ) -> ASyncFunctionSyncDefault[P, T]:
         """
         Get the bound method or descriptor.
 
@@ -517,15 +642,21 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
         return ASyncBoundMethod.__get__(self, instance, owner)
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
     @overload
-    def __call__(self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:...
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T:...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:
         """
         Call the bound method with synchronous default behavior.
@@ -538,6 +669,7 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
             The result of the method call.
         """
         return ASyncBoundMethod.__call__(self, *args, **kwargs)
+
 
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     """
@@ -558,15 +690,21 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
         return ASyncBoundMethod.__get__(self, instance, owner)
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
     @overload
-    def __call__(self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:...
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T:...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:
         """
         Call the bound method with asynchronous default behavior.

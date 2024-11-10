@@ -3,40 +3,50 @@ import pytest
 
 from a_sync import TaskMapping, create_task, exceptions
 
+
 @pytest.mark.asyncio_cooperative
 async def test_create_task():
-    await create_task(coro=asyncio.sleep(0), name='test')
+    await create_task(coro=asyncio.sleep(0), name="test")
+
 
 @pytest.mark.asyncio_cooperative
 async def test_persistent_task():
     check = False
+
     async def task():
         await asyncio.sleep(1)
         nonlocal check
         check = True
+
     create_task(coro=task(), skip_gc_until_done=True)
-    # there is no local reference to the newly created task. does it still complete? 
+    # there is no local reference to the newly created task. does it still complete?
     await asyncio.sleep(2)
     assert check is True
+
 
 @pytest.mark.asyncio_cooperative
 async def test_pruning():
     async def task():
         return
+
     create_task(coro=task(), skip_gc_until_done=True)
     await asyncio.sleep(0)
     # previously, it failed here
     create_task(coro=task(), skip_gc_until_done=True)
 
+
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_init():
     tasks = TaskMapping(_coro_fn)
-    assert tasks._wrapped_func is _coro_fn, f"{tasks._wrapped_func} , {_coro_fn}, {tasks._wrapped_func == _coro_fn}"
+    assert (
+        tasks._wrapped_func is _coro_fn
+    ), f"{tasks._wrapped_func} , {_coro_fn}, {tasks._wrapped_func == _coro_fn}"
     assert tasks._wrapped_func_kwargs == {}
     assert tasks._name is None
-    tasks = TaskMapping(_coro_fn, name='test', kwarg0=1, kwarg1=None)
-    assert tasks._wrapped_func_kwargs == {'kwarg0': 1, 'kwarg1': None}
+    tasks = TaskMapping(_coro_fn, name="test", kwarg0=1, kwarg1=None)
+    assert tasks._wrapped_func_kwargs == {"kwarg0": 1, "kwarg1": None}
     assert tasks._name == "test"
+
 
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping():
@@ -52,9 +62,16 @@ async def test_task_mapping():
     # can we await the mapping?
     assert await tasks == {0: "1", 1: "22"}
     # can we await one from scratch?
-    assert await TaskMapping(_coro_fn, range(5)) == {0: "1", 1: "22", 2: "333", 3: "4444", 4: "55555"}
+    assert await TaskMapping(_coro_fn, range(5)) == {
+        0: "1",
+        1: "22",
+        2: "333",
+        3: "4444",
+        4: "55555",
+    }
     assert len(tasks) == 2
-    
+
+
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_map_with_sync_iter():
     tasks = TaskMapping(_coro_fn)
@@ -69,9 +86,9 @@ async def test_task_mapping_map_with_sync_iter():
                     ...
         i += 1
     tasks = TaskMapping(_coro_fn)
-    async for k in tasks.map(range(5), pop=False, yields='keys'):
+    async for k in tasks.map(range(5), pop=False, yields="keys"):
         assert isinstance(k, int)
-    
+
     # test keys
     for k in tasks.keys():
         assert isinstance(k, int)
@@ -81,7 +98,7 @@ async def test_task_mapping_map_with_sync_iter():
         assert isinstance(k, int)
     async for k in tasks.keys():
         assert isinstance(k, int)
-    
+
     # test values
     for v in tasks.values():
         assert isinstance(v, asyncio.Future)
@@ -92,7 +109,7 @@ async def test_task_mapping_map_with_sync_iter():
         assert isinstance(v, str)
     async for v in tasks.values():
         assert isinstance(v, str)
-    
+
     # test items
     for k, v in tasks.items():
         assert isinstance(k, int)
@@ -106,12 +123,14 @@ async def test_task_mapping_map_with_sync_iter():
     async for k, v in tasks.items():
         assert isinstance(k, int)
         assert isinstance(v, str)
-    
+
+
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_map_with_async_iter():
     async def async_iter():
         for i in range(5):
             yield i
+
     tasks = TaskMapping(_coro_fn)
     i = 0
     async for k, v in tasks.map(async_iter()):
@@ -124,9 +143,9 @@ async def test_task_mapping_map_with_async_iter():
                     ...
         i += 1
     tasks = TaskMapping(_coro_fn)
-    async for k in tasks.map(async_iter(), pop=False, yields='keys'):
+    async for k in tasks.map(async_iter(), pop=False, yields="keys"):
         assert isinstance(k, int)
-    
+
     # test keys
     for k in tasks.keys():
         assert isinstance(k, int)
@@ -138,9 +157,13 @@ async def test_task_mapping_map_with_async_iter():
         assert isinstance(k, int)
     assert await tasks.keys().aiterbykeys() == list(range(5))
     assert await tasks.keys().aiterbyvalues() == list(range(5))
-    assert await tasks.keys().aiterbykeys(reverse=True) == sorted(range(5), reverse=True)
-    assert await tasks.keys().aiterbyvalues(reverse=True) == sorted(range(5), reverse=True)
-    
+    assert await tasks.keys().aiterbykeys(reverse=True) == sorted(
+        range(5), reverse=True
+    )
+    assert await tasks.keys().aiterbyvalues(reverse=True) == sorted(
+        range(5), reverse=True
+    )
+
     # test values
     for v in tasks.values():
         assert isinstance(v, asyncio.Future)
@@ -153,9 +176,13 @@ async def test_task_mapping_map_with_async_iter():
         assert isinstance(v, str)
     assert await tasks.values().aiterbykeys() == [str(i) * i for i in range(1, 6)]
     assert await tasks.values().aiterbyvalues() == [str(i) * i for i in range(1, 6)]
-    assert await tasks.values().aiterbykeys(reverse=True) == [str(i) * i for i in sorted(range(1, 6), reverse=True)]
-    assert await tasks.values().aiterbyvalues(reverse=True) == [str(i) * i for i in sorted(range(1, 6), reverse=True)]
-    
+    assert await tasks.values().aiterbykeys(reverse=True) == [
+        str(i) * i for i in sorted(range(1, 6), reverse=True)
+    ]
+    assert await tasks.values().aiterbyvalues(reverse=True) == [
+        str(i) * i for i in sorted(range(1, 6), reverse=True)
+    ]
+
     # test items
     for k, v in tasks.items():
         assert isinstance(k, int)
@@ -169,20 +196,29 @@ async def test_task_mapping_map_with_async_iter():
     async for k, v in tasks.items():
         assert isinstance(k, int)
         assert isinstance(v, str)
-    assert await tasks.items().aiterbykeys() == [(i, str(i+1) * (i+1)) for i in range(5)]
-    assert await tasks.items().aiterbyvalues() == [(i, str(i+1) * (i+1)) for i in range(5)]
-    assert await tasks.items().aiterbykeys(reverse=True) == [(i, str(i+1) * (i+1)) for i in sorted(range(5), reverse=True)]
-    assert await tasks.items(pop=True).aiterbyvalues(reverse=True) == [(i, str(i+1) * (i+1)) for i in sorted(range(5), reverse=True)]
+    assert await tasks.items().aiterbykeys() == [
+        (i, str(i + 1) * (i + 1)) for i in range(5)
+    ]
+    assert await tasks.items().aiterbyvalues() == [
+        (i, str(i + 1) * (i + 1)) for i in range(5)
+    ]
+    assert await tasks.items().aiterbykeys(reverse=True) == [
+        (i, str(i + 1) * (i + 1)) for i in sorted(range(5), reverse=True)
+    ]
+    assert await tasks.items(pop=True).aiterbyvalues(reverse=True) == [
+        (i, str(i + 1) * (i + 1)) for i in sorted(range(5), reverse=True)
+    ]
     assert not tasks  # did pop work?
+
 
 def test_taskmapping_views_sync():
     tasks = TaskMapping(_coro_fn, range(5))
-    
+
     # keys are currently empty until the loop has a chance to run
     assert len(tasks.keys()) == 0
     assert len(tasks.values()) == 0
     assert len(tasks.items()) == 0
-    
+
     tasks.gather()
 
     assert len(tasks.keys()) == 5
@@ -195,15 +231,16 @@ def test_taskmapping_views_sync():
     # test values
     for v in tasks.values():
         assert isinstance(v, asyncio.Future)
-    
+
     # test items
     for k, v in tasks.items():
         assert isinstance(k, int)
         assert isinstance(v, asyncio.Future)
-        
+
     assert len(tasks.keys()) == 5
     for k in tasks.keys():
         assert isinstance(k, int)
+
 
 async def _coro_fn(i: int) -> str:
     i += 1

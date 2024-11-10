@@ -7,34 +7,36 @@ from async_lru import alru_cache
 from a_sync import exceptions
 from a_sync._typing import *
 
+
 class CacheKwargs(TypedDict):
     maxsize: Optional[int]
     ttl: Optional[int]
     typed: bool
 
-@overload
-def apply_async_memory_cache(
-    coro_fn: Literal[None],
-    **kwargs: Unpack[CacheKwargs]
-) -> AsyncDecorator[P, T]:...
-    
-@overload
-def apply_async_memory_cache(
-    coro_fn: int,
-    **kwargs: Unpack[CacheKwargs]
-) -> AsyncDecorator[P, T]:...
-    
-@overload
-def apply_async_memory_cache(
-    coro_fn: CoroFn[P, T],
-    **kwargs: Unpack[CacheKwargs]
-) -> CoroFn[P, T]:...
 
 @overload
 def apply_async_memory_cache(
-    coro_fn: Literal[None],
-    **kwargs: Unpack[CacheKwargs]
-) -> AsyncDecorator[P, T]:...
+    coro_fn: Literal[None], **kwargs: Unpack[CacheKwargs]
+) -> AsyncDecorator[P, T]: ...
+
+
+@overload
+def apply_async_memory_cache(
+    coro_fn: int, **kwargs: Unpack[CacheKwargs]
+) -> AsyncDecorator[P, T]: ...
+
+
+@overload
+def apply_async_memory_cache(
+    coro_fn: CoroFn[P, T], **kwargs: Unpack[CacheKwargs]
+) -> CoroFn[P, T]: ...
+
+
+@overload
+def apply_async_memory_cache(
+    coro_fn: Literal[None], **kwargs: Unpack[CacheKwargs]
+) -> AsyncDecorator[P, T]: ...
+
 
 def apply_async_memory_cache(
     coro_fn: Optional[Union[CoroFn[P, T], int]] = None,
@@ -47,14 +49,16 @@ def apply_async_memory_cache(
         assert maxsize is None
         maxsize = coro_fn
         coro_fn = None
-    
-    # Validate 
+
+    # Validate
     elif coro_fn is None:
         if not (maxsize is None or isinstance(maxsize, int)):
-            raise TypeError("'lru_cache_maxsize' must be a positive integer or None.", maxsize)
+            raise TypeError(
+                "'lru_cache_maxsize' must be a positive integer or None.", maxsize
+            )
     elif not asyncio.iscoroutinefunction(coro_fn):
         raise exceptions.FunctionNotAsync(coro_fn)
-    
+
     if maxsize == -1:
         maxsize = None
 

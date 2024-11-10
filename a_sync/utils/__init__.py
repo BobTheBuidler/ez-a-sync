@@ -1,16 +1,16 @@
 import asyncio
 
-from a_sync.utils.iterators import (as_yielded, exhaust_iterator,
-                                    exhaust_iterators)
+from a_sync.utils.iterators import as_yielded, exhaust_iterator, exhaust_iterators
 
 
 __all__ = [
-    #"all",
-    #"any",
+    # "all",
+    # "any",
     "as_yielded",
     "exhaust_iterator",
     "exhaust_iterators",
 ]
+
 
 async def any(*awaitables) -> bool:
     """
@@ -56,12 +56,13 @@ async def any(*awaitables) -> bool:
                 fut.cancel()
             return True
     return False
-    
+
+
 async def all(*awaitables) -> bool:
     """
     Asynchronously evaluates whether all of the given awaitables evaluate to True.
 
-    This function takes multiple awaitable objects and returns True if all of them evaluate to True. It cancels 
+    This function takes multiple awaitable objects and returns True if all of them evaluate to True. It cancels
     the remaining awaitables once a False result is found.
 
     Args:
