@@ -53,9 +53,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         ...     async with aiohttp.ClientSession() as session:
         ...         async with session.get(url) as response:
         ...             return await response.text()
-        ... 
+        ...
         >>> tasks = TaskMapping(fetch_data, name='url_fetcher', concurrency=5)
-        >>> tasks['example.com'] = 
+        >>> tasks['example.com'] =
         >>> tasks['python.org'] = 'https://www.python.org'
         >>> async for key, result in tasks:
         ...     print(f"Data for {key}: {result}")
