@@ -40,8 +40,8 @@ class Queue(_Queue[T]):
     """
     A generic asynchronous queue that extends the functionality of asyncio.Queue.
 
-    This implementation supports retrieving multiple items at once and handling 
-    task processing in both FIFO and LIFO order. It provides enhanced type hinting 
+    This implementation supports retrieving multiple items at once and handling
+    task processing in both FIFO and LIFO order. It provides enhanced type hinting
     support and additional methods for bulk operations.
 
     Inherits from:
@@ -84,7 +84,7 @@ class Queue(_Queue[T]):
 
         Raises:
             :exc:`~asyncio.QueueEmpty`: If the queue is empty.
-        
+
         Returns:
             T: The next item in the queue.
 
@@ -117,7 +117,7 @@ class Queue(_Queue[T]):
 
         Args:
             item: The item to add to the queue.
-        
+
         Raises:
             :exc:`~asyncio.QueueFull`: If the queue is full.
 
@@ -130,7 +130,7 @@ class Queue(_Queue[T]):
         """
         Asynchronously retrieves and removes all available items from the queue.
 
-        If the queue is empty, this method will wait until at least one item 
+        If the queue is empty, this method will wait until at least one item
         is available before returning.
 
         Returns:
@@ -237,7 +237,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     """
     A queue designed for processing tasks asynchronously with multiple workers.
 
-    Each item in the queue is processed by a worker, and tasks can return results 
+    Each item in the queue is processed by a worker, and tasks can return results
     via asynchronous futures. This queue is ideal for scenarios where tasks need
     to be processed concurrently with a fixed number of workers.
 
@@ -614,7 +614,10 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
     A priority-based processing queue where tasks are processed based on priority.
     # NOTE: WIP
     """
-    async def put(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+
+    async def put(
+        self, priority: Any, *args: P.args, **kwargs: P.kwargs
+    ) -> "asyncio.Future[V]":
         """
         Asynchronously adds a task with priority to the queue.
 
@@ -635,7 +638,9 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         await super().put(self, (priority, args, kwargs, fut))
         return fut
 
-    def put_nowait(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+    def put_nowait(
+        self, priority: Any, *args: P.args, **kwargs: P.kwargs
+    ) -> "asyncio.Future[V]":
         """
         Immediately adds a task with priority to the queue without waiting.
 
@@ -711,18 +716,22 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
             >>> print(key)
         """
         return (args, tuple((kwarg, kwargs[kwarg]) for kwarg in sorted(kwargs)))
-    
+
+
 class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueue):
     """
     A :class:`~asyncio.PriorityQueue` subclass that allows priorities to be updated (or computed) on the fly.
     # NOTE: WIP
     """
 
-class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]):
+
+class SmartProcessingQueue(
+    _VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]
+):
     """
     A PriorityProcessingQueue subclass that will execute jobs with the most waiters first
     """
-    
+
     _no_futs = False
     """Whether smart futures are used."""
 
