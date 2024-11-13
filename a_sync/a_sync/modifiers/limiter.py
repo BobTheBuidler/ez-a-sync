@@ -48,11 +48,8 @@ def apply_rate_limit(
         runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance.
 
     Raises:
-        TypeError: If 'runs_per_minute' is not an integer when 'coro_fn' is None.
+        TypeError: If 'runs_per_minute' is not an integer or AsyncLimiter when 'coro_fn' is None.
         exceptions.FunctionNotAsync: If 'coro_fn' is not an asynchronous function.
-
-    Returns:
-        A decorated coroutine function with rate limiting applied, or a decorator if 'coro_fn' is None.
     """
     # Parse Inputs
     if isinstance(coro_fn, (int, AsyncLimiter)):
