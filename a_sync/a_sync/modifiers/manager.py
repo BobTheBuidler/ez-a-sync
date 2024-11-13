@@ -5,6 +5,7 @@ from a_sync._typing import *
 from a_sync.a_sync.config import user_set_default_modifiers, null_modifiers
 from a_sync.a_sync.modifiers import cache, limiter, semaphores
 
+# TODO give me a docstring
 valid_modifiers = [
     key
     for key in ModifierKwargs.__annotations__
@@ -16,9 +17,35 @@ class ModifierManager(Dict[str, Any]):
     """Manages modifiers for asynchronous and synchronous functions.
 
     This class is responsible for applying modifiers to functions, such as
-    caching, rate limiting, and semaphores for asynchronous functions.
+    caching, rate limiting, and semaphores for asynchronous functions. It also
+    handles synchronous functions, although no sync modifiers are currently
+    implemented.
+
+    Examples:
+        Creating a ModifierManager with specific modifiers:
+
+        >>> modifiers = ModifierKwargs(cache_type='memory', runs_per_minute=60)
+        >>> manager = ModifierManager(modifiers)
+
+        Applying modifiers to an asynchronous function:
+
+        >>> async def my_coro():
+        ...     pass
+        >>> modified_coro = manager.apply_async_modifiers(my_coro)
+
+        Applying modifiers to a synchronous function (no sync modifiers applied):
+
+        >>> def my_function():
+        ...     pass
+        >>> modified_function = manager.apply_sync_modifiers(my_function)
+
+    See Also:
+        - :class:`a_sync.a_sync.modifiers.cache`
+        - :class:`a_sync.a_sync.modifiers.limiter`
+        - :class:`a_sync.a_sync.modifiers.semaphores`
     """
 
+    # TODO give us docstrings
     default: DefaultMode
     cache_type: CacheType
     cache_typed: bool
@@ -26,9 +53,13 @@ class ModifierManager(Dict[str, Any]):
     ram_cache_ttl: Optional[int]
     runs_per_minute: Optional[int]
     semaphore: SemaphoreSpec
+
     # sync modifiers
     executor: Executor
-    """This is not applied like a typical modifier. The executor is used to run the sync function in an asynchronous context."""
+    """
+    This is not applied like a typical modifier but is still passed through the library with them for convenience. 
+    The executor is used to run the sync function in an asynchronous context.
+    """
 
     __slots__ = ("_modifiers",)
 
@@ -95,6 +126,12 @@ class ModifierManager(Dict[str, Any]):
 
         Returns:
             The modified coroutine function.
+
+        Examples:
+            >>> async def my_coro():
+            ...     pass
+            >>> manager = ModifierManager(ModifierKwargs(runs_per_minute=60))
+            >>> modified_coro = manager.apply_async_modifiers(my_coro)
         """
         # NOTE: THESE STACK IN REVERSE ORDER
         if self.use_limiter:
@@ -122,6 +159,12 @@ class ModifierManager(Dict[str, Any]):
 
         Returns:
             The wrapped synchronous function.
+
+        Examples:
+            >>> def my_function():
+            ...     pass
+            >>> manager = ModifierManager(ModifierKwargs())
+            >>> modified_function = manager.apply_sync_modifiers(my_function)
         """
 
         @functools.wraps(function)
@@ -167,5 +210,6 @@ class ModifierManager(Dict[str, Any]):
         return self._modifiers[modifier_key]  # type: ignore [literal-required]
 
 
+# TODO give us docstrings
 nulls = ModifierManager(null_modifiers)
 user_defaults = ModifierManager(user_set_default_modifiers)
