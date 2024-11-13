@@ -103,6 +103,10 @@
 <span class="sd">    `ASyncFunctionAsyncDefault` and `ASyncFunctionSyncDefault`, to handle the application</span>
 <span class="sd">    of async and sync modifiers to functions. Modifiers can alter the behavior of functions,</span>
 <span class="sd">    such as converting sync functions to async, applying caching, or rate limiting.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`~ASyncFunction`</span>
+<span class="sd">        - :class:`~ModifierManager`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">modifiers</span><span class="p">:</span> <span class="n">ModifierManager</span>
@@ -119,6 +123,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The asynchronous version of the function with applied modifiers.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :func:`_helpers._asyncify`</span>
+<span class="sd">            - :meth:`ModifierManager.apply_async_modifiers`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">coro_fn</span> <span class="o">=</span> <span class="n">_helpers</span><span class="o">.</span><span class="n">_asyncify</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">executor</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">apply_async_modifiers</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">)</span></div>
@@ -131,6 +139,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The modified _await function.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :func:`_helpers._await`</span>
+<span class="sd">            - :meth:`ModifierManager.apply_sync_modifiers`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">apply_sync_modifiers</span><span class="p">(</span><span class="n">_helpers</span><span class="o">.</span><span class="n">_await</span><span class="p">)</span>
 
@@ -141,6 +153,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The default execution mode.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :attr:`ModifierManager.default`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">default</span></div>
 
@@ -157,6 +172,9 @@
 <span class="sd">    Raises:</span>
 <span class="sd">        TypeError: If the input is not callable.</span>
 <span class="sd">        RuntimeError: If the function has arguments with names that conflict with viable flags.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`_check_not_genfunc`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">(</span><span class="n">AsyncPropertyDescriptor</span><span class="p">,</span> <span class="n">AsyncCachedPropertyDescriptor</span><span class="p">)):</span>
         <span class="k">return</span>  <span class="c1"># These are always valid</span>
@@ -198,6 +216,10 @@
 
 <span class="sd">        # Asynchronous call</span>
 <span class="sd">        result = await func(5)  # returns &quot;5&quot;</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`_ModifiedMixin`</span>
+<span class="sd">        - :class:`ModifierManager`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># NOTE: We can&#39;t use __slots__ here because it breaks functools.update_wrapper</span>
@@ -221,6 +243,10 @@
 <span class="sd">        Args:</span>
 <span class="sd">            fn: The function to wrap.</span>
 <span class="sd">            **modifiers: Keyword arguments for function modifiers.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :func:`_validate_wrapped_fn`</span>
+<span class="sd">            - :class:`ModifierManager`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_validate_wrapped_fn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
 
@@ -285,6 +311,10 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            Exception: Any exception that may be raised by the wrapped function.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :attr:`default`</span>
+<span class="sd">            - :meth:`_run_sync`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
             <span class="s2">&quot;calling </span><span class="si">%s</span><span class="s2"> fn: </span><span class="si">%s</span><span class="s2"> with args: </span><span class="si">%s</span><span class="s2"> kwargs: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span>
@@ -296,14 +326,18 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
-    <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-    <span class="p">):</span>  <span class="c1"># -&gt; Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:</span>
+    <span class="k">def</span> <span class="nf">fn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># NOTE type hint doesnt work in py3.8 or py3.9, debug later</span>
+        <span class="c1">#  -&gt; Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the final wrapped version of :attr:`ASyncFunction._fn` decorated with all of the a_sync goodness.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The final wrapped function.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`_async_wrap`</span>
+<span class="sd">            - :meth:`_sync_wrap`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_wrap</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_def</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sync_wrap</span>
 
@@ -327,6 +361,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                A TaskMapping object for managing concurrent execution.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :class:`TaskMapping`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
 
@@ -356,6 +393,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                True if any result is truthy, otherwise False.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -382,6 +422,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                True if all results are truthy, otherwise False.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -408,6 +451,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                The minimum result.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -434,6 +480,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                The maximum result.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -460,6 +509,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                The sum of the results.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -490,6 +542,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                A TaskMapping object for managing concurrent execution.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :class:`TaskMapping`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
 
@@ -522,6 +577,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                True if any result is truthy, otherwise False.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -551,6 +609,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                True if all results are truthy, otherwise False.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -580,6 +641,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                The minimum result.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -609,6 +673,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                The maximum result.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -638,6 +705,9 @@
 
 <span class="sd">            Returns:</span>
 <span class="sd">                The sum of the results.</span>
+
+<span class="sd">            See Also:</span>
+<span class="sd">                - :meth:`map`</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">iterables</span><span class="p">,</span>
@@ -657,6 +727,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            True if the default is sync, False if async.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :attr:`default`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="kc">True</span>
@@ -671,6 +744,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            True if the function is asynchronous, otherwise False.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :func:`asyncio.iscoroutinefunction`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span>
 
@@ -688,6 +764,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            True if the function should run synchronously, otherwise False.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :func:`_kwargs.get_flag_name`</span>
+<span class="sd">            - :func:`_kwargs.is_sync`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">flag</span> <span class="o">:=</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">get_flag_name</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="c1"># If a flag was specified in the kwargs, we will defer to it.</span>
@@ -707,6 +787,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The asynchronous version of the wrapped function.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`_asyncify`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_def</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
@@ -724,6 +807,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The modified function.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`ModifierManager.apply_async_modifiers`</span>
+<span class="sd">            - :meth:`ModifierManager.apply_sync_modifiers`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_async_def</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">apply_async_modifiers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span>
@@ -738,6 +825,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The wrapped function with async handling.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`_run_sync`</span>
+<span class="sd">            - :meth:`_await`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_modified_fn</span><span class="p">)</span>
@@ -759,6 +850,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The wrapped function with sync handling.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`_run_sync`</span>
+<span class="sd">            - :meth:`_asyncified`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_modified_fn</span><span class="p">)</span>
@@ -793,6 +888,9 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If &#39;default&#39; is not &#39;sync&#39;, &#39;async&#39;, or None.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`ModifierManager`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="s2">&quot;default&quot;</span> <span class="ow">in</span> <span class="n">modifiers</span><span class="p">,</span> <span class="n">modifiers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">modifiers</span><span class="p">)</span>
@@ -807,6 +905,9 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If &#39;default&#39; is not &#39;sync&#39;, &#39;async&#39;, or None.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :attr:`ModifierManager.default`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">default</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">,</span> <span class="s2">&quot;async&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -833,6 +934,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            An ASyncFunction instance with the appropriate default behavior.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`ASyncFunction`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="s2">&quot;async&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span><span class="p">)</span>
@@ -856,6 +960,10 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If the function is a generator or async generator.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`inspect.isasyncgenfunction`</span>
+<span class="sd">        - :func:`inspect.isgeneratorfunction`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isasyncgenfunction</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">or</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isgeneratorfunction</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unable to decorate generator functions with this decorator&quot;</span><span class="p">)</span></div>
@@ -926,6 +1034,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The result of the function call.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`ASyncFunction.__call__`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -1002,6 +1113,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The result of the function call.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`ASyncFunction.__call__`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 

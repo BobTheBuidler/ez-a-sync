@@ -78,17 +78,23 @@
 
 <span class="sd">Environment Variables:</span>
 <span class="sd">    A_SYNC_EXECUTOR_TYPE: Specifies the type of executor to use. Valid values are</span>
-<span class="sd">        strings that start with &#39;p&#39; for ProcessPoolExecutor (e.g., &#39;processes&#39;)</span>
-<span class="sd">        or &#39;t&#39; for ThreadPoolExecutor (e.g., &#39;threads&#39;). Defaults to &#39;threads&#39;.</span>
+<span class="sd">        strings that start with &#39;p&#39; for :class:`~concurrent.futures.ProcessPoolExecutor` </span>
+<span class="sd">        (e.g., &#39;processes&#39;) or &#39;t&#39; for :class:`~concurrent.futures.ThreadPoolExecutor` </span>
+<span class="sd">        (e.g., &#39;threads&#39;). Defaults to &#39;threads&#39;.</span>
 <span class="sd">    A_SYNC_EXECUTOR_VALUE: Specifies the number of workers for the executor.</span>
 <span class="sd">        Defaults to 8.</span>
 <span class="sd">    A_SYNC_DEFAULT_MODE: Sets the default mode for a_sync functions if not specified.</span>
 <span class="sd">    A_SYNC_CACHE_TYPE: Sets the default cache type. If not specified, defaults to None.</span>
 <span class="sd">    A_SYNC_CACHE_TYPED: Boolean flag to determine if cache keys should consider types.</span>
 <span class="sd">    A_SYNC_RAM_CACHE_MAXSIZE: Sets the maximum size for the RAM cache. Defaults to -1.</span>
-<span class="sd">    A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. Defaults to None.</span>
+<span class="sd">    A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. Defaults to 0, </span>
+<span class="sd">        which is interpreted as None.</span>
 <span class="sd">    A_SYNC_RUNS_PER_MINUTE: Sets the rate limit for function execution.</span>
 <span class="sd">    A_SYNC_SEMAPHORE: Sets the semaphore limit for function execution.</span>
+
+<span class="sd">See Also:</span>
+<span class="sd">    - :mod:`concurrent.futures`: For more details on executors.</span>
+<span class="sd">    - :mod:`functools`: For caching mechanisms.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">functools</span>
@@ -109,11 +115,25 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the default executor based on the EXECUTOR_TYPE environment variable.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        An instance of either ProcessPoolExecutor or ThreadPoolExecutor.</span>
+<span class="sd">        An instance of either :class:`~concurrent.futures.ProcessPoolExecutor`</span>
+<span class="sd">        or :class:`~concurrent.futures.ThreadPoolExecutor`.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If an invalid EXECUTOR_TYPE is specified. Valid values are</span>
-<span class="sd">        strings that start with &#39;p&#39; for ProcessPoolExecutor or &#39;t&#39; for ThreadPoolExecutor.</span>
+<span class="sd">        strings that start with &#39;p&#39; for :class:`~concurrent.futures.ProcessPoolExecutor`</span>
+<span class="sd">        or &#39;t&#39; for :class:`~concurrent.futures.ThreadPoolExecutor`.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import os</span>
+<span class="sd">        &gt;&gt;&gt; os.environ[&quot;A_SYNC_EXECUTOR_TYPE&quot;] = &quot;threads&quot;</span>
+<span class="sd">        &gt;&gt;&gt; executor = get_default_executor()</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(executor, ThreadPoolExecutor)</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &gt;&gt;&gt; os.environ[&quot;A_SYNC_EXECUTOR_TYPE&quot;] = &quot;processes&quot;</span>
+<span class="sd">        &gt;&gt;&gt; executor = get_default_executor()</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(executor, ProcessPoolExecutor)</span>
+<span class="sd">        True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">EXECUTOR_TYPE</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">):</span>  <span class="c1"># p, P, proc, Processes, etc</span>
         <span class="k">return</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">EXECUTOR_VALUE</span><span class="p">)</span>

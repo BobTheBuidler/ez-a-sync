@@ -94,6 +94,17 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        exceptions.SyncModeInAsyncContextError: If the event loop is already running.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; async def example_coroutine():</span>
+<span class="sd">        ...     return 42</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; result = _await(example_coroutine())</span>
+<span class="sd">        &gt;&gt;&gt; print(result)</span>
+<span class="sd">        42</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`asyncio.run`: For running the main entry point of an asyncio program.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">awaitable</span><span class="p">)</span>
@@ -115,10 +126,23 @@
 <span class="sd">        executor: The executor used to run the synchronous function.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        A coroutine function wrapping the input function.</span>
+<span class="sd">        CoroFn[P, T]: A coroutine function wrapping the input function.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        exceptions.FunctionNotSync: If the input function is a coroutine function or an instance of ASyncFunction.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; def sync_function(x):</span>
+<span class="sd">        ...     return x * 2</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; async_function = _asyncify(sync_function, executor)</span>
+<span class="sd">        &gt;&gt;&gt; result = await async_function(3)</span>
+<span class="sd">        &gt;&gt;&gt; print(result)</span>
+<span class="sd">        6</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`concurrent.futures.Executor`: For managing pools of threads or processes.</span>
+<span class="sd">        - :func:`asyncio.to_thread`: For running blocking code in a separate thread.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="n">ASyncFunction</span>
 

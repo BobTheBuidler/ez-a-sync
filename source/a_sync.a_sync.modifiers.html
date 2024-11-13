@@ -172,24 +172,40 @@
 <p>This function can be used as a decorator to limit the number of times
 an asynchronous function can be called per minute. It can be configured
 with either an integer specifying the number of runs per minute or an
-AsyncLimiter instance.</p>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">aiolimiter.AsyncLimiter</span></code> instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>coro_fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – The coroutine function to be rate-limited. If an integer is provided, it is treated as runs per minute, and runs_per_minute should be None.</p></li>
-<li><p><strong>runs_per_minute</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>AsyncLimiter</em><em> | </em><em>None</em>) – The number of allowed executions per minute or an AsyncLimiter instance. If coro_fn is an integer, this should be None.</p></li>
+<li><p><strong>coro_fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – The coroutine function to be rate-limited. If an integer is provided, it is treated as runs per minute, and <cite>runs_per_minute</cite> should be None.</p></li>
+<li><p><strong>runs_per_minute</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>AsyncLimiter</em><em> | </em><em>None</em>) – The number of allowed executions per minute or an <code class="xref py py-class docutils literal notranslate"><span class="pre">aiolimiter.AsyncLimiter</span></code> instance. If <cite>coro_fn</cite> is an integer, this should be None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If ‘runs_per_minute’ is neither an integer nor an AsyncLimiter when ‘coro_fn’ is None.</p></li>
-<li><p><a class="reference internal" href="a_sync.html#a_sync.exceptions.FunctionNotAsync" title="a_sync.exceptions.FunctionNotAsync"><strong>exceptions.FunctionNotAsync</strong></a> – If ‘coro_fn’ is not an asynchronous function.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If <cite>runs_per_minute</cite> is neither an integer nor an <code class="xref py py-class docutils literal notranslate"><span class="pre">aiolimiter.AsyncLimiter</span></code> when <cite>coro_fn</cite> is None.</p></li>
+<li><p><a class="reference internal" href="a_sync.html#a_sync.exceptions.FunctionNotAsync" title="a_sync.exceptions.FunctionNotAsync"><strong>exceptions.FunctionNotAsync</strong></a> – If <cite>coro_fn</cite> is not an asynchronous function.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]] | <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@apply_rate_limit</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">async_limiter</span> <span class="o">=</span> <span class="n">AsyncLimiter</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@apply_rate_limit</span><span class="p">(</span><span class="n">async_limiter</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">aiolimiter.AsyncLimiter</span></code></p>
+</div>
 </dd></dl>
 
 </section>
@@ -201,7 +217,35 @@ AsyncLimiter instance.</p>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Any</span></code></a>]</p>
 <p>Manages modifiers for asynchronous and synchronous functions.</p>
 <p>This class is responsible for applying modifiers to functions, such as
-caching, rate limiting, and semaphores for asynchronous functions.</p>
+caching, rate limiting, and semaphores for asynchronous functions. It also
+handles synchronous functions, although no sync modifiers are currently
+implemented.</p>
+<p class="rubric">Examples</p>
+<p>Creating a ModifierManager with specific modifiers:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modifiers</span> <span class="o">=</span> <span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">modifiers</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Applying modifiers to an asynchronous function:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_coro</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modified_coro</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">apply_async_modifiers</span><span class="p">(</span><span class="n">my_coro</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Applying modifiers to a synchronous function (no sync modifiers applied):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modified_function</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">apply_sync_modifiers</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="a_sync.a_sync.modifiers.cache.html#module-a_sync.a_sync.modifiers.cache" title="a_sync.a_sync.modifiers.cache"><code class="xref py py-class docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.cache</span></code></a></p></li>
+<li><p><a class="reference internal" href="#module-a_sync.a_sync.modifiers.limiter" title="a_sync.a_sync.modifiers.limiter"><code class="xref py py-class docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.limiter</span></code></a></p></li>
+<li><p><a class="reference internal" href="#module-a_sync.a_sync.modifiers.semaphores" title="a_sync.a_sync.modifiers.semaphores"><code class="xref py py-class docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.semaphores</span></code></a></p></li>
+</ul>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__">
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modifier_key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/modifiers/manager.html#ModifierManager.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__" title="Link to this definition"></a></dt>
@@ -259,6 +303,13 @@ caching, rate limiting, and semaphores for asynchronous functions.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_coro</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modified_coro</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">apply_async_modifiers</span><span class="p">(</span><span class="n">my_coro</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -280,6 +331,13 @@ caching, rate limiting, and semaphores for asynchronous functions.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <em>T</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modified_function</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">apply_sync_modifiers</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -390,7 +448,8 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.executor">
 <span class="sig-name descname"><span class="pre">executor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Executor</span></em><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.executor" title="Link to this definition"></a></dt>
-<dd><p>This is not applied like a typical modifier. The executor is used to run the sync function in an asynchronous context.</p>
+<dd><p>This is not applied like a typical modifier but is still passed through the library with them for convenience.
+The executor is used to run the sync function in an asynchronous context.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -439,29 +498,46 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.semaphores.apply_semaphore">
 <span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.modifiers.semaphores.</span></span><span class="sig-name descname"><span class="pre">apply_semaphore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coro_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">semaphore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/modifiers/semaphores.html#apply_semaphore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.modifiers.semaphores.apply_semaphore" title="Link to this definition"></a></dt>
-<dd><p>Applies a semaphore to a coroutine function or returns a decorator.</p>
+<dd><p>Apply a semaphore to a coroutine function or return a decorator.</p>
 <p>This function can be used to apply a semaphore to a coroutine function either by
 passing the coroutine function and semaphore as arguments or by using the semaphore
 as a decorator. It raises exceptions if the inputs are not valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>coro_fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><em>Semaphore</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – The coroutine function to which the semaphore will be applied, or None
-if the semaphore is to be used as a decorator.</p></li>
-<li><p><strong>semaphore</strong> (<em>Semaphore</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – The semaphore to apply, which can be an integer or an asyncio.Semaphore object.</p></li>
+<li><p><strong>coro_fn</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – The coroutine function to which the semaphore will be applied,
+or None if the semaphore is to be used as a decorator.</p></li>
+<li><p><strong>semaphore</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore" title="(in Python v3.13)"><em>asyncio.Semaphore</em></a><em>, </em><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore" title="a_sync.primitives.ThreadsafeSemaphore"><em>primitives.ThreadsafeSemaphore</em></a><em>]</em>) – The semaphore to apply, which can be an integer, an <cite>asyncio.Semaphore</cite>,
+or a <cite>primitives.ThreadsafeSemaphore</cite> object.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If both coro_fn and semaphore are provided as invalid inputs.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If both <cite>coro_fn</cite> and <cite>semaphore</cite> are provided as invalid inputs.</p></li>
 <li><p><a class="reference internal" href="a_sync.html#a_sync.exceptions.FunctionNotAsync" title="a_sync.exceptions.FunctionNotAsync"><strong>exceptions.FunctionNotAsync</strong></a> – If the provided function is not a coroutine.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If the semaphore is not an integer or an asyncio.Semaphore object.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If the semaphore is not an integer, an <cite>asyncio.Semaphore</cite>, or a <cite>primitives.ThreadsafeSemaphore</cite> object.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]] | <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p>Using as a decorator:
+&gt;&gt;&gt; &#64;apply_semaphore(2)
+… async def limited_concurrent_function():
+…     pass</p>
+<p>Applying directly to a function:
+&gt;&gt;&gt; async def my_coroutine():
+…     pass
+&gt;&gt;&gt; my_coroutine = apply_semaphore(my_coroutine, 3)</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">primitives.ThreadsafeSemaphore</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py data">

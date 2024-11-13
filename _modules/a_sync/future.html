@@ -112,6 +112,17 @@
 <span class="sd">    Args:</span>
 <span class="sd">        callable: The callable to convert. Defaults to None.</span>
 <span class="sd">        **kwargs: Additional keyword arguments for the modifier.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A callable that returns either the result or an ASyncFuture.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; @future</span>
+<span class="sd">        ... async def async_function():</span>
+<span class="sd">        ...     return 42</span>
+<span class="sd">        &gt;&gt;&gt; result = async_function()</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(result, ASyncFuture)</span>
+<span class="sd">        True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_ASyncFutureWrappedFn</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -123,6 +134,15 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        *things: Items to gather and materialize.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A list of materialized items.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; async def async_fn(x):</span>
+<span class="sd">        ...     return x</span>
+<span class="sd">        &gt;&gt;&gt; await _gather_check_and_materialize(async_fn(1), 2, async_fn(3))</span>
+<span class="sd">        [1, 2, 3]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">_check_and_materialize</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span> <span class="k">for</span> <span class="n">thing</span> <span class="ow">in</span> <span class="n">things</span><span class="p">])</span>
 
@@ -133,6 +153,15 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        thing: The item to check and materialize.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The materialized item.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; async def async_fn():</span>
+<span class="sd">        ...     return 42</span>
+<span class="sd">        &gt;&gt;&gt; await _check_and_materialize(async_fn())</span>
+<span class="sd">        42</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="k">await</span> <span class="n">thing</span> <span class="k">if</span> <span class="n">isawaitable</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span> <span class="k">else</span> <span class="n">thing</span>
 
@@ -141,11 +170,22 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Materializes the result of an ASyncFuture.</span>
 
+<span class="sd">    This function attempts to run the event loop until the ASyncFuture is complete.</span>
+<span class="sd">    If the event loop is already running, it raises a RuntimeError.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        meta: The ASyncFuture to materialize.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        RuntimeError: If the event loop is running and the result cannot be awaited.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; future = ASyncFuture(asyncio.sleep(1, result=42))</span>
+<span class="sd">        &gt;&gt;&gt; _materialize(future)</span>
+<span class="sd">        42</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`ASyncFuture`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
@@ -167,6 +207,13 @@
 <span class="sd">    A class representing an asynchronous future result.</span>
 
 <span class="sd">    Inherits from both concurrent.futures.Future and Awaitable[T], allowing it to be used in both synchronous and asynchronous contexts.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; async def async_fn():</span>
+<span class="sd">        ...     return 42</span>
+<span class="sd">        &gt;&gt;&gt; future = ASyncFuture(async_fn())</span>
+<span class="sd">        &gt;&gt;&gt; await future</span>
+<span class="sd">        42</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;__awaitable__&quot;</span><span class="p">,</span> <span class="s2">&quot;__dependencies&quot;</span><span class="p">,</span> <span class="s2">&quot;__dependants&quot;</span><span class="p">,</span> <span class="s2">&quot;__task&quot;</span>
@@ -218,6 +265,9 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            other: The other dependency to list.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of ASyncFuture dependencies.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ASyncFuture</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">]</span>
@@ -229,6 +279,14 @@
 <span class="sd">        If this future is not done, it will work like cf.Future.result. It will block, await the awaitable, and return the result when ready.</span>
 <span class="sd">        If this future is done and the result has attribute `result`, will return `getattr(future_result, &#39;result&#39;)`</span>
 <span class="sd">        If this future is done and the result does NOT have attribute `result`, will again work like cf.Future.result</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The result of the future or a callable to get the result.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; future = ASyncFuture(asyncio.sleep(1, result=42))</span>
+<span class="sd">            &gt;&gt;&gt; future.result()</span>
+<span class="sd">            42</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span> <span class="o">:=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">result</span><span class="p">(),</span> <span class="s2">&quot;result&quot;</span><span class="p">):</span>
@@ -262,6 +320,14 @@
     <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Makes the ASyncFuture awaitable.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A generator for awaiting the future.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; future = ASyncFuture(asyncio.sleep(1, result=42))</span>
+<span class="sd">            &gt;&gt;&gt; await future</span>
+<span class="sd">            42</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__await</span><span class="p">()</span><span class="o">.</span><span class="fm">__await__</span><span class="p">()</span>
 
@@ -274,6 +340,15 @@
     <span class="k">def</span> <span class="nf">__task__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Task[T]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the asyncio task associated with the awaitable, creating it if necessary.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The asyncio task.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; future = ASyncFuture(asyncio.sleep(1, result=42))</span>
+<span class="sd">            &gt;&gt;&gt; task = future.__task__</span>
+<span class="sd">            &gt;&gt;&gt; isinstance(task, asyncio.Task)</span>
+<span class="sd">            True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__awaitable__</span><span class="p">)</span>
@@ -909,6 +984,9 @@
     <span class="k">def</span> <span class="nf">__dependants__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;ASyncFuture&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the set of dependants for this ASyncFuture, including nested dependants.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A set of ASyncFuture dependants.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dependants</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependants</span><span class="p">:</span>
@@ -920,6 +998,9 @@
     <span class="k">def</span> <span class="nf">__dependencies__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;ASyncFuture&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the set of dependencies for this ASyncFuture, including nested dependencies.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A set of ASyncFuture dependencies.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dependencies</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependencies</span><span class="p">:</span>
@@ -942,6 +1023,14 @@
 <span class="k">class</span> <span class="nc">_ASyncFutureWrappedFn</span><span class="p">(</span><span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">ASyncFuture</span><span class="p">[</span><span class="n">T</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A callable class to wrap functions and return ASyncFuture objects.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; def sync_fn():</span>
+<span class="sd">        ...     return 42</span>
+<span class="sd">        &gt;&gt;&gt; wrapped_fn = _ASyncFutureWrappedFn(sync_fn)</span>
+<span class="sd">        &gt;&gt;&gt; future = wrapped_fn()</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(future, ASyncFuture)</span>
+<span class="sd">        True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;callable&quot;</span><span class="p">,</span> <span class="s2">&quot;wrapped&quot;</span><span class="p">,</span> <span class="s2">&quot;_callable_name&quot;</span>
@@ -991,6 +1080,16 @@
     <span class="c1"># NOTE: probably could just replace this with functools.partial</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to handle instance methods wrapped as ASyncFuture.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; class MyClass:</span>
+<span class="sd">        ...     @_ASyncFutureWrappedFn</span>
+<span class="sd">        ...     def method(self):</span>
+<span class="sd">        ...         return 42</span>
+<span class="sd">        &gt;&gt;&gt; instance = MyClass()</span>
+<span class="sd">        &gt;&gt;&gt; future = instance.method()</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(future, ASyncFuture)</span>
+<span class="sd">        True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__module__</span><span class="p">:</span> <span class="nb">str</span>

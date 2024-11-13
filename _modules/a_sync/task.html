@@ -118,8 +118,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A mapping of keys to asynchronous tasks with additional functionality.</span>
 
-<span class="sd">    TaskMapping is a specialized dictionary that maps keys to asyncio Tasks. It provides</span>
+<span class="sd">    `TaskMapping` is a specialized dictionary that maps keys to `asyncio` Tasks. It provides</span>
 <span class="sd">    convenient methods for creating, managing, and iterating over these tasks asynchronously.</span>
+
+<span class="sd">    Tasks are created automatically for each key using a provided function. You cannot manually set items in a `TaskMapping` using dictionary-like syntax.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; async def fetch_data(url: str) -&gt; str:</span>
@@ -127,15 +129,19 @@
 <span class="sd">        ...         async with session.get(url) as response:</span>
 <span class="sd">        ...             return await response.text()</span>
 <span class="sd">        ...</span>
-<span class="sd">        &gt;&gt;&gt; tasks = TaskMapping(fetch_data, name=&#39;url_fetcher&#39;, concurrency=5)</span>
-<span class="sd">        &gt;&gt;&gt; tasks[&#39;example.com&#39;]</span>
-<span class="sd">        &gt;&gt;&gt; tasks[&#39;python.org&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; tasks = TaskMapping(fetch_data, [&#39;http://example.com&#39;, &#39;https://www.python.org&#39;], name=&#39;url_fetcher&#39;, concurrency=5)</span>
 <span class="sd">        &gt;&gt;&gt; async for key, result in tasks:</span>
 <span class="sd">        ...     print(f&quot;Data for {key}: {result}&quot;)</span>
 <span class="sd">        ...</span>
 <span class="sd">        Data for python.org: http://python.org</span>
 <span class="sd">        Data for example.com: http://example.com</span>
 
+<span class="sd">    Note:</span>
+<span class="sd">        You cannot manually set items in a `TaskMapping` using dictionary-like syntax. Tasks are created and managed internally.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`asyncio.Task`</span>
+<span class="sd">        - :func:`asyncio.create_task`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -189,6 +195,13 @@
 <span class="sd">            name: An optional name for the tasks created by this mapping.</span>
 <span class="sd">            concurrency: Maximum number of tasks to run concurrently.</span>
 <span class="sd">            **wrapped_func_kwargs: Additional keyword arguments to be passed to wrapped_func.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            async def process_item(item: int) -&gt; int:</span>
+<span class="sd">                await asyncio.sleep(1)</span>
+<span class="sd">                return item * 2</span>
+
+<span class="sd">            task_map = TaskMapping(process_item, [1, 2, 3], concurrency=2)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">concurrency</span><span class="p">:</span>
@@ -392,6 +405,15 @@
 <span class="sd">        Yields:</span>
 <span class="sd">            Depending on `yields`, either keys, values,</span>
 <span class="sd">            or tuples of key-value pairs representing the results of completed tasks.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            async def process_item(item: int) -&gt; int:</span>
+<span class="sd">                await asyncio.sleep(1)</span>
+<span class="sd">                return item * 2</span>
+
+<span class="sd">            task_map = TaskMapping(process_item)</span>
+<span class="sd">            async for key, result in task_map.map([1, 2, 3]):</span>
+<span class="sd">                print(f&quot;Processed {key}: {result}&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_check_destroyed</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
 
@@ -535,6 +557,15 @@
 
 <span class="sd">        Yields:</span>
 <span class="sd">            Tuples of key-value pairs representing the results of completed tasks.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            async def process_item(item: int) -&gt; int:</span>
+<span class="sd">                await asyncio.sleep(1)</span>
+<span class="sd">                return item * 2</span>
+
+<span class="sd">            task_map = TaskMapping(process_item, [1, 2, 3])</span>
+<span class="sd">            async for key, result in task_map.yield_completed():</span>
+<span class="sd">                print(f&quot;Completed {key}: {result}&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">task</span> <span class="ow">in</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>

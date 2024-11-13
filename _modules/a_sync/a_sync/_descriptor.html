@@ -70,10 +70,16 @@
              
   <h1>Source code for a_sync.a_sync._descriptor</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module contains the ASyncDescriptor class, which is used to create sync/async methods</span>
+<span class="sd">This module contains the :class:`ASyncDescriptor` class, which is used to create dual-function sync/async methods</span>
 <span class="sd">and properties.</span>
 
-<span class="sd">It also includes utility methods for mapping operations across multiple instances.</span>
+<span class="sd">The :class:`ASyncDescriptor` class provides functionality for mapping operations across multiple instances</span>
+<span class="sd">and includes utility methods for common operations such as checking if all or any results are truthy, </span>
+<span class="sd">and finding the minimum, maximum, or sum of results of the method or property mapped across multiple instances.</span>
+
+<span class="sd">See Also:</span>
+<span class="sd">    - :class:`~a_sync.a_sync.function.ASyncFunction`</span>
+<span class="sd">    - :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">functools</span>
@@ -96,6 +102,27 @@
 <span class="sd">    and includes utility methods for common operations such as checking if all or any</span>
 <span class="sd">    results are truthy, and finding the minimum, maximum, or sum of results of the method</span>
 <span class="sd">    or property mapped across multiple instances.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        To create a dual-function method or property, subclass :class:`ASyncDescriptor` and implement</span>
+<span class="sd">        the desired functionality. You can then use the provided utility methods to perform operations</span>
+<span class="sd">        across multiple instances.</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">            def __init__(self, func):</span>
+<span class="sd">                super().__init__(func)</span>
+
+<span class="sd">        class MyClass:</span>
+<span class="sd">            my_method = MyDescriptor(lambda x: x * 2)</span>
+
+<span class="sd">        instance = MyClass()</span>
+<span class="sd">        result = instance.my_method.map([1, 2, 3])</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`~a_sync.a_sync.function.ASyncFunction`</span>
+<span class="sd">        - :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__wrapped__</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
@@ -112,7 +139,7 @@
         <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">ModifierKwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the {cls}.</span>
+<span class="sd">        Initialize the :class:`ASyncDescriptor`.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            _fget: The function to be wrapped.</span>
@@ -136,7 +163,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span> <span class="o">=</span> <span class="n">_fget</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span> <span class="o">=</span> <span class="n">field_name</span> <span class="ow">or</span> <span class="n">_fget</span><span class="o">.</span><span class="vm">__name__</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The name of the field the {cls} is bound to.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The name of the field the :class:`ASyncDescriptor` is bound to.&quot;&quot;&quot;</span>
 
         <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span></div>
 
@@ -146,7 +173,7 @@
 
     <span class="k">def</span> <span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the field name when the {cls} is assigned to a class.</span>
+<span class="sd">        Set the field name when the :class:`ASyncDescriptor` is assigned to a class.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            owner: The class owning this descriptor.</span>
@@ -160,14 +187,25 @@
         <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="o">**</span><span class="n">bound_method_kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMapping[I, T]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a TaskMapping for the given instances.</span>
+<span class="sd">        Create a :class:`TaskMapping` for the given instances.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            *instances: Iterable of instances to map over.</span>
 <span class="sd">            **bound_method_kwargs: Additional keyword arguments for the bound method.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A TaskMapping object.</span>
+<span class="sd">            A :class:`TaskMapping` object.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x * 2)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = instance.my_method.map([1, 2, 3])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">a_sync.task</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
 
@@ -180,7 +218,18 @@
 <span class="sd">        Create an :class:`~ASyncFunction` that checks if all results are truthy.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An ASyncFunction object.</span>
+<span class="sd">            An :class:`ASyncFunction` object.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x &gt; 0)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method.all([1, 2, 3])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_all</span><span class="p">)</span>
 
@@ -190,7 +239,18 @@
 <span class="sd">        Create an :class:`~ASyncFunction` that checks if any result is truthy.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An ASyncFunction object.</span>
+<span class="sd">            An :class:`ASyncFunction` object.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x &gt; 0)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method.any([-1, 0, 1])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_any</span><span class="p">)</span>
 
@@ -200,7 +260,20 @@
 <span class="sd">        Create an :class:`~ASyncFunction` that returns the minimum result.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An ASyncFunction object.</span>
+<span class="sd">            An :class:`ASyncFunction` object.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method.min([3, 1, 2])</span>
+<span class="sd">            ```</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="p">)</span>
 
@@ -210,7 +283,18 @@
 <span class="sd">        Create an :class:`~ASyncFunction` that returns the maximum result.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An ASyncFunction object.</span>
+<span class="sd">            An :class:`ASyncFunction` object.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method.max([3, 1, 2])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">)</span>
 
@@ -220,7 +304,20 @@
 <span class="sd">        Create an :class:`~ASyncFunction` that returns the sum of results.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An ASyncFunction object.</span>
+<span class="sd">            An :class:`ASyncFunction` object.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method.sum([1, 2, 3])</span>
+<span class="sd">            ```</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sum</span><span class="p">)</span>
 
@@ -244,6 +341,19 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A boolean indicating if all results are truthy.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x &gt; 0)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method._all([1, 2, 3])</span>
+<span class="sd">            ```</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
@@ -270,6 +380,19 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A boolean indicating if any result is truthy.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x &gt; 0)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method._any([-1, 0, 1])</span>
+<span class="sd">            ```</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
@@ -296,6 +419,19 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The minimum result.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method._min([3, 1, 2])</span>
+<span class="sd">            ```</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
@@ -322,6 +458,19 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The maximum result.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method._max([3, 1, 2])</span>
+<span class="sd">            ```</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
@@ -348,6 +497,19 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The sum of the results.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            ```python</span>
+<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
+<span class="sd">                def __init__(self, func):</span>
+<span class="sd">                    super().__init__(func)</span>
+
+<span class="sd">            class MyClass:</span>
+<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+
+<span class="sd">            instance = MyClass()</span>
+<span class="sd">            result = await instance.my_method._sum([1, 2, 3])</span>
+<span class="sd">            ```</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="n">concurrency</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>

@@ -89,8 +89,18 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator to apply a rate limit to an asynchronous function.</span>
 
+<span class="sd">    This overload allows specifying the number of allowed executions per minute.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        runs_per_minute: The number of allowed executions per minute.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; @apply_rate_limit(60)</span>
+<span class="sd">        ... async def my_function():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`aiolimiter.AsyncLimiter`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -101,9 +111,21 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator to apply a rate limit to an asynchronous function.</span>
 
+<span class="sd">    This overload allows specifying either the number of allowed executions per minute</span>
+<span class="sd">    or an :class:`aiolimiter.AsyncLimiter` instance.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        coro_fn: The coroutine function to be rate-limited.</span>
-<span class="sd">        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance.</span>
+<span class="sd">        runs_per_minute: The number of allowed executions per minute or an :class:`aiolimiter.AsyncLimiter` instance.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; async_limiter = AsyncLimiter(60)</span>
+<span class="sd">        &gt;&gt;&gt; @apply_rate_limit(async_limiter)</span>
+<span class="sd">        ... async def my_function():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`aiolimiter.AsyncLimiter`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -118,15 +140,28 @@
 <span class="sd">    This function can be used as a decorator to limit the number of times</span>
 <span class="sd">    an asynchronous function can be called per minute. It can be configured</span>
 <span class="sd">    with either an integer specifying the number of runs per minute or an</span>
-<span class="sd">    AsyncLimiter instance.</span>
+<span class="sd">    :class:`aiolimiter.AsyncLimiter` instance.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        coro_fn: The coroutine function to be rate-limited. If an integer is provided, it is treated as runs per minute, and runs_per_minute should be None.</span>
-<span class="sd">        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance. If coro_fn is an integer, this should be None.</span>
+<span class="sd">        coro_fn: The coroutine function to be rate-limited. If an integer is provided, it is treated as runs per minute, and `runs_per_minute` should be None.</span>
+<span class="sd">        runs_per_minute: The number of allowed executions per minute or an :class:`aiolimiter.AsyncLimiter` instance. If `coro_fn` is an integer, this should be None.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        TypeError: If &#39;runs_per_minute&#39; is neither an integer nor an AsyncLimiter when &#39;coro_fn&#39; is None.</span>
-<span class="sd">        exceptions.FunctionNotAsync: If &#39;coro_fn&#39; is not an asynchronous function.</span>
+<span class="sd">        TypeError: If `runs_per_minute` is neither an integer nor an :class:`aiolimiter.AsyncLimiter` when `coro_fn` is None.</span>
+<span class="sd">        exceptions.FunctionNotAsync: If `coro_fn` is not an asynchronous function.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; @apply_rate_limit(60)</span>
+<span class="sd">        ... async def my_function():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">        &gt;&gt;&gt; async_limiter = AsyncLimiter(60)</span>
+<span class="sd">        &gt;&gt;&gt; @apply_rate_limit(async_limiter)</span>
+<span class="sd">        ... async def my_function():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`aiolimiter.AsyncLimiter`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Parse Inputs</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">AsyncLimiter</span><span class="p">)):</span>

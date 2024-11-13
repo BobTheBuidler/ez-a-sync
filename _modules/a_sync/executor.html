@@ -72,7 +72,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">With these executors, you can simply run sync functions in your executor with `await executor.run(fn, *args)`.</span>
 
-<span class="sd">`executor.submit(fn, *args)` will work the same as the concurrent.futures implementation, but will return an asyncio.Future instead of a concurrent.futures.Future.</span>
+<span class="sd">`executor.submit(fn, *args)` will work the same as the `concurrent.futures` implementation, but will return an `asyncio.Future` instead of a `concurrent.futures.Future`.</span>
 
 <span class="sd">This module provides several executor classes:</span>
 <span class="sd">- _AsyncExecutorMixin: A mixin providing asynchronous run and submit methods, with support for synchronous mode.</span>
@@ -116,12 +116,21 @@
 <span class="sd">        A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`.</span>
 <span class="sd">        Doesn&#39;t `await this_executor.run(fn, *args)` look so much better?</span>
 
-<span class="sd">        Oh, and you can also use kwargs!</span>
+<span class="sd">        In synchronous mode, the function is executed directly in the current thread.</span>
+<span class="sd">        In asynchronous mode, the function is submitted to the executor and awaited.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            fn: The function to run.</span>
 <span class="sd">            *args: Positional arguments for the function.</span>
 <span class="sd">            **kwargs: Keyword arguments for the function.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; async def example():</span>
+<span class="sd">            &gt;&gt;&gt;     result = await executor.run(some_function, arg1, arg2, kwarg1=value1)</span>
+<span class="sd">            &gt;&gt;&gt;     print(result)</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`submit` for submitting functions to the executor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -131,12 +140,20 @@
 
     <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[T]&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore [override]</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.</span>
+<span class="sd">        Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            fn: The function to submit.</span>
 <span class="sd">            *args: Positional arguments for the function.</span>
 <span class="sd">            **kwargs: Keyword arguments for the function.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; future = executor.submit(some_function, arg1, arg2, kwarg1=value1)</span>
+<span class="sd">            &gt;&gt;&gt; result = await future</span>
+<span class="sd">            &gt;&gt;&gt; print(result)</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`run` for running functions with the executor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
             <span class="n">fut</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
@@ -160,6 +177,10 @@
     <span class="k">def</span> <span class="nf">sync_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Indicates if the executor is in synchronous mode (max_workers == 0).</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; if executor.sync_mode:</span>
+<span class="sd">            &gt;&gt;&gt;     print(&quot;Executor is in synchronous mode.&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">==</span> <span class="mi">0</span>
 
@@ -167,6 +188,9 @@
     <span class="k">def</span> <span class="nf">worker_count_current</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the current number of workers.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; print(f&quot;Current worker count: {executor.worker_count_current}&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
 
@@ -179,6 +203,9 @@
 <span class="sd">            fn: The function being executed.</span>
 <span class="sd">            *args: Positional arguments for the function.</span>
 <span class="sd">            **kwargs: Keyword arguments for the function.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`_start_debug_daemon` to start the debug daemon.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># TODO: make prettier strings for other types</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;function&quot;</span><span class="p">:</span>
@@ -246,6 +273,11 @@
 <span class="sd">            mp_context: The multiprocessing context. Defaults to None.</span>
 <span class="sd">            initializer: An initializer callable. Defaults to None.</span>
 <span class="sd">            initargs: Arguments for the initializer. Defaults to ().</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; executor = AsyncProcessPoolExecutor(max_workers=4)</span>
+<span class="sd">            &gt;&gt;&gt; future = executor.submit(some_function, arg1, arg2)</span>
+<span class="sd">            &gt;&gt;&gt; result = await future</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_workers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mp_context</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
@@ -294,6 +326,11 @@
 <span class="sd">            thread_name_prefix: Prefix for thread names. Defaults to &#39;&#39;.</span>
 <span class="sd">            initializer: An initializer callable. Defaults to None.</span>
 <span class="sd">            initargs: Arguments for the initializer. Defaults to ().</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix=&quot;MyThread&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; future = executor.submit(some_function, arg1, arg2)</span>
+<span class="sd">            &gt;&gt;&gt; result = await future</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_workers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
@@ -323,6 +360,9 @@
 <span class="sd">        initializer: The initializer function.</span>
 <span class="sd">        initargs: Arguments for the initializer.</span>
 <span class="sd">        timeout: Timeout duration for pruning inactive threads.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`PruningThreadPoolExecutor` for more details on thread pruning.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">initializer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -413,6 +453,11 @@
 <span class="sd">            initializer: An initializer callable. Defaults to None.</span>
 <span class="sd">            initargs: Arguments for the initializer. Defaults to ().</span>
 <span class="sd">            timeout: Timeout duration for pruning inactive threads. Defaults to TEN_MINUTES.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; executor = PruningThreadPoolExecutor(max_workers=5, timeout=300)</span>
+<span class="sd">            &gt;&gt;&gt; future = executor.submit(some_function, arg1, arg2)</span>
+<span class="sd">            &gt;&gt;&gt; result = await future</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
@@ -432,6 +477,9 @@
     <span class="k">def</span> <span class="nf">_adjust_thread_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adjusts the number of threads based on workload and idle threads.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :func:`_worker` for the worker function that handles thread pruning.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adjusting_lock</span><span class="p">:</span>
             <span class="c1"># if idle threads are available, don&#39;t spin new threads</span>

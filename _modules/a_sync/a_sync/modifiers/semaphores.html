@@ -86,13 +86,24 @@
 <span class="k">def</span> <span class="nf">apply_semaphore</span><span class="p">(</span>  <span class="c1"># type: ignore [misc]</span>
     <span class="n">semaphore</span><span class="p">:</span> <span class="n">SemaphoreSpec</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies a semaphore to a coroutine function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a decorator to apply a semaphore to a coroutine function.</span>
 
 <span class="sd">    This overload is used when the semaphore is provided as a single argument,</span>
 <span class="sd">    returning a decorator that can be applied to a coroutine function.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        semaphore: The semaphore to apply, which can be an integer or an asyncio.Semaphore object.</span>
+<span class="sd">        semaphore (Union[int, asyncio.Semaphore, primitives.ThreadsafeSemaphore]):</span>
+<span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`,</span>
+<span class="sd">            or a `primitives.ThreadsafeSemaphore` object.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; @apply_semaphore(2)</span>
+<span class="sd">        ... async def limited_concurrent_function():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`asyncio.Semaphore`</span>
+<span class="sd">        - :class:`primitives.ThreadsafeSemaphore`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -101,14 +112,25 @@
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">semaphore</span><span class="p">:</span> <span class="n">SemaphoreSpec</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies a semaphore to a coroutine function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply a semaphore directly to a coroutine function.</span>
 
 <span class="sd">    This overload is used when both the coroutine function and semaphore are provided,</span>
 <span class="sd">    directly applying the semaphore to the coroutine function.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        coro_fn: The coroutine function to which the semaphore will be applied.</span>
-<span class="sd">        semaphore: The semaphore to apply, which can be an integer or an asyncio.Semaphore object.</span>
+<span class="sd">        coro_fn (Callable): The coroutine function to which the semaphore will be applied.</span>
+<span class="sd">        semaphore (Union[int, asyncio.Semaphore, primitives.ThreadsafeSemaphore]):</span>
+<span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`,</span>
+<span class="sd">            or a `primitives.ThreadsafeSemaphore` object.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; async def my_coroutine():</span>
+<span class="sd">        ...     pass</span>
+<span class="sd">        &gt;&gt;&gt; my_coroutine = apply_semaphore(my_coroutine, 3)</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`asyncio.Semaphore`</span>
+<span class="sd">        - :class:`primitives.ThreadsafeSemaphore`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -118,21 +140,38 @@
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">SemaphoreSpec</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">semaphore</span><span class="p">:</span> <span class="n">SemaphoreSpec</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecoratorOrCoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies a semaphore to a coroutine function or returns a decorator.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply a semaphore to a coroutine function or return a decorator.</span>
 
 <span class="sd">    This function can be used to apply a semaphore to a coroutine function either by</span>
 <span class="sd">    passing the coroutine function and semaphore as arguments or by using the semaphore</span>
 <span class="sd">    as a decorator. It raises exceptions if the inputs are not valid.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        coro_fn: The coroutine function to which the semaphore will be applied, or None</span>
-<span class="sd">            if the semaphore is to be used as a decorator.</span>
-<span class="sd">        semaphore: The semaphore to apply, which can be an integer or an asyncio.Semaphore object.</span>
+<span class="sd">        coro_fn (Optional[Callable]): The coroutine function to which the semaphore will be applied,</span>
+<span class="sd">            or None if the semaphore is to be used as a decorator.</span>
+<span class="sd">        semaphore (Union[int, asyncio.Semaphore, primitives.ThreadsafeSemaphore]):</span>
+<span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`,</span>
+<span class="sd">            or a `primitives.ThreadsafeSemaphore` object.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If both coro_fn and semaphore are provided as invalid inputs.</span>
+<span class="sd">        ValueError: If both `coro_fn` and `semaphore` are provided as invalid inputs.</span>
 <span class="sd">        exceptions.FunctionNotAsync: If the provided function is not a coroutine.</span>
-<span class="sd">        TypeError: If the semaphore is not an integer or an asyncio.Semaphore object.</span>
+<span class="sd">        TypeError: If the semaphore is not an integer, an `asyncio.Semaphore`, or a `primitives.ThreadsafeSemaphore` object.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        Using as a decorator:</span>
+<span class="sd">        &gt;&gt;&gt; @apply_semaphore(2)</span>
+<span class="sd">        ... async def limited_concurrent_function():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">        Applying directly to a function:</span>
+<span class="sd">        &gt;&gt;&gt; async def my_coroutine():</span>
+<span class="sd">        ...     pass</span>
+<span class="sd">        &gt;&gt;&gt; my_coroutine = apply_semaphore(my_coroutine, 3)</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`asyncio.Semaphore`</span>
+<span class="sd">        - :class:`primitives.ThreadsafeSemaphore`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Parse Inputs</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">)):</span>

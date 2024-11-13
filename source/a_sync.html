@@ -2323,6 +2323,11 @@ including task shielding and a custom task factory for creating SmartTask instan
 <p>A smart future that tracks waiters and integrates with a smart processing queue.</p>
 <p>Inherits from both _SmartFutureMixin and asyncio.Future, providing additional functionality
 for tracking waiters and integrating with a smart processing queue.</p>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture()</span>
+<span class="pre">await</span> <span class="pre">future</span>
+<span class="pre">`</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/_smart.html#SmartFuture.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync._smart.SmartFuture.__init__" title="Link to this definition"></a></dt>
@@ -2339,6 +2344,10 @@ for tracking waiters and integrating with a smart processing queue.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture(queue=my_queue,</span> <span class="pre">key=my_key)</span>
+<span class="pre">`</span></code></p>
 </dd></dl>
 
 <dl class="py method">
@@ -2382,8 +2391,8 @@ it erases the context exception value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>waiter</strong> (<a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>) – The waiter task to clean up.</p></li>
 <li><p><strong>self</strong> (<a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a><em> | </em><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>)</p></li>
-<li><p><strong>waiter</strong> (<a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2536,6 +2545,19 @@ InvalidStateError.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture.num_waiters">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync._smart.SmartFuture.num_waiters" title="Link to this definition"></a></dt>
 <dd><p>Get the number of waiters currently awaiting the future or task.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of waiters.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture()</span>
+<span class="pre">print(future.num_waiters)</span>
+<span class="pre">`</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -2547,6 +2569,11 @@ InvalidStateError.</p>
 <p>A smart task that tracks waiters and integrates with a smart processing queue.</p>
 <p>Inherits from both _SmartFutureMixin and asyncio.Task, providing additional functionality
 for tracking waiters and integrating with a smart processing queue.</p>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">task</span> <span class="pre">=</span> <span class="pre">SmartTask(coro=my_coroutine())</span>
+<span class="pre">await</span> <span class="pre">task</span>
+<span class="pre">`</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coro</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/_smart.html#SmartTask.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync._smart.SmartTask.__init__" title="Link to this definition"></a></dt>
@@ -2563,6 +2590,10 @@ for tracking waiters and integrating with a smart processing queue.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">task</span> <span class="pre">=</span> <span class="pre">SmartTask(coro=my_coroutine(),</span> <span class="pre">name=&quot;my_task&quot;)</span>
+<span class="pre">`</span></code></p>
 </dd></dl>
 
 <dl class="py method">
@@ -2606,8 +2637,8 @@ it erases the context exception value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>waiter</strong> (<a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>) – The waiter task to clean up.</p></li>
 <li><p><strong>self</strong> (<a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a><em> | </em><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>)</p></li>
-<li><p><strong>waiter</strong> (<a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2837,6 +2868,19 @@ InvalidStateError.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask.num_waiters">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync._smart.SmartTask.num_waiters" title="Link to this definition"></a></dt>
 <dd><p>Get the number of waiters currently awaiting the future or task.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of waiters.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture()</span>
+<span class="pre">print(future.num_waiters)</span>
+<span class="pre">`</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -2860,6 +2904,10 @@ InvalidStateError.</p>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>[<em>V</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">future</span> <span class="pre">=</span> <span class="pre">create_future(queue=my_queue,</span> <span class="pre">key=my_key)</span>
+<span class="pre">`</span></code></p>
 </dd></dl>
 
 <dl class="py function">
@@ -2874,6 +2922,16 @@ InvalidStateError.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">set_smart_task_factory()</span>
+<span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync._smart.smart_task_factory" title="a_sync._smart.smart_task_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">smart_task_factory()</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -2915,6 +2973,16 @@ you can combine shield() with a try/except clause, as follows:</p>
 <dd class="field-even"><p><a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">result</span> <span class="pre">=</span> <span class="pre">await</span> <span class="pre">shield(my_coroutine())</span>
+<span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.shield" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.shield()</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -2936,6 +3004,11 @@ you can combine shield() with a try/except clause, as follows:</p>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">loop</span> <span class="pre">=</span> <span class="pre">asyncio.get_event_loop()</span>
+<span class="pre">task</span> <span class="pre">=</span> <span class="pre">smart_task_factory(loop,</span> <span class="pre">my_coroutine())</span>
+<span class="pre">`</span></code></p>
 </dd></dl>
 
 </section>
@@ -3760,7 +3833,7 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <section id="module-a_sync.executor">
 <span id="a-sync-executor-module"></span><h2>a_sync.executor module<a class="headerlink" href="#module-a_sync.executor" title="Link to this heading"></a></h2>
 <p>With these executors, you can simply run sync functions in your executor with <cite>await executor.run(fn, *args)</cite>.</p>
-<p><cite>executor.submit(fn, *args)</cite> will work the same as the concurrent.futures implementation, but will return an asyncio.Future instead of a concurrent.futures.Future.</p>
+<p><cite>executor.submit(fn, *args)</cite> will work the same as the <cite>concurrent.futures</cite> implementation, but will return an <cite>asyncio.Future</cite> instead of a <cite>concurrent.futures.Future</cite>.</p>
 <p>This module provides several executor classes:
 - _AsyncExecutorMixin: A mixin providing asynchronous run and submit methods, with support for synchronous mode.
 - AsyncProcessPoolExecutor: An async process pool executor.
@@ -3798,6 +3871,12 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -3822,6 +3901,12 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.AsyncProcessPoolExecutor._start_debug_daemon" title="a_sync.executor.AsyncProcessPoolExecutor._start_debug_daemon"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_start_debug_daemon()</span></code></a> to start the debug daemon.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -3934,7 +4019,8 @@ be evaluated out-of-order.</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor.run" title="Link to this definition"></a></dt>
 <dd><p>A shorthand way to call <cite>await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)</cite>.
 Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</p>
-<p>Oh, and you can also use kwargs!</p>
+<p>In synchronous mode, the function is executed directly in the current thread.
+In asynchronous mode, the function is submitted to the executor and awaited.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -3944,6 +4030,18 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.AsyncProcessPoolExecutor.submit" title="a_sync.executor.AsyncProcessPoolExecutor.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">submit()</span></code></a> for submitting functions to the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -3969,7 +4067,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -3982,6 +4080,18 @@ cancelled.</p></li>
 <dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.AsyncProcessPoolExecutor.run" title="a_sync.executor.AsyncProcessPoolExecutor.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> for running functions with the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
@@ -4103,12 +4213,21 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor.sync_mode">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor.sync_mode" title="Link to this definition"></a></dt>
 <dd><p>Indicates if the executor is in synchronous mode (max_workers == 0).</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">executor</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Executor is in synchronous mode.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor.worker_count_current">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">worker_count_current</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor.worker_count_current" title="Link to this definition"></a></dt>
 <dd><p>Returns the current number of workers.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current worker count: </span><span class="si">{</span><span class="n">executor</span><span class="o">.</span><span class="n">worker_count_current</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -4135,6 +4254,12 @@ cancelled.</p></li>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">&quot;MyThread&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -4159,6 +4284,12 @@ cancelled.</p></li>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.AsyncThreadPoolExecutor._start_debug_daemon" title="a_sync.executor.AsyncThreadPoolExecutor._start_debug_daemon"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_start_debug_daemon()</span></code></a> to start the debug daemon.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -4262,7 +4393,8 @@ be evaluated out-of-order.</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor.run" title="Link to this definition"></a></dt>
 <dd><p>A shorthand way to call <cite>await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)</cite>.
 Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</p>
-<p>Oh, and you can also use kwargs!</p>
+<p>In synchronous mode, the function is executed directly in the current thread.
+In asynchronous mode, the function is submitted to the executor and awaited.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -4272,6 +4404,18 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.AsyncThreadPoolExecutor.submit" title="a_sync.executor.AsyncThreadPoolExecutor.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">submit()</span></code></a> for submitting functions to the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -4297,7 +4441,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -4310,6 +4454,18 @@ cancelled.</p></li>
 <dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.AsyncThreadPoolExecutor.run" title="a_sync.executor.AsyncThreadPoolExecutor.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> for running functions with the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
@@ -4411,12 +4567,21 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor.sync_mode">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor.sync_mode" title="Link to this definition"></a></dt>
 <dd><p>Indicates if the executor is in synchronous mode (max_workers == 0).</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">executor</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Executor is in synchronous mode.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor.worker_count_current">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">worker_count_current</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor.worker_count_current" title="Link to this definition"></a></dt>
 <dd><p>Returns the current number of workers.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current worker count: </span><span class="si">{</span><span class="n">executor</span><span class="o">.</span><span class="n">worker_count_current</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -4443,12 +4608,24 @@ A minimum of one thread will remain active to prevent locks.</p>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">PruningThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor._adjust_thread_count">
 <span class="sig-name descname"><span class="pre">_adjust_thread_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/executor.html#PruningThreadPoolExecutor._adjust_thread_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor._adjust_thread_count" title="Link to this definition"></a></dt>
 <dd><p>Adjusts the number of threads based on workload and idle threads.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_worker()</span></code> for the worker function that handles thread pruning.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -4468,6 +4645,12 @@ A minimum of one thread will remain active to prevent locks.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.PruningThreadPoolExecutor._start_debug_daemon" title="a_sync.executor.PruningThreadPoolExecutor._start_debug_daemon"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_start_debug_daemon()</span></code></a> to start the debug daemon.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -4571,7 +4754,8 @@ be evaluated out-of-order.</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor.run" title="Link to this definition"></a></dt>
 <dd><p>A shorthand way to call <cite>await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)</cite>.
 Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</p>
-<p>Oh, and you can also use kwargs!</p>
+<p>In synchronous mode, the function is executed directly in the current thread.
+In asynchronous mode, the function is submitted to the executor and awaited.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -4581,6 +4765,18 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.PruningThreadPoolExecutor.submit" title="a_sync.executor.PruningThreadPoolExecutor.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">submit()</span></code></a> for submitting functions to the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -4606,7 +4802,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -4619,6 +4815,18 @@ cancelled.</p></li>
 <dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.PruningThreadPoolExecutor.run" title="a_sync.executor.PruningThreadPoolExecutor.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> for running functions with the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
@@ -4732,12 +4940,21 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor.sync_mode">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor.sync_mode" title="Link to this definition"></a></dt>
 <dd><p>Indicates if the executor is in synchronous mode (max_workers == 0).</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">executor</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Executor is in synchronous mode.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor.worker_count_current">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">worker_count_current</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor.worker_count_current" title="Link to this definition"></a></dt>
 <dd><p>Returns the current number of workers.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current worker count: </span><span class="si">{</span><span class="n">executor</span><span class="o">.</span><span class="n">worker_count_current</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -4771,6 +4988,14 @@ _ASyncFutureInstanceMethod: A class to handle instance methods wrapped as ASyncF
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Awaitable</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <p>A class representing an asynchronous future result.</p>
 <p>Inherits from both concurrent.futures.Future and Awaitable[T], allowing it to be used in both synchronous and asynchronous contexts.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">async_fn</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="mi">42</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="n">async_fn</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">future</span>
+<span class="go">42</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.future.ASyncFuture.__add">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.future.ASyncFuture.__add" title="Link to this definition"></a></dt>
@@ -4954,8 +5179,11 @@ _ASyncFutureInstanceMethod: A class to handle instance methods wrapped as ASyncF
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>other</strong> – The other dependency to list.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<a class="reference internal" href="#a_sync.future.ASyncFuture" title="a_sync.future.ASyncFuture"><em>ASyncFuture</em></a>]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of ASyncFuture dependencies.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<a class="reference internal" href="#a_sync.future.ASyncFuture" title="a_sync.future.ASyncFuture"><em>ASyncFuture</em></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5208,6 +5436,17 @@ False then the work should not be executed.</p>
 <dd><p>If this future is not done, it will work like cf.Future.result. It will block, await the awaitable, and return the result when ready.
 If this future is done and the result has attribute <cite>result</cite>, will return <cite>getattr(future_result, ‘result’)</cite>
 If this future is done and the result does NOT have attribute <cite>result</cite>, will again work like cf.Future.result</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The result of the future or a callable to get the result.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="mi">42</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="go">42</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -5223,10 +5462,22 @@ If this future is done and the result does NOT have attribute <cite>result</cite
 <li><p><strong>**kwargs</strong> (<em>Unpack</em><em>[</em><a class="reference internal" href="#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a><em>]</em>) – Additional keyword arguments for the modifier.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <em>T</em> | <a class="reference internal" href="#a_sync.future.ASyncFuture" title="a_sync.future.ASyncFuture"><em>ASyncFuture</em></a>[<em>T</em>]]</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A callable that returns either the result or an ASyncFuture.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <em>T</em> | <a class="reference internal" href="#a_sync.future.ASyncFuture" title="a_sync.future.ASyncFuture"><em>ASyncFuture</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@future</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">async_function</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="mi">42</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">async_function</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ASyncFuture</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>
@@ -5882,23 +6133,33 @@ iterate over items, applying the key function to each item for sorting.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.task.</span></span><span class="sig-name descname"><span class="pre">TaskMapping</span></span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDict</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterable</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]]</p>
 <p>A mapping of keys to asynchronous tasks with additional functionality.</p>
-<p>TaskMapping is a specialized dictionary that maps keys to asyncio Tasks. It provides
+<p><cite>TaskMapping</cite> is a specialized dictionary that maps keys to <cite>asyncio</cite> Tasks. It provides
 convenient methods for creating, managing, and iterating over these tasks asynchronously.</p>
+<p>Tasks are created automatically for each key using a provided function. You cannot manually set items in a <cite>TaskMapping</cite> using dictionary-like syntax.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
 <span class="gp">... </span>        <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
 <span class="gp">... </span>            <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 <span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;url_fetcher&#39;</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;example.com&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;python.org&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;http://example.com&#39;</span><span class="p">,</span> <span class="s1">&#39;https://www.python.org&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;url_fetcher&#39;</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="go">Data for python.org: http://python.org</span>
 <span class="go">Data for example.com: http://example.com</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You cannot manually set items in a <cite>TaskMapping</cite> using dictionary-like syntax. Tasks are created and managed internally.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task</span></code></a></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.create_task" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code></a></p></li>
+</ul>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping.__aiter__">
@@ -5959,6 +6220,13 @@ convenient methods for creating, managing, and iterating over these tasks asynch
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>async def process_item(item: int) -&gt; int:</dt><dd><p>await asyncio.sleep(1)
+return item * 2</p>
+</dd>
+</dl>
+<p>task_map = TaskMapping(process_item, [1, 2, 3], concurrency=2)</p>
 </dd></dl>
 
 <dl class="py method">
@@ -6127,6 +6395,17 @@ or tuples of key-value pairs representing the results of completed tasks.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<em>K</em>, <em>V</em>]]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>async def process_item(item: int) -&gt; int:</dt><dd><p>await asyncio.sleep(1)
+return item * 2</p>
+</dd>
+</dl>
+<p>task_map = TaskMapping(process_item)
+async for key, result in task_map.map([1, 2, 3]):</p>
+<blockquote>
+<div><p>print(f”Processed {key}: {result}”)</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py method">
@@ -6197,6 +6476,17 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<em>K</em>, <em>V</em>]]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>async def process_item(item: int) -&gt; int:</dt><dd><p>await asyncio.sleep(1)
+return item * 2</p>
+</dd>
+</dl>
+<p>task_map = TaskMapping(process_item, [1, 2, 3])
+async for key, result in task_map.yield_completed():</p>
+<blockquote>
+<div><p>print(f”Completed {key}: {result}”)</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py attribute">
@@ -6738,6 +7028,22 @@ caching functionality, storing the computed value after the first access.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id17"><span class="problematic" id="id18">``</span></a><a href="#id19"><span class="problematic" id="id20">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._all([1, 2, 3])
+<a href="#id21"><span class="problematic" id="id22">``</span></a><a href="#id23"><span class="problematic" id="id24">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6760,6 +7066,22 @@ caching functionality, storing the computed value after the first access.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id25"><span class="problematic" id="id26">``</span></a><a href="#id27"><span class="problematic" id="id28">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._any([-1, 0, 1])
+<a href="#id29"><span class="problematic" id="id30">``</span></a><a href="#id31"><span class="problematic" id="id32">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6777,6 +7099,13 @@ caching functionality, storing the computed value after the first access.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -6809,6 +7138,22 @@ caching functionality, storing the computed value after the first access.</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id33"><span class="problematic" id="id34">``</span></a><a href="#id35"><span class="problematic" id="id36">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._max([3, 1, 2])
+<a href="#id37"><span class="problematic" id="id38">``</span></a><a href="#id39"><span class="problematic" id="id40">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6831,6 +7176,22 @@ caching functionality, storing the computed value after the first access.</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id41"><span class="problematic" id="id42">``</span></a><a href="#id43"><span class="problematic" id="id44">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._min([3, 1, 2])
+<a href="#id45"><span class="problematic" id="id46">``</span></a><a href="#id47"><span class="problematic" id="id48">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6853,6 +7214,22 @@ caching functionality, storing the computed value after the first access.</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id49"><span class="problematic" id="id50">``</span></a><a href="#id51"><span class="problematic" id="id52">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._sum([1, 2, 3])
+<a href="#id53"><span class="problematic" id="id54">``</span></a><a href="#id55"><span class="problematic" id="id56">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7004,6 +7381,13 @@ caching functionality, storing the computed value after the first access.</p>
 <dd class="field-odd"><p>The modified _await function.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -7012,9 +7396,21 @@ caching functionality, storing the computed value after the first access.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if all results are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.all([1, 2, 3])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -7023,9 +7419,21 @@ caching functionality, storing the computed value after the first access.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if any result is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.any([-1, 0, 1])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -7037,12 +7445,18 @@ caching functionality, storing the computed value after the first access.</p>
 <dd class="field-odd"><p>The default execution mode.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">ModifierManager.default</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.field_name">
 <span class="sig-name descname"><span class="pre">field_name</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.field_name" title="Link to this definition"></a></dt>
-<dd><p>The name of the field the {cls} is bound to.</p>
+<dd><p>The name of the field the <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncDescriptor</span></code> is bound to.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -7062,9 +7476,21 @@ caching functionality, storing the computed value after the first access.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the maximum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.max([3, 1, 2])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -7073,9 +7499,25 @@ caching functionality, storing the computed value after the first access.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the minimum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id57"><span class="problematic" id="id58">``</span></a><a href="#id59"><span class="problematic" id="id60">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.min([3, 1, 2])
+<a href="#id61"><span class="problematic" id="id62">``</span></a><a href="#id63"><span class="problematic" id="id64">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -7089,9 +7531,25 @@ caching functionality, storing the computed value after the first access.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the sum of results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id65"><span class="problematic" id="id66">``</span></a><a href="#id67"><span class="problematic" id="id68">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.sum([1, 2, 3])
+<a href="#id69"><span class="problematic" id="id70">``</span></a><a href="#id71"><span class="problematic" id="id72">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -7416,6 +7874,22 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id73"><span class="problematic" id="id74">``</span></a><a href="#id75"><span class="problematic" id="id76">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._all([1, 2, 3])
+<a href="#id77"><span class="problematic" id="id78">``</span></a><a href="#id79"><span class="problematic" id="id80">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7438,6 +7912,22 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id81"><span class="problematic" id="id82">``</span></a><a href="#id83"><span class="problematic" id="id84">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._any([-1, 0, 1])
+<a href="#id85"><span class="problematic" id="id86">``</span></a><a href="#id87"><span class="problematic" id="id88">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7455,6 +7945,13 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -7477,6 +7974,22 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id89"><span class="problematic" id="id90">``</span></a><a href="#id91"><span class="problematic" id="id92">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._max([3, 1, 2])
+<a href="#id93"><span class="problematic" id="id94">``</span></a><a href="#id95"><span class="problematic" id="id96">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7499,6 +8012,22 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id97"><span class="problematic" id="id98">``</span></a><a href="#id99"><span class="problematic" id="id100">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._min([3, 1, 2])
+<a href="#id101"><span class="problematic" id="id102">``</span></a><a href="#id103"><span class="problematic" id="id104">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7521,6 +8050,22 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id105"><span class="problematic" id="id106">``</span></a><a href="#id107"><span class="problematic" id="id108">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._sum([1, 2, 3])
+<a href="#id109"><span class="problematic" id="id110">``</span></a><a href="#id111"><span class="problematic" id="id112">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7584,6 +8129,13 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-odd"><p>The modified _await function.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -7592,9 +8144,21 @@ assert sync_instance1 is not async_instance1</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if all results are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.all([1, 2, 3])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -7603,9 +8167,21 @@ assert sync_instance1 is not async_instance1</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if any result is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.any([-1, 0, 1])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -7617,12 +8193,18 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-odd"><p>The default execution mode.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">ModifierManager.default</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.field_name">
 <span class="sig-name descname"><span class="pre">field_name</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.field_name" title="Link to this definition"></a></dt>
-<dd><p>The name of the field the {cls} is bound to.</p>
+<dd><p>The name of the field the <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncDescriptor</span></code> is bound to.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -7642,9 +8224,21 @@ assert sync_instance1 is not async_instance1</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the maximum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.max([3, 1, 2])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -7653,9 +8247,25 @@ assert sync_instance1 is not async_instance1</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the minimum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id113"><span class="problematic" id="id114">``</span></a><a href="#id115"><span class="problematic" id="id116">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.min([3, 1, 2])
+<a href="#id117"><span class="problematic" id="id118">``</span></a><a href="#id119"><span class="problematic" id="id120">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -7669,9 +8279,25 @@ assert sync_instance1 is not async_instance1</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the sum of results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id121"><span class="problematic" id="id122">``</span></a><a href="#id123"><span class="problematic" id="id124">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.sum([1, 2, 3])
+<a href="#id125"><span class="problematic" id="id126">``</span></a><a href="#id127"><span class="problematic" id="id128">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -7713,6 +8339,12 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -7737,6 +8369,12 @@ assert sync_instance1 is not async_instance1</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.AsyncProcessPoolExecutor._start_debug_daemon" title="a_sync.AsyncProcessPoolExecutor._start_debug_daemon"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_start_debug_daemon()</span></code></a> to start the debug daemon.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -7828,7 +8466,7 @@ If set to one, the items in the list will be sent one at a time.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id17"><span class="problematic" id="id18">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id129"><span class="problematic" id="id130">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -7838,7 +8476,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.13)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id19"><span class="problematic" id="id20">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id131"><span class="problematic" id="id132">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -7849,7 +8487,8 @@ be evaluated out-of-order.</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor.run" title="Link to this definition"></a></dt>
 <dd><p>A shorthand way to call <cite>await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)</cite>.
 Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</p>
-<p>Oh, and you can also use kwargs!</p>
+<p>In synchronous mode, the function is executed directly in the current thread.
+In asynchronous mode, the function is submitted to the executor and awaited.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -7859,6 +8498,18 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.AsyncProcessPoolExecutor.submit" title="a_sync.AsyncProcessPoolExecutor.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">submit()</span></code></a> for submitting functions to the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -7884,7 +8535,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -7897,6 +8548,18 @@ cancelled.</p></li>
 <dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.AsyncProcessPoolExecutor.run" title="a_sync.AsyncProcessPoolExecutor.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> for running functions with the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
@@ -7980,8 +8643,8 @@ cancelled.</p></li>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id21">
-<span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'processes'</span></em><a class="headerlink" href="#id21" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id133">
+<span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'processes'</span></em><a class="headerlink" href="#id133" title="Link to this definition"></a></dt>
 <dd><p>The type of workers used, set to “processes”.</p>
 </dd></dl>
 
@@ -8018,12 +8681,21 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor.sync_mode">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor.sync_mode" title="Link to this definition"></a></dt>
 <dd><p>Indicates if the executor is in synchronous mode (max_workers == 0).</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">executor</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Executor is in synchronous mode.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor.worker_count_current">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">worker_count_current</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor.worker_count_current" title="Link to this definition"></a></dt>
 <dd><p>Returns the current number of workers.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current worker count: </span><span class="si">{</span><span class="n">executor</span><span class="o">.</span><span class="n">worker_count_current</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -8050,6 +8722,12 @@ cancelled.</p></li>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">&quot;MyThread&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -8074,6 +8752,12 @@ cancelled.</p></li>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.AsyncThreadPoolExecutor._start_debug_daemon" title="a_sync.AsyncThreadPoolExecutor._start_debug_daemon"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_start_debug_daemon()</span></code></a> to start the debug daemon.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -8156,7 +8840,7 @@ ThreadPoolExecutor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id22"><span class="problematic" id="id23">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id134"><span class="problematic" id="id135">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -8166,7 +8850,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.13)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id24"><span class="problematic" id="id25">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id136"><span class="problematic" id="id137">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -8177,7 +8861,8 @@ be evaluated out-of-order.</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor.run" title="Link to this definition"></a></dt>
 <dd><p>A shorthand way to call <cite>await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)</cite>.
 Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</p>
-<p>Oh, and you can also use kwargs!</p>
+<p>In synchronous mode, the function is executed directly in the current thread.
+In asynchronous mode, the function is submitted to the executor and awaited.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -8187,6 +8872,18 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.AsyncThreadPoolExecutor.submit" title="a_sync.AsyncThreadPoolExecutor.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">submit()</span></code></a> for submitting functions to the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -8212,7 +8909,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -8225,6 +8922,18 @@ cancelled.</p></li>
 <dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.AsyncThreadPoolExecutor.run" title="a_sync.AsyncThreadPoolExecutor.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> for running functions with the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
@@ -8326,12 +9035,21 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor.sync_mode">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor.sync_mode" title="Link to this definition"></a></dt>
 <dd><p>Indicates if the executor is in synchronous mode (max_workers == 0).</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">executor</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Executor is in synchronous mode.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor.worker_count_current">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">worker_count_current</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor.worker_count_current" title="Link to this definition"></a></dt>
 <dd><p>Returns the current number of workers.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current worker count: </span><span class="si">{</span><span class="n">executor</span><span class="o">.</span><span class="n">worker_count_current</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -9397,12 +10115,24 @@ A minimum of one thread will remain active to prevent locks.</p>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">PruningThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor._adjust_thread_count">
 <span class="sig-name descname"><span class="pre">_adjust_thread_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/executor.html#PruningThreadPoolExecutor._adjust_thread_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor._adjust_thread_count" title="Link to this definition"></a></dt>
 <dd><p>Adjusts the number of threads based on workload and idle threads.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_worker()</span></code> for the worker function that handles thread pruning.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -9422,6 +10152,12 @@ A minimum of one thread will remain active to prevent locks.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.PruningThreadPoolExecutor._start_debug_daemon" title="a_sync.PruningThreadPoolExecutor._start_debug_daemon"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_start_debug_daemon()</span></code></a> to start the debug daemon.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -9504,7 +10240,7 @@ ThreadPoolExecutor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id26"><span class="problematic" id="id27">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id138"><span class="problematic" id="id139">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -9514,7 +10250,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.13)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id28"><span class="problematic" id="id29">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id140"><span class="problematic" id="id141">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -9525,7 +10261,8 @@ be evaluated out-of-order.</p>
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor.run" title="Link to this definition"></a></dt>
 <dd><p>A shorthand way to call <cite>await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)</cite>.
 Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</p>
-<p>Oh, and you can also use kwargs!</p>
+<p>In synchronous mode, the function is executed directly in the current thread.
+In asynchronous mode, the function is submitted to the executor and awaited.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -9535,6 +10272,18 @@ Doesn’t <cite>await this_executor.run(fn, *args)</cite> look so much better?</
 </ul>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">executor</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.PruningThreadPoolExecutor.submit" title="a_sync.PruningThreadPoolExecutor.submit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">submit()</span></code></a> for submitting functions to the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -9560,7 +10309,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -9573,6 +10322,18 @@ cancelled.</p></li>
 <dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="n">value1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.PruningThreadPoolExecutor.run" title="a_sync.PruningThreadPoolExecutor.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run()</span></code></a> for running functions with the executor.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
@@ -9686,12 +10447,21 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor.sync_mode">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor.sync_mode" title="Link to this definition"></a></dt>
 <dd><p>Indicates if the executor is in synchronous mode (max_workers == 0).</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">executor</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Executor is in synchronous mode.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor.worker_count_current">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">worker_count_current</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor.worker_count_current" title="Link to this definition"></a></dt>
 <dd><p>Returns the current number of workers.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current worker count: </span><span class="si">{</span><span class="n">executor</span><span class="o">.</span><span class="n">worker_count_current</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -10026,7 +10796,7 @@ the queue.</p>
 <p>This semaphore includes debug logging and can be used to decorate coroutine functions.
 It allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.</p>
 <p>So you can write this pattern:</p>
-<p><a href="#id30"><span class="problematic" id="id31">``</span></a>`
+<p><a href="#id142"><span class="problematic" id="id143">``</span></a>`
 semaphore = Semaphore(5)</p>
 <dl class="simple">
 <dt>async def limited():</dt><dd><dl class="simple">
@@ -10035,16 +10805,16 @@ semaphore = Semaphore(5)</p>
 </dl>
 </dd>
 </dl>
-<p><a href="#id32"><span class="problematic" id="id33">``</span></a><a href="#id34"><span class="problematic" id="id35">`</span></a></p>
+<p><a href="#id144"><span class="problematic" id="id145">``</span></a><a href="#id146"><span class="problematic" id="id147">`</span></a></p>
 <p>like this:</p>
-<p><a href="#id36"><span class="problematic" id="id37">``</span></a>`
+<p><a href="#id148"><span class="problematic" id="id149">``</span></a>`
 semaphore = Semaphore(5)</p>
 <p>&#64;semaphore
 async def limited():</p>
 <blockquote>
 <div><p>return 1</p>
 </div></blockquote>
-<p><a href="#id38"><span class="problematic" id="id39">``</span></a><a href="#id40"><span class="problematic" id="id41">`</span></a></p>
+<p><a href="#id150"><span class="problematic" id="id151">``</span></a><a href="#id152"><span class="problematic" id="id153">`</span></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#Semaphore.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.Semaphore.__call__" title="Link to this definition"></a></dt>
@@ -10668,23 +11438,33 @@ the queue.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">TaskMapping</span></span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDict</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task[V]</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterable</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]]</p>
 <p>A mapping of keys to asynchronous tasks with additional functionality.</p>
-<p>TaskMapping is a specialized dictionary that maps keys to asyncio Tasks. It provides
+<p><cite>TaskMapping</cite> is a specialized dictionary that maps keys to <cite>asyncio</cite> Tasks. It provides
 convenient methods for creating, managing, and iterating over these tasks asynchronously.</p>
+<p>Tasks are created automatically for each key using a provided function. You cannot manually set items in a <cite>TaskMapping</cite> using dictionary-like syntax.</p>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
 <span class="gp">... </span>        <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
 <span class="gp">... </span>            <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 <span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;url_fetcher&#39;</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;example.com&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;python.org&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;http://example.com&#39;</span><span class="p">,</span> <span class="s1">&#39;https://www.python.org&#39;</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;url_fetcher&#39;</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="gp">...</span>
 <span class="go">Data for python.org: http://python.org</span>
 <span class="go">Data for example.com: http://example.com</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You cannot manually set items in a <cite>TaskMapping</cite> using dictionary-like syntax. Tasks are created and managed internally.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task</span></code></a></p></li>
+<li><p><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.create_task" title="a_sync.asyncio.create_task"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code></a></p></li>
+</ul>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.TaskMapping.__aiter__">
@@ -10745,6 +11525,13 @@ convenient methods for creating, managing, and iterating over these tasks asynch
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>async def process_item(item: int) -&gt; int:</dt><dd><p>await asyncio.sleep(1)
+return item * 2</p>
+</dd>
+</dl>
+<p>task_map = TaskMapping(process_item, [1, 2, 3], concurrency=2)</p>
 </dd></dl>
 
 <dl class="py method">
@@ -10913,6 +11700,17 @@ or tuples of key-value pairs representing the results of completed tasks.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<em>K</em>, <em>V</em>]]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>async def process_item(item: int) -&gt; int:</dt><dd><p>await asyncio.sleep(1)
+return item * 2</p>
+</dd>
+</dl>
+<p>task_map = TaskMapping(process_item)
+async for key, result in task_map.map([1, 2, 3]):</p>
+<blockquote>
+<div><p>print(f”Processed {key}: {result}”)</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py method">
@@ -10983,6 +11781,17 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a>[<em>K</em>, <em>V</em>]]</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<dl class="simple">
+<dt>async def process_item(item: int) -&gt; int:</dt><dd><p>await asyncio.sleep(1)
+return item * 2</p>
+</dd>
+</dl>
+<p>task_map = TaskMapping(process_item, [1, 2, 3])
+async for key, result in task_map.yield_completed():</p>
+<blockquote>
+<div><p>print(f”Completed {key}: {result}”)</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py attribute">
@@ -11454,6 +12263,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id154"><span class="problematic" id="id155">``</span></a><a href="#id156"><span class="problematic" id="id157">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._all([1, 2, 3])
+<a href="#id158"><span class="problematic" id="id159">``</span></a><a href="#id160"><span class="problematic" id="id161">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11476,6 +12301,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id162"><span class="problematic" id="id163">``</span></a><a href="#id164"><span class="problematic" id="id165">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._any([-1, 0, 1])
+<a href="#id166"><span class="problematic" id="id167">``</span></a><a href="#id168"><span class="problematic" id="id169">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11493,6 +12334,13 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -11525,6 +12373,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id170"><span class="problematic" id="id171">``</span></a><a href="#id172"><span class="problematic" id="id173">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._max([3, 1, 2])
+<a href="#id174"><span class="problematic" id="id175">``</span></a><a href="#id176"><span class="problematic" id="id177">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11547,6 +12411,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id178"><span class="problematic" id="id179">``</span></a><a href="#id180"><span class="problematic" id="id181">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._min([3, 1, 2])
+<a href="#id182"><span class="problematic" id="id183">``</span></a><a href="#id184"><span class="problematic" id="id185">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11569,6 +12449,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id186"><span class="problematic" id="id187">``</span></a><a href="#id188"><span class="problematic" id="id189">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._sum([1, 2, 3])
+<a href="#id190"><span class="problematic" id="id191">``</span></a><a href="#id192"><span class="problematic" id="id193">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11720,6 +12616,13 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p>The modified _await function.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -11728,9 +12631,21 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if all results are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.all([1, 2, 3])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -11739,9 +12654,21 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if any result is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.any([-1, 0, 1])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -11753,12 +12680,18 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p>The default execution mode.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">ModifierManager.default</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.cached_property.field_name">
 <span class="sig-name descname"><span class="pre">field_name</span></span><a class="headerlink" href="#a_sync.cached_property.field_name" title="Link to this definition"></a></dt>
-<dd><p>The name of the field the {cls} is bound to.</p>
+<dd><p>The name of the field the <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncDescriptor</span></code> is bound to.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -11778,9 +12711,21 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the maximum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.max([3, 1, 2])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -11789,9 +12734,25 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the minimum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id194"><span class="problematic" id="id195">``</span></a><a href="#id196"><span class="problematic" id="id197">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.min([3, 1, 2])
+<a href="#id198"><span class="problematic" id="id199">``</span></a><a href="#id200"><span class="problematic" id="id201">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -11805,9 +12766,25 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the sum of results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id202"><span class="problematic" id="id203">``</span></a><a href="#id204"><span class="problematic" id="id205">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.sum([1, 2, 3])
+<a href="#id206"><span class="problematic" id="id207">``</span></a><a href="#id208"><span class="problematic" id="id209">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -11872,6 +12849,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id210"><span class="problematic" id="id211">``</span></a><a href="#id212"><span class="problematic" id="id213">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._all([1, 2, 3])
+<a href="#id214"><span class="problematic" id="id215">``</span></a><a href="#id216"><span class="problematic" id="id217">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11894,6 +12887,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id218"><span class="problematic" id="id219">``</span></a><a href="#id220"><span class="problematic" id="id221">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._any([-1, 0, 1])
+<a href="#id222"><span class="problematic" id="id223">``</span></a><a href="#id224"><span class="problematic" id="id225">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11911,6 +12920,13 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -11933,6 +12949,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id226"><span class="problematic" id="id227">``</span></a><a href="#id228"><span class="problematic" id="id229">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._max([3, 1, 2])
+<a href="#id230"><span class="problematic" id="id231">``</span></a><a href="#id232"><span class="problematic" id="id233">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11955,6 +12987,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id234"><span class="problematic" id="id235">``</span></a><a href="#id236"><span class="problematic" id="id237">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._min([3, 1, 2])
+<a href="#id238"><span class="problematic" id="id239">``</span></a><a href="#id240"><span class="problematic" id="id241">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11977,6 +13025,22 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p><em>T</em></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id242"><span class="problematic" id="id243">``</span></a><a href="#id244"><span class="problematic" id="id245">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method._sum([1, 2, 3])
+<a href="#id246"><span class="problematic" id="id247">``</span></a><a href="#id248"><span class="problematic" id="id249">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -12040,6 +13104,13 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p>The modified _await function.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -12048,9 +13119,21 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if all results are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.all([1, 2, 3])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -12059,9 +13142,21 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if any result is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.any([-1, 0, 1])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -12073,12 +13168,18 @@ become larger than zero again, wake up that coroutine.</p>
 <dd class="field-odd"><p>The default execution mode.</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">ModifierManager.default</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.property.field_name">
 <span class="sig-name descname"><span class="pre">field_name</span></span><a class="headerlink" href="#a_sync.property.field_name" title="Link to this definition"></a></dt>
-<dd><p>The name of the field the {cls} is bound to.</p>
+<dd><p>The name of the field the <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncDescriptor</span></code> is bound to.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -12098,9 +13199,21 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the maximum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<dl class="simple">
+<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</dd>
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.max([3, 1, 2])</p>
 </dd></dl>
 
 <dl class="py property">
@@ -12109,9 +13222,25 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the minimum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id250"><span class="problematic" id="id251">``</span></a><a href="#id252"><span class="problematic" id="id253">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.min([3, 1, 2])
+<a href="#id254"><span class="problematic" id="id255">``</span></a><a href="#id256"><span class="problematic" id="id257">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -12125,9 +13254,25 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the sum of results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An ASyncFunction object.</p>
+<dd class="field-odd"><p>An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> object.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p><a href="#id258"><span class="problematic" id="id259">``</span></a><a href="#id260"><span class="problematic" id="id261">`</span></a>python
+class MyDescriptor(ASyncDescriptor):</p>
+<blockquote>
+<div><dl class="simple">
+<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+</dd>
+</dl>
+<p>instance = MyClass()
+result = await instance.my_method.sum([1, 2, 3])
+<a href="#id262"><span class="problematic" id="id263">``</span></a><a href="#id264"><span class="problematic" id="id265">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -12189,9 +13334,9 @@ config.default_sync_executor.</p></li>
 <dt>As a simple decorator:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span>
 <span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_async_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">some_fn</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">some_async_fn</span><span class="p">()</span>
 <span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_async_fn</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
 </div>
@@ -12201,7 +13346,7 @@ config.default_sync_executor.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_sync_fn</span><span class="p">()</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_sync_fn</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="go">&lt;coroutine object some_sync_fn at 0x12345678&gt;</span>
+<span class="go">&lt;coroutine object some_sync_fn at 0x7fb4f5fb49c0&gt;</span>
 </pre></div>
 </div>
 </dd>
@@ -12213,6 +13358,18 @@ config.default_sync_executor.</p></li>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&lt;coroutine object some_fn at 0x7fb4f5fb49c0&gt;</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="s1">&#39;async&#39;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">()</span>
+<span class="go">&lt;coroutine object some_fn at 0x7fb4f5fb49c0&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">(</span><span class="n">asynchronous</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
 </div>
@@ -12241,19 +13398,25 @@ config.default_sync_executor.</p></li>
 </dl>
 </li>
 </ol>
-<p>The decorated function can then be called either synchronously or asynchronously:</p>
-<blockquote>
-<div><p>result = some_fn()  # Synchronous call
-result = await some_fn()  # Asynchronous call</p>
-</div></blockquote>
-<p>The execution mode can also be explicitly specified during the call:</p>
-<blockquote>
-<div><p>result = some_fn(sync=True)  # Force synchronous execution
-result = await some_fn(sync=False)  # Force asynchronous execution</p>
-</div></blockquote>
+<dl>
+<dt>The decorated function can then be called either synchronously or asynchronously:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">some_fn</span><span class="p">()</span>  <span class="c1"># Synchronous call</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">some_fn</span><span class="p">()</span>  <span class="c1"># Asynchronous call</span>
+</pre></div>
+</div>
+</dd>
+<dt>The execution mode can also be explicitly specified during the call:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">some_fn</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Force synchronous execution</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">some_fn</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Force asynchronous execution</span>
+</pre></div>
+</div>
+</dd>
+</dl>
 <p>This decorator is particularly useful for libraries that need to support
 both synchronous and asynchronous usage, or for gradually migrating
 synchronous code to asynchronous without breaking existing interfaces.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncDecorator</span></code></p>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -12351,7 +13514,7 @@ It short-circuits on the first truthy value. If the iterable is empty, it return
 </dl>
 <p class="rubric">Examples</p>
 <p>Awaiting individual awaitables:
-<a href="#id42"><span class="problematic" id="id43">``</span></a>`
+<a href="#id266"><span class="problematic" id="id267">``</span></a>`
 awaitables = [async_function1(), async_function2()]
 for coro in as_completed(awaitables):</p>
 <blockquote>
@@ -12362,9 +13525,9 @@ for coro in as_completed(awaitables):</p>
 <dt>async for val in as_completed(awaitables, aiter=True):</dt><dd><p>…</p>
 </dd>
 </dl>
-<p><a href="#id44"><span class="problematic" id="id45">``</span></a><a href="#id46"><span class="problematic" id="id47">`</span></a></p>
+<p><a href="#id268"><span class="problematic" id="id269">``</span></a><a href="#id270"><span class="problematic" id="id271">`</span></a></p>
 <p>Awaiting mappings of awaitables:
-<a href="#id48"><span class="problematic" id="id49">``</span></a>`
+<a href="#id272"><span class="problematic" id="id273">``</span></a>`
 mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dl class="simple">
 <dt>for coro in as_completed(mapping):</dt><dd><p>k, v = await coro
@@ -12373,7 +13536,7 @@ mapping = {‘key1’: async_function1(), ‘key2’: async_function2()}</p>
 <dt>async for k, v in as_completed(mapping, aiter=True):</dt><dd><p>…</p>
 </dd>
 </dl>
-<p><a href="#id50"><span class="problematic" id="id51">``</span></a><a href="#id52"><span class="problematic" id="id53">`</span></a></p>
+<p><a href="#id274"><span class="problematic" id="id275">``</span></a><a href="#id276"><span class="problematic" id="id277">`</span></a></p>
 </dd></dl>
 
 <dl class="py function">
