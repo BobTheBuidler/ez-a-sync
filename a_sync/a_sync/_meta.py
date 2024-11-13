@@ -6,12 +6,10 @@ from typing import Any, Dict, Tuple
 
 from a_sync import ENVIRONMENT_VARIABLES
 from a_sync.a_sync import modifiers
-from a_sync.a_sync.function import ASyncFunction, ModifiedMixin
+from a_sync.a_sync.function import ASyncFunction, _ModifiedMixin
 from a_sync.a_sync.method import ASyncMethodDescriptor
-from a_sync.a_sync.property import (
-    ASyncPropertyDescriptor,
-    ASyncCachedPropertyDescriptor,
-)
+from a_sync.a_sync.property import (ASyncCachedPropertyDescriptor,
+                                    ASyncPropertyDescriptor)
 from a_sync.future import _ASyncFutureWrappedFn  # type: ignore [attr-defined]
 from a_sync.iter import ASyncGeneratorFunction
 from a_sync.primitives.locks.semaphore import Semaphore
@@ -26,7 +24,8 @@ class ASyncMeta(ABCMeta):
     wrapped with asynchronous capabilities upon class instantiation. This includes
     wrapping functions with `ASyncMethodDescriptor` and properties with
     `ASyncPropertyDescriptor` or `ASyncCachedPropertyDescriptor`. Additionally, it handles
-    `ModifiedMixin` objects, which are used when functions are decorated with a_sync decorators
+    `_ModifiedMixin` objects (# TODO replace this with the actual subclasses of _modifiedMixin, which is just an internal use mixin class that has no meaning ot the user), 
+    which are used when functions are decorated with a_sync decorators
     to apply specific modifiers to those functions.
     """
     def __new__(cls, new_class_name, bases, attrs):
@@ -76,11 +75,12 @@ class ASyncMeta(ABCMeta):
             )
             fn_modifiers = dict(class_defined_modifiers)
             # Special handling for functions decorated with a_sync decorators
-            if isinstance(attr_value, ModifiedMixin):
+            if isinstance(attr_value, _ModifiedMixin):
                 logger.debug(
-                    "`%s.%s` is a `ModifiedMixin` object, which means you decorated it with an a_sync decorator even though `%s` is an ASyncABC class",
+                    "`%s.%s` is a `%s` object, which means you decorated it with an a_sync decorator even though `%s` is an ASyncABC class",
                     new_class_name,
                     attr_name,
+                    type(attr_value).__name__,
                     new_class_name,
                 )
                 logger.debug(

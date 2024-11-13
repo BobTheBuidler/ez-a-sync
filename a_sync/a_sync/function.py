@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class ModifiedMixin:
+class _ModifiedMixin:
     """
     A mixin class for internal use that provides functionality for applying modifiers to functions.
 
@@ -77,7 +77,7 @@ def _validate_wrapped_fn(fn: Callable) -> None:
             )
 
 
-class ASyncFunction(ModifiedMixin, Generic[P, T]):
+class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     """
     A callable wrapper object that can be executed both synchronously and asynchronously.
 
@@ -575,7 +575,7 @@ else:
     _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
 
 
-class ASyncDecorator(ModifiedMixin):
+class ASyncDecorator(_ModifiedMixin):
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         """
         Initializes an ASyncDecorator instance.
