@@ -53,7 +53,7 @@ async def gather(
 
     Differences from asyncio.gather:
     - Uses type hints for use with static type checkers.
-    - Supports gathering either individual awaitables or a k:v mapping of awaitables, but not both simultaneously.
+    - Supports gathering either individual awaitables or a k:v mapping of awaitables.
     - Provides progress reporting using tqdm if 'tqdm' is set to True.
     - Allows exclusion of results based on a condition using the 'exclude_if' parameter.
 
@@ -69,22 +69,18 @@ async def gather(
 
         - Results will be a list containing the result of each awaitable in sequential order.
 
-        ```
         >>> results = await gather(thing1(), thing2())
         >>> results
         ['result', 123]
-        ```
 
         Awaiting a mapping of awaitables:
 
         - Results will be a dictionary with 'key1' mapped to the result of thing1() and 'key2' mapped to the result of thing2.
 
-        ```
         >>> mapping = {'key1': thing1(), 'key2': thing2()}
         >>> results = await gather(mapping)
         >>> results
         {'key1': 'result', 'key2': 123}
-        ```
     """
     is_mapping = _is_mapping(awaitables)
     results = await (
@@ -135,12 +131,11 @@ async def gather_mapping(
 
     Example:
         The 'results' dictionary will contain the awaited results, where keys match the keys in the 'mapping' and values contain the results of the corresponding awaitables.
-        ```
+
         >>> mapping = {'task1': async_function1(), 'task2': async_function2(), 'task3': async_function3()}
         >>> results = await gather_mapping(mapping)
         >>> results
         {'task1': "result", 'task2': 123, 'task3': None}
-        ```
     """
     results = {
         k: v
