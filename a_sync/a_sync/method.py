@@ -31,8 +31,27 @@ logger = logging.getLogger(__name__)
 
 class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     """
-    This class provides the core functionality for creating :class:`ASyncBoundMethod` objects,
+    Provides the core functionality for creating :class:`ASyncBoundMethod` objects,
     which can be used to define methods that can be called both synchronously and asynchronously.
+
+    It handles the binding of methods to instances and determines the default mode
+    ("sync" or "async") based on the instance type or the `default` attribute.
+
+    Examples:
+        >>> class MyClass:
+        ...     @ASyncMethodDescriptor
+        ...     async def my_method(self):
+        ...         return "Hello, World!"
+        ...
+        >>> obj = MyClass()
+        >>> await obj.my_method()
+        'Hello, World!'
+        >>> obj.my_method(sync=True)
+        'Hello, World!'
+
+    See Also:
+        - :class:`ASyncBoundMethod`
+        - :class:`ASyncFunction`
     """
 
     __wrapped__: AnyFn[P, T]
@@ -47,8 +66,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             *args: Positional arguments.
             **kwargs: Keyword arguments.
 
-        Returns:
-            The result of the method call.
+        Examples:
+            >>> descriptor = ASyncMethodDescriptor(my_async_function)
+            >>> await descriptor(instance, arg1, arg2, kwarg1=value1)
         """
         # NOTE: This is only used by TaskMapping atm  # TODO: use it elsewhere
         logger.debug(
@@ -74,8 +94,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             instance: The instance to bind the method to, or None.
             owner: The owner class.
 
-        Returns:
-            The descriptor or bound method.
+        Examples:
+            >>> descriptor = ASyncMethodDescriptor(my_function)
+            >>> bound_method = descriptor.__get__(instance, MyClass)
         """
         if instance is None:
             return self
@@ -136,7 +157,12 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             value: The value to set.
 
         Raises:
-            :class:`RuntimeError`: Always raised to prevent setting.
+            RuntimeError: Always raised to prevent setting.
+
+        Examples:
+            >>> descriptor = ASyncMethodDescriptor(my_function)
+            >>> descriptor.__set__(instance, value)
+            RuntimeError: cannot set field_name, descriptor is what you get. sorry.
         """
         raise RuntimeError(
             f"cannot set {self.field_name}, {self} is what you get. sorry."
@@ -150,7 +176,12 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             instance: The instance.
 
         Raises:
-            :class:`RuntimeError`: Always raised to prevent deletion.
+            RuntimeError: Always raised to prevent deletion.
+
+        Examples:
+            >>> descriptor = ASyncMethodDescriptor(my_function)
+            >>> descriptor.__delete__(instance)
+            RuntimeError: cannot delete field_name, you're stuck with descriptor forever. sorry.
         """
         raise RuntimeError(
             f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry."
@@ -161,8 +192,10 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         """
         Check if the wrapped function is a coroutine function.
 
-        Returns:
-            True if the wrapped function is a coroutine function, False otherwise.
+        Examples:
+            >>> descriptor = ASyncMethodDescriptor(my_function)
+            >>> descriptor.__is_async_def__
+            True
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
 
@@ -175,6 +208,10 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
 
         Returns:
             A timer handle for cache management.
+
+        Examples:
+            >>> descriptor = ASyncMethodDescriptor(my_function)
+            >>> cache_handle = descriptor._get_cache_handle(instance)
         """
         # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
         return asyncio.get_event_loop().call_later(
@@ -189,6 +226,22 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
 
     This class extends ASyncMethodDescriptor to provide a synchronous
     default behavior for method calls.
+
+    Examples:
+        >>> class MyClass:
+        ...     @ASyncMethodDescriptorSyncDefault
+        ...     def my_method(self):
+        ...         return "Hello, World!"
+        ...
+        >>> obj = MyClass()
+        >>> obj.my_method()
+        'Hello, World!'
+        >>> await obj.my_method(sync=False)
+        'Hello, World!'
+
+    See Also:
+        - :class:`ASyncBoundMethodSyncDefault`
+        - :class:`ASyncFunctionSyncDefault`
     """
 
     default = "sync"
@@ -229,8 +282,9 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
             instance: The instance to bind the method to, or None.
             owner: The owner class.
 
-        Returns:
-            The descriptor or bound method with synchronous default.
+        Examples:
+            >>> descriptor = ASyncMethodDescriptorSyncDefault(my_function)
+            >>> bound_method = descriptor.__get__(instance, MyClass)
         """
         if instance is None:
             return self
@@ -256,6 +310,22 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
 
     This class extends ASyncMethodDescriptor to provide an asynchronous default
     behavior for method calls.
+
+    Examples:
+        >>> class MyClass:
+        ...     @ASyncMethodDescriptorAsyncDefault
+        ...     async def my_method(self):
+        ...         return "Hello, World!"
+        ...
+        >>> obj = MyClass()
+        >>> await obj.my_method()
+        'Hello, World!'
+        >>> obj.my_method(sync=True)
+        'Hello, World!'
+
+    See Also:
+        - :class:`ASyncBoundMethodAsyncDefault`
+        - :class:`ASyncFunctionAsyncDefault`
     """
 
     default = "async"
@@ -294,8 +364,9 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
             instance: The instance to bind the method to, or None.
             owner: The owner class.
 
-        Returns:
-            The descriptor or bound method with asynchronous default.
+        Examples:
+            >>> descriptor = ASyncMethodDescriptorAsyncDefault(my_function)
+            >>> bound_method = descriptor.__get__(instance, MyClass)
         """
         if instance is None:
             return self
@@ -320,15 +391,34 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
     This class represents a method bound to an instance, which can be called
     either synchronously or asynchronously based on various conditions.
+
+    Examples:
+        >>> class MyClass:
+        ...     def __init__(self, value):
+        ...         self.value = value
+        ...
+        ...     @ASyncMethodDescriptor
+        ...     async def my_method(self):
+        ...         return self.value
+        ...
+        >>> obj = MyClass(42)
+        >>> await obj.my_method()
+        42
+        >>> obj.my_method(sync=True)
+        42
+
+    See Also:
+        - :class:`ASyncMethodDescriptor`
+        - :class:`ASyncFunction`
     """
 
     # NOTE: this is created by the Descriptor
 
     _cache_handle: asyncio.TimerHandle
-    "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
+    """An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."""
 
     __weakself__: "weakref.ref[I]"
-    "A weak reference to the instance the function is bound to."
+    """A weak reference to the instance the function is bound to."""
 
     __wrapped__: AnyFn[Concatenate[I, P], T]
     """The original unbound method that was wrapped."""
@@ -350,6 +440,18 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             unbound: The unbound function.
             async_def: Whether the original function is an async def.
             **modifiers: Additional modifiers for the function.
+
+        Examples:
+            >>> class MyClass:
+            ...     def __init__(self, value):
+            ...         self.value = value
+            ...
+            ...     @ASyncMethodDescriptor
+            ...     async def my_method(self):
+            ...         return self.value
+            ...
+            >>> obj = MyClass(42)
+            >>> bound_method = ASyncBoundMethod(obj, MyClass.my_method, True)
         """
         self.__weakself__ = weakref.ref(instance, self.__cancel_cache_handle)
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
@@ -358,15 +460,17 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             unbound = unbound.__wrapped__
         ASyncFunction.__init__(self, unbound, **modifiers)
         self._is_async_def = async_def
-        "True if `self.__wrapped__` is a coroutine function, False otherwise."
+        """True if `self.__wrapped__` is a coroutine function, False otherwise."""
         functools.update_wrapper(self, unbound)
 
     def __repr__(self) -> str:
         """
         Return a string representation of the bound method.
 
-        Returns:
-            A string representation of the bound method.
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> repr(bound_method)
+            '<ASyncBoundMethod for function module.ClassName.method_name bound to instance>'
         """
         try:
             instance_type = type(self.__self__)
@@ -401,8 +505,10 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             *args: Positional arguments.
             **kwargs: Keyword arguments.
 
-        Returns:
-            The result of the method call, which may be a coroutine.
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> await bound_method(arg1, arg2, kwarg1=value1)
+            >>> bound_method(arg1, arg2, kwarg1=value1, sync=True)
         """
         logger.debug("calling %s with args: %s kwargs: %s", self, args, kwargs)
         # This could either be a coroutine or a return value from an awaited coroutine,
@@ -428,11 +534,13 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         """
         Get the instance the method is bound to.
 
-        Returns:
-            The instance the method is bound to.
-
         Raises:
-            :class:`ReferenceError`: If the instance has been garbage collected.
+            ReferenceError: If the instance has been garbage collected.
+
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> bound_method.__self__
+            <MyClass instance>
         """
         instance = self.__weakself__()
         if instance is not None:
@@ -444,8 +552,10 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         """
         Check if the method is bound to an ASyncABC instance.
 
-        Returns:
-            True if bound to an ASyncABC instance, False otherwise.
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> bound_method.__bound_to_a_sync_instance__
+            True
         """
         from a_sync.a_sync.abstract import ASyncABC
 
@@ -469,6 +579,10 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
         Returns:
             A TaskMapping instance for this method.
+
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> task_mapping = bound_method.map(iterable1, iterable2, concurrency=5)
         """
         from a_sync import TaskMapping
 
@@ -492,8 +606,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            True if any result is truthy, False otherwise.
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> result = await bound_method.any(iterable1, iterable2)
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -515,8 +630,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            True if all results are truthy, False otherwise.
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> result = await bound_method.all(iterable1, iterable2)
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -538,8 +654,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            The minimum result.
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> result = await bound_method.min(iterable1, iterable2)
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -561,8 +678,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            The maximum result.
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> result = await bound_method.max(iterable1, iterable2)
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -584,8 +702,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            The sum of the results.
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> result = await bound_method.sum(iterable1, iterable2)
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -598,8 +717,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         Args:
             kwargs: Keyword arguments passed to the method.
 
-        Returns:
-            True if the method should be awaited, False otherwise.
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> should_await = bound_method._should_await(kwargs)
         """
         if flag := _kwargs.get_flag_name(kwargs):
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
@@ -616,6 +736,10 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
         Args:
             instance: The instance associated with the cache handle.
+
+        Examples:
+            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+            >>> bound_method.__cancel_cache_handle(instance)
         """
         cache_handle: asyncio.TimerHandle = self._cache_handle
         cache_handle.cancel()
@@ -624,6 +748,25 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     """
     A bound method with synchronous default behavior.
+
+    Examples:
+        >>> class MyClass:
+        ...     def __init__(self, value):
+        ...         self.value = value
+        ...
+        ...     @ASyncMethodDescriptorSyncDefault
+        ...     def my_method(self):
+        ...         return self.value
+        ...
+        >>> obj = MyClass(42)
+        >>> obj.my_method()
+        42
+        >>> await obj.my_method(sync=False)
+        42
+
+    See Also:
+        - :class:`ASyncBoundMethod`
+        - :class:`ASyncMethodDescriptorSyncDefault`
     """
 
     def __get__(
@@ -636,8 +779,9 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
             instance: The instance to bind the method to, or None.
             owner: The owner class.
 
-        Returns:
-            The bound method with synchronous default behavior.
+        Examples:
+            >>> descriptor = ASyncMethodDescriptorSyncDefault(my_function)
+            >>> bound_method = descriptor.__get__(instance, MyClass)
         """
         return ASyncBoundMethod.__get__(self, instance, owner)
 
@@ -665,8 +809,9 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
             *args: Positional arguments.
             **kwargs: Keyword arguments.
 
-        Returns:
-            The result of the method call.
+        Examples:
+            >>> bound_method = ASyncBoundMethodSyncDefault(instance, my_function, True)
+            >>> bound_method(arg1, arg2, kwarg1=value1)
         """
         return ASyncBoundMethod.__call__(self, *args, **kwargs)
 
@@ -674,6 +819,25 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     """
     A bound method with asynchronous default behavior.
+
+    Examples:
+        >>> class MyClass:
+        ...     def __init__(self, value):
+        ...         self.value = value
+        ...
+        ...     @ASyncMethodDescriptorAsyncDefault
+        ...     async def my_method(self):
+        ...         return self.value
+        ...
+        >>> obj = MyClass(42)
+        >>> await obj.my_method()
+        42
+        >>> obj.my_method(sync=True)
+        42
+
+    See Also:
+        - :class:`ASyncBoundMethod`
+        - :class:`ASyncMethodDescriptorAsyncDefault`
     """
 
     def __get__(self, instance: I, owner: Type[I]) -> ASyncFunctionAsyncDefault[P, T]:
@@ -684,8 +848,9 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
             instance: The instance to bind the method to.
             owner: The owner class.
 
-        Returns:
-            The bound method with asynchronous default behavior.
+        Examples:
+            >>> descriptor = ASyncMethodDescriptorAsyncDefault(my_function)
+            >>> bound_method = descriptor.__get__(instance, MyClass)
         """
         return ASyncBoundMethod.__get__(self, instance, owner)
 
@@ -713,7 +878,8 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
             *args: Positional arguments.
             **kwargs: Keyword arguments.
 
-        Returns:
-            A coroutine representing the asynchronous method call.
+        Examples:
+            >>> bound_method = ASyncBoundMethodAsyncDefault(instance, my_function, True)
+            >>> await bound_method(arg1, arg2, kwarg1=value1)
         """
         return ASyncBoundMethod.__call__(self, *args, **kwargs)

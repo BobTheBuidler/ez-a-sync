@@ -35,6 +35,18 @@ def a_sync(
     Args:
         default: Specifies the default execution mode as 'async'.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> @a_sync(default='async')
+        ... async def my_function():
+        ...     return True
+        >>> await my_function()
+        True
+        >>> my_function(sync=True)
+        True
+
+    See Also:
+        :class:`ASyncDecoratorAsyncDefault`
     """
 
 
@@ -49,6 +61,18 @@ def a_sync(
     Args:
         default: Specifies the default execution mode as 'sync'.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> @a_sync(default='sync')
+        ... def my_function():
+        ...     return True
+        >>> my_function()
+        True
+        >>> await my_function(sync=False)
+        True
+
+    See Also:
+        :class:`ASyncDecoratorSyncDefault`
     """
 
 
@@ -61,6 +85,18 @@ def a_sync(
 
     Args:
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> @a_sync
+        ... async def my_function():
+        ...     return True
+        >>> await my_function()
+        True
+        >>> my_function(sync=True)
+        True
+
+    See Also:
+        :class:`ASyncDecorator`
     """
 
 
@@ -77,6 +113,18 @@ def a_sync(
         coro_fn: The coroutine function to be decorated.
         default: Specifies no default execution mode.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> async def my_function():
+        ...     return True
+        >>> decorated_function = a_sync(my_function)
+        >>> await decorated_function()
+        True
+        >>> decorated_function(sync=True)
+        True
+
+    See Also:
+        :class:`ASyncFunctionAsyncDefault`
     """
 
 
@@ -93,18 +141,19 @@ def a_sync(
         coro_fn: The synchronous function to be decorated.
         default: Specifies no default execution mode.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> def my_function():
+        ...     return True
+        >>> decorated_function = a_sync(my_function)
+        >>> decorated_function()
+        True
+        >>> await decorated_function(sync=False)
+        True
+
+    See Also:
+        :class:`ASyncFunctionSyncDefault`
     """
-
-
-# @a_sync(default='async')
-# def some_fn():
-#     pass
-#
-# @a_sync(default='async')
-# async def some_fn():
-#     pass
-#
-# NOTE These should output a decorator that will be applied to 'some_fn'
 
 
 @overload
@@ -120,6 +169,18 @@ def a_sync(
         coro_fn: Specifies no function.
         default: Specifies the default execution mode as 'async'.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> @a_sync(default='async')
+        ... async def my_function():
+        ...     return True
+        >>> await my_function()
+        True
+        >>> my_function(sync=True)
+        True
+
+    See Also:
+        :class:`ASyncDecoratorAsyncDefault`
     """
 
 
@@ -136,10 +197,19 @@ def a_sync(
         coro_fn: Specifies the default execution mode as 'async'.
         default: Specifies no default execution mode.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> @a_sync('async')
+        ... async def my_function():
+        ...     return True
+        >>> await my_function()
+        True
+        >>> my_function(sync=True)
+        True
+
+    See Also:
+        :class:`ASyncDecoratorAsyncDefault`
     """
-
-
-# a_sync(some_fn, default='async')
 
 
 @overload  # async def, async default
@@ -155,6 +225,18 @@ def a_sync(
         coro_fn: The coroutine function to be decorated.
         default: Specifies the default execution mode as 'async'.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> async def my_function():
+        ...     return True
+        >>> decorated_function = a_sync(my_function, default='async')
+        >>> await decorated_function()
+        True
+        >>> decorated_function(sync=True)
+        True
+
+    See Also:
+        :class:`ASyncFunctionAsyncDefault`
     """
 
 
@@ -171,10 +253,19 @@ def a_sync(
         coro_fn: The synchronous function to be decorated.
         default: Specifies the default execution mode as 'async'.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> def my_function():
+        ...     return True
+        >>> decorated_function = a_sync(my_function, default='async')
+        >>> await decorated_function()
+        True
+        >>> decorated_function(sync=True)
+        True
+
+    See Also:
+        :class:`ASyncFunctionAsyncDefault`
     """
-
-
-# a_sync(some_fn, default='sync')
 
 
 @overload  # async def, sync default
@@ -190,6 +281,18 @@ def a_sync(
         coro_fn: The coroutine function to be decorated.
         default: Specifies the default execution mode as 'sync'.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> async def my_function():
+        ...     return True
+        >>> decorated_function = a_sync(my_function, default='sync')
+        >>> decorated_function()
+        True
+        >>> await decorated_function(sync=False)
+        True
+
+    See Also:
+        :class:`ASyncFunctionSyncDefault`
     """
 
 
@@ -206,18 +309,19 @@ def a_sync(
         coro_fn: The synchronous function to be decorated.
         default: Specifies the default execution mode as 'sync'.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> def my_function():
+        ...     return True
+        >>> decorated_function = a_sync(my_function, default='sync')
+        >>> decorated_function()
+        True
+        >>> await decorated_function(sync=False)
+        True
+
+    See Also:
+        :class:`ASyncFunctionSyncDefault`
     """
-
-
-# @a_sync(default='sync')
-# def some_fn():
-#     pass
-#
-# @a_sync(default='sync')
-# async def some_fn():
-#     pass
-#
-# NOTE These should output a decorator that will be applied to 'some_fn'
 
 
 @overload
@@ -233,6 +337,18 @@ def a_sync(
         coro_fn: Specifies no function.
         default: Specifies the default execution mode as 'sync'.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> @a_sync(default='sync')
+        ... def my_function():
+        ...     return True
+        >>> my_function()
+        True
+        >>> await my_function(sync=False)
+        True
+
+    See Also:
+        :class:`ASyncDecoratorSyncDefault`
     """
 
 
@@ -249,6 +365,18 @@ def a_sync(
         coro_fn: Specifies the default execution mode as 'sync'.
         default: Specifies no default execution mode.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> @a_sync('sync')
+        ... def my_function():
+        ...     return True
+        >>> my_function()
+        True
+        >>> await my_function(sync=False)
+        True
+
+    See Also:
+        :class:`ASyncDecoratorSyncDefault`
     """
 
 
@@ -265,6 +393,18 @@ def a_sync(
         coro_fn: Specifies the default execution mode as 'sync'.
         default: Specifies no default execution mode.
         **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        >>> @a_sync('sync')
+        ... def my_function():
+        ...     return True
+        >>> my_function()
+        True
+        >>> await my_function(sync=False)
+        True
+
+    See Also:
+        :class:`ASyncDecoratorSyncDefault`
     """
 
 
@@ -313,9 +453,9 @@ def a_sync(
             >>> @a_sync
             ... async def some_async_fn():
             ...     return True
-            >>> await some_fn()
+            >>> await some_async_fn()
             True
-            >>> some_fn(sync=True)
+            >>> some_async_fn(sync=True)
             True
 
             >>> @a_sync
@@ -324,7 +464,7 @@ def a_sync(
             >>> some_sync_fn()
             True
             >>> some_sync_fn(sync=False)
-            <coroutine object some_sync_fn at 0x12345678>
+            <coroutine object some_sync_fn at 0x7fb4f5fb49c0>
 
         2. As a decorator with default mode specified:
             >>> @a_sync(default='sync')
@@ -332,6 +472,17 @@ def a_sync(
             ...     return True
             ...
             >>> some_fn()
+            True
+            >>> some_fn(sync=False)
+            <coroutine object some_fn at 0x7fb4f5fb49c0>
+
+            >>> @a_sync('async')
+            ... def some_fn():
+            ...     return True
+            ...
+            >>> some_fn()
+            <coroutine object some_fn at 0x7fb4f5fb49c0>
+            >>> some_fn(asynchronous=False)
             True
 
         3. As a decorator with modifiers:
@@ -348,18 +499,19 @@ def a_sync(
             "some return value"
 
     The decorated function can then be called either synchronously or asynchronously:
-
-        result = some_fn()  # Synchronous call
-        result = await some_fn()  # Asynchronous call
+        >>> result = some_fn()  # Synchronous call
+        >>> result = await some_fn()  # Asynchronous call
 
     The execution mode can also be explicitly specified during the call:
-
-        result = some_fn(sync=True)  # Force synchronous execution
-        result = await some_fn(sync=False)  # Force asynchronous execution
+        >>> result = some_fn(sync=True)  # Force synchronous execution
+        >>> result = await some_fn(sync=False)  # Force asynchronous execution
 
     This decorator is particularly useful for libraries that need to support
     both synchronous and asynchronous usage, or for gradually migrating
     synchronous code to asynchronous without breaking existing interfaces.
+
+    See Also:
+        :class:`ASyncFunction`, :class:`ASyncDecorator`
     """
 
     # If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync('sync')...
