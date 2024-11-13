@@ -45,10 +45,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     """
     A mapping of keys to asynchronous tasks with additional functionality.
 
-    `TaskMapping` is a specialized dictionary that maps keys to `asyncio` Tasks. It provides
+    TaskMapping is a specialized dictionary that maps keys to asyncio Tasks. It provides
     convenient methods for creating, managing, and iterating over these tasks asynchronously.
-
-    Tasks are created automatically for each key using a provided function. You cannot manually set items in a `TaskMapping` using dictionary-like syntax.
 
     Example:
         >>> async def fetch_data(url: str) -> str:
@@ -56,19 +54,15 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         ...         async with session.get(url) as response:
         ...             return await response.text()
         ...
-        >>> tasks = TaskMapping(fetch_data, ['http://example.com', 'https://www.python.org'], name='url_fetcher', concurrency=5)
+        >>> tasks = TaskMapping(fetch_data, name='url_fetcher', concurrency=5)
+        >>> tasks['example.com']
+        >>> tasks['python.org']
         >>> async for key, result in tasks:
         ...     print(f"Data for {key}: {result}")
         ...
         Data for python.org: http://python.org
         Data for example.com: http://example.com
 
-    Note:
-        You cannot manually set items in a `TaskMapping` using dictionary-like syntax. Tasks are created and managed internally.
-
-    See Also:
-        - :class:`asyncio.Task`
-        - :func:`asyncio.create_task`
     """
 
     concurrency: Optional[int] = None
@@ -120,13 +114,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             name: An optional name for the tasks created by this mapping.
             concurrency: Maximum number of tasks to run concurrently.
             **wrapped_func_kwargs: Additional keyword arguments to be passed to wrapped_func.
-
-        Example:
-            async def process_item(item: int) -> int:
-                await asyncio.sleep(1)
-                return item * 2
-
-            task_map = TaskMapping(process_item, [1, 2, 3], concurrency=2)
         """
 
         if concurrency:
@@ -309,15 +296,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         Yields:
             Depending on `yields`, either keys, values,
             or tuples of key-value pairs representing the results of completed tasks.
-
-        Example:
-            async def process_item(item: int) -> int:
-                await asyncio.sleep(1)
-                return item * 2
-
-            task_map = TaskMapping(process_item)
-            async for key, result in task_map.map([1, 2, 3]):
-                print(f"Processed {key}: {result}")
         """
         self._if_pop_check_destroyed(pop)
 
@@ -443,15 +421,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
         Yields:
             Tuples of key-value pairs representing the results of completed tasks.
-
-        Example:
-            async def process_item(item: int) -> int:
-                await asyncio.sleep(1)
-                return item * 2
-
-            task_map = TaskMapping(process_item, [1, 2, 3])
-            async for key, result in task_map.yield_completed():
-                print(f"Completed {key}: {result}")
         """
         if pop:
             for k, task in dict(self).items():

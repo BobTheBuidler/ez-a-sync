@@ -1,5 +1,3 @@
-/home/ubuntu/libs/a-sync/a_sync/a_sync/_helpers.py
-
 """
 This module provides utility functions for handling asynchronous operations
 and converting synchronous functions to asynchronous ones.
@@ -23,17 +21,6 @@ def _await(awaitable: Awaitable[T]) -> T:
 
     Raises:
         exceptions.SyncModeInAsyncContextError: If the event loop is already running.
-
-    Examples:
-        >>> async def example_coroutine():
-        ...     return 42
-        ...
-        >>> result = _await(example_coroutine())
-        >>> print(result)
-        42
-
-    See Also:
-        - :func:`asyncio.run`: For running the main entry point of an asyncio program.
     """
     try:
         return a_sync.asyncio.get_event_loop().run_until_complete(awaitable)
@@ -52,23 +39,10 @@ def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: 
         executor: The executor used to run the synchronous function.
 
     Returns:
-        CoroFn[P, T]: A coroutine function wrapping the input function.
+        A coroutine function wrapping the input function.
 
     Raises:
         exceptions.FunctionNotSync: If the input function is a coroutine function or an instance of ASyncFunction.
-
-    Examples:
-        >>> def sync_function(x):
-        ...     return x * 2
-        ...
-        >>> async_function = _asyncify(sync_function, executor)
-        >>> result = await async_function(3)
-        >>> print(result)
-        6
-
-    See Also:
-        - :class:`concurrent.futures.Executor`: For managing pools of threads or processes.
-        - :func:`asyncio.to_thread`: For running blocking code in a separate thread.
     """
     from a_sync.a_sync.function import ASyncFunction
 

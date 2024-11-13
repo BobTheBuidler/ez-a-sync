@@ -17,18 +17,8 @@ def apply_rate_limit(
 ) -> AsyncDecorator[P, T]:
     """Decorator to apply a rate limit to an asynchronous function.
 
-    This overload allows specifying the number of allowed executions per minute.
-
     Args:
         runs_per_minute: The number of allowed executions per minute.
-
-    Examples:
-        >>> @apply_rate_limit(60)
-        ... async def my_function():
-        ...     pass
-
-    See Also:
-        :class:`aiolimiter.AsyncLimiter`
     """
 
 
@@ -39,21 +29,9 @@ def apply_rate_limit(
 ) -> CoroFn[P, T]:
     """Decorator to apply a rate limit to an asynchronous function.
 
-    This overload allows specifying either the number of allowed executions per minute
-    or an :class:`aiolimiter.AsyncLimiter` instance.
-
     Args:
         coro_fn: The coroutine function to be rate-limited.
-        runs_per_minute: The number of allowed executions per minute or an :class:`aiolimiter.AsyncLimiter` instance.
-
-    Examples:
-        >>> async_limiter = AsyncLimiter(60)
-        >>> @apply_rate_limit(async_limiter)
-        ... async def my_function():
-        ...     pass
-
-    See Also:
-        :class:`aiolimiter.AsyncLimiter`
+        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance.
     """
 
 
@@ -66,28 +44,15 @@ def apply_rate_limit(
     This function can be used as a decorator to limit the number of times
     an asynchronous function can be called per minute. It can be configured
     with either an integer specifying the number of runs per minute or an
-    :class:`aiolimiter.AsyncLimiter` instance.
+    AsyncLimiter instance.
 
     Args:
-        coro_fn: The coroutine function to be rate-limited. If an integer is provided, it is treated as runs per minute, and `runs_per_minute` should be None.
-        runs_per_minute: The number of allowed executions per minute or an :class:`aiolimiter.AsyncLimiter` instance. If `coro_fn` is an integer, this should be None.
+        coro_fn: The coroutine function to be rate-limited. If an integer is provided, it is treated as runs per minute, and runs_per_minute should be None.
+        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance. If coro_fn is an integer, this should be None.
 
     Raises:
-        TypeError: If `runs_per_minute` is neither an integer nor an :class:`aiolimiter.AsyncLimiter` when `coro_fn` is None.
-        exceptions.FunctionNotAsync: If `coro_fn` is not an asynchronous function.
-
-    Examples:
-        >>> @apply_rate_limit(60)
-        ... async def my_function():
-        ...     pass
-
-        >>> async_limiter = AsyncLimiter(60)
-        >>> @apply_rate_limit(async_limiter)
-        ... async def my_function():
-        ...     pass
-
-    See Also:
-        :class:`aiolimiter.AsyncLimiter`
+        TypeError: If 'runs_per_minute' is neither an integer nor an AsyncLimiter when 'coro_fn' is None.
+        exceptions.FunctionNotAsync: If 'coro_fn' is not an asynchronous function.
     """
     # Parse Inputs
     if isinstance(coro_fn, (int, AsyncLimiter)):

@@ -1,14 +1,8 @@
 """
-This module contains the :class:`ASyncDescriptor` class, which is used to create dual-function sync/async methods
+This module contains the ASyncDescriptor class, which is used to create sync/async methods
 and properties.
 
-The :class:`ASyncDescriptor` class provides functionality for mapping operations across multiple instances
-and includes utility methods for common operations such as checking if all or any results are truthy, 
-and finding the minimum, maximum, or sum of results of the method or property mapped across multiple instances.
-
-See Also:
-    - :class:`~a_sync.a_sync.function.ASyncFunction`
-    - :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`
+It also includes utility methods for mapping operations across multiple instances.
 """
 
 import functools
@@ -29,27 +23,6 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     and includes utility methods for common operations such as checking if all or any
     results are truthy, and finding the minimum, maximum, or sum of results of the method
     or property mapped across multiple instances.
-
-    Examples:
-        To create a dual-function method or property, subclass :class:`ASyncDescriptor` and implement
-        the desired functionality. You can then use the provided utility methods to perform operations
-        across multiple instances.
-
-        ```python
-        class MyDescriptor(ASyncDescriptor):
-            def __init__(self, func):
-                super().__init__(func)
-
-        class MyClass:
-            my_method = MyDescriptor(lambda x: x * 2)
-
-        instance = MyClass()
-        result = instance.my_method.map([1, 2, 3])
-        ```
-
-    See Also:
-        - :class:`~a_sync.a_sync.function.ASyncFunction`
-        - :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`
     """
 
     __wrapped__: AnyFn[Concatenate[I, P], T]
@@ -64,7 +37,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         **modifiers: ModifierKwargs,
     ) -> None:
         """
-        Initialize the :class:`ASyncDescriptor`.
+        Initialize the {cls}.
 
         Args:
             _fget: The function to be wrapped.
@@ -88,7 +61,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             self.__wrapped__ = _fget
 
         self.field_name = field_name or _fget.__name__
-        """The name of the field the :class:`ASyncDescriptor` is bound to."""
+        """The name of the field the {cls} is bound to."""
 
         functools.update_wrapper(self, self.__wrapped__)
 
@@ -97,7 +70,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
     def __set_name__(self, owner, name):
         """
-        Set the field name when the :class:`ASyncDescriptor` is assigned to a class.
+        Set the field name when the {cls} is assigned to a class.
 
         Args:
             owner: The class owning this descriptor.
@@ -109,25 +82,14 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         self, *instances: AnyIterable[I], **bound_method_kwargs: P.kwargs
     ) -> "TaskMapping[I, T]":
         """
-        Create a :class:`TaskMapping` for the given instances.
+        Create a TaskMapping for the given instances.
 
         Args:
             *instances: Iterable of instances to map over.
             **bound_method_kwargs: Additional keyword arguments for the bound method.
 
         Returns:
-            A :class:`TaskMapping` object.
-
-        Examples:
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x * 2)
-
-            instance = MyClass()
-            result = instance.my_method.map([1, 2, 3])
+            A TaskMapping object.
         """
         from a_sync.task import TaskMapping
 
@@ -139,18 +101,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         Create an :class:`~ASyncFunction` that checks if all results are truthy.
 
         Returns:
-            An :class:`ASyncFunction` object.
-
-        Examples:
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x > 0)
-
-            instance = MyClass()
-            result = await instance.my_method.all([1, 2, 3])
+            An ASyncFunction object.
         """
         return decorator.a_sync(default=self.default)(self._all)
 
@@ -160,18 +111,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         Create an :class:`~ASyncFunction` that checks if any result is truthy.
 
         Returns:
-            An :class:`ASyncFunction` object.
-
-        Examples:
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x > 0)
-
-            instance = MyClass()
-            result = await instance.my_method.any([-1, 0, 1])
+            An ASyncFunction object.
         """
         return decorator.a_sync(default=self.default)(self._any)
 
@@ -181,20 +121,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         Create an :class:`~ASyncFunction` that returns the minimum result.
 
         Returns:
-            An :class:`ASyncFunction` object.
-
-        Examples:
-            ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x)
-
-            instance = MyClass()
-            result = await instance.my_method.min([3, 1, 2])
-            ```
+            An ASyncFunction object.
         """
         return decorator.a_sync(default=self.default)(self._min)
 
@@ -204,18 +131,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         Create an :class:`~ASyncFunction` that returns the maximum result.
 
         Returns:
-            An :class:`ASyncFunction` object.
-
-        Examples:
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x)
-
-            instance = MyClass()
-            result = await instance.my_method.max([3, 1, 2])
+            An ASyncFunction object.
         """
         return decorator.a_sync(default=self.default)(self._max)
 
@@ -225,20 +141,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         Create an :class:`~ASyncFunction` that returns the sum of results.
 
         Returns:
-            An :class:`ASyncFunction` object.
-
-        Examples:
-            ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x)
-
-            instance = MyClass()
-            result = await instance.my_method.sum([1, 2, 3])
-            ```
+            An ASyncFunction object.
         """
         return decorator.a_sync(default=self.default)(self._sum)
 
@@ -260,19 +163,6 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
         Returns:
             A boolean indicating if all results are truthy.
-
-        Examples:
-            ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x > 0)
-
-            instance = MyClass()
-            result = await instance.my_method._all([1, 2, 3])
-            ```
         """
         return await self.map(
             *instances, concurrency=concurrency, name=name, **kwargs
@@ -296,19 +186,6 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
         Returns:
             A boolean indicating if any result is truthy.
-
-        Examples:
-            ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x > 0)
-
-            instance = MyClass()
-            result = await instance.my_method._any([-1, 0, 1])
-            ```
         """
         return await self.map(
             *instances, concurrency=concurrency, name=name, **kwargs
@@ -332,19 +209,6 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
         Returns:
             The minimum result.
-
-        Examples:
-            ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x)
-
-            instance = MyClass()
-            result = await instance.my_method._min([3, 1, 2])
-            ```
         """
         return await self.map(
             *instances, concurrency=concurrency, name=name, **kwargs
@@ -368,19 +232,6 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
         Returns:
             The maximum result.
-
-        Examples:
-            ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x)
-
-            instance = MyClass()
-            result = await instance.my_method._max([3, 1, 2])
-            ```
         """
         return await self.map(
             *instances, concurrency=concurrency, name=name, **kwargs
@@ -404,19 +255,6 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
         Returns:
             The sum of the results.
-
-        Examples:
-            ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
-            class MyClass:
-                my_method = MyDescriptor(lambda x: x)
-
-            instance = MyClass()
-            result = await instance.my_method._sum([1, 2, 3])
-            ```
         """
         return await self.map(
             *instances, concurrency=concurrency, name=name, **kwargs
