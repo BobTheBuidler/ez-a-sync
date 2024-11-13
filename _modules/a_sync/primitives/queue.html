@@ -70,9 +70,10 @@
              
   <h1>Source code for a_sync.primitives.queue</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module provides various queue implementations for managing asynchronous tasks, including standard FIFO queues,</span>
-<span class="sd">priority queues, and processing queues. These queues support advanced features like waiting for multiple items,</span>
-<span class="sd">handling priority tasks, and processing tasks with multiple workers.</span>
+<span class="sd">This module provides various queue implementations for managing asynchronous tasks, </span>
+<span class="sd">including standard FIFO queues, priority queues, and processing queues.</span>
+<span class="sd"># TODO specify a list of specific objects with a brief description + use case example instead of being vague like this</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
@@ -112,36 +113,123 @@
 <div class="viewcode-block" id="Queue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue">[docs]</a>
 <span class="k">class</span> <span class="nc">Queue</span><span class="p">(</span><span class="n">_Queue</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
-    <span class="c1"># for type hint support, no functional difference</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A generic asynchronous queue that extends the functionality of asyncio.Queue.</span>
+
+<span class="sd">    This implementation supports retrieving multiple items at once and handling </span>
+<span class="sd">    task processing in both FIFO and LIFO order. It provides enhanced type hinting </span>
+<span class="sd">    support and additional methods for bulk operations.</span>
+
+<span class="sd">    Inherits from:</span>
+<span class="sd">        - :class:`~asyncio.Queue`</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; queue = Queue()</span>
+<span class="sd">        &gt;&gt;&gt; await queue.put(item=&#39;task1&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; await queue.put(item=&#39;task2&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; result = await queue.get()</span>
+<span class="sd">        &gt;&gt;&gt; print(result)</span>
+<span class="sd">        task1</span>
+<span class="sd">        &gt;&gt;&gt; all_tasks = await queue.get_all()</span>
+<span class="sd">        &gt;&gt;&gt; print(all_tasks)</span>
+<span class="sd">        [&#39;task2&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="Queue.get">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue.get">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Asynchronously retrieves and removes the next item from the queue.</span>
+
+<span class="sd">        If the queue is empty, this method will block until an item is available.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            T: The next item in the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; result = await queue.get()</span>
+<span class="sd">            &gt;&gt;&gt; print(result)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">_Queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Queue.get_nowait">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue.get_nowait">[docs]</a>
     <span class="k">def</span> <span class="nf">get_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves and removes the next item from the queue without blocking.</span>
+
+<span class="sd">        This method does not wait for an item to be available and will raise</span>
+<span class="sd">        an exception if the queue is empty.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            :exc:`~asyncio.QueueEmpty`: If the queue is empty.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            T: The next item in the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; result = queue.get_nowait()</span>
+<span class="sd">            &gt;&gt;&gt; print(result)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_Queue</span><span class="o">.</span><span class="n">get_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Queue.put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue.put">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Asynchronously adds an item to the queue.</span>
+
+<span class="sd">        If the queue is full, this method will block until space is available.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            item: The item to add to the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; await queue.put(item=&#39;task&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_Queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Queue.put_nowait">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue.put_nowait">[docs]</a>
     <span class="k">def</span> <span class="nf">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds an item to the queue without blocking.</span>
+
+<span class="sd">        This method does not wait for space to be available and will raise</span>
+<span class="sd">        an exception if the queue is full.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            item: The item to add to the queue.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            :exc:`~asyncio.QueueFull`: If the queue is full.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; queue.put_nowait(item=&#39;task&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_Queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Queue.get_all">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue.get_all">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;returns 1 or more items&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Asynchronously retrieves and removes all available items from the queue.</span>
+
+<span class="sd">        If the queue is empty, this method will wait until at least one item </span>
+<span class="sd">        is available before returning.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[T]: A list of all items that were in the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; tasks = await queue.get_all()</span>
+<span class="sd">            &gt;&gt;&gt; print(tasks)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_nowait</span><span class="p">()</span>
         <span class="k">except</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">QueueEmpty</span><span class="p">:</span>
@@ -151,7 +239,22 @@
 <div class="viewcode-block" id="Queue.get_all_nowait">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue.get_all_nowait">[docs]</a>
     <span class="k">def</span> <span class="nf">get_all_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;returns 1 or more items, or raises asyncio.QueueEmpty&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves and removes all available items from the queue without waiting.</span>
+
+<span class="sd">        This method does not wait for items to be available and will raise</span>
+<span class="sd">        an exception if the queue is empty.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            :exc:`~asyncio.QueueEmpty`: If the queue is empty.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[T]: A list of all items that were in the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; tasks = queue.get_all_nowait()</span>
+<span class="sd">            &gt;&gt;&gt; print(tasks)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
@@ -165,6 +268,23 @@
 <div class="viewcode-block" id="Queue.get_multi">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue.get_multi">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get_multi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">can_return_less</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Asynchronously retrieves up to `i` items from the queue.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            i: The number of items to retrieve.</span>
+<span class="sd">            can_return_less: If True, may return fewer than `i` items if queue is emptied.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[T]: A list containing the retrieved items.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            :exc:`~asyncio.QueueEmpty`: If no items are available and fewer items cannot be returned.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; tasks = await queue.get_multi(i=2, can_return_less=True)</span>
+<span class="sd">            &gt;&gt;&gt; print(tasks)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_validate_args</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">can_return_less</span><span class="p">)</span>
         <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">can_return_less</span><span class="p">:</span>
@@ -181,8 +301,21 @@
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue.get_multi_nowait">[docs]</a>
     <span class="k">def</span> <span class="nf">get_multi_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">can_return_less</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Just like `asyncio.Queue.get_nowait`, but will return `i` items instead of 1.</span>
-<span class="sd">        Set `can_return_less` to True if you want to receive up to `i` items.</span>
+<span class="sd">        Retrieves up to `i` items from the queue without waiting.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            i: The number of items to retrieve.</span>
+<span class="sd">            can_return_less: If True, may return fewer than `i` items if queue is emptied.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            :exc:`~asyncio.QueueEmpty`: If no items are available and fewer items cannot be returned.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[T]: A list containing the retrieved items.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; tasks = queue.get_multi_nowait(i=3, can_return_less=True)</span>
+<span class="sd">            &gt;&gt;&gt; print(tasks)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_validate_args</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">can_return_less</span><span class="p">)</span>
         <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
@@ -204,7 +337,24 @@
 <div class="viewcode-block" id="ProcessingQueue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue">[docs]</a>
 <span class="k">class</span> <span class="nc">ProcessingQueue</span><span class="p">(</span><span class="n">_Queue</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">]],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A queue designed for processing tasks asynchronously with multiple workers.</span>
+
+<span class="sd">    Each item in the queue is processed by a worker, and tasks can return results </span>
+<span class="sd">    via asynchronous futures. This queue is ideal for scenarios where tasks need</span>
+<span class="sd">    to be processed concurrently with a fixed number of workers.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; async def process_task(data): return data.upper()</span>
+<span class="sd">        &gt;&gt;&gt; queue = ProcessingQueue(func=process_task, num_workers=5)</span>
+<span class="sd">        &gt;&gt;&gt; fut = await queue.put(item=&#39;task&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; print(await fut)</span>
+<span class="sd">        TASK</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_closed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Indicates whether the queue is closed.&quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="s2">&quot;num_workers&quot;</span><span class="p">,</span> <span class="s2">&quot;_worker_coro&quot;</span>
 
 <div class="viewcode-block" id="ProcessingQueue.__init__">
@@ -218,6 +368,19 @@
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a processing queue with the given worker function and worker count.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            func: The task function to process.</span>
+<span class="sd">            num_workers: Number of workers to process tasks.</span>
+<span class="sd">            return_data: Whether tasks should return data via futures. Defaults to True.</span>
+<span class="sd">            name: Name of the queue. Defaults to an empty string.</span>
+<span class="sd">            loop: Optional event loop for the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; queue = ProcessingQueue(func=my_task_func, num_workers=3, name=&#39;myqueue&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">loop</span><span class="p">:</span>
@@ -228,13 +391,20 @@
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The function that each worker will process.&quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span> <span class="o">=</span> <span class="n">num_workers</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The number of worker tasks for processing.&quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Optional name for the queue.&quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">_no_futs</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">return_data</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates whether tasks will return data via futures.&quot;&quot;&quot;</span>
 
         <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
         <span class="k">async</span> <span class="k">def</span> <span class="nf">_worker_coro</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-            <span class="c1"># we use this little helper so we can have context of `func` in any err logs</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Worker coroutine for processing tasks.&quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__worker_coro</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_worker_coro</span> <span class="o">=</span> <span class="n">_worker_coro</span></div>
@@ -242,6 +412,12 @@
 
     <span class="c1"># NOTE: asyncio defines both this and __str__</span>
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provides a detailed string representation of the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; print(queue)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">repr_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">:</span>
             <span class="n">repr_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -252,6 +428,12 @@
 
     <span class="c1"># NOTE: asyncio defines both this and __repr__</span>
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provides a string representation of the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; print(queue)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">repr_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">:</span>
             <span class="n">repr_string</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -263,10 +445,20 @@
 <div class="viewcode-block" id="ProcessingQueue.__call__">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue.__call__">[docs]</a>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submits a task to the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; fut = queue(*args, **kwargs)</span>
+<span class="sd">            &gt;&gt;&gt; print(fut)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles the deletion of the queue, ensuring tasks are handled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unfinished_tasks</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -277,17 +469,43 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the name of the queue, or its representation.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; print(queue.name)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="ow">or</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ProcessingQueue.close">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue.close">[docs]</a>
     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Closes the queue, preventing further task submissions.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; queue.close()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="ProcessingQueue.put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue.put">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Asynchronously submits a task to the queue.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: Positional arguments for the task.</span>
+<span class="sd">            kwargs: Keyword arguments for the task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The future result of the task.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; fut = await queue.put(item=&#39;task&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print(await fut)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_futs</span><span class="p">:</span>
             <span class="k">return</span> <span class="k">await</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
@@ -299,6 +517,20 @@
 <div class="viewcode-block" id="ProcessingQueue.put_nowait">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue.put_nowait">[docs]</a>
     <span class="k">def</span> <span class="nf">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Immediately submits a task to the queue without waiting.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: Positional arguments for the task.</span>
+<span class="sd">            kwargs: Keyword arguments for the task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The future result of the task.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; fut = queue.put_nowait(item=&#39;task&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print(await fut)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_futs</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">((</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
@@ -310,12 +542,14 @@
 <div class="viewcode-block" id="ProcessingQueue._create_future">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue._create_future">[docs]</a>
     <span class="k">def</span> <span class="nf">_create_future</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a future for the task.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ProcessingQueue._ensure_workers">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue._ensure_workers">[docs]</a>
     <span class="k">def</span> <span class="nf">_ensure_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensures that the worker tasks are running.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is closed: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
@@ -326,19 +560,20 @@
                     <span class="c1"># re-raise with clean traceback</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)(</span><span class="o">*</span><span class="n">exc</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>  <span class="c1"># type: ignore [union-attr]</span>
-                    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="c1"># this should never be reached, but just in case</span>
             <span class="n">exc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="c1"># re-raise with clean traceback</span>
                 <span class="k">raise</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)(</span><span class="o">*</span><span class="n">exc</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>  <span class="c1"># type: ignore [union-attr]</span>
-            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span></div>
+            <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
     <span class="k">def</span> <span class="nf">_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Task[NoReturn]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates and manages the worker tasks for the queue.&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;starting worker task for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="n">workers</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">create_task</span><span class="p">(</span>
@@ -357,6 +592,9 @@
         <span class="k">return</span> <span class="n">task</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__worker_coro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The coroutine executed by worker tasks to process the queue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span>
         <span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_futs</span><span class="p">:</span>
@@ -414,12 +652,15 @@
 <span class="sd">    Validates the arguments for methods that retrieve multiple items from the queue.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        i (int): The number of items to retrieve.</span>
-<span class="sd">        can_return_less (bool): Whether the method is allowed to return fewer than `i` items.</span>
+<span class="sd">        i: The number of items to retrieve.</span>
+<span class="sd">        can_return_less: Whether the method is allowed to return fewer than `i` items.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        TypeError: If `i` is not an integer or `can_return_less` is not a boolean.</span>
-<span class="sd">        ValueError: If `i` is not greater than 1.</span>
+<span class="sd">        :exc:`~TypeError`: If `i` is not an integer or `can_return_less` is not a boolean.</span>
+<span class="sd">        :exc:`~ValueError`: If `i` is not greater than 1.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; _validate_args(i=2, can_return_less=False)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`i` must be an integer greater than 1. You passed </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -435,6 +676,10 @@
 <div class="viewcode-block" id="_SmartFutureRef">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._SmartFutureRef">[docs]</a>
 <span class="k">class</span> <span class="nc">_SmartFutureRef</span><span class="p">(</span><span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Weak reference for :class:`~_smart.SmartFuture` objects used in priority queues.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;_SmartFutureRef[T]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compares two weak references to SmartFuture objects for ordering.</span>
@@ -443,39 +688,65 @@
 <span class="sd">        reference is considered less than another if it has more waiters or if it has been garbage collected.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            other (_SmartFutureRef[T]): The other SmartFuture reference to compare with.</span>
+<span class="sd">            other: The other SmartFuture reference to compare with.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bool: True if this reference is less than the other, False otherwise.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; ref1 = _SmartFutureRef(fut1)</span>
+<span class="sd">            &gt;&gt;&gt; ref2 = _SmartFutureRef(fut2)</span>
+<span class="sd">            &gt;&gt;&gt; print(ref1 &lt; ref2)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">strong_self</span> <span class="o">=</span> <span class="bp">self</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">strong_self</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="n">strong_other</span> <span class="o">=</span> <span class="n">other</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">strong_other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="n">strong_self</span> <span class="o">&lt;</span> <span class="n">strong_other</span></div>
+        <span class="k">return</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">strong_other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">strong_self</span> <span class="o">&lt;</span> <span class="n">strong_other</span></div>
 
 
 
 <div class="viewcode-block" id="_PriorityQueueMixin">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._PriorityQueueMixin">[docs]</a>
 <span class="k">class</span> <span class="nc">_PriorityQueueMixin</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mixin for creating priority queue functionality with support for custom comparison.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="_PriorityQueueMixin._init">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._PriorityQueueMixin._init">[docs]</a>
     <span class="k">def</span> <span class="nf">_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxsize</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the priority queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; queue._init(maxsize=10)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 
 <div class="viewcode-block" id="_PriorityQueueMixin._put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._PriorityQueueMixin._put">[docs]</a>
     <span class="k">def</span> <span class="nf">_put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">heappush</span><span class="o">=</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds an item to the priority queue based on its priority.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; queue._put(item=&#39;task&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">heappush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="_PriorityQueueMixin._get">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._PriorityQueueMixin._get">[docs]</a>
     <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heappop</span><span class="o">=</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the highest priority item from the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; task = queue._get()</span>
+<span class="sd">            &gt;&gt;&gt; print(task)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">heappop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span></div>
 </div>
 
@@ -484,12 +755,28 @@
 <div class="viewcode-block" id="PriorityProcessingQueue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.PriorityProcessingQueue">[docs]</a>
 <span class="k">class</span> <span class="nc">PriorityProcessingQueue</span><span class="p">(</span><span class="n">_PriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">ProcessingQueue</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
-    <span class="c1"># NOTE: WIP</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A priority-based processing queue where tasks are processed based on priority.</span>
+<span class="sd">    # NOTE: WIP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="PriorityProcessingQueue.put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.PriorityProcessingQueue.put">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">put</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Asynchronously adds a task with priority to the queue.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            priority: The priority of the task.</span>
+<span class="sd">            args: Positional arguments for the task.</span>
+<span class="sd">            kwargs: Keyword arguments for the task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The future representing the result of the task.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; fut = await queue.put(priority=1, item=&#39;task&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print(await fut)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
         <span class="n">fut</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
         <span class="k">await</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span><span class="p">))</span>
@@ -498,9 +785,22 @@
 
 <div class="viewcode-block" id="PriorityProcessingQueue.put_nowait">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.PriorityProcessingQueue.put_nowait">[docs]</a>
-    <span class="k">def</span> <span class="nf">put_nowait</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Immediately adds a task with priority to the queue without waiting.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            priority: The priority of the task.</span>
+<span class="sd">            args: Positional arguments for the task.</span>
+<span class="sd">            kwargs: Keyword arguments for the task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The future representing the result of the task.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; fut = queue.put_nowait(priority=1, item=&#39;task&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print(await fut)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
         <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span><span class="p">))</span>
@@ -510,6 +810,16 @@
 <div class="viewcode-block" id="PriorityProcessingQueue._get">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.PriorityProcessingQueue._get">[docs]</a>
     <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heappop</span><span class="o">=</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the highest priority task from the queue.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The priority, task arguments, keyword arguments, and future of the task.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; task = queue._get()</span>
+<span class="sd">            &gt;&gt;&gt; print(task)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">priority</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="n">heappop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span></div>
 </div>
@@ -519,11 +829,27 @@
 <div class="viewcode-block" id="_VariablePriorityQueueMixin">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._VariablePriorityQueueMixin">[docs]</a>
 <span class="k">class</span> <span class="nc">_VariablePriorityQueueMixin</span><span class="p">(</span><span class="n">_PriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mixin for priority queues where task priorities can be updated dynamically.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="_VariablePriorityQueueMixin._get">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._VariablePriorityQueueMixin._get">[docs]</a>
     <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heapify</span><span class="o">=</span><span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">,</span> <span class="n">heappop</span><span class="o">=</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">):</span>
-        <span class="s2">&quot;Resort the heap to consider any changes in priorities and pop the smallest value&quot;</span>
-        <span class="c1"># resort the heap</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resorts the priority queue to consider any changes in priorities and retrieves the task with the highest updated priority.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            heapify: Function to resort the heap.</span>
+<span class="sd">            heappop: Function to pop the highest priority task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The highest priority task in the queue.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; task = queue._get()</span>
+<span class="sd">            &gt;&gt;&gt; print(task)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">heapify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span>
         <span class="c1"># take the job with the most waiters</span>
         <span class="k">return</span> <span class="n">heappop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span></div>
@@ -532,29 +858,47 @@
 <div class="viewcode-block" id="_VariablePriorityQueueMixin._get_key">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._VariablePriorityQueueMixin._get_key">[docs]</a>
     <span class="k">def</span> <span class="nf">_get_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_smart</span><span class="o">.</span><span class="n">_Key</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a unique key for task identification based on arguments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: Positional arguments for the task.</span>
+<span class="sd">            kwargs: Keyword arguments for the task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The generated key for the task.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; key = queue._get_key(*args, **kwargs)</span>
+<span class="sd">            &gt;&gt;&gt; print(key)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">kwarg</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">kwarg</span><span class="p">])</span> <span class="k">for</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)))</span></div>
 </div>
 
-
-
+    
 <div class="viewcode-block" id="VariablePriorityQueue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.VariablePriorityQueue">[docs]</a>
 <span class="k">class</span> <span class="nc">VariablePriorityQueue</span><span class="p">(</span><span class="n">_VariablePriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">PriorityQueue</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A PriorityQueue subclass that allows priorities to be updated (or computed) on the fly&quot;&quot;&quot;</span></div>
-
-
-    <span class="c1"># NOTE: WIP</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A :class:`~asyncio.PriorityQueue` subclass that allows priorities to be updated (or computed) on the fly.</span>
+<span class="sd">    # NOTE: WIP</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="SmartProcessingQueue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue">[docs]</a>
-<span class="k">class</span> <span class="nc">SmartProcessingQueue</span><span class="p">(</span>
-    <span class="n">_VariablePriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">ProcessingQueue</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">V</span><span class="p">]</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A PriorityProcessingQueue subclass that will execute jobs with the most waiters first&quot;&quot;&quot;</span>
-
+<span class="k">class</span> <span class="nc">SmartProcessingQueue</span><span class="p">(</span><span class="n">_VariablePriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">ProcessingQueue</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">V</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A PriorityProcessingQueue subclass that will execute jobs with the most waiters first</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
     <span class="n">_no_futs</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">_futs</span><span class="p">:</span> <span class="s2">&quot;weakref.WeakValueDictionary[_smart._Key, _smart.SmartFuture[T]]&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether smart futures are used.&quot;&quot;&quot;</span>
+
+    <span class="n">_futs</span><span class="p">:</span> <span class="s2">&quot;weakref.WeakValueDictionary[_smart._Key[T], _smart.SmartFuture[T]]&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Weak reference dictionary for managing smart futures.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SmartProcessingQueue.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue.__init__">[docs]</a>
@@ -566,15 +910,39 @@
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a smart processing queue with the given worker function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            func: The worker function.</span>
+<span class="sd">            num_workers: Number of worker tasks.</span>
+<span class="sd">            name: Optional name for the queue.</span>
+<span class="sd">            loop: Optional event loop.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; queue = SmartProcessingQueue(func=my_task_func, num_workers=3, name=&#39;smart_queue&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">return_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">_smart</span><span class="o">.</span><span class="n">_Key</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">_smart</span><span class="o">.</span><span class="n">SmartFuture</span><span class="p">[</span><span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">weakref</span><span class="o">.</span><span class="n">WeakValueDictionary</span><span class="p">()</span>
-        <span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">WeakValueDictionary</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="SmartProcessingQueue.put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue.put">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_smart</span><span class="o">.</span><span class="n">SmartFuture</span><span class="p">[</span><span class="n">V</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Asynchronously adds a task with smart future handling to the queue.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: Positional arguments for the task.</span>
+<span class="sd">            kwargs: Keyword arguments for the task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The future representing the task&#39;s result.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; fut = await queue.put(item=&#39;task&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print(await fut)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
         <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_key</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">fut</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
@@ -588,6 +956,20 @@
 <div class="viewcode-block" id="SmartProcessingQueue.put_nowait">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue.put_nowait">[docs]</a>
     <span class="k">def</span> <span class="nf">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_smart</span><span class="o">.</span><span class="n">SmartFuture</span><span class="p">[</span><span class="n">V</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Immediately adds a task with smart future handling to the queue without waiting.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: Positional arguments for the task.</span>
+<span class="sd">            kwargs: Keyword arguments for the task.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The future representing the task&#39;s result.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; fut = queue.put_nowait(item=&#39;task&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; print(await fut)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
         <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_key</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">fut</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
@@ -601,17 +983,39 @@
 <div class="viewcode-block" id="SmartProcessingQueue._create_future">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue._create_future">[docs]</a>
     <span class="k">def</span> <span class="nf">_create_future</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">_smart</span><span class="o">.</span><span class="n">_Key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a smart future for the task.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_smart</span><span class="o">.</span><span class="n">create_future</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_loop</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SmartProcessingQueue._get">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue._get">[docs]</a>
     <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the task with the highest priority from the queue.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The priority, task arguments, keyword arguments, and future of the task.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; task = queue._get()</span>
+<span class="sd">            &gt;&gt;&gt; print(task)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fut</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_get</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span><span class="p">()</span></div>
 
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__worker_coro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Worker coroutine responsible for processing tasks in the queue.</span>
+
+<span class="sd">        Retrieves tasks, executes them, and sets the results or exceptions for the futures.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Any: Exceptions raised during task processing are logged.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &gt;&gt;&gt; await queue.__worker_coro()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span>
         <span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
         <span class="n">fut</span><span class="p">:</span> <span class="n">_smart</span><span class="o">.</span><span class="n">SmartFuture</span><span class="p">[</span><span class="n">V</span><span class="p">]</span>
