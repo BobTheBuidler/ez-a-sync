@@ -1,3 +1,26 @@
+"""
+This module initializes the a_sync library by importing and organizing various components, utilities, and classes.
+It provides a convenient and unified interface for asynchronous programming with a focus on flexibility and efficiency.
+
+The `a_sync` library offers decorators and base classes to facilitate writing both synchronous and asynchronous code.
+It includes the `@a_sync()` decorator and the `ASyncGenericBase` class, which allow for creating functions and classes
+that can operate in both synchronous and asynchronous contexts. Additionally, it provides enhanced asyncio primitives,
+such as queues and locks, with extra functionality.
+
+Modules and components included:
+- `aliases`, `exceptions`, `iter`, `task`: Core modules of the library.
+- `ASyncGenericBase`, `ASyncGenericSingleton`, `a_sync`: Base classes and decorators for dual-context execution.
+- `apply_semaphore`: Function to apply semaphores to coroutines.
+- `ASyncCachedPropertyDescriptor`, `ASyncPropertyDescriptor`, `cached_property`, `property`: Property descriptors for async properties.
+- `as_completed`, `create_task`, `gather`: Enhanced asyncio functions.
+- Executors: `AsyncThreadPoolExecutor`, `AsyncProcessPoolExecutor`, `PruningThreadPoolExecutor` for async execution.
+- Iterators: `ASyncFilter`, `ASyncSorter`, `ASyncIterable`, `ASyncIterator` for async iteration.
+- Utilities: `all`, `any`, `as_yielded` for async utilities.
+
+Alias for backward compatibility:
+- `ASyncBase` is an alias for `ASyncGenericBase`, which will be removed eventually, probably in version 0.1.0.
+"""
+
 from a_sync import aliases, exceptions, iter, task
 from a_sync.a_sync import ASyncGenericBase, ASyncGenericSingleton, a_sync
 from a_sync.a_sync.modifiers.semaphores import apply_semaphore

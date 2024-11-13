@@ -9,18 +9,20 @@ import functools
 
 from a_sync._typing import *
 from a_sync.a_sync import decorator
-from a_sync.a_sync.function import ASyncFunction, ModifiedMixin, ModifierManager
+from a_sync.a_sync.function import ASyncFunction, ModifierManager, _ModifiedMixin
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
 
 
-class ASyncDescriptor(ModifiedMixin, Generic[I, P, T]):
+class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     """
-    A descriptor base class for asynchronous methods and properties.
+    A descriptor base class for dual-function ASync methods and properties.
 
     This class provides functionality for mapping operations across multiple instances
-    and includes utility methods for common operations.
+    and includes utility methods for common operations such as checking if all or any
+    results are truthy, and finding the minimum, maximum, or sum of results of the method
+    or property mapped across multiple instances.
     """
 
     __wrapped__: AnyFn[Concatenate[I, P], T]

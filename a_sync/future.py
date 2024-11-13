@@ -1,5 +1,26 @@
 # type: ignore [var-annotated]
 
+"""
+The future.py module provides functionality for handling asynchronous futures, 
+including a decorator for converting callables into ASyncFuture objects and 
+utilities for managing asynchronous computations.
+
+Functions:
+    future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]) -> Callable[P, Union[T, "ASyncFuture[T]"]]: 
+        A decorator to convert a callable into an ASyncFuture, with optional modifiers.
+    _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> List[T]: 
+        Gathers and materializes a list of awaitable or non-awaitable items.
+    _check_and_materialize(thing: T) -> T: 
+        Checks if an item is awaitable and materializes it.
+    _materialize(meta: "ASyncFuture[T]") -> T: 
+        Materializes the result of an ASyncFuture.
+
+Classes:
+    ASyncFuture: Represents an asynchronous future result.
+    _ASyncFutureWrappedFn: A callable class to wrap functions and return ASyncFuture objects.
+    _ASyncFutureInstanceMethod: A class to handle instance methods wrapped as ASyncFuture.
+"""
+
 import asyncio
 import concurrent.futures
 from functools import partial, wraps
@@ -12,18 +33,46 @@ def future(
     callable: AnyFn[P, T] = None,
     **kwargs: Unpack[ModifierKwargs],
 ) -> Callable[P, Union[T, "ASyncFuture[T]"]]:
+    """
+    A decorator function to convert a callable into an ASyncFuture, with optional modifiers.
+
+    Args:
+        callable: The callable to convert. Defaults to None.
+        **kwargs: Additional keyword arguments for the modifier.
+    """
     return _ASyncFutureWrappedFn(callable, **kwargs)
 
 
 async def _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> List[T]:
+    """
+    Gathers and materializes a list of awaitable or non-awaitable items.
+
+    Args:
+        *things: Items to gather and materialize.
+    """
     return await asyncio.gather(*[_check_and_materialize(thing) for thing in things])
 
 
 async def _check_and_materialize(thing: T) -> T:
+    """
+    Checks if an item is awaitable and materializes it.
+
+    Args:
+        thing: The item to check and materialize.
+    """
     return await thing if isawaitable(thing) else thing
 
 
 def _materialize(meta: "ASyncFuture[T]") -> T:
+    """
+    Materializes the result of an ASyncFuture.
+
+    Args:
+        meta: The ASyncFuture to materialize.
+
+    Raises:
+        RuntimeError: If the event loop is running and the result cannot be awaited.
+    """
     try:
         return asyncio.get_event_loop().run_until_complete(meta)
     except RuntimeError as e:
@@ -38,18 +87,35 @@ MetaNumeric = Union[
 
 
 class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
+    """
+    A class representing an asynchronous future result.
+
+    Inherits from both concurrent.futures.Future and Awaitable[T], allowing it to be used in both synchronous and asynchronous contexts.
+    """
+
     __slots__ = "__awaitable__", "__dependencies", "__dependants", "__task"
 
     def __init__(
         self, awaitable: Awaitable[T], dependencies: List["ASyncFuture"] = []
     ) -> None:
+        """
+        Initializes an ASyncFuture with an awaitable and optional dependencies.
+
+        Args:
+            awaitable: The awaitable object.
+            dependencies: A list of dependencies. Defaults to [].
+        """
         self.__awaitable__ = awaitable
+        """The awaitable object."""
         self.__dependencies = dependencies
+        """A list of dependencies."""
         for dependency in dependencies:
             assert isinstance(dependency, ASyncFuture)
             dependency.__dependants.append(self)
         self.__dependants: List[ASyncFuture] = []
+        """A list of dependants."""
         self.__task = None
+        """The task associated with the awaitable."""
         super().__init__()
 
     def __hash__(self) -> int:
@@ -68,6 +134,12 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         return string + ">"
 
     def __list_dependencies(self, other) -> List["ASyncFuture"]:
+        """
+        Lists dependencies for the ASyncFuture.
+
+        Args:
+            other: The other dependency to list.
+        """
         if isinstance(other, ASyncFuture):
             return [self, other]
         return [self]
@@ -76,8 +148,8 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def result(self) -> Union[Callable[[], T], Any]:
         """
         If this future is not done, it will work like cf.Future.result. It will block, await the awaitable, and return the result when ready.
-        If this future is done and the result has attribute `results`, will return `getattr(future_result, 'result')`
-        If this future is done and the result does NOT have attribute `results`, will again work like cf.Future.result
+        If this future is done and the result has attribute `result`, will return `getattr(future_result, 'result')`
+        If this future is done and the result does NOT have attribute `result`, will again work like cf.Future.result
         """
         if self.done():
             if hasattr(r := super().result(), "result"):
@@ -106,6 +178,9 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         )
 
     def __await__(self) -> Generator[Any, None, T]:
+        """
+        Makes the ASyncFuture awaitable.
+        """
         return self.__await().__await__()
 
     async def __await(self) -> T:
@@ -115,6 +190,9 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
     @property
     def __task__(self) -> "asyncio.Task[T]":
+        """
+        Returns the asyncio task associated with the awaitable, creating it if necessary.
+        """
         if self.__task is None:
             self.__task = asyncio.create_task(self.__awaitable__)
         return self.__task
@@ -741,6 +819,9 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
     @property
     def __dependants__(self) -> Set["ASyncFuture"]:
+        """
+        Returns the set of dependants for this ASyncFuture, including nested dependants.
+        """
         dependants = set()
         for dep in self.__dependants:
             dependants.add(dep)
@@ -749,6 +830,9 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
     @property
     def __dependencies__(self) -> Set["ASyncFuture"]:
+        """
+        Returns the set of dependencies for this ASyncFuture, including nested dependencies.
+        """
         dependencies = set()
         for dep in self.__dependencies:
             dependencies.add(dep)
@@ -767,6 +851,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
 @final
 class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
+    """
+    A callable class to wrap functions and return ASyncFuture objects.
+    """
+
     __slots__ = "callable", "wrapped", "_callable_name"
 
     def __init__(
@@ -778,7 +866,11 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
 
         if callable:
             self.callable = callable
+            """The callable function."""
+
             self._callable_name = callable.__name__
+            """The name of the callable function."""
+
             a_sync_callable = a_sync(callable, default="async", **kwargs)
 
             @wraps(callable)
@@ -786,6 +878,7 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
                 return ASyncFuture(a_sync_callable(*args, **kwargs, sync=False))
 
             self.wrapped = future_wrap
+            """The wrapped function returning ASyncFuture."""
         else:
             self.wrapped = partial(_ASyncFutureWrappedFn, **kwargs)
 
@@ -807,6 +900,31 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
 @final
 class _ASyncFutureInstanceMethod(Generic[I, P, T]):
     # NOTE: probably could just replace this with functools.partial
+    """
+    A class to handle instance methods wrapped as ASyncFuture.
+    """
+
+    __module__: str
+    """The module name of the wrapper."""
+
+    __name__: str
+    """The name of the wrapper."""
+
+    __qualname__: str
+    """The qualified name of the wrapper."""
+
+    __doc__: Optional[str]
+    """The docstring of the wrapper."""
+
+    __annotations__: Dict[str, Any]
+    """The annotations of the wrapper."""
+
+    __instance: I
+    """The instance to which the method is bound."""
+
+    __wrapper: _ASyncFutureWrappedFn[P, T]
+    """The wrapper function."""
+
     def __init__(
         self,
         wrapper: _ASyncFutureWrappedFn[P, T],

@@ -1,5 +1,8 @@
 """
-This package contains buffed versions of the objects found in the builtin `asyncio` package.
+This package provides custom utilities and extensions to the builtin `asyncio` package.
+
+These utilities include enhanced versions of common asyncio functions, offering additional
+features and improved functionality for asynchronous programming.
 """
 
 from a_sync.asyncio.as_completed import as_completed

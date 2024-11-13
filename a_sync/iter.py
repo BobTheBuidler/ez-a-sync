@@ -30,17 +30,15 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
 
     Example:
         You must subclass this mixin class and define your own `__aiter__` method as shown below.
-        ```
+
         >>> class MyAwaitableAIterable(_AwaitableAsyncIterableMixin):
-        ...    def __aiter__(self):
+        ...    async def __aiter__(self):
         ...        for i in range(4):
         ...            yield i
-        ...
+
         >>> aiterable = MyAwaitableAIterable()
         >>> await aiterable
-        [0, 1, 2, 3, 4]
-
-        ```
+        [0, 1, 2, 3]
     """
 
     __wrapped__: AsyncIterable[T]
@@ -139,7 +137,12 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
         return cls(wrapped)
 
     def __init__(self, async_iterable: AsyncIterable[T]):
-        "Initializes the ASyncIterable with an async iterable."
+        """
+        Initializes the ASyncIterable with an async iterable.
+
+        Args:
+            async_iterable: The async iterable to wrap.
+        """
         if not isinstance(async_iterable, AsyncIterable):
             raise TypeError(
                 f"`async_iterable` must be an AsyncIterable. You passed {async_iterable}"
@@ -197,11 +200,23 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
             raise
 
     @overload
-    def wrap(cls, aiterator: AsyncIterator[T]) -> "ASyncIterator[T]": ...
+    def wrap(cls, aiterator: AsyncIterator[T]) -> "ASyncIterator[T]":
+        """
+        Wraps an AsyncIterator in an ASyncIterator.
+
+        Args:
+            aiterator: The AsyncIterator to wrap.
+        """
+
     @overload
-    def wrap(
-        cls, async_gen_func: AsyncGenFunc[P, T]
-    ) -> "ASyncGeneratorFunction[P, T]": ...
+    def wrap(cls, async_gen_func: AsyncGenFunc[P, T]) -> "ASyncGeneratorFunction[P, T]":
+        """
+        Wraps an async generator function in an ASyncGeneratorFunction.
+
+        Args:
+            async_gen_func: The async generator function to wrap.
+        """
+
     @classmethod
     def wrap(cls, wrapped):
         "Class method to wrap either an AsyncIterator or an async generator function."
@@ -217,7 +232,12 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         )
 
     def __init__(self, async_iterator: AsyncIterator[T]):
-        "Initializes the ASyncIterator with an async iterator."
+        """
+        Initializes the ASyncIterator with an async iterator.
+
+        Args:
+            async_iterator: The async iterator to wrap.
+        """
         if not isinstance(async_iterator, AsyncIterator):
             raise TypeError(
                 f"`async_iterator` must be an AsyncIterator. You passed {async_iterator}"
@@ -415,9 +435,6 @@ def _key_if_no_key(obj: T) -> T:
 
     Args:
         obj: The object to return.
-
-    Returns:
-        The object itself.
     """
     return obj
 

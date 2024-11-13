@@ -26,13 +26,34 @@ logger = logging.getLogger(__name__)
 
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
+    """Base class for creating asynchronous properties.
+
+    This class provides the foundation for defining properties that can be accessed
+    both synchronously and asynchronously. It includes utility methods for common
+    operations such as `any`, `all`, `min`, `max`, and `sum`.
+    """
+
     any: ASyncFunction[AnyIterable[I], bool]
+    """An ASyncFunction that checks if any result is truthy."""
+
     all: ASyncFunction[AnyIterable[I], bool]
+    """An ASyncFunction that checks if all results are truthy."""
+
     min: ASyncFunction[AnyIterable[I], T]
+    """An ASyncFunction that returns the minimum result."""
+
     max: ASyncFunction[AnyIterable[I], T]
+    """An ASyncFunction that returns the maximum result."""
+
     sum: ASyncFunction[AnyIterable[I], T]
+    """An ASyncFunction that returns the sum of results."""
+
     hidden_method_descriptor: "HiddenMethodDescriptor[T]"
+    """A descriptor for the hidden method."""
+
     __wrapped__: Callable[[I], T]
+    """The wrapped function or method."""
+
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
 
     def __init__(
@@ -41,6 +62,13 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         field_name: Optional[str] = None,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
+        """Initializes the _ASyncPropertyDescriptorBase.
+
+        Args:
+            _fget: The function to be wrapped.
+            field_name: Optional name for the field. If not provided, the function's name will be used.
+            **modifiers: Additional modifier arguments.
+        """
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
@@ -60,6 +88,15 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     def __get__(
         self, instance: Optional[I], owner: Type[I]
     ) -> Union[Self, Awaitable[T]]:
+        """Retrieves the property value, either synchronously or asynchronously.
+
+        Args:
+            instance: The instance from which the property is accessed.
+            owner: The owner class of the property.
+
+        Returns:
+            The property value, either as an awaitable or directly.
+        """
         if instance is None:
             return self
         awaitable = super().__get__(instance, owner)
@@ -97,6 +134,15 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         return retval
 
     async def get(self, instance: I, owner: Optional[Type[I]] = None) -> T:
+        """Asynchronously retrieves the property value.
+
+        Args:
+            instance: The instance from which the property is accessed.
+            owner: The owner class of the property.
+
+        Returns:
+            The property value.
+        """
         if instance is None:
             raise ValueError(instance)
         logger.debug("awaiting %s for instance %s", self, instance)
@@ -109,6 +155,17 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         concurrency: Optional[int] = None,
         name: str = "",
     ) -> "TaskMapping[I, T]":
+        """Maps the property across multiple instances.
+
+        Args:
+            instances: An iterable of instances.
+            owner: The owner class of the property.
+            concurrency: Optional concurrency limit.
+            name: Optional name for the task mapping.
+
+        Returns:
+            A TaskMapping object.
+        """
         from a_sync.task import TaskMapping
 
         logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
@@ -124,10 +181,11 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
 class ASyncPropertyDescriptor(
     _ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor
 ):
-    pass
+    """Descriptor class for asynchronous properties."""
 
 
-class property(ASyncPropertyDescriptor[I, T]): ...
+class property(ASyncPropertyDescriptor[I, T]):
+    """Descriptor for defining properties that can be accessed both synchronously and asynchronously."""
 
 
 @final
@@ -151,6 +209,15 @@ class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     @overload
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
     def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[Self, T]:
+        """Retrieves the property value, either synchronously or asynchronously.
+
+        Args:
+            instance: The instance from which the property is accessed.
+            owner: The owner class of the property.
+
+        Returns:
+            The property value, either as an awaitable or directly.
+        """
         return _ASyncPropertyDescriptorBase.__get__(self, instance, owner)
 
 
@@ -275,6 +342,15 @@ def a_sync_property(  # type: ignore [misc]
     ASyncPropertyDecoratorSyncDefault[I, T],
     ASyncPropertyDecoratorAsyncDefault[I, T],
 ]:
+    """Decorator for creating properties that can be accessed both synchronously and asynchronously.
+
+    Args:
+        func: The function to be wrapped.
+        **modifiers: Additional modifier arguments.
+
+    Returns:
+        A property descriptor that supports both sync and async access.
+    """
     func, modifiers = _parse_args(func, modifiers)
     if modifiers.get("default") == "sync":
         descriptor_class = ASyncPropertyDescriptorSyncDefault
@@ -306,13 +382,33 @@ class ASyncCachedPropertyDescriptor(
         field_name=None,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
+        """Initializes the ASyncCachedPropertyDescriptor.
+
+        Args:
+            _fget: The function to be wrapped.
+            _fset: Optional setter function for the property.
+            _fdel: Optional deleter function for the property.
+            field_name: Optional name for the field. If not provided, the function's name will be used.
+            **modifiers: Additional modifier arguments.
+        """
         super().__init__(_fget, field_name, **modifiers)
         self._check_method_sync(_fset, "setter")
-        self._check_method_sync(_fdel, "deleter")
         self._fset = _fset
+        """Optional setter function for the property."""
+
+        self._check_method_sync(_fdel, "deleter")
         self._fdel = _fdel
+        """Optional deleter function for the property."""
 
     def get_lock(self, instance: I) -> "asyncio.Task[T]":
+        """Retrieves the lock for the property.
+
+        Args:
+            instance: The instance from which the property is accessed.
+
+        Returns:
+            An asyncio Task representing the lock.
+        """
         instance_state = self.get_instance_state(instance)
         task = instance_state.lock[self.field_name]
         if isinstance(task, asyncio.Lock):
@@ -322,9 +418,23 @@ class ASyncCachedPropertyDescriptor(
         return task
 
     def pop_lock(self, instance: I) -> None:
+        """Removes the lock for the property.
+
+        Args:
+            instance: The instance from which the property is accessed.
+        """
         self.get_instance_state(instance).lock.pop(self.field_name, None)
 
     def get_loader(self, instance: I) -> Callable[[], T]:
+        """Retrieves the loader function for the property.
+
+        Args:
+            instance: The instance from which the property is accessed.
+
+        Returns:
+            A callable that loads the property value.
+        """
+
         @functools.wraps(self._fget)
         async def load_value():
             inner_task = self.get_lock(instance)
@@ -340,7 +450,8 @@ class ASyncCachedPropertyDescriptor(
         return load_value
 
 
-class cached_property(ASyncCachedPropertyDescriptor[I, T]): ...
+class cached_property(ASyncCachedPropertyDescriptor[I, T]):
+    """Descriptor for defining cached properties that can be accessed both synchronously and asynchronously."""
 
 
 @final
@@ -359,6 +470,15 @@ class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
     @overload
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
     def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[Self, T]:
+        """Retrieves the cached property value, either synchronously or asynchronously.
+
+        Args:
+            instance: The instance from which the property is accessed.
+            owner: The owner class of the property.
+
+        Returns:
+            The cached property value, either as an awaitable or directly.
+        """
         return _ASyncPropertyDescriptorBase.__get__(self, instance, owner)
 
 
@@ -472,10 +592,19 @@ def a_sync_cached_property(  # type: ignore [misc]
     ASyncCachedPropertyDecoratorSyncDefault[I, T],
     ASyncCachedPropertyDecoratorAsyncDefault[I, T],
 ]:
+    """Decorator for creating cached properties that can be accessed both synchronously and asynchronously.
+
+    Args:
+        func: The function to be wrapped.
+        **modifiers: Additional modifier arguments.
+
+    Returns:
+        A cached property descriptor that supports both sync and async access.
+    """
     func, modifiers = _parse_args(func, modifiers)
     if modifiers.get("default") == "sync":
         descriptor_class = ASyncCachedPropertyDescriptorSyncDefault
-    elif modifiers.get("default") == "sync":
+    elif modifiers.get("default") == "async":
         descriptor_class = ASyncCachedPropertyDescriptorAsyncDefault
     else:
         descriptor_class = ASyncCachedPropertyDescriptor
@@ -485,6 +614,12 @@ def a_sync_cached_property(  # type: ignore [misc]
 
 @final
 class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
+    """Represents a hidden method for asynchronous properties.
+
+    This class is used internally to manage hidden methods associated with
+    asynchronous properties.
+    """
+
     def __init__(
         self,
         instance: I,
@@ -493,25 +628,51 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
         field_name: str,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
+        """Initializes the HiddenMethod.
+
+        Args:
+            instance: The instance to which the method is bound.
+            unbound: The unbound function to be wrapped.
+            async_def: Indicates if the method is asynchronous.
+            field_name: The name of the field associated with the method.
+            **modifiers: Additional modifier arguments.
+        """
         super().__init__(instance, unbound, async_def, **modifiers)
         self.__name__ = field_name
+        """The name of the hidden method."""
 
     def __repr__(self) -> str:
+        """Returns a string representation of the HiddenMethod."""
         instance_type = type(self.__self__)
         return f"<{self.__class__.__name__} for property {instance_type.__module__}.{instance_type.__name__}.{self.__name__[2:-2]} bound to {self.__self__}>"
 
     def _should_await(self, kwargs: dict) -> bool:
+        """Determines if the method should be awaited.
+
+        Args:
+            kwargs: The keyword arguments passed to the method.
+
+        Returns:
+            A boolean indicating if the method should be awaited.
+        """
         try:
             return self.__self__.__a_sync_should_await_from_kwargs__(kwargs)
         except (AttributeError, exceptions.NoFlagsFound):
             return False
 
     def __await__(self) -> Generator[Any, None, T]:
+        """Returns an awaitable for the method."""
         return self(sync=False).__await__()
 
 
 @final
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
+    """Descriptor for hidden methods associated with asynchronous properties.
+
+    This class is used internally to manage hidden methods associated with
+    asynchronous properties.
+    """
+
     def __init__(
         self,
         _fget: AnyFn[Concatenate[I, P], Awaitable[T]],
@@ -538,6 +699,15 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
             self.__doc__ += f"\n\nThe original docstring for :meth:`~{self.__wrapped__.__qualname__}` is shown below:\n\n{self.__wrapped__.__doc__}"
 
     def __get__(self, instance: I, owner: Type[I]) -> HiddenMethod[I, T]:
+        """Retrieves the hidden method for the property.
+
+        Args:
+            instance: The instance from which the method is accessed.
+            owner: The owner class of the method.
+
+        Returns:
+            The hidden method.
+        """
         if instance is None:
             return self
         try:
@@ -558,6 +728,14 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
 
 
 def _is_a_sync_instance(instance: object) -> bool:
+    """Checks if an instance is an ASync instance.
+
+    Args:
+        instance: The instance to check.
+
+    Returns:
+        A boolean indicating if the instance is an ASync instance.
+    """
     try:
         return instance.__is_a_sync_instance__  # type: ignore [attr-defined]
     except AttributeError:
@@ -571,6 +749,15 @@ def _is_a_sync_instance(instance: object) -> bool:
 def _parse_args(
     func: Union[None, DefaultMode, AsyncGetterFunction[I, T]], modifiers: ModifierKwargs
 ) -> Tuple[Optional[AsyncGetterFunction[I, T]], ModifierKwargs]:
+    """Parses the arguments for the property decorators.
+
+    Args:
+        func: The function to be wrapped.
+        modifiers: Additional modifier arguments.
+
+    Returns:
+        A tuple containing the parsed function and modifiers.
+    """
     if func in ["sync", "async"]:
         modifiers["default"] = func
         func = None

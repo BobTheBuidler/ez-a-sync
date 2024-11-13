@@ -78,15 +78,12 @@ def as_completed(
     - Provides progress reporting using tqdm if 'tqdm' is set to True.
 
     Args:
-        fs (Iterable[Awaitable[T] or Mapping[K, Awaitable[V]]]): The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.
-        timeout (float, optional): The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
-        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        aiter (bool, optional): If True, returns an async iterator of results. Defaults to False.
-        tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
+        fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.
+        timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
+        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False. Note: This parameter is not currently implemented in the function logic.
+        aiter: If True, returns an async iterator of results. Defaults to False.
+        tqdm: If True, enables progress reporting using tqdm. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
-
-    Returns:
-        Iterator[Coroutine[Any, Any, T] or ASyncIterator[Tuple[K, V]]]: An iterator of results when awaiting individual awaitables or an async iterator when awaiting mappings.
 
     Examples:
         Awaiting individual awaitables:
@@ -171,15 +168,12 @@ def as_completed_mapping(
     This function is designed to await a mapping of awaitable objects, where each key-value pair represents a unique awaitable. It enables concurrent execution and gathers results into an iterator or an async iterator.
 
     Args:
-        mapping (Mapping[K, Awaitable[V]]): A dictionary-like object where keys are of type K and values are awaitable objects of type V.
-        timeout (float, optional): The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
-        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        aiter (bool, optional): If True, returns an async iterator of results. Defaults to False.
-        tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
+        mapping: A dictionary-like object where keys are of type K and values are awaitable objects of type V.
+        timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
+        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.
+        aiter: If True, returns an async iterator of results. Defaults to False.
+        tqdm: If True, enables progress reporting using tqdm. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
-
-    Returns:
-        Union[Iterator[Coroutine[Any, Any, Tuple[K, V]]] or ASyncIterator[Tuple[K, V]]]: An iterator of results or an async iterator when awaiting mappings.
 
     Example:
         ```
@@ -206,6 +200,14 @@ def as_completed_mapping(
 
 
 async def _exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
+    """Wraps an awaitable to catch exceptions and return them instead of raising.
+
+    Args:
+        awaitable: The awaitable to wrap.
+
+    Returns:
+        The result of the awaitable or the exception if one is raised.
+    """
     try:
         return await awaitable
     except Exception as e:
@@ -220,6 +222,15 @@ async def __yield_as_completed(
     tqdm: bool = False,
     **tqdm_kwargs: Any
 ) -> AsyncIterator[T]:
+    """Yields results from awaitables as they complete.
+
+    Args:
+        futs: The awaitables to await.
+        timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
+        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.
+        tqdm: If True, enables progress reporting using tqdm. Defaults to False.
+        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
+    """
     for fut in as_completed(
         futs,
         timeout=timeout,
@@ -241,6 +252,16 @@ async def __mapping_wrap(
 async def __mapping_wrap(
     k: K, v: Awaitable[V], return_exceptions: bool = False
 ) -> Union[V, Exception]:
+    """Wraps a key-value pair of awaitable to catch exceptions and return them with the key.
+
+    Args:
+        k: The key associated with the awaitable.
+        v: The awaitable to wrap.
+        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.
+
+    Returns:
+        A tuple of the key and the result of the awaitable or the exception if one is raised.
+    """
     try:
         return k, await v
     except Exception as e:

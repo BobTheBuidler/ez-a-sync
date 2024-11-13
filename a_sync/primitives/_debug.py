@@ -41,7 +41,7 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
             **kwargs: Keyword arguments for the debug daemon.
 
         Returns:
-            The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.
+            The debug daemon task as an asyncio.Task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.
         """
         if self.debug_logs_enabled and asyncio.get_event_loop().is_running():
             return asyncio.create_task(self._debug_daemon(*args, **kwargs))
