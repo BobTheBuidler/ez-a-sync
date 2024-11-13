@@ -1,3 +1,8 @@
+"""
+This module provides various semaphore implementations, including a debug-enabled semaphore,
+a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi-threaded applications.
+"""
+
 import asyncio
 import functools
 import logging
@@ -172,11 +177,17 @@ class DummySemaphore(asyncio.Semaphore):
 
 class ThreadsafeSemaphore(Semaphore):
     """
-    While its a bit weird to run multiple event loops, sometimes either you or a lib you're using must do so.
+    A semaphore that works in a multi-threaded environment.
+    
+    This semaphore ensures that the program functions correctly even when used with multiple event loops.
+
+    While its a bit weird to run multiple event loops, sometimes either you or a lib you're using must do so. 
+
     When in use in threaded applications, this semaphore will not work as intended but at least your program will function.
+
     You may need to reduce the semaphore value for multi-threaded applications.
 
-    # TL;DR it's a janky fix for an edge case problem and will otherwise function as a normal a_sync.Semaphore (which is just an asyncio.Semaphore with extra bells and whistles).
+    TL;DR it's a janky fix for an edge case problem and will otherwise function as a normal a_sync.Semaphore (which is just an asyncio.Semaphore with extra bells and whistles).
     """
 
     __slots__ = "semaphores", "dummy"

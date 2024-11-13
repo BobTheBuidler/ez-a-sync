@@ -1,3 +1,8 @@
+"""
+This module initializes the a_sync library by importing and organizing various components, utilities, and classes.
+It provides a convenient and unified interface for asynchronous programming with a focus on flexibility and efficiency.
+"""
+
 from a_sync import aliases, exceptions, iter, task
 from a_sync.a_sync import ASyncGenericBase, ASyncGenericSingleton, a_sync
 from a_sync.a_sync.modifiers.semaphores import apply_semaphore

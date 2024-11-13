@@ -1,3 +1,9 @@
+"""
+This module defines smart future and task utilities for the a_sync library.
+These utilities provide enhanced functionality for managing asynchronous tasks and futures,
+including task shielding and a custom task factory for creating SmartTask instances.
+"""
+
 import asyncio
 import logging
 import warnings
@@ -18,11 +24,17 @@ logger = logging.getLogger(__name__)
 
 
 class _SmartFutureMixin(Generic[T]):
+    """
+    Mixin class that provides common functionality for smart futures and tasks.
+    """
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
     _key: _Key
     _waiters: "weakref.WeakSet[SmartTask[T]]"
 
     def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
+        """
+        Await the smart future or task, handling waiters and logging.
+        """
         if self.done():
             return self.result()  # May raise too.
         self._asyncio_future_blocking = True
@@ -37,6 +49,9 @@ class _SmartFutureMixin(Generic[T]):
     @property
     def num_waiters(self: Union["SmartFuture", "SmartTask"]) -> int:
         # NOTE: we check .done() because the callback may not have ran yet and its very lightweight
+        """
+        Get the number of waiters currently awaiting the future or task.
+        """
         if self.done():
             # if there are any waiters left, there won't be once the event loop runs once
             return 0
@@ -45,17 +60,25 @@ class _SmartFutureMixin(Generic[T]):
     def _waiter_done_cleanup_callback(
         self: Union["SmartFuture", "SmartTask"], waiter: "SmartTask"
     ) -> None:
-        "Removes the waiter from _waiters, and _queue._futs if applicable"
+        """
+        Callback to clean up waiters when a waiter task is done.
+
+        Removes the waiter from _waiters, and _queue._futs if applicable
+        """
         if not self.done():
             self._waiters.remove(waiter)
 
     def _self_done_cleanup_callback(self: Union["SmartFuture", "SmartTask"]) -> None:
+        """
+        Callback to clean up waiters and remove the future from the queue when done.
+        """
         self._waiters.clear()
         if queue := self._queue:
             queue._futs.pop(self._key)
-
-
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
+    """
+    A smart future that tracks waiters and integrates with a smart processing queue.
+    """
     _queue = None
     _key = None
 
@@ -66,6 +89,14 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         key: Optional[_Key] = None,
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ) -> None:
+        """
+        Initialize the SmartFuture with an optional queue and key.
+        
+        Args:
+            queue: Optional; a smart processing queue.
+            key: Optional; a key identifying the future.
+            loop: Optional; the event loop.
+        """
         super().__init__(loop=loop)
         if queue:
             self._queue = weakref.proxy(queue)
@@ -78,9 +109,18 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         return f"<{type(self).__name__} key={self._key} waiters={self.num_waiters} {self._state}>"
 
     def __lt__(self, other: "SmartFuture[T]") -> bool:
-        """heap considers lower values as higher priority so a future with more waiters will be 'less than' a future with less waiters."""
-        # other = other_ref()
-        # if other is None:
+        """
+        Compare the number of waiters to determine priority in a heap.
+        Lower values indicate higher priority, so more waiters means 'less than'.
+        
+        Args:
+            other: Another SmartFuture to compare with.
+            
+        Returns:
+            True if self has more waiters than other.
+        """
+        #other = other_ref()
+        #if other is None:
         #    # garbage collected refs should always process first so they can be popped from the queue
         #    return False
         return self.num_waiters > other.num_waiters
@@ -92,10 +132,24 @@ def create_future(
     key: Optional[_Key] = None,
     loop: Optional[asyncio.AbstractEventLoop] = None,
 ) -> SmartFuture[V]:
+    """
+    Create a SmartFuture instance.
+    
+    Args:
+        queue: Optional; a smart processing queue.
+        key: Optional; a key identifying the future.
+        loop: Optional; the event loop.
+        
+    Returns:
+        A SmartFuture instance.
+    """
     return SmartFuture(queue=queue, key=key, loop=loop or asyncio.get_event_loop())
 
 
 class SmartTask(_SmartFutureMixin[T], asyncio.Task):
+    """
+    A smart task that tracks waiters and integrates with a smart processing queue.
+    """
     def __init__(
         self,
         coro: Awaitable[T],
@@ -103,6 +157,14 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
         loop: Optional[asyncio.AbstractEventLoop] = None,
         name: Optional[str] = None,
     ) -> None:
+        """
+        Initialize the SmartTask with a coroutine and optional event loop.
+        
+        Args:
+            coro: The coroutine to run in the task.
+            loop: Optional; the event loop.
+            name: Optional; the name of the task.
+        """
         super().__init__(coro, loop=loop, name=name)
         self._waiters: Set["asyncio.Task[T]"] = set()
         self.add_done_callback(SmartTask._self_done_cleanup_callback)
