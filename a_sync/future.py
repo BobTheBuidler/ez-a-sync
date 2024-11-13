@@ -65,7 +65,7 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
         meta: The ASyncFuture to materialize.
 
     Raises:
-        RuntimeError: If the result is not set and the event loop is running.
+        RuntimeError: If the event loop is running and the result cannot be awaited.
     """
     try:
         return asyncio.get_event_loop().run_until_complete(meta)
@@ -140,8 +140,8 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def result(self) -> Union[Callable[[], T], Any]:
         """
         If this future is not done, it will work like cf.Future.result. It will block, await the awaitable, and return the result when ready.
-        If this future is done and the result has attribute `results`, will return `getattr(future_result, 'result')`
-        If this future is done and the result does NOT have attribute `results`, will again work like cf.Future.result
+        If this future is done and the result has attribute `result`, will return `getattr(future_result, 'result')`
+        If this future is done and the result does NOT have attribute `result`, will again work like cf.Future.result
         """
         if self.done():
             if hasattr(r := super().result(), "result"):
