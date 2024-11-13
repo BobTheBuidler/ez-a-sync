@@ -1,7 +1,7 @@
 """
 This module provides two specialized async flow management classes, CounterLock and CounterLockCluster.
 
-These primitives manages :class:`asyncio.Task` objects that must wait for an internal counter to reach a specific value.
+These primitives manage :class:`asyncio.Task` objects that must wait for an internal counter to reach a specific value.
 """
 
 import asyncio
@@ -15,10 +15,10 @@ from a_sync.primitives.locks.event import Event
 
 class CounterLock(_DebugDaemonMixin):
     """
-    An async primitive that blocks until the internal counter has reached a specific value.
+    An async primitive that uses an internal counter to manage task synchronization.
 
-    A coroutine can `await counter.wait_for(3)` and it will block until the internal counter >= 3.
-    If some other task executes `counter.value = 5` or `counter.set(5)`, the first coroutine will unblock as 5 >= 3.
+    A coroutine can `await counter.wait_for(3)` and it will wait until the internal counter >= 3.
+    If some other task executes `counter.value = 5` or `counter.set(5)`, the first coroutine will proceed as 5 >= 3.
 
     The internal counter can only increase.
     """
@@ -31,9 +31,8 @@ class CounterLock(_DebugDaemonMixin):
 
         Args:
             start_value: The initial value of the counter.
-            name (optional): An optional name for the counter, used in debug logs.
+            name: An optional name for the counter, used in debug logs.
         """
-
         self._name = name
         """An optional name for the counter, used in debug logs."""
 
@@ -52,9 +51,6 @@ class CounterLock(_DebugDaemonMixin):
 
         Args:
             value: The value to wait for.
-
-        Returns:
-            True when the counter reaches or exceeds the specified value.
         """
         if not self.is_ready(value):
             self._ensure_debug_daemon()
@@ -66,10 +62,10 @@ class CounterLock(_DebugDaemonMixin):
         Sets the counter to the specified value.
 
         Args:
-            value: The value to set the counter to. Must be >= the current value.
+            value: The value to set the counter to. Must be strictly greater than the current value.
 
         Raises:
-            ValueError: If the new value is less than the current value.
+            ValueError: If the new value is less than or equal to the current value.
         """
         self.value = value
 
@@ -81,9 +77,6 @@ class CounterLock(_DebugDaemonMixin):
     def value(self) -> int:
         """
         Gets the current value of the counter.
-
-        Returns:
-            The current value of the counter.
         """
         return self._value
 
@@ -124,9 +117,9 @@ class CounterLock(_DebugDaemonMixin):
 
 class CounterLockCluster:
     """
-    An asyncio primitive that represents 2 or more CounterLock objects.
+    An asyncio primitive that represents a collection of CounterLock objects.
 
-    `wait_for(i)` will block until the value of all CounterLock objects is >= i.
+    `wait_for(i)` will wait until the value of all CounterLock objects is >= i.
     """
 
     __slots__ = ("locks",)
@@ -146,9 +139,6 @@ class CounterLockCluster:
 
         Args:
             value: The value to wait for.
-
-        Returns:
-            True when the value of all CounterLock objects reach or exceed the specified value.
         """
         await asyncio.gather(
             *[counter_lock.wait_for(value) for counter_lock in self.locks]
