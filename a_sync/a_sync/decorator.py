@@ -28,20 +28,23 @@ from a_sync.a_sync.function import (
 def a_sync(
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorAsyncDefault: ...
+) -> ASyncDecoratorAsyncDefault:
+    ...
 
 
 @overload
 def a_sync(
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorSyncDefault: ...
+) -> ASyncDecoratorSyncDefault:
+    ...
 
 
 @overload
 def a_sync(
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecorator: ...
+) -> ASyncDecorator:
+    ...
 
 
 @overload  # async def, None default
@@ -49,7 +52,8 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionAsyncDefault[P, T]: ...
+) -> ASyncFunctionAsyncDefault[P, T]:
+    ...
 
 
 @overload  # sync def none default
@@ -57,7 +61,8 @@ def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionSyncDefault[P, T]: ...
+) -> ASyncFunctionSyncDefault[P, T]:
+    ...
 
 
 # @a_sync(default='async')
@@ -76,7 +81,8 @@ def a_sync(
     coro_fn: Literal[None],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorAsyncDefault: ...
+) -> ASyncDecoratorAsyncDefault:
+    ...
 
 
 @overload  # if you try to use default as the only arg
@@ -84,7 +90,8 @@ def a_sync(
     coro_fn: Literal["async"],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorAsyncDefault: ...
+) -> ASyncDecoratorAsyncDefault:
+    ...
 
 
 # a_sync(some_fn, default='async')
@@ -95,7 +102,8 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionAsyncDefault[P, T]: ...
+) -> ASyncFunctionAsyncDefault[P, T]:
+    ...
 
 
 @overload  # sync def async default
@@ -103,7 +111,8 @@ def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionAsyncDefault[P, T]: ...
+) -> ASyncFunctionAsyncDefault[P, T]:
+    ...
 
 
 # a_sync(some_fn, default='sync')
@@ -114,7 +123,8 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionSyncDefault: ...
+) -> ASyncFunctionSyncDefault:
+    ...
 
 
 @overload  # sync def sync default
@@ -122,7 +132,8 @@ def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionSyncDefault: ...
+) -> ASyncFunctionSyncDefault:
+    ...
 
 
 # @a_sync(default='sync')
@@ -141,7 +152,8 @@ def a_sync(
     coro_fn: Literal[None],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorSyncDefault: ...
+) -> ASyncDecoratorSyncDefault:
+    ...
 
 
 @overload  # if you try to use default as the only arg
@@ -149,7 +161,8 @@ def a_sync(
     coro_fn: Literal["sync"],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorSyncDefault: ...
+) -> ASyncDecoratorSyncDefault:
+    ...
 
 
 @overload  # if you try to use default as the only arg
@@ -157,7 +170,8 @@ def a_sync(
     coro_fn: Literal["sync"],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorSyncDefault: ...
+) -> ASyncDecoratorSyncDefault:
+    ...
 
 
 # catchall
@@ -183,84 +197,71 @@ def a_sync(
                      See :class:`ModifierKwargs` for available options.
 
     Modifiers:
-        lib defaults:
-            async settings
-                cache_type: CacheType = None,            - This can be None or 'memory'. 'memory' is a lru cache which can be modified with the 'cache_typed','ram_cache_maxsize','ram_cache_ttl' modifiers.
-                cache_typed: bool = False,               - Set to True if you want types considered treated for cache keys. ie with cache_typed=True, Decimal(0) and 0 will be considered separate keys.
-                ram_cache_maxsize: Optional[int] = -1,   - The maxsize for your lru cache. None if cache is unbounded. If you set this value without specifying a cache type, 'memory' will automatically be applied.
-                ram_cache_ttl: Optional[int] = None,     - The ttl for items in your lru cache. Set to None. If you set this value without specifying a cache type, 'memory' will automatically be applied.
-                runs_per_minute: Optional[int] = None,   - Setting this value enables a rate limiter for the decorated function.
-                semaphore: SemaphoreSpec = None,         - drop in a Semaphore for your async defined functions.
-            sync settings
-                executor: Executor = config.default_sync_executor
+        The following modifiers can be used to customize the behavior of the decorator:
 
-    Returns:
-        An :class:`~ASyncDecorator` if used as a decorator factory, or an :class:`~ASyncFunction`
-        if used directly on a function.
+        - cache_type: Can be None or 'memory'. 'memory' is an LRU cache which can be modified with
+          the 'cache_typed', 'ram_cache_maxsize', and 'ram_cache_ttl' modifiers.
+        - cache_typed: Set to True if you want types considered for cache keys. For example, with
+          cache_typed=True, Decimal(0) and 0 will be considered separate keys.
+        - ram_cache_maxsize: The max size for your LRU cache. None if the cache is unbounded. If you
+          set this value without specifying a cache type, 'memory' will automatically be applied.
+        - ram_cache_ttl: The TTL for items in your LRU cache. Set to None. If you set this value
+          without specifying a cache type, 'memory' will automatically be applied.
+        - runs_per_minute: Setting this value enables a rate limiter for the decorated function.
+        - semaphore: Drop in a Semaphore for your async defined functions.
+        - executor: The executor for the synchronous function. Set to the library's default of
+          config.default_sync_executor.
 
     Examples:
         The decorator can be used in several ways.
 
         1. As a simple decorator:
-        ```python
-        >>> @a_sync
-        ... async def some_async_fn():
-        ...     return True
-        >>> await some_fn()
-        True
-        >>> some_fn(sync=True)
-        True
-        ```
-        ```
-        >>> @a_sync
-        ... def some_sync_fn():
-        ...     return True
-        >>> some_sync_fn()
-        True
-        >>> some_sync_fn(sync=False)
-        <coroutine object some_sync_fn at 0x12345678>
-        ```
+            >>> @a_sync
+            ... async def some_async_fn():
+            ...     return True
+            >>> await some_fn()
+            True
+            >>> some_fn(sync=True)
+            True
+
+            >>> @a_sync
+            ... def some_sync_fn():
+            ...     return True
+            >>> some_sync_fn()
+            True
+            >>> some_sync_fn(sync=False)
+            <coroutine object some_sync_fn at 0x12345678>
 
         2. As a decorator with default mode specified:
-        ```python
-        >>> @a_sync(default='sync')
-        ... async def some_fn():
-        ...     return True
-        ...
-        >>> some_fn()
-        True
-        ```
+            >>> @a_sync(default='sync')
+            ... async def some_fn():
+            ...     return True
+            ...
+            >>> some_fn()
+            True
 
         3. As a decorator with modifiers:
-        ```python
-        >>> @a_sync(cache_type='memory', runs_per_minute=60)
-        ... async def some_fn():
-        ...    return True
-        ...
-        >>> some_fn(sync=True)
-        True
-        ```
+            >>> @a_sync(cache_type='memory', runs_per_minute=60)
+            ... async def some_fn():
+            ...    return True
+            ...
+            >>> some_fn(sync=True)
+            True
 
         4. Applied directly to a function:
-        ```python
-        >>> some_fn = a_sync(some_existing_function, default='sync')
-        >>> some_fn()
-        "some return value"
-        ```
+            >>> some_fn = a_sync(some_existing_function, default='sync')
+            >>> some_fn()
+            "some return value"
 
     The decorated function can then be called either synchronously or asynchronously:
 
-    ```python
-    result = some_fn()  # Synchronous call
-    result = await some_fn()  # Asynchronous call
-    ```
+        result = some_fn()  # Synchronous call
+        result = await some_fn()  # Asynchronous call
 
     The execution mode can also be explicitly specified during the call:
 
-    ```python
-    result = some_fn(sync=True)  # Force synchronous execution
-    result = await some_fn(sync=False)  # Force asynchronous execution
-    ```
+        result = some_fn(sync=True)  # Force synchronous execution
+        result = await some_fn(sync=False)  # Force asynchronous execution
 
     This decorator is particularly useful for libraries that need to support
     both synchronous and asynchronous usage, or for gradually migrating

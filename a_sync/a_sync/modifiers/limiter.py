@@ -8,39 +8,57 @@ from a_sync import aliases, exceptions
 from a_sync._typing import *
 
 
+LimiterSpec = Union[int, AsyncLimiter]
+
 @overload
 def apply_rate_limit(
-    coro_fn: Literal[None],
     runs_per_minute: int,
-) -> AsyncDecorator[P, T]: ...
+) -> AsyncDecorator[P, T]:
+    """Decorator to apply a rate limit to an asynchronous function.
 
-
-@overload
-def apply_rate_limit(
-    coro_fn: int,
-    runs_per_minute: Literal[None],
-) -> AsyncDecorator[P, T]: ...
-
-
+    Args:
+        runs_per_minute: The number of allowed executions per minute.
+    """
+    
 @overload
 def apply_rate_limit(
     coro_fn: CoroFn[P, T],
-    runs_per_minute: Union[int, AsyncLimiter],
-) -> CoroFn[P, T]: ...
+    runs_per_minute: LimiterSpec,
+) -> CoroFn[P, T]:
+    """Decorator to apply a rate limit to an asynchronous function.
 
-
+    Args:
+        coro_fn: The coroutine function to be rate-limited.
+        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance.
+    """
+    
 def apply_rate_limit(
     coro_fn: Optional[Union[CoroFn[P, T], int]] = None,
-    runs_per_minute: Optional[Union[int, AsyncLimiter]] = None,
+    runs_per_minute: Optional[LimiterSpec] = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
+    """Applies a rate limit to an asynchronous function.
+
+    This function can be used as a decorator to limit the number of times
+    an asynchronous function can be called per minute. It can be configured
+    with either an integer specifying the number of runs per minute or an
+    AsyncLimiter instance.
+
+    Args:
+        coro_fn: The coroutine function to be rate-limited. If an integer is provided, it is treated as runs per minute.
+        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance. If coro_fn is an integer, this should be None.
+
+    Raises:
+        TypeError: If 'runs_per_minute' is neither an integer nor an AsyncLimiter when 'coro_fn' is None.
+        exceptions.FunctionNotAsync: If 'coro_fn' is not an asynchronous function.
+    """
     # Parse Inputs
-    if isinstance(coro_fn, int):
+    if isinstance(coro_fn, (int, AsyncLimiter)):
         assert runs_per_minute is None
         runs_per_minute = coro_fn
         coro_fn = None
 
     elif coro_fn is None:
-        if runs_per_minute is not None and not isinstance(runs_per_minute, int):
+        if runs_per_minute is not None and not isinstance(runs_per_minute, (int, AsyncLimiter)):
             raise TypeError("'runs_per_minute' must be an integer.", runs_per_minute)
 
     elif not asyncio.iscoroutinefunction(coro_fn):

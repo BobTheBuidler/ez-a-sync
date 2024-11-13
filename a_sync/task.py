@@ -1,3 +1,12 @@
+"""
+This module provides asynchronous task management utilities, specifically focused on creating and handling mappings of tasks.
+
+The main components include:
+- TaskMapping: A class for managing and asynchronously generating tasks based on input iterables.
+- TaskMappingKeys: A view to asynchronously iterate over the keys of a TaskMapping.
+- TaskMappingValues: A view to asynchronously iterate over the values of a TaskMapping.
+- TaskMappingItems: A view to asynchronously iterate over the items (key-value pairs) of a TaskMapping.
+"""
 import asyncio
 import contextlib
 import functools
@@ -96,7 +105,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         Initialize a TaskMapping instance.
 
         Args:
-            wrapped_func: A function that takes a key (and optional parameters) and returns an Awaitable.
+            wrapped_func: A callable that takes a key and additional parameters and returns an Awaitable.
             *iterables: Any number of iterables whose elements will be used as keys for task generation.
             name: An optional name for the tasks created by this mapping.
             concurrency: Maximum number of tasks to run concurrently.
@@ -643,6 +652,9 @@ _get_value: Callable[[Tuple[K, V]], V] = lambda k_and_v: k_and_v[1]
 
 
 class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
+    """
+    Base class for TaskMapping views that provides common functionality.
+    """
     _get_from_item: Callable[[Tuple[K, V]], T]
     _pop: bool = False
 
@@ -683,6 +695,9 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
 
 
 class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
+    """
+    Asynchronous view to iterate over the keys of a TaskMapping.
+    """
     _get_from_item = lambda self, item: _get_key(item)
 
     async def __aiter__(self) -> AsyncIterator[K]:
@@ -740,6 +755,9 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
 
 
 class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
+    """
+    Asynchronous view to iterate over the items (key-value pairs) of a TaskMapping.
+    """
     _get_from_item = lambda self, item: item
 
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
@@ -755,6 +773,9 @@ class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
 
 
 class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
+    """
+    Asynchronous view to iterate over the values of a TaskMapping.
+    """
     _get_from_item = lambda self, item: _get_value(item)
 
     async def __aiter__(self) -> AsyncIterator[V]:

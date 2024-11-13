@@ -19,11 +19,8 @@ def _await(awaitable: Awaitable[T]) -> T:
     Args:
         awaitable: The awaitable object to be awaited.
 
-    Returns:
-        The result of the awaitable.
-
     Raises:
-        :class:`exceptions.SyncModeInAsyncContextError`: If the event loop is already running.
+        exceptions.SyncModeInAsyncContextError: If the event loop is already running.
     """
     try:
         return a_sync.asyncio.get_event_loop().run_until_complete(awaitable)
@@ -39,13 +36,13 @@ def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: 
 
     Args:
         func: The synchronous function to be converted.
-        executor: The executor to run the synchronous function.
+        executor: The executor used to run the synchronous function.
 
     Returns:
         A coroutine function wrapping the input function.
 
     Raises:
-        :class:`exceptions.FunctionNotSync`: If the input function is already asynchronous.
+        exceptions.FunctionNotSync: If the input function is a coroutine function or an instance of ASyncFunction.
     """
     from a_sync.a_sync.function import ASyncFunction
 

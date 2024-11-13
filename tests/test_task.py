@@ -6,11 +6,24 @@ from a_sync import TaskMapping, create_task, exceptions
 
 @pytest.mark.asyncio_cooperative
 async def test_create_task():
+    """Test the creation of an asynchronous task.
+
+    Verifies that a task can be created using the `create_task`
+    function with a coroutine and a specified name. Note that
+    this test does not assert the task's name.
+    """
     await create_task(coro=asyncio.sleep(0), name="test")
 
 
 @pytest.mark.asyncio_cooperative
 async def test_persistent_task():
+    """Test the persistence of a task without a local reference.
+
+    Checks if a task created without a local reference
+    completes successfully by setting a nonlocal variable.
+    The test ensures that the task completes by verifying
+    the change in the nonlocal variable.
+    """
     check = False
 
     async def task():
@@ -26,6 +39,11 @@ async def test_persistent_task():
 
 @pytest.mark.asyncio_cooperative
 async def test_pruning():
+    """Test task creation and handling without errors.
+
+    Ensures that tasks can be created without causing errors.
+    This test does not explicitly check for task pruning.
+    """
     async def task():
         return
 
@@ -37,6 +55,12 @@ async def test_pruning():
 
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_init():
+    """Test initialization of TaskMapping.
+
+    Verifies that the TaskMapping class initializes correctly
+    with the provided coroutine function and arguments. Checks
+    the handling of function arguments and the task name.
+    """
     tasks = TaskMapping(_coro_fn)
     assert (
         tasks._wrapped_func is _coro_fn
@@ -50,6 +74,12 @@ async def test_task_mapping_init():
 
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping():
+    """Test the functionality of TaskMapping.
+
+    Checks the behavior of TaskMapping, including task
+    creation, retrieval, and execution. Verifies the ability
+    to await the mapping and checks the return values of tasks.
+    """
     tasks = TaskMapping(_coro_fn)
     # does it return the correct type
     assert isinstance(tasks[0], asyncio.Task)
@@ -74,6 +104,13 @@ async def test_task_mapping():
 
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_map_with_sync_iter():
+    """Test TaskMapping with a synchronous iterator.
+
+    Verifies that TaskMapping can map over a synchronous
+    iterator and correctly handle keys, values, and items.
+    Ensures that mapping in progress raises a RuntimeError
+    when attempted concurrently.
+    """
     tasks = TaskMapping(_coro_fn)
     i = 0
     async for k, v in tasks.map(range(5)):
@@ -127,6 +164,13 @@ async def test_task_mapping_map_with_sync_iter():
 
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_map_with_async_iter():
+    """Test TaskMapping with an asynchronous iterator.
+
+    Verifies that TaskMapping can map over an asynchronous
+    iterator and correctly handle keys, values, and items.
+    Ensures that mapping in progress raises a RuntimeError
+    when attempted concurrently.
+    """
     async def async_iter():
         for i in range(5):
             yield i
@@ -212,6 +256,12 @@ async def test_task_mapping_map_with_async_iter():
 
 
 def test_taskmapping_views_sync():
+    """Test synchronous views of TaskMapping.
+
+    Checks the synchronous access to keys, values, and items
+    in TaskMapping. Verifies the state of these views before
+    and after gathering tasks.
+    """
     tasks = TaskMapping(_coro_fn, range(5))
 
     # keys are currently empty until the loop has a chance to run
@@ -243,5 +293,13 @@ def test_taskmapping_views_sync():
 
 
 async def _coro_fn(i: int) -> str:
+    """Coroutine function for testing.
+
+    Args:
+        i: An integer input.
+
+    Returns:
+        A string representation of the incremented input.
+    """
     i += 1
     return str(i) * i

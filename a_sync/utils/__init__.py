@@ -1,3 +1,8 @@
+"""
+This module initializes the utility functions for the a_sync library, including functions for handling asynchronous 
+iterators and implementing asynchronous versions of the built-in any and all functions.
+"""
+
 import asyncio
 
 from a_sync.utils.iterators import as_yielded, exhaust_iterator, exhaust_iterators
