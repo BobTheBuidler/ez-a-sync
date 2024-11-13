@@ -25,7 +25,9 @@ class ASyncMeta(ABCMeta):
     Any class with `ASyncMeta` as its metaclass will have its functions and properties
     wrapped with asynchronous capabilities upon class instantiation. This includes
     wrapping functions with `ASyncMethodDescriptor` and properties with
-    `ASyncPropertyDescriptor` or `ASyncCachedPropertyDescriptor`.
+    `ASyncPropertyDescriptor` or `ASyncCachedPropertyDescriptor`. Additionally, it handles
+    `ModifiedMixin` objects, which are used when functions are decorated with a_sync decorators
+    to apply specific modifiers to those functions.
 
     Attributes:
         class_defined_modifiers (dict): Modifiers defined at the class level.
