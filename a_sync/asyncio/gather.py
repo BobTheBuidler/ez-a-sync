@@ -55,15 +55,14 @@ async def gather(
     - Uses type hints for use with static type checkers.
     - Supports gathering either individual awaitables or a k:v mapping of awaitables.
     - Provides progress reporting using tqdm if 'tqdm' is set to True.
+    - Allows exclusion of results based on a condition using the 'exclude_if' parameter.
 
     Args:
         *awaitables: The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.
-        return_exceptions (optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        tqdm (optional): If True, enables progress reporting using tqdm. Defaults to False.
+        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.
+        exclude_if: A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None.
+        tqdm: If True, enables progress reporting using tqdm. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
-
-    Returns:
-        A list of results when awaiting individual awaitables or a dictionary of results when awaiting mappings.
 
     Examples:
         Awaiting individual awaitables:
@@ -129,12 +128,10 @@ async def gather_mapping(
 
     Args:
         mapping: A dictionary-like object where keys are of type K and values are awaitable objects of type V.
-        return_exceptions (optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        tqdm (optional): If True, enables progress reporting using tqdm. Defaults to False.
+        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.
+        exclude_if: A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None.
+        tqdm: If True, enables progress reporting using tqdm. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
-
-    Returns:
-        A dictionary with keys corresponding to the keys of the input mapping and values containing the results of the corresponding awaitables.
 
     Example:
         The 'results' dictionary will contain the awaited results, where keys match the keys in the 'mapping' and values contain the results of the corresponding awaitables.
