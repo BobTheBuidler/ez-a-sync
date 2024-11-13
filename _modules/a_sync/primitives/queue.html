@@ -116,8 +116,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A generic asynchronous queue that extends the functionality of asyncio.Queue.</span>
 
-<span class="sd">    This implementation supports retrieving multiple items at once and handling </span>
-<span class="sd">    task processing in both FIFO and LIFO order. It provides enhanced type hinting </span>
+<span class="sd">    This implementation supports retrieving multiple items at once and handling</span>
+<span class="sd">    task processing in both FIFO and LIFO order. It provides enhanced type hinting</span>
 <span class="sd">    support and additional methods for bulk operations.</span>
 
 <span class="sd">    Inherits from:</span>
@@ -165,7 +165,7 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            :exc:`~asyncio.QueueEmpty`: If the queue is empty.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            T: The next item in the queue.</span>
 
@@ -204,7 +204,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            item: The item to add to the queue.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Raises:</span>
 <span class="sd">            :exc:`~asyncio.QueueFull`: If the queue is full.</span>
 
@@ -220,7 +220,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Asynchronously retrieves and removes all available items from the queue.</span>
 
-<span class="sd">        If the queue is empty, this method will wait until at least one item </span>
+<span class="sd">        If the queue is empty, this method will wait until at least one item</span>
 <span class="sd">        is available before returning.</span>
 
 <span class="sd">        Returns:</span>
@@ -340,7 +340,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A queue designed for processing tasks asynchronously with multiple workers.</span>
 
-<span class="sd">    Each item in the queue is processed by a worker, and tasks can return results </span>
+<span class="sd">    Each item in the queue is processed by a worker, and tasks can return results</span>
 <span class="sd">    via asynchronous futures. This queue is ideal for scenarios where tasks need</span>
 <span class="sd">    to be processed concurrently with a fixed number of workers.</span>
 
@@ -759,9 +759,12 @@
 <span class="sd">    A priority-based processing queue where tasks are processed based on priority.</span>
 <span class="sd">    # NOTE: WIP</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="PriorityProcessingQueue.put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.PriorityProcessingQueue.put">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">put</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Asynchronously adds a task with priority to the queue.</span>
 
@@ -785,7 +788,9 @@
 
 <div class="viewcode-block" id="PriorityProcessingQueue.put_nowait">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.PriorityProcessingQueue.put_nowait">[docs]</a>
-    <span class="k">def</span> <span class="nf">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">put_nowait</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Immediately adds a task with priority to the queue without waiting.</span>
 
@@ -875,7 +880,8 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">kwarg</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">kwarg</span><span class="p">])</span> <span class="k">for</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)))</span></div>
 </div>
 
-    
+
+
 <div class="viewcode-block" id="VariablePriorityQueue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.VariablePriorityQueue">[docs]</a>
 <span class="k">class</span> <span class="nc">VariablePriorityQueue</span><span class="p">(</span><span class="n">_VariablePriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">PriorityQueue</span><span class="p">):</span>
@@ -885,13 +891,16 @@
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
+
 <div class="viewcode-block" id="SmartProcessingQueue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue">[docs]</a>
-<span class="k">class</span> <span class="nc">SmartProcessingQueue</span><span class="p">(</span><span class="n">_VariablePriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">ProcessingQueue</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">V</span><span class="p">]):</span>
+<span class="k">class</span> <span class="nc">SmartProcessingQueue</span><span class="p">(</span>
+    <span class="n">_VariablePriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">ProcessingQueue</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">V</span><span class="p">]</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PriorityProcessingQueue subclass that will execute jobs with the most waiters first</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    
+
     <span class="n">_no_futs</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether smart futures are used.&quot;&quot;&quot;</span>
 
