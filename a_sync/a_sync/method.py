@@ -33,6 +33,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     """
     This class provides the core functionality for creating :class:`ASyncBoundMethod` objects,
     which can be used to define methods that can be called both synchronously and asynchronously.
+
+    It handles the binding of methods to instances and determines the default mode
+    ("sync" or "async") based on the instance type or the `default` attribute.
     """
 
     __wrapped__: AnyFn[P, T]
@@ -46,9 +49,6 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             instance: The instance the method is bound to.
             *args: Positional arguments.
             **kwargs: Keyword arguments.
-
-        Returns:
-            The result of the method call.
         """
         # NOTE: This is only used by TaskMapping atm  # TODO: use it elsewhere
         logger.debug(
@@ -73,9 +73,6 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         Args:
             instance: The instance to bind the method to, or None.
             owner: The owner class.
-
-        Returns:
-            The descriptor or bound method.
         """
         if instance is None:
             return self
@@ -136,7 +133,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             value: The value to set.
 
         Raises:
-            :class:`RuntimeError`: Always raised to prevent setting.
+            RuntimeError: Always raised to prevent setting.
         """
         raise RuntimeError(
             f"cannot set {self.field_name}, {self} is what you get. sorry."
@@ -150,7 +147,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             instance: The instance.
 
         Raises:
-            :class:`RuntimeError`: Always raised to prevent deletion.
+            RuntimeError: Always raised to prevent deletion.
         """
         raise RuntimeError(
             f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry."
@@ -160,9 +157,6 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     def __is_async_def__(self) -> bool:
         """
         Check if the wrapped function is a coroutine function.
-
-        Returns:
-            True if the wrapped function is a coroutine function, False otherwise.
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
 
@@ -228,9 +222,6 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
         Args:
             instance: The instance to bind the method to, or None.
             owner: The owner class.
-
-        Returns:
-            The descriptor or bound method with synchronous default.
         """
         if instance is None:
             return self
@@ -293,9 +284,6 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         Args:
             instance: The instance to bind the method to, or None.
             owner: The owner class.
-
-        Returns:
-            The descriptor or bound method with asynchronous default.
         """
         if instance is None:
             return self
@@ -325,10 +313,10 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     # NOTE: this is created by the Descriptor
 
     _cache_handle: asyncio.TimerHandle
-    "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
+    """An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."""
 
     __weakself__: "weakref.ref[I]"
-    "A weak reference to the instance the function is bound to."
+    """A weak reference to the instance the function is bound to."""
 
     __wrapped__: AnyFn[Concatenate[I, P], T]
     """The original unbound method that was wrapped."""
@@ -358,15 +346,12 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             unbound = unbound.__wrapped__
         ASyncFunction.__init__(self, unbound, **modifiers)
         self._is_async_def = async_def
-        "True if `self.__wrapped__` is a coroutine function, False otherwise."
+        """True if `self.__wrapped__` is a coroutine function, False otherwise."""
         functools.update_wrapper(self, unbound)
 
     def __repr__(self) -> str:
         """
         Return a string representation of the bound method.
-
-        Returns:
-            A string representation of the bound method.
         """
         try:
             instance_type = type(self.__self__)
@@ -400,9 +385,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         Args:
             *args: Positional arguments.
             **kwargs: Keyword arguments.
-
-        Returns:
-            The result of the method call, which may be a coroutine.
         """
         logger.debug("calling %s with args: %s kwargs: %s", self, args, kwargs)
         # This could either be a coroutine or a return value from an awaited coroutine,
@@ -428,11 +410,8 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         """
         Get the instance the method is bound to.
 
-        Returns:
-            The instance the method is bound to.
-
         Raises:
-            :class:`ReferenceError`: If the instance has been garbage collected.
+            ReferenceError: If the instance has been garbage collected.
         """
         instance = self.__weakself__()
         if instance is not None:
@@ -443,9 +422,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     def __bound_to_a_sync_instance__(self) -> bool:
         """
         Check if the method is bound to an ASyncABC instance.
-
-        Returns:
-            True if bound to an ASyncABC instance, False otherwise.
         """
         from a_sync.a_sync.abstract import ASyncABC
 
@@ -491,9 +467,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             concurrency: Optional concurrency limit.
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
-
-        Returns:
-            True if any result is truthy, False otherwise.
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -514,9 +487,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             concurrency: Optional concurrency limit.
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
-
-        Returns:
-            True if all results are truthy, False otherwise.
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -537,9 +507,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             concurrency: Optional concurrency limit.
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
-
-        Returns:
-            The minimum result.
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -560,9 +527,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             concurrency: Optional concurrency limit.
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
-
-        Returns:
-            The maximum result.
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -583,9 +547,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             concurrency: Optional concurrency limit.
             task_name: Optional name for the task.
             **kwargs: Additional keyword arguments.
-
-        Returns:
-            The sum of the results.
         """
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
@@ -597,9 +558,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
         Args:
             kwargs: Keyword arguments passed to the method.
-
-        Returns:
-            True if the method should be awaited, False otherwise.
         """
         if flag := _kwargs.get_flag_name(kwargs):
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
@@ -635,9 +593,6 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
         Args:
             instance: The instance to bind the method to, or None.
             owner: The owner class.
-
-        Returns:
-            The bound method with synchronous default behavior.
         """
         return ASyncBoundMethod.__get__(self, instance, owner)
 
@@ -664,9 +619,6 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
         Args:
             *args: Positional arguments.
             **kwargs: Keyword arguments.
-
-        Returns:
-            The result of the method call.
         """
         return ASyncBoundMethod.__call__(self, *args, **kwargs)
 
@@ -683,9 +635,6 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
         Args:
             instance: The instance to bind the method to.
             owner: The owner class.
-
-        Returns:
-            The bound method with asynchronous default behavior.
         """
         return ASyncBoundMethod.__get__(self, instance, owner)
 
@@ -712,8 +661,5 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
         Args:
             *args: Positional arguments.
             **kwargs: Keyword arguments.
-
-        Returns:
-            A coroutine representing the asynchronous method call.
         """
         return ASyncBoundMethod.__call__(self, *args, **kwargs)
