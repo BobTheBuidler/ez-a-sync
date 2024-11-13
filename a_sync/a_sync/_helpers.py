@@ -1,5 +1,3 @@
-/home/ubuntu/libs/a-sync/a_sync/a_sync/_helpers.py
-
 """
 This module provides utility functions for handling asynchronous operations
 and converting synchronous functions to asynchronous ones.

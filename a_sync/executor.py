@@ -1,5 +1,3 @@
-# /home/ubuntu/libs/a-sync/a_sync/executor.py
-
 """
 With these executors, you can simply run sync functions in your executor with `await executor.run(fn, *args)`.
 
