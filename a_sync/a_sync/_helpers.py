@@ -19,9 +19,6 @@ def _await(awaitable: Awaitable[T]) -> T:
     Args:
         awaitable: The awaitable object to be awaited.
 
-    Returns:
-        The result of the awaitable.
-
     Raises:
         exceptions.SyncModeInAsyncContextError: If the event loop is already running.
     """
@@ -39,7 +36,7 @@ def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: 
 
     Args:
         func: The synchronous function to be converted.
-        executor: The executor to run the synchronous function.
+        executor: The executor used to run the synchronous function.
 
     Returns:
         A coroutine function wrapping the input function.
