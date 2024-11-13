@@ -27,9 +27,6 @@ async def exhaust_iterator(
     Args:
         iterator (AsyncIterator[T]): The async iterator to exhaust.
         queue (Optional[asyncio.Queue]): An optional queue where iterated items will be placed. If None, items are simply consumed.
-
-    Returns:
-        None
     """
     async for thing in iterator:
         if queue:
@@ -49,9 +46,6 @@ async def exhaust_iterators(
         iterators: A sequence of async iterators to be exhausted concurrently.
         queue (Optional[asyncio.Queue]): An optional queue where items from all iterators will be placed. If None, items are simply consumed.
         join (Optional[bool]): If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.
-
-    Returns:
-        None
     """
     for x in await asyncio.gather(
         *[exhaust_iterator(iterator, queue=queue) for iterator in iterators],
@@ -180,11 +174,8 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
     Args:
         *iterators: Variable length list of AsyncIterator objects to be merged.
 
-    Returns:
-        AsyncIterator[T]: An async iterator that yields items from the input async iterators as they become available.
-
     Note:
-        This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability.
+        This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability. The `_Done` sentinel class is used internally to signal the completion of processing.
     """
     # hypothesis idea: _Done should never be exposed to user, works for all desired input types
     queue: Queue[Union[T, _Done]] = Queue()
@@ -237,10 +228,16 @@ class _Done:
     """
 
     def __init__(self, exc: Optional[Exception] = None) -> None:
+        """Initializes the _Done sentinel.
+
+        Args:
+            exc (Optional[Exception]): An optional exception to be associated with the completion.
+        """
         self._exc = exc
 
     @property
     def _tb(self) -> TracebackType:
+        """Returns the traceback associated with the exception, if any."""
         return self._exc.__traceback__  # type: ignore [union-attr]
 
 
