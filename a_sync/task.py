@@ -591,10 +591,10 @@ class _NoRunningLoop(Exception): ...
 
 @overload
 def _yield(key: K, value: V, yields: Literal["keys"]) -> K: 
-        # TODO write specific docs for this overload
+    ... # TODO write specific docs for this overload
 @overload
 def _yield(key: K, value: V, yields: Literal["both"]) -> Tuple[K, V]: 
-        # TODO write specific docs for this overload
+    ... # TODO write specific docs for this overload
 def _yield(key: K, value: V, yields: Literal["keys", "both"]) -> Union[K, Tuple[K, V]]:
     """
     Yield either the key, value, or both based on the 'yields' parameter.
