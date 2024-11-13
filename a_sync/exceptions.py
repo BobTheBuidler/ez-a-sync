@@ -27,14 +27,14 @@ class ASyncFlagException(ValueError):
     def desc(self, target) -> str:
         """
         Returns a description of the target for the flag error message.
-        
+
         Args:
             target: The target object or string to describe.
-            
+
         Returns:
             A string description of the target.
         """
-        if target == 'kwargs':
+        if target == "kwargs":
             return "flags present in 'kwargs'"
         else:
             return f"flag attributes defined on {target}"
@@ -173,6 +173,7 @@ class ASyncRuntimeError(RuntimeError):
     """
     Raised for runtime errors in asynchronous operations.
     """
+
     def __init__(self, e: RuntimeError):
         """
         Initializes the ASyncRuntimeError exception.
@@ -241,10 +242,11 @@ class PersistedTaskException(Exception):
     """
     Raised when an exception persists in an asyncio Task.
     """
+
     def __init__(self, exc: E, task: asyncio.Task) -> None:
         """
         Initializes the PersistedTaskException exception.
-        
+
         Args:
             exc: The exception that persisted.
             task: The asyncio Task where the exception occurred.

@@ -30,12 +30,12 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
 
     Example:
         You must subclass this mixin class and define your own `__aiter__` method as shown below.
-        
+
         >>> class MyAwaitableAIterable(_AwaitableAsyncIterableMixin):
         ...    async def __aiter__(self):
         ...        for i in range(4):
         ...            yield i
-        
+
         >>> aiterable = MyAwaitableAIterable()
         >>> await aiterable
         [0, 1, 2, 3]

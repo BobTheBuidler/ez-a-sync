@@ -9,6 +9,7 @@ from a_sync._typing import *
 # We keep this here for now so we don't break downstream deps. Eventually will be removed.
 from a_sync.primitives import ThreadsafeSemaphore, DummySemaphore
 
+
 @overload
 def apply_semaphore(  # type: ignore [misc]
     semaphore: SemaphoreSpec,
@@ -21,6 +22,7 @@ def apply_semaphore(  # type: ignore [misc]
     Args:
         semaphore: The semaphore to apply, which can be an integer or a Semaphore object.
     """
+
 
 @overload
 def apply_semaphore(
@@ -36,7 +38,8 @@ def apply_semaphore(
         coro_fn: The coroutine function to which the semaphore will be applied.
         semaphore: The semaphore to apply, which can be an integer or a Semaphore object.
     """
-    
+
+
 def apply_semaphore(
     coro_fn: Optional[Union[CoroFn[P, T], SemaphoreSpec]] = None,
     semaphore: SemaphoreSpec = None,
@@ -93,6 +96,7 @@ def apply_semaphore(
             return semaphore_wrap
 
     return semaphore_decorator if coro_fn is None else semaphore_decorator(coro_fn)
+
 
 dummy_semaphore = primitives.DummySemaphore()
 """A dummy semaphore that does not enforce any concurrency limits."""

@@ -28,9 +28,9 @@ CM = TypeVar("CM", bound="_AbstractPrioritySemaphoreContextManager[Priority]")
 class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     """
     A semaphore that allows prioritization of waiters.
-    
+
     This semaphore manages waiters with associated priorities, ensuring that waiters with higher
-    priorities are processed before those with lower priorities. If no priority is specified, 
+    priorities are processed before those with lower priorities. If no priority is specified,
     the semaphore uses a default top priority.
     """
 
@@ -119,8 +119,8 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     def _wake_up_next(self) -> None:
         """Wakes up the next waiter in line.
 
-        This method handles the waking of waiters based on priority. It includes an emergency 
-        procedure to handle potential lost waiters, ensuring that no waiter is left indefinitely 
+        This method handles the waking of waiters based on priority. It includes an emergency
+        procedure to handle potential lost waiters, ensuring that no waiter is left indefinitely
         waiting.
         """
         while self._waiters:
@@ -181,7 +181,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     """
     A context manager for priority semaphore waiters.
-    
+
     This context manager is associated with a specific priority and handles
     the acquisition and release of the semaphore for waiters with that priority.
     """
@@ -271,8 +271,12 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         """Releases the semaphore for this context manager."""
         self._parent.release()
 
-class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager[Numeric]):
+
+class _PrioritySemaphoreContextManager(
+    _AbstractPrioritySemaphoreContextManager[Numeric]
+):
     """Context manager for numeric priority semaphores."""
+
     _priority_name = "priority"
 
 
@@ -287,15 +291,16 @@ class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreCo
     async with priority_semaphore[priority]:
         await do_stuff()
     ```
-    
+
     You can also enter and exit this semaphore without specifying a priority, and it will use the top priority by default:
-    
+
     ```
     priority_semaphore = PrioritySemaphore(10)
-    
+
     async with priority_semaphore:
         await do_stuff()
     ```
     """
+
     _context_manager_class = _PrioritySemaphoreContextManager
     _top_priority = -1

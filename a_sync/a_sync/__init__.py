@@ -9,7 +9,7 @@ The rest of the objects are exposed for type checking only, you should not make 
 """
 
 # TODO: double check on these before adding them to docs
-#- two decorators @:class:`property` and @:class:`cached_property` for the creation of dual-function properties and cached properties, respectively.
+# - two decorators @:class:`property` and @:class:`cached_property` for the creation of dual-function properties and cached properties, respectively.
 
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.decorator import a_sync

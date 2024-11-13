@@ -44,6 +44,7 @@ async def test_pruning():
     Ensures that tasks can be created without causing errors.
     This test does not explicitly check for task pruning.
     """
+
     async def task():
         return
 
@@ -171,6 +172,7 @@ async def test_task_mapping_map_with_async_iter():
     Ensures that mapping in progress raises a RuntimeError
     when attempted concurrently.
     """
+
     async def async_iter():
         for i in range(5):
             yield i

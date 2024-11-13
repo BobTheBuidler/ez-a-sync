@@ -10,6 +10,7 @@ from a_sync._typing import *
 
 LimiterSpec = Union[int, AsyncLimiter]
 
+
 @overload
 def apply_rate_limit(
     runs_per_minute: int,
@@ -19,7 +20,8 @@ def apply_rate_limit(
     Args:
         runs_per_minute: The number of allowed executions per minute.
     """
-    
+
+
 @overload
 def apply_rate_limit(
     coro_fn: CoroFn[P, T],
@@ -31,7 +33,8 @@ def apply_rate_limit(
         coro_fn: The coroutine function to be rate-limited.
         runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance.
     """
-    
+
+
 def apply_rate_limit(
     coro_fn: Optional[Union[CoroFn[P, T], int]] = None,
     runs_per_minute: Optional[LimiterSpec] = None,
@@ -58,7 +61,9 @@ def apply_rate_limit(
         coro_fn = None
 
     elif coro_fn is None:
-        if runs_per_minute is not None and not isinstance(runs_per_minute, (int, AsyncLimiter)):
+        if runs_per_minute is not None and not isinstance(
+            runs_per_minute, (int, AsyncLimiter)
+        ):
             raise TypeError("'runs_per_minute' must be an integer.", runs_per_minute)
 
     elif not asyncio.iscoroutinefunction(coro_fn):

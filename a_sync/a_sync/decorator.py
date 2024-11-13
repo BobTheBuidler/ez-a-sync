@@ -28,23 +28,20 @@ from a_sync.a_sync.function import (
 def a_sync(
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorAsyncDefault:
-    ...
+) -> ASyncDecoratorAsyncDefault: ...
 
 
 @overload
 def a_sync(
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorSyncDefault:
-    ...
+) -> ASyncDecoratorSyncDefault: ...
 
 
 @overload
 def a_sync(
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecorator:
-    ...
+) -> ASyncDecorator: ...
 
 
 @overload  # async def, None default
@@ -52,8 +49,7 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionAsyncDefault[P, T]:
-    ...
+) -> ASyncFunctionAsyncDefault[P, T]: ...
 
 
 @overload  # sync def none default
@@ -61,8 +57,7 @@ def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionSyncDefault[P, T]:
-    ...
+) -> ASyncFunctionSyncDefault[P, T]: ...
 
 
 # @a_sync(default='async')
@@ -81,8 +76,7 @@ def a_sync(
     coro_fn: Literal[None],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorAsyncDefault:
-    ...
+) -> ASyncDecoratorAsyncDefault: ...
 
 
 @overload  # if you try to use default as the only arg
@@ -90,8 +84,7 @@ def a_sync(
     coro_fn: Literal["async"],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorAsyncDefault:
-    ...
+) -> ASyncDecoratorAsyncDefault: ...
 
 
 # a_sync(some_fn, default='async')
@@ -102,8 +95,7 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionAsyncDefault[P, T]:
-    ...
+) -> ASyncFunctionAsyncDefault[P, T]: ...
 
 
 @overload  # sync def async default
@@ -111,8 +103,7 @@ def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionAsyncDefault[P, T]:
-    ...
+) -> ASyncFunctionAsyncDefault[P, T]: ...
 
 
 # a_sync(some_fn, default='sync')
@@ -123,8 +114,7 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionSyncDefault:
-    ...
+) -> ASyncFunctionSyncDefault: ...
 
 
 @overload  # sync def sync default
@@ -132,8 +122,7 @@ def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionSyncDefault:
-    ...
+) -> ASyncFunctionSyncDefault: ...
 
 
 # @a_sync(default='sync')
@@ -152,8 +141,7 @@ def a_sync(
     coro_fn: Literal[None],
     default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorSyncDefault:
-    ...
+) -> ASyncDecoratorSyncDefault: ...
 
 
 @overload  # if you try to use default as the only arg
@@ -161,8 +149,7 @@ def a_sync(
     coro_fn: Literal["sync"],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorSyncDefault:
-    ...
+) -> ASyncDecoratorSyncDefault: ...
 
 
 @overload  # if you try to use default as the only arg
@@ -170,8 +157,7 @@ def a_sync(
     coro_fn: Literal["sync"],
     default: Literal[None],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncDecoratorSyncDefault:
-    ...
+) -> ASyncDecoratorSyncDefault: ...
 
 
 # catchall

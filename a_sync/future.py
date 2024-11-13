@@ -89,7 +89,9 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
     __slots__ = "__awaitable__", "__dependencies", "__dependants", "__task"
 
-    def __init__(self, awaitable: Awaitable[T], dependencies: List["ASyncFuture"] = []) -> None:
+    def __init__(
+        self, awaitable: Awaitable[T], dependencies: List["ASyncFuture"] = []
+    ) -> None:
         """
         Initializes an ASyncFuture with an awaitable and optional dependencies.
 
@@ -846,7 +848,7 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
     """
     A callable class to wrap functions and return ASyncFuture objects.
     """
-    
+
     __slots__ = "callable", "wrapped", "_callable_name"
 
     def __init__(
@@ -916,7 +918,7 @@ class _ASyncFutureInstanceMethod(Generic[I, P, T]):
 
     __wrapper: _ASyncFutureWrappedFn[P, T]
     """The wrapper function."""
-    
+
     def __init__(
         self,
         wrapper: _ASyncFutureWrappedFn[P, T],
@@ -948,6 +950,7 @@ class _ASyncFutureInstanceMethod(Generic[I, P, T]):
             pass
         self.__instance = instance
         self.__wrapper = wrapper
+
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} for {self.__wrapper.callable} bound to {self.__instance}>"
 

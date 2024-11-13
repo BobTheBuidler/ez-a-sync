@@ -14,6 +14,7 @@ async def test_process_pool_executor_run():
     assert asyncio.iscoroutine(coro)
     await coro
 
+
 @pytest.mark.asyncio
 async def test_thread_pool_executor_run():
     """Tests the ThreadPoolExecutor by running and submitting the work function asynchronously."""
@@ -21,6 +22,7 @@ async def test_thread_pool_executor_run():
     coro = executor.run(time.sleep, 0.1)
     assert asyncio.iscoroutine(coro)
     await coro
+
 
 @pytest.mark.asyncio
 async def test_pruning_thread_pool_executor_run():
@@ -30,6 +32,7 @@ async def test_pruning_thread_pool_executor_run():
     assert asyncio.iscoroutine(coro)
     await coro
 
+
 @pytest.mark.asyncio
 async def test_process_pool_executor_submit():
     """Tests the ProcessPoolExecutor by submitting the work function asynchronously."""
@@ -37,6 +40,7 @@ async def test_process_pool_executor_submit():
     fut = executor.submit(time.sleep, 0.1)
     assert isinstance(fut, asyncio.Future)
     await fut
+
 
 @pytest.mark.asyncio
 async def test_thread_pool_executor_submit():
@@ -46,6 +50,7 @@ async def test_thread_pool_executor_submit():
     assert isinstance(fut, asyncio.Future)
     await fut
 
+
 @pytest.mark.asyncio
 async def test_pruning_thread_pool_executor_submit():
     """Tests the PruningThreadPoolExecutor by submitting the work function asynchronously."""
@@ -53,6 +58,7 @@ async def test_pruning_thread_pool_executor_submit():
     fut = executor.submit(time.sleep, 0.1)
     assert isinstance(fut, asyncio.Future)
     await fut
+
 
 @pytest.mark.asyncio
 async def test_process_pool_executor_sync_run():
@@ -62,6 +68,7 @@ async def test_process_pool_executor_sync_run():
     assert asyncio.iscoroutine(coro)
     await coro
 
+
 @pytest.mark.asyncio
 async def test_thread_pool_executor_sync_run():
     """Tests the ThreadPoolExecutor by running and submitting the work function synchronously."""
@@ -69,6 +76,7 @@ async def test_thread_pool_executor_sync_run():
     coro = executor.run(time.sleep, 0.1)
     assert asyncio.iscoroutine(coro)
     await coro
+
 
 @pytest.mark.asyncio
 async def test_pruning_thread_pool_executor_sync_run():
@@ -78,6 +86,7 @@ async def test_pruning_thread_pool_executor_sync_run():
     assert asyncio.iscoroutine(coro)
     await coro
 
+
 @pytest.mark.asyncio
 async def test_process_pool_executor_sync_submit():
     """Tests the ProcessPoolExecutor by submitting the work function synchronously."""
@@ -86,6 +95,7 @@ async def test_process_pool_executor_sync_submit():
     assert isinstance(fut, asyncio.Future)
     await fut
 
+
 @pytest.mark.asyncio
 async def test_thread_pool_executor_sync_submit():
     """Tests the ThreadPoolExecutor by submitting the work function synchronously."""
@@ -93,6 +103,7 @@ async def test_thread_pool_executor_sync_submit():
     fut = executor.submit(time.sleep, 0.1)
     assert isinstance(fut, asyncio.Future)
     await fut
+
 
 @pytest.mark.asyncio
 async def test_pruning_thread_pool_executor_sync_submit():

@@ -8,8 +8,10 @@ from a_sync import ENVIRONMENT_VARIABLES
 from a_sync.a_sync import modifiers
 from a_sync.a_sync.function import ASyncFunction, _ModifiedMixin
 from a_sync.a_sync.method import ASyncMethodDescriptor
-from a_sync.a_sync.property import (ASyncCachedPropertyDescriptor,
-                                    ASyncPropertyDescriptor)
+from a_sync.a_sync.property import (
+    ASyncCachedPropertyDescriptor,
+    ASyncPropertyDescriptor,
+)
 from a_sync.future import _ASyncFutureWrappedFn  # type: ignore [attr-defined]
 from a_sync.iter import ASyncGeneratorFunction
 from a_sync.primitives.locks.semaphore import Semaphore
@@ -24,10 +26,11 @@ class ASyncMeta(ABCMeta):
     wrapped with asynchronous capabilities upon class instantiation. This includes
     wrapping functions with `ASyncMethodDescriptor` and properties with
     `ASyncPropertyDescriptor` or `ASyncCachedPropertyDescriptor`. Additionally, it handles
-    `_ModifiedMixin` objects (# TODO replace this with the actual subclasses of _modifiedMixin, which is just an internal use mixin class that has no meaning ot the user), 
+    `_ModifiedMixin` objects (# TODO replace this with the actual subclasses of _modifiedMixin, which is just an internal use mixin class that has no meaning ot the user),
     which are used when functions are decorated with a_sync decorators
     to apply specific modifiers to those functions.
     """
+
     def __new__(cls, new_class_name, bases, attrs):
         _update_logger(new_class_name)
         logger.debug(
@@ -42,7 +45,7 @@ class ASyncMeta(ABCMeta):
         #       Currently the parent value is used for functions defined on the parent,
         #       and the subclass value is used for functions defined on the subclass.
         class_defined_modifiers = modifiers.get_modifiers_from(attrs)
-        
+
         logger.debug("found modifiers: %s", class_defined_modifiers)
         logger.debug(
             "now I inspect the class definition to figure out which attributes need to be wrapped"
@@ -145,7 +148,10 @@ class ASyncSingletonMeta(ASyncMeta):
     This metaclass extends `ASyncMeta` to ensure that only one instance of a class
     is created for each synchronous or asynchronous context.
     """
-    def __init__(cls, name: str, bases: Tuple[type, ...], namespace: Dict[str, Any]) -> None:
+
+    def __init__(
+        cls, name: str, bases: Tuple[type, ...], namespace: Dict[str, Any]
+    ) -> None:
         cls.__instances: Dict[bool, object] = {}
         """Dictionary to store singleton instances."""
         cls.__lock = threading.Lock()

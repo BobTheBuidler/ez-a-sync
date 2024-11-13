@@ -27,6 +27,7 @@ class _SmartFutureMixin(Generic[T]):
     """
     Mixin class that provides common functionality for smart futures and tasks.
     """
+
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
     _key: _Key
     _waiters: "weakref.WeakSet[SmartTask[T]]"
@@ -75,10 +76,13 @@ class _SmartFutureMixin(Generic[T]):
         self._waiters.clear()
         if queue := self._queue:
             queue._futs.pop(self._key)
+
+
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
     """
+
     _queue = None
     _key = None
 
@@ -91,7 +95,7 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     ) -> None:
         """
         Initialize the SmartFuture with an optional queue and key.
-        
+
         Args:
             queue: Optional; a smart processing queue.
             key: Optional; a key identifying the future.
@@ -112,15 +116,15 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         """
         Compare the number of waiters to determine priority in a heap.
         Lower values indicate higher priority, so more waiters means 'less than'.
-        
+
         Args:
             other: Another SmartFuture to compare with.
-            
+
         Returns:
             True if self has more waiters than other.
         """
-        #other = other_ref()
-        #if other is None:
+        # other = other_ref()
+        # if other is None:
         #    # garbage collected refs should always process first so they can be popped from the queue
         #    return False
         return self.num_waiters > other.num_waiters
@@ -134,12 +138,12 @@ def create_future(
 ) -> SmartFuture[V]:
     """
     Create a SmartFuture instance.
-    
+
     Args:
         queue: Optional; a smart processing queue.
         key: Optional; a key identifying the future.
         loop: Optional; the event loop.
-        
+
     Returns:
         A SmartFuture instance.
     """
@@ -150,6 +154,7 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
     """
     A smart task that tracks waiters and integrates with a smart processing queue.
     """
+
     def __init__(
         self,
         coro: Awaitable[T],
@@ -159,7 +164,7 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
     ) -> None:
         """
         Initialize the SmartTask with a coroutine and optional event loop.
-        
+
         Args:
             coro: The coroutine to run in the task.
             loop: Optional; the event loop.

@@ -10,38 +10,34 @@ from a_sync._typing import *
 
 class CacheKwargs(TypedDict):
     """Typed dictionary for cache keyword arguments."""
+
     maxsize: Optional[int]
     ttl: Optional[int]
     typed: bool
 
 
 @overload
-def apply_async_memory_cache(
-    **kwargs: Unpack[CacheKwargs]
-) -> AsyncDecorator[P, T]:
+def apply_async_memory_cache(**kwargs: Unpack[CacheKwargs]) -> AsyncDecorator[P, T]:
     """Overload for when no coroutine function is provided."""
 
 
 @overload
 def apply_async_memory_cache(
-    coro_fn: int,
-    **kwargs: Unpack[CacheKwargs]
+    coro_fn: int, **kwargs: Unpack[CacheKwargs]
 ) -> AsyncDecorator[P, T]:
     """Overload for when an integer is provided as the coroutine function."""
 
 
 @overload
 def apply_async_memory_cache(
-    coro_fn: CoroFn[P, T],
-    **kwargs: Unpack[CacheKwargs]
+    coro_fn: CoroFn[P, T], **kwargs: Unpack[CacheKwargs]
 ) -> CoroFn[P, T]:
     """Overload for when a coroutine function is provided."""
 
 
 @overload
 def apply_async_memory_cache(
-    coro_fn: Literal[None],
-    **kwargs: Unpack[CacheKwargs]
+    coro_fn: Literal[None], **kwargs: Unpack[CacheKwargs]
 ) -> AsyncDecorator[P, T]:
     """Duplicate overload for when no coroutine function is provided."""
 
@@ -85,7 +81,7 @@ def apply_async_memory_cache(
             raise TypeError(
                 "'lru_cache_maxsize' must be a positive integer or None.", maxsize
             )
-        
+
     elif not asyncio.iscoroutinefunction(coro_fn):
         raise exceptions.FunctionNotAsync(coro_fn)
 

@@ -107,11 +107,13 @@ class _ASyncDirective:
 
 class _ASyncFunctionDirective(_ASyncDirective, PyFunction):
     """Directive for ASyncFunction instances."""
+
     pass
 
 
 class _ASyncMethodDirective(_ASyncDirective, PyMethod):
     """Directive for ASyncMethod instances."""
+
     pass
 
 

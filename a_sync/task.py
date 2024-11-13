@@ -7,6 +7,7 @@ The main components include:
 - TaskMappingValues: A view to asynchronously iterate over the values of a TaskMapping.
 - TaskMappingItems: A view to asynchronously iterate over the items (key-value pairs) of a TaskMapping.
 """
+
 import asyncio
 import contextlib
 import functools
@@ -655,6 +656,7 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
     """
     Base class for TaskMapping views that provides common functionality.
     """
+
     _get_from_item: Callable[[Tuple[K, V]], T]
     _pop: bool = False
 
@@ -698,6 +700,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
     """
     Asynchronous view to iterate over the keys of a TaskMapping.
     """
+
     _get_from_item = lambda self, item: _get_key(item)
 
     async def __aiter__(self) -> AsyncIterator[K]:
@@ -758,6 +761,7 @@ class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
     """
     Asynchronous view to iterate over the items (key-value pairs) of a TaskMapping.
     """
+
     _get_from_item = lambda self, item: item
 
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
@@ -776,6 +780,7 @@ class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
     """
     Asynchronous view to iterate over the values of a TaskMapping.
     """
+
     _get_from_item = lambda self, item: _get_value(item)
 
     async def __aiter__(self) -> AsyncIterator[V]:
