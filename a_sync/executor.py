@@ -1,9 +1,7 @@
-# /home/ubuntu/libs/a-sync/a_sync/executor.py
-
 """
 With these executors, you can simply run sync functions in your executor with `await executor.run(fn, *args)`.
 
-`executor.submit(fn, *args)` will work the same as the `concurrent.futures` implementation, but will return an `asyncio.Future` instead of a `concurrent.futures.Future`.
+`executor.submit(fn, *args)` will work the same as the concurrent.futures implementation, but will return an asyncio.Future instead of a concurrent.futures.Future.
 
 This module provides several executor classes:
 - _AsyncExecutorMixin: A mixin providing asynchronous run and submit methods, with support for synchronous mode.
@@ -47,21 +45,12 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`.
         Doesn't `await this_executor.run(fn, *args)` look so much better?
 
-        In synchronous mode, the function is executed directly in the current thread.
-        In asynchronous mode, the function is submitted to the executor and awaited.
+        Oh, and you can also use kwargs!
 
         Args:
             fn: The function to run.
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
-
-        Examples:
-            >>> async def example():
-            >>>     result = await executor.run(some_function, arg1, arg2, kwarg1=value1)
-            >>>     print(result)
-
-        See Also:
-            - :meth:`submit` for submitting functions to the executor.
         """
         return (
             fn(*args, **kwargs)
@@ -71,20 +60,12 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
 
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
         """
-        Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking.
+        Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.
 
         Args:
             fn: The function to submit.
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
-
-        Examples:
-            >>> future = executor.submit(some_function, arg1, arg2, kwarg1=value1)
-            >>> result = await future
-            >>> print(result)
-
-        See Also:
-            - :meth:`run` for running functions with the executor.
         """
         if self.sync_mode:
             fut = asyncio.get_event_loop().create_future()
@@ -108,10 +89,6 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     def sync_mode(self) -> bool:
         """
         Indicates if the executor is in synchronous mode (max_workers == 0).
-
-        Examples:
-            >>> if executor.sync_mode:
-            >>>     print("Executor is in synchronous mode.")
         """
         return self._max_workers == 0
 
@@ -119,9 +96,6 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     def worker_count_current(self) -> int:
         """
         Returns the current number of workers.
-
-        Examples:
-            >>> print(f"Current worker count: {executor.worker_count_current}")
         """
         return len(getattr(self, f"_{self._workers}"))
 
@@ -134,9 +108,6 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
             fn: The function being executed.
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
-
-        See Also:
-            - :meth:`_start_debug_daemon` to start the debug daemon.
         """
         # TODO: make prettier strings for other types
         if type(fn).__name__ == "function":
@@ -200,11 +171,6 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
             mp_context: The multiprocessing context. Defaults to None.
             initializer: An initializer callable. Defaults to None.
             initargs: Arguments for the initializer. Defaults to ().
-
-        Examples:
-            >>> executor = AsyncProcessPoolExecutor(max_workers=4)
-            >>> future = executor.submit(some_function, arg1, arg2)
-            >>> result = await future
         """
         if max_workers == 0:
             super().__init__(1, mp_context, initializer, initargs)
@@ -247,11 +213,6 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
             thread_name_prefix: Prefix for thread names. Defaults to ''.
             initializer: An initializer callable. Defaults to None.
             initargs: Arguments for the initializer. Defaults to ().
-
-        Examples:
-            >>> executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix="MyThread")
-            >>> future = executor.submit(some_function, arg1, arg2)
-            >>> result = await future
         """
         if max_workers == 0:
             super().__init__(1, thread_name_prefix, initializer, initargs)
@@ -279,9 +240,6 @@ def _worker(
         initializer: The initializer function.
         initargs: Arguments for the initializer.
         timeout: Timeout duration for pruning inactive threads.
-
-    See Also:
-        - :class:`PruningThreadPoolExecutor` for more details on thread pruning.
     """
     if initializer is not None:
         try:
@@ -368,11 +326,6 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
             initializer: An initializer callable. Defaults to None.
             initargs: Arguments for the initializer. Defaults to ().
             timeout: Timeout duration for pruning inactive threads. Defaults to TEN_MINUTES.
-
-        Examples:
-            >>> executor = PruningThreadPoolExecutor(max_workers=5, timeout=300)
-            >>> future = executor.submit(some_function, arg1, arg2)
-            >>> result = await future
         """
 
         self._timeout = timeout
@@ -389,9 +342,6 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
     def _adjust_thread_count(self):
         """
         Adjusts the number of threads based on workload and idle threads.
-
-        See Also:
-            - :func:`_worker` for the worker function that handles thread pruning.
         """
         with self._adjusting_lock:
             # if idle threads are available, don't spin new threads

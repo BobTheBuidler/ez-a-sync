@@ -39,17 +39,6 @@ def future(
     Args:
         callable: The callable to convert. Defaults to None.
         **kwargs: Additional keyword arguments for the modifier.
-
-    Returns:
-        A callable that returns either the result or an ASyncFuture.
-
-    Example:
-        >>> @future
-        ... async def async_function():
-        ...     return 42
-        >>> result = async_function()
-        >>> isinstance(result, ASyncFuture)
-        True
     """
     return _ASyncFutureWrappedFn(callable, **kwargs)
 
@@ -60,15 +49,6 @@ async def _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> L
 
     Args:
         *things: Items to gather and materialize.
-
-    Returns:
-        A list of materialized items.
-
-    Example:
-        >>> async def async_fn(x):
-        ...     return x
-        >>> await _gather_check_and_materialize(async_fn(1), 2, async_fn(3))
-        [1, 2, 3]
     """
     return await asyncio.gather(*[_check_and_materialize(thing) for thing in things])
 
@@ -79,15 +59,6 @@ async def _check_and_materialize(thing: T) -> T:
 
     Args:
         thing: The item to check and materialize.
-
-    Returns:
-        The materialized item.
-
-    Example:
-        >>> async def async_fn():
-        ...     return 42
-        >>> await _check_and_materialize(async_fn())
-        42
     """
     return await thing if isawaitable(thing) else thing
 
@@ -96,22 +67,11 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
     """
     Materializes the result of an ASyncFuture.
 
-    This function attempts to run the event loop until the ASyncFuture is complete.
-    If the event loop is already running, it raises a RuntimeError.
-
     Args:
         meta: The ASyncFuture to materialize.
 
     Raises:
         RuntimeError: If the event loop is running and the result cannot be awaited.
-
-    Example:
-        >>> future = ASyncFuture(asyncio.sleep(1, result=42))
-        >>> _materialize(future)
-        42
-
-    See Also:
-        :class:`ASyncFuture`
     """
     try:
         return asyncio.get_event_loop().run_until_complete(meta)
@@ -131,13 +91,6 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     A class representing an asynchronous future result.
 
     Inherits from both concurrent.futures.Future and Awaitable[T], allowing it to be used in both synchronous and asynchronous contexts.
-
-    Example:
-        >>> async def async_fn():
-        ...     return 42
-        >>> future = ASyncFuture(async_fn())
-        >>> await future
-        42
     """
 
     __slots__ = "__awaitable__", "__dependencies", "__dependants", "__task"
@@ -186,9 +139,6 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
         Args:
             other: The other dependency to list.
-
-        Returns:
-            A list of ASyncFuture dependencies.
         """
         if isinstance(other, ASyncFuture):
             return [self, other]
@@ -200,14 +150,6 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         If this future is not done, it will work like cf.Future.result. It will block, await the awaitable, and return the result when ready.
         If this future is done and the result has attribute `result`, will return `getattr(future_result, 'result')`
         If this future is done and the result does NOT have attribute `result`, will again work like cf.Future.result
-
-        Returns:
-            The result of the future or a callable to get the result.
-
-        Example:
-            >>> future = ASyncFuture(asyncio.sleep(1, result=42))
-            >>> future.result()
-            42
         """
         if self.done():
             if hasattr(r := super().result(), "result"):
@@ -238,14 +180,6 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __await__(self) -> Generator[Any, None, T]:
         """
         Makes the ASyncFuture awaitable.
-
-        Returns:
-            A generator for awaiting the future.
-
-        Example:
-            >>> future = ASyncFuture(asyncio.sleep(1, result=42))
-            >>> await future
-            42
         """
         return self.__await().__await__()
 
@@ -258,15 +192,6 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __task__(self) -> "asyncio.Task[T]":
         """
         Returns the asyncio task associated with the awaitable, creating it if necessary.
-
-        Returns:
-            The asyncio task.
-
-        Example:
-            >>> future = ASyncFuture(asyncio.sleep(1, result=42))
-            >>> task = future.__task__
-            >>> isinstance(task, asyncio.Task)
-            True
         """
         if self.__task is None:
             self.__task = asyncio.create_task(self.__awaitable__)
@@ -896,9 +821,6 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __dependants__(self) -> Set["ASyncFuture"]:
         """
         Returns the set of dependants for this ASyncFuture, including nested dependants.
-
-        Returns:
-            A set of ASyncFuture dependants.
         """
         dependants = set()
         for dep in self.__dependants:
@@ -910,9 +832,6 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __dependencies__(self) -> Set["ASyncFuture"]:
         """
         Returns the set of dependencies for this ASyncFuture, including nested dependencies.
-
-        Returns:
-            A set of ASyncFuture dependencies.
         """
         dependencies = set()
         for dep in self.__dependencies:
@@ -934,14 +853,6 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
     """
     A callable class to wrap functions and return ASyncFuture objects.
-
-    Example:
-        >>> def sync_fn():
-        ...     return 42
-        >>> wrapped_fn = _ASyncFutureWrappedFn(sync_fn)
-        >>> future = wrapped_fn()
-        >>> isinstance(future, ASyncFuture)
-        True
     """
 
     __slots__ = "callable", "wrapped", "_callable_name"
@@ -991,16 +902,6 @@ class _ASyncFutureInstanceMethod(Generic[I, P, T]):
     # NOTE: probably could just replace this with functools.partial
     """
     A class to handle instance methods wrapped as ASyncFuture.
-
-    Example:
-        >>> class MyClass:
-        ...     @_ASyncFutureWrappedFn
-        ...     def method(self):
-        ...         return 42
-        >>> instance = MyClass()
-        >>> future = instance.method()
-        >>> isinstance(future, ASyncFuture)
-        True
     """
 
     __module__: str
