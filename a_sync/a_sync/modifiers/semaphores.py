@@ -9,32 +9,54 @@ from a_sync._typing import *
 # We keep this here for now so we don't break downstream deps. Eventually will be removed.
 from a_sync.primitives import ThreadsafeSemaphore, DummySemaphore
 
-
 @overload
 def apply_semaphore(  # type: ignore [misc]
-    coro_fn: Literal[None],
     semaphore: SemaphoreSpec,
-) -> AsyncDecorator[P, T]: ...
+) -> AsyncDecorator[P, T]:
+    """Applies a semaphore to a coroutine function.
 
+    This overload is used when the semaphore is provided as a single argument,
+    returning a decorator that can be applied to a coroutine function.
 
-@overload
-def apply_semaphore(
-    coro_fn: SemaphoreSpec,
-    semaphore: Literal[None],
-) -> AsyncDecorator[P, T]: ...
-
+    Args:
+        semaphore: The semaphore to apply, which can be an integer or an asyncio.Semaphore object.
+    """
 
 @overload
 def apply_semaphore(
     coro_fn: CoroFn[P, T],
     semaphore: SemaphoreSpec,
-) -> CoroFn[P, T]: ...
+) -> CoroFn[P, T]:
+    """Applies a semaphore to a coroutine function.
 
+    This overload is used when both the coroutine function and semaphore are provided,
+    directly applying the semaphore to the coroutine function.
 
+    Args:
+        coro_fn: The coroutine function to which the semaphore will be applied.
+        semaphore: The semaphore to apply, which can be an integer or an asyncio.Semaphore object.
+    """
+    
 def apply_semaphore(
     coro_fn: Optional[Union[CoroFn[P, T], SemaphoreSpec]] = None,
     semaphore: SemaphoreSpec = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
+    """Applies a semaphore to a coroutine function or returns a decorator.
+
+    This function can be used to apply a semaphore to a coroutine function either by
+    passing the coroutine function and semaphore as arguments or by using the semaphore
+    as a decorator. It raises exceptions if the inputs are not valid.
+
+    Args:
+        coro_fn: The coroutine function to which the semaphore will be applied, or None
+            if the semaphore is to be used as a decorator.
+        semaphore: The semaphore to apply, which can be an integer or an asyncio.Semaphore object.
+
+    Raises:
+        ValueError: If both coro_fn and semaphore are provided as invalid inputs.
+        exceptions.FunctionNotAsync: If the provided function is not a coroutine.
+        TypeError: If the semaphore is not an integer or an asyncio.Semaphore object.
+    """
     # Parse Inputs
     if isinstance(coro_fn, (int, asyncio.Semaphore)):
         if semaphore is not None:
@@ -72,5 +94,5 @@ def apply_semaphore(
 
     return semaphore_decorator if coro_fn is None else semaphore_decorator(coro_fn)
 
-
 dummy_semaphore = primitives.DummySemaphore()
+"""A dummy semaphore that does not enforce any concurrency limits."""

@@ -23,14 +23,15 @@ def create_task(
     """
     Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.
 
-    Unlike asyncio.create_task, which requires a coroutine, this function accepts any Awaitable, ensuring broader
-    compatibility. It optionally prevents the task from being garbage-collected until completion and provides
-    enhanced error management by wrapping exceptions in a custom exception.
+    This function accepts any Awaitable, ensuring broader compatibility. If the Awaitable is not a coroutine,
+    it attempts to convert it to one. It optionally prevents the task from being garbage-collected until completion
+    and provides enhanced error management by wrapping exceptions in a custom exception when skip_gc_until_done is True.
 
     Args:
-        coro: An Awaitable object from which to create the task.
+        coro: An Awaitable object from which to create the task. If not a coroutine, it will be converted.
         name: Optional name for the task, aiding in debugging.
         skip_gc_until_done: If True, the task is kept alive until it completes, preventing garbage collection.
+                            Exceptions are wrapped in PersistedTaskException for special handling.
         log_destroy_pending: If False, asyncio's default error log when a pending task is destroyed is suppressed.
 
     Returns:
@@ -53,7 +54,14 @@ __persisted_tasks: Set["asyncio.Task[Any]"] = set()
 
 
 async def __await(awaitable: Awaitable[T]) -> T:
-    """Wait for the completion of an Awaitable."""
+    """Wait for the completion of an Awaitable.
+
+    Args:
+        awaitable: The Awaitable object to wait for.
+
+    Raises:
+        RuntimeError: If a RuntimeError occurs during the await, it is raised with additional context.
+    """
     try:
         return await awaitable
     except RuntimeError as e:
@@ -64,7 +72,12 @@ async def __await(awaitable: Awaitable[T]) -> T:
 
 
 def __prune_persisted_tasks():
-    """Remove completed tasks from the set of persisted tasks."""
+    """Remove completed tasks from the set of persisted tasks.
+
+    This function checks each task in the persisted tasks set. If a task is done and has an exception,
+    it logs the exception and raises it if it's not a PersistedTaskException. It also logs the traceback
+    manually since the usual handler will not run after retrieving the exception.
+    """
     for task in tuple(__persisted_tasks):
         if task.done() and (e := task.exception()):
             # force exceptions related to this lib to bubble up
@@ -90,9 +103,6 @@ async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
 
     Args:
         task: The asyncio Task to wrap.
-
-    Returns:
-        The result of the task, if successful.
 
     Raises:
         PersistedTaskException: Wraps any exception raised by the task for special handling.

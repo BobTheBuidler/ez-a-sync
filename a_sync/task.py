@@ -1,3 +1,12 @@
+"""
+This module provides asynchronous task management utilities, specifically focused on creating and handling mappings of tasks.
+
+The main components include:
+- TaskMapping: A class for managing and asynchronously generating tasks based on input iterables.
+- TaskMappingKeys: A view to asynchronously iterate over the keys of a TaskMapping.
+- TaskMappingValues: A view to asynchronously iterate over the values of a TaskMapping.
+- TaskMappingItems: A view to asynchronously iterate over the items (key-value pairs) of a TaskMapping.
+"""
 import asyncio
 import contextlib
 import functools
@@ -96,7 +105,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         Initialize a TaskMapping instance.
 
         Args:
-            wrapped_func: A function that takes a key (and optional parameters) and returns an Awaitable.
+            wrapped_func: A callable that takes a key and additional parameters and returns an Awaitable.
             *iterables: Any number of iterables whose elements will be used as keys for task generation.
             name: An optional name for the tasks created by this mapping.
             concurrency: Maximum number of tasks to run concurrently.
@@ -207,7 +216,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return self.gather(sync=False).__await__()
 
     async def __aiter__(self, pop: bool = False) -> AsyncIterator[Tuple[K, V]]:
-        """aiterate thru all key-task pairs, yielding the key-result pair as each task completes"""
+        """Asynchronously iterate through all key-task pairs, yielding the key-result pair as each task completes."""
         self._if_pop_check_destroyed(pop)
 
         # if you inited the TaskMapping with some iterators, we will load those
@@ -276,13 +285,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         Asynchronously map iterables to tasks and yield their results.
 
         Args:
-        *iterables: Iterables to map over.
-        pop: Whether to remove tasks from the internal storage once they are completed.
-        yields: Whether to yield 'keys', 'values', or 'both' (key-value pairs).
+            *iterables: Iterables to map over.
+            pop: Whether to remove tasks from the internal storage once they are completed.
+            yields: Whether to yield 'keys', 'values', or 'both' (key-value pairs).
 
         Yields:
-        Depending on `yields`, either keys, values,
-        or tuples of key-value pairs representing the results of completed tasks.
+            Depending on `yields`, either keys, values,
+            or tuples of key-value pairs representing the results of completed tasks.
         """
         self._if_pop_check_destroyed(pop)
 
@@ -371,6 +380,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @ASyncMethodDescriptorSyncDefault
     async def min(self, pop: bool = True) -> V:
+        """Return the minimum result from the tasks in the mapping."""
         min = None
         try:
             async for key, result in self.__aiter__(pop=pop):
@@ -388,6 +398,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @ASyncMethodDescriptorSyncDefault
     async def sum(self, pop: bool = False) -> V:
+        """Return the sum of the results from the tasks in the mapping."""
         retval = 0
         try:
             async for key, result in self.__aiter__(pop=pop):
@@ -438,21 +449,41 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @overload
     def pop(
-        self, item: K, cancel: bool = False
-    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]": ...
+        self, item: K, *, cancel: bool = False
+    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]": 
+        """Pop a task from the TaskMapping.
+        
+        Args:
+            item: The key to pop.
+            cancel: Whether to cancel the task when popping it.
+        """
     @overload
     def pop(
-        self, item: K, default: K, cancel: bool = False
-    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]": ...
+        self, item: K, default: K, *, cancel: bool = False
+    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]": 
+        """Pop a task from the TaskMapping.
+        
+        Args:
+            item: The key to pop.
+            default: The default value to return if no matching key is found.
+            cancel: Whether to cancel the task when popping it.
+        """
     def pop(
         self, *args: K, cancel: bool = False
     ) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
+        """Pop a task from the TaskMapping.
+        
+        Args:
+            *args: One key to pop.
+            cancel: Whether to cancel the task when popping it.
+        """
         fut_or_task = super().pop(*args)
         if cancel:
             fut_or_task.cancel()
         return fut_or_task
 
     def clear(self, cancel: bool = False) -> None:
+        """# TODO write docs for this """
         if cancel and self._init_loader and not self._init_loader.done():
             logger.debug("cancelling %s", self._init_loader)
             # temporary, remove later
@@ -559,9 +590,11 @@ class _NoRunningLoop(Exception): ...
 
 
 @overload
-def _yield(key: K, value: V, yields: Literal["keys"]) -> K: ...
+def _yield(key: K, value: V, yields: Literal["keys"]) -> K: 
+        # TODO write specific docs for this overload
 @overload
-def _yield(key: K, value: V, yields: Literal["both"]) -> Tuple[K, V]: ...
+def _yield(key: K, value: V, yields: Literal["both"]) -> Tuple[K, V]: 
+        # TODO write specific docs for this overload
 def _yield(key: K, value: V, yields: Literal["keys", "both"]) -> Union[K, Tuple[K, V]]:
     """
     Yield either the key, value, or both based on the 'yields' parameter.
@@ -643,6 +676,9 @@ _get_value: Callable[[Tuple[K, V]], V] = lambda k_and_v: k_and_v[1]
 
 
 class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
+    """
+    Base class for TaskMapping views that provides common functionality.
+    """
     _get_from_item: Callable[[Tuple[K, V]], T]
     _pop: bool = False
 
@@ -683,6 +719,9 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
 
 
 class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
+    """
+    Asynchronous view to iterate over the keys of a TaskMapping.
+    """
     _get_from_item = lambda self, item: _get_key(item)
 
     async def __aiter__(self) -> AsyncIterator[K]:
@@ -740,6 +779,9 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
 
 
 class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
+    """
+    Asynchronous view to iterate over the items (key-value pairs) of a TaskMapping.
+    """
     _get_from_item = lambda self, item: item
 
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
@@ -755,6 +797,9 @@ class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
 
 
 class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
+    """
+    Asynchronous view to iterate over the values of a TaskMapping.
+    """
     _get_from_item = lambda self, item: _get_value(item)
 
     async def __aiter__(self) -> AsyncIterator[V]:

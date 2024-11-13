@@ -22,12 +22,14 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class ModifiedMixin:
+class _ModifiedMixin:
     """
-    A mixin class that provides functionality for applying modifiers to functions.
+    A mixin class for internal use that provides functionality for applying modifiers to functions.
 
-    This class is used as a base for :class:`~ASyncFunction` and its variants to handle
-    the application of async and sync modifiers to functions.
+    This class is used as a base for :class:`~ASyncFunction` and its variants, such as
+    `ASyncFunctionAsyncDefault` and `ASyncFunctionSyncDefault`, to handle the application
+    of async and sync modifiers to functions. Modifiers can alter the behavior of functions,
+    such as converting sync functions to async, applying caching, or rate limiting.
     """
 
     modifiers: ModifierManager
@@ -35,13 +37,13 @@ class ModifiedMixin:
 
     def _asyncify(self, func: SyncFn[P, T]) -> CoroFn[P, T]:
         """
-        Convert a synchronous function to an asynchronous one and apply async modifiers.
+        Converts a synchronous function to an asynchronous one and applies async modifiers.
 
         Args:
             func: The synchronous function to be converted.
 
         Returns:
-            An asynchronous function with async modifiers applied.
+            The asynchronous version of the function with applied modifiers.
         """
         coro_fn = _helpers._asyncify(func, self.modifiers.executor)
         return self.modifiers.apply_async_modifiers(coro_fn)
@@ -49,26 +51,34 @@ class ModifiedMixin:
     @functools.cached_property
     def _await(self) -> Callable[[Awaitable[T]], T]:
         """
-        Apply sync modifiers to the _helpers._await function and cache it.
+        Applies sync modifiers to the _helpers._await function and caches it.
 
         Returns:
-            A function that applies sync modifiers to awaitable objects.
+            The modified _await function.
         """
         return self.modifiers.apply_sync_modifiers(_helpers._await)
 
     @functools.cached_property
     def default(self) -> DefaultMode:
         """
-        Get the default execution mode (sync, async, or None) for the function.
+        Gets the default execution mode (sync, async, or None) for the function.
 
         Returns:
-            The default execution mode as determined by the modifiers.
+            The default execution mode.
         """
         return self.modifiers.default
 
 
 def _validate_wrapped_fn(fn: Callable) -> None:
-    """Ensures 'fn' is an appropriate function for wrapping with a_sync."""
+    """Ensures 'fn' is an appropriate function for wrapping with a_sync.
+
+    Args:
+        fn: The function to validate.
+
+    Raises:
+        TypeError: If the input is not callable.
+        RuntimeError: If the function has arguments with names that conflict with viable flags.
+    """
     if isinstance(fn, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
         return  # These are always valid
     if not callable(fn):
@@ -84,7 +94,7 @@ def _validate_wrapped_fn(fn: Callable) -> None:
             )
 
 
-class ASyncFunction(ModifiedMixin, Generic[P, T]):
+class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     """
     A callable wrapper object that can be executed both synchronously and asynchronously.
 
@@ -96,7 +106,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     such as caching, rate limiting, and execution in specific contexts (e.g., thread pools).
 
     Example:
-        ```python
         async def my_coroutine(x: int) -> str:
             return str(x)
 
@@ -107,7 +116,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
 
         # Asynchronous call
         result = await func(5)  # returns "5"
-        ```
     """
 
     # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
@@ -115,14 +123,16 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     @overload
     def __init__(
         self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]
-    ) -> None: ...
+    ) -> None: 
+        # TODO write specific docs for this overload
     @overload
     def __init__(
         self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]
-    ) -> None: ...
+    ) -> None: 
+        # TODO write specific docs for this overload
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         """
-        Initialize an ASyncFunction instance.
+        Initializes an ASyncFunction instance.
 
         Args:
             fn: The function to wrap.
@@ -145,24 +155,29 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             )
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
+        # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
+    ) -> Coroutine[Any, Any, T]:
+        # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
+    ) -> T:
+        # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
+    ) -> Coroutine[Any, Any, T]:
+        # TODO write specific docs for this overload
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: ...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: 
+        # TODO write specific docs for this overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """
-        Call the wrapped function either synchronously or asynchronously.
+        Calls the wrapped function either synchronously or asynchronously.
 
         This method determines whether to execute the wrapped function synchronously
         or asynchronously based on the default mode and any provided flags.
@@ -170,9 +185,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         Args:
             *args: Positional arguments to pass to the wrapped function.
             **kwargs: Keyword arguments to pass to the wrapped function.
-
-        Returns:
-            The result of the wrapped function call, which may be a coroutine if run asynchronously.
 
         Raises:
             Exception: Any exception that may be raised by the wrapped function.
@@ -207,7 +219,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> "TaskMapping[P, T]":
             """
-            Create a TaskMapping for the wrapped function with the given iterables.
+            Creates a TaskMapping for the wrapped function with the given iterables.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -216,7 +228,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 **function_kwargs: Additional keyword arguments to pass to the function.
 
             Returns:
-                A TaskMapping object.
+                A TaskMapping object for managing concurrent execution.
             """
             from a_sync import TaskMapping
 
@@ -236,7 +248,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> bool:
             """
-            Check if any result of the function applied to the iterables is truthy.
+            Checks if any result of the function applied to the iterables is truthy.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -245,7 +257,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 **function_kwargs: Additional keyword arguments to pass to the function.
 
             Returns:
-                A boolean indicating if any result is truthy.
+                True if any result is truthy, otherwise False.
             """
             return await self.map(
                 *iterables,
@@ -262,7 +274,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> bool:
             """
-            Check if all results of the function applied to the iterables are truthy.
+            Checks if all results of the function applied to the iterables are truthy.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -271,7 +283,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 **function_kwargs: Additional keyword arguments to pass to the function.
 
             Returns:
-                A boolean indicating if all results are truthy.
+                True if all results are truthy, otherwise False.
             """
             return await self.map(
                 *iterables,
@@ -288,7 +300,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> T:
             """
-            Find the minimum result of the function applied to the iterables.
+            Finds the minimum result of the function applied to the iterables.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -314,7 +326,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> T:
             """
-            Find the maximum result of the function applied to the iterables.
+            Finds the maximum result of the function applied to the iterables.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -340,7 +352,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> T:
             """
-            Calculate the sum of the results of the function applied to the iterables.
+            Calculates the sum of the results of the function applied to the iterables.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -368,7 +380,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> "TaskMapping[P, T]":
             """
-            Create a TaskMapping for the wrapped function with the given iterables.
+            Creates a TaskMapping for the wrapped function with the given iterables.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -377,7 +389,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 **function_kwargs: Additional keyword arguments to pass to the function.
 
             Returns:
-                A TaskMapping object.
+                A TaskMapping object for managing concurrent execution.
             """
             from a_sync import TaskMapping
 
@@ -397,7 +409,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> bool:
             """
-            Check if any result of the function applied to the iterables is truthy.
+            Checks if any result of the function applied to the iterables is truthy.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -406,7 +418,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 **function_kwargs: Additional keyword arguments to pass to the function.
 
             Returns:
-                A boolean indicating if any result is truthy.
+                True if any result is truthy, otherwise False.
             """
             return await self.map(
                 *iterables,
@@ -423,7 +435,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> bool:
             """
-            Check if all results of the function applied to the iterables are truthy.
+            Checks if all results of the function applied to the iterables are truthy.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -432,7 +444,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 **function_kwargs: Additional keyword arguments to pass to the function.
 
             Returns:
-                A boolean indicating if all results are truthy.
+                True if all results are truthy, otherwise False.
             """
             return await self.map(
                 *iterables,
@@ -449,7 +461,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> T:
             """
-            Find the minimum result of the function applied to the iterables.
+            Finds the minimum result of the function applied to the iterables.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -475,7 +487,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> T:
             """
-            Find the maximum result of the function applied to the iterables.
+            Finds the maximum result of the function applied to the iterables.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -501,7 +513,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             **function_kwargs: P.kwargs,
         ) -> T:
             """
-            Calculate the sum of the results of the function applied to the iterables.
+            Calculates the sum of the results of the function applied to the iterables.
 
             Args:
                 *iterables: Iterable objects to be used as arguments for the function.
@@ -522,13 +534,13 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     @functools.cached_property
     def _sync_default(self) -> bool:
         """
-        Determine the default execution mode (sync or async) for the function.
+        Determines the default execution mode (sync or async) for the function.
 
         If the user did not specify a default, this method defers to the function's
         definition (sync vs async def).
 
         Returns:
-            True if the default is sync, False if the default is async.
+            True if the default is sync, False if async.
         """
         return (
             True
@@ -539,16 +551,16 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     @functools.cached_property
     def _async_def(self) -> bool:
         """
-        Check if the wrapped function is an asynchronous function.
+        Checks if the wrapped function is an asynchronous function.
 
         Returns:
-            True if the wrapped function is an asynchronous function, False otherwise.
+            True if the function is asynchronous, otherwise False.
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
 
     def _run_sync(self, kwargs: dict) -> bool:
         """
-        Determine whether to run the function synchronously or asynchronously.
+        Determines whether to run the function synchronously or asynchronously.
 
         This method checks for a flag in the kwargs and defers to it if present.
         If no flag is specified, it defers to the default execution mode.
@@ -557,7 +569,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             kwargs: The keyword arguments passed to the function.
 
         Returns:
-            True if the function should be run synchronously, False otherwise.
+            True if the function should run synchronously, otherwise False.
         """
         if flag := _kwargs.get_flag_name(kwargs):
             # If a flag was specified in the kwargs, we will defer to it.
@@ -569,10 +581,13 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     @functools.cached_property
     def _asyncified(self) -> CoroFn[P, T]:
         """
-        Convert the wrapped function to an asynchronous function and apply both sync and async modifiers.
+        Converts the wrapped function to an asynchronous function and applies both sync and async modifiers.
+
+        Raises:
+            TypeError: If the wrapped function is already asynchronous.
 
         Returns:
-            An asynchronous function with both sync and async modifiers applied.
+            The asynchronous version of the wrapped function.
         """
         if self._async_def:
             raise TypeError(
@@ -583,13 +598,13 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     @functools.cached_property
     def _modified_fn(self) -> AnyFn[P, T]:
         """
-        Apply modifiers to the wrapped function.
+        Applies modifiers to the wrapped function.
 
         If the wrapped function is an asynchronous function, this method applies async modifiers.
         If the wrapped function is a synchronous function, this method applies sync modifiers.
 
         Returns:
-            The wrapped function with modifiers applied.
+            The modified function.
         """
         if self._async_def:
             return self.modifiers.apply_async_modifiers(self.__wrapped__)  # type: ignore [arg-type]
@@ -603,7 +618,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         This method applies the appropriate modifiers and determines whether to await the result.
 
         Returns:
-            The final wrapped function.
+            The wrapped function with async handling.
         """
 
         @functools.wraps(self._modified_fn)
@@ -624,7 +639,7 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         This method applies the appropriate modifiers and determines whether to run the function synchronously or asynchronously.
 
         Returns:
-            The final wrapped function.
+            The wrapped function with sync handling.
         """
 
         @functools.wraps(self._modified_fn)
@@ -644,13 +659,28 @@ else:
     _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
 
 
-class ASyncDecorator(ModifiedMixin):
+class ASyncDecorator(_ModifiedMixin):
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
+        """
+        Initializes an ASyncDecorator instance.
+
+        Args:
+            **modifiers: Keyword arguments for function modifiers.
+
+        Raises:
+            ValueError: If 'default' is not 'sync', 'async', or None.
+        """
         assert "default" in modifiers, modifiers
         self.modifiers = ModifierManager(modifiers)
         self.validate_inputs()
 
     def validate_inputs(self) -> None:
+        """
+        Validates the input modifiers.
+
+        Raises:
+            ValueError: If 'default' is not 'sync', 'async', or None.
+        """
         if self.modifiers.default not in ["sync", "async", None]:
             raise ValueError(
                 f"'default' must be either 'sync', 'async', or None. You passed {self.modifiers.default}."
@@ -658,13 +688,22 @@ class ASyncDecorator(ModifiedMixin):
 
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethod[B, P, T]":  # type: ignore [override]
-        ...
+        # TODO write specific docs for this overload
 
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
-        ...
+        # TODO write specific docs for this overload
 
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
+        """
+        Decorates a function with async or sync behavior based on the default modifier.
+
+        Args:
+            func: The function to decorate.
+
+        Returns:
+            An ASyncFunction instance with the appropriate default behavior.
+        """
         if self.default == "async":
             return ASyncFunctionAsyncDefault(func, **self.modifiers)
         elif self.default == "sync":
@@ -676,6 +715,14 @@ class ASyncDecorator(ModifiedMixin):
 
 
 def _check_not_genfunc(func: Callable) -> None:
+    """Raises an error if the function is a generator or async generator.
+
+    Args:
+        func: The function to check.
+
+    Raises:
+        ValueError: If the function is a generator or async generator.
+    """
     if inspect.isasyncgenfunction(func) or inspect.isgeneratorfunction(func):
         raise ValueError("unable to decorate generator functions with this decorator")
 
@@ -694,7 +741,6 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
     or `asynchronous=True` as a keyword argument.
 
     Example:
-        ```python
         @a_sync(default='sync')
         async def my_function(x: int) -> str:
             return str(x)
@@ -704,27 +750,31 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
 
         # Asynchronous call
         result = await my_function(5, sync=False)  # returns "5"
-        ```
     """
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: 
+        # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
+    ) -> Coroutine[Any, Any, T]: 
+        # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
+    ) -> T: 
+        # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
+    ) -> Coroutine[Any, Any, T]: 
+        # TODO write specific docs for this overload
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: 
+        # TODO write specific docs for this overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
-        """Call the wrapped function, defaulting to synchronous execution.
+        """Calls the wrapped function, defaulting to synchronous execution.
 
         This method overrides the base :meth:`ASyncFunction.__call__` to provide a synchronous
         default behavior.
@@ -733,11 +783,11 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
             *args: Positional arguments to pass to the wrapped function.
             **kwargs: Keyword arguments to pass to the wrapped function.
 
-        Returns:
-            The result of the wrapped function call.
-
         Raises:
             Exception: Any exception that may be raised by the wrapped function.
+
+        Returns:
+            The result of the function call.
         """
         return self.fn(*args, **kwargs)
 
@@ -756,7 +806,6 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
     or `asynchronous=False` as a keyword argument.
 
     Example:
-        ```python
         @a_sync(default='async')
         async def my_function(x: int) -> str:
             return str(x)
@@ -766,27 +815,31 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
 
         # Synchronous call
         result = my_function(5, sync=True)  # returns "5"
-        ```
     """
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: 
+        # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
+    ) -> Coroutine[Any, Any, T]: 
+        # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
+    ) -> T: 
+        # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
+    ) -> Coroutine[Any, Any, T]: 
+        # TODO write specific docs for this overload
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: 
+        # TODO write specific docs for this overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
-        """Call the wrapped function, defaulting to asynchronous execution.
+        """Calls the wrapped function, defaulting to asynchronous execution.
 
         This method overrides the base :meth:`ASyncFunction.__call__` to provide an asynchronous
         default behavior.
@@ -795,11 +848,11 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
             *args: Positional arguments to pass to the wrapped function.
             **kwargs: Keyword arguments to pass to the wrapped function.
 
-        Returns:
-            A coroutine object representing the asynchronous execution of the wrapped function.
-
         Raises:
             Exception: Any exception that may be raised by the wrapped function.
+
+        Returns:
+            The result of the function call.
         """
         return self.fn(*args, **kwargs)
 
@@ -809,32 +862,34 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
 class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodSyncDefault[P, T]":  # type: ignore [override]
-        ...
+        # TODO write specific docs for this overload
 
     @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
-        ...
+        # TODO write specific docs for this overload
 
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
-        ...
+        # TODO write specific docs for this overload
 
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:
+        # TODO write specific docs for this overload
         return ASyncFunctionSyncDefault(func, **self.modifiers)
 
 
 class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodAsyncDefault[P, T]":  # type: ignore [override]
-        ...
+        # TODO write specific docs for this overload
 
     @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
-        ...
+        # TODO write specific docs for this overload
 
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
-        ...
+        # TODO write specific docs for this overload
 
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
+        # TODO write specific docs for this overload
         return ASyncFunctionAsyncDefault(func, **self.modifiers)

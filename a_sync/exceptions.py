@@ -16,15 +16,25 @@ class ASyncFlagException(ValueError):
     Base exception class for flag-related errors in the a_sync library.
     """
 
-    @property
-    def viable_flags(self) -> Set[str]:
-        """
-        Returns the set of viable flags.
-        """
-        return VIABLE_FLAGS
+    viable_flags = VIABLE_FLAGS
+    """
+    The set of viable flags.
+
+    A-Sync uses 'flags' to indicate whether objects / fn calls will be sync or async.
+    You can use any of the provided flags, whichever makes most sense for your use case.
+    """
 
     def desc(self, target) -> str:
-        if target == "kwargs":
+        """
+        Returns a description of the target for the flag error message.
+        
+        Args:
+            target: The target object or string to describe.
+            
+        Returns:
+            A string description of the target.
+        """
+        if target == 'kwargs':
             return "flags present in 'kwargs'"
         else:
             return f"flag attributes defined on {target}"
@@ -160,6 +170,9 @@ class FunctionNotSync(ImproperFunctionType):
 
 
 class ASyncRuntimeError(RuntimeError):
+    """
+    Raised for runtime errors in asynchronous operations.
+    """
     def __init__(self, e: RuntimeError):
         """
         Initializes the ASyncRuntimeError exception.
@@ -225,7 +238,17 @@ class MappingNotEmptyError(MappingError):
 
 
 class PersistedTaskException(Exception):
+    """
+    Raised when an exception persists in an asyncio Task.
+    """
     def __init__(self, exc: E, task: asyncio.Task) -> None:
+        """
+        Initializes the PersistedTaskException exception.
+        
+        Args:
+            exc: The exception that persisted.
+            task: The asyncio Task where the exception occurred.
+        """
         super().__init__(f"{exc.__class__.__name__}: {exc}", task)
         self.exception = exc
         self.task = task
@@ -233,5 +256,5 @@ class PersistedTaskException(Exception):
 
 class EmptySequenceError(ValueError):
     """
-    Raised when an operation is attempted on an empty sequence but items are expected.
+    Raised when an operation is attempted on an empty sequence but items are required.
     """

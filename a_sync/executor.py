@@ -1,13 +1,13 @@
 """
 With these executors, you can simply run sync functions in your executor with `await executor.run(fn, *args)`.
 
-`executor.submit(fn, *args)` will work the same as the concurrent.futures implementation, but will return an asyncio.Future instead of a concurrent.futures.Future
+`executor.submit(fn, *args)` will work the same as the concurrent.futures implementation, but will return an asyncio.Future instead of a concurrent.futures.Future.
 
 This module provides several executor classes:
-- _AsyncExecutorMixin: A mixin providing asynchronous run and submit methods.
+- _AsyncExecutorMixin: A mixin providing asynchronous run and submit methods, with support for synchronous mode.
 - AsyncProcessPoolExecutor: An async process pool executor.
 - AsyncThreadPoolExecutor: An async thread pool executor.
-- PruningThreadPoolExecutor: A thread pool executor that prunes inactive threads after a timeout.
+- PruningThreadPoolExecutor: A thread pool executor that prunes inactive threads after a timeout, ensuring at least one thread remains active.
 """
 
 import asyncio
@@ -34,23 +34,23 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     """
 
     _max_workers: int
+
     _workers: str
+    """The type of workers used."""
+
     __slots__ = "_max_workers", "_initializer", "_initargs", "_broken", "_shutdown_lock"
 
-    async def run(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> T:
+    async def run(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs):
         """
-        A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`
+        A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`.
         Doesn't `await this_executor.run(fn, *args)` look so much better?
 
         Oh, and you can also use kwargs!
 
         Args:
-            fn (Callable[P, T]): The function to run.
+            fn: The function to run.
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
-
-        Returns:
-            T: The result of the function.
         """
         return (
             fn(*args, **kwargs)
@@ -63,12 +63,9 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         Submits a job to the executor and returns an asyncio.Future that can be awaited for the result without blocking.
 
         Args:
-            fn (Callable[P, T]): The function to submit.
+            fn: The function to submit.
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
-
-        Returns:
-            asyncio.Future[T]: The future representing the result of the function.
         """
         if self.sync_mode:
             fut = asyncio.get_event_loop().create_future()
@@ -92,9 +89,6 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     def sync_mode(self) -> bool:
         """
         Indicates if the executor is in synchronous mode (max_workers == 0).
-
-        Returns:
-            bool: True if in synchronous mode, False otherwise.
         """
         return self._max_workers == 0
 
@@ -102,9 +96,6 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     def worker_count_current(self) -> int:
         """
         Returns the current number of workers.
-
-        Returns:
-            int: The current number of workers.
         """
         return len(getattr(self, f"_{self._workers}"))
 
@@ -113,7 +104,7 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
         Runs until manually cancelled by the finished work item.
 
         Args:
-            fut (asyncio.Future): The future being debugged.
+            fut: The future being debugged.
             fn: The function being executed.
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
@@ -144,9 +135,14 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
 class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
     """
     An async process pool executor that allows use of kwargs.
+
+    Attributes:
+        _workers: 
     """
 
     _workers = "processes"
+    """The type of workers used, set to "processes"."""
+
     __slots__ = (
         "_mp_context",
         "_processes",
@@ -171,10 +167,10 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
         Initializes the AsyncProcessPoolExecutor.
 
         Args:
-            max_workers (Optional[int], optional): The maximum number of workers. Defaults to None.
-            mp_context (Optional[multiprocessing.context.BaseContext], optional): The multiprocessing context. Defaults to None.
-            initializer (Optional[Initializer], optional): An initializer callable. Defaults to None.
-            initargs (Tuple[Any, ...], optional): Arguments for the initializer. Defaults to ().
+            max_workers: The maximum number of workers. Defaults to None.
+            mp_context: The multiprocessing context. Defaults to None.
+            initializer: An initializer callable. Defaults to None.
+            initargs: Arguments for the initializer. Defaults to ().
         """
         if max_workers == 0:
             super().__init__(1, mp_context, initializer, initargs)
@@ -192,6 +188,8 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
     """
 
     _workers = "threads"
+    """The type of workers used, set to "threads"."""
+
     __slots__ = (
         "_work_queue",
         "_idle_semaphore",
@@ -211,10 +209,10 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
         Initializes the AsyncThreadPoolExecutor.
 
         Args:
-            max_workers (Optional[int], optional): The maximum number of workers. Defaults to None.
-            thread_name_prefix (str, optional): Prefix for thread names. Defaults to ''.
-            initializer (Optional[Initializer], optional): An initializer callable. Defaults to None.
-            initargs (Tuple[Any, ...], optional): Arguments for the initializer. Defaults to ().
+            max_workers: The maximum number of workers. Defaults to None.
+            thread_name_prefix: Prefix for thread names. Defaults to ''.
+            initializer: An initializer callable. Defaults to None.
+            initargs: Arguments for the initializer. Defaults to ().
         """
         if max_workers == 0:
             super().__init__(1, thread_name_prefix, initializer, initargs)
@@ -306,6 +304,7 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
     """
     This `AsyncThreadPoolExecutor` implementation prunes inactive threads after 'timeout' seconds without a work item.
     Pruned threads will be automatically recreated as needed for future workloads. Up to 'max_threads' can be active at any one time.
+    A minimum of one thread will remain active to prevent locks.
     """
 
     __slots__ = "_timeout", "_adjusting_lock"
@@ -322,14 +321,19 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
         Initializes the PruningThreadPoolExecutor.
 
         Args:
-            max_workers (Optional[int], optional): The maximum number of workers. Defaults to None.
-            thread_name_prefix (str, optional): Prefix for thread names. Defaults to ''.
-            initializer (Optional[Initializer], optional): An initializer callable. Defaults to None.
-            initargs (Tuple[Any, ...], optional): Arguments for the initializer. Defaults to ().
-            timeout (int, optional): Timeout duration for pruning inactive threads. Defaults to TEN_MINUTES.
+            max_workers: The maximum number of workers. Defaults to None.
+            thread_name_prefix: Prefix for thread names. Defaults to ''.
+            initializer: An initializer callable. Defaults to None.
+            initargs: Arguments for the initializer. Defaults to ().
+            timeout: Timeout duration for pruning inactive threads. Defaults to TEN_MINUTES.
         """
+
         self._timeout = timeout
+        """Timeout duration for pruning inactive threads."""
+
         self._adjusting_lock = threading.Lock()
+        """Lock used to adjust the number of threads."""
+        
         super().__init__(max_workers, thread_name_prefix, initializer, initargs)
 
     def __len__(self) -> int:
