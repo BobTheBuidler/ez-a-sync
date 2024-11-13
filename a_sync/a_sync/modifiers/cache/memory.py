@@ -21,12 +21,14 @@ def apply_async_memory_cache(
 ) -> AsyncDecorator[P, T]:
     """Overload for when no coroutine function is provided."""
 
+
 @overload
 def apply_async_memory_cache(
     coro_fn: int,
     **kwargs: Unpack[CacheKwargs]
 ) -> AsyncDecorator[P, T]:
     """Overload for when an integer is provided as the coroutine function."""
+
 
 @overload
 def apply_async_memory_cache(
@@ -35,12 +37,14 @@ def apply_async_memory_cache(
 ) -> CoroFn[P, T]:
     """Overload for when a coroutine function is provided."""
 
+
 @overload
 def apply_async_memory_cache(
     coro_fn: Literal[None],
     **kwargs: Unpack[CacheKwargs]
 ) -> AsyncDecorator[P, T]:
     """Duplicate overload for when no coroutine function is provided."""
+
 
 def apply_async_memory_cache(
     coro_fn: Optional[Union[CoroFn[P, T], int]] = None,
@@ -57,7 +61,8 @@ def apply_async_memory_cache(
 
     Args:
         coro_fn: The coroutine function to be cached, or an integer to set as maxsize.
-        maxsize: The maximum size of the cache. If set to -1, the cache is unbounded.
+        maxsize: The maximum size of the cache. If set to -1, it is converted to None,
+            making the cache unbounded.
         ttl: The time-to-live for cache entries in seconds. If None, entries do not expire.
         typed: Whether to consider the types of arguments as part of the cache key.
 
