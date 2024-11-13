@@ -26,10 +26,10 @@ class ModifiedMixin:
     """
     A mixin class that provides functionality for applying modifiers to functions.
 
-    This class is used as a base for :class:`~ASyncFunction` and its variants to handle
-    the application of async and sync modifiers to functions. Modifiers can alter the
-    behavior of functions, such as converting sync functions to async, applying caching,
-    or rate limiting.
+    This class is used as a base for :class:`~ASyncFunction` and its variants, such as
+    `ASyncFunctionAsyncDefault` and `ASyncFunctionSyncDefault`, to handle the application
+    of async and sync modifiers to functions. Modifiers can alter the behavior of functions,
+    such as converting sync functions to async, applying caching, or rate limiting.
     """
 
     modifiers: ModifierManager
@@ -41,9 +41,6 @@ class ModifiedMixin:
 
         Args:
             func: The synchronous function to be converted.
-
-        Returns:
-            An asynchronous function with async modifiers applied.
         """
         coro_fn = _helpers._asyncify(func, self.modifiers.executor)
         return self.modifiers.apply_async_modifiers(coro_fn)
@@ -52,9 +49,6 @@ class ModifiedMixin:
     def _await(self) -> Callable[[Awaitable[T]], T]:
         """
         Applies sync modifiers to the _helpers._await function and caches it.
-
-        Returns:
-            A function that applies sync modifiers to awaitable objects.
         """
         return self.modifiers.apply_sync_modifiers(_helpers._await)
 
@@ -62,9 +56,6 @@ class ModifiedMixin:
     def default(self) -> DefaultMode:
         """
         Gets the default execution mode (sync, async, or None) for the function.
-
-        Returns:
-            The default execution mode as determined by the modifiers.
         """
         return self.modifiers.default
 
@@ -98,7 +89,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     such as caching, rate limiting, and execution in specific contexts (e.g., thread pools).
 
     Example:
-        ```python
         async def my_coroutine(x: int) -> str:
             return str(x)
 
@@ -109,7 +99,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
 
         # Asynchronous call
         result = await func(5)  # returns "5"
-        ```
     """
 
     # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
@@ -173,9 +162,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
             *args: Positional arguments to pass to the wrapped function.
             **kwargs: Keyword arguments to pass to the wrapped function.
 
-        Returns:
-            The result of the wrapped function call, which may be a coroutine if run asynchronously.
-
         Raises:
             Exception: Any exception that may be raised by the wrapped function.
         """
@@ -193,9 +179,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     ):  # -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
         """
         Returns the final wrapped version of :attr:`ASyncFunction._fn` decorated with all of the a_sync goodness.
-
-        Returns:
-            The final wrapped function.
         """
         return self._async_wrap if self._async_def else self._sync_wrap
 
@@ -216,9 +199,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                A TaskMapping object.
             """
             from a_sync import TaskMapping
 
@@ -245,9 +225,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                A boolean indicating if any result is truthy.
             """
             return await self.map(
                 *iterables,
@@ -271,9 +248,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                A boolean indicating if all results are truthy.
             """
             return await self.map(
                 *iterables,
@@ -297,9 +271,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                The minimum result.
             """
             return await self.map(
                 *iterables,
@@ -323,9 +294,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                The maximum result.
             """
             return await self.map(
                 *iterables,
@@ -349,9 +317,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                The sum of the results.
             """
             return await self.map(
                 *iterables,
@@ -377,9 +342,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                A TaskMapping object.
             """
             from a_sync import TaskMapping
 
@@ -406,9 +368,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                A boolean indicating if any result is truthy.
             """
             return await self.map(
                 *iterables,
@@ -432,9 +391,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                A boolean indicating if all results are truthy.
             """
             return await self.map(
                 *iterables,
@@ -458,9 +414,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                The minimum result.
             """
             return await self.map(
                 *iterables,
@@ -484,9 +437,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                The maximum result.
             """
             return await self.map(
                 *iterables,
@@ -510,9 +460,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
                 concurrency: Optional maximum number of concurrent tasks.
                 task_name: Optional name for the tasks.
                 **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                The sum of the results.
             """
             return await self.map(
                 *iterables,
@@ -528,9 +475,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
 
         If the user did not specify a default, this method defers to the function's
         definition (sync vs async def).
-
-        Returns:
-            True if the default is sync, False if the default is async.
         """
         return (
             True
@@ -542,9 +486,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
     def _async_def(self) -> bool:
         """
         Checks if the wrapped function is an asynchronous function.
-
-        Returns:
-            True if the wrapped function is an asynchronous function, False otherwise.
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
 
@@ -557,9 +498,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
 
         Args:
             kwargs: The keyword arguments passed to the function.
-
-        Returns:
-            True if the function should be run synchronously, False otherwise.
         """
         if flag := _kwargs.get_flag_name(kwargs):
             # If a flag was specified in the kwargs, we will defer to it.
@@ -573,8 +511,8 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         """
         Converts the wrapped function to an asynchronous function and applies both sync and async modifiers.
 
-        Returns:
-            An asynchronous function with both sync and async modifiers applied.
+        Raises:
+            TypeError: If the wrapped function is already asynchronous.
         """
         if self._async_def:
             raise TypeError(
@@ -589,9 +527,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
 
         If the wrapped function is an asynchronous function, this method applies async modifiers.
         If the wrapped function is a synchronous function, this method applies sync modifiers.
-
-        Returns:
-            The wrapped function with modifiers applied.
         """
         if self._async_def:
             return self.modifiers.apply_async_modifiers(self.__wrapped__)  # type: ignore [arg-type]
@@ -603,9 +538,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         The final wrapper if the wrapped function is an asynchronous function.
 
         This method applies the appropriate modifiers and determines whether to await the result.
-
-        Returns:
-            The final wrapped function.
         """
 
         @functools.wraps(self._modified_fn)
@@ -624,9 +556,6 @@ class ASyncFunction(ModifiedMixin, Generic[P, T]):
         The final wrapper if the wrapped function is a synchronous function.
 
         This method applies the appropriate modifiers and determines whether to run the function synchronously or asynchronously.
-
-        Returns:
-            The final wrapped function.
         """
 
         @functools.wraps(self._modified_fn)
@@ -687,9 +616,6 @@ class ASyncDecorator(ModifiedMixin):
 
         Args:
             func: The function to decorate.
-
-        Returns:
-            An ASyncFunction instance with the appropriate default behavior.
         """
         if self.default == "async":
             return ASyncFunctionAsyncDefault(func, **self.modifiers)
@@ -721,7 +647,6 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
     or `asynchronous=True` as a keyword argument.
 
     Example:
-        ```python
         @a_sync(default='sync')
         async def my_function(x: int) -> str:
             return str(x)
@@ -731,7 +656,6 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
 
         # Asynchronous call
         result = await my_function(5, sync=False)  # returns "5"
-        ```
     """
 
     @overload
@@ -760,9 +684,6 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
             *args: Positional arguments to pass to the wrapped function.
             **kwargs: Keyword arguments to pass to the wrapped function.
 
-        Returns:
-            The result of the wrapped function call.
-
         Raises:
             Exception: Any exception that may be raised by the wrapped function.
         """
@@ -783,7 +704,6 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
     or `asynchronous=False` as a keyword argument.
 
     Example:
-        ```python
         @a_sync(default='async')
         async def my_function(x: int) -> str:
             return str(x)
@@ -793,7 +713,6 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
 
         # Synchronous call
         result = my_function(5, sync=True)  # returns "5"
-        ```
     """
 
     @overload
@@ -821,9 +740,6 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
         Args:
             *args: Positional arguments to pass to the wrapped function.
             **kwargs: Keyword arguments to pass to the wrapped function.
-
-        Returns:
-            A coroutine object representing the asynchronous execution of the wrapped function.
 
         Raises:
             Exception: Any exception that may be raised by the wrapped function.
