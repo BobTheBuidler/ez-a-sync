@@ -49,17 +49,20 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     convenient methods for creating, managing, and iterating over these tasks asynchronously.
 
     Example:
-        async def fetch_data(url: str) -> str:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url) as response:
-                    return await response.text()
+        >>> async def fetch_data(url: str) -> str:
+        ...     async with aiohttp.ClientSession() as session:
+        ...         async with session.get(url) as response:
+        ...             return await response.text()
+        ...
+        >>> tasks = TaskMapping(fetch_data, name='url_fetcher', concurrency=5)
+        >>> tasks['example.com'] =
+        >>> tasks['python.org'] = 'https://www.python.org'
+        >>> async for key, result in tasks:
+        ...     print(f"Data for {key}: {result}")
+        ...
+        Data for python.org: http://python.org
+        Data for example.com: http://example.com
 
-        tasks = TaskMapping(fetch_data, name='url_fetcher', concurrency=5)
-        tasks['example.com'] = 'http://example.com'
-        tasks['python.org'] = 'https://www.python.org'
-
-        async for key, result in tasks:
-            print(f"Data for {key}: {result}")
     """
 
     concurrency: Optional[int] = None
