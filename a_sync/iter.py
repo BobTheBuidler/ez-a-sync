@@ -30,17 +30,15 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
 
     Example:
         You must subclass this mixin class and define your own `__aiter__` method as shown below.
-        ```
+        
         >>> class MyAwaitableAIterable(_AwaitableAsyncIterableMixin):
-        ...    def __aiter__(self):
+        ...    async def __aiter__(self):
         ...        for i in range(4):
         ...            yield i
-        ...
+        
         >>> aiterable = MyAwaitableAIterable()
         >>> await aiterable
-        [0, 1, 2, 3, 4]
-
-        ```
+        [0, 1, 2, 3]
     """
 
     __wrapped__: AsyncIterable[T]
@@ -139,7 +137,12 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
         return cls(wrapped)
 
     def __init__(self, async_iterable: AsyncIterable[T]):
-        "Initializes the ASyncIterable with an async iterable."
+        """
+        Initializes the ASyncIterable with an async iterable.
+
+        Args:
+            async_iterable: The async iterable to wrap.
+        """
         if not isinstance(async_iterable, AsyncIterable):
             raise TypeError(
                 f"`async_iterable` must be an AsyncIterable. You passed {async_iterable}"
@@ -217,7 +220,12 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         )
 
     def __init__(self, async_iterator: AsyncIterator[T]):
-        "Initializes the ASyncIterator with an async iterator."
+        """
+        Initializes the ASyncIterator with an async iterator.
+
+        Args:
+            async_iterator: The async iterator to wrap.
+        """
         if not isinstance(async_iterator, AsyncIterator):
             raise TypeError(
                 f"`async_iterator` must be an AsyncIterator. You passed {async_iterator}"
@@ -401,9 +409,6 @@ class ASyncFilter(_ASyncView[T]):
 
         Args:
             obj: The object to check.
-
-        Returns:
-            True if the object passes the filter, False otherwise.
         """
         checked = self._function(obj)
         return bool(await checked) if inspect.isawaitable(checked) else bool(checked)
@@ -415,9 +420,6 @@ def _key_if_no_key(obj: T) -> T:
 
     Args:
         obj: The object to return.
-
-    Returns:
-        The object itself.
     """
     return obj
 
@@ -460,9 +462,6 @@ class ASyncSorter(_ASyncView[T]):
 
         Raises:
             RuntimeError: If the ASyncSorter instance has already been consumed.
-
-        Returns:
-            An async iterator that will yield the sorting results.
         """
         if self._consumed:
             raise RuntimeError(f"{self} has already been consumed")
@@ -487,9 +486,6 @@ class ASyncSorter(_ASyncView[T]):
 
         Args:
             reverse: If True, the list elements will be sorted in reverse order.
-
-        Returns:
-            An async iterator that will yield the sorted items.
         """
         if asyncio.iscoroutinefunction(self._function):
             items = []
