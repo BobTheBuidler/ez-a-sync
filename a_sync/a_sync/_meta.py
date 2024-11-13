@@ -20,8 +20,16 @@ logger = logging.getLogger(__name__)
 
 
 class ASyncMeta(ABCMeta):
-    """Any class with metaclass ASyncMeta will have its functions wrapped with a_sync upon class instantiation."""
+    """Metaclass for wrapping class attributes with asynchronous capabilities.
 
+    Any class with `ASyncMeta` as its metaclass will have its functions and properties
+    wrapped with asynchronous capabilities upon class instantiation. This includes
+    wrapping functions with `ASyncMethodDescriptor` and properties with
+    `ASyncPropertyDescriptor` or `ASyncCachedPropertyDescriptor`.
+
+    Attributes:
+        class_defined_modifiers (dict): Modifiers defined at the class level.
+    """
     def __new__(cls, new_class_name, bases, attrs):
         _update_logger(new_class_name)
         logger.debug(
@@ -133,11 +141,16 @@ class ASyncMeta(ABCMeta):
 
 
 class ASyncSingletonMeta(ASyncMeta):
-    def __init__(
-        cls, name: str, bases: Tuple[type, ...], namespace: Dict[str, Any]
-    ) -> None:
+    """Metaclass for creating singleton instances with asynchronous capabilities.
+
+    This metaclass extends `ASyncMeta` to ensure that only one instance of a class
+    is created for each synchronous or asynchronous context.
+    """
+    def __init__(cls, name: str, bases: Tuple[type, ...], namespace: Dict[str, Any]) -> None:
         cls.__instances: Dict[bool, object] = {}
+        """Dictionary to store singleton instances."""
         cls.__lock = threading.Lock()
+        """Lock to ensure thread-safe instance creation."""
         super().__init__(name, bases, namespace)
 
     def __call__(cls, *args: Any, **kwargs: Any):
@@ -151,6 +164,11 @@ class ASyncSingletonMeta(ASyncMeta):
 
 
 def _update_logger(new_class_name: str) -> None:
+    """Update the logger configuration based on environment variables.
+
+    Args:
+        new_class_name: The name of the new class being created.
+    """
     if (
         ENVIRONMENT_VARIABLES.DEBUG_MODE
         or ENVIRONMENT_VARIABLES.DEBUG_CLASS_NAME == new_class_name
