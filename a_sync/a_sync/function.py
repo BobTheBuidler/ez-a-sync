@@ -695,11 +695,11 @@ class ASyncDecorator(_ModifiedMixin):
 
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethod[B, P, T]":  # type: ignore [override]
-        ... # TODO write specific docs for this overload
+        ...  # TODO write specific docs for this overload
 
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
-        ...# TODO write specific docs for this overload
+        ...  # TODO write specific docs for this overload
 
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
         """
@@ -760,26 +760,25 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
     """
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: 
-        ...# TODO write specific docs for this overload
+    def __call__(
+        self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs
+    ) -> T: ...  # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: 
-        ...# TODO write specific docs for this overload
+    ) -> Coroutine[Any, Any, T]: ...  # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: 
-        ...# TODO write specific docs for this overload
+    ) -> T: ...  # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: 
-        ...# TODO write specific docs for this overload
+    ) -> Coroutine[Any, Any, T]: ...  # TODO write specific docs for this overload
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: 
-        ...# TODO write specific docs for this overload
+    def __call__(
+        self, *args: P.args, **kwargs: P.kwargs
+    ) -> T: ...  # TODO write specific docs for this overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """Calls the wrapped function, defaulting to synchronous execution.
 
@@ -826,25 +825,30 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
 
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
-        # TODO write specific docs for this overload
+
+    # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]: ...
-        # TODO write specific docs for this overload
+
+    # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
     ) -> T: ...
-        # TODO write specific docs for this overload
+
+    # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]: ...
-        # TODO write specific docs for this overload
+
+    # TODO write specific docs for this overload
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
-        # TODO write specific docs for this overload
+
+    # TODO write specific docs for this overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """Calls the wrapped function, defaulting to asynchronous execution.
 
@@ -874,29 +878,29 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
 
     @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
-        ... # TODO write specific docs for this overload
+        ...  # TODO write specific docs for this overload
 
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
-        ... # TODO write specific docs for this overload
+        ...  # TODO write specific docs for this overload
 
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:
-        ... # TODO write specific docs for this overload
+        ...  # TODO write specific docs for this overload
         return ASyncFunctionSyncDefault(func, **self.modifiers)
 
 
 class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodAsyncDefault[P, T]":  # type: ignore [override]
-        ... # TODO write specific docs for this overload
+        ...  # TODO write specific docs for this overload
 
     @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
-        ... # TODO write specific docs for this overload
+        ...  # TODO write specific docs for this overload
 
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
-        ... # TODO write specific docs for this overload
+        ...  # TODO write specific docs for this overload
 
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
         # TODO write specific docs for this overload

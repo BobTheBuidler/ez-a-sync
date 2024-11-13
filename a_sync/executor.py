@@ -137,7 +137,7 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
     An async process pool executor that allows use of kwargs.
 
     Attributes:
-        _workers: 
+        _workers:
     """
 
     _workers = "processes"
@@ -333,7 +333,7 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
 
         self._adjusting_lock = threading.Lock()
         """Lock used to adjust the number of threads."""
-        
+
         super().__init__(max_workers, thread_name_prefix, initializer, initargs)
 
     def __len__(self) -> int:

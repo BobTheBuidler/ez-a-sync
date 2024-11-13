@@ -9,6 +9,7 @@ from a_sync.a_sync.modifiers.cache.memory import apply_async_memory_cache
 
 class CacheArgs(TypedDict):
     """Typed dictionary for cache arguments."""
+
     cache_type: CacheType
     cache_typed: bool
     ram_cache_maxsize: Optional[int]
@@ -21,6 +22,7 @@ def apply_async_cache(
 ) -> AsyncDecorator[P, T]:
     """Overload for when no coroutine function is provided."""
 
+
 @overload
 def apply_async_cache(
     coro_fn: int,
@@ -28,12 +30,14 @@ def apply_async_cache(
 ) -> AsyncDecorator[P, T]:
     """Overload for when an integer is provided as the coroutine function."""
 
+
 @overload
 def apply_async_cache(
     coro_fn: CoroFn[P, T],
     **modifiers: Unpack[CacheArgs],
 ) -> CoroFn[P, T]:
     """Overload for when a coroutine function is provided."""
+
 
 def apply_async_cache(
     coro_fn: Union[CoroFn[P, T], CacheType, int] = None,
@@ -59,7 +63,7 @@ def apply_async_cache(
     Returns:
         A decorator or the decorated coroutine function.
     """
-    
+
     # Parse Inputs
     if isinstance(coro_fn, int):
         assert ram_cache_maxsize is None

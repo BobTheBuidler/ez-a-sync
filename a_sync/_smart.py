@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 class _SmartFutureMixin(Generic[T]):
     """
     Mixin class that provides common functionality for smart futures and tasks.
-    
+
     This mixin provides methods for managing waiters and integrating with a smart processing queue.
     """
 
@@ -83,7 +83,7 @@ class _SmartFutureMixin(Generic[T]):
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
-    
+
     Inherits from both _SmartFutureMixin and asyncio.Future, providing additional functionality
     for tracking waiters and integrating with a smart processing queue.
     """
@@ -100,7 +100,7 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     ) -> None:
         """
         Initialize the SmartFuture with an optional queue and key.
-        
+
         Args:
             queue: Optional; a smart processing queue.
             key: Optional; a key identifying the future.
@@ -121,10 +121,10 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         """
         Compare the number of waiters to determine priority in a heap.
         Lower values indicate higher priority, so more waiters means 'less than'.
-        
+
         Args:
             other: Another SmartFuture to compare with.
-            
+
         Returns:
             True if self has more waiters than other.
         """
@@ -139,12 +139,12 @@ def create_future(
 ) -> SmartFuture[V]:
     """
     Create a SmartFuture instance.
-    
+
     Args:
         queue: Optional; a smart processing queue.
         key: Optional; a key identifying the future.
         loop: Optional; the event loop.
-        
+
     Returns:
         A SmartFuture instance.
     """
@@ -154,7 +154,7 @@ def create_future(
 class SmartTask(_SmartFutureMixin[T], asyncio.Task):
     """
     A smart task that tracks waiters and integrates with a smart processing queue.
-    
+
     Inherits from both _SmartFutureMixin and asyncio.Task, providing additional functionality
     for tracking waiters and integrating with a smart processing queue.
     """
@@ -168,7 +168,7 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
     ) -> None:
         """
         Initialize the SmartTask with a coroutine and optional event loop.
-        
+
         Args:
             coro: The coroutine to run in the task.
             loop: Optional; the event loop.

@@ -83,7 +83,7 @@ class _ASyncWrapperDocumenter:
 
         Returns:
             bool: True if the object is defined in the expected module, False otherwise.
-        
+
         Note:
             Normally checks if *self.object* is really defined in the module
             given by *self.modname*. But since functions decorated with the @task
@@ -148,11 +148,13 @@ class _ASyncDirective:
 
 class _ASyncFunctionDirective(_ASyncDirective, PyFunction):
     """Directive for ASyncFunction instances."""
+
     pass
 
 
 class _ASyncMethodDirective(_ASyncDirective, PyMethod):
     """Directive for ASyncMethod instances."""
+
     pass
 
 

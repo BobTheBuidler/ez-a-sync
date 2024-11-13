@@ -29,7 +29,7 @@ class ModifierManager(Dict[str, Any]):
     # sync modifiers
     executor: Executor
     """This is not applied like a typical modifier. The executor is used to run the sync function in an asynchronous context."""
-    
+
     __slots__ = ("_modifiers",)
 
     def __init__(self, modifiers: ModifierKwargs) -> None:
@@ -123,6 +123,7 @@ class ModifierManager(Dict[str, Any]):
         Returns:
             The wrapped synchronous function.
         """
+
         @functools.wraps(function)
         def sync_modifier_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
             return function(*args, **kwargs)

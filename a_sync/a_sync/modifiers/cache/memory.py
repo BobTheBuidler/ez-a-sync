@@ -10,15 +10,14 @@ from a_sync._typing import *
 
 class CacheKwargs(TypedDict):
     """Typed dictionary for cache keyword arguments."""
+
     maxsize: Optional[int]
     ttl: Optional[int]
     typed: bool
 
 
 @overload
-def apply_async_memory_cache(
-    **kwargs: Unpack[CacheKwargs]
-) -> AsyncDecorator[P, T]:
+def apply_async_memory_cache(**kwargs: Unpack[CacheKwargs]) -> AsyncDecorator[P, T]:
     """Creates a decorator to apply an asynchronous LRU cache.
 
     This overload is used when no coroutine function is provided. The returned
@@ -32,8 +31,7 @@ def apply_async_memory_cache(
 
 @overload
 def apply_async_memory_cache(
-    coro_fn: int,
-    **kwargs: Unpack[CacheKwargs]
+    coro_fn: int, **kwargs: Unpack[CacheKwargs]
 ) -> AsyncDecorator[P, T]:
     """Creates a decorator with maxsize set by an integer.
 
@@ -50,8 +48,7 @@ def apply_async_memory_cache(
 
 @overload
 def apply_async_memory_cache(
-    coro_fn: CoroFn[P, T],
-    **kwargs: Unpack[CacheKwargs]
+    coro_fn: CoroFn[P, T], **kwargs: Unpack[CacheKwargs]
 ) -> CoroFn[P, T]:
     """Applies an asynchronous LRU cache to a provided coroutine function.
 
@@ -67,8 +64,7 @@ def apply_async_memory_cache(
 
 @overload
 def apply_async_memory_cache(
-    coro_fn: Literal[None],
-    **kwargs: Unpack[CacheKwargs]
+    coro_fn: Literal[None], **kwargs: Unpack[CacheKwargs]
 ) -> AsyncDecorator[P, T]:
     """Creates a decorator to apply an asynchronous LRU cache.
 

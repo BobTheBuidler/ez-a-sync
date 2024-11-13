@@ -22,6 +22,7 @@ from a_sync.exceptions import NoFlagsFound
 
 logger = logging.getLogger(__name__)
 
+
 class ASyncABC(metaclass=ASyncMeta):
     """Abstract Base Class for defining asynchronous and synchronous behavior.
 

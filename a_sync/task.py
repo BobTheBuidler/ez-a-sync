@@ -7,6 +7,7 @@ The main components include:
 - TaskMappingValues: A view to asynchronously iterate over the values of a TaskMapping.
 - TaskMappingItems: A view to asynchronously iterate over the items (key-value pairs) of a TaskMapping.
 """
+
 import asyncio
 import contextlib
 import functools
@@ -450,29 +451,31 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     @overload
     def pop(
         self, item: K, *, cancel: bool = False
-    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]": 
+    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
         """Pop a task from the TaskMapping.
-        
+
         Args:
             item: The key to pop.
             cancel: Whether to cancel the task when popping it.
         """
+
     @overload
     def pop(
         self, item: K, default: K, *, cancel: bool = False
-    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]": 
+    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
         """Pop a task from the TaskMapping.
-        
+
         Args:
             item: The key to pop.
             default: The default value to return if no matching key is found.
             cancel: Whether to cancel the task when popping it.
         """
+
     def pop(
         self, *args: K, cancel: bool = False
     ) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
         """Pop a task from the TaskMapping.
-        
+
         Args:
             *args: One key to pop.
             cancel: Whether to cancel the task when popping it.
@@ -483,7 +486,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return fut_or_task
 
     def clear(self, cancel: bool = False) -> None:
-        """# TODO write docs for this """
+        """# TODO write docs for this"""
         if cancel and self._init_loader and not self._init_loader.done():
             logger.debug("cancelling %s", self._init_loader)
             # temporary, remove later
@@ -590,11 +593,13 @@ class _NoRunningLoop(Exception): ...
 
 
 @overload
-def _yield(key: K, value: V, yields: Literal["keys"]) -> K: 
-    ... # TODO write specific docs for this overload
+def _yield(
+    key: K, value: V, yields: Literal["keys"]
+) -> K: ...  # TODO write specific docs for this overload
 @overload
-def _yield(key: K, value: V, yields: Literal["both"]) -> Tuple[K, V]: 
-    ... # TODO write specific docs for this overload
+def _yield(
+    key: K, value: V, yields: Literal["both"]
+) -> Tuple[K, V]: ...  # TODO write specific docs for this overload
 def _yield(key: K, value: V, yields: Literal["keys", "both"]) -> Union[K, Tuple[K, V]]:
     """
     Yield either the key, value, or both based on the 'yields' parameter.
@@ -679,6 +684,7 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
     """
     Base class for TaskMapping views that provides common functionality.
     """
+
     _get_from_item: Callable[[Tuple[K, V]], T]
     _pop: bool = False
 
@@ -722,6 +728,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
     """
     Asynchronous view to iterate over the keys of a TaskMapping.
     """
+
     _get_from_item = lambda self, item: _get_key(item)
 
     async def __aiter__(self) -> AsyncIterator[K]:
@@ -782,6 +789,7 @@ class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
     """
     Asynchronous view to iterate over the items (key-value pairs) of a TaskMapping.
     """
+
     _get_from_item = lambda self, item: item
 
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
@@ -800,6 +808,7 @@ class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
     """
     Asynchronous view to iterate over the values of a TaskMapping.
     """
+
     _get_from_item = lambda self, item: _get_value(item)
 
     async def __aiter__(self) -> AsyncIterator[V]:

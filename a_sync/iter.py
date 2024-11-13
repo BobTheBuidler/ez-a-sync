@@ -30,12 +30,12 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
 
     Example:
         You must subclass this mixin class and define your own `__aiter__` method as shown below.
-        
+
         >>> class MyAwaitableAIterable(_AwaitableAsyncIterableMixin):
         ...    async def __aiter__(self):
         ...        for i in range(4):
         ...            yield i
-        
+
         >>> aiterable = MyAwaitableAIterable()
         >>> await aiterable
         [0, 1, 2, 3]
@@ -200,23 +200,23 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
             raise
 
     @overload
-    def wrap(cls, aiterator: AsyncIterator[T]) -> "ASyncIterator[T]": 
+    def wrap(cls, aiterator: AsyncIterator[T]) -> "ASyncIterator[T]":
         """
         Wraps an AsyncIterator in an ASyncIterator.
 
         Args:
             aiterator: The AsyncIterator to wrap.
         """
+
     @overload
-    def wrap(
-        cls, async_gen_func: AsyncGenFunc[P, T]
-    ) -> "ASyncGeneratorFunction[P, T]": 
+    def wrap(cls, async_gen_func: AsyncGenFunc[P, T]) -> "ASyncGeneratorFunction[P, T]":
         """
         Wraps an async generator function in an ASyncGeneratorFunction.
 
         Args:
             async_gen_func: The async generator function to wrap.
         """
+
     @classmethod
     def wrap(cls, wrapped):
         "Class method to wrap either an AsyncIterator or an async generator function."

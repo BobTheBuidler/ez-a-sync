@@ -434,6 +434,7 @@ class ASyncCachedPropertyDescriptor(
         Returns:
             A callable that loads the property value.
         """
+
         @functools.wraps(self._fget)
         async def load_value():
             inner_task = self.get_lock(instance)
