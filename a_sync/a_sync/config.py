@@ -1,5 +1,3 @@
-# /home/ubuntu/libs/a-sync/a_sync/a_sync/config.py
-
 """
 Configuration module for the a_sync library.
 
