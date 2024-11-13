@@ -1,5 +1,18 @@
 """
-While not the focus of this lib, this module includes some new primitives and some modified versions of standard asyncio primitives.
+This module includes both new primitives and modified versions of standard asyncio primitives.
+
+The primitives provided in this module are:
+
+- Semaphore
+- ThreadsafeSemaphore
+- PrioritySemaphore
+- CounterLock
+- Event
+- Queue
+- ProcessingQueue
+- SmartProcessingQueue
+
+These primitives extend or modify the functionality of standard asyncio primitives to provide additional features or improved performance for specific use cases.
 """
 
 from a_sync.primitives.locks import *
