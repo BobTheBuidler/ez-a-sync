@@ -42,12 +42,12 @@ def get_default_executor() -> Executor:
     """Get the default executor based on the EXECUTOR_TYPE environment variable.
 
     Returns:
-        An instance of either :class:`~concurrent.futures.ProcessPoolExecutor` 
+        An instance of either :class:`~concurrent.futures.ProcessPoolExecutor`
         or :class:`~concurrent.futures.ThreadPoolExecutor`.
 
     Raises:
         ValueError: If an invalid EXECUTOR_TYPE is specified. Valid values are
-        strings that start with 'p' for :class:`~concurrent.futures.ProcessPoolExecutor` 
+        strings that start with 'p' for :class:`~concurrent.futures.ProcessPoolExecutor`
         or 't' for :class:`~concurrent.futures.ThreadPoolExecutor`.
 
     Examples:
