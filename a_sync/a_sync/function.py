@@ -123,12 +123,14 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     @overload
     def __init__(
         self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]
-    ) -> None: ...
+    ) -> None: 
+        ...
         # TODO write specific docs for this overload
     @overload
     def __init__(
         self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]
-    ) -> None: ...
+    ) -> None: 
+        ...
         # TODO write specific docs for this overload
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         """
@@ -155,25 +157,30 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             )
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:...
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
+        ...
         # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]:...
+    ) -> Coroutine[Any, Any, T]:
+        ...
         # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T:...
+    ) -> T:
+        ...
         # TODO write specific docs for this overload
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]:...
+    ) -> Coroutine[Any, Any, T]:
+        ...
         # TODO write specific docs for this overload
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: ...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: 
+        ...
         # TODO write specific docs for this overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """
