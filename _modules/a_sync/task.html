@@ -122,17 +122,20 @@
 <span class="sd">    convenient methods for creating, managing, and iterating over these tasks asynchronously.</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">        async def fetch_data(url: str) -&gt; str:</span>
-<span class="sd">            async with aiohttp.ClientSession() as session:</span>
-<span class="sd">                async with session.get(url) as response:</span>
-<span class="sd">                    return await response.text()</span>
+<span class="sd">        &gt;&gt;&gt; async def fetch_data(url: str) -&gt; str:</span>
+<span class="sd">        ...     async with aiohttp.ClientSession() as session:</span>
+<span class="sd">        ...         async with session.get(url) as response:</span>
+<span class="sd">        ...             return await response.text()</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; tasks = TaskMapping(fetch_data, name=&#39;url_fetcher&#39;, concurrency=5)</span>
+<span class="sd">        &gt;&gt;&gt; tasks[&#39;example.com&#39;] =</span>
+<span class="sd">        &gt;&gt;&gt; tasks[&#39;python.org&#39;] = &#39;https://www.python.org&#39;</span>
+<span class="sd">        &gt;&gt;&gt; async for key, result in tasks:</span>
+<span class="sd">        ...     print(f&quot;Data for {key}: {result}&quot;)</span>
+<span class="sd">        ...</span>
+<span class="sd">        Data for python.org: http://python.org</span>
+<span class="sd">        Data for example.com: http://example.com</span>
 
-<span class="sd">        tasks = TaskMapping(fetch_data, name=&#39;url_fetcher&#39;, concurrency=5)</span>
-<span class="sd">        tasks[&#39;example.com&#39;] = &#39;http://example.com&#39;</span>
-<span class="sd">        tasks[&#39;python.org&#39;] = &#39;https://www.python.org&#39;</span>
-
-<span class="sd">        async for key, result in tasks:</span>
-<span class="sd">            print(f&quot;Data for {key}: {result}&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>

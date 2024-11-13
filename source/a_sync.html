@@ -5885,23 +5885,21 @@ iterate over items, applying the key function to each item for sorting.</p>
 <p>TaskMapping is a specialized dictionary that maps keys to asyncio Tasks. It provides
 convenient methods for creating, managing, and iterating over these tasks asynchronously.</p>
 <p class="rubric">Example</p>
-<dl class="simple">
-<dt>async def fetch_data(url: str) -&gt; str:</dt><dd><dl class="simple">
-<dt>async with aiohttp.ClientSession() as session:</dt><dd><dl class="simple">
-<dt>async with session.get(url) as response:</dt><dd><p>return await response.text()</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>tasks = TaskMapping(fetch_data, name=’url_fetcher’, concurrency=5)
-tasks[‘example.com’] = ‘<a class="reference external" href="http://example.com">http://example.com</a>’
-tasks[‘python.org’] = ‘<a class="reference external" href="https://www.python.org">https://www.python.org</a>’</p>
-<dl class="simple">
-<dt>async for key, result in tasks:</dt><dd><p>print(f”Data for {key}: {result}”)</p>
-</dd>
-</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;url_fetcher&#39;</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;example.com&#39;</span><span class="p">]</span> <span class="o">=</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;python.org&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://www.python.org&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">Data for python.org: http://python.org</span>
+<span class="go">Data for example.com: http://example.com</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping.__aiter__">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.task.TaskMapping.__aiter__" title="Link to this definition"></a></dt>
@@ -10673,23 +10671,21 @@ the queue.</p>
 <p>TaskMapping is a specialized dictionary that maps keys to asyncio Tasks. It provides
 convenient methods for creating, managing, and iterating over these tasks asynchronously.</p>
 <p class="rubric">Example</p>
-<dl class="simple">
-<dt>async def fetch_data(url: str) -&gt; str:</dt><dd><dl class="simple">
-<dt>async with aiohttp.ClientSession() as session:</dt><dd><dl class="simple">
-<dt>async with session.get(url) as response:</dt><dd><p>return await response.text()</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>tasks = TaskMapping(fetch_data, name=’url_fetcher’, concurrency=5)
-tasks[‘example.com’] = ‘<a class="reference external" href="http://example.com">http://example.com</a>’
-tasks[‘python.org’] = ‘<a class="reference external" href="https://www.python.org">https://www.python.org</a>’</p>
-<dl class="simple">
-<dt>async for key, result in tasks:</dt><dd><p>print(f”Data for {key}: {result}”)</p>
-</dd>
-</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">fetch_data</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;url_fetcher&#39;</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;example.com&#39;</span><span class="p">]</span> <span class="o">=</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;python.org&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://www.python.org&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">Data for python.org: http://python.org</span>
+<span class="go">Data for example.com: http://example.com</span>
+</pre></div>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.TaskMapping.__aiter__">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/task.html#TaskMapping.__aiter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.TaskMapping.__aiter__" title="Link to this definition"></a></dt>
