@@ -8,6 +8,7 @@ from a_sync.a_sync.modifiers.cache.memory import apply_async_memory_cache
 
 
 class CacheArgs(TypedDict):
+    """Typed dictionary for cache arguments."""
     cache_type: CacheType
     cache_typed: bool
     ram_cache_maxsize: Optional[int]
@@ -16,24 +17,23 @@ class CacheArgs(TypedDict):
 
 @overload
 def apply_async_cache(
-    coro_fn: Literal[None],
     **modifiers: Unpack[CacheArgs],
-) -> AsyncDecorator[P, T]: ...
-
+) -> AsyncDecorator[P, T]:
+    """Overload for when no coroutine function is provided."""
 
 @overload
 def apply_async_cache(
     coro_fn: int,
     **modifiers: Unpack[CacheArgs],
-) -> AsyncDecorator[P, T]: ...
-
+) -> AsyncDecorator[P, T]:
+    """Overload for when an integer is provided as the coroutine function."""
 
 @overload
 def apply_async_cache(
     coro_fn: CoroFn[P, T],
     **modifiers: Unpack[CacheArgs],
-) -> CoroFn[P, T]: ...
-
+) -> CoroFn[P, T]:
+    """Overload for when a coroutine function is provided."""
 
 def apply_async_cache(
     coro_fn: Union[CoroFn[P, T], CacheType, int] = None,
@@ -42,7 +42,24 @@ def apply_async_cache(
     ram_cache_maxsize: Optional[int] = None,
     ram_cache_ttl: Optional[int] = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
+    """Applies an asynchronous cache to a coroutine function.
 
+    Args:
+        coro_fn: The coroutine function to apply the cache to, or an integer to set as the max size.
+        cache_type: The type of cache to use. Currently, only 'memory' is implemented.
+        cache_typed: Whether to consider types for cache keys.
+        ram_cache_maxsize: The maximum size for the LRU cache. If set to an integer, it overrides coro_fn.
+        ram_cache_ttl: The time-to-live for items in the LRU cache.
+
+    Raises:
+        TypeError: If 'ram_cache_maxsize' is not an integer or None.
+        FunctionNotAsync: If the provided function is not asynchronous.
+        NotImplementedError: If an unsupported cache type is specified.
+
+    Returns:
+        A decorator or the decorated coroutine function.
+    """
+    
     # Parse Inputs
     if isinstance(coro_fn, int):
         assert ram_cache_maxsize is None
