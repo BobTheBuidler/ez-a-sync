@@ -31,11 +31,8 @@ def future(
     A decorator function to convert a callable into an ASyncFuture.
 
     Args:
-        callable (Union[Callable[P, Awaitable[T]], Callable[P, T]], optional): The callable to convert. Defaults to None.
+        callable: The callable to convert. Defaults to None.
         **kwargs: Additional keyword arguments for the modifier.
-
-    Returns:
-        Callable[P, Union[T, "ASyncFuture[T]"]]: The wrapped callable returning an ASyncFuture.
     """
     return _ASyncFutureWrappedFn(callable, **kwargs)
 
@@ -45,10 +42,7 @@ async def _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> L
     Gathers and materializes a list of awaitable or non-awaitable items.
 
     Args:
-        *things (Unpack[MaybeAwaitable[T]]): Items to gather and materialize.
-
-    Returns:
-        List[T]: A list of materialized items.
+        *things: Items to gather and materialize.
     """
     return await asyncio.gather(*[_check_and_materialize(thing) for thing in things])
 
@@ -58,10 +52,7 @@ async def _check_and_materialize(thing: T) -> T:
     Checks if an item is awaitable and materializes it.
 
     Args:
-        thing (T): The item to check and materialize.
-
-    Returns:
-        T: The materialized item.
+        thing: The item to check and materialize.
     """
     return await thing if isawaitable(thing) else thing
 
@@ -71,10 +62,7 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
     Materializes the result of an ASyncFuture.
 
     Args:
-        meta (ASyncFuture[T]): The ASyncFuture to materialize.
-
-    Returns:
-        T: The materialized result.
+        meta: The ASyncFuture to materialize.
 
     Raises:
         RuntimeError: If the result is not set and the event loop is running.
@@ -95,6 +83,8 @@ MetaNumeric = Union[
 class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     """
     A class representing an asynchronous future result.
+
+    Inherits from both concurrent.futures.Future and Awaitable[T], allowing it to be used in both synchronous and asynchronous contexts.
     """
 
     __slots__ = "__awaitable__", "__dependencies", "__dependants", "__task"
@@ -104,8 +94,8 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         Initializes an ASyncFuture with an awaitable and optional dependencies.
 
         Args:
-            awaitable (Awaitable[T]): The awaitable object.
-            dependencies (List[ASyncFuture], optional): A list of dependencies. Defaults to [].
+            awaitable: The awaitable object.
+            dependencies: A list of dependencies. Defaults to [].
         """
         self.__awaitable__ = awaitable
         """The awaitable object."""
@@ -141,9 +131,6 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
         Args:
             other: The other dependency to list.
-
-        Returns:
-            List[ASyncFuture]: A list of dependencies.
         """
         if isinstance(other, ASyncFuture):
             return [self, other]
@@ -183,6 +170,9 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         )
 
     def __await__(self) -> Generator[Any, None, T]:
+        """
+        Makes the ASyncFuture awaitable.
+        """
         return self.__await().__await__()
 
     async def __await(self) -> T:
@@ -192,6 +182,9 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
     @property
     def __task__(self) -> "asyncio.Task[T]":
+        """
+        Returns the asyncio task associated with the awaitable, creating it if necessary.
+        """
         if self.__task is None:
             self.__task = asyncio.create_task(self.__awaitable__)
         return self.__task
@@ -819,10 +812,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     @property
     def __dependants__(self) -> Set["ASyncFuture"]:
         """
-        Returns the set of dependants for this ASyncFuture.
-
-        Returns:
-            Set[ASyncFuture]: The set of dependant futures.
+        Returns the set of dependants for this ASyncFuture, including nested dependants.
         """
         dependants = set()
         for dep in self.__dependants:
@@ -833,10 +823,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     @property
     def __dependencies__(self) -> Set["ASyncFuture"]:
         """
-        Returns the set of dependencies for this ASyncFuture.
-
-        Returns:
-            Set[ASyncFuture]: The set of dependencies.
+        Returns the set of dependencies for this ASyncFuture, including nested dependencies.
         """
         dependencies = set()
         for dep in self.__dependencies:
@@ -860,9 +847,9 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
     A callable class to wrap functions and return ASyncFuture objects.
 
     Attributes:
-        callable (Union[Callable[P, Awaitable[T]], Callable[P, T]]): The callable function.
-        wrapped (Callable[P, ASyncFuture[T]]): The wrapped function returning ASyncFuture.
-        _callable_name (str): The name of the callable function.
+        callable: The callable function.
+        wrapped: The wrapped function returning ASyncFuture.
+        _callable_name: The name of the callable function.
     """
     __slots__ = "callable", "wrapped", "_callable_name"
 
