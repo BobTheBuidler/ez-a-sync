@@ -8,7 +8,7 @@ from a_sync import TaskMapping, create_task, exceptions
 async def test_create_task():
     """Test the creation of an asynchronous task.
 
-    This test verifies that a task can be created using the `create_task`
+    Verifies that a task can be created using the `create_task`
     function with a coroutine and a specified name.
     """
     await create_task(coro=asyncio.sleep(0), name="test")
@@ -18,7 +18,7 @@ async def test_create_task():
 async def test_persistent_task():
     """Test the persistence of a task without a local reference.
 
-    This test checks if a task created without a local reference
+    Checks if a task created without a local reference
     completes successfully by setting a nonlocal variable.
     """
     check = False
@@ -38,7 +38,7 @@ async def test_persistent_task():
 async def test_pruning():
     """Test task creation and pruning.
 
-    This test ensures that tasks can be created and pruned correctly
+    Ensures that tasks can be created and pruned correctly
     without causing errors.
     """
     async def task():
@@ -54,7 +54,7 @@ async def test_pruning():
 async def test_task_mapping_init():
     """Test initialization of TaskMapping.
 
-    This test verifies that the TaskMapping class initializes correctly
+    Verifies that the TaskMapping class initializes correctly
     with the provided coroutine function and arguments.
     """
     tasks = TaskMapping(_coro_fn)
@@ -72,7 +72,7 @@ async def test_task_mapping_init():
 async def test_task_mapping():
     """Test the functionality of TaskMapping.
 
-    This test checks the behavior of TaskMapping, including task
+    Checks the behavior of TaskMapping, including task
     creation, retrieval, and execution.
     """
     tasks = TaskMapping(_coro_fn)
@@ -101,7 +101,7 @@ async def test_task_mapping():
 async def test_task_mapping_map_with_sync_iter():
     """Test TaskMapping with a synchronous iterator.
 
-    This test verifies that TaskMapping can map over a synchronous
+    Verifies that TaskMapping can map over a synchronous
     iterator and correctly handle keys, values, and items.
     """
     tasks = TaskMapping(_coro_fn)
@@ -159,7 +159,7 @@ async def test_task_mapping_map_with_sync_iter():
 async def test_task_mapping_map_with_async_iter():
     """Test TaskMapping with an asynchronous iterator.
 
-    This test verifies that TaskMapping can map over an asynchronous
+    Verifies that TaskMapping can map over an asynchronous
     iterator and correctly handle keys, values, and items.
     """
     async def async_iter():
@@ -249,7 +249,7 @@ async def test_task_mapping_map_with_async_iter():
 def test_taskmapping_views_sync():
     """Test synchronous views of TaskMapping.
 
-    This test checks the synchronous access to keys, values, and items
+    Checks the synchronous access to keys, values, and items
     in TaskMapping.
     """
     tasks = TaskMapping(_coro_fn, range(5))
@@ -286,10 +286,10 @@ async def _coro_fn(i: int) -> str:
     """Coroutine function for testing.
 
     Args:
-        i (int): An integer input.
+        i: An integer input.
 
     Returns:
-        str: A string representation of the incremented input.
+        A string representation of the incremented input.
     """
     i += 1
     return str(i) * i
