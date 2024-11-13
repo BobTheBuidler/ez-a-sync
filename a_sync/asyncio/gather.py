@@ -47,18 +47,18 @@ async def gather(
     **tqdm_kwargs: Any,
 ) -> Union[List[T], Dict[K, V]]:
     """
-    Concurrently awaits a list of awaitable objects or mappings of awaitables and returns the results.
+    Concurrently awaits a list of awaitable objects or a mapping of awaitables and returns the results.
 
-    This function extends Python's asyncio.gather, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.
+    This function extends Python's asyncio.gather, providing additional features for handling either individual awaitable objects or a mapping of awaitables.
 
     Differences from asyncio.gather:
     - Uses type hints for use with static type checkers.
-    - Supports gathering either individual awaitables or a k:v mapping of awaitables.
+    - Supports gathering either individual awaitables or a k:v mapping of awaitables, but not both simultaneously.
     - Provides progress reporting using tqdm if 'tqdm' is set to True.
     - Allows exclusion of results based on a condition using the 'exclude_if' parameter.
 
     Args:
-        *awaitables: The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.
+        *awaitables: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.
         return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.
         exclude_if: A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None.
         tqdm: If True, enables progress reporting using tqdm. Defaults to False.
@@ -75,7 +75,7 @@ async def gather(
         ['result', 123]
         ```
 
-        Awaiting mappings of awaitables:
+        Awaiting a mapping of awaitables:
 
         - Results will be a dictionary with 'key1' mapped to the result of thing1() and 'key2' mapped to the result of thing2.
 
