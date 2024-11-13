@@ -52,7 +52,7 @@ def apply_async_memory_cache(
 
     # Validate
     elif coro_fn is None:
-        if maxsize is not None and (not isinstance(maxsize, int) or maxsize <= 0):
+        if maxsize not in [None, -1] and (not isinstance(maxsize, int) or maxsize <= 0):
             raise TypeError(
                 "'lru_cache_maxsize' must be a positive integer or None.", maxsize
             )
