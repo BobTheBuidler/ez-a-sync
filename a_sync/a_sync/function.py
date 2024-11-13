@@ -30,6 +30,10 @@ class _ModifiedMixin:
     `ASyncFunctionAsyncDefault` and `ASyncFunctionSyncDefault`, to handle the application
     of async and sync modifiers to functions. Modifiers can alter the behavior of functions,
     such as converting sync functions to async, applying caching, or rate limiting.
+
+    See Also:
+        - :class:`~ASyncFunction`
+        - :class:`~ModifierManager`
     """
 
     modifiers: ModifierManager
@@ -44,6 +48,10 @@ class _ModifiedMixin:
 
         Returns:
             The asynchronous version of the function with applied modifiers.
+
+        See Also:
+            - :func:`_helpers._asyncify`
+            - :meth:`ModifierManager.apply_async_modifiers`
         """
         coro_fn = _helpers._asyncify(func, self.modifiers.executor)
         return self.modifiers.apply_async_modifiers(coro_fn)
@@ -55,6 +63,10 @@ class _ModifiedMixin:
 
         Returns:
             The modified _await function.
+
+        See Also:
+            - :func:`_helpers._await`
+            - :meth:`ModifierManager.apply_sync_modifiers`
         """
         return self.modifiers.apply_sync_modifiers(_helpers._await)
 
@@ -65,6 +77,9 @@ class _ModifiedMixin:
 
         Returns:
             The default execution mode.
+
+        See Also:
+            - :attr:`ModifierManager.default`
         """
         return self.modifiers.default
 
@@ -78,6 +93,9 @@ def _validate_wrapped_fn(fn: Callable) -> None:
     Raises:
         TypeError: If the input is not callable.
         RuntimeError: If the function has arguments with names that conflict with viable flags.
+
+    See Also:
+        - :func:`_check_not_genfunc`
     """
     if isinstance(fn, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
         return  # These are always valid
@@ -116,20 +134,26 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         # Asynchronous call
         result = await func(5)  # returns "5"
+
+    See Also:
+        - :class:`_ModifiedMixin`
+        - :class:`ModifierManager`
     """
 
     # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
 
     @overload
-    def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
+    def __init__(
+        self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]
+    ) -> None: 
         ...
         # TODO write specific docs for this overload
-
     @overload
-    def __init__(self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
+    def __init__(
+        self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]
+    ) -> None: 
         ...
         # TODO write specific docs for this overload
-
     def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         """
         Initializes an ASyncFunction instance.
@@ -137,6 +161,10 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         Args:
             fn: The function to wrap.
             **modifiers: Keyword arguments for function modifiers.
+
+        See Also:
+            - :func:`_validate_wrapped_fn`
+            - :class:`ModifierManager`
         """
         _validate_wrapped_fn(fn)
 
@@ -158,33 +186,28 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
         ...
         # TODO write specific docs for this overload
-
     @overload
     def __call__(
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]:
         ...
         # TODO write specific docs for this overload
-
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
     ) -> T:
         ...
         # TODO write specific docs for this overload
-
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]:
         ...
         # TODO write specific docs for this overload
-
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: 
         ...
         # TODO write specific docs for this overload
-
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """
         Calls the wrapped function either synchronously or asynchronously.
@@ -198,6 +221,10 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         Raises:
             Exception: Any exception that may be raised by the wrapped function.
+
+        See Also:
+            - :attr:`default`
+            - :meth:`_run_sync`
         """
         logger.debug(
             "calling %s fn: %s with args: %s kwargs: %s", self, self.fn, args, kwargs
@@ -209,13 +236,16 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
     @functools.cached_property
     def fn(
-        self,
     ):  # -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
         """
         Returns the final wrapped version of :attr:`ASyncFunction._fn` decorated with all of the a_sync goodness.
 
         Returns:
             The final wrapped function.
+
+        See Also:
+            - :meth:`_async_wrap`
+            - :meth:`_sync_wrap`
         """
         return self._async_wrap if self._async_def else self._sync_wrap
 
@@ -239,6 +269,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 A TaskMapping object for managing concurrent execution.
+
+            See Also:
+                - :class:`TaskMapping`
             """
             from a_sync import TaskMapping
 
@@ -268,6 +301,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 True if any result is truthy, otherwise False.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -294,6 +330,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 True if all results are truthy, otherwise False.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -320,6 +359,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 The minimum result.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -346,6 +388,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 The maximum result.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -372,6 +417,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 The sum of the results.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -400,6 +448,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 A TaskMapping object for managing concurrent execution.
+
+            See Also:
+                - :class:`TaskMapping`
             """
             from a_sync import TaskMapping
 
@@ -429,6 +480,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 True if any result is truthy, otherwise False.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -455,6 +509,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 True if all results are truthy, otherwise False.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -481,6 +538,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 The minimum result.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -507,6 +567,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 The maximum result.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -533,6 +596,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             Returns:
                 The sum of the results.
+
+            See Also:
+                - :meth:`map`
             """
             return await self.map(
                 *iterables,
@@ -551,6 +617,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         Returns:
             True if the default is sync, False if async.
+
+        See Also:
+            - :attr:`default`
         """
         return (
             True
@@ -565,6 +634,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         Returns:
             True if the function is asynchronous, otherwise False.
+
+        See Also:
+            - :func:`asyncio.iscoroutinefunction`
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
 
@@ -580,6 +652,10 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         Returns:
             True if the function should run synchronously, otherwise False.
+
+        See Also:
+            - :func:`_kwargs.get_flag_name`
+            - :func:`_kwargs.is_sync`
         """
         if flag := _kwargs.get_flag_name(kwargs):
             # If a flag was specified in the kwargs, we will defer to it.
@@ -598,6 +674,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         Returns:
             The asynchronous version of the wrapped function.
+
+        See Also:
+            - :meth:`_asyncify`
         """
         if self._async_def:
             raise TypeError(
@@ -615,6 +694,10 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         Returns:
             The modified function.
+
+        See Also:
+            - :meth:`ModifierManager.apply_async_modifiers`
+            - :meth:`ModifierManager.apply_sync_modifiers`
         """
         if self._async_def:
             return self.modifiers.apply_async_modifiers(self.__wrapped__)  # type: ignore [arg-type]
@@ -629,6 +712,10 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         Returns:
             The wrapped function with async handling.
+
+        See Also:
+            - :meth:`_run_sync`
+            - :meth:`_await`
         """
 
         @functools.wraps(self._modified_fn)
@@ -650,6 +737,10 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         Returns:
             The wrapped function with sync handling.
+
+        See Also:
+            - :meth:`_run_sync`
+            - :meth:`_asyncified`
         """
 
         @functools.wraps(self._modified_fn)
@@ -679,6 +770,9 @@ class ASyncDecorator(_ModifiedMixin):
 
         Raises:
             ValueError: If 'default' is not 'sync', 'async', or None.
+
+        See Also:
+            - :class:`ModifierManager`
         """
         assert "default" in modifiers, modifiers
         self.modifiers = ModifierManager(modifiers)
@@ -690,6 +784,9 @@ class ASyncDecorator(_ModifiedMixin):
 
         Raises:
             ValueError: If 'default' is not 'sync', 'async', or None.
+
+        See Also:
+            - :attr:`ModifierManager.default`
         """
         if self.modifiers.default not in ["sync", "async", None]:
             raise ValueError(
@@ -713,6 +810,9 @@ class ASyncDecorator(_ModifiedMixin):
 
         Returns:
             An ASyncFunction instance with the appropriate default behavior.
+
+        See Also:
+            - :class:`ASyncFunction`
         """
         if self.default == "async":
             return ASyncFunctionAsyncDefault(func, **self.modifiers)
@@ -732,6 +832,10 @@ def _check_not_genfunc(func: Callable) -> None:
 
     Raises:
         ValueError: If the function is a generator or async generator.
+
+    See Also:
+        - :func:`inspect.isasyncgenfunction`
+        - :func:`inspect.isgeneratorfunction`
     """
     if inspect.isasyncgenfunction(func) or inspect.isgeneratorfunction(func):
         raise ValueError("unable to decorate generator functions with this decorator")
@@ -797,6 +901,9 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
 
         Returns:
             The result of the function call.
+
+        See Also:
+            - :meth:`ASyncFunction.__call__`
         """
         return self.fn(*args, **kwargs)
 
@@ -867,6 +974,9 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
 
         Returns:
             The result of the function call.
+
+        See Also:
+            - :meth:`ASyncFunction.__call__`
         """
         return self.fn(*args, **kwargs)
 

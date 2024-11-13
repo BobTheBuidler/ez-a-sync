@@ -37,6 +37,18 @@ class _SmartFutureMixin(Generic[T]):
     def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
         """
         Await the smart future or task, handling waiters and logging.
+
+        Yields:
+            The result of the future or task.
+
+        Raises:
+            RuntimeError: If await wasn't used with future.
+
+        Example:
+            ```python
+            future = SmartFuture()
+            result = await future
+            ```
         """
         if self.done():
             return self.result()  # May raise too.
@@ -54,6 +66,15 @@ class _SmartFutureMixin(Generic[T]):
         # NOTE: we check .done() because the callback may not have ran yet and its very lightweight
         """
         Get the number of waiters currently awaiting the future or task.
+
+        Returns:
+            int: The number of waiters.
+
+        Example:
+            ```python
+            future = SmartFuture()
+            print(future.num_waiters)
+            ```
         """
         if self.done():
             # if there are any waiters left, there won't be once the event loop runs once
@@ -67,6 +88,9 @@ class _SmartFutureMixin(Generic[T]):
         Callback to clean up waiters when a waiter task is done.
 
         Removes the waiter from _waiters, and _queue._futs if applicable
+
+        Args:
+            waiter: The waiter task to clean up.
         """
         if not self.done():
             self._waiters.remove(waiter)
@@ -86,6 +110,12 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
 
     Inherits from both _SmartFutureMixin and asyncio.Future, providing additional functionality
     for tracking waiters and integrating with a smart processing queue.
+
+    Example:
+        ```python
+        future = SmartFuture()
+        await future
+        ```
     """
 
     _queue = None
@@ -105,6 +135,11 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
             queue: Optional; a smart processing queue.
             key: Optional; a key identifying the future.
             loop: Optional; the event loop.
+
+        Example:
+            ```python
+            future = SmartFuture(queue=my_queue, key=my_key)
+            ```
         """
         super().__init__(loop=loop)
         if queue:
@@ -127,6 +162,13 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
 
         Returns:
             True if self has more waiters than other.
+
+        Example:
+            ```python
+            future1 = SmartFuture()
+            future2 = SmartFuture()
+            print(future1 < future2)
+            ```
         """
         return self.num_waiters > other.num_waiters
 
@@ -147,6 +189,11 @@ def create_future(
 
     Returns:
         A SmartFuture instance.
+
+    Example:
+        ```python
+        future = create_future(queue=my_queue, key=my_key)
+        ```
     """
     return SmartFuture(queue=queue, key=key, loop=loop or asyncio.get_event_loop())
 
@@ -157,6 +204,12 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
 
     Inherits from both _SmartFutureMixin and asyncio.Task, providing additional functionality
     for tracking waiters and integrating with a smart processing queue.
+
+    Example:
+        ```python
+        task = SmartTask(coro=my_coroutine())
+        await task
+        ```
     """
 
     def __init__(
@@ -173,6 +226,11 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
             coro: The coroutine to run in the task.
             loop: Optional; the event loop.
             name: Optional; the name of the task.
+
+        Example:
+            ```python
+            task = SmartTask(coro=my_coroutine(), name="my_task")
+            ```
         """
         super().__init__(coro, loop=loop, name=name)
         self._waiters: Set["asyncio.Task[T]"] = set()
@@ -193,6 +251,12 @@ def smart_task_factory(
 
     Returns:
         A SmartTask instance running the provided coroutine.
+
+    Example:
+        ```python
+        loop = asyncio.get_event_loop()
+        task = smart_task_factory(loop, my_coroutine())
+        ```
     """
     return SmartTask(coro, loop=loop)
 
@@ -203,6 +267,14 @@ def set_smart_task_factory(loop: asyncio.AbstractEventLoop = None) -> None:
 
     Args:
         loop: Optional; the event loop. If None, the current event loop is used.
+
+    Example:
+        ```python
+        set_smart_task_factory()
+        ```
+
+    See Also:
+        - :func:`smart_task_factory`
     """
     if loop is None:
         loop = a_sync.asyncio.get_event_loop()
@@ -241,6 +313,14 @@ def shield(
     Args:
         arg: The awaitable to shield from cancellation.
         loop: Optional; the event loop. Deprecated since Python 3.8.
+
+    Example:
+        ```python
+        result = await shield(my_coroutine())
+        ```
+
+    See Also:
+        - :func:`asyncio.shield`
     """
     if loop is not None:
         warnings.warn(

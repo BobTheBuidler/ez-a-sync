@@ -13,6 +13,11 @@
         - [async modifiers](#async-modifiers)
         - [sync modifiers](#sync-modifiers)
         - [Default Modifiers](#default-modifiers)
+    - [Other Helpful Classes](#other-helpful-classes)
+        - [ASyncIterable](#asynciterable)
+        - [ASyncIterator](#asynciterator)
+        - [ASyncFilter](#asyncfilter)
+        - [ASyncSorter](#asyncsorter)
 
 <!-- /TOC -->
 ## Introduction
@@ -195,3 +200,87 @@ Instead of setting modifiers one by one in functions, you can set a default valu
 - `RAM_CACHE_TTL`
 - `RUNS_PER_MINUTE`
 - `SEMAPHORE`
+
+### Other Helpful Classes
+#### ASyncIterable
+The `ASyncIterable` class allows objects to be iterated over using either a standard `for` loop or an `async for` loop. This is particularly useful in scenarios where the mode of iteration needs to be flexible or is determined at runtime.
+
+```python
+from a_sync import ASyncIterable
+
+async_iterable = ASyncIterable(some_async_iterable)
+
+# Asynchronous iteration
+async for item in async_iterable:
+    ...
+
+# Synchronous iteration
+for item in async_iterable:
+    ...
+```
+
+#### ASyncIterator
+
+The `ASyncIterator` class provides a unified interface for iteration that can operate in both synchronous and asynchronous contexts. It allows the wrapping of asynchronous iterable objects or async generator functions.
+
+```python
+from a_sync import ASyncIterator
+
+async_iterator = ASyncIterator(some_async_iterator)
+
+# Asynchronous iteration
+async for item in async_iterator:
+    ...
+
+# Synchronous iteration
+for item in async_iterator:
+    ...
+```
+
+#### ASyncFilter
+
+The `ASyncFilter` class filters items of an async iterable based on a provided function. It can handle both synchronous and asynchronous filter functions.
+
+```python
+from a_sync import ASyncFilter
+
+async def is_even(x):
+    return x % 2 == 0
+
+filtered_iterable = ASyncFilter(is_even, some_async_iterable)
+
+# or use the alias
+import a_sync
+
+filtered_iterable = a_sync.filter(is_even, some_async_iterable)
+
+# Asynchronous iteration
+async for item in filtered_iterable:
+    ...
+
+# Synchronous iteration
+for item in filtered_iterable:
+    ...
+```
+
+#### ASyncSorter
+
+The `ASyncSorter` class sorts items of an async iterable based on a provided key function. It supports both synchronous and asynchronous key functions.
+
+```python
+from a_sync import ASyncSorter
+
+sorted_iterable = ASyncSorter(some_async_iterable, key=lambda x: x.value)
+
+# or use the alias
+import a_sync
+
+sorted_iterable = a_sync.sort(some_async_iterable, key=lambda x: x.value)
+
+# Asynchronous iteration
+async for item in sorted_iterable:
+    ...
+
+# Synchronous iteration
+for item in sorted_iterable:
+    ...
