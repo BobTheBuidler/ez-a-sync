@@ -44,8 +44,8 @@ def apply_rate_limit(
     AsyncLimiter instance.
 
     Args:
-        coro_fn: The coroutine function to be rate-limited or an integer specifying runs per minute.
-        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance.
+        coro_fn: The coroutine function to be rate-limited. If an integer is provided, it is treated as runs per minute.
+        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance. If coro_fn is an integer, this should be None.
 
     Raises:
         TypeError: If 'runs_per_minute' is neither an integer nor an AsyncLimiter when 'coro_fn' is None.
