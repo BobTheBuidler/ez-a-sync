@@ -845,12 +845,8 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
     """
     A callable class to wrap functions and return ASyncFuture objects.
-
-    Attributes:
-        callable: The callable function.
-        wrapped: The wrapped function returning ASyncFuture.
-        _callable_name: The name of the callable function.
     """
+    
     __slots__ = "callable", "wrapped", "_callable_name"
 
     def __init__(
@@ -862,7 +858,11 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
 
         if callable:
             self.callable = callable
+            """The callable function."""
+
             self._callable_name = callable.__name__
+            """The name of the callable function."""
+
             a_sync_callable = a_sync(callable, default="async", **kwargs)
 
             @wraps(callable)
@@ -870,6 +870,7 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
                 return ASyncFuture(a_sync_callable(*args, **kwargs, sync=False))
 
             self.wrapped = future_wrap
+            """The wrapped function returning ASyncFuture."""
         else:
             self.wrapped = partial(_ASyncFutureWrappedFn, **kwargs)
 

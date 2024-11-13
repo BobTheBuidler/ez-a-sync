@@ -1,3 +1,11 @@
+"""
+I don't recall why I included this in the public API but I had a reason.
+
+You probably shouldn't use this and should use ASyncGenericBase instead.
+
+You can use this for a more custom implementation if necessary.
+"""
+
 import abc
 import functools
 import logging

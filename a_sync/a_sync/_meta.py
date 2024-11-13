@@ -28,9 +28,6 @@ class ASyncMeta(ABCMeta):
     `ASyncPropertyDescriptor` or `ASyncCachedPropertyDescriptor`. Additionally, it handles
     `ModifiedMixin` objects, which are used when functions are decorated with a_sync decorators
     to apply specific modifiers to those functions.
-
-    Attributes:
-        class_defined_modifiers (dict): Modifiers defined at the class level.
     """
     def __new__(cls, new_class_name, bases, attrs):
         _update_logger(new_class_name)
@@ -46,6 +43,7 @@ class ASyncMeta(ABCMeta):
         #       Currently the parent value is used for functions defined on the parent,
         #       and the subclass value is used for functions defined on the subclass.
         class_defined_modifiers = modifiers.get_modifiers_from(attrs)
+        
         logger.debug("found modifiers: %s", class_defined_modifiers)
         logger.debug(
             "now I inspect the class definition to figure out which attributes need to be wrapped"
@@ -89,8 +87,7 @@ class ASyncMeta(ABCMeta):
                     "you probably did this so you could apply some modifiers to `%s` specifically",
                     attr_name,
                 )
-                modified_modifiers = attr_value.modifiers._modifiers
-                if modified_modifiers:
+                if modified_modifiers := attr_value.modifiers._modifiers:
                     logger.debug(
                         "I found `%s.%s` is modified with %s",
                         new_class_name,

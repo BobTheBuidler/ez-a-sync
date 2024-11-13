@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 class ModifiedMixin:
     """
-    A mixin class that provides functionality for applying modifiers to functions.
+    A mixin class for internal use that provides functionality for applying modifiers to functions.
 
     This class is used as a base for :class:`~ASyncFunction` and its variants, such as
     `ASyncFunctionAsyncDefault` and `ASyncFunctionSyncDefault`, to handle the application

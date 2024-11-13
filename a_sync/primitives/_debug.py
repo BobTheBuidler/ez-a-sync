@@ -80,4 +80,3 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
             raise ValueError(f"{t} is not {self._daemon}")
         self._daemon.cancel()
         self._daemon = None
-"""

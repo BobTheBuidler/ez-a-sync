@@ -40,19 +40,21 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         Args:
             value: The initial capacity of the semaphore.
             name: An optional name for the semaphore, used for debugging.
-        
-        Attributes:
-            _context_managers: A dictionary mapping priorities to their context managers.
-            _capacity: The initial capacity of the semaphore.
-            _waiters: A heap queue of context managers, sorted by priority.
-            _potential_lost_waiters: A list of futures representing waiters that might have been lost.
         """
+
         self._context_managers = {}
+        """A dictionary mapping priorities to their context managers."""
+
         self._capacity = value
+        """The initial capacity of the semaphore."""
+
         super().__init__(value, name=name)
         self._waiters = []
+        """A heap queue of context managers, sorted by priority."""
+
         # NOTE: This should (hopefully) be temporary
         self._potential_lost_waiters: List["asyncio.Future[None]"] = []
+        """A list of futures representing waiters that might have been lost."""
 
     def __repr__(self) -> str:
         """Returns a string representation of the semaphore."""
@@ -196,13 +198,14 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
             parent: The parent semaphore.
             priority: The priority associated with this context manager.
             name: An optional name for the context manager, used for debugging.
-        
-        Attributes:
-            _parent: The parent semaphore.
-            _priority: The priority associated with this context manager.
         """
+
         self._parent = parent
+        """The parent semaphore."""
+
         self._priority = priority
+        """The priority associated with this context manager."""
+
         super().__init__(0, name=name)
 
     def __repr__(self) -> str:
