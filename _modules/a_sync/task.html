@@ -69,7 +69,17 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.task</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides asynchronous task management utilities, specifically focused on creating and handling mappings of tasks.</span>
+
+<span class="sd">The main components include:</span>
+<span class="sd">- TaskMapping: A class for managing and asynchronously generating tasks based on input iterables.</span>
+<span class="sd">- TaskMappingKeys: A view to asynchronously iterate over the keys of a TaskMapping.</span>
+<span class="sd">- TaskMappingValues: A view to asynchronously iterate over the values of a TaskMapping.</span>
+<span class="sd">- TaskMappingItems: A view to asynchronously iterate over the items (key-value pairs) of a TaskMapping.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
@@ -171,7 +181,7 @@
 <span class="sd">        Initialize a TaskMapping instance.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            wrapped_func: A function that takes a key (and optional parameters) and returns an Awaitable.</span>
+<span class="sd">            wrapped_func: A callable that takes a key and additional parameters and returns an Awaitable.</span>
 <span class="sd">            *iterables: Any number of iterables whose elements will be used as keys for task generation.</span>
 <span class="sd">            name: An optional name for the tasks created by this mapping.</span>
 <span class="sd">            concurrency: Maximum number of tasks to run concurrently.</span>
@@ -288,7 +298,7 @@
 <div class="viewcode-block" id="TaskMapping.__aiter__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.__aiter__">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aiter__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;aiterate thru all key-task pairs, yielding the key-result pair as each task completes&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asynchronously iterate through all key-task pairs, yielding the key-result pair as each task completes.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_check_destroyed</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
 
         <span class="c1"># if you inited the TaskMapping with some iterators, we will load those</span>
@@ -372,13 +382,13 @@
 <span class="sd">        Asynchronously map iterables to tasks and yield their results.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">        *iterables: Iterables to map over.</span>
-<span class="sd">        pop: Whether to remove tasks from the internal storage once they are completed.</span>
-<span class="sd">        yields: Whether to yield &#39;keys&#39;, &#39;values&#39;, or &#39;both&#39; (key-value pairs).</span>
+<span class="sd">            *iterables: Iterables to map over.</span>
+<span class="sd">            pop: Whether to remove tasks from the internal storage once they are completed.</span>
+<span class="sd">            yields: Whether to yield &#39;keys&#39;, &#39;values&#39;, or &#39;both&#39; (key-value pairs).</span>
 
 <span class="sd">        Yields:</span>
-<span class="sd">        Depending on `yields`, either keys, values,</span>
-<span class="sd">        or tuples of key-value pairs representing the results of completed tasks.</span>
+<span class="sd">            Depending on `yields`, either keys, values,</span>
+<span class="sd">            or tuples of key-value pairs representing the results of completed tasks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_check_destroyed</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
 
@@ -479,6 +489,7 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.min">[docs]</a>
     <span class="nd">@ASyncMethodDescriptorSyncDefault</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">V</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the minimum result from the tasks in the mapping.&quot;&quot;&quot;</span>
         <span class="nb">min</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__aiter__</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">):</span>
@@ -499,6 +510,7 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.sum">[docs]</a>
     <span class="nd">@ASyncMethodDescriptorSyncDefault</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">V</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sum of the results from the tasks in the mapping.&quot;&quot;&quot;</span>
         <span class="n">retval</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__aiter__</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="n">pop</span><span class="p">):</span>
@@ -556,17 +568,38 @@
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">cancel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Union[asyncio.Task[V], asyncio.Future[V]]&quot;</span><span class="p">:</span> <span class="o">...</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cancel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Union[asyncio.Task[V], asyncio.Future[V]]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pop a task from the TaskMapping.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            item: The key to pop.</span>
+<span class="sd">            cancel: Whether to cancel the task when popping it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">cancel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Union[asyncio.Task[V], asyncio.Future[V]]&quot;</span><span class="p">:</span> <span class="o">...</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">cancel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Union[asyncio.Task[V], asyncio.Future[V]]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pop a task from the TaskMapping.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            item: The key to pop.</span>
+<span class="sd">            default: The default value to return if no matching key is found.</span>
+<span class="sd">            cancel: Whether to cancel the task when popping it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="TaskMapping.pop">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.pop">[docs]</a>
     <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">cancel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Union[asyncio.Task[V], asyncio.Future[V]]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pop a task from the TaskMapping.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *args: One key to pop.</span>
+<span class="sd">            cancel: Whether to cancel the task when popping it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fut_or_task</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cancel</span><span class="p">:</span>
             <span class="n">fut_or_task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
@@ -576,6 +609,7 @@
 <div class="viewcode-block" id="TaskMapping.clear">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping.clear">[docs]</a>
     <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cancel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;# TODO write docs for this&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">cancel</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;cancelling </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span><span class="p">)</span>
             <span class="c1"># temporary, remove later</span>
@@ -702,9 +736,13 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">V</span><span class="p">,</span> <span class="n">yields</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">K</span><span class="p">:</span> <span class="o">...</span>
+<span class="k">def</span> <span class="nf">_yield</span><span class="p">(</span>
+    <span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">V</span><span class="p">,</span> <span class="n">yields</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">K</span><span class="p">:</span> <span class="o">...</span>  <span class="c1"># TODO write specific docs for this overload</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">V</span><span class="p">,</span> <span class="n">yields</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;both&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span> <span class="nf">_yield</span><span class="p">(</span>
+    <span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">V</span><span class="p">,</span> <span class="n">yields</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;both&quot;</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]:</span> <span class="o">...</span>  <span class="c1"># TODO write specific docs for this overload</span>
 <span class="k">def</span> <span class="nf">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">V</span><span class="p">,</span> <span class="n">yields</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;keys&quot;</span><span class="p">,</span> <span class="s2">&quot;both&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Yield either the key, value, or both based on the &#39;yields&#39; parameter.</span>
@@ -786,6 +824,10 @@
 
 
 <span class="k">class</span> <span class="nc">_TaskMappingView</span><span class="p">(</span><span class="n">ASyncGenericBase</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for TaskMapping views that provides common functionality.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_get_from_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]],</span> <span class="n">T</span><span class="p">]</span>
     <span class="n">_pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -828,6 +870,10 @@
 <div class="viewcode-block" id="TaskMappingKeys">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMappingKeys">[docs]</a>
 <span class="k">class</span> <span class="nc">TaskMappingKeys</span><span class="p">(</span><span class="n">_TaskMappingView</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Asynchronous view to iterate over the keys of a TaskMapping.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_get_from_item</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">_get_key</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TaskMappingKeys.__aiter__">
@@ -891,6 +937,10 @@
 <div class="viewcode-block" id="TaskMappingItems">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMappingItems">[docs]</a>
 <span class="k">class</span> <span class="nc">TaskMappingItems</span><span class="p">(</span><span class="n">_TaskMappingView</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Asynchronous view to iterate over the items (key-value pairs) of a TaskMapping.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_get_from_item</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span>
 
 <div class="viewcode-block" id="TaskMappingItems.__aiter__">
@@ -912,6 +962,10 @@
 <div class="viewcode-block" id="TaskMappingValues">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMappingValues">[docs]</a>
 <span class="k">class</span> <span class="nc">TaskMappingValues</span><span class="p">(</span><span class="n">_TaskMappingView</span><span class="p">[</span><span class="n">V</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Asynchronous view to iterate over the values of a TaskMapping.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_get_from_item</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">_get_value</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TaskMappingValues.__aiter__">

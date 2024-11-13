@@ -119,7 +119,7 @@
 <span class="sd">            **kwargs: Keyword arguments for the debug daemon.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            The debug daemon task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</span>
+<span class="sd">            The debug daemon task as an asyncio.Task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug_logs_enabled</span> <span class="ow">and</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_debug_daemon</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>

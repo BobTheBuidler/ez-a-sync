@@ -70,11 +70,25 @@
              
   <h1>Source code for a_sync.a_sync.config</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Configuration module for a_sync library.</span>
+<span class="sd">Configuration module for the a_sync library.</span>
 
 <span class="sd">This module provides configuration options and default settings for the a_sync library.</span>
 <span class="sd">It includes functionality for setting up executors, defining default modifiers,</span>
 <span class="sd">and handling environment variable configurations.</span>
+
+<span class="sd">Environment Variables:</span>
+<span class="sd">    A_SYNC_EXECUTOR_TYPE: Specifies the type of executor to use. Valid values are</span>
+<span class="sd">        strings that start with &#39;p&#39; for ProcessPoolExecutor (e.g., &#39;processes&#39;)</span>
+<span class="sd">        or &#39;t&#39; for ThreadPoolExecutor (e.g., &#39;threads&#39;). Defaults to &#39;threads&#39;.</span>
+<span class="sd">    A_SYNC_EXECUTOR_VALUE: Specifies the number of workers for the executor.</span>
+<span class="sd">        Defaults to 8.</span>
+<span class="sd">    A_SYNC_DEFAULT_MODE: Sets the default mode for a_sync functions if not specified.</span>
+<span class="sd">    A_SYNC_CACHE_TYPE: Sets the default cache type. If not specified, defaults to None.</span>
+<span class="sd">    A_SYNC_CACHE_TYPED: Boolean flag to determine if cache keys should consider types.</span>
+<span class="sd">    A_SYNC_RAM_CACHE_MAXSIZE: Sets the maximum size for the RAM cache. Defaults to -1.</span>
+<span class="sd">    A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. Defaults to None.</span>
+<span class="sd">    A_SYNC_RUNS_PER_MINUTE: Sets the rate limit for function execution.</span>
+<span class="sd">    A_SYNC_SEMAPHORE: Sets the semaphore limit for function execution.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">functools</span>
@@ -92,14 +106,14 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.config.get_default_executor">[docs]</a>
 <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_default_executor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Executor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get the default executor based on the :obj:`EXECUTOR_TYPE` environment variable.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the default executor based on the EXECUTOR_TYPE environment variable.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Executor: An instance of either ProcessPoolExecutor or ThreadPoolExecutor.</span>
+<span class="sd">        An instance of either ProcessPoolExecutor or ThreadPoolExecutor.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        :class:`ValueError`: If an invalid EXECUTOR_TYPE is specified.</span>
+<span class="sd">        ValueError: If an invalid EXECUTOR_TYPE is specified. Valid values are</span>
+<span class="sd">        strings that start with &#39;p&#39; for ProcessPoolExecutor or &#39;t&#39; for ThreadPoolExecutor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">EXECUTOR_TYPE</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">):</span>  <span class="c1"># p, P, proc, Processes, etc</span>
         <span class="k">return</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">EXECUTOR_VALUE</span><span class="p">)</span>

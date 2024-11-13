@@ -69,7 +69,29 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.a_sync.modifiers</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">aiolimiter</span> <span class="kn">import</span> <span class="n">AsyncLimiter</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains all logic for ez-a-sync&#39;s &quot;modifiers&quot;.</span>
+
+<span class="sd">Modifiers modify the behavior of ez-a-sync&#39;s ASync objects in various ways.</span>
+
+<span class="sd">Submodules:</span>
+<span class="sd">    cache: Handles caching mechanisms for async functions.</span>
+<span class="sd">    limiter: Manages rate limiting for async functions.</span>
+<span class="sd">    manager: Provides management of valid modifiers and their application.</span>
+<span class="sd">    semaphores: Implements semaphore logic for controlling concurrency.</span>
+
+<span class="sd">The modifiers available are:</span>
+<span class="sd">- `cache_type`: Specifies the type of cache to use, such as &#39;memory&#39;.</span>
+<span class="sd">- `cache_typed`: Determines if types are considered for cache keys.</span>
+<span class="sd">- `ram_cache_maxsize`: Sets the maximum size for the LRU cache.</span>
+<span class="sd">- `ram_cache_ttl`: Defines the time-to-live for items in the cache.</span>
+<span class="sd">- `runs_per_minute`: Sets a rate limit for function execution.</span>
+<span class="sd">- `semaphore`: Specifies a semaphore for controlling concurrency.</span>
+<span class="sd">- `executor`: Defines the executor for synchronous functions.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">aiolimiter</span> <span class="kn">import</span> <span class="n">AsyncLimiter</span>
 
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.primitives.locks</span> <span class="kn">import</span> <span class="n">ThreadsafeSemaphore</span>
@@ -79,6 +101,15 @@
 <div class="viewcode-block" id="get_modifiers_from">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.get_modifiers_from">[docs]</a>
 <span class="k">def</span> <span class="nf">get_modifiers_from</span><span class="p">(</span><span class="n">thing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ModifierKwargs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts valid modifiers from a given object, type, or dictionary.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        thing: The source from which to extract modifiers. It can be a dictionary,</span>
+<span class="sd">            a type, or an object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A ModifierKwargs object containing the valid modifiers extracted from the input.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">thing</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">apply_class_defined_modifiers</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ModifierKwargs</span><span class="p">({</span><span class="n">modifier</span><span class="p">:</span> <span class="n">thing</span><span class="p">[</span><span class="n">modifier</span><span class="p">]</span> <span class="k">for</span> <span class="n">modifier</span> <span class="ow">in</span> <span class="n">valid_modifiers</span> <span class="k">if</span> <span class="n">modifier</span> <span class="ow">in</span> <span class="n">thing</span><span class="p">})</span>  <span class="c1"># type: ignore [misc]</span>
@@ -89,6 +120,17 @@
 <div class="viewcode-block" id="apply_class_defined_modifiers">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.apply_class_defined_modifiers">[docs]</a>
 <span class="k">def</span> <span class="nf">apply_class_defined_modifiers</span><span class="p">(</span><span class="n">attrs_from_metaclass</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies class-defined modifiers to a dictionary of attributes.</span>
+
+<span class="sd">    This function modifies the input dictionary in place. If the &#39;semaphore&#39; key</span>
+<span class="sd">    is present and its value is an integer, it is converted to a ThreadsafeSemaphore.</span>
+<span class="sd">    If the &#39;runs_per_minute&#39; key is present and its value is an integer, it is</span>
+<span class="sd">    converted to an AsyncLimiter. If these keys are not present or their values</span>
+<span class="sd">    are not integers, the function will silently do nothing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        attrs_from_metaclass: A dictionary of attributes from a metaclass.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span> <span class="o">:=</span> <span class="n">attrs_from_metaclass</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;semaphore&quot;</span><span class="p">),</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">attrs_from_metaclass</span><span class="p">[</span><span class="s2">&quot;semaphore&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ThreadsafeSemaphore</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span> <span class="o">:=</span> <span class="n">attrs_from_metaclass</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;runs_per_minute&quot;</span><span class="p">),</span> <span class="nb">int</span><span class="p">):</span>

@@ -69,7 +69,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync._smart</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module defines smart future and task utilities for the a_sync library.</span>
+<span class="sd">These utilities provide enhanced functionality for managing asynchronous tasks and futures,</span>
+<span class="sd">including task shielding and a custom task factory for creating SmartTask instances.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
@@ -89,11 +95,20 @@
 
 
 <span class="k">class</span> <span class="nc">_SmartFutureMixin</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Mixin class that provides common functionality for smart futures and tasks.</span>
+
+<span class="sd">    This mixin provides methods for managing waiters and integrating with a smart processing queue.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;SmartProcessingQueue[Any, Any, T]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_key</span><span class="p">:</span> <span class="n">_Key</span>
     <span class="n">_waiters</span><span class="p">:</span> <span class="s2">&quot;weakref.WeakSet[SmartTask[T]]&quot;</span>
 
     <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Await the smart future or task, handling waiters and logging.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>  <span class="c1"># May raise too.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_asyncio_future_blocking</span> <span class="o">=</span> <span class="kc">True</span>
@@ -108,6 +123,9 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">num_waiters</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># NOTE: we check .done() because the callback may not have ran yet and its very lightweight</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the number of waiters currently awaiting the future or task.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="c1"># if there are any waiters left, there won&#39;t be once the event loop runs once</span>
             <span class="k">return</span> <span class="mi">0</span>
@@ -116,11 +134,18 @@
     <span class="k">def</span> <span class="nf">_waiter_done_cleanup_callback</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">],</span> <span class="n">waiter</span><span class="p">:</span> <span class="s2">&quot;SmartTask&quot;</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="s2">&quot;Removes the waiter from _waiters, and _queue._futs if applicable&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Callback to clean up waiters when a waiter task is done.</span>
+
+<span class="sd">        Removes the waiter from _waiters, and _queue._futs if applicable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">waiter</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_self_done_cleanup_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Callback to clean up waiters and remove the future from the queue when done.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">queue</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">:</span>
             <span class="n">queue</span><span class="o">.</span><span class="n">_futs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="p">)</span>
@@ -129,6 +154,13 @@
 <div class="viewcode-block" id="SmartFuture">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.SmartFuture">[docs]</a>
 <span class="k">class</span> <span class="nc">SmartFuture</span><span class="p">(</span><span class="n">_SmartFutureMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A smart future that tracks waiters and integrates with a smart processing queue.</span>
+
+<span class="sd">    Inherits from both _SmartFutureMixin and asyncio.Future, providing additional functionality</span>
+<span class="sd">    for tracking waiters and integrating with a smart processing queue.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">_queue</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_key</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -141,6 +173,14 @@
         <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_Key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the SmartFuture with an optional queue and key.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            queue: Optional; a smart processing queue.</span>
+<span class="sd">            key: Optional; a key identifying the future.</span>
+<span class="sd">            loop: Optional; the event loop.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">queue</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span>
@@ -154,11 +194,16 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> key=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_key</span><span class="si">}</span><span class="s2"> waiters=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_waiters</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;SmartFuture[T]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;heap considers lower values as higher priority so a future with more waiters will be &#39;less than&#39; a future with less waiters.&quot;&quot;&quot;</span>
-        <span class="c1"># other = other_ref()</span>
-        <span class="c1"># if other is None:</span>
-        <span class="c1">#    # garbage collected refs should always process first so they can be popped from the queue</span>
-        <span class="c1">#    return False</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compare the number of waiters to determine priority in a heap.</span>
+<span class="sd">        Lower values indicate higher priority, so more waiters means &#39;less than&#39;.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            other: Another SmartFuture to compare with.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if self has more waiters than other.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_waiters</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">num_waiters</span></div>
 
 
@@ -171,6 +216,17 @@
     <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_Key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartFuture</span><span class="p">[</span><span class="n">V</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a SmartFuture instance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        queue: Optional; a smart processing queue.</span>
+<span class="sd">        key: Optional; a key identifying the future.</span>
+<span class="sd">        loop: Optional; the event loop.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A SmartFuture instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">SmartFuture</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span> <span class="ow">or</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">())</span></div>
 
 
@@ -178,6 +234,13 @@
 <div class="viewcode-block" id="SmartTask">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.SmartTask">[docs]</a>
 <span class="k">class</span> <span class="nc">SmartTask</span><span class="p">(</span><span class="n">_SmartFutureMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A smart task that tracks waiters and integrates with a smart processing queue.</span>
+
+<span class="sd">    Inherits from both _SmartFutureMixin and asyncio.Task, providing additional functionality</span>
+<span class="sd">    for tracking waiters and integrating with a smart processing queue.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="SmartTask.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.SmartTask.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -187,6 +250,14 @@
         <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the SmartTask with a coroutine and optional event loop.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            coro: The coroutine to run in the task.</span>
+<span class="sd">            loop: Optional; the event loop.</span>
+<span class="sd">            name: Optional; the name of the task.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">coro</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;asyncio.Task[T]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="n">SmartTask</span><span class="o">.</span><span class="n">_self_done_cleanup_callback</span><span class="p">)</span></div>
@@ -260,6 +331,10 @@
 <span class="sd">            res = await shield(something())</span>
 <span class="sd">        except CancelledError:</span>
 <span class="sd">            res = None</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arg: The awaitable to shield from cancellation.</span>
+<span class="sd">        loop: Optional; the event loop. Deprecated since Python 3.8.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">loop</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>

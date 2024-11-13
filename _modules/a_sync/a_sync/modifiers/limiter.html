@@ -80,41 +80,64 @@
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 
 
+<span class="n">LimiterSpec</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">AsyncLimiter</span><span class="p">]</span>
+
+
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">apply_rate_limit</span><span class="p">(</span>
-    <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">runs_per_minute</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator to apply a rate limit to an asynchronous function.</span>
 
-
-<span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">apply_rate_limit</span><span class="p">(</span>
-    <span class="n">coro_fn</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">runs_per_minute</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+<span class="sd">    Args:</span>
+<span class="sd">        runs_per_minute: The number of allowed executions per minute.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">apply_rate_limit</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
-    <span class="n">runs_per_minute</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">AsyncLimiter</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+    <span class="n">runs_per_minute</span><span class="p">:</span> <span class="n">LimiterSpec</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator to apply a rate limit to an asynchronous function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        coro_fn: The coroutine function to be rate-limited.</span>
+<span class="sd">        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="apply_rate_limit">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.limiter.apply_rate_limit">[docs]</a>
 <span class="k">def</span> <span class="nf">apply_rate_limit</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">runs_per_minute</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">AsyncLimiter</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">runs_per_minute</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LimiterSpec</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecoratorOrCoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies a rate limit to an asynchronous function.</span>
+
+<span class="sd">    This function can be used as a decorator to limit the number of times</span>
+<span class="sd">    an asynchronous function can be called per minute. It can be configured</span>
+<span class="sd">    with either an integer specifying the number of runs per minute or an</span>
+<span class="sd">    AsyncLimiter instance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        coro_fn: The coroutine function to be rate-limited. If an integer is provided, it is treated as runs per minute, and runs_per_minute should be None.</span>
+<span class="sd">        runs_per_minute: The number of allowed executions per minute or an AsyncLimiter instance. If coro_fn is an integer, this should be None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TypeError: If &#39;runs_per_minute&#39; is neither an integer nor an AsyncLimiter when &#39;coro_fn&#39; is None.</span>
+<span class="sd">        exceptions.FunctionNotAsync: If &#39;coro_fn&#39; is not an asynchronous function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Parse Inputs</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">AsyncLimiter</span><span class="p">)):</span>
         <span class="k">assert</span> <span class="n">runs_per_minute</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="n">runs_per_minute</span> <span class="o">=</span> <span class="n">coro_fn</span>
         <span class="n">coro_fn</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">elif</span> <span class="n">coro_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">runs_per_minute</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">runs_per_minute</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">runs_per_minute</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">runs_per_minute</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">AsyncLimiter</span><span class="p">)</span>
+        <span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;runs_per_minute&#39; must be an integer.&quot;</span><span class="p">,</span> <span class="n">runs_per_minute</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">):</span>

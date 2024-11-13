@@ -69,7 +69,19 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.a_sync.abstract</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">abc</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides an abstract base class for defining asynchronous and synchronous behavior.</span>
+
+<span class="sd">The ASyncABC class uses the ASyncMeta metaclass to automatically wrap its methods</span>
+<span class="sd">with asynchronous or synchronous behavior based on flags. Subclasses must</span>
+<span class="sd">implement the abstract methods to define the flag name, flag value, and</span>
+<span class="sd">default mode for asynchronous or synchronous execution.</span>
+
+<span class="sd">Note: It is recommended to use ASyncGenericBase for most use cases. This class</span>
+<span class="sd">is intended for more custom implementations if necessary.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -85,41 +97,72 @@
 <div class="viewcode-block" id="ASyncABC">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.abstract.ASyncABC">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncABC</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ASyncMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract Base Class for defining asynchronous and synchronous behavior.</span>
+
+<span class="sd">    This class uses the ASyncMeta metaclass to automatically wrap its methods</span>
+<span class="sd">    with asynchronous or synchronous behavior based on flags. Subclasses must</span>
+<span class="sd">    implement the abstract methods to define the flag name, flag value, and</span>
+<span class="sd">    default mode for asynchronous or synchronous execution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1">##################################</span>
     <span class="c1"># Concrete Methods (overridable) #</span>
     <span class="c1">##################################</span>
 
     <span class="k">def</span> <span class="nf">__a_sync_should_await__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a boolean that indicates whether methods of &#39;instance&#39; should be called as sync or async methods.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines if methods should be called asynchronously.</span>
+
+<span class="sd">        This method first checks the provided keyword arguments for flags</span>
+<span class="sd">        indicating the desired execution mode. If no flags are found, it</span>
+<span class="sd">        defaults to the instance&#39;s asynchronous flag.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            kwargs: A dictionary of keyword arguments to check for flags.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Defer to kwargs always</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__a_sync_should_await_from_kwargs__</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoFlagsFound</span><span class="p">:</span>
-            <span class="c1"># No flag found in kwargs, check for a flag attribute.</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__a_sync_instance_should_await__</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
     <span class="k">def</span> <span class="nf">__a_sync_instance_should_await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A flag indicating whether the instance should default to asynchronous execution.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates if the instance should default to asynchronous execution.</span>
 
-<span class="sd">        You can override this if you want.</span>
-<span class="sd">        If you want to be able to hotswap instance modes, you can redefine this as a non-cached property.</span>
+<span class="sd">        This property can be overridden if dynamic behavior is needed. For</span>
+<span class="sd">        instance, to allow hot-swapping of instance modes, redefine this as a</span>
+<span class="sd">        non-cached property.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_flags</span><span class="o">.</span><span class="n">negate_if_necessary</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__a_sync_flag_name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__a_sync_flag_value__</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__a_sync_should_await_from_kwargs__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;You can override this if you want.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines execution mode from keyword arguments.</span>
+
+<span class="sd">        This method can be overridden to customize how flags are extracted</span>
+<span class="sd">        from keyword arguments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            kwargs: A dictionary of keyword arguments to check for flags.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NoFlagsFound: If no valid flags are found in the keyword arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">flag</span> <span class="o">:=</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">get_flag_name</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">is_sync</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">pop_flag</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span>
         <span class="k">raise</span> <span class="n">NoFlagsFound</span><span class="p">(</span><span class="s2">&quot;kwargs&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">__a_sync_instance_will_be_sync__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;You can override this if you want.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines if a new instance will be synchronous.</span>
+
+<span class="sd">        This method checks the constructor&#39;s signature against provided</span>
+<span class="sd">        keyword arguments to determine the execution mode for the new instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: A tuple of positional arguments for the instance.</span>
+<span class="sd">            kwargs: A dictionary of keyword arguments for the instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
             <span class="s2">&quot;checking `</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">.__init__` signature against provided kwargs to determine a_sync mode for the new instance&quot;</span><span class="p">,</span>
             <span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
@@ -145,25 +188,43 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">__a_sync_modifiers__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncABC&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModifierKwargs</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;You should not override this.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves modifiers for the instance.</span>
+
+<span class="sd">        This method should not be overridden. It returns the modifiers</span>
+<span class="sd">        associated with the instance, which are used to customize behavior.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">modifiers</span><span class="o">.</span><span class="n">get_modifiers_from</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="c1">####################</span>
     <span class="c1"># Abstract Methods #</span>
     <span class="c1">####################</span>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractproperty</span>
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">__a_sync_flag_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">pass</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Abstract property for the flag name.</span>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractproperty</span>
+<span class="sd">        Subclasses must implement this property to return the name of the flag</span>
+<span class="sd">        used to determine execution mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">__a_sync_flag_value__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">pass</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Abstract property for the flag value.</span>
 
-    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractclassmethod</span>  <span class="c1"># type: ignore [arg-type, misc]</span>
+<span class="sd">        Subclasses must implement this property to return the value of the flag</span>
+<span class="sd">        indicating the default execution mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>  <span class="c1"># type: ignore [arg-type, misc]</span>
     <span class="k">def</span> <span class="nf">__a_sync_default_mode__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># type: ignore [empty-body]</span>
-        <span class="c1"># mypy doesnt recognize this abc member</span>
-        <span class="k">pass</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Abstract class method for the default execution mode.</span>
+
+<span class="sd">        Subclasses must implement this method to return the default execution</span>
+<span class="sd">        mode (synchronous or asynchronous) for instances of the class.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
 
 </pre></div>
 

@@ -70,7 +70,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for a_sync.utils.iterators</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides utility functions for handling and merging asynchronous iterators. It includes functions to </span>
+<span class="sd">exhaust async iterators, merge multiple async iterators into a single async iterator, and manage the processing </span>
+<span class="sd">flow of items in an asynchronous context.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">asyncio.futures</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
@@ -95,9 +101,6 @@
 <span class="sd">    Args:</span>
 <span class="sd">        iterator (AsyncIterator[T]): The async iterator to exhaust.</span>
 <span class="sd">        queue (Optional[asyncio.Queue]): An optional queue where iterated items will be placed. If None, items are simply consumed.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">async</span> <span class="k">for</span> <span class="n">thing</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">queue</span><span class="p">:</span>
@@ -120,9 +123,6 @@
 <span class="sd">        iterators: A sequence of async iterators to be exhausted concurrently.</span>
 <span class="sd">        queue (Optional[asyncio.Queue]): An optional queue where items from all iterators will be placed. If None, items are simply consumed.</span>
 <span class="sd">        join (Optional[bool]): If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
         <span class="o">*</span><span class="p">[</span><span class="n">exhaust_iterator</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">)</span> <span class="k">for</span> <span class="n">iterator</span> <span class="ow">in</span> <span class="n">iterators</span><span class="p">],</span>
@@ -251,14 +251,13 @@
 
 <span class="sd">    The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.</span>
 
+<span class="sd">    The function handles exceptions and ensures robustness and reliability by using asyncio tasks and queues. It manages edge cases such as early termination and exception management. The `_Done` sentinel class is used internally to signal the completion of processing.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        *iterators: Variable length list of AsyncIterator objects to be merged.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        AsyncIterator[T]: An async iterator that yields items from the input async iterators as they become available.</span>
-
 <span class="sd">    Note:</span>
-<span class="sd">        This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability.</span>
+<span class="sd">        This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability. The `_Done` sentinel class is used internally to signal the completion of processing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># hypothesis idea: _Done should never be exposed to user, works for all desired input types</span>
     <span class="n">queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">_Done</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
@@ -312,10 +311,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the _Done sentinel.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            exc (Optional[Exception]): An optional exception to be associated with the completion.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exc</span> <span class="o">=</span> <span class="n">exc</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_tb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TracebackType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the traceback associated with the exception, if any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exc</span><span class="o">.</span><span class="n">__traceback__</span>  <span class="c1"># type: ignore [union-attr]</span>
 
 

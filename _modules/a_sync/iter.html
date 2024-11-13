@@ -101,17 +101,15 @@
 
 <span class="sd">    Example:</span>
 <span class="sd">        You must subclass this mixin class and define your own `__aiter__` method as shown below.</span>
-<span class="sd">        ```</span>
+
 <span class="sd">        &gt;&gt;&gt; class MyAwaitableAIterable(_AwaitableAsyncIterableMixin):</span>
-<span class="sd">        ...    def __aiter__(self):</span>
+<span class="sd">        ...    async def __aiter__(self):</span>
 <span class="sd">        ...        for i in range(4):</span>
 <span class="sd">        ...            yield i</span>
-<span class="sd">        ...</span>
+
 <span class="sd">        &gt;&gt;&gt; aiterable = MyAwaitableAIterable()</span>
 <span class="sd">        &gt;&gt;&gt; await aiterable</span>
-<span class="sd">        [0, 1, 2, 3, 4]</span>
-
-<span class="sd">        ```</span>
+<span class="sd">        [0, 1, 2, 3]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__wrapped__</span><span class="p">:</span> <span class="n">AsyncIterable</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
@@ -217,7 +215,12 @@
 <div class="viewcode-block" id="ASyncIterable.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncIterable.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">async_iterable</span><span class="p">:</span> <span class="n">AsyncIterable</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
-        <span class="s2">&quot;Initializes the ASyncIterable with an async iterable.&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the ASyncIterable with an async iterable.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            async_iterable: The async iterable to wrap.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">async_iterable</span><span class="p">,</span> <span class="n">AsyncIterable</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;`async_iterable` must be an AsyncIterable. You passed </span><span class="si">{</span><span class="n">async_iterable</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -288,11 +291,23 @@
 
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">aiterator</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncIterator[T]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">aiterator</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncIterator[T]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wraps an AsyncIterator in an ASyncIterator.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            aiterator: The AsyncIterator to wrap.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">async_gen_func</span><span class="p">:</span> <span class="n">AsyncGenFunc</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncGeneratorFunction[P, T]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">async_gen_func</span><span class="p">:</span> <span class="n">AsyncGenFunc</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncGeneratorFunction[P, T]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Wraps an async generator function in an ASyncGeneratorFunction.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            async_gen_func: The async generator function to wrap.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="ASyncIterator.wrap">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncIterator.wrap">[docs]</a>
     <span class="nd">@classmethod</span>
@@ -313,7 +328,12 @@
 <div class="viewcode-block" id="ASyncIterator.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncIterator.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">async_iterator</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
-        <span class="s2">&quot;Initializes the ASyncIterator with an async iterator.&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the ASyncIterator with an async iterator.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            async_iterator: The async iterator to wrap.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">async_iterator</span><span class="p">,</span> <span class="n">AsyncIterator</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;`async_iterator` must be an AsyncIterator. You passed </span><span class="si">{</span><span class="n">async_iterator</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -540,9 +560,6 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        obj: The object to return.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        The object itself.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">obj</span>
 

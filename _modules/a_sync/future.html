@@ -71,6 +71,27 @@
   <h1>Source code for a_sync.future</h1><div class="highlight"><pre>
 <span></span><span class="c1"># type: ignore [var-annotated]</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The future.py module provides functionality for handling asynchronous futures, </span>
+<span class="sd">including a decorator for converting callables into ASyncFuture objects and </span>
+<span class="sd">utilities for managing asynchronous computations.</span>
+
+<span class="sd">Functions:</span>
+<span class="sd">    future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]) -&gt; Callable[P, Union[T, &quot;ASyncFuture[T]&quot;]]: </span>
+<span class="sd">        A decorator to convert a callable into an ASyncFuture, with optional modifiers.</span>
+<span class="sd">    _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -&gt; List[T]: </span>
+<span class="sd">        Gathers and materializes a list of awaitable or non-awaitable items.</span>
+<span class="sd">    _check_and_materialize(thing: T) -&gt; T: </span>
+<span class="sd">        Checks if an item is awaitable and materializes it.</span>
+<span class="sd">    _materialize(meta: &quot;ASyncFuture[T]&quot;) -&gt; T: </span>
+<span class="sd">        Materializes the result of an ASyncFuture.</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">    ASyncFuture: Represents an asynchronous future result.</span>
+<span class="sd">    _ASyncFutureWrappedFn: A callable class to wrap functions and return ASyncFuture objects.</span>
+<span class="sd">    _ASyncFutureInstanceMethod: A class to handle instance methods wrapped as ASyncFuture.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">concurrent.futures</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
@@ -85,19 +106,47 @@
     <span class="nb">callable</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="s2">&quot;ASyncFuture[T]&quot;</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A decorator function to convert a callable into an ASyncFuture, with optional modifiers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        callable: The callable to convert. Defaults to None.</span>
+<span class="sd">        **kwargs: Additional keyword arguments for the modifier.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_ASyncFutureWrappedFn</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">_gather_check_and_materialize</span><span class="p">(</span><span class="o">*</span><span class="n">things</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">MaybeAwaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gathers and materializes a list of awaitable or non-awaitable items.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        *things: Items to gather and materialize.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">_check_and_materialize</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span> <span class="k">for</span> <span class="n">thing</span> <span class="ow">in</span> <span class="n">things</span><span class="p">])</span>
 
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">_check_and_materialize</span><span class="p">(</span><span class="n">thing</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if an item is awaitable and materializes it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        thing: The item to check and materialize.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="k">await</span> <span class="n">thing</span> <span class="k">if</span> <span class="n">isawaitable</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span> <span class="k">else</span> <span class="n">thing</span>
 
 
 <span class="k">def</span> <span class="nf">_materialize</span><span class="p">(</span><span class="n">meta</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[T]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Materializes the result of an ASyncFuture.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        meta: The ASyncFuture to materialize.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: If the event loop is running and the result cannot be awaited.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">meta</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -114,6 +163,12 @@
 <div class="viewcode-block" id="ASyncFuture">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.future.ASyncFuture">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncFuture</span><span class="p">(</span><span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing an asynchronous future result.</span>
+
+<span class="sd">    Inherits from both concurrent.futures.Future and Awaitable[T], allowing it to be used in both synchronous and asynchronous contexts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;__awaitable__&quot;</span><span class="p">,</span> <span class="s2">&quot;__dependencies&quot;</span><span class="p">,</span> <span class="s2">&quot;__dependants&quot;</span><span class="p">,</span> <span class="s2">&quot;__task&quot;</span>
 
 <div class="viewcode-block" id="ASyncFuture.__init__">
@@ -121,13 +176,24 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">awaitable</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">dependencies</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ASyncFuture&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes an ASyncFuture with an awaitable and optional dependencies.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            awaitable: The awaitable object.</span>
+<span class="sd">            dependencies: A list of dependencies. Defaults to [].</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__awaitable__</span> <span class="o">=</span> <span class="n">awaitable</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The awaitable object.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dependencies</span> <span class="o">=</span> <span class="n">dependencies</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A list of dependencies.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">dependency</span> <span class="ow">in</span> <span class="n">dependencies</span><span class="p">:</span>
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dependency</span><span class="p">,</span> <span class="n">ASyncFuture</span><span class="p">)</span>
             <span class="n">dependency</span><span class="o">.</span><span class="n">__dependants</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__dependants</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ASyncFuture</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A list of dependants.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__task</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The task associated with the awaitable.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
 
 
@@ -147,6 +213,12 @@
         <span class="k">return</span> <span class="n">string</span> <span class="o">+</span> <span class="s2">&quot;&gt;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__list_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;ASyncFuture&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Lists dependencies for the ASyncFuture.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            other: The other dependency to list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ASyncFuture</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span>
@@ -155,8 +227,8 @@
     <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[],</span> <span class="n">T</span><span class="p">],</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If this future is not done, it will work like cf.Future.result. It will block, await the awaitable, and return the result when ready.</span>
-<span class="sd">        If this future is done and the result has attribute `results`, will return `getattr(future_result, &#39;result&#39;)`</span>
-<span class="sd">        If this future is done and the result does NOT have attribute `results`, will again work like cf.Future.result</span>
+<span class="sd">        If this future is done and the result has attribute `result`, will return `getattr(future_result, &#39;result&#39;)`</span>
+<span class="sd">        If this future is done and the result does NOT have attribute `result`, will again work like cf.Future.result</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">r</span> <span class="o">:=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">result</span><span class="p">(),</span> <span class="s2">&quot;result&quot;</span><span class="p">):</span>
@@ -188,6 +260,9 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes the ASyncFuture awaitable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__await</span><span class="p">()</span><span class="o">.</span><span class="fm">__await__</span><span class="p">()</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__await</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
@@ -197,6 +272,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">__task__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Task[T]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the asyncio task associated with the awaitable, creating it if necessary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__awaitable__</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__task</span>
@@ -829,6 +907,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">__dependants__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;ASyncFuture&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the set of dependants for this ASyncFuture, including nested dependants.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dependants</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependants</span><span class="p">:</span>
             <span class="n">dependants</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dep</span><span class="p">)</span>
@@ -837,6 +918,9 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">__dependencies__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;ASyncFuture&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the set of dependencies for this ASyncFuture, including nested dependencies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dependencies</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependencies</span><span class="p">:</span>
             <span class="n">dependencies</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dep</span><span class="p">)</span>
@@ -856,6 +940,10 @@
 
 <span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">_ASyncFutureWrappedFn</span><span class="p">(</span><span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">ASyncFuture</span><span class="p">[</span><span class="n">T</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A callable class to wrap functions and return ASyncFuture objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;callable&quot;</span><span class="p">,</span> <span class="s2">&quot;wrapped&quot;</span><span class="p">,</span> <span class="s2">&quot;_callable_name&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -867,7 +955,11 @@
 
         <span class="k">if</span> <span class="nb">callable</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="o">=</span> <span class="nb">callable</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The callable function.&quot;&quot;&quot;</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">_callable_name</span> <span class="o">=</span> <span class="nb">callable</span><span class="o">.</span><span class="vm">__name__</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The name of the callable function.&quot;&quot;&quot;</span>
+
             <span class="n">a_sync_callable</span> <span class="o">=</span> <span class="n">a_sync</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;async&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
             <span class="nd">@wraps</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span>
@@ -875,6 +967,7 @@
                 <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="n">a_sync_callable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">wrapped</span> <span class="o">=</span> <span class="n">future_wrap</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The wrapped function returning ASyncFuture.&quot;&quot;&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">wrapped</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_ASyncFutureWrappedFn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -896,6 +989,31 @@
 <span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">_ASyncFutureInstanceMethod</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
     <span class="c1"># NOTE: probably could just replace this with functools.partial</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to handle instance methods wrapped as ASyncFuture.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__module__</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The module name of the wrapper.&quot;&quot;&quot;</span>
+
+    <span class="vm">__name__</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the wrapper.&quot;&quot;&quot;</span>
+
+    <span class="vm">__qualname__</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The qualified name of the wrapper.&quot;&quot;&quot;</span>
+
+    <span class="vm">__doc__</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The docstring of the wrapper.&quot;&quot;&quot;</span>
+
+    <span class="vm">__annotations__</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The annotations of the wrapper.&quot;&quot;&quot;</span>
+
+    <span class="n">__instance</span><span class="p">:</span> <span class="n">I</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The instance to which the method is bound.&quot;&quot;&quot;</span>
+
+    <span class="n">__wrapper</span><span class="p">:</span> <span class="n">_ASyncFutureWrappedFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The wrapper function.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">wrapper</span><span class="p">:</span> <span class="n">_ASyncFutureWrappedFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>

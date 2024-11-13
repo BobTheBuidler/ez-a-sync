@@ -80,7 +80,7 @@
 
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">decorator</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="n">ASyncFunction</span><span class="p">,</span> <span class="n">ModifiedMixin</span><span class="p">,</span> <span class="n">ModifierManager</span>
+<span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="n">ASyncFunction</span><span class="p">,</span> <span class="n">ModifierManager</span><span class="p">,</span> <span class="n">_ModifiedMixin</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
@@ -88,12 +88,14 @@
 
 <div class="viewcode-block" id="ASyncDescriptor">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor">[docs]</a>
-<span class="k">class</span> <span class="nc">ASyncDescriptor</span><span class="p">(</span><span class="n">ModifiedMixin</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
+<span class="k">class</span> <span class="nc">ASyncDescriptor</span><span class="p">(</span><span class="n">_ModifiedMixin</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A descriptor base class for asynchronous methods and properties.</span>
+<span class="sd">    A descriptor base class for dual-function ASync methods and properties.</span>
 
 <span class="sd">    This class provides functionality for mapping operations across multiple instances</span>
-<span class="sd">    and includes utility methods for common operations.</span>
+<span class="sd">    and includes utility methods for common operations such as checking if all or any</span>
+<span class="sd">    results are truthy, and finding the minimum, maximum, or sum of results of the method</span>
+<span class="sd">    or property mapped across multiple instances.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__wrapped__</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>

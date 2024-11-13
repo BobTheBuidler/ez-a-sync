@@ -92,11 +92,8 @@
 <span class="sd">    Args:</span>
 <span class="sd">        awaitable: The awaitable object to be awaited.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        The result of the awaitable.</span>
-
 <span class="sd">    Raises:</span>
-<span class="sd">        :class:`exceptions.SyncModeInAsyncContextError`: If the event loop is already running.</span>
+<span class="sd">        exceptions.SyncModeInAsyncContextError: If the event loop is already running.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">awaitable</span><span class="p">)</span>
@@ -115,13 +112,13 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        func: The synchronous function to be converted.</span>
-<span class="sd">        executor: The executor to run the synchronous function.</span>
+<span class="sd">        executor: The executor used to run the synchronous function.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        A coroutine function wrapping the input function.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        :class:`exceptions.FunctionNotSync`: If the input function is already asynchronous.</span>
+<span class="sd">        exceptions.FunctionNotSync: If the input function is a coroutine function or an instance of ASyncFunction.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="n">ASyncFunction</span>
 

@@ -120,45 +120,40 @@
     <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Concurrently awaits a list of awaitable objects or mappings of awaitables and returns the results.</span>
+<span class="sd">    Concurrently awaits a list of awaitable objects or a mapping of awaitables and returns the results.</span>
 
-<span class="sd">    This function extends Python&#39;s asyncio.gather, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.</span>
+<span class="sd">    This function extends Python&#39;s asyncio.gather, providing additional features for handling either individual awaitable objects or a mapping of awaitables.</span>
 
 <span class="sd">    Differences from asyncio.gather:</span>
 <span class="sd">    - Uses type hints for use with static type checkers.</span>
 <span class="sd">    - Supports gathering either individual awaitables or a k:v mapping of awaitables.</span>
 <span class="sd">    - Provides progress reporting using tqdm if &#39;tqdm&#39; is set to True.</span>
+<span class="sd">    - Allows exclusion of results based on a condition using the &#39;exclude_if&#39; parameter.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        *awaitables: The awaitables to await concurrently. It can be a single awaitable or a mapping of awaitables.</span>
-<span class="sd">        return_exceptions (optional): If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
-<span class="sd">        tqdm (optional): If True, enables progress reporting using tqdm. Defaults to False.</span>
+<span class="sd">        *awaitables: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</span>
+<span class="sd">        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
+<span class="sd">        exclude_if: A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None.</span>
+<span class="sd">        tqdm: If True, enables progress reporting using tqdm. Defaults to False.</span>
 <span class="sd">        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        A list of results when awaiting individual awaitables or a dictionary of results when awaiting mappings.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        Awaiting individual awaitables:</span>
 
 <span class="sd">        - Results will be a list containing the result of each awaitable in sequential order.</span>
 
-<span class="sd">        ```</span>
 <span class="sd">        &gt;&gt;&gt; results = await gather(thing1(), thing2())</span>
 <span class="sd">        &gt;&gt;&gt; results</span>
 <span class="sd">        [&#39;result&#39;, 123]</span>
-<span class="sd">        ```</span>
 
-<span class="sd">        Awaiting mappings of awaitables:</span>
+<span class="sd">        Awaiting a mapping of awaitables:</span>
 
 <span class="sd">        - Results will be a dictionary with &#39;key1&#39; mapped to the result of thing1() and &#39;key2&#39; mapped to the result of thing2.</span>
 
-<span class="sd">        ```</span>
 <span class="sd">        &gt;&gt;&gt; mapping = {&#39;key1&#39;: thing1(), &#39;key2&#39;: thing2()}</span>
 <span class="sd">        &gt;&gt;&gt; results = await gather(mapping)</span>
 <span class="sd">        &gt;&gt;&gt; results</span>
 <span class="sd">        {&#39;key1&#39;: &#39;result&#39;, &#39;key2&#39;: 123}</span>
-<span class="sd">        ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">is_mapping</span> <span class="o">=</span> <span class="n">_is_mapping</span><span class="p">(</span><span class="n">awaitables</span><span class="p">)</span>
     <span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="p">(</span>
@@ -205,21 +200,18 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        mapping: A dictionary-like object where keys are of type K and values are awaitable objects of type V.</span>
-<span class="sd">        return_exceptions (optional): If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
-<span class="sd">        tqdm (optional): If True, enables progress reporting using tqdm. Defaults to False.</span>
+<span class="sd">        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
+<span class="sd">        exclude_if: A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None.</span>
+<span class="sd">        tqdm: If True, enables progress reporting using tqdm. Defaults to False.</span>
 <span class="sd">        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        A dictionary with keys corresponding to the keys of the input mapping and values containing the results of the corresponding awaitables.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        The &#39;results&#39; dictionary will contain the awaited results, where keys match the keys in the &#39;mapping&#39; and values contain the results of the corresponding awaitables.</span>
-<span class="sd">        ```</span>
+
 <span class="sd">        &gt;&gt;&gt; mapping = {&#39;task1&#39;: async_function1(), &#39;task2&#39;: async_function2(), &#39;task3&#39;: async_function3()}</span>
 <span class="sd">        &gt;&gt;&gt; results = await gather_mapping(mapping)</span>
 <span class="sd">        &gt;&gt;&gt; results</span>
 <span class="sd">        {&#39;task1&#39;: &quot;result&quot;, &#39;task2&#39;: 123, &#39;task3&#39;: None}</span>
-<span class="sd">        ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">k</span><span class="p">:</span> <span class="n">v</span>

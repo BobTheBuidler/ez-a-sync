@@ -73,9 +73,15 @@
 <span class="sd">This module provides functionality for handling synchronous and asynchronous flags</span>
 <span class="sd">in the ez-a-sync library.</span>
 
-<span class="sd">ez-a-sync uses &#39;flags&#39; to indicate whether objects / function calls will be sync or async.</span>
+<span class="sd">ez-a-sync uses &#39;flags&#39; to indicate whether objects or function calls will be synchronous or asynchronous.</span>
 
-<span class="sd">You can use any of the provided flags, whichever makes most sense for your use case.</span>
+<span class="sd">You can use any of the provided flags, whichever makes the most sense for your use case.</span>
+
+<span class="sd">AFFIRMATIVE_FLAGS: Set of flags indicating synchronous behavior. Currently includes &quot;sync&quot;.</span>
+
+<span class="sd">NEGATIVE_FLAGS: Set of flags indicating asynchronous behavior. Currently includes &quot;asynchronous&quot;.</span>
+
+<span class="sd">VIABLE_FLAGS: Set of all valid flags, combining both synchronous and asynchronous indicators.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
@@ -105,7 +111,7 @@
 <span class="sd">        The potentially negated flag value.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        :class:`exceptions.InvalidFlag`: If the flag is not recognized.</span>
+<span class="sd">        exceptions.InvalidFlag: If the flag is not recognized.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">validate_flag_value</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">AFFIRMATIVE_FLAGS</span><span class="p">:</span>
@@ -130,7 +136,7 @@
 <span class="sd">        The validated flag value.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        :class:`exceptions.InvalidFlagValue`: If the flag value is not a boolean.</span>
+<span class="sd">        exceptions.InvalidFlagValue: If the flag value is not a boolean.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flag_value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidFlagValue</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">)</span>

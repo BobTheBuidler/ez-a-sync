@@ -77,11 +77,11 @@
 
 <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">ENVIRONMENT_VARIABLES</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">modifiers</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="n">ASyncFunction</span><span class="p">,</span> <span class="n">ModifiedMixin</span>
+<span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="n">ASyncFunction</span><span class="p">,</span> <span class="n">_ModifiedMixin</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync.method</span> <span class="kn">import</span> <span class="n">ASyncMethodDescriptor</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync.property</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ASyncPropertyDescriptor</span><span class="p">,</span>
     <span class="n">ASyncCachedPropertyDescriptor</span><span class="p">,</span>
+    <span class="n">ASyncPropertyDescriptor</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">a_sync.future</span> <span class="kn">import</span> <span class="n">_ASyncFutureWrappedFn</span>  <span class="c1"># type: ignore [attr-defined]</span>
 <span class="kn">from</span> <span class="nn">a_sync.iter</span> <span class="kn">import</span> <span class="n">ASyncGeneratorFunction</span>
@@ -93,7 +93,16 @@
 <div class="viewcode-block" id="ASyncMeta">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._meta.ASyncMeta">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncMeta</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Any class with metaclass ASyncMeta will have its functions wrapped with a_sync upon class instantiation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Metaclass for wrapping class attributes with asynchronous capabilities.</span>
+
+<span class="sd">    Any class with `ASyncMeta` as its metaclass will have its functions and properties</span>
+<span class="sd">    wrapped with asynchronous capabilities upon class instantiation. This includes</span>
+<span class="sd">    wrapping functions with `ASyncMethodDescriptor` and properties with</span>
+<span class="sd">    `ASyncPropertyDescriptor` or `ASyncCachedPropertyDescriptor`. Additionally, it handles</span>
+<span class="sd">    `_ModifiedMixin` objects (# TODO replace this with the actual subclasses of _modifiedMixin, which is just an internal use mixin class that has no meaning ot the user),</span>
+<span class="sd">    which are used when functions are decorated with a_sync decorators</span>
+<span class="sd">    to apply specific modifiers to those functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">new_class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
         <span class="n">_update_logger</span><span class="p">(</span><span class="n">new_class_name</span><span class="p">)</span>
@@ -109,6 +118,7 @@
         <span class="c1">#       Currently the parent value is used for functions defined on the parent,</span>
         <span class="c1">#       and the subclass value is used for functions defined on the subclass.</span>
         <span class="n">class_defined_modifiers</span> <span class="o">=</span> <span class="n">modifiers</span><span class="o">.</span><span class="n">get_modifiers_from</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;found modifiers: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">class_defined_modifiers</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
             <span class="s2">&quot;now I inspect the class definition to figure out which attributes need to be wrapped&quot;</span>
@@ -141,19 +151,19 @@
             <span class="p">)</span>
             <span class="n">fn_modifiers</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">class_defined_modifiers</span><span class="p">)</span>
             <span class="c1"># Special handling for functions decorated with a_sync decorators</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr_value</span><span class="p">,</span> <span class="n">ModifiedMixin</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr_value</span><span class="p">,</span> <span class="n">_ModifiedMixin</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                    <span class="s2">&quot;`</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">` is a `ModifiedMixin` object, which means you decorated it with an a_sync decorator even though `</span><span class="si">%s</span><span class="s2">` is an ASyncABC class&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;`</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">` is a `</span><span class="si">%s</span><span class="s2">` object, which means you decorated it with an a_sync decorator even though `</span><span class="si">%s</span><span class="s2">` is an ASyncABC class&quot;</span><span class="p">,</span>
                     <span class="n">new_class_name</span><span class="p">,</span>
                     <span class="n">attr_name</span><span class="p">,</span>
+                    <span class="nb">type</span><span class="p">(</span><span class="n">attr_value</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                     <span class="n">new_class_name</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                     <span class="s2">&quot;you probably did this so you could apply some modifiers to `</span><span class="si">%s</span><span class="s2">` specifically&quot;</span><span class="p">,</span>
                     <span class="n">attr_name</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">modified_modifiers</span> <span class="o">=</span> <span class="n">attr_value</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">_modifiers</span>
-                <span class="k">if</span> <span class="n">modified_modifiers</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">modified_modifiers</span> <span class="o">:=</span> <span class="n">attr_value</span><span class="o">.</span><span class="n">modifiers</span><span class="o">.</span><span class="n">_modifiers</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                         <span class="s2">&quot;I found `</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">` is modified with </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="n">new_class_name</span><span class="p">,</span>
@@ -209,13 +219,21 @@
 <div class="viewcode-block" id="ASyncSingletonMeta">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._meta.ASyncSingletonMeta">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncSingletonMeta</span><span class="p">(</span><span class="n">ASyncMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Metaclass for creating singleton instances with asynchronous capabilities.</span>
+
+<span class="sd">    This metaclass extends `ASyncMeta` to ensure that only one instance of a class</span>
+<span class="sd">    is created for each synchronous or asynchronous context.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
 <div class="viewcode-block" id="ASyncSingletonMeta.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._meta.ASyncSingletonMeta.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bases</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">type</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">__instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dictionary to store singleton instances.&quot;&quot;&quot;</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">__lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lock to ensure thread-safe instance creation.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span></div>
 
 
@@ -234,6 +252,11 @@
 
 
 <span class="k">def</span> <span class="nf">_update_logger</span><span class="p">(</span><span class="n">new_class_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the logger configuration based on environment variables.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        new_class_name: The name of the new class being created.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="n">ENVIRONMENT_VARIABLES</span><span class="o">.</span><span class="n">DEBUG_MODE</span>
         <span class="ow">or</span> <span class="n">ENVIRONMENT_VARIABLES</span><span class="o">.</span><span class="n">DEBUG_CLASS_NAME</span> <span class="o">==</span> <span class="n">new_class_name</span>

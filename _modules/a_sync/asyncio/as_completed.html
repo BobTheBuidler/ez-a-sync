@@ -151,15 +151,12 @@
 <span class="sd">    - Provides progress reporting using tqdm if &#39;tqdm&#39; is set to True.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        fs (Iterable[Awaitable[T] or Mapping[K, Awaitable[V]]]): The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</span>
-<span class="sd">        timeout (float, optional): The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</span>
-<span class="sd">        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
-<span class="sd">        aiter (bool, optional): If True, returns an async iterator of results. Defaults to False.</span>
-<span class="sd">        tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.</span>
+<span class="sd">        fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</span>
+<span class="sd">        timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</span>
+<span class="sd">        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False. Note: This parameter is not currently implemented in the function logic.</span>
+<span class="sd">        aiter: If True, returns an async iterator of results. Defaults to False.</span>
+<span class="sd">        tqdm: If True, enables progress reporting using tqdm. Defaults to False.</span>
 <span class="sd">        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Iterator[Coroutine[Any, Any, T] or ASyncIterator[Tuple[K, V]]]: An iterator of results when awaiting individual awaitables or an async iterator when awaiting mappings.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        Awaiting individual awaitables:</span>
@@ -247,15 +244,12 @@
 <span class="sd">    This function is designed to await a mapping of awaitable objects, where each key-value pair represents a unique awaitable. It enables concurrent execution and gathers results into an iterator or an async iterator.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        mapping (Mapping[K, Awaitable[V]]): A dictionary-like object where keys are of type K and values are awaitable objects of type V.</span>
-<span class="sd">        timeout (float, optional): The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</span>
-<span class="sd">        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
-<span class="sd">        aiter (bool, optional): If True, returns an async iterator of results. Defaults to False.</span>
-<span class="sd">        tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.</span>
+<span class="sd">        mapping: A dictionary-like object where keys are of type K and values are awaitable objects of type V.</span>
+<span class="sd">        timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</span>
+<span class="sd">        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
+<span class="sd">        aiter: If True, returns an async iterator of results. Defaults to False.</span>
+<span class="sd">        tqdm: If True, enables progress reporting using tqdm. Defaults to False.</span>
 <span class="sd">        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Union[Iterator[Coroutine[Any, Any, Tuple[K, V]]] or ASyncIterator[Tuple[K, V]]]: An iterator of results or an async iterator when awaiting mappings.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        ```</span>
@@ -283,6 +277,14 @@
 
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">_exc_wrap</span><span class="p">(</span><span class="n">awaitable</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wraps an awaitable to catch exceptions and return them instead of raising.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        awaitable: The awaitable to wrap.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result of the awaitable or the exception if one is raised.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">awaitable</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -297,6 +299,15 @@
     <span class="n">tqdm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="o">**</span><span class="n">tqdm_kwargs</span><span class="p">:</span> <span class="n">Any</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Yields results from awaitables as they complete.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        futs: The awaitables to await.</span>
+<span class="sd">        timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</span>
+<span class="sd">        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
+<span class="sd">        tqdm: If True, enables progress reporting using tqdm. Defaults to False.</span>
+<span class="sd">        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">fut</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span>
         <span class="n">futs</span><span class="p">,</span>
         <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
@@ -318,6 +329,16 @@
 <span class="k">async</span> <span class="k">def</span> <span class="nf">__mapping_wrap</span><span class="p">(</span>
     <span class="n">k</span><span class="p">:</span> <span class="n">K</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">],</span> <span class="n">return_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">V</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wraps a key-value pair of awaitable to catch exceptions and return them with the key.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        k: The key associated with the awaitable.</span>
+<span class="sd">        v: The awaitable to wrap.</span>
+<span class="sd">        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A tuple of the key and the result of the awaitable or the exception if one is raised.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">k</span><span class="p">,</span> <span class="k">await</span> <span class="n">v</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>

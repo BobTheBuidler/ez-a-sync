@@ -134,7 +134,7 @@ syntax.</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDirective">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">ASyncDescriptorDirective</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#ASyncDescriptorDirective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDirective" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncMethodDirective" title="a_sync.sphinx.ext._ASyncMethodDirective"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncMethodDirective</span></code></a></p>
-<p>Sphinx task directive.</p>
+<p>Directive for ASyncDescriptor instances.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDirective.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_machine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDirective.__init__" title="Link to this definition"></a></dt>
@@ -324,8 +324,18 @@ ERROR-level directive error.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDirective.get_signature_prefix">
 <span class="sig-name descname"><span class="pre">get_signature_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDirective.get_signature_prefix" title="Link to this definition"></a></dt>
-<dd><p>May return a prefix to put before the object name in the
-signature.</p>
+<dd><p>Get the signature prefix for the directive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sig</strong> – The signature to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes representing the signature prefix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -736,22 +746,55 @@ Can be used to manipulate the content.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDocumenter.can_document_member">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">can_document_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">membername</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isattr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDocumenter.can_document_member" title="Link to this definition"></a></dt>
-<dd><p>Called to see if a member can be documented by this Documenter.</p>
+<dd><p>Determine if the member can be documented by this documenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> – The member to check.</p></li>
+<li><p><strong>membername</strong> – The name of the member.</p></li>
+<li><p><strong>isattr</strong> – Boolean indicating if the member is an attribute.</p></li>
+<li><p><strong>parent</strong> – The parent object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the member can be documented, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDocumenter.check_module">
 <span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDocumenter.check_module" title="Link to this definition"></a></dt>
-<dd><p>Check if <em>self.object</em> is really defined in the module given by
-<em>self.modname</em>.</p>
+<dd><p>Check if the object is defined in the expected module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the object is defined in the expected module, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally checks if <em>self.object</em> is really defined in the module
+given by <em>self.modname</em>. But since functions decorated with the &#64;task
+decorator are instances living in the celery.local, we have to check
+the wrapped function instead.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDocumenter.document_members">
 <span class="sig-name descname"><span class="pre">document_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDocumenter.document_members" title="Link to this definition"></a></dt>
-<dd><p>Generate reST for member documentation.</p>
-<p>If <em>all_members</em> is True, document all members, else those given by
-<em>self.options.members</em>.</p>
+<dd><p>Document members of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>all_members</strong> – Boolean indicating if all members should be documented.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -784,8 +827,15 @@ special-members option is set)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncDescriptorDocumenter.format_args">
 <span class="sig-name descname"><span class="pre">format_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncDescriptorDocumenter.format_args" title="Link to this definition"></a></dt>
-<dd><p>Format the argument signature of <em>self.object</em>.</p>
-<p>Should return None if the object does not have a signature.</p>
+<dd><p>Format the arguments of the wrapped method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The formatted arguments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1075,6 +1125,7 @@ generated directive name</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDirective">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">ASyncFunctionAsyncDirective</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#ASyncFunctionAsyncDirective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDirective" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncFunctionDirective" title="a_sync.sphinx.ext._ASyncFunctionDirective"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncFunctionDirective</span></code></a></p>
+<p>Directive for ASyncFunctionAsyncDefault instances.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDirective.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_machine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.__init__" title="Link to this definition"></a></dt>
@@ -1264,8 +1315,18 @@ ERROR-level directive error.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDirective.get_signature_prefix">
 <span class="sig-name descname"><span class="pre">get_signature_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDirective.get_signature_prefix" title="Link to this definition"></a></dt>
-<dd><p>May return a prefix to put before the object name in the
-signature.</p>
+<dd><p>Get the signature prefix for the directive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sig</strong> – The signature to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes representing the signature prefix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1563,7 +1624,7 @@ Can be used to manipulate the content.</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">ASyncFunctionAsyncDocumenter</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#ASyncFunctionAsyncDocumenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncFunctionDocumenter" title="a_sync.sphinx.ext._ASyncFunctionDocumenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter</span></code></a></p>
-<p>Document ASyncFunction instance definitions.</p>
+<p>Document ASyncFunctionAsyncDefault instance definitions.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.typ">
 <span class="sig-name descname"><span class="pre">typ</span></span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.typ" title="Link to this definition"></a></dt>
@@ -1676,22 +1737,55 @@ Can be used to manipulate the content.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.can_document_member">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">can_document_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">membername</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isattr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.can_document_member" title="Link to this definition"></a></dt>
-<dd><p>Called to see if a member can be documented by this Documenter.</p>
+<dd><p>Determine if the member can be documented by this documenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> – The member to check.</p></li>
+<li><p><strong>membername</strong> – The name of the member.</p></li>
+<li><p><strong>isattr</strong> – Boolean indicating if the member is an attribute.</p></li>
+<li><p><strong>parent</strong> – The parent object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the member can be documented, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.check_module">
 <span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.check_module" title="Link to this definition"></a></dt>
-<dd><p>Check if <em>self.object</em> is really defined in the module given by
-<em>self.modname</em>.</p>
+<dd><p>Check if the object is defined in the expected module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the object is defined in the expected module, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally checks if <em>self.object</em> is really defined in the module
+given by <em>self.modname</em>. But since functions decorated with the &#64;task
+decorator are instances living in the celery.local, we have to check
+the wrapped function instead.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.document_members">
 <span class="sig-name descname"><span class="pre">document_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.document_members" title="Link to this definition"></a></dt>
-<dd><p>Generate reST for member documentation.</p>
-<p>If <em>all_members</em> is True, document all members, else those given by
-<em>self.options.members</em>.</p>
+<dd><p>Document members of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>all_members</strong> – Boolean indicating if all members should be documented.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1724,8 +1818,15 @@ special-members option is set)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.format_args">
 <span class="sig-name descname"><span class="pre">format_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionAsyncDocumenter.format_args" title="Link to this definition"></a></dt>
-<dd><p>Format the argument signature of <em>self.object</em>.</p>
-<p>Should return None if the object does not have a signature.</p>
+<dd><p>Format the arguments of the wrapped function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The formatted arguments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2010,6 +2111,7 @@ generated directive name</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDirective">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">ASyncFunctionDirective</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#ASyncFunctionDirective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDirective" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncFunctionDirective" title="a_sync.sphinx.ext._ASyncFunctionDirective"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncFunctionDirective</span></code></a></p>
+<p>Directive for ASyncFunction instances.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDirective.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_machine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDirective.__init__" title="Link to this definition"></a></dt>
@@ -2199,8 +2301,18 @@ ERROR-level directive error.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDirective.get_signature_prefix">
 <span class="sig-name descname"><span class="pre">get_signature_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDirective.get_signature_prefix" title="Link to this definition"></a></dt>
-<dd><p>May return a prefix to put before the object name in the
-signature.</p>
+<dd><p>Get the signature prefix for the directive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sig</strong> – The signature to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes representing the signature prefix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2611,22 +2723,55 @@ Can be used to manipulate the content.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDocumenter.can_document_member">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">can_document_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">membername</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isattr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDocumenter.can_document_member" title="Link to this definition"></a></dt>
-<dd><p>Called to see if a member can be documented by this Documenter.</p>
+<dd><p>Determine if the member can be documented by this documenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> – The member to check.</p></li>
+<li><p><strong>membername</strong> – The name of the member.</p></li>
+<li><p><strong>isattr</strong> – Boolean indicating if the member is an attribute.</p></li>
+<li><p><strong>parent</strong> – The parent object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the member can be documented, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDocumenter.check_module">
 <span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDocumenter.check_module" title="Link to this definition"></a></dt>
-<dd><p>Check if <em>self.object</em> is really defined in the module given by
-<em>self.modname</em>.</p>
+<dd><p>Check if the object is defined in the expected module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the object is defined in the expected module, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally checks if <em>self.object</em> is really defined in the module
+given by <em>self.modname</em>. But since functions decorated with the &#64;task
+decorator are instances living in the celery.local, we have to check
+the wrapped function instead.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDocumenter.document_members">
 <span class="sig-name descname"><span class="pre">document_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDocumenter.document_members" title="Link to this definition"></a></dt>
-<dd><p>Generate reST for member documentation.</p>
-<p>If <em>all_members</em> is True, document all members, else those given by
-<em>self.options.members</em>.</p>
+<dd><p>Document members of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>all_members</strong> – Boolean indicating if all members should be documented.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2659,8 +2804,15 @@ special-members option is set)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionDocumenter.format_args">
 <span class="sig-name descname"><span class="pre">format_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionDocumenter.format_args" title="Link to this definition"></a></dt>
-<dd><p>Format the argument signature of <em>self.object</em>.</p>
-<p>Should return None if the object does not have a signature.</p>
+<dd><p>Format the arguments of the wrapped function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The formatted arguments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2945,6 +3097,7 @@ generated directive name</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDirective">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">ASyncFunctionSyncDirective</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#ASyncFunctionSyncDirective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDirective" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncFunctionDirective" title="a_sync.sphinx.ext._ASyncFunctionDirective"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncFunctionDirective</span></code></a></p>
+<p>Directive for ASyncFunctionSyncDefault instances.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDirective.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_machine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDirective.__init__" title="Link to this definition"></a></dt>
@@ -3134,8 +3287,18 @@ ERROR-level directive error.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDirective.get_signature_prefix">
 <span class="sig-name descname"><span class="pre">get_signature_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDirective.get_signature_prefix" title="Link to this definition"></a></dt>
-<dd><p>May return a prefix to put before the object name in the
-signature.</p>
+<dd><p>Get the signature prefix for the directive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sig</strong> – The signature to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes representing the signature prefix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -3433,7 +3596,7 @@ Can be used to manipulate the content.</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDocumenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">ASyncFunctionSyncDocumenter</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#ASyncFunctionSyncDocumenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncFunctionDocumenter" title="a_sync.sphinx.ext._ASyncFunctionDocumenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter</span></code></a></p>
-<p>Document ASyncFunction instance definitions.</p>
+<p>Document ASyncFunctionSyncDefault instance definitions.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.typ">
 <span class="sig-name descname"><span class="pre">typ</span></span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.typ" title="Link to this definition"></a></dt>
@@ -3546,22 +3709,55 @@ Can be used to manipulate the content.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.can_document_member">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">can_document_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">membername</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isattr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.can_document_member" title="Link to this definition"></a></dt>
-<dd><p>Called to see if a member can be documented by this Documenter.</p>
+<dd><p>Determine if the member can be documented by this documenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> – The member to check.</p></li>
+<li><p><strong>membername</strong> – The name of the member.</p></li>
+<li><p><strong>isattr</strong> – Boolean indicating if the member is an attribute.</p></li>
+<li><p><strong>parent</strong> – The parent object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the member can be documented, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.check_module">
 <span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.check_module" title="Link to this definition"></a></dt>
-<dd><p>Check if <em>self.object</em> is really defined in the module given by
-<em>self.modname</em>.</p>
+<dd><p>Check if the object is defined in the expected module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the object is defined in the expected module, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally checks if <em>self.object</em> is really defined in the module
+given by <em>self.modname</em>. But since functions decorated with the &#64;task
+decorator are instances living in the celery.local, we have to check
+the wrapped function instead.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.document_members">
 <span class="sig-name descname"><span class="pre">document_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.document_members" title="Link to this definition"></a></dt>
-<dd><p>Generate reST for member documentation.</p>
-<p>If <em>all_members</em> is True, document all members, else those given by
-<em>self.options.members</em>.</p>
+<dd><p>Document members of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>all_members</strong> – Boolean indicating if all members should be documented.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -3594,8 +3790,15 @@ special-members option is set)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.format_args">
 <span class="sig-name descname"><span class="pre">format_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncFunctionSyncDocumenter.format_args" title="Link to this definition"></a></dt>
-<dd><p>Format the argument signature of <em>self.object</em>.</p>
-<p>Should return None if the object does not have a signature.</p>
+<dd><p>Format the arguments of the wrapped function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The formatted arguments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -3880,7 +4083,7 @@ generated directive name</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDirective">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">ASyncGeneratorFunctionDirective</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#ASyncGeneratorFunctionDirective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncFunctionDirective" title="a_sync.sphinx.ext._ASyncFunctionDirective"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncFunctionDirective</span></code></a></p>
-<p>Sphinx task directive.</p>
+<p>Directive for ASyncGeneratorFunction instances.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_machine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.__init__" title="Link to this definition"></a></dt>
@@ -4070,8 +4273,18 @@ ERROR-level directive error.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.get_signature_prefix">
 <span class="sig-name descname"><span class="pre">get_signature_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDirective.get_signature_prefix" title="Link to this definition"></a></dt>
-<dd><p>May return a prefix to put before the object name in the
-signature.</p>
+<dd><p>Get the signature prefix for the directive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sig</strong> – The signature to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes representing the signature prefix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -4369,7 +4582,7 @@ Can be used to manipulate the content.</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">ASyncGeneratorFunctionDocumenter</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#ASyncGeneratorFunctionDocumenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncFunctionDocumenter" title="a_sync.sphinx.ext._ASyncFunctionDocumenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncFunctionDocumenter</span></code></a></p>
-<p>Document ASyncFunction instance definitions.</p>
+<p>Document ASyncGeneratorFunction instance definitions.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.typ">
 <span class="sig-name descname"><span class="pre">typ</span></span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.typ" title="Link to this definition"></a></dt>
@@ -4482,22 +4695,55 @@ Can be used to manipulate the content.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.can_document_member">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">can_document_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">membername</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isattr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.can_document_member" title="Link to this definition"></a></dt>
-<dd><p>Called to see if a member can be documented by this Documenter.</p>
+<dd><p>Determine if the member can be documented by this documenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> – The member to check.</p></li>
+<li><p><strong>membername</strong> – The name of the member.</p></li>
+<li><p><strong>isattr</strong> – Boolean indicating if the member is an attribute.</p></li>
+<li><p><strong>parent</strong> – The parent object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the member can be documented, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.check_module">
 <span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.check_module" title="Link to this definition"></a></dt>
-<dd><p>Check if <em>self.object</em> is really defined in the module given by
-<em>self.modname</em>.</p>
+<dd><p>Check if the object is defined in the expected module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the object is defined in the expected module, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally checks if <em>self.object</em> is really defined in the module
+given by <em>self.modname</em>. But since functions decorated with the &#64;task
+decorator are instances living in the celery.local, we have to check
+the wrapped function instead.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.document_members">
 <span class="sig-name descname"><span class="pre">document_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.document_members" title="Link to this definition"></a></dt>
-<dd><p>Generate reST for member documentation.</p>
-<p>If <em>all_members</em> is True, document all members, else those given by
-<em>self.options.members</em>.</p>
+<dd><p>Document members of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>all_members</strong> – Boolean indicating if all members should be documented.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -4530,8 +4776,15 @@ special-members option is set)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.format_args">
 <span class="sig-name descname"><span class="pre">format_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext.ASyncGeneratorFunctionDocumenter.format_args" title="Link to this definition"></a></dt>
-<dd><p>Format the argument signature of <em>self.object</em>.</p>
-<p>Should return None if the object does not have a signature.</p>
+<dd><p>Format the arguments of the wrapped function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The formatted arguments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -4816,10 +5069,23 @@ generated directive name</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncDirective">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">_ASyncDirective</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncDirective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncDirective" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for ASync directives.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncDirective.get_signature_prefix">
 <span class="sig-name descname"><span class="pre">get_signature_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncDirective.get_signature_prefix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncDirective.get_signature_prefix" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get the signature prefix for the directive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sig</strong> – The signature to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes representing the signature prefix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncDirective.prefix_env">
@@ -4832,6 +5098,7 @@ generated directive name</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDirective">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">_ASyncFunctionDirective</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncFunctionDirective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDirective" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncDirective" title="a_sync.sphinx.ext._ASyncDirective"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncDirective</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">PyFunction</span></code></p>
+<p>Directive for ASyncFunction instances.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDirective.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_machine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDirective.__init__" title="Link to this definition"></a></dt>
@@ -5021,8 +5288,18 @@ ERROR-level directive error.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDirective.get_signature_prefix">
 <span class="sig-name descname"><span class="pre">get_signature_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDirective.get_signature_prefix" title="Link to this definition"></a></dt>
-<dd><p>May return a prefix to put before the object name in the
-signature.</p>
+<dd><p>Get the signature prefix for the directive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sig</strong> – The signature to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes representing the signature prefix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -5320,6 +5597,7 @@ Can be used to manipulate the content.</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDocumenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">_ASyncFunctionDocumenter</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncFunctionDocumenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDocumenter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncWrapperDocumenter" title="a_sync.sphinx.ext._ASyncWrapperDocumenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncWrapperDocumenter</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionDocumenter</span></code></p>
+<p>Documenter for ASyncFunction instances.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDocumenter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directive</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDocumenter.__init__" title="Link to this definition"></a></dt>
@@ -5426,22 +5704,55 @@ Can be used to manipulate the content.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDocumenter.can_document_member">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">can_document_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">membername</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isattr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDocumenter.can_document_member" title="Link to this definition"></a></dt>
-<dd><p>Called to see if a member can be documented by this Documenter.</p>
+<dd><p>Determine if the member can be documented by this documenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> – The member to check.</p></li>
+<li><p><strong>membername</strong> – The name of the member.</p></li>
+<li><p><strong>isattr</strong> – Boolean indicating if the member is an attribute.</p></li>
+<li><p><strong>parent</strong> – The parent object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the member can be documented, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDocumenter.check_module">
 <span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDocumenter.check_module" title="Link to this definition"></a></dt>
-<dd><p>Check if <em>self.object</em> is really defined in the module given by
-<em>self.modname</em>.</p>
+<dd><p>Check if the object is defined in the expected module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the object is defined in the expected module, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally checks if <em>self.object</em> is really defined in the module
+given by <em>self.modname</em>. But since functions decorated with the &#64;task
+decorator are instances living in the celery.local, we have to check
+the wrapped function instead.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDocumenter.document_members">
 <span class="sig-name descname"><span class="pre">document_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDocumenter.document_members" title="Link to this definition"></a></dt>
-<dd><p>Generate reST for member documentation.</p>
-<p>If <em>all_members</em> is True, document all members, else those given by
-<em>self.options.members</em>.</p>
+<dd><p>Document members of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>all_members</strong> – Boolean indicating if all members should be documented.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -5474,8 +5785,15 @@ special-members option is set)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncFunctionDocumenter.format_args">
 <span class="sig-name descname"><span class="pre">format_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncFunctionDocumenter.format_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncFunctionDocumenter.format_args" title="Link to this definition"></a></dt>
-<dd><p>Format the argument signature of <em>self.object</em>.</p>
-<p>Should return None if the object does not have a signature.</p>
+<dd><p>Format the arguments of the wrapped function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The formatted arguments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -5765,6 +6083,7 @@ generated directive name</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDirective">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">_ASyncMethodDirective</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncMethodDirective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDirective" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncDirective" title="a_sync.sphinx.ext._ASyncDirective"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncDirective</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">PyMethod</span></code></p>
+<p>Directive for ASyncMethod instances.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDirective.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arguments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lineno</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content_offset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_machine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDirective.__init__" title="Link to this definition"></a></dt>
@@ -5954,8 +6273,18 @@ ERROR-level directive error.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDirective.get_signature_prefix">
 <span class="sig-name descname"><span class="pre">get_signature_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDirective.get_signature_prefix" title="Link to this definition"></a></dt>
-<dd><p>May return a prefix to put before the object name in the
-signature.</p>
+<dd><p>Get the signature prefix for the directive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sig</strong> – The signature to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of nodes representing the signature prefix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -6253,6 +6582,7 @@ Can be used to manipulate the content.</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDocumenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">_ASyncMethodDocumenter</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncMethodDocumenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDocumenter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.sphinx.ext._ASyncWrapperDocumenter" title="a_sync.sphinx.ext._ASyncWrapperDocumenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncWrapperDocumenter</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MethodDocumenter</span></code></p>
+<p>Documenter for ASyncMethod instances.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDocumenter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directive</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDocumenter.__init__" title="Link to this definition"></a></dt>
@@ -6359,22 +6689,55 @@ Can be used to manipulate the content.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDocumenter.can_document_member">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">can_document_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">membername</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isattr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDocumenter.can_document_member" title="Link to this definition"></a></dt>
-<dd><p>Called to see if a member can be documented by this Documenter.</p>
+<dd><p>Determine if the member can be documented by this documenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> – The member to check.</p></li>
+<li><p><strong>membername</strong> – The name of the member.</p></li>
+<li><p><strong>isattr</strong> – Boolean indicating if the member is an attribute.</p></li>
+<li><p><strong>parent</strong> – The parent object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the member can be documented, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDocumenter.check_module">
 <span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDocumenter.check_module" title="Link to this definition"></a></dt>
-<dd><p>Check if <em>self.object</em> is really defined in the module given by
-<em>self.modname</em>.</p>
+<dd><p>Check if the object is defined in the expected module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the object is defined in the expected module, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally checks if <em>self.object</em> is really defined in the module
+given by <em>self.modname</em>. But since functions decorated with the &#64;task
+decorator are instances living in the celery.local, we have to check
+the wrapped function instead.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDocumenter.document_members">
 <span class="sig-name descname"><span class="pre">document_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDocumenter.document_members" title="Link to this definition"></a></dt>
-<dd><p>Generate reST for member documentation.</p>
-<p>If <em>all_members</em> is True, document all members, else those given by
-<em>self.options.members</em>.</p>
+<dd><p>Document members of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>all_members</strong> – Boolean indicating if all members should be documented.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -6407,8 +6770,15 @@ special-members option is set)</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncMethodDocumenter.format_args">
 <span class="sig-name descname"><span class="pre">format_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncMethodDocumenter.format_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncMethodDocumenter.format_args" title="Link to this definition"></a></dt>
-<dd><p>Format the argument signature of <em>self.object</em>.</p>
-<p>Should return None if the object does not have a signature.</p>
+<dd><p>Format the arguments of the wrapped method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The formatted arguments.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -6703,20 +7073,60 @@ generated directive name</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncWrapperDocumenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">_ASyncWrapperDocumenter</span></span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncWrapperDocumenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncWrapperDocumenter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for documenters that handle wrapped ASync functions.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncWrapperDocumenter.can_document_member">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">can_document_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">membername</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isattr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncWrapperDocumenter.can_document_member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncWrapperDocumenter.can_document_member" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Determine if the member can be documented by this documenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> – The member to check.</p></li>
+<li><p><strong>membername</strong> – The name of the member.</p></li>
+<li><p><strong>isattr</strong> – Boolean indicating if the member is an attribute.</p></li>
+<li><p><strong>parent</strong> – The parent object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the member can be documented, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncWrapperDocumenter.check_module">
 <span class="sig-name descname"><span class="pre">check_module</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncWrapperDocumenter.check_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncWrapperDocumenter.check_module" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Check if the object is defined in the expected module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the object is defined in the expected module, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally checks if <em>self.object</em> is really defined in the module
+given by <em>self.modname</em>. But since functions decorated with the &#64;task
+decorator are instances living in the celery.local, we have to check
+the wrapped function instead.</p>
+</div>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncWrapperDocumenter.document_members">
 <span class="sig-name descname"><span class="pre">document_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_members</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#_ASyncWrapperDocumenter.document_members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext._ASyncWrapperDocumenter.document_members" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Document members of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>all_members</strong> – Boolean indicating if all members should be documented.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext._ASyncWrapperDocumenter.typ">
@@ -6729,12 +7139,41 @@ generated directive name</p>
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.autodoc_skip_member_handler">
 <span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">autodoc_skip_member_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">what</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#autodoc_skip_member_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.autodoc_skip_member_handler" title="Link to this definition"></a></dt>
 <dd><p>Handler for autodoc-skip-member event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>app</strong> – The Sphinx application object.</p></li>
+<li><p><strong>what</strong> – The type of the object being documented.</p></li>
+<li><p><strong>name</strong> – The name of the object.</p></li>
+<li><p><strong>obj</strong> – The object itself.</p></li>
+<li><p><strong>skip</strong> – Boolean indicating if the member should be skipped.</p></li>
+<li><p><strong>options</strong> – The options for the autodoc directive.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the member should be skipped, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.sphinx.ext.setup">
 <span class="sig-prename descclassname"><span class="pre">a_sync.sphinx.ext.</span></span><span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/sphinx/ext.html#setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.sphinx.ext.setup" title="Link to this definition"></a></dt>
 <dd><p>Setup Sphinx extension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>app</strong> – The Sphinx application object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with metadata about the extension.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

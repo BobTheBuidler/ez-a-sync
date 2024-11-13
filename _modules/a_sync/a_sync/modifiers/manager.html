@@ -87,6 +87,12 @@
 <div class="viewcode-block" id="ModifierManager">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager">[docs]</a>
 <span class="k">class</span> <span class="nc">ModifierManager</span><span class="p">(</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages modifiers for asynchronous and synchronous functions.</span>
+
+<span class="sd">    This class is responsible for applying modifiers to functions, such as</span>
+<span class="sd">    caching, rate limiting, and semaphores for asynchronous functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span>
     <span class="n">cache_type</span><span class="p">:</span> <span class="n">CacheType</span>
     <span class="n">cache_typed</span><span class="p">:</span> <span class="nb">bool</span>
@@ -96,11 +102,21 @@
     <span class="n">semaphore</span><span class="p">:</span> <span class="n">SemaphoreSpec</span>
     <span class="c1"># sync modifiers</span>
     <span class="n">executor</span><span class="p">:</span> <span class="n">Executor</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is not applied like a typical modifier. The executor is used to run the sync function in an asynchronous context.&quot;&quot;&quot;</span>
+
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;_modifiers&quot;</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="ModifierManager.__init__">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modifiers</span><span class="p">:</span> <span class="n">ModifierKwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the ModifierManager with the given modifiers.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            modifiers: A dictionary of modifiers to be applied.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If an unsupported modifier is provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">modifiers</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_modifiers</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is not a supported modifier.&quot;</span><span class="p">)</span>
@@ -108,9 +124,18 @@
 
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a string representation of the modifiers.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_modifiers</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modifier_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the value of a modifier.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            modifier_key: The key of the modifier to retrieve.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The value of the modifier, or the default value if not set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">modifier_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_modifiers</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">modifier_key</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -119,14 +144,17 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">use_limiter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines if a rate limiter should be used.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runs_per_minute</span> <span class="o">!=</span> <span class="n">nulls</span><span class="o">.</span><span class="n">runs_per_minute</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">use_semaphore</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines if a semaphore should be used.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">semaphore</span> <span class="o">!=</span> <span class="n">nulls</span><span class="o">.</span><span class="n">semaphore</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">use_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines if caching should be used.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">cache_type</span> <span class="o">!=</span> <span class="n">nulls</span><span class="o">.</span><span class="n">cache_type</span><span class="p">,</span>
@@ -139,6 +167,14 @@
 <div class="viewcode-block" id="ModifierManager.apply_async_modifiers">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.apply_async_modifiers">[docs]</a>
     <span class="k">def</span> <span class="nf">apply_async_modifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applies asynchronous modifiers to a coroutine function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            coro_fn: The coroutine function to modify.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The modified coroutine function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># NOTE: THESE STACK IN REVERSE ORDER</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_limiter</span><span class="p">:</span>
             <span class="n">coro_fn</span> <span class="o">=</span> <span class="n">limiter</span><span class="o">.</span><span class="n">apply_rate_limit</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runs_per_minute</span><span class="p">)</span>
@@ -158,11 +194,22 @@
 <div class="viewcode-block" id="ModifierManager.apply_sync_modifiers">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.apply_sync_modifiers">[docs]</a>
     <span class="k">def</span> <span class="nf">apply_sync_modifiers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wraps a synchronous function.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            There are no sync modifiers at this time, but they will be added here for convenience.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            function: The synchronous function to wrap.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The wrapped synchronous function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">sync_modifier_wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-        <span class="c1"># NOTE There are no sync modifiers at this time but they will be added here for my convenience.</span>
         <span class="k">return</span> <span class="n">sync_modifier_wrap</span></div>
 
 
@@ -170,36 +217,50 @@
 <div class="viewcode-block" id="ModifierManager.keys">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.keys">[docs]</a>
     <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeysView</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>  <span class="c1"># type: ignore [override]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the keys of the modifiers.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modifiers</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ModifierManager.values">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.values">[docs]</a>
     <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ValuesView</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>  <span class="c1"># type: ignore [override]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the values of the modifiers.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modifiers</span><span class="o">.</span><span class="n">values</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ModifierManager.items">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.items">[docs]</a>
     <span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ItemsView</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># type: ignore [override]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the items of the modifiers.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modifiers</span><span class="o">.</span><span class="n">items</span><span class="p">()</span></div>
 
 
     <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># type: ignore [override]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if a key is in the modifiers.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modifiers</span>
 
 <div class="viewcode-block" id="ModifierManager.__iter__">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.__iter__">[docs]</a>
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an iterator over the modifier keys.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modifiers</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span></div>
 
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of modifiers.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_modifiers</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ModifierManager.__getitem__">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__">[docs]</a>
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">modifier_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the value of a modifier by key.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            modifier_key: The key of the modifier to retrieve.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The value of the modifier.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modifiers</span><span class="p">[</span><span class="n">modifier_key</span><span class="p">]</span>  <span class="c1"># type: ignore [literal-required]</span></div>
 </div>
 
