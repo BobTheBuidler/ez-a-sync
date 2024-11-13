@@ -20,28 +20,8 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     """
     A semaphore with additional debugging capabilities.
 
-    This semaphore includes debug logging.
-
-    Also, it can be used to decorate coroutine functions so you can rewrite this pattern:
-
-    ```
-    semaphore = Semaphore(5)
-
-    async def limited():
-        async with semaphore:
-            return 1
-
-    ```
-
-    like this:
-
-    ```
-    semaphore = Semaphore(5)
-
-    @semaphore
-    async def limited():
-        return 1
-    ```
+    This semaphore includes debug logging and can be used to decorate coroutine functions.
+    It allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.
     """
 
     if sys.version_info >= (3, 10):
@@ -61,30 +41,18 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         self.name = name or self.__origin__ if hasattr(self, "__origin__") else None
         self._decorated: Set[str] = set()
 
-    # Dank new functionality
-
     def __call__(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
         """
-        Convenient decorator method to wrap coroutine functions with the semaphore so you can rewrite this pattern:
+        Decorator method to wrap coroutine functions with the semaphore.
 
-        ```
-        semaphore = Semaphore(5)
+        This allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.
 
-        async def limited():
-            async with semaphore:
+        Example:
+            semaphore = Semaphore(5)
+
+            @semaphore
+            async def limited():
                 return 1
-
-        ```
-
-        like this:
-
-        ```
-        semaphore = Semaphore(5)
-
-        @semaphore
-        async def limited():
-            return 1
-        ```
         """
         return self.decorate(fn)  # type: ignore [arg-type, return-value]
 
@@ -102,26 +70,11 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         Wrap a coroutine function to ensure it runs with the semaphore.
 
         Example:
-            Now you can rewrite this pattern:
-
-            ```
-            semaphore = Semaphore(5)
-
-            async def limited():
-                async with semaphore:
-                    return 1
-
-            ```
-
-            like this:
-
-            ```
             semaphore = Semaphore(5)
 
             @semaphore
             async def limited():
                 return 1
-            ```
         """
         if not asyncio.iscoroutinefunction(fn):
             raise TypeError(f"{fn} must be a coroutine function")
@@ -139,7 +92,6 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
             self._ensure_debug_daemon()
         return await super().acquire()
 
-    # Everything below just adds some debug logs
     async def _debug_daemon(self) -> None:
         """
         Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.
@@ -154,11 +106,19 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
 class DummySemaphore(asyncio.Semaphore):
     """
     A dummy semaphore that implements the standard :class:`asyncio.Semaphore` API but does nothing.
+
+    This class is useful for scenarios where a semaphore interface is required but no actual synchronization is needed.
     """
 
     __slots__ = "name", "_value"
 
     def __init__(self, name: Optional[str] = None):
+        """
+        Initialize the dummy semaphore with an optional name.
+
+        Args:
+            name (optional): An optional name for the dummy semaphore.
+        """
         self.name = name
         self._value = 0
 
@@ -178,21 +138,21 @@ class DummySemaphore(asyncio.Semaphore):
 class ThreadsafeSemaphore(Semaphore):
     """
     A semaphore that works in a multi-threaded environment.
-    
+
     This semaphore ensures that the program functions correctly even when used with multiple event loops.
-
-    While its a bit weird to run multiple event loops, sometimes either you or a lib you're using must do so. 
-
-    When in use in threaded applications, this semaphore will not work as intended but at least your program will function.
-
-    You may need to reduce the semaphore value for multi-threaded applications.
-
-    TL;DR it's a janky fix for an edge case problem and will otherwise function as a normal a_sync.Semaphore (which is just an asyncio.Semaphore with extra bells and whistles).
+    It provides a workaround for edge cases involving multiple threads and event loops.
     """
 
     __slots__ = "semaphores", "dummy"
 
     def __init__(self, value: Optional[int], name: Optional[str] = None) -> None:
+        """
+        Initialize the threadsafe semaphore with a given value and optional name.
+
+        Args:
+            value: The initial value for the semaphore, should be an integer.
+            name (optional): An optional name for the semaphore.
+        """
         assert isinstance(value, int), f"{value} should be an integer."
         super().__init__(value, name=name)
         self.semaphores: DefaultDict[Thread, Semaphore] = defaultdict(lambda: Semaphore(value, name=self.name))  # type: ignore [arg-type]
@@ -203,6 +163,12 @@ class ThreadsafeSemaphore(Semaphore):
 
     @functools.cached_property
     def use_dummy(self) -> bool:
+        """
+        Determine whether to use a dummy semaphore.
+
+        Returns:
+            bool: True if the semaphore value is None, indicating the use of a dummy semaphore.
+        """
         return self._value is None
 
     @property
