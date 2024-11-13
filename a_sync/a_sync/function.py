@@ -238,7 +238,8 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         return f"<{self.__class__.__name__} {self.__module__}.{self.__name__} at {hex(id(self))}>"
 
     @functools.cached_property
-    def fn(self) -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
+    def fn(self):
+        #  -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
         """
         Returns the final wrapped version of :attr:`ASyncFunction._fn` decorated with all of the a_sync goodness.
 
