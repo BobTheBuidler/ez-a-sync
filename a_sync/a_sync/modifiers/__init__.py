@@ -1,3 +1,25 @@
+"""
+This file contains all logic for ez-a-sync's "modifiers".
+
+Modifiers modify the behavior of ez-a-sync's ASync objects in various ways.
+
+Submodules:
+    cache: Handles caching mechanisms for async functions.
+    limiter: Manages rate limiting for async functions.
+    manager: Provides management of valid modifiers and their application.
+    semaphores: Implements semaphore logic for controlling concurrency.
+
+The modifiers available are:
+- `cache_type`: Specifies the type of cache to use, such as 'memory'.
+- `cache_typed`: Determines if types are considered for cache keys.
+- `ram_cache_maxsize`: Sets the maximum size for the LRU cache.
+- `ram_cache_ttl`: Defines the time-to-live for items in the cache.
+- `runs_per_minute`: Sets a rate limit for function execution.
+- `semaphore`: Specifies a semaphore for controlling concurrency.
+- `executor`: Defines the executor for synchronous functions.
+
+"""
+
 from aiolimiter import AsyncLimiter
 
 from a_sync._typing import *
