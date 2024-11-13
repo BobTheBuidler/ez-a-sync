@@ -27,7 +27,8 @@ def apply_class_defined_modifiers(attrs_from_metaclass: dict):
     This function modifies the input dictionary in place. If the 'semaphore' key
     is present and its value is an integer, it is converted to a ThreadsafeSemaphore.
     If the 'runs_per_minute' key is present and its value is an integer, it is
-    converted to an AsyncLimiter.
+    converted to an AsyncLimiter. If these keys are not present or their values
+    are not integers, the function will silently do nothing.
 
     Args:
         attrs_from_metaclass: A dictionary of attributes from a metaclass.
