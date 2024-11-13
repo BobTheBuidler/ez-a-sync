@@ -171,6 +171,8 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
 
     The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.
 
+    The function handles exceptions and ensures robustness and reliability by using asyncio tasks and queues. It manages edge cases such as early termination and exception management. The `_Done` sentinel class is used internally to signal the completion of processing.
+
     Args:
         *iterators: Variable length list of AsyncIterator objects to be merged.
 
