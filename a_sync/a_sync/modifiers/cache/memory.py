@@ -81,10 +81,11 @@ def apply_async_memory_cache(
 
     # Validate
     elif coro_fn is None:
-        if not (maxsize is None or isinstance(maxsize, int)):
+        if maxsize is not None and (not isinstance(maxsize, int) or maxsize <= 0):
             raise TypeError(
                 "'lru_cache_maxsize' must be a positive integer or None.", maxsize
             )
+        
     elif not asyncio.iscoroutinefunction(coro_fn):
         raise exceptions.FunctionNotAsync(coro_fn)
 
