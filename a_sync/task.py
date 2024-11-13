@@ -105,7 +105,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         Initialize a TaskMapping instance.
 
         Args:
-            wrapped_func: A function that takes a key (and optional parameters) and returns an Awaitable.
+            wrapped_func: A callable that takes a key and additional parameters and returns an Awaitable.
             *iterables: Any number of iterables whose elements will be used as keys for task generation.
             name: An optional name for the tasks created by this mapping.
             concurrency: Maximum number of tasks to run concurrently.
