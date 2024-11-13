@@ -30,7 +30,8 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     A semaphore that allows prioritization of waiters.
     
     This semaphore manages waiters with associated priorities, ensuring that waiters with higher
-    priorities are processed before those with lower priorities.
+    priorities are processed before those with lower priorities. If no priority is specified, 
+    the semaphore uses a default top priority.
     """
 
     def __init__(self, value: int = 1, *, name: Optional[str] = None) -> None:
@@ -39,6 +40,12 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         Args:
             value: The initial capacity of the semaphore.
             name: An optional name for the semaphore, used for debugging.
+        
+        Attributes:
+            _context_managers: A dictionary mapping priorities to their context managers.
+            _capacity: The initial capacity of the semaphore.
+            _waiters: A heap queue of context managers, sorted by priority.
+            _potential_lost_waiters: A list of futures representing waiters that might have been lost.
         """
         self._context_managers = {}
         self._capacity = value
@@ -69,7 +76,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         """Gets the context manager for a given priority.
 
         Args:
-            priority: The priority for which to get the context manager.
+            priority: The priority for which to get the context manager. If None, uses the top priority.
 
         Returns:
             The context manager associated with the given priority.
@@ -108,7 +115,12 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         }
 
     def _wake_up_next(self) -> None:
-        """Wakes up the next waiter in line."""
+        """Wakes up the next waiter in line.
+
+        This method handles the waking of waiters based on priority. It includes an emergency 
+        procedure to handle potential lost waiters, ensuring that no waiter is left indefinitely 
+        waiting.
+        """
         while self._waiters:
             manager = heapq.heappop(self._waiters)
             if len(manager) == 0:
@@ -184,6 +196,10 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
             parent: The parent semaphore.
             priority: The priority associated with this context manager.
             name: An optional name for the context manager, used for debugging.
+        
+        Attributes:
+            _parent: The parent semaphore.
+            _priority: The priority associated with this context manager.
         """
         self._parent = parent
         self._priority = priority
