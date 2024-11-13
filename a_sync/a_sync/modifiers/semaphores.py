@@ -15,6 +15,9 @@ def apply_semaphore(  # type: ignore [misc]
 ) -> AsyncDecorator[P, T]:
     """Applies a semaphore to a coroutine function.
 
+    This overload is used when the semaphore is provided as a single argument,
+    returning a decorator that can be applied to a coroutine function.
+
     Args:
         semaphore: The semaphore to apply, which can be an integer or a Semaphore object.
     """
@@ -25,6 +28,9 @@ def apply_semaphore(
     semaphore: SemaphoreSpec,
 ) -> CoroFn[P, T]:
     """Applies a semaphore to a coroutine function.
+
+    This overload is used when both the coroutine function and semaphore are provided,
+    directly applying the semaphore to the coroutine function.
 
     Args:
         coro_fn: The coroutine function to which the semaphore will be applied.
@@ -47,7 +53,7 @@ def apply_semaphore(
         semaphore: The semaphore to apply, which can be an integer or a Semaphore object.
 
     Raises:
-        ValueError: If both coro_fn and semaphore are provided.
+        ValueError: If both coro_fn and semaphore are provided as invalid inputs.
         exceptions.FunctionNotAsync: If the provided function is not a coroutine.
         TypeError: If the semaphore is not an integer or a Semaphore object.
     """
