@@ -1,9 +1,13 @@
 """
-I don't recall why I included this in the public API but I had a reason.
+This module provides an abstract base class for defining asynchronous and synchronous behavior.
 
-You probably shouldn't use this and should use ASyncGenericBase instead.
+The ASyncABC class uses the ASyncMeta metaclass to automatically wrap its methods
+with asynchronous or synchronous behavior based on flags. Subclasses must
+implement the abstract methods to define the flag name, flag value, and
+default mode for asynchronous or synchronous execution.
 
-You can use this for a more custom implementation if necessary.
+Note: It is recommended to use ASyncGenericBase for most use cases. This class
+is intended for more custom implementations if necessary.
 """
 
 import abc
@@ -40,9 +44,6 @@ class ASyncABC(metaclass=ASyncMeta):
 
         Args:
             kwargs: A dictionary of keyword arguments to check for flags.
-
-        Returns:
-            A boolean indicating whether to await the method execution.
         """
         try:
             return self.__a_sync_should_await_from_kwargs__(kwargs)
@@ -70,9 +71,6 @@ class ASyncABC(metaclass=ASyncMeta):
         Args:
             kwargs: A dictionary of keyword arguments to check for flags.
 
-        Returns:
-            A boolean indicating whether to await the method execution.
-
         Raises:
             NoFlagsFound: If no valid flags are found in the keyword arguments.
         """
@@ -90,9 +88,6 @@ class ASyncABC(metaclass=ASyncMeta):
         Args:
             args: A tuple of positional arguments for the instance.
             kwargs: A dictionary of keyword arguments for the instance.
-
-        Returns:
-            A boolean indicating whether the new instance will be synchronous.
         """
         logger.debug(
             "checking `%s.%s.__init__` signature against provided kwargs to determine a_sync mode for the new instance",
