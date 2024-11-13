@@ -20,7 +20,7 @@ class CounterLock(_DebugDaemonMixin):
     A coroutine can `await counter.wait_for(3)` and it will wait until the internal counter >= 3.
     If some other task executes `counter.value = 5` or `counter.set(5)`, the first coroutine will proceed as 5 >= 3.
 
-    The internal counter can only increase.
+    The internal counter can only be set to a value greater than the current value.
     """
 
     __slots__ = "is_ready", "_name", "_value", "_events"
