@@ -5891,8 +5891,8 @@ convenient methods for creating, managing, and iterating over these tasks asynch
 <span class="gp">... </span>            <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;url_fetcher&#39;</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;example.com&#39;</span><span class="p">]</span> <span class="o">=</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;python.org&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://www.python.org&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;example.com&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;python.org&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="gp">...</span>
@@ -10677,8 +10677,8 @@ convenient methods for creating, managing, and iterating over these tasks asynch
 <span class="gp">... </span>            <span class="k">return</span> <span class="k">await</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="n">fetch_data</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;url_fetcher&#39;</span><span class="p">,</span> <span class="n">concurrency</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;example.com&#39;</span><span class="p">]</span> <span class="o">=</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;python.org&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;https://www.python.org&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;example.com&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span><span class="p">[</span><span class="s1">&#39;python.org&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">tasks</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data for </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="gp">...</span>
