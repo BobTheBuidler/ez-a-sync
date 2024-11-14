@@ -21,9 +21,11 @@ class ASyncGenericSingleton(ASyncGenericBase, metaclass=ASyncSingletonMeta):
         This class can be instantiated directly, but it is intended to be subclassed
         to define specific asynchronous behavior. Subclasses should define
         the necessary properties and methods to specify the asynchronous behavior, as outlined
-        in :class:`ASyncABC`.
+        in :class:`ASyncGenericBase`.
 
     Example:
+        Create a subclass of `ASyncGenericSingleton` to define specific behavior:
+
         .. code-block:: python
 
             class MyAsyncSingleton(ASyncGenericSingleton):
@@ -58,5 +60,4 @@ class ASyncGenericSingleton(ASyncGenericBase, metaclass=ASyncSingletonMeta):
     See Also:
         - :class:`ASyncGenericBase` for base functionality.
         - :class:`ASyncSingletonMeta` for the metaclass managing the singleton behavior.
-        - :class:`ASyncABC` for defining asynchronous and synchronous behavior.
     """
