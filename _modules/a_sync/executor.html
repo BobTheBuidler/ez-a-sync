@@ -70,15 +70,20 @@
              
   <h1>Source code for a_sync.executor</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">With these executors, you can simply run sync functions in your executor with `await executor.run(fn, *args)`.</span>
+<span class="sd">This module provides several executor classes that facilitate running synchronous functions asynchronously using `asyncio`.</span>
 
-<span class="sd">`executor.submit(fn, *args)` will work the same as the `concurrent.futures` implementation, but will return an `asyncio.Future` instead of a `concurrent.futures.Future`.</span>
+<span class="sd">With these executors, you can run sync functions in your executor with `await executor.run(fn, *args)`.</span>
+<span class="sd">The `executor.submit(fn, *args)` method works similarly to the `concurrent.futures` implementation but</span>
+<span class="sd">returns an `asyncio.Future` instead of a `concurrent.futures.Future`.</span>
 
-<span class="sd">This module provides several executor classes:</span>
-<span class="sd">- _AsyncExecutorMixin: A mixin providing asynchronous run and submit methods, with support for synchronous mode.</span>
-<span class="sd">- AsyncProcessPoolExecutor: An async process pool executor.</span>
-<span class="sd">- AsyncThreadPoolExecutor: An async thread pool executor.</span>
-<span class="sd">- PruningThreadPoolExecutor: A thread pool executor that prunes inactive threads after a timeout, ensuring at least one thread remains active.</span>
+<span class="sd">Executor Classes:</span>
+<span class="sd">- :class:`_AsyncExecutorMixin`: A mixin providing asynchronous run and submit methods, with support for synchronous mode.</span>
+<span class="sd">- :class:`AsyncProcessPoolExecutor`: An async process pool executor.</span>
+<span class="sd">- :class:`AsyncThreadPoolExecutor`: An async thread pool executor.</span>
+<span class="sd">- :class:`PruningThreadPoolExecutor`: A thread pool executor that prunes inactive threads after a timeout, ensuring at least one thread remains active to prevent locks.</span>
+
+<span class="sd">See Also:</span>
+<span class="sd">    - :mod:`concurrent.futures` for the original synchronous executor implementations.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
@@ -102,6 +107,16 @@
 <span class="k">class</span> <span class="nc">_AsyncExecutorMixin</span><span class="p">(</span><span class="n">cf</span><span class="o">.</span><span class="n">Executor</span><span class="p">,</span> <span class="n">_DebugDaemonMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A mixin for Executors to provide asynchronous run and submit methods.</span>
+
+<span class="sd">    This mixin allows executors to operate in both synchronous and asynchronous modes. In synchronous mode, functions are executed directly in the current thread. In asynchronous mode, functions are submitted to the executor and awaited.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; async def example():</span>
+<span class="sd">        &gt;&gt;&gt;     result = await executor.run(some_function, arg1, arg2, kwarg1=value1)</span>
+<span class="sd">        &gt;&gt;&gt;     print(result)</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :meth:`submit` for submitting functions to the executor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_max_workers</span><span class="p">:</span> <span class="nb">int</span>
@@ -236,8 +251,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An async process pool executor that allows use of kwargs.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        _workers:</span>
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; executor = AsyncProcessPoolExecutor(max_workers=4)</span>
+<span class="sd">        &gt;&gt;&gt; future = executor.submit(some_function, arg1, arg2)</span>
+<span class="sd">        &gt;&gt;&gt; result = await future</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_workers</span> <span class="o">=</span> <span class="s2">&quot;processes&quot;</span>
@@ -296,6 +313,11 @@
 <span class="k">class</span> <span class="nc">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">cf</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An async thread pool executor that allows use of kwargs.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix=&quot;MyThread&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; future = executor.submit(some_function, arg1, arg2)</span>
+<span class="sd">        &gt;&gt;&gt; result = await future</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_workers</span> <span class="o">=</span> <span class="s2">&quot;threads&quot;</span>
@@ -429,7 +451,16 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This `AsyncThreadPoolExecutor` implementation prunes inactive threads after &#39;timeout&#39; seconds without a work item.</span>
 <span class="sd">    Pruned threads will be automatically recreated as needed for future workloads. Up to &#39;max_threads&#39; can be active at any one time.</span>
-<span class="sd">    A minimum of one thread will remain active to prevent locks.</span>
+<span class="sd">    The executor ensures that at least one active thread remains to prevent locks.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The `_worker` function includes a check (`len(executor) &gt; 1`) to ensure that at least one thread remains active.</span>
+<span class="sd">        This prevents the executor from having zero active threads, which could lead to deadlocks.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; executor = PruningThreadPoolExecutor(max_workers=5, timeout=300)</span>
+<span class="sd">        &gt;&gt;&gt; future = executor.submit(some_function, arg1, arg2)</span>
+<span class="sd">        &gt;&gt;&gt; result = await future</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;_timeout&quot;</span><span class="p">,</span> <span class="s2">&quot;_adjusting_lock&quot;</span>
