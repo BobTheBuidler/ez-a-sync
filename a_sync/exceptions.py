@@ -125,6 +125,9 @@ class InvalidFlag(ASyncFlagException):
         ...     print(e)
         'flag' must be one of: {'sync', 'asynchronous'}. You passed invalid_flag.
         This code should not be reached and likely indicates an issue with a custom subclass definition.
+
+    See Also:
+        - :const:`VIABLE_FLAGS`
     """
 
     def __init__(self, flag: Optional[str]):
