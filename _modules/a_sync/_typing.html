@@ -101,10 +101,14 @@
 <span class="sd">    asyncio.run(main())</span>
 <span class="sd">    ```</span>
 
-<span class="sd">    Example of defining a coroutine function type:</span>
+<span class="sd">    Example of defining a coroutine function type using `CoroFn` with `ParamSpec`:</span>
 
 <span class="sd">    ```python</span>
 <span class="sd">    from a_sync._typing import CoroFn</span>
+<span class="sd">    from typing_extensions import ParamSpec</span>
+<span class="sd">    from typing import Awaitable</span>
+
+<span class="sd">    P = ParamSpec(&quot;P&quot;)</span>
 
 <span class="sd">    async def async_function(x: int) -&gt; str:</span>
 <span class="sd">        return str(x)</span>
@@ -112,10 +116,13 @@
 <span class="sd">    coro_fn: CoroFn[[int], str] = async_function</span>
 <span class="sd">    ```</span>
 
-<span class="sd">    Example of defining a synchronous function type:</span>
+<span class="sd">    Example of defining a synchronous function type using `SyncFn` with `ParamSpec`:</span>
 
 <span class="sd">    ```python</span>
 <span class="sd">    from a_sync._typing import SyncFn</span>
+<span class="sd">    from typing_extensions import ParamSpec</span>
+
+<span class="sd">    P = ParamSpec(&quot;P&quot;)</span>
 
 <span class="sd">    def sync_function(x: int) -&gt; str:</span>
 <span class="sd">        return str(x)</span>

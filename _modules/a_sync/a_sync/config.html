@@ -86,10 +86,8 @@
 <span class="sd">    A_SYNC_CACHE_TYPED: Boolean flag to determine if cache keys should consider types.</span>
 <span class="sd">    A_SYNC_RAM_CACHE_MAXSIZE: Sets the maximum size for the RAM cache. Defaults to -1.</span>
 <span class="sd">    A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. If not specified,</span>
-<span class="sd">        defaults to None, meaning cache entries do not expire by default.</span>
-<span class="sd">        Note: Although the environment variable retrieval process uses 0 as a placeholder,</span>
-<span class="sd">        the actual default behavior is determined by `null_modifiers[&quot;ram_cache_ttl&quot;]`, </span>
-<span class="sd">        which is `None`.</span>
+<span class="sd">        defaults to 0, which is then checked against `null_modifiers[&quot;ram_cache_ttl&quot;]` </span>
+<span class="sd">        to potentially set it to `None`, meaning cache entries do not expire by default.</span>
 <span class="sd">    A_SYNC_RUNS_PER_MINUTE: Sets the rate limit for function execution.</span>
 <span class="sd">    A_SYNC_SEMAPHORE: Sets the semaphore limit for function execution.</span>
 

@@ -444,7 +444,7 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._smart.shield">[docs]</a>
 <span class="k">def</span> <span class="nf">shield</span><span class="p">(</span>
     <span class="n">arg</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartFuture</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">SmartFuture</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wait for a future, shielding it from cancellation.</span>
 
@@ -474,6 +474,9 @@
 <span class="sd">    Args:</span>
 <span class="sd">        arg: The awaitable to shield from cancellation.</span>
 <span class="sd">        loop: Optional; the event loop. Deprecated since Python 3.8.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A :class:`SmartFuture` or :class:`asyncio.Future` instance.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        Using shield to protect a coroutine from cancellation:</span>

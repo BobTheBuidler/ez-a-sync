@@ -152,7 +152,7 @@
 <span class="sd">    - Provides progress reporting using :mod:`tqdm` if &#39;tqdm&#39; is set to True.</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        The `return_exceptions` parameter is not directly used in this function but is relevant for wrapped awaitables in mappings. Users should test their specific use cases to ensure the desired behavior.</span>
+<span class="sd">        The `return_exceptions` parameter is used to wrap awaitables with exceptions if set to True, allowing exceptions to be returned as results instead of being raised.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</span>

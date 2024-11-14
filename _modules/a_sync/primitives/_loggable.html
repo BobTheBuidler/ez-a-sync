@@ -104,7 +104,7 @@
 <span class="sd">            &gt;&gt;&gt; instance = MyClass()</span>
 <span class="sd">            &gt;&gt;&gt; logger = instance.logger</span>
 <span class="sd">            &gt;&gt;&gt; logger.name</span>
-<span class="sd">            &#39;your_module_name.MyClass.example&#39;</span>
+<span class="sd">            &#39;module_name.MyClass.example&#39;</span>
 
 <span class="sd">            &gt;&gt;&gt; class AnotherClass(_LoggerMixin):</span>
 <span class="sd">            ...     pass</span>
@@ -112,10 +112,10 @@
 <span class="sd">            &gt;&gt;&gt; another_instance = AnotherClass()</span>
 <span class="sd">            &gt;&gt;&gt; another_logger = another_instance.logger</span>
 <span class="sd">            &gt;&gt;&gt; another_logger.name</span>
-<span class="sd">            &#39;your_module_name.AnotherClass&#39;</span>
+<span class="sd">            &#39;module_name.AnotherClass&#39;</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            Replace `your_module_name` with the actual module name where the class is defined.</span>
+<span class="sd">            Replace `module_name` with the actual module name where the class is defined.</span>
 
 <span class="sd">        See Also:</span>
 <span class="sd">            - :func:`logging.getLogger`</span>

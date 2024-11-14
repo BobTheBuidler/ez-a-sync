@@ -898,8 +898,8 @@ Ensure that your environment supports this usage or adjust the import if necessa
 <span class="go">&#39;sync&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_flag_name</span><span class="p">({</span><span class="s1">&#39;async&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
-<span class="go">&#39;async&#39;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_flag_name</span><span class="p">({</span><span class="s1">&#39;asynchronous&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+<span class="go">&#39;asynchronous&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">get_flag_name</span><span class="p">({})</span>
@@ -933,7 +933,7 @@ Ensure that your environment supports this usage or adjust the import if necessa
 <span class="go">True</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_sync</span><span class="p">(</span><span class="s1">&#39;async&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;async&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">is_sync</span><span class="p">(</span><span class="s1">&#39;asynchronous&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;asynchronous&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 <span class="go">False</span>
 </pre></div>
 </div>
@@ -1303,10 +1303,8 @@ A_SYNC_CACHE_TYPED: Boolean flag to determine if cache keys should consider type
 A_SYNC_RAM_CACHE_MAXSIZE: Sets the maximum size for the RAM cache. Defaults to -1.
 A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. If not specified,</p>
 <blockquote>
-<div><p>defaults to None, meaning cache entries do not expire by default.
-Note: Although the environment variable retrieval process uses 0 as a placeholder,
-the actual default behavior is determined by <cite>null_modifiers[“ram_cache_ttl”]</cite>,
-which is <cite>None</cite>.</p>
+<div><p>defaults to 0, which is then checked against <cite>null_modifiers[“ram_cache_ttl”]</cite>
+to potentially set it to <cite>None</cite>, meaning cache entries do not expire by default.</p>
 </div></blockquote>
 <p>A_SYNC_RUNS_PER_MINUTE: Sets the rate limit for function execution.
 A_SYNC_SEMAPHORE: Sets the semaphore limit for function execution.</p>
@@ -1493,6 +1491,11 @@ config.default_sync_executor.</p></li>
 <p>This decorator is particularly useful for libraries that need to support
 both synchronous and asynchronous usage, or for gradually migrating
 synchronous code to asynchronous without breaking existing interfaces.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the <cite>coro_fn</cite> argument is passed as ‘async’ or ‘sync’, it is treated as the <cite>default</cite> argument,
+and <cite>coro_fn</cite> is set to <cite>None</cite>.</p>
+</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncDecorator</span></code></p>
@@ -1938,7 +1941,7 @@ such as caching, rate limiting, and execution in specific contexts (e.g., thread
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The logic for determining whether to execute the function synchronously or asynchronously
-is handled by the <cite>_run_sync</cite> method, which checks for flags in the <cite>kwargs</cite> and defers
+is handled by the <cite>self.fn</cite> property, which checks for flags in the <cite>kwargs</cite> and defers
 to the default execution mode if no flags are specified.</p>
 </div>
 <p class="rubric">Example</p>
@@ -1963,12 +1966,13 @@ result = await func(5)  # returns “5”</p>
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/function.html#ASyncFunction.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.__call__" title="Link to this definition"></a></dt>
 <dd><p>Calls the wrapped function either synchronously or asynchronously.</p>
 <p>This method determines whether to execute the wrapped function synchronously
-or asynchronously based on the default mode and any provided flags.</p>
+or asynchronously based on the default mode and any provided flags. The
+decision logic is encapsulated within the <cite>self.fn</cite> property, which uses
+the <cite>_run_sync</cite> method to decide the execution mode.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The logic for determining the execution mode is handled by the
-<a class="reference internal" href="#a_sync.a_sync.function.ASyncFunction._run_sync" title="a_sync.a_sync.function.ASyncFunction._run_sync"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_run_sync()</span></code></a> method, which checks for flags in the kwargs and
-defers to the default execution mode if no flags are specified.</p>
+<p>The <cite>self.fn</cite> property is responsible for selecting the appropriate
+execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -5020,6 +5024,10 @@ the method’s default setting, or specific flags passed during the method call.
 which is the actual object that can be called in both synchronous and asynchronous contexts.
 It can create different types of bound methods (<cite>ASyncBoundMethodSyncDefault</cite>,
 <cite>ASyncBoundMethodAsyncDefault</cite>, or <cite>ASyncBoundMethod</cite>) based on the default mode or instance type.</p>
+<p>If the default mode is explicitly set to “sync” or “async”, it creates <cite>ASyncBoundMethodSyncDefault</cite>
+or <cite>ASyncBoundMethodAsyncDefault</cite> respectively. If neither is set, it defaults to creating an
+<cite>ASyncBoundMethod</cite>. For instances of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncABC</span></code>, it checks the <cite>__a_sync_instance_should_await__</cite>
+attribute to decide the type of bound method to create.</p>
 <p>It also manages cache handles for bound methods and prevents setting or deleting the descriptor.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
@@ -11485,9 +11493,10 @@ while maintaining the singleton pattern within each context.</p>
 <p>This class can be instantiated directly, but it is intended to be subclassed
 to define specific asynchronous behavior. Subclasses should define
 the necessary properties and methods to specify the asynchronous behavior, as outlined
-in <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncABC</span></code>.</p>
+in <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncGenericBase</span></code>.</p>
 </div>
 <p class="rubric">Example</p>
+<p>Create a subclass of <cite>ASyncGenericSingleton</cite> to define specific behavior:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyAsyncSingleton</span><span class="p">(</span><span class="n">ASyncGenericSingleton</span><span class="p">):</span>
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">__a_sync_flag_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -11523,7 +11532,6 @@ in <code class="xref py py-class docutils literal notranslate"><span class="pre"
 <ul class="simple">
 <li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncGenericBase</span></code> for base functionality.</p></li>
 <li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSingletonMeta</span></code> for the metaclass managing the singleton behavior.</p></li>
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncABC</span></code> for defining asynchronous and synchronous behavior.</p></li>
 </ul>
 </div>
 <dl class="py method">
@@ -12097,7 +12105,7 @@ such as caching, rate limiting, and execution in specific contexts (e.g., thread
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The logic for determining whether to execute the function synchronously or asynchronously
-is handled by the <cite>_run_sync</cite> method, which checks for flags in the <cite>kwargs</cite> and defers
+is handled by the <cite>self.fn</cite> property, which checks for flags in the <cite>kwargs</cite> and defers
 to the default execution mode if no flags are specified.</p>
 </div>
 <p class="rubric">Example</p>
@@ -12122,12 +12130,13 @@ result = await func(5)  # returns “5”</p>
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/function.html#ASyncFunction.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.__call__" title="Link to this definition"></a></dt>
 <dd><p>Calls the wrapped function either synchronously or asynchronously.</p>
 <p>This method determines whether to execute the wrapped function synchronously
-or asynchronously based on the default mode and any provided flags.</p>
+or asynchronously based on the default mode and any provided flags. The
+decision logic is encapsulated within the <cite>self.fn</cite> property, which uses
+the <cite>_run_sync</cite> method to decide the execution mode.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The logic for determining the execution mode is handled by the
-<a class="reference internal" href="#a_sync.a_sync.ASyncFunction._run_sync" title="a_sync.a_sync.ASyncFunction._run_sync"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_run_sync()</span></code></a> method, which checks for flags in the kwargs and
-defers to the default execution mode if no flags are specified.</p>
+<p>The <cite>self.fn</cite> property is responsible for selecting the appropriate
+execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -15117,6 +15126,11 @@ config.default_sync_executor.</p></li>
 <p>This decorator is particularly useful for libraries that need to support
 both synchronous and asynchronous usage, or for gradually migrating
 synchronous code to asynchronous without breaking existing interfaces.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the <cite>coro_fn</cite> argument is passed as ‘async’ or ‘sync’, it is treated as the <cite>default</cite> argument,
+and <cite>coro_fn</cite> is set to <cite>None</cite>.</p>
+</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#a_sync.a_sync.ASyncFunction" title="a_sync.a_sync.ASyncFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncDecorator</span></code></p>

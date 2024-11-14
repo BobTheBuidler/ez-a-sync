@@ -115,6 +115,11 @@
 <span class="sd">    It can create different types of bound methods (`ASyncBoundMethodSyncDefault`,</span>
 <span class="sd">    `ASyncBoundMethodAsyncDefault`, or `ASyncBoundMethod`) based on the default mode or instance type.</span>
 
+<span class="sd">    If the default mode is explicitly set to &quot;sync&quot; or &quot;async&quot;, it creates `ASyncBoundMethodSyncDefault`</span>
+<span class="sd">    or `ASyncBoundMethodAsyncDefault` respectively. If neither is set, it defaults to creating an</span>
+<span class="sd">    `ASyncBoundMethod`. For instances of :class:`ASyncABC`, it checks the `__a_sync_instance_should_await__`</span>
+<span class="sd">    attribute to decide the type of bound method to create.</span>
+
 <span class="sd">    It also manages cache handles for bound methods and prevents setting or deleting the descriptor.</span>
 
 <span class="sd">    Examples:</span>

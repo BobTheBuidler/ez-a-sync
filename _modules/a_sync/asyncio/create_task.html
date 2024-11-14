@@ -70,7 +70,7 @@
              
   <h1>Source code for a_sync.asyncio.create_task</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module extends asyncio.create_task to support any Awaitable,</span>
+<span class="sd">This module extends :func:`asyncio.create_task` to support any :class:`Awaitable`,</span>
 <span class="sd">manage task lifecycle, and enhance error handling.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -97,10 +97,10 @@
 <span class="sd">    Extends :func:`asyncio.create_task` to support any :class:`Awaitable`, manage task lifecycle, and enhance error handling.</span>
 
 <span class="sd">    This function accepts any :class:`Awaitable`, ensuring broader compatibility. If the Awaitable is not a coroutine,</span>
-<span class="sd">    it is awaited directly using a private helper function `__await`, which can handle any Awaitable object.</span>
+<span class="sd">    it is awaited directly using a private helper function `__await`, which can handle non-coroutine Awaitable objects.</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        The `__await` function is designed to handle any Awaitable, implicitly managing non-coroutine Awaitables by awaiting them.</span>
+<span class="sd">        The `__await` function is designed to handle non-coroutine Awaitables by awaiting them directly.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        coro: An :class:`Awaitable` object from which to create the task.</span>
@@ -109,9 +109,6 @@
 <span class="sd">            Exceptions are wrapped in :class:`PersistedTaskException` for special handling within the</span>
 <span class="sd">            `__persisted_task_exc_wrap` function.</span>
 <span class="sd">        log_destroy_pending: If False, asyncio&#39;s default error log when a pending task is destroyed is suppressed.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        An :class:`asyncio.Task` object created from the provided Awaitable.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        Create a simple task with a coroutine:</span>
@@ -148,7 +145,7 @@
 
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">__await</span><span class="p">(</span><span class="n">awaitable</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait for the completion of an Awaitable.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait for the completion of a non-coroutine Awaitable.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        awaitable: The :class:`Awaitable` object to wait for.</span>

@@ -209,7 +209,7 @@
 
 <span class="sd">    Note:</span>
 <span class="sd">        The logic for determining whether to execute the function synchronously or asynchronously</span>
-<span class="sd">        is handled by the `_run_sync` method, which checks for flags in the `kwargs` and defers</span>
+<span class="sd">        is handled by the `self.fn` property, which checks for flags in the `kwargs` and defers</span>
 <span class="sd">        to the default execution mode if no flags are specified.</span>
 
 <span class="sd">    Example:</span>
@@ -376,12 +376,13 @@
 <span class="sd">        Calls the wrapped function either synchronously or asynchronously.</span>
 
 <span class="sd">        This method determines whether to execute the wrapped function synchronously</span>
-<span class="sd">        or asynchronously based on the default mode and any provided flags.</span>
+<span class="sd">        or asynchronously based on the default mode and any provided flags. The</span>
+<span class="sd">        decision logic is encapsulated within the `self.fn` property, which uses</span>
+<span class="sd">        the `_run_sync` method to decide the execution mode.</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            The logic for determining the execution mode is handled by the</span>
-<span class="sd">            :meth:`_run_sync` method, which checks for flags in the kwargs and</span>
-<span class="sd">            defers to the default execution mode if no flags are specified.</span>
+<span class="sd">            The `self.fn` property is responsible for selecting the appropriate</span>
+<span class="sd">            execution path (sync or async) by leveraging the `_run_sync` method.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            *args: Positional arguments to pass to the wrapped function.</span>

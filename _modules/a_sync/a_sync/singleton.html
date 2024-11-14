@@ -94,9 +94,11 @@
 <span class="sd">        This class can be instantiated directly, but it is intended to be subclassed</span>
 <span class="sd">        to define specific asynchronous behavior. Subclasses should define</span>
 <span class="sd">        the necessary properties and methods to specify the asynchronous behavior, as outlined</span>
-<span class="sd">        in :class:`ASyncABC`.</span>
+<span class="sd">        in :class:`ASyncGenericBase`.</span>
 
 <span class="sd">    Example:</span>
+<span class="sd">        Create a subclass of `ASyncGenericSingleton` to define specific behavior:</span>
+
 <span class="sd">        .. code-block:: python</span>
 
 <span class="sd">            class MyAsyncSingleton(ASyncGenericSingleton):</span>
@@ -131,7 +133,6 @@
 <span class="sd">    See Also:</span>
 <span class="sd">        - :class:`ASyncGenericBase` for base functionality.</span>
 <span class="sd">        - :class:`ASyncSingletonMeta` for the metaclass managing the singleton behavior.</span>
-<span class="sd">        - :class:`ASyncABC` for defining asynchronous and synchronous behavior.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 </pre></div>

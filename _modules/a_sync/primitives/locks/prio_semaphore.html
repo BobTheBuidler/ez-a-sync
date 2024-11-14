@@ -107,9 +107,9 @@
 
 <span class="sd">    This semaphore manages waiters with associated priorities, ensuring that waiters with higher</span>
 <span class="sd">    priorities are processed before those with lower priorities. Subclasses must define the</span>
-<span class="sd">    `_top_priority` property to specify the default top priority behavior.</span>
+<span class="sd">    `_top_priority` attribute to specify the default top priority behavior.</span>
 
-<span class="sd">    The `_context_manager_class` property should return the class used for managing semaphore contexts.</span>
+<span class="sd">    The `_context_manager_class` attribute should specify the class used for managing semaphore contexts.</span>
 
 <span class="sd">    See Also:</span>
 <span class="sd">        :class:`PrioritySemaphore` for an implementation using numeric priorities.</span>

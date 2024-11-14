@@ -274,6 +274,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dt class="sig sig-object py" id="a_sync.primitives.locks.counter.CounterLock.wait_for">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait_for</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock.wait_for"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.counter.CounterLock.wait_for" title="Link to this definition"></a></dt>
 <dd><p>Waits until the counter reaches or exceeds the specified value.</p>
+<p>This method will ensure the debug daemon is running if the counter is not ready.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The value to wait for.</p>
@@ -355,7 +356,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
+<span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -364,12 +365,12 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
+<span class="go">&#39;module_name.AnotherClass&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
+<p>Replace <cite>module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -679,7 +680,7 @@ true will not block at all.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
+<span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -688,12 +689,12 @@ true will not block at all.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
+<span class="go">&#39;module_name.AnotherClass&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
+<p>Replace <cite>module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -1119,7 +1120,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
+<span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -1128,12 +1129,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
+<span class="go">&#39;module_name.AnotherClass&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
+<p>Replace <cite>module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -1158,8 +1159,8 @@ become larger than zero again, wake up that coroutine.</p>
 <p>A semaphore that allows prioritization of waiters.</p>
 <p>This semaphore manages waiters with associated priorities, ensuring that waiters with higher
 priorities are processed before those with lower priorities. Subclasses must define the
-<cite>_top_priority</cite> property to specify the default top priority behavior.</p>
-<p>The <cite>_context_manager_class</cite> property should return the class used for managing semaphore contexts.</p>
+<cite>_top_priority</cite> attribute to specify the default top priority behavior.</p>
+<p>The <cite>_context_manager_class</cite> attribute should specify the class used for managing semaphore contexts.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">PrioritySemaphore</span></code></a> for an implementation using numeric priorities.</p>
@@ -1541,7 +1542,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
+<span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -1550,12 +1551,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
+<span class="go">&#39;module_name.AnotherClass&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
+<p>Replace <cite>module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -1897,7 +1898,7 @@ async def limited():</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
+<span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -1906,12 +1907,12 @@ async def limited():</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
+<span class="go">&#39;module_name.AnotherClass&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
+<p>Replace <cite>module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -2263,7 +2264,7 @@ async def limited():</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
+<span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -2272,12 +2273,12 @@ async def limited():</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
+<span class="go">&#39;module_name.AnotherClass&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
+<p>Replace <cite>module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -2352,12 +2353,7 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.DummySemaphore.acquire">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/semaphore.html#DummySemaphore.acquire"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore.acquire" title="Link to this definition"></a></dt>
-<dd><p>Acquire a semaphore.</p>
-<p>If the internal counter is larger than zero on entry,
-decrement it by one and return True immediately.  If it is
-zero on entry, block, waiting until some other coroutine has
-called release() to make it larger than 0, and then return
-True.</p>
+<dd><p>Acquire the dummy semaphore, which is a no-op.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
@@ -2698,7 +2694,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
+<span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -2707,12 +2703,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
+<span class="go">&#39;module_name.AnotherClass&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
+<p>Replace <cite>module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -3023,7 +3019,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
+<span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -3032,12 +3028,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
+<span class="go">&#39;module_name.AnotherClass&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
+<p>Replace <cite>module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
