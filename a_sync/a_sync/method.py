@@ -42,6 +42,11 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     It can create different types of bound methods (`ASyncBoundMethodSyncDefault`,
     `ASyncBoundMethodAsyncDefault`, or `ASyncBoundMethod`) based on the default mode or instance type.
 
+    If the default mode is explicitly set to "sync" or "async", it creates `ASyncBoundMethodSyncDefault`
+    or `ASyncBoundMethodAsyncDefault` respectively. If neither is set, it defaults to creating an
+    `ASyncBoundMethod`. For instances of :class:`ASyncABC`, it checks the `__a_sync_instance_should_await__`
+    attribute to decide the type of bound method to create.
+
     It also manages cache handles for bound methods and prevents setting or deleting the descriptor.
 
     Examples:
