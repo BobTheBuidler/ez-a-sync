@@ -350,7 +350,7 @@ def set_smart_task_factory(loop: asyncio.AbstractEventLoop = None) -> None:
 
 def shield(
     arg: Awaitable[T], *, loop: Optional[asyncio.AbstractEventLoop] = None
-) -> SmartFuture[T]:
+) -> Union[SmartFuture[T], asyncio.Future]:
     """
     Wait for a future, shielding it from cancellation.
 
@@ -380,6 +380,9 @@ def shield(
     Args:
         arg: The awaitable to shield from cancellation.
         loop: Optional; the event loop. Deprecated since Python 3.8.
+
+    Returns:
+        A :class:`SmartFuture` or :class:`asyncio.Future` instance.
 
     Example:
         Using shield to protect a coroutine from cancellation:
