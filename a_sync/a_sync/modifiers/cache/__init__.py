@@ -11,16 +11,38 @@ class CacheArgs(TypedDict):
     """Typed dictionary for cache arguments."""
 
     cache_type: CacheType
+    """The type of cache to use. Currently, only 'memory' is implemented."""
+
     cache_typed: bool
+    """Whether to consider types for cache keys."""
+
     ram_cache_maxsize: Optional[int]
+    """The maximum size for the LRU cache."""
+
     ram_cache_ttl: Optional[int]
+    """The time-to-live for items in the LRU cache."""
 
 
 @overload
 def apply_async_cache(
     **modifiers: Unpack[CacheArgs],
 ) -> AsyncDecorator[P, T]:
-    """Overload for when no coroutine function is provided."""
+    """Creates a decorator to apply an asynchronous cache.
+
+    This overload is used when no coroutine function is provided. The returned
+    decorator can be applied to a coroutine function later.
+
+    Args:
+        **modifiers: Cache configuration options such as `cache_type`, `cache_typed`, `ram_cache_maxsize`, and `ram_cache_ttl`.
+
+    Examples:
+        >>> @apply_async_cache(cache_type='memory', ram_cache_maxsize=100)
+        ... async def my_function():
+        ...     pass
+
+    See Also:
+        :func:`apply_async_memory_cache`
+    """
 
 
 @overload
@@ -28,7 +50,24 @@ def apply_async_cache(
     coro_fn: int,
     **modifiers: Unpack[CacheArgs],
 ) -> AsyncDecorator[P, T]:
-    """Overload for when an integer is provided as the coroutine function."""
+    """Creates a decorator with `ram_cache_maxsize` set by an integer.
+
+    This overload is used when an integer is provided as the first argument,
+    which sets the `ram_cache_maxsize` for the cache. The returned decorator
+    can be applied to a coroutine function later.
+
+    Args:
+        coro_fn: An integer to set as the max size for the cache.
+        **modifiers: Additional cache configuration options.
+
+    Examples:
+        >>> @apply_async_cache(100, cache_type='memory')
+        ... async def my_function():
+        ...     pass
+
+    See Also:
+        :func:`apply_async_memory_cache`
+    """
 
 
 @overload
@@ -36,7 +75,23 @@ def apply_async_cache(
     coro_fn: CoroFn[P, T],
     **modifiers: Unpack[CacheArgs],
 ) -> CoroFn[P, T]:
-    """Overload for when a coroutine function is provided."""
+    """Applies an asynchronous cache directly to a coroutine function.
+
+    This overload is used when a coroutine function is provided. The cache is
+    applied directly to the function.
+
+    Args:
+        coro_fn: The coroutine function to be cached.
+        **modifiers: Cache configuration options such as `cache_type`, `cache_typed`, `ram_cache_maxsize`, and `ram_cache_ttl`.
+
+    Examples:
+        >>> async def my_function():
+        ...     pass
+        >>> cached_function = apply_async_cache(my_function, cache_type='memory', ram_cache_maxsize=100)
+
+    See Also:
+        :func:`apply_async_memory_cache`
+    """
 
 
 def apply_async_cache(
@@ -47,6 +102,8 @@ def apply_async_cache(
     ram_cache_ttl: Optional[int] = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
     """Applies an asynchronous cache to a coroutine function.
+
+    This function can be used to apply a cache to a coroutine function, either by passing the function directly or by using it as a decorator. The cache type is currently limited to 'memory'. If an unsupported cache type is specified, a `NotImplementedError` is raised.
 
     Args:
         coro_fn: The coroutine function to apply the cache to, or an integer to set as the max size.
@@ -60,8 +117,21 @@ def apply_async_cache(
         FunctionNotAsync: If the provided function is not asynchronous.
         NotImplementedError: If an unsupported cache type is specified.
 
-    Returns:
-        A decorator or the decorated coroutine function.
+    Examples:
+        >>> @apply_async_cache(cache_type='memory', ram_cache_maxsize=100)
+        ... async def my_function():
+        ...     pass
+
+        >>> async def my_function():
+        ...     pass
+        >>> cached_function = apply_async_cache(my_function, cache_type='memory', ram_cache_maxsize=100)
+
+        >>> @apply_async_cache(100, cache_type='memory')
+        ... async def another_function():
+        ...     pass
+
+    See Also:
+        :func:`apply_async_memory_cache`
     """
 
     # Parse Inputs

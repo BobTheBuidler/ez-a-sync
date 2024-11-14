@@ -10,6 +10,9 @@ async def test_create_task():
 
     Verifies that a task can be created using the `create_task`
     function with a coroutine and a specified name.
+
+    See Also:
+        - :func:`a_sync.create_task`
     """
     t = create_task(coro=asyncio.sleep(0), name="test")
     assert t.get_name() == "test", t
@@ -17,13 +20,16 @@ async def test_create_task():
 
 
 @pytest.mark.asyncio_cooperative
-async def test_persistent_task():
+async def test_persistent_task():  # sourcery skip: simplify-boolean-comparison
     """Test the persistence of a task without a local reference.
 
     Checks if a task created without a local reference
     completes successfully by setting a nonlocal variable.
     The test ensures that the task completes by verifying
     the change in the nonlocal variable.
+
+    See Also:
+        - :func:`a_sync.create_task`
     """
     check = False
 
@@ -43,7 +49,11 @@ async def test_pruning():
     """Test task creation and handling without errors.
 
     Ensures that tasks can be created without causing errors.
-    This test does not explicitly check for task pruning.
+    This test does not explicitly check for task pruning, despite
+    its name, but rather focuses on task creation stability.
+
+    See Also:
+        - :func:`a_sync.create_task`
     """
 
     async def task():
@@ -59,9 +69,12 @@ async def test_pruning():
 async def test_task_mapping_init():
     """Test initialization of TaskMapping.
 
-    Verifies that the TaskMapping class initializes correctly
+    Verifies that the :class:`TaskMapping` class initializes correctly
     with the provided coroutine function and arguments. Checks
     the handling of function arguments and the task name.
+
+    See Also:
+        - :class:`a_sync.TaskMapping`
     """
     tasks = TaskMapping(_coro_fn)
     assert (
@@ -78,9 +91,12 @@ async def test_task_mapping_init():
 async def test_task_mapping():
     """Test the functionality of TaskMapping.
 
-    Checks the behavior of TaskMapping, including task
+    Checks the behavior of :class:`TaskMapping`, including task
     creation, retrieval, and execution. Verifies the ability
     to await the mapping and checks the return values of tasks.
+
+    See Also:
+        - :class:`a_sync.TaskMapping`
     """
     tasks = TaskMapping(_coro_fn)
     # does it return the correct type
@@ -108,10 +124,13 @@ async def test_task_mapping():
 async def test_task_mapping_map_with_sync_iter():
     """Test TaskMapping with a synchronous iterator.
 
-    Verifies that TaskMapping can map over a synchronous
+    Verifies that :class:`TaskMapping` can map over a synchronous
     iterator and correctly handle keys, values, and items.
-    Ensures that mapping in progress raises a RuntimeError
+    Ensures that mapping in progress raises a :class:`RuntimeError`
     when attempted concurrently.
+
+    See Also:
+        - :class:`a_sync.TaskMapping`
     """
     tasks = TaskMapping(_coro_fn)
     i = 0
@@ -168,10 +187,13 @@ async def test_task_mapping_map_with_sync_iter():
 async def test_task_mapping_map_with_async_iter():
     """Test TaskMapping with an asynchronous iterator.
 
-    Verifies that TaskMapping can map over an asynchronous
+    Verifies that :class:`TaskMapping` can map over an asynchronous
     iterator and correctly handle keys, values, and items.
-    Ensures that mapping in progress raises a RuntimeError
+    Ensures that mapping in progress raises a :class:`RuntimeError`
     when attempted concurrently.
+
+    See Also:
+        - :class:`a_sync.TaskMapping`
     """
 
     async def async_iter():
@@ -262,22 +284,19 @@ def test_taskmapping_views_sync():
     """Test synchronous views of TaskMapping.
 
     Checks the synchronous access to keys, values, and items
-    in TaskMapping. Verifies the state of these views before
+    in :class:`TaskMapping`. Verifies the state of these views before
     and after gathering tasks.
+
+    See Also:
+        - :class:`a_sync.TaskMapping`
     """
     tasks = TaskMapping(_coro_fn, range(5))
 
     # keys are currently empty until the loop has a chance to run
-    assert len(tasks.keys()) == 0
-    assert len(tasks.values()) == 0
-    assert len(tasks.items()) == 0
-
+    _assert_len_dictviews(tasks, 0)
     tasks.gather()
 
-    assert len(tasks.keys()) == 5
-    assert len(tasks.values()) == 5
-    assert len(tasks.items()) == 5
-
+    _assert_len_dictviews(tasks, 5)
     for k in tasks.keys():
         assert isinstance(k, int)
 
@@ -295,6 +314,12 @@ def test_taskmapping_views_sync():
         assert isinstance(k, int)
 
 
+def _assert_len_dictviews(tasks, i):
+    assert len(tasks.keys()) == i
+    assert len(tasks.values()) == i
+    assert len(tasks.items()) == i
+
+
 async def _coro_fn(i: int) -> str:
     """Coroutine function for testing.
 
@@ -303,6 +328,9 @@ async def _coro_fn(i: int) -> str:
 
     Returns:
         A string representation of the incremented input.
+
+    See Also:
+        - :func:`a_sync.TaskMapping`
     """
     i += 1
     return str(i) * i

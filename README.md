@@ -13,11 +13,16 @@
         - [async modifiers](#async-modifiers)
         - [sync modifiers](#sync-modifiers)
         - [Default Modifiers](#default-modifiers)
-    - [Other Helpful Classes](#other-helpful-classes)
+    - [Other Helpful Classes](#other-helpful-modules)
         - [ASyncIterable](#asynciterable)
         - [ASyncIterator](#asynciterator)
         - [ASyncFilter](#asyncfilter)
         - [ASyncSorter](#asyncsorter)
+- [Other Helpful Modules](#other-helpful-modules)
+    - [future](#future)
+        - [ASyncFuture](#asyncfuture)
+        - [future decorator](#future-decorator)
+    - [asyncio](#asyncio)
 
 <!-- /TOC -->
 ## Introduction
@@ -203,7 +208,7 @@ Instead of setting modifiers one by one in functions, you can set a default valu
 
 ### Other Helpful Classes
 #### ASyncIterable
-The `ASyncIterable` class allows objects to be iterated over using either a standard `for` loop or an `async for` loop. This is particularly useful in scenarios where the mode of iteration needs to be flexible or is determined at runtime.
+The [ASyncIterable](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.ASyncIterable) class allows objects to be iterated over using either a standard `for` loop or an `async for` loop. This is particularly useful in scenarios where the mode of iteration needs to be flexible or is determined at runtime.
 
 ```python
 from a_sync import ASyncIterable
@@ -219,9 +224,11 @@ for item in async_iterable:
     ...
 ```
 
+See the [documentation](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.ASyncIterable) for more information.
+
 #### ASyncIterator
 
-The `ASyncIterator` class provides a unified interface for iteration that can operate in both synchronous and asynchronous contexts. It allows the wrapping of asynchronous iterable objects or async generator functions.
+The [ASyncIterator](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.ASyncIterator) class provides a unified interface for iteration that can operate in both synchronous and asynchronous contexts. It allows the wrapping of asynchronous iterable objects or async generator functions.
 
 ```python
 from a_sync import ASyncIterator
@@ -237,9 +244,11 @@ for item in async_iterator:
     ...
 ```
 
+See the [documentation](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.ASyncIterator) for more information.
+
 #### ASyncFilter
 
-The `ASyncFilter` class filters items of an async iterable based on a provided function. It can handle both synchronous and asynchronous filter functions.
+The [ASyncFilter](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.ASyncFilter) class filters items of an async iterable based on a provided function. It can handle both synchronous and asynchronous filter functions.
 
 ```python
 from a_sync import ASyncFilter
@@ -263,9 +272,11 @@ for item in filtered_iterable:
     ...
 ```
 
+See the [documentation](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.ASyncFilter) for more information.
+
 #### ASyncSorter
 
-The `ASyncSorter` class sorts items of an async iterable based on a provided key function. It supports both synchronous and asynchronous key functions.
+The [ASyncSorter](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.ASyncSorter) class sorts items of an async iterable based on a provided key function. It supports both synchronous and asynchronous key functions.
 
 ```python
 from a_sync import ASyncSorter
@@ -284,3 +295,35 @@ async for item in sorted_iterable:
 # Synchronous iteration
 for item in sorted_iterable:
     ...
+```
+
+See the [documentation](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.ASyncSorter) for more information.
+
+## Other Helpful Modules
+The stuff here is unrelated to the main purpose of ez-a-sync, but cool and useful nonetheless
+
+### asyncio
+
+The `ez-a-sync` library extends the functionality of Python's `asyncio` module with additional utilities to simplify asynchronous programming.
+
+- **as_completed**: This function allows you to iterate over awaitables as they complete, similar to `asyncio.as_completed`. It supports both synchronous and asynchronous iteration. [Learn more about `as_completed`](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.asyncio.as_completed).
+
+- **gather**: A utility to run multiple asynchronous operations concurrently and wait for all of them to complete. It is similar to `asyncio.gather` but integrates seamlessly with the `ez-a-sync` library. [Learn more about `gather`](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.asyncio.gather).
+
+- **create_task**: A function to create a new task from a coroutine, similar to `asyncio.create_task`, but with additional features provided by `ez-a-sync`. [Learn more about `create_task`](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.asyncio.create_task).
+
+- **as_completed**: This function allows you to iterate over awaitables as they complete, similar to `asyncio.as_completed`. It supports both synchronous and asynchronous iteration. [Learn more about `as_completed`](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.asyncio.as_completed).
+
+These utilities enhance the standard `asyncio` module, providing more flexibility and control over asynchronous operations. For detailed documentation and examples, please refer to the [documentation](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.asyncio)
+
+### future
+The future module is something totally different. 
+ TODO: short explainer of module value prop and use case
+
+#### ASyncFuture
+[documentation](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.future.ASyncFuture)
+ TODO: short explainers on ASyncFuture class
+
+#### future decorator
+[documentation](#https://bobthebuidler.github.io/ez-a-sync/source/a_sync.html#a_sync.future.future)
+ TODO: short explainers on future fn

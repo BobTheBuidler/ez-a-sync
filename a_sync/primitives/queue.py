@@ -1,8 +1,16 @@
 """
-This module provides various queue implementations for managing asynchronous tasks, 
-including standard FIFO queues, priority queues, and processing queues.
-# TODO specify a list of specific objects with a brief description + use case example instead of being vague like this
+This module provides various queue implementations for managing asynchronous tasks. 
+It includes standard FIFO queues, priority queues, and processing queues with enhanced functionality.
 
+Classes:
+    Queue: A generic asynchronous queue that extends the functionality of `asyncio.Queue`.
+    ProcessingQueue: A queue designed for processing tasks asynchronously with multiple workers.
+    PriorityProcessingQueue: A priority-based processing queue where tasks are processed based on priority.
+    SmartProcessingQueue: A processing queue that executes jobs with the most waiters first, supporting dynamic priorities.
+
+See Also:
+    `asyncio.Queue`: The base class for asynchronous FIFO queues.
+    `asyncio.PriorityQueue`: The base class for priority queues.
 """
 
 import asyncio
@@ -38,7 +46,7 @@ else:
 
 class Queue(_Queue[T]):
     """
-    A generic asynchronous queue that extends the functionality of asyncio.Queue.
+    A generic asynchronous queue that extends the functionality of `asyncio.Queue`.
 
     This implementation supports retrieving multiple items at once and handling
     task processing in both FIFO and LIFO order. It provides enhanced type hinting
@@ -66,9 +74,6 @@ class Queue(_Queue[T]):
 
         If the queue is empty, this method will block until an item is available.
 
-        Returns:
-            T: The next item in the queue.
-
         Example:
             >>> result = await queue.get()
             >>> print(result)
@@ -84,9 +89,6 @@ class Queue(_Queue[T]):
 
         Raises:
             :exc:`~asyncio.QueueEmpty`: If the queue is empty.
-
-        Returns:
-            T: The next item in the queue.
 
         Example:
             >>> result = queue.get_nowait()
@@ -133,9 +135,6 @@ class Queue(_Queue[T]):
         If the queue is empty, this method will wait until at least one item
         is available before returning.
 
-        Returns:
-            List[T]: A list of all items that were in the queue.
-
         Example:
             >>> tasks = await queue.get_all()
             >>> print(tasks)
@@ -154,9 +153,6 @@ class Queue(_Queue[T]):
 
         Raises:
             :exc:`~asyncio.QueueEmpty`: If the queue is empty.
-
-        Returns:
-            List[T]: A list of all items that were in the queue.
 
         Example:
             >>> tasks = queue.get_all_nowait()
@@ -178,9 +174,6 @@ class Queue(_Queue[T]):
         Args:
             i: The number of items to retrieve.
             can_return_less: If True, may return fewer than `i` items if queue is emptied.
-
-        Returns:
-            List[T]: A list containing the retrieved items.
 
         Raises:
             :exc:`~asyncio.QueueEmpty`: If no items are available and fewer items cannot be returned.
@@ -210,9 +203,6 @@ class Queue(_Queue[T]):
 
         Raises:
             :exc:`~asyncio.QueueEmpty`: If no items are available and fewer items cannot be returned.
-
-        Returns:
-            List[T]: A list containing the retrieved items.
 
         Example:
             >>> tasks = queue.get_multi_nowait(i=3, can_return_less=True)
@@ -548,6 +538,9 @@ def _validate_args(i: int, can_return_less: bool) -> None:
 class _SmartFutureRef(weakref.ref, Generic[T]):
     """
     Weak reference for :class:`~_smart.SmartFuture` objects used in priority queues.
+
+    See Also:
+        :class:`~_smart.SmartFuture`
     """
 
     def __lt__(self, other: "_SmartFutureRef[T]") -> bool:
@@ -578,6 +571,9 @@ class _SmartFutureRef(weakref.ref, Generic[T]):
 class _PriorityQueueMixin(Generic[T]):
     """
     Mixin for creating priority queue functionality with support for custom comparison.
+
+    See Also:
+        :class:`~asyncio.PriorityQueue`
     """
 
     def _init(self, maxsize):
@@ -612,7 +608,20 @@ class _PriorityQueueMixin(Generic[T]):
 class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
     """
     A priority-based processing queue where tasks are processed based on priority.
-    # NOTE: WIP
+
+    This queue allows tasks to be added with a specified priority, ensuring that
+    higher priority tasks are processed before lower priority ones. It is ideal
+    for scenarios where task prioritization is crucial.
+
+    Example:
+        >>> async def process_task(data): return data.upper()
+        >>> queue = PriorityProcessingQueue(func=process_task, num_workers=5)
+        >>> fut = await queue.put(priority=1, item='task')
+        >>> print(await fut)
+        TASK
+
+    See Also:
+        :class:`~ProcessingQueue`
     """
 
     async def put(
@@ -679,6 +688,9 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
 class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
     """
     Mixin for priority queues where task priorities can be updated dynamically.
+
+    See Also:
+        :class:`~_PriorityQueueMixin`
     """
 
     def _get(self, heapify=heapq.heapify, heappop=heapq.heappop):
@@ -721,7 +733,20 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
 class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueue):
     """
     A :class:`~asyncio.PriorityQueue` subclass that allows priorities to be updated (or computed) on the fly.
-    # NOTE: WIP
+
+    This queue supports dynamic priority updates, making it suitable for tasks
+    where priorities may change over time. It ensures that tasks are processed
+    based on the most current priority.
+
+    Example:
+        >>> queue = VariablePriorityQueue()
+        >>> queue.put_nowait((1, 'task1'))
+        >>> queue.put_nowait((2, 'task2'))
+        >>> task = queue.get_nowait()
+        >>> print(task)
+
+    See Also:
+        :class:`~asyncio.PriorityQueue`
     """
 
 
@@ -729,7 +754,21 @@ class SmartProcessingQueue(
     _VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]
 ):
     """
-    A PriorityProcessingQueue subclass that will execute jobs with the most waiters first
+    A processing queue that will execute jobs with the most waiters first, supporting dynamic priorities.
+
+    This queue is designed to handle tasks with dynamic priorities, ensuring that
+    tasks with the most waiters are prioritized. It is ideal for scenarios where
+    task execution order is influenced by the number of waiters.
+
+    Example:
+        >>> async def process_task(data): return data.upper()
+        >>> queue = SmartProcessingQueue(func=process_task, num_workers=5)
+        >>> fut = await queue.put(item='task')
+        >>> print(await fut)
+        TASK
+
+    See Also:
+        :class:`~ProcessingQueue`
     """
 
     _no_futs = False

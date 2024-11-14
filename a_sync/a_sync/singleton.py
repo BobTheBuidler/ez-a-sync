@@ -6,32 +6,56 @@ class ASyncGenericSingleton(ASyncGenericBase, metaclass=ASyncSingletonMeta):
     """
     A base class for creating singleton-esque ASync classes.
 
-    This class combines the functionality of ASyncGenericBase with a singleton pattern,
+    This class combines the functionality of :class:`ASyncGenericBase` with a singleton pattern,
     ensuring that only one instance of the class exists per execution mode (sync/async).
-    It uses a custom metaclass to manage instance creation and caching.
+    It uses a custom metaclass :class:`ASyncSingletonMeta` to manage instance creation and caching.
 
-    Subclasses of ASyncGenericSingleton will have two instances instead of one:
+    Subclasses of :class:`ASyncGenericSingleton` will have two instances instead of one:
     - one synchronous instance
     - one asynchronous instance
 
     This allows for proper behavior in both synchronous and asynchronous contexts
     while maintaining the singleton pattern within each context.
 
+    Note:
+        This class is abstract and cannot be instantiated directly. Subclasses should define
+        the necessary properties and methods to specify the asynchronous behavior, as outlined
+        in :class:`ASyncABC`.
+
     Example:
-        class MyAsyncSingleton(ASyncGenericSingleton):
-            @a_sync
-            def my_method(self):
-                # Method implementation
+        .. code-block:: python
 
-        # These will return the same synchronous instance
-        sync_instance1 = MyAsyncSingleton(sync=True)
-        sync_instance2 = MyAsyncSingleton(sync=True)
+            class MyAsyncSingleton(ASyncGenericSingleton):
+                @property
+                def __a_sync_flag_name__(self):
+                    return "asynchronous"
 
-        # These will return the same asynchronous instance
-        async_instance1 = MyAsyncSingleton(asynchronous=True)
-        async_instance2 = MyAsyncSingleton(asynchronous=True)
+                @property
+                def __a_sync_flag_value__(self):
+                    return self.asynchronous
 
-        assert sync_instance1 is sync_instance2
-        assert async_instance1 is async_instance2
-        assert sync_instance1 is not async_instance1
+                @classmethod
+                def __a_sync_default_mode__(cls):
+                    return False
+
+                @a_sync
+                def my_method(self):
+                    # Method implementation
+
+            # These will return the same synchronous instance
+            sync_instance1 = MyAsyncSingleton(sync=True)
+            sync_instance2 = MyAsyncSingleton(sync=True)
+
+            # These will return the same asynchronous instance
+            async_instance1 = MyAsyncSingleton(asynchronous=True)
+            async_instance2 = MyAsyncSingleton(asynchronous=True)
+
+            assert sync_instance1 is sync_instance2
+            assert async_instance1 is async_instance2
+            assert sync_instance1 is not async_instance1
+
+    See Also:
+        - :class:`ASyncGenericBase` for base functionality.
+        - :class:`ASyncSingletonMeta` for the metaclass managing the singleton behavior.
+        - :class:`ASyncABC` for defining asynchronous and synchronous behavior.
     """

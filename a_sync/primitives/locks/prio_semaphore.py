@@ -30,8 +30,13 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     A semaphore that allows prioritization of waiters.
 
     This semaphore manages waiters with associated priorities, ensuring that waiters with higher
-    priorities are processed before those with lower priorities. If no priority is specified,
-    the semaphore uses a default top priority.
+    priorities are processed before those with lower priorities. Subclasses must define the 
+    `_top_priority` property to specify the default top priority behavior.
+
+    The `_context_manager_class` property should return the class used for managing semaphore contexts.
+
+    See Also:
+        :class:`PrioritySemaphore` for an implementation using numeric priorities.
     """
 
     name: Optional[str]
@@ -55,7 +60,13 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 
     @property
     def _top_priority(self) -> PT:
-        # You can use this so you can set priorities with non numeric comparable values
+        """Defines the top priority for the semaphore.
+
+        Subclasses must implement this property to specify the default top priority.
+
+        Raises:
+            NotImplementedError: If not implemented in a subclass.
+        """
         raise NotImplementedError
 
     def __init__(self, value: int = 1, *, name: Optional[str] = None) -> None:
@@ -64,6 +75,9 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         Args:
             value: The initial capacity of the semaphore.
             name: An optional name for the semaphore, used for debugging.
+
+        Examples:
+            >>> semaphore = _AbstractPrioritySemaphore(5, name="test_semaphore")
         """
 
         self._context_managers = {}
@@ -85,15 +99,36 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={self._count_waiters()}>"
 
     async def __aenter__(self) -> None:
-        """Enters the semaphore context, acquiring it with the top priority."""
+        """Enters the semaphore context, acquiring it with the top priority.
+
+        This method is part of the asynchronous context management protocol.
+
+        Examples:
+            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> async with semaphore:
+            ...     await do_stuff()
+        """
         await self[self._top_priority].acquire()
 
     async def __aexit__(self, *_) -> None:
-        """Exits the semaphore context, releasing it with the top priority."""
+        """Exits the semaphore context, releasing it with the top priority.
+
+        This method is part of the asynchronous context management protocol.
+
+        Examples:
+            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> async with semaphore:
+            ...     await do_stuff()
+        """
         self[self._top_priority].release()
 
     async def acquire(self) -> Literal[True]:
-        """Acquires the semaphore with the top priority."""
+        """Acquires the semaphore with the top priority.
+
+        Examples:
+            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> await semaphore.acquire()
+        """
         return await self[self._top_priority].acquire()
 
     def __getitem__(
@@ -106,6 +141,10 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 
         Returns:
             The context manager associated with the given priority.
+
+        Examples:
+            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> context_manager = semaphore[priority]
         """
         priority = self._top_priority if priority is None else priority
         if priority not in self._context_managers:
@@ -121,6 +160,10 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 
         Returns:
             True if the semaphore cannot be acquired immediately, False otherwise.
+
+        Examples:
+            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> semaphore.locked()
         """
         return self._value == 0 or (
             any(
@@ -134,6 +177,10 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 
         Returns:
             A dictionary mapping each priority to the number of waiters.
+
+        Examples:
+            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> semaphore._count_waiters()
         """
         return {
             manager._priority: len(manager.waiters)
@@ -146,6 +193,12 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         This method handles the waking of waiters based on priority. It includes an emergency
         procedure to handle potential lost waiters, ensuring that no waiter is left indefinitely
         waiting.
+
+        The emergency procedure is a temporary measure to address potential issues with lost waiters.
+
+        Examples:
+            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> semaphore._wake_up_next()
         """
         while self._waiters:
             manager = heapq.heappop(self._waiters)
@@ -230,6 +283,10 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
             parent: The parent semaphore.
             priority: The priority associated with this context manager.
             name: An optional name for the context manager, used for debugging.
+
+        Examples:
+            >>> parent_semaphore = _AbstractPrioritySemaphore(5)
+            >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent_semaphore, priority=1)
         """
 
         self._parent = parent
@@ -256,6 +313,14 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
 
         Returns:
             True if this context manager has a lower priority than the other, False otherwise.
+
+        Raises:
+            TypeError: If the other object is not of the same type.
+
+        Examples:
+            >>> cm1 = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
+            >>> cm2 = _AbstractPrioritySemaphoreContextManager(parent, priority=2)
+            >>> cm1 < cm2
         """
         if type(other) is not type(self):
             raise TypeError(f"{other} is not type {self.__class__.__name__}")
@@ -281,6 +346,10 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         zero on entry, block, waiting until some other coroutine has
         called release() to make it larger than 0, and then return
         True.
+
+        Examples:
+            >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
+            >>> await context_manager.acquire()
         """
         if self._parent._value <= 0:
             self._ensure_debug_daemon()
@@ -300,7 +369,12 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         return True
 
     def release(self) -> None:
-        """Releases the semaphore for this context manager."""
+        """Releases the semaphore for this context manager.
+
+        Examples:
+            >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
+            >>> context_manager.release()
+        """
         self._parent.release()
 
 
@@ -315,7 +389,9 @@ class _PrioritySemaphoreContextManager(
 class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreContextManager]):  # type: ignore [type-var]
     """Semaphore that uses numeric priorities for waiters.
 
-    It's similar to a regular Semaphore but requires each waiter to have a priority:
+    This class extends :class:`_AbstractPrioritySemaphore` and provides a concrete implementation
+    using numeric priorities. The `_context_manager_class` is set to :class:`_PrioritySemaphoreContextManager`,
+    and the `_top_priority` is set to -1, which is the highest priority.
 
     Examples:
         The primary way to use this semaphore is by specifying a priority.
@@ -329,6 +405,9 @@ class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreCo
         >>> priority_semaphore = PrioritySemaphore(10)
         >>> async with priority_semaphore:
         ...     await do_stuff()
+
+    See Also:
+        :class:`_AbstractPrioritySemaphore` for the base class implementation.
     """
 
     _context_manager_class = _PrioritySemaphoreContextManager

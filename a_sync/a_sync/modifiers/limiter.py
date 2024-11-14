@@ -23,6 +23,8 @@ def apply_rate_limit(
         runs_per_minute: The number of allowed executions per minute.
 
     Examples:
+        Applying a rate limit of 60 executions per minute:
+
         >>> @apply_rate_limit(60)
         ... async def my_function():
         ...     pass
@@ -47,6 +49,8 @@ def apply_rate_limit(
         runs_per_minute: The number of allowed executions per minute or an :class:`aiolimiter.AsyncLimiter` instance.
 
     Examples:
+        Using an :class:`aiolimiter.AsyncLimiter` instance:
+
         >>> async_limiter = AsyncLimiter(60)
         >>> @apply_rate_limit(async_limiter)
         ... async def my_function():
@@ -77,12 +81,22 @@ def apply_rate_limit(
         exceptions.FunctionNotAsync: If `coro_fn` is not an asynchronous function.
 
     Examples:
+        Applying a rate limit of 60 executions per minute:
+
         >>> @apply_rate_limit(60)
         ... async def my_function():
         ...     pass
 
+        Using an :class:`aiolimiter.AsyncLimiter` instance:
+
         >>> async_limiter = AsyncLimiter(60)
         >>> @apply_rate_limit(async_limiter)
+        ... async def my_function():
+        ...     pass
+
+        Specifying the rate limit directly in the decorator:
+
+        >>> @apply_rate_limit
         ... async def my_function():
         ...     pass
 

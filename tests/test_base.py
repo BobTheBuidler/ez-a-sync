@@ -19,6 +19,21 @@ from tests.fixtures import (
 
 
 def test_base_direct_init():
+    """Test direct initialization of :class:`~a_sync.a_sync.base.ASyncGenericBase`.
+
+    This test ensures that directly initializing :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    raises a :class:`NotImplementedError`, as it is intended to be subclassed.
+
+    Raises:
+        NotImplementedError: If :class:`~a_sync.a_sync.base.ASyncGenericBase` is directly initialized.
+
+    Example:
+        >>> from a_sync.a_sync.base import ASyncGenericBase
+        >>> ASyncGenericBase()
+        Traceback (most recent call last):
+            ...
+        NotImplementedError: You should not create instances of `ASyncGenericBase` directly, you should subclass `ASyncGenericBase` instead.
+    """
     with pytest.raises(NotImplementedError, match=""):
         ASyncGenericBase()
 
@@ -31,6 +46,27 @@ both_modes = pytest.mark.parametrize("sync", [True, False])
 @classes
 @both_modes
 def test_inheritance(cls, sync: bool):
+    """Test inheritance and metaclass functionality.
+
+    This test checks that instances of subclasses of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    are correctly initialized with the :class:`~a_sync.a_sync._meta.ASyncMeta` metaclass, ensuring 
+    that methods are wrapped with asynchronous or synchronous behavior based on flags.
+
+    Args:
+        cls: The class to test.
+        sync: Whether to test in synchronous mode.
+
+    Example:
+        >>> class MyClass(ASyncGenericBase):
+        ...     def __init__(self, value, sync=True):
+        ...         self.value = value
+        ...         self.sync = sync
+        >>> instance = MyClass(1, sync=True)
+        >>> isinstance(instance, ASyncGenericBase)
+        True
+        >>> isinstance(instance.__class__, ASyncMeta)
+        True
+    """
     instance = cls(1, sync=sync)
     assert isinstance(instance, ASyncGenericBase)
     assert isinstance(instance.__class__, ASyncMeta)
@@ -39,6 +75,18 @@ def test_inheritance(cls, sync: bool):
 @classes
 @increment
 def test_method_sync(cls: type, i: int):
+    """Test synchronous method execution.
+
+    This test verifies that methods in synchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    subclasses execute correctly and can be overridden with keyword arguments to run asynchronously.
+
+    Args:
+        cls: The class to test.
+        i: The increment value for testing.
+
+    Raises:
+        WrongThreadError: If a synchronous method is incorrectly awaited in a :class:`TestSync` instance.
+    """
     sync_instance = cls(i, sync=True)
     assert sync_instance.test_fn() == i
 
@@ -76,6 +124,19 @@ def test_method_sync(cls: type, i: int):
 @increment
 @pytest.mark.asyncio_cooperative
 async def test_method_async(cls: type, i: int):
+    """Test asynchronous method execution.
+
+    This test verifies that methods in asynchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    subclasses execute correctly and can be overridden with keyword arguments to run synchronously.
+
+    Args:
+        cls: The class to test.
+        i: The increment value for testing.
+
+    Raises:
+        WrongThreadError: If an asynchronous method is incorrectly run synchronously in a :class:`TestSync` instance.
+        SyncModeInAsyncContextError: If a synchronous method is run in an asynchronous context.
+    """
     async_instance = cls(i, sync=False)
     if isinstance(async_instance, TestSync):
         # this raises an assertion error inside of the test_fn execution. this is okay.
@@ -105,6 +166,15 @@ async def test_method_async(cls: type, i: int):
 @classes
 @increment
 def test_property_sync(cls: type, i: int):
+    """Test synchronous property access.
+
+    This test verifies that properties in synchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    subclasses are accessed correctly and that hidden methods for properties can be accessed.
+
+    Args:
+        cls: The class to test.
+        i: The increment value for testing.
+    """
     sync_instance = cls(i, sync=True)
     assert sync_instance.test_property == i * 2
 
@@ -120,6 +190,18 @@ def test_property_sync(cls: type, i: int):
 @increment
 @pytest.mark.asyncio_cooperative
 async def test_property_async(cls: type, i: int):
+    """Test asynchronous property access.
+
+    This test verifies that properties in asynchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    subclasses are accessed correctly and that hidden methods for properties can be accessed.
+
+    Args:
+        cls: The class to test.
+        i: The increment value for testing.
+
+    Raises:
+        SyncModeInAsyncContextError: If a synchronous property is accessed in an asynchronous context.
+    """
     async_instance = cls(i, sync=False)
     assert await async_instance.test_property == i * 2
 
@@ -136,6 +218,15 @@ async def test_property_async(cls: type, i: int):
 @classes
 @increment
 def test_cached_property_sync(cls: type, i: int):
+    """Test synchronous cached property access.
+
+    This test verifies that cached properties in synchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    subclasses are accessed correctly and that hidden methods for cached properties can be accessed.
+
+    Args:
+        cls: The class to test.
+        i: The increment value for testing.
+    """
     sync_instance = cls(i, sync=True)
     start = time.time()
     assert sync_instance.test_cached_property == i * 3
@@ -170,6 +261,18 @@ def test_cached_property_sync(cls: type, i: int):
 @increment
 @pytest.mark.asyncio_cooperative
 async def test_cached_property_async(cls: type, i: int):
+    """Test asynchronous cached property access.
+
+    This test verifies that cached properties in asynchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    subclasses are accessed correctly and that hidden methods for cached properties can be accessed.
+
+    Args:
+        cls: The class to test.
+        i: The increment value for testing.
+
+    Raises:
+        SyncModeInAsyncContextError: If a synchronous cached property is accessed in an asynchronous context.
+    """
     async_instance = cls(i, sync=False)
     start = time.time()
     assert await async_instance.test_cached_property == i * 3
@@ -197,6 +300,21 @@ async def test_cached_property_async(cls: type, i: int):
 
 @pytest.mark.asyncio_cooperative
 async def test_asynchronous_context_manager():
+    """Test asynchronous context manager functionality.
+
+    This test verifies that :class:`~a_sync.a_sync.base.ASyncGenericBase` subclasses can be used as asynchronous context managers.
+
+    Example:
+        >>> class AsyncContextManager(ASyncGenericBase):
+        ...     async def __aenter__(self):
+        ...         self.entered = True
+        ...         return self
+        ...     async def __aexit__(self, exc_type, exc_val, exc_tb):
+        ...         self.exited = True
+        >>> async with AsyncContextManager() as cm:
+        ...     assert cm.entered
+        >>> assert cm.exited
+    """
     # Can the implementation work with an async context manager?
     class AsyncContextManager(ASyncGenericBase):
         async def __aenter__(self):
@@ -212,6 +330,21 @@ async def test_asynchronous_context_manager():
 
 
 def test_synchronous_context_manager():
+    """Test synchronous context manager functionality.
+
+    This test verifies that :class:`~a_sync.a_sync.base.ASyncGenericBase` subclasses can be used as synchronous context managers.
+
+    Example:
+        >>> class SyncContextManager(ASyncGenericBase):
+        ...     def __enter__(self):
+        ...         self.entered = True
+        ...         return self
+        ...     def __exit__(self, exc_type, exc_val, exc_tb):
+        ...         self.exited = True
+        >>> with SyncContextManager() as cm:
+        ...     assert cm.entered
+        >>> assert cm.exited
+    """
     # Can the implementation work with a context manager?
 
     class SyncContextManager(ASyncGenericBase):
@@ -229,6 +362,23 @@ def test_synchronous_context_manager():
 
 @pytest.mark.asyncio_cooperative
 async def test_asynchronous_iteration():
+    """Test asynchronous iteration functionality.
+
+    This test verifies that :class:`~a_sync.a_sync.base.ASyncGenericBase` subclasses can be used with asynchronous iteration.
+
+    Example:
+        >>> class ASyncObjectWithAiter(ASyncGenericBase):
+        ...     def __init__(self):
+        ...         self.count = 0
+        ...     def __aiter__(self):
+        ...         return self
+        ...     async def __anext__(self):
+        ...         if self.count < 3:
+        ...             self.count += 1
+        ...             return self.count
+        ...         raise StopAsyncIteration
+        >>> assert [item async for item in ASyncObjectWithAiter()] == [1, 2, 3]
+    """
     # Does the implementation screw anything up with aiteration?
     class ASyncObjectWithAiter(ASyncGenericBase):
         def __init__(self):
@@ -247,6 +397,23 @@ async def test_asynchronous_iteration():
 
 
 def test_synchronous_iteration():
+    """Test synchronous iteration functionality.
+
+    This test verifies that :class:`~a_sync.a_sync.base.ASyncGenericBase` subclasses can be used with synchronous iteration.
+
+    Example:
+        >>> class ASyncObjectWithIter(ASyncGenericBase):
+        ...     def __init__(self):
+        ...         self.count = 0
+        ...     def __iter__(self):
+        ...         return self
+        ...     def __next__(self):
+        ...         if self.count < 3:
+        ...             self.count += 1
+        ...             return self.count
+        ...         raise StopIteration
+        >>> assert list(ASyncObjectWithIter()) == [1, 2, 3]
+    """
     # Does the implementation screw anything up with iteration?
     class ASyncObjectWithIter(ASyncGenericBase):
         def __init__(self):
@@ -272,13 +439,39 @@ class ClassWithGenFunc(ASyncGenericBase):
 
 
 def test_bound_generator_meta_sync():
-    """Does the metaclass handle generator functions correctly?"""
+    """Test synchronous generator function handling.
+
+    This test verifies that the :class:`~a_sync.a_sync._meta.ASyncMeta` metaclass correctly handles generator functions
+    when used in synchronous contexts.
+
+    Example:
+        >>> class ClassWithGenFunc(ASyncGenericBase):
+        ...     async def generate(self):
+        ...         yield 0
+        ...         yield 1
+        ...         yield 2
+        >>> for _ in ClassWithGenFunc().generate():
+        ...     assert isinstance(_, int)
+    """
     for _ in ClassWithGenFunc().generate():
         assert isinstance(_, int)
 
 
 @pytest.mark.asyncio_cooperative
 async def test_bound_generator_meta_async():
-    """Does the metaclass handle generator functions correctly?"""
+    """Test asynchronous generator function handling.
+
+    This test verifies that the :class:`~a_sync.a_sync._meta.ASyncMeta` metaclass correctly handles generator functions
+    when used in asynchronous contexts.
+
+    Example:
+        >>> class ClassWithGenFunc(ASyncGenericBase):
+        ...     async def generate(self):
+        ...         yield 0
+        ...         yield 1
+        ...         yield 2
+        >>> async for _ in ClassWithGenFunc().generate():
+        ...     assert isinstance(_, int)
+    """
     async for _ in ClassWithGenFunc().generate():
         assert isinstance(_, int)

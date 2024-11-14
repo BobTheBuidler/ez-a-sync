@@ -21,21 +21,41 @@ def create_task(
     log_destroy_pending: bool = True,
 ) -> "asyncio.Task[T]":
     """
-    Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.
+    Extends :func:`asyncio.create_task` to support any :class:`Awaitable`, manage task lifecycle, and enhance error handling.
 
-    This function accepts any Awaitable, ensuring broader compatibility. If the Awaitable is not a coroutine,
-    it attempts to convert it to one. It optionally prevents the task from being garbage-collected until completion
-    and provides enhanced error management by wrapping exceptions in a custom exception when skip_gc_until_done is True.
+    This function accepts any :class:`Awaitable`, ensuring broader compatibility. If the Awaitable is not a coroutine,
+    it is awaited directly using a private helper function `__await`, which can handle any Awaitable object.
+
+    Note:
+        The `__await` function is designed to handle any Awaitable, implicitly managing non-coroutine Awaitables by awaiting them.
 
     Args:
-        coro: An Awaitable object from which to create the task. If not a coroutine, it will be converted.
+        coro: An :class:`Awaitable` object from which to create the task.
         name: Optional name for the task, aiding in debugging.
         skip_gc_until_done: If True, the task is kept alive until it completes, preventing garbage collection.
-                            Exceptions are wrapped in PersistedTaskException for special handling.
+            Exceptions are wrapped in :class:`PersistedTaskException` for special handling within the
+            `__persisted_task_exc_wrap` function.
         log_destroy_pending: If False, asyncio's default error log when a pending task is destroyed is suppressed.
 
     Returns:
-        An asyncio.Task object created from the provided Awaitable.
+        An :class:`asyncio.Task` object created from the provided Awaitable.
+
+    Examples:
+        Create a simple task with a coroutine:
+
+        >>> async def my_coroutine():
+        ...     return "Hello, World!"
+        >>> task = create_task(my_coroutine())
+
+        Create a task with a non-coroutine Awaitable:
+
+        >>> from concurrent.futures import Future
+        >>> future = Future()
+        >>> task = create_task(future)
+
+    See Also:
+        - :func:`asyncio.create_task`
+        - :class:`asyncio.Task`
     """
 
     if not asyncio.iscoroutine(coro):
@@ -57,10 +77,20 @@ async def __await(awaitable: Awaitable[T]) -> T:
     """Wait for the completion of an Awaitable.
 
     Args:
-        awaitable: The Awaitable object to wait for.
+        awaitable: The :class:`Awaitable` object to wait for.
 
     Raises:
         RuntimeError: If a RuntimeError occurs during the await, it is raised with additional context.
+
+    Examples:
+        Await a simple coroutine:
+
+        >>> async def my_coroutine():
+        ...     return "Hello, World!"
+        >>> result = await __await(my_coroutine())
+
+    See Also:
+        - :class:`Awaitable`
     """
     try:
         return await awaitable
@@ -75,8 +105,11 @@ def __prune_persisted_tasks():
     """Remove completed tasks from the set of persisted tasks.
 
     This function checks each task in the persisted tasks set. If a task is done and has an exception,
-    it logs the exception and raises it if it's not a PersistedTaskException. It also logs the traceback
+    it logs the exception and raises it if it's not a :class:`PersistedTaskException`. It also logs the traceback
     manually since the usual handler will not run after retrieving the exception.
+
+    See Also:
+        - :class:`PersistedTaskException`
     """
     for task in tuple(__persisted_tasks):
         if task.done() and (e := task.exception()):
@@ -102,10 +135,13 @@ async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
     Wrap a task to handle its exception in a specialized manner.
 
     Args:
-        task: The asyncio Task to wrap.
+        task: The :class:`asyncio.Task` to wrap.
 
     Raises:
         PersistedTaskException: Wraps any exception raised by the task for special handling.
+
+    See Also:
+        - :class:`PersistedTaskException`
     """
     try:
         return await task

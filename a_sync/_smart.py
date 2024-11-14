@@ -1,7 +1,8 @@
 """
 This module defines smart future and task utilities for the a_sync library.
 These utilities provide enhanced functionality for managing asynchronous tasks and futures,
-including task shielding and a custom task factory for creating SmartTask instances.
+including a custom task factory for creating :class:`~SmartTask` instances and a shielding mechanism
+to protect tasks from cancellation.
 """
 
 import asyncio
@@ -45,9 +46,18 @@ class _SmartFutureMixin(Generic[T]):
             RuntimeError: If await wasn't used with future.
 
         Example:
+            Awaiting a SmartFuture:
+
             ```python
             future = SmartFuture()
             result = await future
+            ```
+
+            Awaiting a SmartTask:
+
+            ```python
+            task = SmartTask(coro=my_coroutine())
+            result = await task
             ```
         """
         if self.done():
@@ -66,9 +76,6 @@ class _SmartFutureMixin(Generic[T]):
         # NOTE: we check .done() because the callback may not have ran yet and its very lightweight
         """
         Get the number of waiters currently awaiting the future or task.
-
-        Returns:
-            int: The number of waiters.
 
         Example:
             ```python
@@ -108,10 +115,12 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
 
-    Inherits from both _SmartFutureMixin and asyncio.Future, providing additional functionality
+    Inherits from both :class:`_SmartFutureMixin` and :class:`asyncio.Future`, providing additional functionality
     for tracking waiters and integrating with a smart processing queue.
 
     Example:
+        Creating and awaiting a SmartFuture:
+
         ```python
         future = SmartFuture()
         await future
@@ -160,9 +169,6 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         Args:
             other: Another SmartFuture to compare with.
 
-        Returns:
-            True if self has more waiters than other.
-
         Example:
             ```python
             future1 = SmartFuture()
@@ -180,7 +186,7 @@ def create_future(
     loop: Optional[asyncio.AbstractEventLoop] = None,
 ) -> SmartFuture[V]:
     """
-    Create a SmartFuture instance.
+    Create a :class:`~SmartFuture` instance.
 
     Args:
         queue: Optional; a smart processing queue.
@@ -191,6 +197,8 @@ def create_future(
         A SmartFuture instance.
 
     Example:
+        Creating a SmartFuture using the factory function:
+
         ```python
         future = create_future(queue=my_queue, key=my_key)
         ```
@@ -202,10 +210,12 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
     """
     A smart task that tracks waiters and integrates with a smart processing queue.
 
-    Inherits from both _SmartFutureMixin and asyncio.Task, providing additional functionality
+    Inherits from both :class:`_SmartFutureMixin` and :class:`asyncio.Task`, providing additional functionality
     for tracking waiters and integrating with a smart processing queue.
 
     Example:
+        Creating and awaiting a SmartTask:
+
         ```python
         task = SmartTask(coro=my_coroutine())
         await task
@@ -253,10 +263,15 @@ def smart_task_factory(
         A SmartTask instance running the provided coroutine.
 
     Example:
+        Using the smart task factory to create a SmartTask:
+
         ```python
         loop = asyncio.get_event_loop()
         task = smart_task_factory(loop, my_coroutine())
         ```
+
+    See Also:
+        - :func:`set_smart_task_factory`
     """
     return SmartTask(coro, loop=loop)
 
@@ -269,6 +284,8 @@ def set_smart_task_factory(loop: asyncio.AbstractEventLoop = None) -> None:
         loop: Optional; the event loop. If None, the current event loop is used.
 
     Example:
+        Setting the smart task factory for the current event loop:
+
         ```python
         set_smart_task_factory()
         ```
@@ -315,6 +332,8 @@ def shield(
         loop: Optional; the event loop. Deprecated since Python 3.8.
 
     Example:
+        Using shield to protect a coroutine from cancellation:
+
         ```python
         result = await shield(my_coroutine())
         ```

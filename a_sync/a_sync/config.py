@@ -1,6 +1,4 @@
 """
-Configuration module for the a_sync library.
-
 This module provides configuration options and default settings for the a_sync library.
 It includes functionality for setting up executors, defining default modifiers,
 and handling environment variable configurations.
@@ -16,10 +14,29 @@ Environment Variables:
     A_SYNC_CACHE_TYPE: Sets the default cache type. If not specified, defaults to None.
     A_SYNC_CACHE_TYPED: Boolean flag to determine if cache keys should consider types.
     A_SYNC_RAM_CACHE_MAXSIZE: Sets the maximum size for the RAM cache. Defaults to -1.
-    A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. Defaults to 0, 
-        which is interpreted as None.
+    A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. If not specified,
+        defaults to None, meaning cache entries do not expire by default.
+        Note: Although the environment variable retrieval process uses 0 as a placeholder,
+        the actual default behavior is determined by `null_modifiers["ram_cache_ttl"]`, 
+        which is `None`.
     A_SYNC_RUNS_PER_MINUTE: Sets the rate limit for function execution.
     A_SYNC_SEMAPHORE: Sets the semaphore limit for function execution.
+
+Examples:
+    To set the executor type to use threads with 4 workers, set the environment variables:
+    
+    .. code-block:: bash
+
+        export A_SYNC_EXECUTOR_TYPE=threads
+        export A_SYNC_EXECUTOR_VALUE=4
+
+    To configure caching with a maximum size of 100 and a TTL of 60 seconds:
+
+    .. code-block:: bash
+
+        export A_SYNC_CACHE_TYPE=memory
+        export A_SYNC_RAM_CACHE_MAXSIZE=100
+        export A_SYNC_RAM_CACHE_TTL=60
 
 See Also:
     - :mod:`concurrent.futures`: For more details on executors.
