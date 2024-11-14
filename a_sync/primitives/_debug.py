@@ -80,7 +80,7 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
         """
         Ensures that the debug daemon task is running.
 
-        This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.
+        This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.
 
         Args:
             *args: Positional arguments for the debug daemon.

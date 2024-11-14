@@ -1,7 +1,7 @@
 """
 This module provides two specialized async flow management classes, :class:`CounterLock` and :class:`CounterLockCluster`.
 
-These primitives manage :class:`asyncio.Task` objects that must wait for an internal counter to reach a specific value.
+These primitives manage synchronization of tasks that must wait for an internal counter to reach a specific value.
 """
 
 import asyncio
@@ -48,10 +48,10 @@ class CounterLock(_DebugDaemonMixin):
         """The current value of the counter."""
 
         self._events: DefaultDict[int, Event] = defaultdict(Event)
-        """A defaultdict that maps each awaited value to an :class:`asyncio.Event` that manages the waiters for that value."""
+        """A defaultdict that maps each awaited value to an :class:`Event` that manages the waiters for that value."""
 
         self.is_ready = lambda v: self._value >= v
-        """A lambda function that indicates whether a given value has already been surpassed."""
+        """A lambda function that indicates whether the current counter value is greater than or equal to a given value."""
 
     async def wait_for(self, value: int) -> bool:
         """

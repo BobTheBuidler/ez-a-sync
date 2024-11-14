@@ -140,7 +140,10 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         while self._waiters:
             await asyncio.sleep(60)
             self.logger.debug(
-                f"{self} has {len(self)} waiters for any of: {self._decorated}"
+                "%s has %s waiters for any of: %s",
+                self,
+                len(self),
+                self._decorated,
             )
 
 

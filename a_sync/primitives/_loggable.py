@@ -31,7 +31,7 @@ class _LoggerMixin:
             >>> instance = MyClass()
             >>> logger = instance.logger
             >>> logger.name
-            '__main__.MyClass.example'
+            'your_module_name.MyClass.example'
 
             >>> class AnotherClass(_LoggerMixin):
             ...     pass
@@ -39,7 +39,10 @@ class _LoggerMixin:
             >>> another_instance = AnotherClass()
             >>> another_logger = another_instance.logger
             >>> another_logger.name
-            '__main__.AnotherClass'
+            'your_module_name.AnotherClass'
+
+        Note:
+            Replace `your_module_name` with the actual module name where the class is defined.
 
         See Also:
             - :func:`logging.getLogger`

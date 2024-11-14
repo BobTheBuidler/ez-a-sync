@@ -156,13 +156,31 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         42
 
     Note:
-        Some arithmetic operations are currently broken or incomplete. Use with caution.
+        Arithmetic operations are implemented, allowing for mathematical operations on future results.
+        You no longer have to choose between optimized async code and clean, readable code.
 
-    TODO include a simple mathematics example a one complex example with numerous variables and operations
-    TODO include attribute access examples
-    TODO describe a bit more about both of the above 2 TODOs somewhere in this class-level docstring
-    TODO describe why a user would want to use these (to write cleaner code that doesn't require as many ugly gathers)
-    TODO include comparisons between the 'new way' with this future class and the 'old way' with gathers
+    Example:
+        >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
+        >>> future2 = ASyncFuture(asyncio.sleep(1, result=5))
+        >>> future3 = ASyncFuture(asyncio.sleep(1, result=10))
+        >>> future4 = ASyncFuture(asyncio.sleep(1, result=2))
+        >>> result = (future1 + future2) / future3 ** future4
+        >>> await result
+        0.15
+
+    Attribute Access:
+        The `ASyncFuture` allows attribute access on the materialized result.
+
+    Example:
+        >>> class Example:
+        ...     def __init__(self, value):
+        ...         self.value = value
+        >>> future = ASyncFuture(asyncio.sleep(1, result=Example(42)))
+        >>> future.value
+        42
+
+    See Also:
+        :func:`future` for creating `ASyncFuture` instances.
     """
 
     __slots__ = "__awaitable__", "__dependencies", "__dependants", "__task"

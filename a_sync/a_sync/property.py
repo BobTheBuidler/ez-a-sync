@@ -197,7 +197,9 @@ class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     synchronously but can also be used asynchronously if needed.
     """
 
+    # TODO give all of these docstrings
     default = "sync"
+    # TODO and give these ones examples
     any: ASyncFunctionSyncDefault[AnyIterable[I], bool]
     all: ASyncFunctionSyncDefault[AnyIterable[I], bool]
     min: ASyncFunctionSyncDefault[AnyIterable[I], T]
@@ -230,7 +232,9 @@ class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
     asynchronously but can also be used synchronously if needed.
     """
 
+    # TODO give all of these docstrings
     default = "async"
+    # TODO and give these ones examples
     any: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
     all: ASyncFunctionAsyncDefault[AnyIterable[I], bool]
     min: ASyncFunctionAsyncDefault[AnyIterable[I], T]
@@ -238,6 +242,7 @@ class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
     sum: ASyncFunctionAsyncDefault[AnyIterable[I], T]
 
 
+# Give all of these docstrings
 ASyncPropertyDecorator = Callable[[AnyGetterFunction[I, T]], property[I, T]]
 ASyncPropertyDecoratorSyncDefault = Callable[
     [AnyGetterFunction[I, T]], ASyncPropertyDescriptorSyncDefault[I, T]
