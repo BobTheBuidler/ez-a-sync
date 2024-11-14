@@ -104,11 +104,18 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.method.ASyncMethodDescriptor">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncMethodDescriptor</span><span class="p">(</span><span class="n">ASyncDescriptor</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Provides the core functionality for creating :class:`ASyncBoundMethod` objects,</span>
-<span class="sd">    which can be used to define methods that can be called both synchronously and asynchronously.</span>
+<span class="sd">    A descriptor for managing methods that can be called both synchronously and asynchronously.</span>
 
-<span class="sd">    It handles the binding of methods to instances and determines the default mode</span>
-<span class="sd">    (&quot;sync&quot; or &quot;async&quot;) based on the instance type or the `default` attribute.</span>
+<span class="sd">    This class provides the core functionality for binding methods to instances and determining</span>
+<span class="sd">    the execution mode (&quot;sync&quot; or &quot;async&quot;) based on various conditions, such as the instance type,</span>
+<span class="sd">    the method&#39;s default setting, or specific flags passed during the method call.</span>
+
+<span class="sd">    The descriptor is responsible for creating an appropriate bound method when accessed,</span>
+<span class="sd">    which is the actual object that can be called in both synchronous and asynchronous contexts.</span>
+<span class="sd">    It can create different types of bound methods (`ASyncBoundMethodSyncDefault`,</span>
+<span class="sd">    `ASyncBoundMethodAsyncDefault`, or `ASyncBoundMethod`) based on the default mode or instance type.</span>
+
+<span class="sd">    It also manages cache handles for bound methods and prevents setting or deleting the descriptor.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; class MyClass:</span>
@@ -306,8 +313,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A descriptor for :class:`ASyncBoundMethodSyncDefault` objects.</span>
 
-<span class="sd">    This class extends ASyncMethodDescriptor to provide a synchronous</span>
-<span class="sd">    default behavior for method calls.</span>
+<span class="sd">    This class extends :class:`ASyncMethodDescriptor` to provide a synchronous</span>
+<span class="sd">    default behavior for method calls. It specifically creates `ASyncBoundMethodSyncDefault`</span>
+<span class="sd">    instances, which are specialized versions of `ASyncBoundMethod` with synchronous default behavior.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; class MyClass:</span>
@@ -318,7 +326,10 @@
 <span class="sd">        &gt;&gt;&gt; obj = MyClass()</span>
 <span class="sd">        &gt;&gt;&gt; obj.my_method()</span>
 <span class="sd">        &#39;Hello, World!&#39;</span>
-<span class="sd">        &gt;&gt;&gt; await obj.my_method(sync=False)</span>
+<span class="sd">        &gt;&gt;&gt; coro = obj.my_method(sync=False)</span>
+<span class="sd">        &gt;&gt;&gt; coro</span>
+<span class="sd">        &lt;coroutine object MyClass.my_method at 0x7fb4f5fb49c0&gt;</span>
+<span class="sd">        &gt;&gt;&gt; await coro</span>
 <span class="sd">        &#39;Hello, World!&#39;</span>
 
 <span class="sd">    See Also:</span>
@@ -393,8 +404,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A descriptor for asynchronous methods with an asynchronous default.</span>
 
-<span class="sd">    This class extends ASyncMethodDescriptor to provide an asynchronous default</span>
-<span class="sd">    behavior for method calls.</span>
+<span class="sd">    This class extends :class:`ASyncMethodDescriptor` to provide an asynchronous default</span>
+<span class="sd">    behavior for method calls. It specifically creates `ASyncBoundMethodAsyncDefault`</span>
+<span class="sd">    instances, which are specialized versions of `ASyncBoundMethod` with asynchronous default behavior.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; class MyClass:</span>
@@ -403,8 +415,10 @@
 <span class="sd">        ...         return &quot;Hello, World!&quot;</span>
 <span class="sd">        ...</span>
 <span class="sd">        &gt;&gt;&gt; obj = MyClass()</span>
-<span class="sd">        &gt;&gt;&gt; await obj.my_method()</span>
-<span class="sd">        &#39;Hello, World!&#39;</span>
+<span class="sd">        &gt;&gt;&gt; coro = obj.my_method()</span>
+<span class="sd">        &gt;&gt;&gt; coro</span>
+<span class="sd">        &lt;coroutine object MyClass.my_method at 0x7fb4f5fb49c0&gt;</span>
+<span class="sd">        &gt;&gt;&gt; await coro</span>
 <span class="sd">        &gt;&gt;&gt; obj.my_method(sync=True)</span>
 <span class="sd">        &#39;Hello, World!&#39;</span>
 
@@ -478,7 +492,9 @@
 <span class="sd">    A bound method that can be called both synchronously and asynchronously.</span>
 
 <span class="sd">    This class represents a method bound to an instance, which can be called</span>
-<span class="sd">    either synchronously or asynchronously based on various conditions.</span>
+<span class="sd">    either synchronously or asynchronously based on various conditions. It handles</span>
+<span class="sd">    caching of bound methods and includes logic for determining whether to await</span>
+<span class="sd">    the method call based on flags or default settings.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; class MyClass:</span>
@@ -679,6 +695,7 @@
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; bound_method = ASyncBoundMethod(instance, my_function, True)</span>
 <span class="sd">            &gt;&gt;&gt; task_mapping = bound_method.map(iterable1, iterable2, concurrency=5)</span>
+<span class="sd">            TODO briefly include how someone would then use task_mapping</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
 
@@ -867,6 +884,9 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A bound method with synchronous default behavior.</span>
 
+<span class="sd">    This class is a specialized version of :class:`ASyncBoundMethod` that defaults to synchronous execution.</span>
+<span class="sd">    It overrides the `__call__` method to enforce synchronous default behavior.</span>
+
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; class MyClass:</span>
 <span class="sd">        ...     def __init__(self, value):</span>
@@ -943,6 +963,9 @@
 <span class="k">class</span> <span class="nc">ASyncBoundMethodAsyncDefault</span><span class="p">(</span><span class="n">ASyncBoundMethod</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A bound method with asynchronous default behavior.</span>
+
+<span class="sd">    This class is a specialized version of :class:`ASyncBoundMethod` that defaults to asynchronous execution.</span>
+<span class="sd">    It overrides the `__call__` method to enforce asynchronous default behavior.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; class MyClass:</span>

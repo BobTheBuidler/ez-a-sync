@@ -70,9 +70,9 @@
              
   <h1>Source code for a_sync.primitives._debug</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module provides a mixin class used to provide helpful information to developers during the debugging process.</span>
+<span class="sd">This module provides a mixin class used to facilitate the creation of debugging daemons in subclasses.</span>
 
-<span class="sd">The mixin ensures that rich debug logs are automagically emitted from subclass instances whenever debug logging is enabled.</span>
+<span class="sd">The mixin provides a framework for managing a debug daemon task, which can be used to emit rich debug logs from subclass instances whenever debug logging is enabled. Subclasses must implement the specific logging behavior.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">abc</span>
@@ -86,9 +86,12 @@
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.primitives._debug._DebugDaemonMixin">[docs]</a>
 <span class="k">class</span> <span class="nc">_DebugDaemonMixin</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A mixin class that provides debugging capabilities using a daemon task.</span>
+<span class="sd">    A mixin class that provides a framework for debugging capabilities using a daemon task.</span>
 
-<span class="sd">    This mixin ensures that rich debug logs are automagically emitted from subclass instances whenever debug logging is enabled.</span>
+<span class="sd">    This mixin sets up the structure for managing a debug daemon task. Subclasses are responsible for implementing the specific behavior of the daemon, including any logging functionality.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`_LoggerMixin` for logging capabilities.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;_daemon&quot;</span><span class="p">,)</span>
@@ -100,11 +103,24 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Abstract method to define the debug daemon&#39;s behavior.</span>
 
+<span class="sd">        Subclasses must implement this method to specify what the debug daemon should do, including any logging or monitoring tasks.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            fut: The future associated with the daemon.</span>
 <span class="sd">            fn: The function to be debugged.</span>
 <span class="sd">            *args: Positional arguments for the function.</span>
 <span class="sd">            **kwargs: Keyword arguments for the function.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            Implementing a simple debug daemon in a subclass:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                class MyDebugClass(_DebugDaemonMixin):</span>
+<span class="sd">                    async def _debug_daemon(self, fut, fn, *args, **kwargs):</span>
+<span class="sd">                        while not fut.done():</span>
+<span class="sd">                            self.logger.debug(&quot;Debugging...&quot;)</span>
+<span class="sd">                            await asyncio.sleep(1)</span>
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
 
@@ -114,16 +130,28 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the debug daemon task if debug logging is enabled and the event loop is running.</span>
 
+<span class="sd">        This method checks if debug logging is enabled and if the event loop is running. If both conditions are met, it starts the debug daemon task.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            *args: Positional arguments for the debug daemon.</span>
 <span class="sd">            **kwargs: Keyword arguments for the debug daemon.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The debug daemon task as an asyncio.Task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            Starting the debug daemon:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                my_instance = MyDebugClass()</span>
+<span class="sd">                my_instance._start_debug_daemon()</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :meth:`_ensure_debug_daemon` for ensuring the daemon is running.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug_logs_enabled</span> <span class="ow">and</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
             <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_debug_daemon</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-        <span class="c1"># else we return a blank Future since we shouldn&#39;t or can&#39;t create the daemon</span>
         <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span></div>
 
 
@@ -133,12 +161,25 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Ensures that the debug daemon task is running.</span>
 
+<span class="sd">        This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            *args: Positional arguments for the debug daemon.</span>
 <span class="sd">            **kwargs: Keyword arguments for the debug daemon.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Either the debug daemon task or a dummy future if debug logging is not enabled.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            Ensuring the debug daemon is running:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                my_instance = MyDebugClass()</span>
+<span class="sd">                my_instance._ensure_debug_daemon()</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :meth:`_start_debug_daemon` for starting the daemon.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug_logs_enabled</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_daemon</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
@@ -154,11 +195,24 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the debug daemon task.</span>
 
+<span class="sd">        This method cancels the debug daemon task if it is running. Raises a ValueError if the task to be stopped is not the current daemon.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            t (optional): The task to be stopped, if any.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If `t` is not the current daemon.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            Stopping the debug daemon:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                my_instance = MyDebugClass()</span>
+<span class="sd">                my_instance._stop_debug_daemon()</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :meth:`_ensure_debug_daemon` for ensuring the daemon is running.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">t</span> <span class="ow">and</span> <span class="n">t</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_daemon</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2"> is not </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_daemon</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>

@@ -70,10 +70,18 @@
              
   <h1>Source code for a_sync.primitives.queue</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module provides various queue implementations for managing asynchronous tasks, </span>
-<span class="sd">including standard FIFO queues, priority queues, and processing queues.</span>
-<span class="sd"># TODO specify a list of specific objects with a brief description + use case example instead of being vague like this</span>
+<span class="sd">This module provides various queue implementations for managing asynchronous tasks. </span>
+<span class="sd">It includes standard FIFO queues, priority queues, and processing queues with enhanced functionality.</span>
 
+<span class="sd">Classes:</span>
+<span class="sd">    Queue: A generic asynchronous queue that extends the functionality of `asyncio.Queue`.</span>
+<span class="sd">    ProcessingQueue: A queue designed for processing tasks asynchronously with multiple workers.</span>
+<span class="sd">    PriorityProcessingQueue: A priority-based processing queue where tasks are processed based on priority.</span>
+<span class="sd">    SmartProcessingQueue: A processing queue that executes jobs with the most waiters first, supporting dynamic priorities.</span>
+
+<span class="sd">See Also:</span>
+<span class="sd">    `asyncio.Queue`: The base class for asynchronous FIFO queues.</span>
+<span class="sd">    `asyncio.PriorityQueue`: The base class for priority queues.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
@@ -114,7 +122,7 @@
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue">[docs]</a>
 <span class="k">class</span> <span class="nc">Queue</span><span class="p">(</span><span class="n">_Queue</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A generic asynchronous queue that extends the functionality of asyncio.Queue.</span>
+<span class="sd">    A generic asynchronous queue that extends the functionality of `asyncio.Queue`.</span>
 
 <span class="sd">    This implementation supports retrieving multiple items at once and handling</span>
 <span class="sd">    task processing in both FIFO and LIFO order. It provides enhanced type hinting</span>
@@ -144,9 +152,6 @@
 
 <span class="sd">        If the queue is empty, this method will block until an item is available.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            T: The next item in the queue.</span>
-
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; result = await queue.get()</span>
 <span class="sd">            &gt;&gt;&gt; print(result)</span>
@@ -165,9 +170,6 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            :exc:`~asyncio.QueueEmpty`: If the queue is empty.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            T: The next item in the queue.</span>
 
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; result = queue.get_nowait()</span>
@@ -223,9 +225,6 @@
 <span class="sd">        If the queue is empty, this method will wait until at least one item</span>
 <span class="sd">        is available before returning.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            List[T]: A list of all items that were in the queue.</span>
-
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; tasks = await queue.get_all()</span>
 <span class="sd">            &gt;&gt;&gt; print(tasks)</span>
@@ -247,9 +246,6 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            :exc:`~asyncio.QueueEmpty`: If the queue is empty.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            List[T]: A list of all items that were in the queue.</span>
 
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; tasks = queue.get_all_nowait()</span>
@@ -274,9 +270,6 @@
 <span class="sd">        Args:</span>
 <span class="sd">            i: The number of items to retrieve.</span>
 <span class="sd">            can_return_less: If True, may return fewer than `i` items if queue is emptied.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            List[T]: A list containing the retrieved items.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            :exc:`~asyncio.QueueEmpty`: If no items are available and fewer items cannot be returned.</span>
@@ -309,9 +302,6 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            :exc:`~asyncio.QueueEmpty`: If no items are available and fewer items cannot be returned.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            List[T]: A list containing the retrieved items.</span>
 
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; tasks = queue.get_multi_nowait(i=3, can_return_less=True)</span>
@@ -678,6 +668,9 @@
 <span class="k">class</span> <span class="nc">_SmartFutureRef</span><span class="p">(</span><span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Weak reference for :class:`~_smart.SmartFuture` objects used in priority queues.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`~_smart.SmartFuture`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;_SmartFutureRef[T]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -711,6 +704,9 @@
 <span class="k">class</span> <span class="nc">_PriorityQueueMixin</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mixin for creating priority queue functionality with support for custom comparison.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`~asyncio.PriorityQueue`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="_PriorityQueueMixin._init">
@@ -757,7 +753,20 @@
 <span class="k">class</span> <span class="nc">PriorityProcessingQueue</span><span class="p">(</span><span class="n">_PriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">ProcessingQueue</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A priority-based processing queue where tasks are processed based on priority.</span>
-<span class="sd">    # NOTE: WIP</span>
+
+<span class="sd">    This queue allows tasks to be added with a specified priority, ensuring that</span>
+<span class="sd">    higher priority tasks are processed before lower priority ones. It is ideal</span>
+<span class="sd">    for scenarios where task prioritization is crucial.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; async def process_task(data): return data.upper()</span>
+<span class="sd">        &gt;&gt;&gt; queue = PriorityProcessingQueue(func=process_task, num_workers=5)</span>
+<span class="sd">        &gt;&gt;&gt; fut = await queue.put(priority=1, item=&#39;task&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; print(await fut)</span>
+<span class="sd">        TASK</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`~ProcessingQueue`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PriorityProcessingQueue.put">
@@ -836,6 +845,9 @@
 <span class="k">class</span> <span class="nc">_VariablePriorityQueueMixin</span><span class="p">(</span><span class="n">_PriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mixin for priority queues where task priorities can be updated dynamically.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`~_PriorityQueueMixin`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="_VariablePriorityQueueMixin._get">
@@ -887,7 +899,20 @@
 <span class="k">class</span> <span class="nc">VariablePriorityQueue</span><span class="p">(</span><span class="n">_VariablePriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">PriorityQueue</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A :class:`~asyncio.PriorityQueue` subclass that allows priorities to be updated (or computed) on the fly.</span>
-<span class="sd">    # NOTE: WIP</span>
+
+<span class="sd">    This queue supports dynamic priority updates, making it suitable for tasks</span>
+<span class="sd">    where priorities may change over time. It ensures that tasks are processed</span>
+<span class="sd">    based on the most current priority.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; queue = VariablePriorityQueue()</span>
+<span class="sd">        &gt;&gt;&gt; queue.put_nowait((1, &#39;task1&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; queue.put_nowait((2, &#39;task2&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; task = queue.get_nowait()</span>
+<span class="sd">        &gt;&gt;&gt; print(task)</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`~asyncio.PriorityQueue`</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -898,7 +923,21 @@
     <span class="n">_VariablePriorityQueueMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">ProcessingQueue</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">V</span><span class="p">]</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A PriorityProcessingQueue subclass that will execute jobs with the most waiters first</span>
+<span class="sd">    A processing queue that will execute jobs with the most waiters first, supporting dynamic priorities.</span>
+
+<span class="sd">    This queue is designed to handle tasks with dynamic priorities, ensuring that</span>
+<span class="sd">    tasks with the most waiters are prioritized. It is ideal for scenarios where</span>
+<span class="sd">    task execution order is influenced by the number of waiters.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; async def process_task(data): return data.upper()</span>
+<span class="sd">        &gt;&gt;&gt; queue = SmartProcessingQueue(func=process_task, num_workers=5)</span>
+<span class="sd">        &gt;&gt;&gt; fut = await queue.put(item=&#39;task&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; print(await fut)</span>
+<span class="sd">        TASK</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`~ProcessingQueue`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_no_futs</span> <span class="o">=</span> <span class="kc">False</span>

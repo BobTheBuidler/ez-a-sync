@@ -108,6 +108,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Basic usage with an asynchronous default:</span>
+
 <span class="sd">        &gt;&gt;&gt; @a_sync(default=&#39;async&#39;)</span>
 <span class="sd">        ... async def my_function():</span>
 <span class="sd">        ...     return True</span>
@@ -134,6 +136,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Basic usage with a synchronous default:</span>
+
 <span class="sd">        &gt;&gt;&gt; @a_sync(default=&#39;sync&#39;)</span>
 <span class="sd">        ... def my_function():</span>
 <span class="sd">        ...     return True</span>
@@ -158,6 +162,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Usage without specifying a default mode:</span>
+
 <span class="sd">        &gt;&gt;&gt; @a_sync</span>
 <span class="sd">        ... async def my_function():</span>
 <span class="sd">        ...     return True</span>
@@ -186,6 +192,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Decorating an asynchronous function without a default mode:</span>
+
 <span class="sd">        &gt;&gt;&gt; async def my_function():</span>
 <span class="sd">        ...     return True</span>
 <span class="sd">        &gt;&gt;&gt; decorated_function = a_sync(my_function)</span>
@@ -214,6 +222,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Decorating a synchronous function without a default mode:</span>
+
 <span class="sd">        &gt;&gt;&gt; def my_function():</span>
 <span class="sd">        ...     return True</span>
 <span class="sd">        &gt;&gt;&gt; decorated_function = a_sync(my_function)</span>
@@ -242,6 +252,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Creating an asynchronous default decorator without a function:</span>
+
 <span class="sd">        &gt;&gt;&gt; @a_sync(default=&#39;async&#39;)</span>
 <span class="sd">        ... async def my_function():</span>
 <span class="sd">        ...     return True</span>
@@ -270,6 +282,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Using &#39;async&#39; as the only argument:</span>
+
 <span class="sd">        &gt;&gt;&gt; @a_sync(&#39;async&#39;)</span>
 <span class="sd">        ... async def my_function():</span>
 <span class="sd">        ...     return True</span>
@@ -298,6 +312,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Decorating an asynchronous function with an async default:</span>
+
 <span class="sd">        &gt;&gt;&gt; async def my_function():</span>
 <span class="sd">        ...     return True</span>
 <span class="sd">        &gt;&gt;&gt; decorated_function = a_sync(my_function, default=&#39;async&#39;)</span>
@@ -326,6 +342,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Decorating a synchronous function with an async default:</span>
+
 <span class="sd">        &gt;&gt;&gt; def my_function():</span>
 <span class="sd">        ...     return True</span>
 <span class="sd">        &gt;&gt;&gt; decorated_function = a_sync(my_function, default=&#39;async&#39;)</span>
@@ -354,6 +372,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Decorating an asynchronous function with a sync default:</span>
+
 <span class="sd">        &gt;&gt;&gt; async def my_function():</span>
 <span class="sd">        ...     return True</span>
 <span class="sd">        &gt;&gt;&gt; decorated_function = a_sync(my_function, default=&#39;sync&#39;)</span>
@@ -382,6 +402,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Decorating a synchronous function with a sync default:</span>
+
 <span class="sd">        &gt;&gt;&gt; def my_function():</span>
 <span class="sd">        ...     return True</span>
 <span class="sd">        &gt;&gt;&gt; decorated_function = a_sync(my_function, default=&#39;sync&#39;)</span>
@@ -410,6 +432,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Creating a synchronous default decorator without a function:</span>
+
 <span class="sd">        &gt;&gt;&gt; @a_sync(default=&#39;sync&#39;)</span>
 <span class="sd">        ... def my_function():</span>
 <span class="sd">        ...     return True</span>
@@ -438,6 +462,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Using &#39;sync&#39; as the only argument:</span>
+
 <span class="sd">        &gt;&gt;&gt; @a_sync(&#39;sync&#39;)</span>
 <span class="sd">        ... def my_function():</span>
 <span class="sd">        ...     return True</span>
@@ -466,6 +492,8 @@
 <span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Using &#39;sync&#39; as the only argument:</span>
+
 <span class="sd">        &gt;&gt;&gt; @a_sync(&#39;sync&#39;)</span>
 <span class="sd">        ... def my_function():</span>
 <span class="sd">        ...     return True</span>

@@ -92,7 +92,21 @@
 <span class="sd">        The name of the flag if present, None otherwise.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        :class:`exceptions.TooManyFlags`: If more than one flag is present in the kwargs.</span>
+<span class="sd">        :class:`exceptions.TooManyFlags`: If more than one flag is present in the kwargs,</span>
+<span class="sd">        the exception includes the message &quot;kwargs&quot; and the list of present flags.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; get_flag_name({&#39;sync&#39;: True})</span>
+<span class="sd">        &#39;sync&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; get_flag_name({&#39;async&#39;: False})</span>
+<span class="sd">        &#39;async&#39;</span>
+
+<span class="sd">        &gt;&gt;&gt; get_flag_name({})</span>
+<span class="sd">        None</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :func:`is_sync`: Determines if the operation should be synchronous based on the flag value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">present_flags</span> <span class="o">=</span> <span class="p">[</span><span class="n">flag</span> <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">_flags</span><span class="o">.</span><span class="n">VIABLE_FLAGS</span> <span class="k">if</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">present_flags</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -110,12 +124,22 @@
 <span class="sd">    Determine if the operation should be synchronous based on the flag value.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        flag: The name of the flag to check.</span>
-<span class="sd">        kwargs: A dictionary of keyword arguments.</span>
-<span class="sd">        pop_flag: Whether to remove the flag from kwargs. Defaults to False.</span>
+<span class="sd">        flag (str): The name of the flag to check.</span>
+<span class="sd">        kwargs (dict): A dictionary of keyword arguments.</span>
+<span class="sd">        pop_flag (bool, optional): Whether to remove the flag from kwargs. Defaults to False.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        True if the operation should be synchronous, False otherwise.</span>
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; is_sync(&#39;sync&#39;, {&#39;sync&#39;: True})</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &gt;&gt;&gt; is_sync(&#39;async&#39;, {&#39;async&#39;: False})</span>
+<span class="sd">        False</span>
+
+<span class="sd">        &gt;&gt;&gt; is_sync(&#39;sync&#39;, {&#39;sync&#39;: True}, pop_flag=True)</span>
+<span class="sd">        True</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :func:`get_flag_name`: Retrieves the name of the flag present in the kwargs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">flag_value</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span> <span class="k">if</span> <span class="n">pop_flag</span> <span class="k">else</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">flag</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">_flags</span><span class="o">.</span><span class="n">negate_if_necessary</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">)</span></div>

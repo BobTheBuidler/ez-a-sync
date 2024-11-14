@@ -82,6 +82,10 @@
 <span class="sd">NEGATIVE_FLAGS: Set of flags indicating asynchronous behavior. Currently includes &quot;asynchronous&quot;.</span>
 
 <span class="sd">VIABLE_FLAGS: Set of all valid flags, combining both synchronous and asynchronous indicators.</span>
+
+<span class="sd">Functions:</span>
+<span class="sd">    - negate_if_necessary: Negates the flag value if necessary based on the flag type.</span>
+<span class="sd">    - validate_flag_value: Validates that the flag value is a boolean.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
@@ -89,19 +93,52 @@
 <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">exceptions</span>
 
 <span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sync&quot;</span><span class="p">}</span>
-<span class="sd">&quot;&quot;&quot;Set of flags indicating synchronous behavior.&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Set of flags indicating synchronous behavior.</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">    &gt;&gt;&gt; &#39;sync&#39; in AFFIRMATIVE_FLAGS</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &gt;&gt;&gt; &#39;async&#39; in AFFIRMATIVE_FLAGS</span>
+<span class="sd">    False</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">NEGATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;asynchronous&quot;</span><span class="p">}</span>
-<span class="sd">&quot;&quot;&quot;Set of flags indicating asynchronous behavior.&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Set of flags indicating asynchronous behavior.</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">    &gt;&gt;&gt; &#39;asynchronous&#39; in NEGATIVE_FLAGS</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &gt;&gt;&gt; &#39;sync&#39; in NEGATIVE_FLAGS</span>
+<span class="sd">    False</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">VIABLE_FLAGS</span> <span class="o">=</span> <span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">|</span> <span class="n">NEGATIVE_FLAGS</span>
-<span class="sd">&quot;&quot;&quot;Set of all valid flags.&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Set of all valid flags, combining both synchronous and asynchronous indicators.</span>
+
+<span class="sd">A-Sync uses &#39;flags&#39; to indicate whether objects or function calls will be sync or async.</span>
+<span class="sd">You can use any of the provided flags, whichever makes most sense for your use case.</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">    &gt;&gt;&gt; &#39;sync&#39; in VIABLE_FLAGS</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &gt;&gt;&gt; &#39;asynchronous&#39; in VIABLE_FLAGS</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &gt;&gt;&gt; &#39;invalid&#39; in VIABLE_FLAGS</span>
+<span class="sd">    False</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="negate_if_necessary">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._flags.negate_if_necessary">[docs]</a>
 <span class="k">def</span> <span class="nf">negate_if_necessary</span><span class="p">(</span><span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Negate the flag value if necessary based on the flag type.</span>
+
+<span class="sd">    This function checks if the provided flag is in the set of affirmative or negative flags</span>
+<span class="sd">    and negates the flag value accordingly. If the flag is not recognized, it raises an exception.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        flag: The flag to check.</span>
@@ -112,6 +149,16 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        exceptions.InvalidFlag: If the flag is not recognized.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; negate_if_necessary(&#39;sync&#39;, True)</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &gt;&gt;&gt; negate_if_necessary(&#39;asynchronous&#39;, True)</span>
+<span class="sd">        False</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`validate_flag_value`: Validates that the flag value is a boolean.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">validate_flag_value</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">AFFIRMATIVE_FLAGS</span><span class="p">:</span>
@@ -128,6 +175,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Validate that the flag value is a boolean.</span>
 
+<span class="sd">    This function ensures that the provided flag value is of type boolean. If not, it raises an exception.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        flag: The flag being validated.</span>
 <span class="sd">        flag_value: The value to validate.</span>
@@ -137,6 +186,18 @@
 
 <span class="sd">    Raises:</span>
 <span class="sd">        exceptions.InvalidFlagValue: If the flag value is not a boolean.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; validate_flag_value(&#39;sync&#39;, True)</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &gt;&gt;&gt; validate_flag_value(&#39;asynchronous&#39;, &#39;yes&#39;)</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">        exceptions.InvalidFlagValue: Invalid flag value for &#39;asynchronous&#39;: &#39;yes&#39;</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`negate_if_necessary`: Negates the flag value if necessary based on the flag type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">flag_value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">InvalidFlagValue</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">)</span>

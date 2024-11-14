@@ -90,7 +90,7 @@
 <span class="sd">    Await an awaitable object in a synchronous context.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        awaitable: The awaitable object to be awaited.</span>
+<span class="sd">        awaitable (Awaitable[T]): The awaitable object to be awaited.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        exceptions.SyncModeInAsyncContextError: If the event loop is already running.</span>
@@ -119,22 +119,30 @@
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._helpers._asyncify">[docs]</a>
 <span class="k">def</span> <span class="nf">_asyncify</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">executor</span><span class="p">:</span> <span class="n">Executor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>  <span class="c1"># type: ignore [misc]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert a synchronous function to a coroutine function.</span>
+<span class="sd">    Convert a synchronous function to a coroutine function using an executor.</span>
+
+<span class="sd">    This function submits the synchronous function to the provided executor and wraps</span>
+<span class="sd">    the resulting future in a coroutine function. This allows the synchronous function</span>
+<span class="sd">    to be executed asynchronously.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The function `_asyncify` uses `asyncio.futures.wrap_future` to wrap the future</span>
+<span class="sd">        returned by the executor, specifying the event loop with `a_sync.asyncio.get_event_loop()`.</span>
+<span class="sd">        Ensure that your environment supports this usage or adjust the import if necessary.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        func: The synchronous function to be converted.</span>
-<span class="sd">        executor: The executor used to run the synchronous function.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        CoroFn[P, T]: A coroutine function wrapping the input function.</span>
+<span class="sd">        func (SyncFn[P, T]): The synchronous function to be converted.</span>
+<span class="sd">        executor (Executor): The executor used to run the synchronous function.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        exceptions.FunctionNotSync: If the input function is a coroutine function or an instance of ASyncFunction.</span>
+<span class="sd">        exceptions.FunctionNotSync: If the input function is a coroutine function or an instance of :class:`~a_sync.a_sync.function.ASyncFunction`.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from concurrent.futures import ThreadPoolExecutor</span>
 <span class="sd">        &gt;&gt;&gt; def sync_function(x):</span>
 <span class="sd">        ...     return x * 2</span>
 <span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; executor = ThreadPoolExecutor()</span>
 <span class="sd">        &gt;&gt;&gt; async_function = _asyncify(sync_function, executor)</span>
 <span class="sd">        &gt;&gt;&gt; result = await async_function(3)</span>
 <span class="sd">        &gt;&gt;&gt; print(result)</span>

@@ -92,18 +92,33 @@
 <span class="sd">    returning a decorator that can be applied to a coroutine function.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        semaphore (Union[int, asyncio.Semaphore, primitives.ThreadsafeSemaphore]):</span>
-<span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`,</span>
-<span class="sd">            or a `primitives.ThreadsafeSemaphore` object.</span>
+<span class="sd">        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):</span>
+<span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Using as a decorator with an integer semaphore:</span>
 <span class="sd">        &gt;&gt;&gt; @apply_semaphore(2)</span>
 <span class="sd">        ... async def limited_concurrent_function():</span>
 <span class="sd">        ...     pass</span>
 
+<span class="sd">        Using as a decorator with an `asyncio.Semaphore`:</span>
+<span class="sd">        &gt;&gt;&gt; sem = asyncio.Semaphore(2)</span>
+<span class="sd">        &gt;&gt;&gt; @apply_semaphore(sem)</span>
+<span class="sd">        ... async def another_function():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">        Using as a decorator with a `primitives.Semaphore`:</span>
+<span class="sd">        &gt;&gt;&gt; sem = primitives.ThreadsafeSemaphore(2)</span>
+<span class="sd">        &gt;&gt;&gt; @apply_semaphore(sem)</span>
+<span class="sd">        ... async def yet_another_function():</span>
+<span class="sd">        ...     pass</span>
+
 <span class="sd">    See Also:</span>
 <span class="sd">        - :class:`asyncio.Semaphore`</span>
-<span class="sd">        - :class:`primitives.ThreadsafeSemaphore`</span>
+<span class="sd">        - :class:`primitives.Semaphore`</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -119,18 +134,29 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        coro_fn (Callable): The coroutine function to which the semaphore will be applied.</span>
-<span class="sd">        semaphore (Union[int, asyncio.Semaphore, primitives.ThreadsafeSemaphore]):</span>
-<span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`,</span>
-<span class="sd">            or a `primitives.ThreadsafeSemaphore` object.</span>
+<span class="sd">        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):</span>
+<span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Applying directly to a function with an integer semaphore:</span>
 <span class="sd">        &gt;&gt;&gt; async def my_coroutine():</span>
 <span class="sd">        ...     pass</span>
 <span class="sd">        &gt;&gt;&gt; my_coroutine = apply_semaphore(my_coroutine, 3)</span>
 
+<span class="sd">        Applying directly with an `asyncio.Semaphore`:</span>
+<span class="sd">        &gt;&gt;&gt; sem = asyncio.Semaphore(3)</span>
+<span class="sd">        &gt;&gt;&gt; my_coroutine = apply_semaphore(my_coroutine, sem)</span>
+
+<span class="sd">        Applying directly with a `primitives.Semaphore`:</span>
+<span class="sd">        &gt;&gt;&gt; sem = primitives.ThreadsafeSemaphore(3)</span>
+<span class="sd">        &gt;&gt;&gt; my_coroutine = apply_semaphore(my_coroutine, sem)</span>
+
 <span class="sd">    See Also:</span>
 <span class="sd">        - :class:`asyncio.Semaphore`</span>
-<span class="sd">        - :class:`primitives.ThreadsafeSemaphore`</span>
+<span class="sd">        - :class:`primitives.Semaphore`</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -149,14 +175,13 @@
 <span class="sd">    Args:</span>
 <span class="sd">        coro_fn (Optional[Callable]): The coroutine function to which the semaphore will be applied,</span>
 <span class="sd">            or None if the semaphore is to be used as a decorator.</span>
-<span class="sd">        semaphore (Union[int, asyncio.Semaphore, primitives.ThreadsafeSemaphore]):</span>
-<span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`,</span>
-<span class="sd">            or a `primitives.ThreadsafeSemaphore` object.</span>
+<span class="sd">        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):</span>
+<span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If both `coro_fn` and `semaphore` are provided as invalid inputs.</span>
+<span class="sd">        ValueError: If both `coro_fn` and `semaphore` are provided and the first argument is an integer or `asyncio.Semaphore`.</span>
 <span class="sd">        exceptions.FunctionNotAsync: If the provided function is not a coroutine.</span>
-<span class="sd">        TypeError: If the semaphore is not an integer, an `asyncio.Semaphore`, or a `primitives.ThreadsafeSemaphore` object.</span>
+<span class="sd">        TypeError: If the semaphore is not an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        Using as a decorator:</span>
@@ -169,9 +194,18 @@
 <span class="sd">        ...     pass</span>
 <span class="sd">        &gt;&gt;&gt; my_coroutine = apply_semaphore(my_coroutine, 3)</span>
 
+<span class="sd">        Handling invalid inputs:</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     apply_semaphore(3, 2)</span>
+<span class="sd">        ... except ValueError as e:</span>
+<span class="sd">        ...     print(e)</span>
+
 <span class="sd">    See Also:</span>
 <span class="sd">        - :class:`asyncio.Semaphore`</span>
-<span class="sd">        - :class:`primitives.ThreadsafeSemaphore`</span>
+<span class="sd">        - :class:`primitives.Semaphore`</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Parse Inputs</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">)):</span>

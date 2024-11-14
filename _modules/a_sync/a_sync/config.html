@@ -70,8 +70,6 @@
              
   <h1>Source code for a_sync.a_sync.config</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Configuration module for the a_sync library.</span>
-
 <span class="sd">This module provides configuration options and default settings for the a_sync library.</span>
 <span class="sd">It includes functionality for setting up executors, defining default modifiers,</span>
 <span class="sd">and handling environment variable configurations.</span>
@@ -87,10 +85,29 @@
 <span class="sd">    A_SYNC_CACHE_TYPE: Sets the default cache type. If not specified, defaults to None.</span>
 <span class="sd">    A_SYNC_CACHE_TYPED: Boolean flag to determine if cache keys should consider types.</span>
 <span class="sd">    A_SYNC_RAM_CACHE_MAXSIZE: Sets the maximum size for the RAM cache. Defaults to -1.</span>
-<span class="sd">    A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. Defaults to 0, </span>
-<span class="sd">        which is interpreted as None.</span>
+<span class="sd">    A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. If not specified,</span>
+<span class="sd">        defaults to None, meaning cache entries do not expire by default.</span>
+<span class="sd">        Note: Although the environment variable retrieval process uses 0 as a placeholder,</span>
+<span class="sd">        the actual default behavior is determined by `null_modifiers[&quot;ram_cache_ttl&quot;]`, </span>
+<span class="sd">        which is `None`.</span>
 <span class="sd">    A_SYNC_RUNS_PER_MINUTE: Sets the rate limit for function execution.</span>
 <span class="sd">    A_SYNC_SEMAPHORE: Sets the semaphore limit for function execution.</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">    To set the executor type to use threads with 4 workers, set the environment variables:</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        export A_SYNC_EXECUTOR_TYPE=threads</span>
+<span class="sd">        export A_SYNC_EXECUTOR_VALUE=4</span>
+
+<span class="sd">    To configure caching with a maximum size of 100 and a TTL of 60 seconds:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">        export A_SYNC_CACHE_TYPE=memory</span>
+<span class="sd">        export A_SYNC_RAM_CACHE_MAXSIZE=100</span>
+<span class="sd">        export A_SYNC_RAM_CACHE_TTL=60</span>
 
 <span class="sd">See Also:</span>
 <span class="sd">    - :mod:`concurrent.futures`: For more details on executors.</span>

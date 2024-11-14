@@ -97,11 +97,28 @@
 
 <span class="sd">    Any class with `ASyncMeta` as its metaclass will have its functions and properties</span>
 <span class="sd">    wrapped with asynchronous capabilities upon class instantiation. This includes</span>
-<span class="sd">    wrapping functions with `ASyncMethodDescriptor` and properties with</span>
-<span class="sd">    `ASyncPropertyDescriptor` or `ASyncCachedPropertyDescriptor`. Additionally, it handles</span>
-<span class="sd">    `_ModifiedMixin` objects (# TODO replace this with the actual subclasses of _modifiedMixin, which is just an internal use mixin class that has no meaning ot the user),</span>
-<span class="sd">    which are used when functions are decorated with a_sync decorators</span>
-<span class="sd">    to apply specific modifiers to those functions.</span>
+<span class="sd">    wrapping functions with :class:`~a_sync.a_sync.method.ASyncMethodDescriptor` and properties with</span>
+<span class="sd">    :class:`~a_sync.a_sync.property.ASyncPropertyDescriptor` or :class:`~a_sync.a_sync.property.ASyncCachedPropertyDescriptor`.</span>
+<span class="sd">    It also handles attributes that are instances of :class:`~a_sync.a_sync.function.ASyncFunction`,</span>
+<span class="sd">    which are used when functions are decorated with a_sync decorators to apply specific modifiers to those functions.</span>
+
+<span class="sd">    Attributes that are instances of :class:`~a_sync.future._ASyncFutureWrappedFn` and :class:`~a_sync.primitives.locks.semaphore.Semaphore`</span>
+<span class="sd">    are explicitly skipped and not wrapped.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        To create a class with asynchronous capabilities, define your class with `ASyncMeta` as its metaclass:</span>
+
+<span class="sd">        &gt;&gt;&gt; class MyClass(metaclass=ASyncMeta):</span>
+<span class="sd">        ...     def my_method(self):</span>
+<span class="sd">        ...         return &quot;Hello, World!&quot;</span>
+
+<span class="sd">        The `my_method` function will be wrapped with :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`, allowing it to be used asynchronously.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`~a_sync.a_sync.function.ASyncFunction`</span>
+<span class="sd">        - :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`</span>
+<span class="sd">        - :class:`~a_sync.a_sync.property.ASyncPropertyDescriptor`</span>
+<span class="sd">        - :class:`~a_sync.a_sync.property.ASyncCachedPropertyDescriptor`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">new_class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">attrs</span><span class="p">):</span>
@@ -221,8 +238,20 @@
 <span class="k">class</span> <span class="nc">ASyncSingletonMeta</span><span class="p">(</span><span class="n">ASyncMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Metaclass for creating singleton instances with asynchronous capabilities.</span>
 
-<span class="sd">    This metaclass extends `ASyncMeta` to ensure that only one instance of a class</span>
+<span class="sd">    This metaclass extends :class:`~a_sync.a_sync._meta.ASyncMeta` to ensure that only one instance of a class</span>
 <span class="sd">    is created for each synchronous or asynchronous context.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        To create a singleton class with asynchronous capabilities, define your class with `ASyncSingletonMeta` as its metaclass:</span>
+
+<span class="sd">        &gt;&gt;&gt; class MySingleton(metaclass=ASyncSingletonMeta):</span>
+<span class="sd">        ...     def __init__(self):</span>
+<span class="sd">        ...         print(&quot;Instance created&quot;)</span>
+
+<span class="sd">        The `MySingleton` class will ensure that only one instance is created for each context.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`~a_sync.a_sync._meta.ASyncMeta`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ASyncSingletonMeta.__init__">

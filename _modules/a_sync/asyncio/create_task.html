@@ -94,21 +94,41 @@
     <span class="n">log_destroy_pending</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Task[T]&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extends asyncio.create_task to support any Awaitable, manage task lifecycle, and enhance error handling.</span>
+<span class="sd">    Extends :func:`asyncio.create_task` to support any :class:`Awaitable`, manage task lifecycle, and enhance error handling.</span>
 
-<span class="sd">    This function accepts any Awaitable, ensuring broader compatibility. If the Awaitable is not a coroutine,</span>
-<span class="sd">    it attempts to convert it to one. It optionally prevents the task from being garbage-collected until completion</span>
-<span class="sd">    and provides enhanced error management by wrapping exceptions in a custom exception when skip_gc_until_done is True.</span>
+<span class="sd">    This function accepts any :class:`Awaitable`, ensuring broader compatibility. If the Awaitable is not a coroutine,</span>
+<span class="sd">    it is awaited directly using a private helper function `__await`, which can handle any Awaitable object.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The `__await` function is designed to handle any Awaitable, implicitly managing non-coroutine Awaitables by awaiting them.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        coro: An Awaitable object from which to create the task. If not a coroutine, it will be converted.</span>
+<span class="sd">        coro: An :class:`Awaitable` object from which to create the task.</span>
 <span class="sd">        name: Optional name for the task, aiding in debugging.</span>
 <span class="sd">        skip_gc_until_done: If True, the task is kept alive until it completes, preventing garbage collection.</span>
-<span class="sd">                            Exceptions are wrapped in PersistedTaskException for special handling.</span>
+<span class="sd">            Exceptions are wrapped in :class:`PersistedTaskException` for special handling within the</span>
+<span class="sd">            `__persisted_task_exc_wrap` function.</span>
 <span class="sd">        log_destroy_pending: If False, asyncio&#39;s default error log when a pending task is destroyed is suppressed.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        An asyncio.Task object created from the provided Awaitable.</span>
+<span class="sd">        An :class:`asyncio.Task` object created from the provided Awaitable.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        Create a simple task with a coroutine:</span>
+
+<span class="sd">        &gt;&gt;&gt; async def my_coroutine():</span>
+<span class="sd">        ...     return &quot;Hello, World!&quot;</span>
+<span class="sd">        &gt;&gt;&gt; task = create_task(my_coroutine())</span>
+
+<span class="sd">        Create a task with a non-coroutine Awaitable:</span>
+
+<span class="sd">        &gt;&gt;&gt; from concurrent.futures import Future</span>
+<span class="sd">        &gt;&gt;&gt; future = Future()</span>
+<span class="sd">        &gt;&gt;&gt; task = create_task(future)</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`asyncio.create_task`</span>
+<span class="sd">        - :class:`asyncio.Task`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutine</span><span class="p">(</span><span class="n">coro</span><span class="p">):</span>
@@ -131,10 +151,20 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wait for the completion of an Awaitable.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        awaitable: The Awaitable object to wait for.</span>
+<span class="sd">        awaitable: The :class:`Awaitable` object to wait for.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        RuntimeError: If a RuntimeError occurs during the await, it is raised with additional context.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        Await a simple coroutine:</span>
+
+<span class="sd">        &gt;&gt;&gt; async def my_coroutine():</span>
+<span class="sd">        ...     return &quot;Hello, World!&quot;</span>
+<span class="sd">        &gt;&gt;&gt; result = await __await(my_coroutine())</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`Awaitable`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">awaitable</span>
@@ -149,8 +179,11 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove completed tasks from the set of persisted tasks.</span>
 
 <span class="sd">    This function checks each task in the persisted tasks set. If a task is done and has an exception,</span>
-<span class="sd">    it logs the exception and raises it if it&#39;s not a PersistedTaskException. It also logs the traceback</span>
+<span class="sd">    it logs the exception and raises it if it&#39;s not a :class:`PersistedTaskException`. It also logs the traceback</span>
 <span class="sd">    manually since the usual handler will not run after retrieving the exception.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`PersistedTaskException`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">__persisted_tasks</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">done</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="n">e</span> <span class="o">:=</span> <span class="n">task</span><span class="o">.</span><span class="n">exception</span><span class="p">()):</span>
@@ -176,10 +209,13 @@
 <span class="sd">    Wrap a task to handle its exception in a specialized manner.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        task: The asyncio Task to wrap.</span>
+<span class="sd">        task: The :class:`asyncio.Task` to wrap.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        PersistedTaskException: Wraps any exception raised by the task for special handling.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`PersistedTaskException`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">task</span>

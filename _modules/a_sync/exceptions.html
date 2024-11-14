@@ -87,15 +87,13 @@
 <span class="k">class</span> <span class="nc">ASyncFlagException</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base exception class for flag-related errors in the a_sync library.</span>
+
+<span class="sd">    A-Sync uses &#39;flags&#39; to indicate whether objects or function calls will be sync or async.</span>
+<span class="sd">    You can use any of the provided flags, whichever makes most sense for your use case.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">viable_flags</span> <span class="o">=</span> <span class="n">VIABLE_FLAGS</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    The set of viable flags.</span>
-
-<span class="sd">    A-Sync uses &#39;flags&#39; to indicate whether objects / fn calls will be sync or async.</span>
-<span class="sd">    You can use any of the provided flags, whichever makes most sense for your use case.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The set of viable flags.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ASyncFlagException.desc">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncFlagException.desc">[docs]</a>
@@ -106,8 +104,13 @@
 <span class="sd">        Args:</span>
 <span class="sd">            target: The target object or string to describe.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            A string description of the target.</span>
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; exception = ASyncFlagException()</span>
+<span class="sd">            &gt;&gt;&gt; exception.desc(&quot;kwargs&quot;)</span>
+<span class="sd">            &quot;flags present in &#39;kwargs&#39;&quot;</span>
+
+<span class="sd">            &gt;&gt;&gt; exception.desc(&quot;some_target&quot;)</span>
+<span class="sd">            &#39;flag attributes defined on some_target&#39;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">target</span> <span class="o">==</span> <span class="s2">&quot;kwargs&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;flags present in &#39;kwargs&#39;&quot;</span>
@@ -122,6 +125,15 @@
 <span class="k">class</span> <span class="nc">NoFlagsFound</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when no viable flags are found in the target.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise NoFlagsFound(&quot;some_target&quot;)</span>
+<span class="sd">        ... except NoFlagsFound as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        There are no viable a_sync flag attributes defined on some_target:</span>
+<span class="sd">        Viable flags: {&#39;sync&#39;, &#39;asynchronous&#39;}</span>
+<span class="sd">        This is likely an issue with a custom subclass definition.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="NoFlagsFound.__init__">
@@ -149,6 +161,15 @@
 <span class="k">class</span> <span class="nc">TooManyFlags</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when multiple flags are found, but only one was expected.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise TooManyFlags(&quot;some_target&quot;, [&quot;flag1&quot;, &quot;flag2&quot;])</span>
+<span class="sd">        ... except TooManyFlags as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        There are multiple a_sync flag attributes defined on some_target and there should only be one.</span>
+<span class="sd">        Present flags: [&#39;flag1&#39;, &#39;flag2&#39;]</span>
+<span class="sd">        This is likely an issue with a custom subclass definition.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TooManyFlags.__init__">
@@ -160,8 +181,11 @@
 <span class="sd">        Args:</span>
 <span class="sd">            target: The target object where flags were found.</span>
 <span class="sd">            present_flags: The flags that were found.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`ASyncFlagException`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">err</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;There are multiple a_sync </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_desc</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="si">}</span><span class="s2"> and there should only be one.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;There are multiple a_sync </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">desc</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="si">}</span><span class="s2"> and there should only be one.</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">err</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Present flags: </span><span class="si">{</span><span class="n">present_flags</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="n">err</span> <span class="o">+=</span> <span class="s2">&quot;This is likely an issue with a custom subclass definition.&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
@@ -174,6 +198,14 @@
 <span class="k">class</span> <span class="nc">InvalidFlag</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when an invalid flag is encountered.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise InvalidFlag(&quot;invalid_flag&quot;)</span>
+<span class="sd">        ... except InvalidFlag as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        &#39;flag&#39; must be one of: {&#39;sync&#39;, &#39;asynchronous&#39;}. You passed invalid_flag.</span>
+<span class="sd">        This code should not be reached and likely indicates an issue with a custom subclass definition.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="InvalidFlag.__init__">
@@ -184,6 +216,9 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            flag: The invalid flag.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`ASyncFlagException`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">err</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&#39;flag&#39; must be one of: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">viable_flags</span><span class="si">}</span><span class="s2">. You passed </span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="n">err</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">This code should not be reached and likely indicates an issue with a custom subclass definition.&quot;</span>
@@ -197,6 +232,13 @@
 <span class="k">class</span> <span class="nc">InvalidFlagValue</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a flag has an invalid value.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise InvalidFlagValue(&quot;some_flag&quot;, &quot;not_a_boolean&quot;)</span>
+<span class="sd">        ... except InvalidFlagValue as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        &#39;some_flag&#39; should be boolean. You passed not_a_boolean.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="InvalidFlagValue.__init__">
@@ -208,6 +250,9 @@
 <span class="sd">        Args:</span>
 <span class="sd">            flag: The flag with an invalid value.</span>
 <span class="sd">            flag_value: The invalid value of the flag.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`ASyncFlagException`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">&#39; should be boolean. You passed </span><span class="si">{</span><span class="n">flag_value</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
 </div>
@@ -219,6 +264,16 @@
 <span class="k">class</span> <span class="nc">FlagNotDefined</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a flag is not defined on an object.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; class SomeClass:</span>
+<span class="sd">        ...     pass</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise FlagNotDefined(SomeClass, &quot;some_flag&quot;)</span>
+<span class="sd">        ... except FlagNotDefined as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        &lt;class &#39;__main__.SomeClass&#39;&gt; flag some_flag is not defined.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FlagNotDefined.__init__">
@@ -230,6 +285,9 @@
 <span class="sd">        Args:</span>
 <span class="sd">            obj: The object where the flag is not defined.</span>
 <span class="sd">            flag: The undefined flag.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`ASyncFlagException`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2"> flag </span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2"> is not defined.&quot;</span><span class="p">)</span></div>
 </div>
@@ -241,6 +299,10 @@
 <span class="k">class</span> <span class="nc">ImproperFunctionType</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a function that should be sync is async or vice-versa.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`FunctionNotAsync`</span>
+<span class="sd">        - :class:`FunctionNotSync`</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
@@ -250,6 +312,16 @@
 <span class="k">class</span> <span class="nc">FunctionNotAsync</span><span class="p">(</span><span class="n">ImproperFunctionType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a function expected to be async is not.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; def some_function():</span>
+<span class="sd">        ...     pass</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise FunctionNotAsync(some_function)</span>
+<span class="sd">        ... except FunctionNotAsync as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        `coro_fn` must be a coroutine function defined with `async def`. You passed &lt;function some_function at 0x...&gt;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FunctionNotAsync.__init__">
@@ -260,6 +332,9 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            fn: The function that is not async.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`ImproperFunctionType`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;`coro_fn` must be a coroutine function defined with `async def`. You passed </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">.&quot;</span>
@@ -272,7 +347,17 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotSync">[docs]</a>
 <span class="k">class</span> <span class="nc">FunctionNotSync</span><span class="p">(</span><span class="n">ImproperFunctionType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Raised when a function expected to be sync is not.</span>
+<span class="sd">    Raised when a function expected to be sync is actually async.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; async def some_async_function():</span>
+<span class="sd">        ...     pass</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise FunctionNotSync(some_async_function)</span>
+<span class="sd">        ... except FunctionNotSync as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        `func` must be a coroutine function defined with `def`. You passed &lt;function some_async_function at 0x...&gt;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FunctionNotSync.__init__">
@@ -283,6 +368,9 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            fn: The function that is not sync.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`ImproperFunctionType`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;`func` must be a coroutine function defined with `def`. You passed </span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2">.&quot;</span>
@@ -296,6 +384,13 @@
 <span class="k">class</span> <span class="nc">ASyncRuntimeError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised for runtime errors in asynchronous operations.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise ASyncRuntimeError(RuntimeError(&quot;Some runtime error&quot;))</span>
+<span class="sd">        ... except ASyncRuntimeError as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        Some runtime error</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ASyncRuntimeError.__init__">
@@ -306,6 +401,9 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            e: The original runtime error.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`RuntimeError`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
 </div>
@@ -317,6 +415,15 @@
 <span class="k">class</span> <span class="nc">SyncModeInAsyncContextError</span><span class="p">(</span><span class="n">ASyncRuntimeError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when synchronous code is used within an asynchronous context.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise SyncModeInAsyncContextError()</span>
+<span class="sd">        ... except SyncModeInAsyncContextError as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        The event loop is already running, which means you&#39;re trying to use an `ASyncFunction` synchronously from within an async context.</span>
+<span class="sd">        Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:</span>
+<span class="sd">        {&#39;sync&#39;, &#39;asynchronous&#39;}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SyncModeInAsyncContextError.__init__">
@@ -324,6 +431,9 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the SyncModeInAsyncContextError exception.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`ASyncRuntimeError`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">err</span><span class="p">:</span>
             <span class="n">err</span> <span class="o">=</span> <span class="s2">&quot;The event loop is already running, which means you&#39;re trying to use an `ASyncFunction` synchronously from within an async context.</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -339,6 +449,16 @@
 <span class="k">class</span> <span class="nc">MappingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for errors related to :class:`~TaskMapping`.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from a_sync import TaskMapping</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise MappingError(TaskMapping(), &quot;Some mapping error&quot;)</span>
+<span class="sd">        ... except MappingError as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        Some mapping error:</span>
+<span class="sd">        &lt;TaskMapping object at 0x...&gt;</span>
+<span class="sd">        {}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_msg</span><span class="p">:</span> <span class="nb">str</span>
@@ -352,8 +472,11 @@
 <span class="sd">        Args:</span>
 <span class="sd">            mapping: The TaskMapping where the error occurred.</span>
 <span class="sd">            msg: An optional message describing the error.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`TaskMapping`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;:</span><span class="se">\n</span><span class="si">{</span><span class="n">mapping</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="n">msg</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg</span><span class="p">)</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;:</span><span class="se">\n</span><span class="si">{</span><span class="n">mapping</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="n">mapping</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="nb">dict</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
@@ -367,6 +490,16 @@
 <span class="k">class</span> <span class="nc">MappingIsEmptyError</span><span class="p">(</span><span class="n">MappingError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a TaskMapping is empty and an operation requires it to have items.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from a_sync import TaskMapping</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise MappingIsEmptyError(TaskMapping())</span>
+<span class="sd">        ... except MappingIsEmptyError as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        TaskMapping does not contain anything to yield:</span>
+<span class="sd">        &lt;TaskMapping object at 0x...&gt;</span>
+<span class="sd">        {}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_msg</span> <span class="o">=</span> <span class="s2">&quot;TaskMapping does not contain anything to yield&quot;</span></div>
@@ -378,6 +511,18 @@
 <span class="k">class</span> <span class="nc">MappingNotEmptyError</span><span class="p">(</span><span class="n">MappingError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a TaskMapping is not empty and an operation requires it to be empty.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from a_sync import TaskMapping</span>
+<span class="sd">        &gt;&gt;&gt; task_mapping = TaskMapping()</span>
+<span class="sd">        &gt;&gt;&gt; task_mapping[&#39;key&#39;] = &#39;value&#39;</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise MappingNotEmptyError(task_mapping)</span>
+<span class="sd">        ... except MappingNotEmptyError as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        TaskMapping already contains some data. In order to use `map`, you need a fresh one:</span>
+<span class="sd">        &lt;TaskMapping object at 0x...&gt;</span>
+<span class="sd">        {&#39;key&#39;: &#39;value&#39;}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_msg</span> <span class="o">=</span> <span class="s2">&quot;TaskMapping already contains some data. In order to use `map`, you need a fresh one&quot;</span></div>
@@ -389,6 +534,18 @@
 <span class="k">class</span> <span class="nc">PersistedTaskException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when an exception persists in an asyncio Task.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; import asyncio</span>
+<span class="sd">        &gt;&gt;&gt; async def some_task():</span>
+<span class="sd">        ...     raise ValueError(&quot;Some error&quot;)</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; task = asyncio.create_task(some_task())</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise PersistedTaskException(ValueError(&quot;Some error&quot;), task)</span>
+<span class="sd">        ... except PersistedTaskException as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        ValueError: Some error</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PersistedTaskException.__init__">
@@ -400,6 +557,9 @@
 <span class="sd">        Args:</span>
 <span class="sd">            exc: The exception that persisted.</span>
 <span class="sd">            task: The asyncio Task where the exception occurred.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`asyncio.Task`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">exc</span>
@@ -413,6 +573,13 @@
 <span class="k">class</span> <span class="nc">EmptySequenceError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when an operation is attempted on an empty sequence but items are required.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise EmptySequenceError(&quot;Sequence is empty&quot;)</span>
+<span class="sd">        ... except EmptySequenceError as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        Sequence is empty</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 </pre></div>

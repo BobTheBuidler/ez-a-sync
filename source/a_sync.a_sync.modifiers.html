@@ -191,13 +191,21 @@ with either an integer specifying the number of runs per minute or an
 </dd>
 </dl>
 <p class="rubric">Examples</p>
+<p>Applying a rate limit of 60 executions per minute:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@apply_rate_limit</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
 <span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 </pre></div>
 </div>
+<p>Using an <code class="xref py py-class docutils literal notranslate"><span class="pre">aiolimiter.AsyncLimiter</span></code> instance:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">async_limiter</span> <span class="o">=</span> <span class="n">AsyncLimiter</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nd">@apply_rate_limit</span><span class="p">(</span><span class="n">async_limiter</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Specifying the rate limit directly in the decorator:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@apply_rate_limit</span>
 <span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 </pre></div>
@@ -507,15 +515,14 @@ as a decorator. It raises exceptions if the inputs are not valid.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>coro_fn</strong> (<em>Optional</em><em>[</em><em>Callable</em><em>]</em>) – The coroutine function to which the semaphore will be applied,
 or None if the semaphore is to be used as a decorator.</p></li>
-<li><p><strong>semaphore</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore" title="(in Python v3.13)"><em>asyncio.Semaphore</em></a><em>, </em><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore" title="a_sync.primitives.ThreadsafeSemaphore"><em>primitives.ThreadsafeSemaphore</em></a><em>]</em>) – The semaphore to apply, which can be an integer, an <cite>asyncio.Semaphore</cite>,
-or a <cite>primitives.ThreadsafeSemaphore</cite> object.</p></li>
+<li><p><strong>semaphore</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore" title="(in Python v3.13)"><em>asyncio.Semaphore</em></a><em>, </em><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.Semaphore" title="a_sync.primitives.Semaphore"><em>primitives.Semaphore</em></a><em>]</em>) – The semaphore to apply, which can be an integer, an <cite>asyncio.Semaphore</cite>, or a <cite>primitives.Semaphore</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If both <cite>coro_fn</cite> and <cite>semaphore</cite> are provided as invalid inputs.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If both <cite>coro_fn</cite> and <cite>semaphore</cite> are provided and the first argument is an integer or <cite>asyncio.Semaphore</cite>.</p></li>
 <li><p><a class="reference internal" href="a_sync.html#a_sync.exceptions.FunctionNotAsync" title="a_sync.exceptions.FunctionNotAsync"><strong>exceptions.FunctionNotAsync</strong></a> – If the provided function is not a coroutine.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If the semaphore is not an integer, an <cite>asyncio.Semaphore</cite>, or a <cite>primitives.ThreadsafeSemaphore</cite> object.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If the semaphore is not an integer, an <cite>asyncio.Semaphore</cite>, or a <cite>primitives.Semaphore</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -531,12 +538,21 @@ or a <cite>primitives.ThreadsafeSemaphore</cite> object.</p></li>
 &gt;&gt;&gt; async def my_coroutine():
 …     pass
 &gt;&gt;&gt; my_coroutine = apply_semaphore(my_coroutine, 3)</p>
+<p>Handling invalid inputs:
+&gt;&gt;&gt; try:
+…     apply_semaphore(3, 2)
+… except ValueError as e:
+…     print(e)</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a></p></li>
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">primitives.ThreadsafeSemaphore</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">primitives.Semaphore</span></code></p></li>
 </ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><cite>primitives.Semaphore</cite> is a subclass of <cite>asyncio.Semaphore</cite>. Therefore, when the documentation refers to <cite>asyncio.Semaphore</cite>, it also includes <cite>primitives.Semaphore</cite> and any other subclasses.</p>
 </div>
 </dd></dl>
 
@@ -565,7 +581,16 @@ semaphores: Implements semaphore logic for controlling concurrency.</p>
 - <cite>ram_cache_ttl</cite>: Defines the time-to-live for items in the cache.
 - <cite>runs_per_minute</cite>: Sets a rate limit for function execution.
 - <cite>semaphore</cite>: Specifies a semaphore for controlling concurrency.
-- <cite>executor</cite>: Defines the executor for synchronous functions.</p>
+- <cite>executor</cite>: Defines the executor for synchronous functions. This is not applied like the other modifiers but is used to manage the execution context for synchronous functions when they are called in an asynchronous manner.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="a_sync.a_sync.modifiers.cache.html#module-a_sync.a_sync.modifiers.cache" title="a_sync.a_sync.modifiers.cache"><code class="xref py py-mod docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.cache</span></code></a></p></li>
+<li><p><a class="reference internal" href="#module-a_sync.a_sync.modifiers.limiter" title="a_sync.a_sync.modifiers.limiter"><code class="xref py py-mod docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.limiter</span></code></a></p></li>
+<li><p><a class="reference internal" href="#module-a_sync.a_sync.modifiers.manager" title="a_sync.a_sync.modifiers.manager"><code class="xref py py-mod docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.manager</span></code></a></p></li>
+<li><p><a class="reference internal" href="#module-a_sync.a_sync.modifiers.semaphores" title="a_sync.a_sync.modifiers.semaphores"><code class="xref py py-mod docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.semaphores</span></code></a></p></li>
+</ul>
+</div>
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.apply_class_defined_modifiers">
 <span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.modifiers.</span></span><span class="sig-name descname"><span class="pre">apply_class_defined_modifiers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attrs_from_metaclass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/modifiers.html#apply_class_defined_modifiers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.modifiers.apply_class_defined_modifiers" title="Link to this definition"></a></dt>
@@ -580,6 +605,25 @@ are not integers, the function will silently do nothing.</p>
 <dd class="field-odd"><p><strong>attrs_from_metaclass</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A dictionary of attributes from a metaclass.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p>Applying modifiers to a dictionary:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;semaphore&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;runs_per_minute&#39;</span><span class="p">:</span> <span class="mi">60</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">apply_class_defined_modifiers</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;semaphore&#39;</span><span class="p">]</span>
+<span class="go">ThreadsafeSemaphore(3)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;runs_per_minute&#39;</span><span class="p">]</span>
+<span class="go">AsyncLimiter(60)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">a_sync.primitives.locks.ThreadsafeSemaphore</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">aiolimiter.AsyncLimiter</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -598,6 +642,27 @@ a type, or an object.</p>
 <dd class="field-odd"><p><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<p>Extracting modifiers from a class:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Example</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">cache_type</span> <span class="o">=</span> <span class="s1">&#39;memory&#39;</span>
+<span class="gp">... </span>    <span class="n">runs_per_minute</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_modifiers_from</span><span class="p">(</span><span class="n">Example</span><span class="p">)</span>
+<span class="go">ModifierKwargs({&#39;cache_type&#39;: &#39;memory&#39;, &#39;runs_per_minute&#39;: 60})</span>
+</pre></div>
+</div>
+<p>Extracting modifiers from a dictionary:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modifiers_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cache_type&#39;</span><span class="p">:</span> <span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="s1">&#39;semaphore&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_modifiers_from</span><span class="p">(</span><span class="n">modifiers_dict</span><span class="p">)</span>
+<span class="go">ModifierKwargs({&#39;cache_type&#39;: &#39;memory&#39;, &#39;semaphore&#39;: ThreadsafeSemaphore(5)})</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.modifiers.manager.ModifierManager" title="a_sync.a_sync.modifiers.manager.ModifierManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.manager.ModifierManager</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 </section>

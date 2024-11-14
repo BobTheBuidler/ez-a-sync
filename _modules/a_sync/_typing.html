@@ -70,9 +70,62 @@
              
   <h1>Source code for a_sync._typing</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module provides type definitions and type-related utilities for the a_sync library.</span>
-<span class="sd">It includes various type aliases, protocols, and TypedDicts used throughout the library</span>
-<span class="sd">to enhance type checking and provide better IDE support.</span>
+<span class="sd">This module provides type definitions and type-related utilities for the `a_sync` library.</span>
+
+<span class="sd">It includes various type aliases and protocols used throughout the library to enhance type checking and provide better IDE support.</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">    The following examples demonstrate how to use some of the type aliases and protocols defined in this module.</span>
+
+<span class="sd">    Example of a function that can return either an awaitable or a direct value:</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    from a_sync._typing import MaybeAwaitable</span>
+<span class="sd">    from typing import Awaitable</span>
+
+<span class="sd">    async def process_data(data: MaybeAwaitable[int]) -&gt; int:</span>
+<span class="sd">        if isinstance(data, Awaitable):</span>
+<span class="sd">            return await data</span>
+<span class="sd">        return data</span>
+
+<span class="sd">    # Usage</span>
+<span class="sd">    import asyncio</span>
+
+<span class="sd">    async def main():</span>
+<span class="sd">        result = await process_data(asyncio.sleep(1, result=42))</span>
+<span class="sd">        print(result)  # Output: 42</span>
+
+<span class="sd">        result = await process_data(42)</span>
+<span class="sd">        print(result)  # Output: 42</span>
+
+<span class="sd">    asyncio.run(main())</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    Example of defining a coroutine function type:</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    from a_sync._typing import CoroFn</span>
+
+<span class="sd">    async def async_function(x: int) -&gt; str:</span>
+<span class="sd">        return str(x)</span>
+
+<span class="sd">    coro_fn: CoroFn[[int], str] = async_function</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    Example of defining a synchronous function type:</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    from a_sync._typing import SyncFn</span>
+
+<span class="sd">    def sync_function(x: int) -&gt; str:</span>
+<span class="sd">        return str(x)</span>
+
+<span class="sd">    sync_fn: SyncFn[[int], str] = sync_function</span>
+<span class="sd">    ```</span>
+
+<span class="sd">See Also:</span>
+<span class="sd">    - :mod:`typing`</span>
+<span class="sd">    - :mod:`asyncio`</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>

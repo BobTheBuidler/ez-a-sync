@@ -217,9 +217,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func</span> <span class="o">=</span> <span class="n">wrapped_func</span>
         <span class="s2">&quot;The function used to create tasks for each key.&quot;</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wrapped_func</span><span class="p">,</span> <span class="n">ASyncMethodDescriptor</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">get_flag_name</span><span class="p">(</span><span class="n">wrapped_func_kwargs</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">wrapped_func_kwargs</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">wrapped_func</span><span class="p">,</span> <span class="n">ASyncMethodDescriptor</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">get_flag_name</span><span class="p">(</span><span class="n">wrapped_func_kwargs</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="n">wrapped_func_kwargs</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">wrapped_func_kwargs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func_kwargs</span> <span class="o">=</span> <span class="n">wrapped_func_kwargs</span>
 

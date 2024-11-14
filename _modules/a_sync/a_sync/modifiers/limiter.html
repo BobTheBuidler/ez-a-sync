@@ -95,6 +95,8 @@
 <span class="sd">        runs_per_minute: The number of allowed executions per minute.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Applying a rate limit of 60 executions per minute:</span>
+
 <span class="sd">        &gt;&gt;&gt; @apply_rate_limit(60)</span>
 <span class="sd">        ... async def my_function():</span>
 <span class="sd">        ...     pass</span>
@@ -119,6 +121,8 @@
 <span class="sd">        runs_per_minute: The number of allowed executions per minute or an :class:`aiolimiter.AsyncLimiter` instance.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Using an :class:`aiolimiter.AsyncLimiter` instance:</span>
+
 <span class="sd">        &gt;&gt;&gt; async_limiter = AsyncLimiter(60)</span>
 <span class="sd">        &gt;&gt;&gt; @apply_rate_limit(async_limiter)</span>
 <span class="sd">        ... async def my_function():</span>
@@ -151,12 +155,22 @@
 <span class="sd">        exceptions.FunctionNotAsync: If `coro_fn` is not an asynchronous function.</span>
 
 <span class="sd">    Examples:</span>
+<span class="sd">        Applying a rate limit of 60 executions per minute:</span>
+
 <span class="sd">        &gt;&gt;&gt; @apply_rate_limit(60)</span>
 <span class="sd">        ... async def my_function():</span>
 <span class="sd">        ...     pass</span>
 
+<span class="sd">        Using an :class:`aiolimiter.AsyncLimiter` instance:</span>
+
 <span class="sd">        &gt;&gt;&gt; async_limiter = AsyncLimiter(60)</span>
 <span class="sd">        &gt;&gt;&gt; @apply_rate_limit(async_limiter)</span>
+<span class="sd">        ... async def my_function():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">        Specifying the rate limit directly in the decorator:</span>
+
+<span class="sd">        &gt;&gt;&gt; @apply_rate_limit</span>
 <span class="sd">        ... async def my_function():</span>
 <span class="sd">        ...     pass</span>
 

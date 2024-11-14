@@ -110,12 +110,15 @@ flow of items in an asynchronous context.</p>
 <dt class="sig sig-object py" id="a_sync.utils.iterators.as_yielded">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.iterators.</span></span><span class="sig-name descname"><span class="pre">as_yielded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">iterators</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils/iterators.html#as_yielded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.utils.iterators.as_yielded" title="Link to this definition"></a></dt>
 <dd><p>Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.</p>
-<p>This function is designed to streamline the handling of multiple asynchronous data streams by consolidating them into a single asynchronous iteration context. It enables concurrent fetching and processing of items from multiple sources, improving efficiency and simplifying code structure when dealing with asynchronous operations.</p>
-<p>The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.</p>
-<p>The function handles exceptions and ensures robustness and reliability by using asyncio tasks and queues. It manages edge cases such as early termination and exception management. The <cite>_Done</cite> sentinel class is used internally to signal the completion of processing.</p>
+<p>This function is designed to streamline the handling of multiple asynchronous data streams by consolidating them into a single asynchronous iteration context.
+It enables concurrent fetching and processing of items from multiple sources, improving efficiency and simplifying code structure when dealing with asynchronous operations.</p>
+<p>The merging process is facilitated by the <a class="reference internal" href="#a_sync.utils.iterators.exhaust_iterators" title="a_sync.utils.iterators.exhaust_iterators"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterators()</span></code></a> function, which concurrently processes the source iterators and places their items into a queue.
+This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.</p>
+<p>The function handles exceptions and ensures robustness and reliability by using asyncio tasks and queues. It manages edge cases such as early termination and exception management.
+The <code class="xref py py-class docutils literal notranslate"><span class="pre">_Done</span></code> sentinel class is used internally to signal the completion of processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
+<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.AsyncIterator" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterator</span></code></a> objects to be merged.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
@@ -123,7 +126,22 @@ flow of items in an asynchronous context.</p>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability. The <cite>_Done</cite> sentinel class is used internally to signal the completion of processing.</p>
+<p>This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process.
+It handles edge cases such as early termination and exception management, ensuring robustness and reliability.
+The <code class="xref py py-class docutils literal notranslate"><span class="pre">_Done</span></code> sentinel class is used internally to signal the completion of processing.</p>
+</div>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">as_yielded</span><span class="p">(</span><span class="n">iterator1</span><span class="p">,</span> <span class="n">iterator2</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.utils.iterators.exhaust_iterator" title="a_sync.utils.iterators.exhaust_iterator"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterator()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#a_sync.utils.iterators.exhaust_iterators" title="a_sync.utils.iterators.exhaust_iterators"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterators()</span></code></a></p></li>
+</ul>
 </div>
 </dd></dl>
 
@@ -131,37 +149,68 @@ flow of items in an asynchronous context.</p>
 <dt class="sig sig-object py" id="a_sync.utils.iterators.exhaust_iterator">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.iterators.</span></span><span class="sig-name descname"><span class="pre">exhaust_iterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils/iterators.html#exhaust_iterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.utils.iterators.exhaust_iterator" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously iterates over items from the given async iterator and optionally places them into a queue.</p>
-<p>This function is a utility to exhaust an async iterator, with an option to forward the iterated items to a provided asyncio.Queue. It’s particularly useful when dealing with asynchronous operations that produce items to be consumed by other parts of an application, enabling a producer-consumer pattern.</p>
+<p>This function is a utility to exhaust an async iterator, with an option to forward the iterated items to a provided queue-like object.
+The queue should have a <cite>put_nowait</cite> method. This is particularly useful when dealing with asynchronous operations that produce items
+to be consumed by other parts of an application, enabling a producer-consumer pattern.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to exhaust.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue-like object where iterated items will be placed.
+The queue should support the <cite>put_nowait</cite> method. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">await</span> <span class="n">exhaust_iterator</span><span class="p">(</span><span class="n">some_async_iterator</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="n">my_queue</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.utils.iterators.exhaust_iterators" title="a_sync.utils.iterators.exhaust_iterators"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterators()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#a_sync.utils.iterators.as_yielded" title="a_sync.utils.iterators.as_yielded"><code class="xref py py-func docutils literal notranslate"><span class="pre">as_yielded()</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.utils.iterators.exhaust_iterators">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.iterators.</span></span><span class="sig-name descname"><span class="pre">exhaust_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterators</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils/iterators.html#exhaust_iterators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.utils.iterators.exhaust_iterators" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.</p>
-<p>This function leverages asyncio.gather to concurrently exhaust multiple async iterators. It’s useful in scenarios where items from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.</p>
+<p>This function leverages <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.gather" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.gather()</span></code></a> to concurrently exhaust multiple async iterators. It’s useful in scenarios where items
+from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterators</strong> – A sequence of async iterators to be exhausted concurrently.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync.Queue" title="a_sync.Queue"><em>Queue</em></a><em>]</em>) – An optional queue-like object where items from all iterators will be placed. If None, items are simply consumed.</p></li>
 <li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>join</cite> is True but no <cite>queue</cite> is provided.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">await</span> <span class="n">exhaust_iterators</span><span class="p">([</span><span class="n">iterator1</span><span class="p">,</span> <span class="n">iterator2</span><span class="p">],</span> <span class="n">queue</span><span class="o">=</span><span class="n">my_queue</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.utils.iterators.exhaust_iterator" title="a_sync.utils.iterators.exhaust_iterator"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterator()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#a_sync.utils.iterators.as_yielded" title="a_sync.utils.iterators.as_yielded"><code class="xref py py-func docutils literal notranslate"><span class="pre">as_yielded()</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 </section>
@@ -173,12 +222,15 @@ iterators and implementing asynchronous versions of the built-in any and all fun
 <dt class="sig sig-object py" id="a_sync.utils.as_yielded">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.</span></span><span class="sig-name descname"><span class="pre">as_yielded</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">iterators</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils/iterators.html#as_yielded"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.utils.as_yielded" title="Link to this definition"></a></dt>
 <dd><p>Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.</p>
-<p>This function is designed to streamline the handling of multiple asynchronous data streams by consolidating them into a single asynchronous iteration context. It enables concurrent fetching and processing of items from multiple sources, improving efficiency and simplifying code structure when dealing with asynchronous operations.</p>
-<p>The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.</p>
-<p>The function handles exceptions and ensures robustness and reliability by using asyncio tasks and queues. It manages edge cases such as early termination and exception management. The <cite>_Done</cite> sentinel class is used internally to signal the completion of processing.</p>
+<p>This function is designed to streamline the handling of multiple asynchronous data streams by consolidating them into a single asynchronous iteration context.
+It enables concurrent fetching and processing of items from multiple sources, improving efficiency and simplifying code structure when dealing with asynchronous operations.</p>
+<p>The merging process is facilitated by the <a class="reference internal" href="#a_sync.utils.exhaust_iterators" title="a_sync.utils.exhaust_iterators"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterators()</span></code></a> function, which concurrently processes the source iterators and places their items into a queue.
+This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.</p>
+<p>The function handles exceptions and ensures robustness and reliability by using asyncio tasks and queues. It manages edge cases such as early termination and exception management.
+The <code class="xref py py-class docutils literal notranslate"><span class="pre">_Done</span></code> sentinel class is used internally to signal the completion of processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of AsyncIterator objects to be merged.</p>
+<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.AsyncIterator" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterator</span></code></a> objects to be merged.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
@@ -186,7 +238,22 @@ iterators and implementing asynchronous versions of the built-in any and all fun
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability. The <cite>_Done</cite> sentinel class is used internally to signal the completion of processing.</p>
+<p>This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process.
+It handles edge cases such as early termination and exception management, ensuring robustness and reliability.
+The <code class="xref py py-class docutils literal notranslate"><span class="pre">_Done</span></code> sentinel class is used internally to signal the completion of processing.</p>
+</div>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">as_yielded</span><span class="p">(</span><span class="n">iterator1</span><span class="p">,</span> <span class="n">iterator2</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.utils.exhaust_iterator" title="a_sync.utils.exhaust_iterator"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterator()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#a_sync.utils.exhaust_iterators" title="a_sync.utils.exhaust_iterators"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterators()</span></code></a></p></li>
+</ul>
 </div>
 </dd></dl>
 
@@ -194,37 +261,68 @@ iterators and implementing asynchronous versions of the built-in any and all fun
 <dt class="sig sig-object py" id="a_sync.utils.exhaust_iterator">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.</span></span><span class="sig-name descname"><span class="pre">exhaust_iterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils/iterators.html#exhaust_iterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.utils.exhaust_iterator" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously iterates over items from the given async iterator and optionally places them into a queue.</p>
-<p>This function is a utility to exhaust an async iterator, with an option to forward the iterated items to a provided asyncio.Queue. It’s particularly useful when dealing with asynchronous operations that produce items to be consumed by other parts of an application, enabling a producer-consumer pattern.</p>
+<p>This function is a utility to exhaust an async iterator, with an option to forward the iterated items to a provided queue-like object.
+The queue should have a <cite>put_nowait</cite> method. This is particularly useful when dealing with asynchronous operations that produce items
+to be consumed by other parts of an application, enabling a producer-consumer pattern.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to exhaust.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where iterated items will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue-like object where iterated items will be placed.
+The queue should support the <cite>put_nowait</cite> method. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">await</span> <span class="n">exhaust_iterator</span><span class="p">(</span><span class="n">some_async_iterator</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="n">my_queue</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.utils.exhaust_iterators" title="a_sync.utils.exhaust_iterators"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterators()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#a_sync.utils.as_yielded" title="a_sync.utils.as_yielded"><code class="xref py py-func docutils literal notranslate"><span class="pre">as_yielded()</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.utils.exhaust_iterators">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.</span></span><span class="sig-name descname"><span class="pre">exhaust_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterators</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils/iterators.html#exhaust_iterators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.utils.exhaust_iterators" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.</p>
-<p>This function leverages asyncio.gather to concurrently exhaust multiple async iterators. It’s useful in scenarios where items from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.</p>
+<p>This function leverages <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.gather" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.gather()</span></code></a> to concurrently exhaust multiple async iterators. It’s useful in scenarios where items
+from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterators</strong> – A sequence of async iterators to be exhausted concurrently.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue where items from all iterators will be placed. If None, items are simply consumed.</p></li>
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync.Queue" title="a_sync.Queue"><em>Queue</em></a><em>]</em>) – An optional queue-like object where items from all iterators will be placed. If None, items are simply consumed.</p></li>
 <li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>join</cite> is True but no <cite>queue</cite> is provided.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">await</span> <span class="n">exhaust_iterators</span><span class="p">([</span><span class="n">iterator1</span><span class="p">,</span> <span class="n">iterator2</span><span class="p">],</span> <span class="n">queue</span><span class="o">=</span><span class="n">my_queue</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.utils.exhaust_iterator" title="a_sync.utils.exhaust_iterator"><code class="xref py py-func docutils literal notranslate"><span class="pre">exhaust_iterator()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#a_sync.utils.as_yielded" title="a_sync.utils.as_yielded"><code class="xref py py-func docutils literal notranslate"><span class="pre">as_yielded()</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 </section>

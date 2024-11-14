@@ -106,8 +106,13 @@
 <span class="sd">    A semaphore that allows prioritization of waiters.</span>
 
 <span class="sd">    This semaphore manages waiters with associated priorities, ensuring that waiters with higher</span>
-<span class="sd">    priorities are processed before those with lower priorities. If no priority is specified,</span>
-<span class="sd">    the semaphore uses a default top priority.</span>
+<span class="sd">    priorities are processed before those with lower priorities. Subclasses must define the</span>
+<span class="sd">    `_top_priority` property to specify the default top priority behavior.</span>
+
+<span class="sd">    The `_context_manager_class` property should return the class used for managing semaphore contexts.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`PrioritySemaphore` for an implementation using numeric priorities.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
@@ -131,7 +136,13 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_top_priority</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PT</span><span class="p">:</span>
-        <span class="c1"># You can use this so you can set priorities with non numeric comparable values</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Defines the top priority for the semaphore.</span>
+
+<span class="sd">        Subclasses must implement this property to specify the default top priority.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: If not implemented in a subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 <div class="viewcode-block" id="_AbstractPrioritySemaphore.__init__">
@@ -142,6 +153,9 @@
 <span class="sd">        Args:</span>
 <span class="sd">            value: The initial capacity of the semaphore.</span>
 <span class="sd">            name: An optional name for the semaphore, used for debugging.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; semaphore = _AbstractPrioritySemaphore(5, name=&quot;test_semaphore&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_context_managers</span> <span class="o">=</span> <span class="p">{}</span>
@@ -164,17 +178,38 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> capacity=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_capacity</span><span class="si">}</span><span class="s2"> value=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="si">}</span><span class="s2"> waiters=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_count_waiters</span><span class="p">()</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aenter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enters the semaphore context, acquiring it with the top priority.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enters the semaphore context, acquiring it with the top priority.</span>
+
+<span class="sd">        This method is part of the asynchronous context management protocol.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; semaphore = _AbstractPrioritySemaphore(5)</span>
+<span class="sd">            &gt;&gt;&gt; async with semaphore:</span>
+<span class="sd">            ...     await do_stuff()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_top_priority</span><span class="p">]</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aexit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exits the semaphore context, releasing it with the top priority.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exits the semaphore context, releasing it with the top priority.</span>
+
+<span class="sd">        This method is part of the asynchronous context management protocol.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; semaphore = _AbstractPrioritySemaphore(5)</span>
+<span class="sd">            &gt;&gt;&gt; async with semaphore:</span>
+<span class="sd">            ...     await do_stuff()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_top_priority</span><span class="p">]</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 
 <div class="viewcode-block" id="_AbstractPrioritySemaphore.acquire">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync._AbstractPrioritySemaphore.acquire">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Acquires the semaphore with the top priority.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Acquires the semaphore with the top priority.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; semaphore = _AbstractPrioritySemaphore(5)</span>
+<span class="sd">            &gt;&gt;&gt; await semaphore.acquire()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_top_priority</span><span class="p">]</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span></div>
 
 
@@ -190,6 +225,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The context manager associated with the given priority.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; semaphore = _AbstractPrioritySemaphore(5)</span>
+<span class="sd">            &gt;&gt;&gt; context_manager = semaphore[priority]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">priority</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_top_priority</span> <span class="k">if</span> <span class="n">priority</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">priority</span>
         <span class="k">if</span> <span class="n">priority</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_context_managers</span><span class="p">:</span>
@@ -208,6 +247,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            True if the semaphore cannot be acquired immediately, False otherwise.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; semaphore = _AbstractPrioritySemaphore(5)</span>
+<span class="sd">            &gt;&gt;&gt; semaphore.locked()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span>
             <span class="nb">any</span><span class="p">(</span>
@@ -224,6 +267,10 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A dictionary mapping each priority to the number of waiters.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; semaphore = _AbstractPrioritySemaphore(5)</span>
+<span class="sd">            &gt;&gt;&gt; semaphore._count_waiters()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="n">manager</span><span class="o">.</span><span class="n">_priority</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">waiters</span><span class="p">)</span>
@@ -239,6 +286,12 @@
 <span class="sd">        This method handles the waking of waiters based on priority. It includes an emergency</span>
 <span class="sd">        procedure to handle potential lost waiters, ensuring that no waiter is left indefinitely</span>
 <span class="sd">        waiting.</span>
+
+<span class="sd">        The emergency procedure is a temporary measure to address potential issues with lost waiters.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; semaphore = _AbstractPrioritySemaphore(5)</span>
+<span class="sd">            &gt;&gt;&gt; semaphore._wake_up_next()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span>
             <span class="n">manager</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">)</span>
@@ -329,6 +382,10 @@
 <span class="sd">            parent: The parent semaphore.</span>
 <span class="sd">            priority: The priority associated with this context manager.</span>
 <span class="sd">            name: An optional name for the context manager, used for debugging.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; parent_semaphore = _AbstractPrioritySemaphore(5)</span>
+<span class="sd">            &gt;&gt;&gt; context_manager = _AbstractPrioritySemaphoreContextManager(parent_semaphore, priority=1)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
@@ -359,6 +416,14 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            True if this context manager has a lower priority than the other, False otherwise.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: If the other object is not of the same type.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; cm1 = _AbstractPrioritySemaphoreContextManager(parent, priority=1)</span>
+<span class="sd">            &gt;&gt;&gt; cm2 = _AbstractPrioritySemaphoreContextManager(parent, priority=2)</span>
+<span class="sd">            &gt;&gt;&gt; cm1 &lt; cm2</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">other</span><span class="si">}</span><span class="s2"> is not type </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -386,6 +451,10 @@
 <span class="sd">        zero on entry, block, waiting until some other coroutine has</span>
 <span class="sd">        called release() to make it larger than 0, and then return</span>
 <span class="sd">        True.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)</span>
+<span class="sd">            &gt;&gt;&gt; await context_manager.acquire()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_value</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_debug_daemon</span><span class="p">()</span>
@@ -408,7 +477,12 @@
 <div class="viewcode-block" id="_AbstractPrioritySemaphoreContextManager.release">
 <a class="viewcode-back" href="../../../../source/a_sync.primitives.locks.html#a_sync._AbstractPrioritySemaphoreContextManager.release">[docs]</a>
     <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Releases the semaphore for this context manager.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Releases the semaphore for this context manager.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)</span>
+<span class="sd">            &gt;&gt;&gt; context_manager.release()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">release</span><span class="p">()</span></div>
 </div>
 
@@ -430,7 +504,9 @@
 <span class="k">class</span> <span class="nc">PrioritySemaphore</span><span class="p">(</span><span class="n">_AbstractPrioritySemaphore</span><span class="p">[</span><span class="n">Numeric</span><span class="p">,</span> <span class="n">_PrioritySemaphoreContextManager</span><span class="p">]):</span>  <span class="c1"># type: ignore [type-var]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Semaphore that uses numeric priorities for waiters.</span>
 
-<span class="sd">    It&#39;s similar to a regular Semaphore but requires each waiter to have a priority:</span>
+<span class="sd">    This class extends :class:`_AbstractPrioritySemaphore` and provides a concrete implementation</span>
+<span class="sd">    using numeric priorities. The `_context_manager_class` is set to :class:`_PrioritySemaphoreContextManager`,</span>
+<span class="sd">    and the `_top_priority` is set to -1, which is the highest priority.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        The primary way to use this semaphore is by specifying a priority.</span>
@@ -444,6 +520,9 @@
 <span class="sd">        &gt;&gt;&gt; priority_semaphore = PrioritySemaphore(10)</span>
 <span class="sd">        &gt;&gt;&gt; async with priority_semaphore:</span>
 <span class="sd">        ...     await do_stuff()</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`_AbstractPrioritySemaphore` for the base class implementation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_context_manager_class</span> <span class="o">=</span> <span class="n">_PrioritySemaphoreContextManager</span>

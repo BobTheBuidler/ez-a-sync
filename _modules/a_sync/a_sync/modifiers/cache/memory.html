@@ -94,7 +94,8 @@
 
 <span class="nd">@overload</span>
 <span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a decorator to apply an asynchronous LRU cache.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a decorator to apply an asynchronous LRU cache.</span>
 
 <span class="sd">    This overload is used when no coroutine function is provided. The returned</span>
 <span class="sd">    decorator can be applied to a coroutine function later.</span>
@@ -102,6 +103,14 @@
 <span class="sd">    Args:</span>
 <span class="sd">        **kwargs: Keyword arguments for cache configuration, including maxsize,</span>
 <span class="sd">            ttl, and typed.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; @apply_async_memory_cache(maxsize=128, ttl=60)</span>
+<span class="sd">        ... async def fetch_data():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`alru_cache` for the underlying caching mechanism.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -119,6 +128,13 @@
 <span class="sd">        coro_fn: An integer to set as maxsize for the cache.</span>
 <span class="sd">        **kwargs: Additional keyword arguments for cache configuration, including</span>
 <span class="sd">            ttl and typed.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; # This usage is not supported</span>
+<span class="sd">        &gt;&gt;&gt; apply_async_memory_cache(128, ttl=60)</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`apply_async_memory_cache` for correct usage.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -126,7 +142,8 @@
 <span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies an asynchronous LRU cache to a provided coroutine function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies an asynchronous LRU cache to a provided coroutine function.</span>
 
 <span class="sd">    This overload is used when a coroutine function is provided. The cache is</span>
 <span class="sd">    applied directly to the function.</span>
@@ -135,6 +152,14 @@
 <span class="sd">        coro_fn: The coroutine function to be cached.</span>
 <span class="sd">        **kwargs: Keyword arguments for cache configuration, including maxsize,</span>
 <span class="sd">            ttl, and typed.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; async def fetch_data():</span>
+<span class="sd">        ...     pass</span>
+<span class="sd">        &gt;&gt;&gt; cached_fetch = apply_async_memory_cache(fetch_data, maxsize=128, ttl=60)</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`alru_cache` for the underlying caching mechanism.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -142,7 +167,8 @@
 <span class="k">def</span> <span class="nf">apply_async_memory_cache</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">CacheKwargs</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a decorator to apply an asynchronous LRU cache.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a decorator to apply an asynchronous LRU cache.</span>
 
 <span class="sd">    This duplicate overload is used when no coroutine function is provided. The</span>
 <span class="sd">    returned decorator can be applied to a coroutine function later.</span>
@@ -151,6 +177,14 @@
 <span class="sd">        coro_fn: None, indicating no coroutine function is provided.</span>
 <span class="sd">        **kwargs: Keyword arguments for cache configuration, including maxsize,</span>
 <span class="sd">            ttl, and typed.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; @apply_async_memory_cache(maxsize=128, ttl=60)</span>
+<span class="sd">        ... async def fetch_data():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`alru_cache` for the underlying caching mechanism.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 
@@ -162,7 +196,8 @@
     <span class="n">ttl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">typed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecoratorOrCoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies an asynchronous LRU cache to a coroutine function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies an asynchronous LRU cache to a coroutine function.</span>
 
 <span class="sd">    This function uses the `alru_cache` from the `async_lru` library to cache</span>
 <span class="sd">    the results of an asynchronous coroutine function. The cache can be configured</span>
@@ -180,8 +215,17 @@
 <span class="sd">        TypeError: If `maxsize` is not a positive integer or None when `coro_fn` is None.</span>
 <span class="sd">        exceptions.FunctionNotAsync: If `coro_fn` is not an asynchronous function.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        A decorator if `coro_fn` is None, otherwise the cached coroutine function.</span>
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; @apply_async_memory_cache(maxsize=128, ttl=60)</span>
+<span class="sd">        ... async def fetch_data():</span>
+<span class="sd">        ...     pass</span>
+
+<span class="sd">        &gt;&gt;&gt; async def fetch_data():</span>
+<span class="sd">        ...     pass</span>
+<span class="sd">        &gt;&gt;&gt; cached_fetch = apply_async_memory_cache(fetch_data, maxsize=128, ttl=60)</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :func:`alru_cache` for the underlying caching mechanism.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Parse Inputs</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
