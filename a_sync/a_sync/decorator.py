@@ -538,6 +538,10 @@ def a_sync(
     both synchronous and asynchronous usage, or for gradually migrating
     synchronous code to asynchronous without breaking existing interfaces.
 
+    Note:
+        If the `coro_fn` argument is passed as 'async' or 'sync', it is treated as the `default` argument,
+        and `coro_fn` is set to `None`.
+
     See Also:
         :class:`ASyncFunction`, :class:`ASyncDecorator`
     """
