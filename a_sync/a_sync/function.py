@@ -38,7 +38,7 @@ class _ModifiedMixin:
 
     # TODO: give me a docstring
     modifiers: ModifierManager
-    
+
     __slots__ = "modifiers", "wrapped"
 
     def _asyncify(self, func: SyncFn[P, T]) -> CoroFn[P, T]:
@@ -254,7 +254,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         Example:
             result = func(5, asynchronous=False)
         """
-        
+
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
@@ -971,35 +971,36 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
     """
 
     @overload
-    def __call__(
-        self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs
-    ) -> T:
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
         # TODO write specific docs for this overload
         ...
+
     @overload
     def __call__(
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]:
         # TODO write specific docs for this overload
         ...
+
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
     ) -> T:
         # TODO write specific docs for this overload
         ...
+
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]:
         # TODO write specific docs for this overload
         ...
+
     @overload
-    def __call__(
-        self, *args: P.args, **kwargs: P.kwargs
-    ) -> T:
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:
         # TODO write specific docs for this overload
         ...
+
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """Calls the wrapped function, defaulting to synchronous execution.
 
@@ -1051,24 +1052,28 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
         # TODO write specific docs for this overload
         ...
+
     @overload
     def __call__(
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]:
         # TODO write specific docs for this overload
         ...
+
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
     ) -> T:
         # TODO write specific docs for this overload
         ...
+
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]:
         # TODO write specific docs for this overload
         ...
+
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
@@ -1125,7 +1130,7 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
         See Also:
             - :class:`ASyncFunctionSyncDefault`
         """
-        
+
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
         """
@@ -1140,7 +1145,7 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
         See Also:
             - :class:`ASyncFunctionSyncDefault`
         """
-        
+
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:
         # TODO write specific docs for this implementation
         return ASyncFunctionSyncDefault(func, **self.modifiers)

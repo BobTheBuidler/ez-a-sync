@@ -19,7 +19,7 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
         The name of the flag if present, None otherwise.
 
     Raises:
-        :class:`exceptions.TooManyFlags`: If more than one flag is present in the kwargs, 
+        :class:`exceptions.TooManyFlags`: If more than one flag is present in the kwargs,
         the exception includes the message "kwargs" and the list of present flags.
 
     Examples:

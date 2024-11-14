@@ -28,7 +28,7 @@ def test_executor():
     including running tasks, handling futures, and managing exceptions.
 
     Note:
-        `ProcessPoolExecutor` is an alias for `AsyncProcessPoolExecutor`, 
+        `ProcessPoolExecutor` is an alias for `AsyncProcessPoolExecutor`,
         which is why the assertion `assert isinstance(executor, AsyncProcessPoolExecutor)` is always true.
 
     See Also:

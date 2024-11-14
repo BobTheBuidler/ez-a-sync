@@ -50,7 +50,7 @@ def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: 
     to be executed asynchronously.
 
     Note:
-        The function `_asyncify` uses `asyncio.futures.wrap_future` to wrap the future 
+        The function `_asyncify` uses `asyncio.futures.wrap_future` to wrap the future
         returned by the executor, specifying the event loop with `a_sync.asyncio.get_event_loop()`.
         Ensure that your environment supports this usage or adjust the import if necessary.
 

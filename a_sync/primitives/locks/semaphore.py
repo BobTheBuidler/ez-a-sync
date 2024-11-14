@@ -136,7 +136,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
 
             async def monitor():
                 await semaphore._debug_daemon()
-        """ 
+        """
         while self._waiters:
             await asyncio.sleep(60)
             self.logger.debug(

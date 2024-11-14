@@ -21,7 +21,7 @@ from tests.fixtures import (
 def test_base_direct_init():
     """Test direct initialization of :class:`~a_sync.a_sync.base.ASyncGenericBase`.
 
-    This test ensures that directly initializing :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    This test ensures that directly initializing :class:`~a_sync.a_sync.base.ASyncGenericBase`
     raises a :class:`NotImplementedError`, as it is intended to be subclassed.
 
     Raises:
@@ -48,8 +48,8 @@ both_modes = pytest.mark.parametrize("sync", [True, False])
 def test_inheritance(cls, sync: bool):
     """Test inheritance and metaclass functionality.
 
-    This test checks that instances of subclasses of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
-    are correctly initialized with the :class:`~a_sync.a_sync._meta.ASyncMeta` metaclass, ensuring 
+    This test checks that instances of subclasses of :class:`~a_sync.a_sync.base.ASyncGenericBase`
+    are correctly initialized with the :class:`~a_sync.a_sync._meta.ASyncMeta` metaclass, ensuring
     that methods are wrapped with asynchronous or synchronous behavior based on flags.
 
     Args:
@@ -77,7 +77,7 @@ def test_inheritance(cls, sync: bool):
 def test_method_sync(cls: type, i: int):
     """Test synchronous method execution.
 
-    This test verifies that methods in synchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    This test verifies that methods in synchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase`
     subclasses execute correctly and can be overridden with keyword arguments to run asynchronously.
 
     Args:
@@ -126,7 +126,7 @@ def test_method_sync(cls: type, i: int):
 async def test_method_async(cls: type, i: int):
     """Test asynchronous method execution.
 
-    This test verifies that methods in asynchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    This test verifies that methods in asynchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase`
     subclasses execute correctly and can be overridden with keyword arguments to run synchronously.
 
     Args:
@@ -168,7 +168,7 @@ async def test_method_async(cls: type, i: int):
 def test_property_sync(cls: type, i: int):
     """Test synchronous property access.
 
-    This test verifies that properties in synchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    This test verifies that properties in synchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase`
     subclasses are accessed correctly and that hidden methods for properties can be accessed.
 
     Args:
@@ -192,7 +192,7 @@ def test_property_sync(cls: type, i: int):
 async def test_property_async(cls: type, i: int):
     """Test asynchronous property access.
 
-    This test verifies that properties in asynchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    This test verifies that properties in asynchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase`
     subclasses are accessed correctly and that hidden methods for properties can be accessed.
 
     Args:
@@ -220,7 +220,7 @@ async def test_property_async(cls: type, i: int):
 def test_cached_property_sync(cls: type, i: int):
     """Test synchronous cached property access.
 
-    This test verifies that cached properties in synchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    This test verifies that cached properties in synchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase`
     subclasses are accessed correctly and that hidden methods for cached properties can be accessed.
 
     Args:
@@ -263,7 +263,7 @@ def test_cached_property_sync(cls: type, i: int):
 async def test_cached_property_async(cls: type, i: int):
     """Test asynchronous cached property access.
 
-    This test verifies that cached properties in asynchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase` 
+    This test verifies that cached properties in asynchronous instances of :class:`~a_sync.a_sync.base.ASyncGenericBase`
     subclasses are accessed correctly and that hidden methods for cached properties can be accessed.
 
     Args:
@@ -315,6 +315,7 @@ async def test_asynchronous_context_manager():
         ...     assert cm.entered
         >>> assert cm.exited
     """
+
     # Can the implementation work with an async context manager?
     class AsyncContextManager(ASyncGenericBase):
         async def __aenter__(self):
@@ -379,6 +380,7 @@ async def test_asynchronous_iteration():
         ...         raise StopAsyncIteration
         >>> assert [item async for item in ASyncObjectWithAiter()] == [1, 2, 3]
     """
+
     # Does the implementation screw anything up with aiteration?
     class ASyncObjectWithAiter(ASyncGenericBase):
         def __init__(self):
@@ -414,6 +416,7 @@ def test_synchronous_iteration():
         ...         raise StopIteration
         >>> assert list(ASyncObjectWithIter()) == [1, 2, 3]
     """
+
     # Does the implementation screw anything up with iteration?
     class ASyncObjectWithIter(ASyncGenericBase):
         def __init__(self):

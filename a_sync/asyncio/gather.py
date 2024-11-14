@@ -1,6 +1,7 @@
 """
 This module provides an enhanced version of :func:`asyncio.gather`.
 """
+
 from typing import Any, Awaitable, Dict, List, Mapping, Union, overload
 
 from a_sync._typing import *

@@ -39,7 +39,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
 
     The descriptor is responsible for creating an appropriate bound method when accessed,
     which is the actual object that can be called in both synchronous and asynchronous contexts.
-    It can create different types of bound methods (`ASyncBoundMethodSyncDefault`, 
+    It can create different types of bound methods (`ASyncBoundMethodSyncDefault`,
     `ASyncBoundMethodAsyncDefault`, or `ASyncBoundMethod`) based on the default mode or instance type.
 
     It also manages cache handles for bound methods and prevents setting or deleting the descriptor.

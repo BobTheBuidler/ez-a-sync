@@ -15,7 +15,7 @@ def test_flag_predefined():
     See Also:
         - :class:`a_sync.a_sync.singleton.ASyncGenericSingleton` for more details on the base class.
     """
-    
+
     class Test(ASyncGenericSingleton):
         sync = True
 

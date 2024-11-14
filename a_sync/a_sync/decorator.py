@@ -38,7 +38,7 @@ def a_sync(
 
     Examples:
         Basic usage with an asynchronous default:
-        
+
         >>> @a_sync(default='async')
         ... async def my_function():
         ...     return True
@@ -66,7 +66,7 @@ def a_sync(
 
     Examples:
         Basic usage with a synchronous default:
-        
+
         >>> @a_sync(default='sync')
         ... def my_function():
         ...     return True
@@ -92,7 +92,7 @@ def a_sync(
 
     Examples:
         Usage without specifying a default mode:
-        
+
         >>> @a_sync
         ... async def my_function():
         ...     return True
@@ -122,7 +122,7 @@ def a_sync(
 
     Examples:
         Decorating an asynchronous function without a default mode:
-        
+
         >>> async def my_function():
         ...     return True
         >>> decorated_function = a_sync(my_function)
@@ -152,7 +152,7 @@ def a_sync(
 
     Examples:
         Decorating a synchronous function without a default mode:
-        
+
         >>> def my_function():
         ...     return True
         >>> decorated_function = a_sync(my_function)
@@ -182,7 +182,7 @@ def a_sync(
 
     Examples:
         Creating an asynchronous default decorator without a function:
-        
+
         >>> @a_sync(default='async')
         ... async def my_function():
         ...     return True
@@ -212,7 +212,7 @@ def a_sync(
 
     Examples:
         Using 'async' as the only argument:
-        
+
         >>> @a_sync('async')
         ... async def my_function():
         ...     return True
@@ -242,7 +242,7 @@ def a_sync(
 
     Examples:
         Decorating an asynchronous function with an async default:
-        
+
         >>> async def my_function():
         ...     return True
         >>> decorated_function = a_sync(my_function, default='async')
@@ -272,7 +272,7 @@ def a_sync(
 
     Examples:
         Decorating a synchronous function with an async default:
-        
+
         >>> def my_function():
         ...     return True
         >>> decorated_function = a_sync(my_function, default='async')
@@ -302,7 +302,7 @@ def a_sync(
 
     Examples:
         Decorating an asynchronous function with a sync default:
-        
+
         >>> async def my_function():
         ...     return True
         >>> decorated_function = a_sync(my_function, default='sync')
@@ -332,7 +332,7 @@ def a_sync(
 
     Examples:
         Decorating a synchronous function with a sync default:
-        
+
         >>> def my_function():
         ...     return True
         >>> decorated_function = a_sync(my_function, default='sync')
@@ -362,7 +362,7 @@ def a_sync(
 
     Examples:
         Creating a synchronous default decorator without a function:
-        
+
         >>> @a_sync(default='sync')
         ... def my_function():
         ...     return True
@@ -392,7 +392,7 @@ def a_sync(
 
     Examples:
         Using 'sync' as the only argument:
-        
+
         >>> @a_sync('sync')
         ... def my_function():
         ...     return True
@@ -422,7 +422,7 @@ def a_sync(
 
     Examples:
         Using 'sync' as the only argument:
-        
+
         >>> @a_sync('sync')
         ... def my_function():
         ...     return True
