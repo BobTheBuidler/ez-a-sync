@@ -1,13 +1,18 @@
 """
-With these executors, you can simply run sync functions in your executor with `await executor.run(fn, *args)`.
+This module provides several executor classes that facilitate running synchronous functions asynchronously using `asyncio`.
 
-`executor.submit(fn, *args)` will work the same as the `concurrent.futures` implementation, but will return an `asyncio.Future` instead of a `concurrent.futures.Future`.
+With these executors, you can run sync functions in your executor with `await executor.run(fn, *args)`.
+The `executor.submit(fn, *args)` method works similarly to the `concurrent.futures` implementation but
+returns an `asyncio.Future` instead of a `concurrent.futures.Future`.
 
-This module provides several executor classes:
-- _AsyncExecutorMixin: A mixin providing asynchronous run and submit methods, with support for synchronous mode.
-- AsyncProcessPoolExecutor: An async process pool executor.
-- AsyncThreadPoolExecutor: An async thread pool executor.
-- PruningThreadPoolExecutor: A thread pool executor that prunes inactive threads after a timeout, ensuring at least one thread remains active.
+Executor Classes:
+- :class:`_AsyncExecutorMixin`: A mixin providing asynchronous run and submit methods, with support for synchronous mode.
+- :class:`AsyncProcessPoolExecutor`: An async process pool executor.
+- :class:`AsyncThreadPoolExecutor`: An async thread pool executor.
+- :class:`PruningThreadPoolExecutor`: A thread pool executor that prunes inactive threads after a timeout, ensuring at least one thread remains active to prevent locks.
+
+See Also:
+    - :mod:`concurrent.futures` for the original synchronous executor implementations.
 """
 
 import asyncio
@@ -31,6 +36,16 @@ Initializer = Callable[..., object]
 class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
     """
     A mixin for Executors to provide asynchronous run and submit methods.
+
+    This mixin allows executors to operate in both synchronous and asynchronous modes. In synchronous mode, functions are executed directly in the current thread. In asynchronous mode, functions are submitted to the executor and awaited.
+
+    Examples:
+        >>> async def example():
+        >>>     result = await executor.run(some_function, arg1, arg2, kwarg1=value1)
+        >>>     print(result)
+
+    See Also:
+        - :meth:`submit` for submitting functions to the executor.
     """
 
     _max_workers: int
@@ -163,8 +178,10 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
     """
     An async process pool executor that allows use of kwargs.
 
-    Attributes:
-        _workers:
+    Examples:
+        >>> executor = AsyncProcessPoolExecutor(max_workers=4)
+        >>> future = executor.submit(some_function, arg1, arg2)
+        >>> result = await future
     """
 
     _workers = "processes"
@@ -217,6 +234,11 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
 class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
     """
     An async thread pool executor that allows use of kwargs.
+
+    Examples:
+        >>> executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix="MyThread")
+        >>> future = executor.submit(some_function, arg1, arg2)
+        >>> result = await future
     """
 
     _workers = "threads"
@@ -344,7 +366,16 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
     """
     This `AsyncThreadPoolExecutor` implementation prunes inactive threads after 'timeout' seconds without a work item.
     Pruned threads will be automatically recreated as needed for future workloads. Up to 'max_threads' can be active at any one time.
-    A minimum of one thread will remain active to prevent locks.
+    The executor ensures that at least one active thread remains to prevent locks.
+
+    Note:
+        The `_worker` function includes a check (`len(executor) > 1`) to ensure that at least one thread remains active.
+        This prevents the executor from having zero active threads, which could lead to deadlocks.
+
+    Examples:
+        >>> executor = PruningThreadPoolExecutor(max_workers=5, timeout=300)
+        >>> future = executor.submit(some_function, arg1, arg2)
+        >>> result = await future
     """
 
     __slots__ = "_timeout", "_adjusting_lock"
