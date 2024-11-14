@@ -125,7 +125,19 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
 
     This class allows objects to be iterated over using either a standard `for` loop or an `async for` loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.
 
-    The class achieves this by implementing both `__iter__` and `__aiter__` methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. This dual functionality is particularly useful in codebases that are transitioning between synchronous and asynchronous code, or in libraries that aim to support both synchronous and asynchronous usage patterns without requiring the user to manage different types of iterable objects.
+    The class achieves this by implementing both `__iter__` and `__aiter__` methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. However, note that synchronous iteration relies on the :class:`ASyncIterator` class, which uses `asyncio.get_event_loop().run_until_complete` to fetch items. This can raise a `RuntimeError` if the event loop is already running, resulting in a :class:`SyncModeInAsyncContextError`.
+
+    Example:
+        >>> async_iterable = ASyncIterable(some_async_iterable)
+        >>> async for item in async_iterable:
+        ...     print(item)
+        >>> for item in async_iterable:
+        ...     print(item)
+
+    See Also:
+        - :class:`ASyncIterator`
+        - :class:`ASyncFilter`
+        - :class:`ASyncSorter`
     """
 
     @classmethod
@@ -178,7 +190,20 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
 
     By implementing both `__next__` and `__anext__` methods, ASyncIterator enables objects to be iterated using standard iteration protocols while internally managing the complexities of asynchronous iteration. This design simplifies the use of asynchronous iterables in environments or frameworks that are not inherently asynchronous, such as standard synchronous functions or older codebases being gradually migrated to asynchronous IO.
 
-    This class is particularly useful for library developers seeking to provide a consistent iteration interface across synchronous and asynchronous code, reducing the cognitive load on users and promoting code reusability and simplicity.
+    Note:
+        Synchronous iteration with `ASyncIterator` uses `asyncio.get_event_loop().run_until_complete`, which can raise a `RuntimeError` if the event loop is already running. In such cases, a :class:`SyncModeInAsyncContextError` is raised, indicating that synchronous iteration is not possible in an already running event loop.
+
+    Example:
+        >>> async_iterator = ASyncIterator(some_async_iterator)
+        >>> async for item in async_iterator:
+        ...     print(item)
+        >>> for item in async_iterator:
+        ...     print(item)
+
+    See Also:
+        - :class:`ASyncIterable`
+        - :class:`ASyncFilter`
+        - :class:`ASyncSorter`
     """
 
     def __next__(self) -> T:
@@ -270,6 +295,18 @@ class ASyncGeneratorFunction(Generic[P, T]):
     The ASyncGeneratorFunction class supports dynamic binding to instances, enabling it to be used as a method on class instances. When accessed as a descriptor, it automatically handles the binding to the instance, thereby allowing the wrapped async generator function to be invoked with instance context ('self') automatically provided. This feature is invaluable for designing classes that need to expose asynchronous generators as part of their interface while maintaining the ease of use and calling semantics similar to regular methods.
 
     By providing a unified interface to asynchronous generator functions, this class facilitates the creation of APIs that are flexible and easy to use in a wide range of asynchronous programming scenarios. It abstracts away the complexities involved in managing asynchronous generator lifecycles and invocation semantics, making it easier for developers to integrate asynchronous iteration patterns into their applications.
+
+    Example:
+        >>> async def my_async_gen():
+        ...     yield 1
+        ...     yield 2
+        >>> async_gen_func = ASyncGeneratorFunction(my_async_gen)
+        >>> for item in async_gen_func():
+        ...     print(item)
+
+    See Also:
+        - :class:`ASyncIterator`
+        - :class:`ASyncIterable`
     """
 
     _cache_handle: asyncio.TimerHandle
@@ -310,9 +347,6 @@ class ASyncGeneratorFunction(Generic[P, T]):
         Args:
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
-
-        Returns:
-            An :class:`ASyncIterator` wrapping the :class:`AsyncIterator` returned from the wrapped function call.
         """
         if self.__weakself__ is None:
             return ASyncIterator(self.__wrapped__(*args, **kwargs))
@@ -393,7 +427,19 @@ class ASyncFilter(_ASyncView[T]):
 
     This class inherits from :class:`~_ASyncView` and provides the functionality to asynchronously
     iterate over items, applying the filter function to each item to determine if it should be
-    included in the result.
+    included in the result. The filter function can be either synchronous or asynchronous.
+
+    Example:
+        >>> async def is_even(x):
+        ...     return x % 2 == 0
+        >>> filtered_iterable = ASyncFilter(is_even, some_async_iterable)
+        >>> async for item in filtered_iterable:
+        ...     print(item)
+
+    See Also:
+        - :class:`ASyncIterable`
+        - :class:`ASyncIterator`
+        - :class:`ASyncSorter`
     """
 
     def __repr__(self) -> str:
@@ -445,7 +491,18 @@ class ASyncSorter(_ASyncView[T]):
     An async sorter class that sorts items of an async iterable based on a provided key function.
 
     This class inherits from :class:`~_ASyncView` and provides the functionality to asynchronously
-    iterate over items, applying the key function to each item for sorting.
+    iterate over items, applying the key function to each item for sorting. The key function can be
+    either synchronous or asynchronous. Note that the ASyncSorter instance can only be consumed once.
+
+    Example:
+        >>> sorted_iterable = ASyncSorter(some_async_iterable, key=lambda x: x.value)
+        >>> async for item in sorted_iterable:
+        ...     print(item)
+
+    See Also:
+        - :class:`ASyncIterable`
+        - :class:`ASyncIterator`
+        - :class:`ASyncFilter`
     """
 
     reversed: bool = False

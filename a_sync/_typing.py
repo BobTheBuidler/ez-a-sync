@@ -1,7 +1,60 @@
 """
-This module provides type definitions and type-related utilities for the a_sync library.
-It includes various type aliases, protocols, and TypedDicts used throughout the library
-to enhance type checking and provide better IDE support.
+This module provides type definitions and type-related utilities for the `a_sync` library.
+
+It includes various type aliases and protocols used throughout the library to enhance type checking and provide better IDE support.
+
+Examples:
+    The following examples demonstrate how to use some of the type aliases and protocols defined in this module.
+
+    Example of a function that can return either an awaitable or a direct value:
+
+    ```python
+    from a_sync._typing import MaybeAwaitable
+    from typing import Awaitable
+
+    async def process_data(data: MaybeAwaitable[int]) -> int:
+        if isinstance(data, Awaitable):
+            return await data
+        return data
+
+    # Usage
+    import asyncio
+
+    async def main():
+        result = await process_data(asyncio.sleep(1, result=42))
+        print(result)  # Output: 42
+
+        result = await process_data(42)
+        print(result)  # Output: 42
+
+    asyncio.run(main())
+    ```
+
+    Example of defining a coroutine function type:
+
+    ```python
+    from a_sync._typing import CoroFn
+
+    async def async_function(x: int) -> str:
+        return str(x)
+
+    coro_fn: CoroFn[[int], str] = async_function
+    ```
+
+    Example of defining a synchronous function type:
+
+    ```python
+    from a_sync._typing import SyncFn
+
+    def sync_function(x: int) -> str:
+        return str(x)
+
+    sync_fn: SyncFn[[int], str] = sync_function
+    ```
+
+See Also:
+    - :mod:`typing`
+    - :mod:`asyncio`
 """
 
 import asyncio

@@ -1,12 +1,11 @@
 """
 This module provides an abstract base class for defining asynchronous and synchronous behavior.
 
-The ASyncABC class uses the ASyncMeta metaclass to automatically wrap its methods
-with asynchronous or synchronous behavior based on flags. Subclasses must
-implement the abstract methods to define the flag name, flag value, and
-default mode for asynchronous or synchronous execution.
+The :class:`ASyncABC` class uses the :class:`ASyncMeta` metaclass to facilitate the creation of classes
+that can operate in both asynchronous and synchronous contexts. It provides concrete methods to determine
+the execution mode based on flags and keyword arguments.
 
-Note: It is recommended to use ASyncGenericBase for most use cases. This class
+Note: It is recommended to use :class:`ASyncGenericBase` for most use cases. This class
 is intended for more custom implementations if necessary.
 """
 
@@ -26,10 +25,35 @@ logger = logging.getLogger(__name__)
 class ASyncABC(metaclass=ASyncMeta):
     """Abstract Base Class for defining asynchronous and synchronous behavior.
 
-    This class uses the ASyncMeta metaclass to automatically wrap its methods
-    with asynchronous or synchronous behavior based on flags. Subclasses must
-    implement the abstract methods to define the flag name, flag value, and
-    default mode for asynchronous or synchronous execution.
+    This class provides methods to determine the execution mode based on flags and keyword arguments.
+    It is designed to be subclassed, allowing developers to create classes that can be used in both
+    synchronous and asynchronous contexts.
+
+    See Also:
+        - :class:`ASyncGenericBase`: A more user-friendly base class for creating dual-mode classes.
+        - :class:`ASyncMeta`: Metaclass that facilitates asynchronous capabilities in class attributes.
+
+    Examples:
+        To create a class that inherits from `ASyncABC`, you need to implement the abstract methods
+        and can override the concrete methods if needed.
+
+        ```python
+        class MyASyncClass(ASyncABC):
+            @property
+            def __a_sync_flag_name__(self) -> str:
+                return "sync"
+
+            @property
+            def __a_sync_flag_value__(self) -> bool:
+                return True
+
+            @classmethod
+            def __a_sync_default_mode__(cls) -> bool:
+                return False
+        ```
+
+        In this example, `MyASyncClass` is a subclass of `ASyncABC` with custom implementations
+        for the required abstract methods.
     """
 
     ##################################
@@ -45,6 +69,11 @@ class ASyncABC(metaclass=ASyncMeta):
 
         Args:
             kwargs: A dictionary of keyword arguments to check for flags.
+
+        Examples:
+            >>> instance = MyASyncClass()
+            >>> instance.__a_sync_should_await__({'sync': True})
+            False
         """
         try:
             return self.__a_sync_should_await_from_kwargs__(kwargs)
@@ -58,6 +87,11 @@ class ASyncABC(metaclass=ASyncMeta):
         This property can be overridden if dynamic behavior is needed. For
         instance, to allow hot-swapping of instance modes, redefine this as a
         non-cached property.
+
+        Examples:
+            >>> instance = MyASyncClass()
+            >>> instance.__a_sync_instance_should_await__
+            True
         """
         return _flags.negate_if_necessary(
             self.__a_sync_flag_name__, self.__a_sync_flag_value__
@@ -74,6 +108,11 @@ class ASyncABC(metaclass=ASyncMeta):
 
         Raises:
             NoFlagsFound: If no valid flags are found in the keyword arguments.
+
+        Examples:
+            >>> instance = MyASyncClass()
+            >>> instance.__a_sync_should_await_from_kwargs__({'sync': False})
+            True
         """
         if flag := _kwargs.get_flag_name(kwargs):
             return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
@@ -89,6 +128,10 @@ class ASyncABC(metaclass=ASyncMeta):
         Args:
             args: A tuple of positional arguments for the instance.
             kwargs: A dictionary of keyword arguments for the instance.
+
+        Examples:
+            >>> MyASyncClass.__a_sync_instance_will_be_sync__((), {'sync': True})
+            True
         """
         logger.debug(
             "checking `%s.%s.__init__` signature against provided kwargs to determine a_sync mode for the new instance",
@@ -119,6 +162,11 @@ class ASyncABC(metaclass=ASyncMeta):
 
         This method should not be overridden. It returns the modifiers
         associated with the instance, which are used to customize behavior.
+
+        Examples:
+            >>> instance = MyASyncClass()
+            >>> instance.__a_sync_modifiers__
+            {'cache_type': 'memory'}
         """
         return modifiers.get_modifiers_from(self)
 

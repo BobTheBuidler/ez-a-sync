@@ -18,31 +18,34 @@ logger = logging.getLogger(__name__)
 
 class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     """
-    A semaphore with additional debugging capabilities.
+    A semaphore with additional debugging capabilities inherited from :class:`_DebugDaemonMixin`.
 
-    This semaphore includes debug logging and can be used to decorate coroutine functions.
+    This semaphore includes debug logging capabilities that are activated when the semaphore has waiters.
     It allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.
 
-    So you can write this pattern:
+    Example:
+        You can write this pattern:
 
-    ```
-    semaphore = Semaphore(5)
+        ```
+        semaphore = Semaphore(5)
 
-    async def limited():
-        async with semaphore:
+        async def limited():
+            async with semaphore:
+                return 1
+        ```
+
+        like this:
+
+        ```
+        semaphore = Semaphore(5)
+
+        @semaphore
+        async def limited():
             return 1
+        ```
 
-    ```
-
-    like this:
-
-    ```
-    semaphore = Semaphore(5)
-
-    @semaphore
-    async def limited():
-        return 1
-    ```
+    See Also:
+        :class:`_DebugDaemonMixin` for more details on debugging capabilities.
     """
 
     if sys.version_info >= (3, 10):
@@ -109,6 +112,14 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         return semaphore_wrapper
 
     async def acquire(self) -> Literal[True]:
+        """
+        Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.
+
+        If the semaphore value is zero or less, the debug daemon is started to log the state of the semaphore.
+
+        Returns:
+            True when the semaphore is successfully acquired.
+        """
         if self._value <= 0:
             self._ensure_debug_daemon()
         return await super().acquire()
@@ -116,6 +127,15 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     async def _debug_daemon(self) -> None:
         """
         Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.
+
+        This method is part of the :class:`_DebugDaemonMixin` and is used to provide detailed logging information
+        about the semaphore's state when it is being waited on.
+
+        Example:
+            semaphore = Semaphore(5)
+
+            async def monitor():
+                await semaphore._debug_daemon()
         """
         while self._waiters:
             await asyncio.sleep(60)
@@ -129,6 +149,13 @@ class DummySemaphore(asyncio.Semaphore):
     A dummy semaphore that implements the standard :class:`asyncio.Semaphore` API but does nothing.
 
     This class is useful for scenarios where a semaphore interface is required but no actual synchronization is needed.
+
+    Example:
+        dummy_semaphore = DummySemaphore()
+
+        async def no_op():
+            async with dummy_semaphore:
+                return 1
     """
 
     __slots__ = "name", "_value"
@@ -149,11 +176,14 @@ class DummySemaphore(asyncio.Semaphore):
     async def acquire(self) -> Literal[True]:
         return True
 
-    def release(self) -> None: ...
+    def release(self) -> None:
+        """No-op release method."""
 
-    async def __aenter__(self): ...
+    async def __aenter__(self):
+        """No-op context manager entry."""
 
-    async def __aexit__(self, *args): ...
+    async def __aexit__(self, *args):
+        """No-op context manager exit."""
 
 
 class ThreadsafeSemaphore(Semaphore):
@@ -161,7 +191,18 @@ class ThreadsafeSemaphore(Semaphore):
     A semaphore that works in a multi-threaded environment.
 
     This semaphore ensures that the program functions correctly even when used with multiple event loops.
-    It provides a workaround for edge cases involving multiple threads and event loops.
+    It provides a workaround for edge cases involving multiple threads and event loops by using a separate semaphore
+    for each thread.
+
+    Example:
+        semaphore = ThreadsafeSemaphore(5)
+
+        async def limited():
+            async with semaphore:
+                return 1
+
+    See Also:
+        :class:`Semaphore` for the base class implementation.
     """
 
     __slots__ = "semaphores", "dummy"
@@ -198,6 +239,13 @@ class ThreadsafeSemaphore(Semaphore):
         Returns the appropriate semaphore for the current thread.
 
         NOTE: We can't cache this property because we need to check the current thread every time we access it.
+
+        Example:
+            semaphore = ThreadsafeSemaphore(5)
+
+            async def limited():
+                async with semaphore.semaphore:
+                    return 1
         """
         return self.dummy if self.use_dummy else self.semaphores[current_thread()]
 

@@ -17,7 +17,7 @@ def _await(awaitable: Awaitable[T]) -> T:
     Await an awaitable object in a synchronous context.
 
     Args:
-        awaitable: The awaitable object to be awaited.
+        awaitable (Awaitable[T]): The awaitable object to be awaited.
 
     Raises:
         exceptions.SyncModeInAsyncContextError: If the event loop is already running.
@@ -43,22 +43,30 @@ def _await(awaitable: Awaitable[T]) -> T:
 
 def _asyncify(func: SyncFn[P, T], executor: Executor) -> CoroFn[P, T]:  # type: ignore [misc]
     """
-    Convert a synchronous function to a coroutine function.
+    Convert a synchronous function to a coroutine function using an executor.
+
+    This function submits the synchronous function to the provided executor and wraps
+    the resulting future in a coroutine function. This allows the synchronous function
+    to be executed asynchronously.
+
+    Note:
+        The function `_asyncify` uses `asyncio.futures.wrap_future` to wrap the future
+        returned by the executor, specifying the event loop with `a_sync.asyncio.get_event_loop()`.
+        Ensure that your environment supports this usage or adjust the import if necessary.
 
     Args:
-        func: The synchronous function to be converted.
-        executor: The executor used to run the synchronous function.
-
-    Returns:
-        CoroFn[P, T]: A coroutine function wrapping the input function.
+        func (SyncFn[P, T]): The synchronous function to be converted.
+        executor (Executor): The executor used to run the synchronous function.
 
     Raises:
-        exceptions.FunctionNotSync: If the input function is a coroutine function or an instance of ASyncFunction.
+        exceptions.FunctionNotSync: If the input function is a coroutine function or an instance of :class:`~a_sync.a_sync.function.ASyncFunction`.
 
     Examples:
+        >>> from concurrent.futures import ThreadPoolExecutor
         >>> def sync_function(x):
         ...     return x * 2
         ...
+        >>> executor = ThreadPoolExecutor()
         >>> async_function = _asyncify(sync_function, executor)
         >>> result = await async_function(3)
         >>> print(result)

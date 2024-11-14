@@ -16,8 +16,13 @@ The modifiers available are:
 - `ram_cache_ttl`: Defines the time-to-live for items in the cache.
 - `runs_per_minute`: Sets a rate limit for function execution.
 - `semaphore`: Specifies a semaphore for controlling concurrency.
-- `executor`: Defines the executor for synchronous functions.
+- `executor`: Defines the executor for synchronous functions. This is not applied like the other modifiers but is used to manage the execution context for synchronous functions when they are called in an asynchronous manner.
 
+See Also:
+    - :mod:`a_sync.a_sync.modifiers.cache`
+    - :mod:`a_sync.a_sync.modifiers.limiter`
+    - :mod:`a_sync.a_sync.modifiers.manager`
+    - :mod:`a_sync.a_sync.modifiers.semaphores`
 """
 
 from aiolimiter import AsyncLimiter
@@ -36,6 +41,24 @@ def get_modifiers_from(thing: Union[dict, type, object]) -> ModifierKwargs:
 
     Returns:
         A ModifierKwargs object containing the valid modifiers extracted from the input.
+
+    Examples:
+        Extracting modifiers from a class:
+
+        >>> class Example:
+        ...     cache_type = 'memory'
+        ...     runs_per_minute = 60
+        >>> get_modifiers_from(Example)
+        ModifierKwargs({'cache_type': 'memory', 'runs_per_minute': 60})
+
+        Extracting modifiers from a dictionary:
+
+        >>> modifiers_dict = {'cache_type': 'memory', 'semaphore': 5}
+        >>> get_modifiers_from(modifiers_dict)
+        ModifierKwargs({'cache_type': 'memory', 'semaphore': ThreadsafeSemaphore(5)})
+
+    See Also:
+        - :class:`a_sync.a_sync.modifiers.manager.ModifierManager`
     """
     if isinstance(thing, dict):
         apply_class_defined_modifiers(thing)
@@ -54,6 +77,21 @@ def apply_class_defined_modifiers(attrs_from_metaclass: dict):
 
     Args:
         attrs_from_metaclass: A dictionary of attributes from a metaclass.
+
+    Examples:
+        Applying modifiers to a dictionary:
+
+        >>> attrs = {'semaphore': 3, 'runs_per_minute': 60}
+        >>> apply_class_defined_modifiers(attrs)
+        >>> attrs['semaphore']
+        ThreadsafeSemaphore(3)
+
+        >>> attrs['runs_per_minute']
+        AsyncLimiter(60)
+
+    See Also:
+        - :class:`a_sync.primitives.locks.ThreadsafeSemaphore`
+        - :class:`aiolimiter.AsyncLimiter`
     """
     if isinstance(val := attrs_from_metaclass.get("semaphore"), int):
         attrs_from_metaclass["semaphore"] = ThreadsafeSemaphore(val)

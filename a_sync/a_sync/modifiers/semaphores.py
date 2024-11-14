@@ -20,18 +20,33 @@ def apply_semaphore(  # type: ignore [misc]
     returning a decorator that can be applied to a coroutine function.
 
     Args:
-        semaphore (Union[int, asyncio.Semaphore, primitives.ThreadsafeSemaphore]):
-            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`,
-            or a `primitives.ThreadsafeSemaphore` object.
+        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):
+            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Examples:
+        Using as a decorator with an integer semaphore:
         >>> @apply_semaphore(2)
         ... async def limited_concurrent_function():
         ...     pass
 
+        Using as a decorator with an `asyncio.Semaphore`:
+        >>> sem = asyncio.Semaphore(2)
+        >>> @apply_semaphore(sem)
+        ... async def another_function():
+        ...     pass
+
+        Using as a decorator with a `primitives.Semaphore`:
+        >>> sem = primitives.ThreadsafeSemaphore(2)
+        >>> @apply_semaphore(sem)
+        ... async def yet_another_function():
+        ...     pass
+
     See Also:
         - :class:`asyncio.Semaphore`
-        - :class:`primitives.ThreadsafeSemaphore`
+        - :class:`primitives.Semaphore`
+
+    Note:
+        `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.
     """
 
 
@@ -47,18 +62,29 @@ def apply_semaphore(
 
     Args:
         coro_fn (Callable): The coroutine function to which the semaphore will be applied.
-        semaphore (Union[int, asyncio.Semaphore, primitives.ThreadsafeSemaphore]):
-            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`,
-            or a `primitives.ThreadsafeSemaphore` object.
+        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):
+            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Examples:
+        Applying directly to a function with an integer semaphore:
         >>> async def my_coroutine():
         ...     pass
         >>> my_coroutine = apply_semaphore(my_coroutine, 3)
 
+        Applying directly with an `asyncio.Semaphore`:
+        >>> sem = asyncio.Semaphore(3)
+        >>> my_coroutine = apply_semaphore(my_coroutine, sem)
+
+        Applying directly with a `primitives.Semaphore`:
+        >>> sem = primitives.ThreadsafeSemaphore(3)
+        >>> my_coroutine = apply_semaphore(my_coroutine, sem)
+
     See Also:
         - :class:`asyncio.Semaphore`
-        - :class:`primitives.ThreadsafeSemaphore`
+        - :class:`primitives.Semaphore`
+
+    Note:
+        `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.
     """
 
 
@@ -75,14 +101,13 @@ def apply_semaphore(
     Args:
         coro_fn (Optional[Callable]): The coroutine function to which the semaphore will be applied,
             or None if the semaphore is to be used as a decorator.
-        semaphore (Union[int, asyncio.Semaphore, primitives.ThreadsafeSemaphore]):
-            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`,
-            or a `primitives.ThreadsafeSemaphore` object.
+        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):
+            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Raises:
-        ValueError: If both `coro_fn` and `semaphore` are provided as invalid inputs.
+        ValueError: If both `coro_fn` and `semaphore` are provided and the first argument is an integer or `asyncio.Semaphore`.
         exceptions.FunctionNotAsync: If the provided function is not a coroutine.
-        TypeError: If the semaphore is not an integer, an `asyncio.Semaphore`, or a `primitives.ThreadsafeSemaphore` object.
+        TypeError: If the semaphore is not an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Examples:
         Using as a decorator:
@@ -95,9 +120,18 @@ def apply_semaphore(
         ...     pass
         >>> my_coroutine = apply_semaphore(my_coroutine, 3)
 
+        Handling invalid inputs:
+        >>> try:
+        ...     apply_semaphore(3, 2)
+        ... except ValueError as e:
+        ...     print(e)
+
     See Also:
         - :class:`asyncio.Semaphore`
-        - :class:`primitives.ThreadsafeSemaphore`
+        - :class:`primitives.Semaphore`
+
+    Note:
+        `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.
     """
     # Parse Inputs
     if isinstance(coro_fn, (int, asyncio.Semaphore)):

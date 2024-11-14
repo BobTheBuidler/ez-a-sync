@@ -24,11 +24,28 @@ class ASyncMeta(ABCMeta):
 
     Any class with `ASyncMeta` as its metaclass will have its functions and properties
     wrapped with asynchronous capabilities upon class instantiation. This includes
-    wrapping functions with `ASyncMethodDescriptor` and properties with
-    `ASyncPropertyDescriptor` or `ASyncCachedPropertyDescriptor`. Additionally, it handles
-    `_ModifiedMixin` objects (# TODO replace this with the actual subclasses of _modifiedMixin, which is just an internal use mixin class that has no meaning ot the user),
-    which are used when functions are decorated with a_sync decorators
-    to apply specific modifiers to those functions.
+    wrapping functions with :class:`~a_sync.a_sync.method.ASyncMethodDescriptor` and properties with
+    :class:`~a_sync.a_sync.property.ASyncPropertyDescriptor` or :class:`~a_sync.a_sync.property.ASyncCachedPropertyDescriptor`.
+    It also handles attributes that are instances of :class:`~a_sync.a_sync.function.ASyncFunction`,
+    which are used when functions are decorated with a_sync decorators to apply specific modifiers to those functions.
+
+    Attributes that are instances of :class:`~a_sync.future._ASyncFutureWrappedFn` and :class:`~a_sync.primitives.locks.semaphore.Semaphore`
+    are explicitly skipped and not wrapped.
+
+    Example:
+        To create a class with asynchronous capabilities, define your class with `ASyncMeta` as its metaclass:
+
+        >>> class MyClass(metaclass=ASyncMeta):
+        ...     def my_method(self):
+        ...         return "Hello, World!"
+
+        The `my_method` function will be wrapped with :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`, allowing it to be used asynchronously.
+
+    See Also:
+        - :class:`~a_sync.a_sync.function.ASyncFunction`
+        - :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`
+        - :class:`~a_sync.a_sync.property.ASyncPropertyDescriptor`
+        - :class:`~a_sync.a_sync.property.ASyncCachedPropertyDescriptor`
     """
 
     def __new__(cls, new_class_name, bases, attrs):
@@ -145,8 +162,20 @@ class ASyncMeta(ABCMeta):
 class ASyncSingletonMeta(ASyncMeta):
     """Metaclass for creating singleton instances with asynchronous capabilities.
 
-    This metaclass extends `ASyncMeta` to ensure that only one instance of a class
+    This metaclass extends :class:`~a_sync.a_sync._meta.ASyncMeta` to ensure that only one instance of a class
     is created for each synchronous or asynchronous context.
+
+    Example:
+        To create a singleton class with asynchronous capabilities, define your class with `ASyncSingletonMeta` as its metaclass:
+
+        >>> class MySingleton(metaclass=ASyncSingletonMeta):
+        ...     def __init__(self):
+        ...         print("Instance created")
+
+        The `MySingleton` class will ensure that only one instance is created for each context.
+
+    See Also:
+        - :class:`~a_sync.a_sync._meta.ASyncMeta`
     """
 
     def __init__(

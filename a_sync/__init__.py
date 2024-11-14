@@ -8,17 +8,40 @@ that can operate in both synchronous and asynchronous contexts. Additionally, it
 such as queues and locks, with extra functionality.
 
 Modules and components included:
-- `aliases`, `exceptions`, `iter`, `task`: Core modules of the library.
-- `ASyncGenericBase`, `ASyncGenericSingleton`, `a_sync`: Base classes and decorators for dual-context execution.
-- `apply_semaphore`: Function to apply semaphores to coroutines.
-- `ASyncCachedPropertyDescriptor`, `ASyncPropertyDescriptor`, `cached_property`, `property`: Property descriptors for async properties.
-- `as_completed`, `create_task`, `gather`: Enhanced asyncio functions.
-- Executors: `AsyncThreadPoolExecutor`, `AsyncProcessPoolExecutor`, `PruningThreadPoolExecutor` for async execution.
-- Iterators: `ASyncFilter`, `ASyncSorter`, `ASyncIterable`, `ASyncIterator` for async iteration.
-- Utilities: `all`, `any`, `as_yielded` for async utilities.
+- :mod:`~aliases`, :mod:`~exceptions`, :mod:`~iter`, :mod:`~task`: Core modules of the library.
+- :class:`~ASyncGenericBase`, :class:`~ASyncGenericSingleton`, :func:`~a_sync`: Base classes and decorators for dual-context execution.
+- :class:`~ASyncCachedPropertyDescriptor`, :class:`~ASyncPropertyDescriptor`, `cached_property`, `property`: Property descriptors for async properties.
+- :func:`~as_completed`, :func:`~create_task`, :func:`~gather`: Enhanced asyncio functions.
+- Executors: :class:`~AsyncThreadPoolExecutor`, :class:`~AsyncProcessPoolExecutor`, :class:`~PruningThreadPoolExecutor` for async execution.
+- Iterators: :class:`~ASyncFilter`, :class:`~ASyncSorter`, :class:`~ASyncIterable`, :class:`~ASyncIterator` for async iteration.
+- Utilities: :func:`~all`, :func:`~any`, :func:`~as_yielded`, :func:`~exhaust_iterator`, :func:`~exhaust_iterators` for async utilities.
+- :func:`~apply_semaphore`: Function to apply semaphores to coroutines.
 
 Alias for backward compatibility:
-- `ASyncBase` is an alias for `ASyncGenericBase`, which will be removed eventually, probably in version 0.1.0.
+- :class:`~ASyncBase` is an alias for :class:`~ASyncGenericBase`, which will be removed eventually, probably in version 0.1.0.
+
+Examples:
+    Using the `@a_sync` decorator:
+    >>> from a_sync import a_sync
+    >>> @a_sync
+    ... async def my_function():
+    ...     return "Hello, World!"
+    >>> result = await my_function()
+    >>> print(result)
+
+    Using `ASyncGenericBase` for dual-context classes:
+    >>> from a_sync import ASyncGenericBase
+    >>> class MyClass(ASyncGenericBase):
+    ...     async def my_method(self):
+    ...         return "Hello from MyClass"
+    >>> obj = MyClass()
+    >>> result = await obj.my_method()
+    >>> print(result)
+
+See Also:
+    - :mod:`a_sync.a_sync`: Contains the core classes and decorators.
+    - :mod:`a_sync.asyncio`: Provides enhanced asyncio functions.
+    - :mod:`a_sync.primitives`: Includes modified versions of standard asyncio primitives.
 """
 
 from a_sync import aliases, exceptions, iter, task

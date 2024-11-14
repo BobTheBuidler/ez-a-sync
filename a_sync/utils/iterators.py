@@ -22,11 +22,22 @@ async def exhaust_iterator(
     """
     Asynchronously iterates over items from the given async iterator and optionally places them into a queue.
 
-    This function is a utility to exhaust an async iterator, with an option to forward the iterated items to a provided asyncio.Queue. It's particularly useful when dealing with asynchronous operations that produce items to be consumed by other parts of an application, enabling a producer-consumer pattern.
+    This function is a utility to exhaust an async iterator, with an option to forward the iterated items to a provided queue-like object.
+    The queue should have a `put_nowait` method. This is particularly useful when dealing with asynchronous operations that produce items
+    to be consumed by other parts of an application, enabling a producer-consumer pattern.
 
     Args:
         iterator (AsyncIterator[T]): The async iterator to exhaust.
-        queue (Optional[asyncio.Queue]): An optional queue where iterated items will be placed. If None, items are simply consumed.
+        queue (Optional[asyncio.Queue]): An optional queue-like object where iterated items will be placed.
+            The queue should support the `put_nowait` method. If None, items are simply consumed.
+
+    Example:
+        >>> async def example():
+        >>>     await exhaust_iterator(some_async_iterator, queue=my_queue)
+
+    See Also:
+        - :func:`exhaust_iterators`
+        - :func:`as_yielded`
     """
     async for thing in iterator:
         if queue:
@@ -40,12 +51,24 @@ async def exhaust_iterators(
     """
     Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.
 
-    This function leverages asyncio.gather to concurrently exhaust multiple async iterators. It's useful in scenarios where items from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.
+    This function leverages :func:`asyncio.gather` to concurrently exhaust multiple async iterators. It's useful in scenarios where items
+    from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.
 
     Args:
         iterators: A sequence of async iterators to be exhausted concurrently.
-        queue (Optional[asyncio.Queue]): An optional queue where items from all iterators will be placed. If None, items are simply consumed.
+        queue (Optional[Queue]): An optional queue-like object where items from all iterators will be placed. If None, items are simply consumed.
         join (Optional[bool]): If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.
+
+    Raises:
+        ValueError: If `join` is True but no `queue` is provided.
+
+    Example:
+        >>> async def example():
+        >>>     await exhaust_iterators([iterator1, iterator2], queue=my_queue, join=True)
+
+    See Also:
+        - :func:`exhaust_iterator`
+        - :func:`as_yielded`
     """
     for x in await asyncio.gather(
         *[exhaust_iterator(iterator, queue=queue) for iterator in iterators],
@@ -167,17 +190,31 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
     """
     Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.
 
-    This function is designed to streamline the handling of multiple asynchronous data streams by consolidating them into a single asynchronous iteration context. It enables concurrent fetching and processing of items from multiple sources, improving efficiency and simplifying code structure when dealing with asynchronous operations.
+    This function is designed to streamline the handling of multiple asynchronous data streams by consolidating them into a single asynchronous iteration context.
+    It enables concurrent fetching and processing of items from multiple sources, improving efficiency and simplifying code structure when dealing with asynchronous operations.
 
-    The merging process is facilitated by internally managing a queue where items from the source iterators are placed as they are fetched. This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.
+    The merging process is facilitated by the :func:`exhaust_iterators` function, which concurrently processes the source iterators and places their items into a queue.
+    This mechanism ensures that the merged stream of items is delivered in an order determined by the availability of items from the source iterators, rather than their original sequence.
 
-    The function handles exceptions and ensures robustness and reliability by using asyncio tasks and queues. It manages edge cases such as early termination and exception management. The `_Done` sentinel class is used internally to signal the completion of processing.
+    The function handles exceptions and ensures robustness and reliability by using asyncio tasks and queues. It manages edge cases such as early termination and exception management.
+    The :class:`_Done` sentinel class is used internally to signal the completion of processing.
 
     Args:
-        *iterators: Variable length list of AsyncIterator objects to be merged.
+        *iterators: Variable length list of :class:`~collections.abc.AsyncIterator` objects to be merged.
 
     Note:
-        This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process. It handles edge cases such as early termination and exception management, ensuring robustness and reliability. The `_Done` sentinel class is used internally to signal the completion of processing.
+        This implementation leverages asyncio tasks and queues to efficiently manage the asynchronous iteration and merging process.
+        It handles edge cases such as early termination and exception management, ensuring robustness and reliability.
+        The :class:`_Done` sentinel class is used internally to signal the completion of processing.
+
+    Example:
+        >>> async def example():
+        >>>     async for item in as_yielded(iterator1, iterator2):
+        >>>         print(item)
+
+    See Also:
+        - :func:`exhaust_iterator`
+        - :func:`exhaust_iterators`
     """
     # hypothesis idea: _Done should never be exposed to user, works for all desired input types
     queue: Queue[Union[T, _Done]] = Queue()
@@ -224,17 +261,16 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
 
 class _Done:
     """
-    A sentinel class used to signal the completion of processing in the as_yielded function.
+    A sentinel class used to signal the completion of processing in the :func:`as_yielded` function.
 
-    This class acts as a marker to indicate that all items have been processed and the asynchronous iteration can be concluded. It is used internally within the implementation of as_yielded to efficiently manage the termination of the iteration process once all source iterators have been exhausted.
+    This class acts as a marker to indicate that all items have been processed and the asynchronous iteration can be concluded.
+    It is used internally within the implementation of :func:`as_yielded` to efficiently manage the termination of the iteration process once all source iterators have been exhausted.
+
+    Args:
+        exc (Optional[Exception]): An optional exception to be associated with the completion.
     """
 
     def __init__(self, exc: Optional[Exception] = None) -> None:
-        """Initializes the _Done sentinel.
-
-        Args:
-            exc (Optional[Exception]): An optional exception to be associated with the completion.
-        """
         self._exc = exc
 
     @property

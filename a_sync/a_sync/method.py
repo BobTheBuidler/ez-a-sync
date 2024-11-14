@@ -31,11 +31,18 @@ logger = logging.getLogger(__name__)
 
 class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     """
-    Provides the core functionality for creating :class:`ASyncBoundMethod` objects,
-    which can be used to define methods that can be called both synchronously and asynchronously.
+    A descriptor for managing methods that can be called both synchronously and asynchronously.
 
-    It handles the binding of methods to instances and determines the default mode
-    ("sync" or "async") based on the instance type or the `default` attribute.
+    This class provides the core functionality for binding methods to instances and determining
+    the execution mode ("sync" or "async") based on various conditions, such as the instance type,
+    the method's default setting, or specific flags passed during the method call.
+
+    The descriptor is responsible for creating an appropriate bound method when accessed,
+    which is the actual object that can be called in both synchronous and asynchronous contexts.
+    It can create different types of bound methods (`ASyncBoundMethodSyncDefault`,
+    `ASyncBoundMethodAsyncDefault`, or `ASyncBoundMethod`) based on the default mode or instance type.
+
+    It also manages cache handles for bound methods and prevents setting or deleting the descriptor.
 
     Examples:
         >>> class MyClass:
@@ -224,8 +231,9 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
     """
     A descriptor for :class:`ASyncBoundMethodSyncDefault` objects.
 
-    This class extends ASyncMethodDescriptor to provide a synchronous
-    default behavior for method calls.
+    This class extends :class:`ASyncMethodDescriptor` to provide a synchronous
+    default behavior for method calls. It specifically creates `ASyncBoundMethodSyncDefault`
+    instances, which are specialized versions of `ASyncBoundMethod` with synchronous default behavior.
 
     Examples:
         >>> class MyClass:
@@ -236,7 +244,10 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
         >>> obj = MyClass()
         >>> obj.my_method()
         'Hello, World!'
-        >>> await obj.my_method(sync=False)
+        >>> coro = obj.my_method(sync=False)
+        >>> coro
+        <coroutine object MyClass.my_method at 0x7fb4f5fb49c0>
+        >>> await coro
         'Hello, World!'
 
     See Also:
@@ -308,8 +319,9 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
     """
     A descriptor for asynchronous methods with an asynchronous default.
 
-    This class extends ASyncMethodDescriptor to provide an asynchronous default
-    behavior for method calls.
+    This class extends :class:`ASyncMethodDescriptor` to provide an asynchronous default
+    behavior for method calls. It specifically creates `ASyncBoundMethodAsyncDefault`
+    instances, which are specialized versions of `ASyncBoundMethod` with asynchronous default behavior.
 
     Examples:
         >>> class MyClass:
@@ -318,8 +330,10 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         ...         return "Hello, World!"
         ...
         >>> obj = MyClass()
-        >>> await obj.my_method()
-        'Hello, World!'
+        >>> coro = obj.my_method()
+        >>> coro
+        <coroutine object MyClass.my_method at 0x7fb4f5fb49c0>
+        >>> await coro
         >>> obj.my_method(sync=True)
         'Hello, World!'
 
@@ -390,7 +404,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     A bound method that can be called both synchronously and asynchronously.
 
     This class represents a method bound to an instance, which can be called
-    either synchronously or asynchronously based on various conditions.
+    either synchronously or asynchronously based on various conditions. It handles
+    caching of bound methods and includes logic for determining whether to await
+    the method call based on flags or default settings.
 
     Examples:
         >>> class MyClass:
@@ -583,6 +599,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         Examples:
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> task_mapping = bound_method.map(iterable1, iterable2, concurrency=5)
+            TODO briefly include how someone would then use task_mapping
         """
         from a_sync import TaskMapping
 
@@ -749,6 +766,9 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     """
     A bound method with synchronous default behavior.
 
+    This class is a specialized version of :class:`ASyncBoundMethod` that defaults to synchronous execution.
+    It overrides the `__call__` method to enforce synchronous default behavior.
+
     Examples:
         >>> class MyClass:
         ...     def __init__(self, value):
@@ -819,6 +839,9 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     """
     A bound method with asynchronous default behavior.
+
+    This class is a specialized version of :class:`ASyncBoundMethod` that defaults to asynchronous execution.
+    It overrides the `__call__` method to enforce asynchronous default behavior.
 
     Examples:
         >>> class MyClass:

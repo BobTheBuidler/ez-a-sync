@@ -18,7 +18,8 @@ class CacheKwargs(TypedDict):
 
 @overload
 def apply_async_memory_cache(**kwargs: Unpack[CacheKwargs]) -> AsyncDecorator[P, T]:
-    """Creates a decorator to apply an asynchronous LRU cache.
+    """
+    Creates a decorator to apply an asynchronous LRU cache.
 
     This overload is used when no coroutine function is provided. The returned
     decorator can be applied to a coroutine function later.
@@ -26,6 +27,14 @@ def apply_async_memory_cache(**kwargs: Unpack[CacheKwargs]) -> AsyncDecorator[P,
     Args:
         **kwargs: Keyword arguments for cache configuration, including maxsize,
             ttl, and typed.
+
+    Examples:
+        >>> @apply_async_memory_cache(maxsize=128, ttl=60)
+        ... async def fetch_data():
+        ...     pass
+
+    See Also:
+        - :func:`alru_cache` for the underlying caching mechanism.
     """
 
 
@@ -43,6 +52,13 @@ def apply_async_memory_cache(
         coro_fn: An integer to set as maxsize for the cache.
         **kwargs: Additional keyword arguments for cache configuration, including
             ttl and typed.
+
+    Examples:
+        >>> # This usage is not supported
+        >>> apply_async_memory_cache(128, ttl=60)
+
+    See Also:
+        - :func:`apply_async_memory_cache` for correct usage.
     """
 
 
@@ -50,7 +66,8 @@ def apply_async_memory_cache(
 def apply_async_memory_cache(
     coro_fn: CoroFn[P, T], **kwargs: Unpack[CacheKwargs]
 ) -> CoroFn[P, T]:
-    """Applies an asynchronous LRU cache to a provided coroutine function.
+    """
+    Applies an asynchronous LRU cache to a provided coroutine function.
 
     This overload is used when a coroutine function is provided. The cache is
     applied directly to the function.
@@ -59,6 +76,14 @@ def apply_async_memory_cache(
         coro_fn: The coroutine function to be cached.
         **kwargs: Keyword arguments for cache configuration, including maxsize,
             ttl, and typed.
+
+    Examples:
+        >>> async def fetch_data():
+        ...     pass
+        >>> cached_fetch = apply_async_memory_cache(fetch_data, maxsize=128, ttl=60)
+
+    See Also:
+        - :func:`alru_cache` for the underlying caching mechanism.
     """
 
 
@@ -66,7 +91,8 @@ def apply_async_memory_cache(
 def apply_async_memory_cache(
     coro_fn: Literal[None], **kwargs: Unpack[CacheKwargs]
 ) -> AsyncDecorator[P, T]:
-    """Creates a decorator to apply an asynchronous LRU cache.
+    """
+    Creates a decorator to apply an asynchronous LRU cache.
 
     This duplicate overload is used when no coroutine function is provided. The
     returned decorator can be applied to a coroutine function later.
@@ -75,6 +101,14 @@ def apply_async_memory_cache(
         coro_fn: None, indicating no coroutine function is provided.
         **kwargs: Keyword arguments for cache configuration, including maxsize,
             ttl, and typed.
+
+    Examples:
+        >>> @apply_async_memory_cache(maxsize=128, ttl=60)
+        ... async def fetch_data():
+        ...     pass
+
+    See Also:
+        - :func:`alru_cache` for the underlying caching mechanism.
     """
 
 
@@ -84,7 +118,8 @@ def apply_async_memory_cache(
     ttl: Optional[int] = None,
     typed: bool = False,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
-    """Applies an asynchronous LRU cache to a coroutine function.
+    """
+    Applies an asynchronous LRU cache to a coroutine function.
 
     This function uses the `alru_cache` from the `async_lru` library to cache
     the results of an asynchronous coroutine function. The cache can be configured
@@ -102,8 +137,17 @@ def apply_async_memory_cache(
         TypeError: If `maxsize` is not a positive integer or None when `coro_fn` is None.
         exceptions.FunctionNotAsync: If `coro_fn` is not an asynchronous function.
 
-    Returns:
-        A decorator if `coro_fn` is None, otherwise the cached coroutine function.
+    Examples:
+        >>> @apply_async_memory_cache(maxsize=128, ttl=60)
+        ... async def fetch_data():
+        ...     pass
+
+        >>> async def fetch_data():
+        ...     pass
+        >>> cached_fetch = apply_async_memory_cache(fetch_data, maxsize=128, ttl=60)
+
+    See Also:
+        - :func:`alru_cache` for the underlying caching mechanism.
     """
     # Parse Inputs
     if isinstance(coro_fn, int):

@@ -11,19 +11,41 @@ class _LoggerMixin:
     A mixin class that adds logging capabilities to other classes.
 
     This mixin provides a cached property for accessing a logger instance and a property to check if debug logging is enabled.
+
+    See Also:
+        - :func:`logging.getLogger`
+        - :class:`logging.Logger`
     """
 
     @cached_property
     def logger(self) -> Logger:
         """
-        Returns a logger instance specific to the class using this mixin.
+        Provides a logger instance specific to the class using this mixin.
 
         The logger ID is constructed from the module and class name, and optionally includes an instance name if available.
 
-        Returns:
-            Logger: A logger instance for the class.
+        Examples:
+            >>> class MyClass(_LoggerMixin):
+            ...     _name = "example"
+            ...
+            >>> instance = MyClass()
+            >>> logger = instance.logger
+            >>> logger.name
+            '__main__.MyClass.example'
+
+            >>> class AnotherClass(_LoggerMixin):
+            ...     pass
+            ...
+            >>> another_instance = AnotherClass()
+            >>> another_logger = another_instance.logger
+            >>> another_logger.name
+            '__main__.AnotherClass'
+
+        See Also:
+            - :func:`logging.getLogger`
+            - :class:`logging.Logger`
         """
-        logger_id = type(self).__qualname__
+        logger_id = f"{type(self).__module__}.{type(self).__qualname__}"
         if hasattr(self, "_name") and self._name:
             logger_id += f".{self._name}"
         return getLogger(logger_id)
@@ -33,7 +55,15 @@ class _LoggerMixin:
         """
         Checks if debug logging is enabled for the logger.
 
-        Returns:
-            bool: True if debug logging is enabled, False otherwise.
+        Examples:
+            >>> class MyClass(_LoggerMixin):
+            ...     pass
+            ...
+            >>> instance = MyClass()
+            >>> instance.debug_logs_enabled
+            False
+
+        See Also:
+            - :attr:`logging.Logger.isEnabledFor`
         """
         return self.logger.isEnabledFor(DEBUG)

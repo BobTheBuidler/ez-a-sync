@@ -1,5 +1,5 @@
 """
-This module provides two specialized async flow management classes, CounterLock and CounterLockCluster.
+This module provides two specialized async flow management classes, :class:`CounterLock` and :class:`CounterLockCluster`.
 
 These primitives manage :class:`asyncio.Task` objects that must wait for an internal counter to reach a specific value.
 """
@@ -21,17 +21,25 @@ class CounterLock(_DebugDaemonMixin):
     If some other task executes `counter.value = 5` or `counter.set(5)`, the first coroutine will proceed as 5 >= 3.
 
     The internal counter can only be set to a value greater than the current value.
+
+    See Also:
+        :class:`CounterLockCluster` for managing multiple :class:`CounterLock` instances.
     """
 
     __slots__ = "is_ready", "_name", "_value", "_events"
 
     def __init__(self, start_value: int = 0, name: Optional[str] = None):
         """
-        Initializes the CounterLock with a starting value and an optional name.
+        Initializes the :class:`CounterLock` with a starting value and an optional name.
 
         Args:
             start_value: The initial value of the counter.
             name: An optional name for the counter, used in debug logs.
+
+        Examples:
+            >>> counter = CounterLock(start_value=0, name="example_counter")
+            >>> counter.value
+            0
         """
         self._name = name
         """An optional name for the counter, used in debug logs."""
@@ -51,6 +59,13 @@ class CounterLock(_DebugDaemonMixin):
 
         Args:
             value: The value to wait for.
+
+        Examples:
+            >>> counter = CounterLock(start_value=0)
+            >>> await counter.wait_for(5)  # This will block until counter.value >= 5
+
+        See Also:
+            :meth:`CounterLock.set` to set the counter value.
         """
         if not self.is_ready(value):
             self._ensure_debug_daemon()
@@ -61,15 +76,36 @@ class CounterLock(_DebugDaemonMixin):
         """
         Sets the counter to the specified value.
 
+        This method internally uses the `value` property to enforce that the new value must be strictly greater than the current value.
+
         Args:
             value: The value to set the counter to. Must be strictly greater than the current value.
 
         Raises:
             ValueError: If the new value is less than or equal to the current value.
+
+        Examples:
+            >>> counter = CounterLock(start_value=0)
+            >>> counter.set(5)
+            >>> counter.value
+            5
+
+        See Also:
+            :meth:`CounterLock.value` for direct value assignment.
         """
         self.value = value
 
     def __repr__(self) -> str:
+        """
+        Returns a string representation of the :class:`CounterLock` instance.
+
+        The representation includes the name, current value, and the number of waiters for each awaited value.
+
+        Examples:
+            >>> counter = CounterLock(start_value=0, name="example_counter")
+            >>> repr(counter)
+            '<CounterLock name=example_counter value=0 waiters={}>'
+        """
         waiters = {v: len(self._events[v]._waiters) for v in sorted(self._events)}
         return f"<CounterLock name={self._name} value={self._value} waiters={waiters}>"
 
@@ -77,6 +113,11 @@ class CounterLock(_DebugDaemonMixin):
     def value(self) -> int:
         """
         Gets the current value of the counter.
+
+        Examples:
+            >>> counter = CounterLock(start_value=0)
+            >>> counter.value
+            0
         """
         return self._value
 
@@ -90,6 +131,16 @@ class CounterLock(_DebugDaemonMixin):
 
         Raises:
             ValueError: If the new value is less than the current value.
+
+        Examples:
+            >>> counter = CounterLock(start_value=0)
+            >>> counter.value = 5
+            >>> counter.value
+            5
+            >>> counter.value = 3
+            Traceback (most recent call last):
+            ...
+            ValueError: You cannot decrease the value.
         """
         if value > self._value:
             self._value = value
@@ -106,6 +157,8 @@ class CounterLock(_DebugDaemonMixin):
     async def _debug_daemon(self) -> None:
         """
         Periodically logs debug information about the counter state and waiters.
+
+        This method is used internally to provide debugging information when debug logging is enabled.
         """
         start = time()
         while self._events:
@@ -117,28 +170,42 @@ class CounterLock(_DebugDaemonMixin):
 
 class CounterLockCluster:
     """
-    An asyncio primitive that represents a collection of CounterLock objects.
+    An asyncio primitive that represents a collection of :class:`CounterLock` objects.
 
-    `wait_for(i)` will wait until the value of all CounterLock objects is >= i.
+    `wait_for(i)` will wait until the value of all :class:`CounterLock` objects is >= i.
+
+    See Also:
+        :class:`CounterLock` for managing individual counters.
     """
 
     __slots__ = ("locks",)
 
     def __init__(self, counter_locks: Iterable[CounterLock]) -> None:
         """
-        Initializes the CounterLockCluster with a collection of CounterLock objects.
+        Initializes the :class:`CounterLockCluster` with a collection of :class:`CounterLock` objects.
 
         Args:
-            counter_locks: The CounterLock objects to manage.
+            counter_locks: The :class:`CounterLock` objects to manage.
+
+        Examples:
+            >>> lock1 = CounterLock(start_value=0)
+            >>> lock2 = CounterLock(start_value=0)
+            >>> cluster = CounterLockCluster([lock1, lock2])
         """
         self.locks = list(counter_locks)
 
     async def wait_for(self, value: int) -> bool:
         """
-        Waits until the value of all CounterLock objects in the cluster reaches or exceeds the specified value.
+        Waits until the value of all :class:`CounterLock` objects in the cluster reaches or exceeds the specified value.
 
         Args:
             value: The value to wait for.
+
+        Examples:
+            >>> lock1 = CounterLock(start_value=0)
+            >>> lock2 = CounterLock(start_value=0)
+            >>> cluster = CounterLockCluster([lock1, lock2])
+            >>> await cluster.wait_for(5)  # This will block until all locks have value >= 5
         """
         await asyncio.gather(
             *[counter_lock.wait_for(value) for counter_lock in self.locks]

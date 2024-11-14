@@ -9,6 +9,7 @@ try:
 except ImportError as e:
 
     class tqdm_asyncio:  # type: ignore [no-redef]
+        @staticmethod
         def as_completed(*args, **kwargs):
             raise ImportError("You must have tqdm installed to use this feature")
 
@@ -69,45 +70,49 @@ def as_completed(
     """
     Concurrently awaits a list of awaitable objects or mappings of awaitables and returns an iterator of results.
 
-    This function extends Python's asyncio.as_completed, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.
+    This function extends Python's :func:`asyncio.as_completed`, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.
 
-    Differences from asyncio.as_completed:
+    Differences from :func:`asyncio.as_completed`:
     - Uses type hints for use with static type checkers.
     - Supports either individual awaitables or a k:v mapping of awaitables.
-    - Can be used as an async iterator which yields the result values. Example below.
-    - Provides progress reporting using tqdm if 'tqdm' is set to True.
+    - Can be used as an async iterator which yields the result values.
+    - Provides progress reporting using :mod:`tqdm` if 'tqdm' is set to True.
+
+    Note:
+        The `return_exceptions` parameter is partially implemented. While exceptions can be wrapped and returned instead of being raised, this behavior may not be fully consistent across all scenarios. Users should test their specific use cases to ensure the desired behavior.
 
     Args:
         fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.
         timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
-        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False. Note: This parameter is not currently implemented in the function logic.
+        return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
         aiter: If True, returns an async iterator of results. Defaults to False.
-        tqdm: If True, enables progress reporting using tqdm. Defaults to False.
-        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
+        tqdm: If True, enables progress reporting using :mod:`tqdm`. Defaults to False.
+        **tqdm_kwargs: Additional keyword arguments for :mod:`tqdm` if progress reporting is enabled.
 
     Examples:
         Awaiting individual awaitables:
-        ```
-        awaitables = [async_function1(), async_function2()]
-        for coro in as_completed(awaitables):
-            val = await coro
-            ...
 
-        async for val in as_completed(awaitables, aiter=True):
-            ...
-        ```
+        >>> awaitables = [async_function1(), async_function2()]
+        >>> for coro in as_completed(awaitables):
+        ...     val = await coro
+        ...     ...
+
+        >>> async for val in as_completed(awaitables, aiter=True):
+        ...     ...
 
         Awaiting mappings of awaitables:
-        ```
-        mapping = {'key1': async_function1(), 'key2': async_function2()}
 
-        for coro in as_completed(mapping):
-            k, v = await coro
-            ...
+        >>> mapping = {'key1': async_function1(), 'key2': async_function2()}
+        >>> for coro in as_completed(mapping):
+        ...     k, v = await coro
+        ...     ...
 
-        async for k, v in as_completed(mapping, aiter=True):
-            ...
-        ```
+        >>> async for k, v in as_completed(mapping, aiter=True):
+        ...     ...
+
+    See Also:
+        - :func:`asyncio.as_completed`
+        - :class:`ASyncIterator`
     """
     if isinstance(fs, Mapping):
         return as_completed_mapping(
@@ -170,22 +175,23 @@ def as_completed_mapping(
     Args:
         mapping: A dictionary-like object where keys are of type K and values are awaitable objects of type V.
         timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
-        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.
+        return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
         aiter: If True, returns an async iterator of results. Defaults to False.
-        tqdm: If True, enables progress reporting using tqdm. Defaults to False.
-        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
+        tqdm: If True, enables progress reporting using :mod:`tqdm`. Defaults to False.
+        **tqdm_kwargs: Additional keyword arguments for :mod:`tqdm` if progress reporting is enabled.
 
     Example:
-        ```
-        mapping = {'key1': async_function1(), 'key2': async_function2()}
+        >>> mapping = {'key1': async_function1(), 'key2': async_function2()}
+        >>> for coro in as_completed_mapping(mapping):
+        ...     k, v = await coro
+        ...     ...
 
-        for coro in as_completed_mapping(mapping):
-            k, v = await coro
-            ...
+        >>> async for k, v in as_completed_mapping(mapping, aiter=True):
+        ...     ...
 
-        async for k, v in as_completed_mapping(mapping, aiter=True):
-            ...
-        ```
+    See Also:
+        - :func:`as_completed`
+        - :class:`ASyncIterator`
     """
     return as_completed(
         [
@@ -227,9 +233,9 @@ async def __yield_as_completed(
     Args:
         futs: The awaitables to await.
         timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
-        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.
-        tqdm: If True, enables progress reporting using tqdm. Defaults to False.
-        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
+        return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
+        tqdm: If True, enables progress reporting using :mod:`tqdm`. Defaults to False.
+        **tqdm_kwargs: Additional keyword arguments for :mod:`tqdm` if progress reporting is enabled.
     """
     for fut in as_completed(
         futs,
@@ -257,7 +263,7 @@ async def __mapping_wrap(
     Args:
         k: The key associated with the awaitable.
         v: The awaitable to wrap.
-        return_exceptions: If True, exceptions are returned as results instead of raising them. Defaults to False.
+        return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
 
     Returns:
         A tuple of the key and the result of the awaitable or the exception if one is raised.

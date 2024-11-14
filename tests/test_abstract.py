@@ -13,6 +13,21 @@ else:
 
 
 def test_abc_direct_init():
+    """Test that ASyncABC cannot be instantiated directly.
+
+    This test verifies that attempting to instantiate the abstract base class
+    `ASyncABC` raises a `TypeError`. This is expected behavior for abstract
+    base classes in Python, which require subclasses to implement all abstract
+    methods before instantiation.
+
+    Raises:
+        TypeError: If `ASyncABC` is instantiated without implementing abstract methods.
+
+    Example:
+        >>> from a_sync.a_sync.abstract import ASyncABC
+        >>> ASyncABC()
+        TypeError: Can't instantiate abstract class ASyncABC with abstract methods ...
+    """
     with pytest.raises(
         TypeError,
         match=f"Can't instantiate abstract class ASyncABC {_MIDDLE} {', '.join(_methods)}",
