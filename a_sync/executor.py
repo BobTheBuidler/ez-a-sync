@@ -324,7 +324,9 @@ def _worker(
 
                 with executor._adjusting_lock:  # NOTE: NEW
                     # NOTE: We keep a minimum of one thread active to prevent locks
-                    if len(executor) > 1:  # NOTE: NEW
+                    if len(executor) > 1 or executor._idle_semaphore.acquire(
+                        blocking=False
+                    ):  # NOTE: NEW
                         t = threading.current_thread()  # NOTE: NEW
                         executor._threads.remove(t)  # NOTE: NEW
                         thread._threads_queues.pop(t)  # NOTE: NEW
