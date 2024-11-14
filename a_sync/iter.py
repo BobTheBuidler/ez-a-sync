@@ -187,7 +187,16 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
         return self.__wrapped__.__aiter__()
 
     def __iter__(self) -> Iterator[T]:
-        "Return an iterator that yields :obj:`T` objects from the {cls}."
+        """
+        Return an iterator that yields :obj:`T` objects from the {cls}.
+
+        Note:
+            Synchronous iteration leverages :class:`ASyncIterator`, which uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
+            :meth:`ASyncIterator.__next__` raises a :class:`SyncModeInAsyncContextError` if the event loop is already running. 
+
+            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase
+            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
+        """
         yield from ASyncIterator(self.__aiter__())
 
     __slots__ = ("__wrapped__",)
@@ -222,8 +231,18 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         """
         Synchronously fetch the next item from the {cls}.
 
+        Note:
+            This method uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
+            This raises a :class:`RuntimeError` if the event loop is already running. 
+            This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.
+
+            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase
+            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
+            
         Raises:
-            :class:`StopIteration`: Once all items have been fetched from the {cls}.
+            StopIteration: Once all items have been fetched from the {cls}.
+            SyncModeInAsyncContextError: If the event loop is already running.
+            
         """
         try:
             return asyncio.get_event_loop().run_until_complete(self.__anext__())
@@ -292,7 +311,17 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         return await self.__wrapped__.__anext__()
 
     def __iter__(self) -> Self:
-        "Return the {cls} for iteration."
+        """
+        Return the {cls} for iteration.
+
+        Note:
+            Synchronous iteration uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
+            This raises a :class:`RuntimeError` if the event loop is already running. 
+            This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.
+
+            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase
+            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
+        """
         return self
 
     def __aiter__(self) -> Self:
