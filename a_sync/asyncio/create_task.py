@@ -1,5 +1,5 @@
 """
-This module extends asyncio.create_task to support any Awaitable,
+This module extends :func:`asyncio.create_task` to support any :class:`Awaitable`,
 manage task lifecycle, and enhance error handling.
 """
 
@@ -24,10 +24,10 @@ def create_task(
     Extends :func:`asyncio.create_task` to support any :class:`Awaitable`, manage task lifecycle, and enhance error handling.
 
     This function accepts any :class:`Awaitable`, ensuring broader compatibility. If the Awaitable is not a coroutine,
-    it is awaited directly using a private helper function `__await`, which can handle any Awaitable object.
+    it is awaited directly using a private helper function `__await`, which can handle non-coroutine Awaitable objects.
 
     Note:
-        The `__await` function is designed to handle any Awaitable, implicitly managing non-coroutine Awaitables by awaiting them.
+        The `__await` function is designed to handle non-coroutine Awaitables by awaiting them directly.
 
     Args:
         coro: An :class:`Awaitable` object from which to create the task.
@@ -36,9 +36,6 @@ def create_task(
             Exceptions are wrapped in :class:`PersistedTaskException` for special handling within the
             `__persisted_task_exc_wrap` function.
         log_destroy_pending: If False, asyncio's default error log when a pending task is destroyed is suppressed.
-
-    Returns:
-        An :class:`asyncio.Task` object created from the provided Awaitable.
 
     Examples:
         Create a simple task with a coroutine:
@@ -74,7 +71,7 @@ __persisted_tasks: Set["asyncio.Task[Any]"] = set()
 
 
 async def __await(awaitable: Awaitable[T]) -> T:
-    """Wait for the completion of an Awaitable.
+    """Wait for the completion of a non-coroutine Awaitable.
 
     Args:
         awaitable: The :class:`Awaitable` object to wait for.
