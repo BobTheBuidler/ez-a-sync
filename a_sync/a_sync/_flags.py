@@ -12,6 +12,7 @@ You can use any of the provided flags, whichever makes the most sense for your u
 
 :obj:`VIABLE_FLAGS`: Set of all valid flags, combining both synchronous and asynchronous indicators.
 """
+
 from typing import Any
 
 from a_sync import exceptions

@@ -125,18 +125,18 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     dual compatibility with both synchronous and asynchronous
     iteration protocols.
 
-    This class allows objects to be iterated over using either a 
+    This class allows objects to be iterated over using either a
     standard `for` loop or an `async for` loop, making it versatile
-    in scenarios where the mode of iteration (synchronous or asynchronous) 
+    in scenarios where the mode of iteration (synchronous or asynchronous)
     needs to be flexible or is determined at runtime.
 
     The class achieves this by implementing both `__iter__` and `__aiter__`
     methods, enabling it to return appropriate iterator objects that can
     handle synchronous and asynchronous iteration, respectively. However,
     note that synchronous iteration relies on the :class:`ASyncIterator`
-    class, which uses `asyncio.get_event_loop().run_until_complete` to 
-    fetch items. This can raise a `RuntimeError` if the event loop is 
-    already running, and in such cases, a :class:`SyncModeInAsyncContextError` 
+    class, which uses `asyncio.get_event_loop().run_until_complete` to
+    fetch items. This can raise a `RuntimeError` if the event loop is
+    already running, and in such cases, a :class:`SyncModeInAsyncContextError`
     is raised from the `RuntimeError`.
 
     Example:
