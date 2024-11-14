@@ -2,13 +2,15 @@
 This module contains the :class:`ASyncDescriptor` class, which is used to create dual-function sync/async methods
 and properties.
 
-The :class:`ASyncDescriptor` class provides functionality for mapping operations across multiple instances
-and includes utility methods for common operations such as checking if all or any results are truthy, 
-and finding the minimum, maximum, or sum of results of the method or property mapped across multiple instances.
+The :class:`ASyncDescriptor` class provides a base for creating descriptors that can handle both synchronous and asynchronous
+operations. It includes utility methods for mapping operations across multiple instances and provides access to common
+operations such as checking if all or any results are truthy, and finding the minimum, maximum, or sum of results of the
+method or property mapped across multiple instances through the use of :class:`~a_sync.a_sync.function.ASyncFunction`.
 
 See Also:
     - :class:`~a_sync.a_sync.function.ASyncFunction`
     - :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`
+    - :class:`~a_sync.a_sync.property.ASyncPropertyDescriptor`
 """
 
 import functools
@@ -28,7 +30,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     This class provides functionality for mapping operations across multiple instances
     and includes utility methods for common operations such as checking if all or any
     results are truthy, and finding the minimum, maximum, or sum of results of the method
-    or property mapped across multiple instances.
+    or property mapped across multiple instances through the use of :class:`~a_sync.a_sync.function.ASyncFunction`.
 
     Examples:
         To create a dual-function method or property, subclass :class:`ASyncDescriptor` and implement
@@ -36,12 +38,10 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         across multiple instances.
 
         ```python
-        class MyDescriptor(ASyncDescriptor):
-            def __init__(self, func):
-                super().__init__(func)
-
         class MyClass:
-            my_method = MyDescriptor(lambda x: x * 2)
+            @ASyncDescriptor
+            def my_method(self, x):
+                return x * 2
 
         instance = MyClass()
         result = instance.my_method.map([1, 2, 3])
@@ -119,12 +119,10 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             A :class:`TaskMapping` object.
 
         Examples:
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x * 2)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x * 2
 
             instance = MyClass()
             result = instance.my_method.map([1, 2, 3])
@@ -142,12 +140,10 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             An :class:`ASyncFunction` object.
 
         Examples:
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x > 0)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x > 0
 
             instance = MyClass()
             result = await instance.my_method.all([1, 2, 3])
@@ -163,12 +159,10 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             An :class:`ASyncFunction` object.
 
         Examples:
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x > 0)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x > 0
 
             instance = MyClass()
             result = await instance.my_method.any([-1, 0, 1])
@@ -185,12 +179,10 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
         Examples:
             ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x
 
             instance = MyClass()
             result = await instance.my_method.min([3, 1, 2])
@@ -207,12 +199,10 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             An :class:`ASyncFunction` object.
 
         Examples:
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x
 
             instance = MyClass()
             result = await instance.my_method.max([3, 1, 2])
@@ -229,12 +219,10 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
         Examples:
             ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x
 
             instance = MyClass()
             result = await instance.my_method.sum([1, 2, 3])
@@ -258,17 +246,12 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            A boolean indicating if all results are truthy.
-
         Examples:
             ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x > 0)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x > 0
 
             instance = MyClass()
             result = await instance.my_method._all([1, 2, 3])
@@ -294,17 +277,12 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            A boolean indicating if any result is truthy.
-
         Examples:
             ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x > 0)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x > 0
 
             instance = MyClass()
             result = await instance.my_method._any([-1, 0, 1])
@@ -330,17 +308,12 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            The minimum result.
-
         Examples:
             ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x
 
             instance = MyClass()
             result = await instance.my_method._min([3, 1, 2])
@@ -366,17 +339,12 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            The maximum result.
-
         Examples:
             ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x
 
             instance = MyClass()
             result = await instance.my_method._max([3, 1, 2])
@@ -402,17 +370,12 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             name: Optional name for the task.
             **kwargs: Additional keyword arguments.
 
-        Returns:
-            The sum of the results.
-
         Examples:
             ```python
-            class MyDescriptor(ASyncDescriptor):
-                def __init__(self, func):
-                    super().__init__(func)
-
             class MyClass:
-                my_method = MyDescriptor(lambda x: x)
+                @ASyncDescriptor
+                def my_method(self, x):
+                    return x
 
             instance = MyClass()
             result = await instance.my_method._sum([1, 2, 3])

@@ -125,6 +125,8 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     async def acquire(self) -> Literal[True]:
         """Acquires the semaphore with the top priority.
 
+        This method overrides :meth:`Semaphore.acquire` to handle priority-based logic.
+
         Examples:
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> await semaphore.acquire()
@@ -347,6 +349,8 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         called release() to make it larger than 0, and then return
         True.
 
+        This method overrides :meth:`Semaphore.acquire` to handle priority-based logic.
+
         Examples:
             >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
             >>> await context_manager.acquire()
@@ -370,6 +374,8 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
 
     def release(self) -> None:
         """Releases the semaphore for this context manager.
+
+        This method overrides :meth:`Semaphore.release` to handle priority-based logic.
 
         Examples:
             >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)

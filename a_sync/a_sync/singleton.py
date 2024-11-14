@@ -18,7 +18,8 @@ class ASyncGenericSingleton(ASyncGenericBase, metaclass=ASyncSingletonMeta):
     while maintaining the singleton pattern within each context.
 
     Note:
-        This class is abstract and cannot be instantiated directly. Subclasses should define
+        This class can be instantiated directly, but it is intended to be subclassed
+        to define specific asynchronous behavior. Subclasses should define
         the necessary properties and methods to specify the asynchronous behavior, as outlined
         in :class:`ASyncABC`.
 

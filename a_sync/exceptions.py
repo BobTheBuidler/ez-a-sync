@@ -16,11 +16,21 @@ class ASyncFlagException(ValueError):
     Base exception class for flag-related errors in the a_sync library.
 
     A-Sync uses 'flags' to indicate whether objects or function calls will be sync or async.
-    You can use any of the provided flags, whichever makes most sense for your use case.
+    You can use any of the provided flags, which include 'sync' and 'asynchronous', whichever makes most sense for your use case.
+
+    Examples:
+        >>> try:
+        ...     raise ASyncFlagException("An error occurred with flags.")
+        ... except ASyncFlagException as e:
+        ...     print(e)
+        An error occurred with flags.
+
+    See Also:
+        - :const:`VIABLE_FLAGS`
     """
 
     viable_flags = VIABLE_FLAGS
-    """The set of viable flags."""
+    """The set of viable flags: {'sync', 'asynchronous'}."""
 
     def desc(self, target) -> str:
         """

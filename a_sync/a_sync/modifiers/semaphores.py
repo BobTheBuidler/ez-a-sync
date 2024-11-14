@@ -105,7 +105,7 @@ def apply_semaphore(
             The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Raises:
-        ValueError: If both `coro_fn` and `semaphore` are provided and the first argument is an integer or `asyncio.Semaphore`.
+        ValueError: If `coro_fn` is an integer or `asyncio.Semaphore` and `semaphore` is not None.
         exceptions.FunctionNotAsync: If the provided function is not a coroutine.
         TypeError: If the semaphore is not an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 

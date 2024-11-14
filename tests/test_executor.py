@@ -22,19 +22,19 @@ def do_work(i, kwarg=None):
 
 
 def test_executor():
-    """Tests the functionality of the ProcessPoolExecutor.
+    """Tests the functionality of the :class:`~a_sync.executor.ProcessPoolExecutor`.
 
-    This test verifies that the ProcessPoolExecutor behaves as expected,
+    This test verifies that the :class:`~a_sync.executor.ProcessPoolExecutor` behaves as expected,
     including running tasks, handling futures, and managing exceptions.
 
     Note:
-        `ProcessPoolExecutor` is an alias for `AsyncProcessPoolExecutor`,
+        :class:`~a_sync.executor.ProcessPoolExecutor` is an alias for :class:`~a_sync.executor.AsyncProcessPoolExecutor`,
         which is why the assertion `assert isinstance(executor, AsyncProcessPoolExecutor)` is always true.
 
     See Also:
-        - :class:`a_sync.executor.AsyncProcessPoolExecutor`
-        - :meth:`a_sync.executor._AsyncExecutorMixin.run`
-        - :meth:`a_sync.executor._AsyncExecutorMixin.submit`
+        - :class:`~a_sync.executor.AsyncProcessPoolExecutor`
+        - :meth:`~a_sync.executor._AsyncExecutorMixin.run`
+        - :meth:`~a_sync.executor._AsyncExecutorMixin.submit`
     """
     executor = ProcessPoolExecutor(1)
     assert isinstance(executor, AsyncProcessPoolExecutor)

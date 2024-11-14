@@ -16,7 +16,7 @@ class ASyncGenericBase(ASyncABC):
     """
     Base class for creating dual-function sync/async-capable classes without writing all your code twice.
 
-    This class provides the foundation for creating hybrid sync/async classes. It allows methods
+    This class, via its inherited metaclass :class:`~ASyncMeta', provides the foundation for creating hybrid sync/async classes. It allows methods
     and properties to be defined once and used in both synchronous and asynchronous contexts.
 
     The class uses the :func:`a_sync` decorator internally to create dual-mode methods and properties.

@@ -29,6 +29,26 @@ class _SmartFutureMixin(Generic[T]):
     Mixin class that provides common functionality for smart futures and tasks.
 
     This mixin provides methods for managing waiters and integrating with a smart processing queue.
+    It uses weak references to manage resources efficiently.
+
+    Example:
+        Creating a SmartFuture and awaiting it:
+
+        ```python
+        future = SmartFuture()
+        result = await future
+        ```
+
+        Creating a SmartTask and awaiting it:
+
+        ```python
+        task = SmartTask(coro=my_coroutine())
+        result = await task
+        ```
+
+    See Also:
+        - :class:`SmartFuture`
+        - :class:`SmartTask`
     """
 
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
@@ -73,18 +93,22 @@ class _SmartFutureMixin(Generic[T]):
 
     @property
     def num_waiters(self: Union["SmartFuture", "SmartTask"]) -> int:
-        # NOTE: we check .done() because the callback may not have ran yet and its very lightweight
         """
         Get the number of waiters currently awaiting the future or task.
+
+        This property checks if the future or task is done to ensure accurate counting
+        of waiters, as the callback may not have run yet.
 
         Example:
             ```python
             future = SmartFuture()
             print(future.num_waiters)
             ```
+
+        See Also:
+            - :meth:`_waiter_done_cleanup_callback`
         """
         if self.done():
-            # if there are any waiters left, there won't be once the event loop runs once
             return 0
         return sum(getattr(waiter, "num_waiters", 1) or 1 for waiter in self._waiters)
 
@@ -94,10 +118,13 @@ class _SmartFutureMixin(Generic[T]):
         """
         Callback to clean up waiters when a waiter task is done.
 
-        Removes the waiter from _waiters, and _queue._futs if applicable
+        Removes the waiter from _waiters, and _queue._futs if applicable.
 
         Args:
             waiter: The waiter task to clean up.
+
+        Example:
+            Automatically called when a waiter task completes.
         """
         if not self.done():
             self._waiters.remove(waiter)
@@ -105,6 +132,8 @@ class _SmartFutureMixin(Generic[T]):
     def _self_done_cleanup_callback(self: Union["SmartFuture", "SmartTask"]) -> None:
         """
         Callback to clean up waiters and remove the future from the queue when done.
+
+        This method clears all waiters and removes the future from the associated queue.
         """
         self._waiters.clear()
         if queue := self._queue:
@@ -125,6 +154,10 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         future = SmartFuture()
         await future
         ```
+
+    See Also:
+        - :class:`_SmartFutureMixin`
+        - :class:`asyncio.Future`
     """
 
     _queue = None
@@ -149,6 +182,9 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
             ```python
             future = SmartFuture(queue=my_queue, key=my_key)
             ```
+
+        See Also:
+            - :class:`SmartProcessingQueue`
         """
         super().__init__(loop=loop)
         if queue:
@@ -175,6 +211,9 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
             future2 = SmartFuture()
             print(future1 < future2)
             ```
+
+        See Also:
+            - :meth:`num_waiters`
         """
         return self.num_waiters > other.num_waiters
 
@@ -202,6 +241,9 @@ def create_future(
         ```python
         future = create_future(queue=my_queue, key=my_key)
         ```
+
+    See Also:
+        - :class:`SmartFuture`
     """
     return SmartFuture(queue=queue, key=key, loop=loop or asyncio.get_event_loop())
 
@@ -220,6 +262,10 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
         task = SmartTask(coro=my_coroutine())
         await task
         ```
+
+    See Also:
+        - :class:`_SmartFutureMixin`
+        - :class:`asyncio.Task`
     """
 
     def __init__(
@@ -241,6 +287,9 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
             ```python
             task = SmartTask(coro=my_coroutine(), name="my_task")
             ```
+
+        See Also:
+            - :func:`asyncio.create_task`
         """
         super().__init__(coro, loop=loop, name=name)
         self._waiters: Set["asyncio.Task[T]"] = set()
@@ -272,6 +321,7 @@ def smart_task_factory(
 
     See Also:
         - :func:`set_smart_task_factory`
+        - :class:`SmartTask`
     """
     return SmartTask(coro, loop=loop)
 

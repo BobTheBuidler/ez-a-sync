@@ -89,32 +89,55 @@ class ModifierManager(Dict[str, Any]):
 
         Returns:
             The value of the modifier, or the default value if not set.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager.cache_type
+            'memory'
         """
         if modifier_key not in valid_modifiers:
             return super().__getattribute__(modifier_key)
         return (
-            self[modifier_key] if modifier_key in self else user_defaults[modifier_key]
+            self[modifier_key] if modifier_key in self else USER_DEFAULTS[modifier_key]
         )
 
     @property
     def use_limiter(self) -> bool:
-        """Determines if a rate limiter should be used."""
-        return self.runs_per_minute != nulls.runs_per_minute
+        """Determines if a rate limiter should be used.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(runs_per_minute=60))
+            >>> manager.use_limiter
+            True
+        """
+        return self.runs_per_minute != NULLS.runs_per_minute
 
     @property
     def use_semaphore(self) -> bool:
-        """Determines if a semaphore should be used."""
-        return self.semaphore != nulls.semaphore
+        """Determines if a semaphore should be used.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(semaphore=SemaphoreSpec()))
+            >>> manager.use_semaphore
+            True
+        """
+        return self.semaphore != NULLS.semaphore
 
     @property
     def use_cache(self) -> bool:
-        """Determines if caching should be used."""
+        """Determines if caching should be used.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager.use_cache
+            True
+        """
         return any(
             [
-                self.cache_type != nulls.cache_type,
-                self.ram_cache_maxsize != nulls.ram_cache_maxsize,
-                self.ram_cache_ttl != nulls.ram_cache_ttl,
-                self.cache_typed != nulls.cache_typed,
+                self.cache_type != NULLS.cache_type,
+                self.ram_cache_maxsize != NULLS.ram_cache_maxsize,
+                self.ram_cache_ttl != NULLS.ram_cache_ttl,
+                self.cache_typed != NULLS.cache_typed,
             ]
         )
 
@@ -175,27 +198,66 @@ class ModifierManager(Dict[str, Any]):
 
     # Dictionary api
     def keys(self) -> KeysView[str]:  # type: ignore [override]
-        """Returns the keys of the modifiers."""
+        """Returns the keys of the modifiers.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> list(manager.keys())
+            ['cache_type']
+        """
         return self._modifiers.keys()
 
     def values(self) -> ValuesView[Any]:  # type: ignore [override]
-        """Returns the values of the modifiers."""
+        """Returns the values of the modifiers.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> list(manager.values())
+            ['memory']
+        """
         return self._modifiers.values()
 
     def items(self) -> ItemsView[str, Any]:  # type: ignore [override]
-        """Returns the items of the modifiers."""
+        """Returns the items of the modifiers.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> list(manager.items())
+            [('cache_type', 'memory')]
+        """
         return self._modifiers.items()
 
     def __contains__(self, key: str) -> bool:  # type: ignore [override]
-        """Checks if a key is in the modifiers."""
+        """Checks if a key is in the modifiers.
+
+        Args:
+            key: The key to check.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> 'cache_type' in manager
+            True
+        """
         return key in self._modifiers
 
     def __iter__(self) -> Iterator[str]:
-        """Returns an iterator over the modifier keys."""
+        """Returns an iterator over the modifier keys.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> list(iter(manager))
+            ['cache_type']
+        """
         return self._modifiers.__iter__()
 
     def __len__(self) -> int:
-        """Returns the number of modifiers."""
+        """Returns the number of modifiers.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> len(manager)
+            1
+        """
         return len(self._modifiers)
 
     def __getitem__(self, modifier_key: str):
@@ -206,10 +268,15 @@ class ModifierManager(Dict[str, Any]):
 
         Returns:
             The value of the modifier.
+
+        Examples:
+            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager['cache_type']
+            'memory'
         """
         return self._modifiers[modifier_key]  # type: ignore [literal-required]
 
 
 # TODO give us docstrings
-nulls = ModifierManager(null_modifiers)
-user_defaults = ModifierManager(user_set_default_modifiers)
+NULLS = ModifierManager(null_modifiers)
+USER_DEFAULTS = ModifierManager(user_set_default_modifiers)

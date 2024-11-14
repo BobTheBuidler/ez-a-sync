@@ -75,17 +75,17 @@ def as_completed(
     Differences from :func:`asyncio.as_completed`:
     - Uses type hints for use with static type checkers.
     - Supports either individual awaitables or a k:v mapping of awaitables.
-    - Can be used as an async iterator which yields the result values.
+    - Can be used as an async iterator which yields the result values using :class:`ASyncIterator`.
     - Provides progress reporting using :mod:`tqdm` if 'tqdm' is set to True.
 
     Note:
-        The `return_exceptions` parameter is partially implemented. While exceptions can be wrapped and returned instead of being raised, this behavior may not be fully consistent across all scenarios. Users should test their specific use cases to ensure the desired behavior.
+        The `return_exceptions` parameter is not directly used in this function but is relevant for wrapped awaitables in mappings. Users should test their specific use cases to ensure the desired behavior.
 
     Args:
         fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.
         timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
         return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
-        aiter: If True, returns an async iterator of results. Defaults to False.
+        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. Defaults to False.
         tqdm: If True, enables progress reporting using :mod:`tqdm`. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for :mod:`tqdm` if progress reporting is enabled.
 
@@ -176,7 +176,7 @@ def as_completed_mapping(
         mapping: A dictionary-like object where keys are of type K and values are awaitable objects of type V.
         timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
         return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
-        aiter: If True, returns an async iterator of results. Defaults to False.
+        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. Defaults to False.
         tqdm: If True, enables progress reporting using :mod:`tqdm`. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for :mod:`tqdm` if progress reporting is enabled.
 
