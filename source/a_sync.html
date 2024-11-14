@@ -6304,6 +6304,14 @@ included in the result. The filter function can be either synchronous or asynchr
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a> for iteration.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
+This RuntimeError will be caught and a more descriptive <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> will be raised in its place.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.iter.ASyncFilter.__aiter__" title="a_sync.iter.ASyncFilter.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <a class="reference internal" href="#a_sync.iter.ASyncFilter.__anext__" title="a_sync.iter.ASyncFilter.__anext__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code></a> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Self</em></p>
@@ -6315,9 +6323,20 @@ included in the result. The filter function can be either synchronous or asynchr
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__next__">
 <span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__next__" title="Link to this definition"></a></dt>
 <dd><p>Synchronously fetch the next item from the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
+This RuntimeError will be caught and a more descriptive <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> will be raised in its place.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.iter.ASyncFilter.__aiter__" title="a_sync.iter.ASyncFilter.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <a class="reference internal" href="#a_sync.iter.ASyncFilter.__anext__" title="a_sync.iter.ASyncFilter.__anext__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code></a> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all items have been fetched from the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all items have been fetched from the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><strong>SyncModeInAsyncContextError</strong></a> – If the event loop is already running.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>T</em></p>
@@ -6559,6 +6578,13 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterable.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return an iterator that yields <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the <a class="reference internal" href="#a_sync.iter.ASyncIterable" title="a_sync.iter.ASyncIterable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterable</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Synchronous iteration leverages <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>, which uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+<a class="reference internal" href="#a_sync.iter.ASyncIterator.__next__" title="a_sync.iter.ASyncIterator.__next__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ASyncIterator.__next__()</span></code></a> raises a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> if the event loop is already running.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.iter.ASyncIterable.__aiter__" title="a_sync.iter.ASyncIterable.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.13)"><em>Iterator</em></a>[<em>T</em>]</p>
@@ -6697,6 +6723,14 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterator.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a> for iteration.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
+This RuntimeError will be caught and a more descriptive <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> will be raised in its place.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.iter.ASyncIterator.__aiter__" title="a_sync.iter.ASyncIterator.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <a class="reference internal" href="#a_sync.iter.ASyncIterator.__anext__" title="a_sync.iter.ASyncIterator.__anext__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code></a> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Self</em></p>
@@ -6708,9 +6742,20 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__next__">
 <span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator.__next__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterator.__next__" title="Link to this definition"></a></dt>
 <dd><p>Synchronously fetch the next item from the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
+This RuntimeError will be caught and a more descriptive <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> will be raised in its place.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.iter.ASyncIterator.__aiter__" title="a_sync.iter.ASyncIterator.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <a class="reference internal" href="#a_sync.iter.ASyncIterator.__anext__" title="a_sync.iter.ASyncIterator.__anext__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code></a> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all items have been fetched from the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all items have been fetched from the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><strong>SyncModeInAsyncContextError</strong></a> – If the event loop is already running.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>T</em></p>
@@ -6852,6 +6897,14 @@ either synchronous or asynchronous. Note that the ASyncSorter instance can only 
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a> for iteration.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
+This RuntimeError will be caught and a more descriptive <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> will be raised in its place.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.iter.ASyncSorter.__aiter__" title="a_sync.iter.ASyncSorter.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <a class="reference internal" href="#a_sync.iter.ASyncSorter.__anext__" title="a_sync.iter.ASyncSorter.__anext__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code></a> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Self</em></p>
@@ -6863,9 +6916,20 @@ either synchronous or asynchronous. Note that the ASyncSorter instance can only 
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__next__">
 <span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__next__" title="Link to this definition"></a></dt>
 <dd><p>Synchronously fetch the next item from the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
+This RuntimeError will be caught and a more descriptive <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> will be raised in its place.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.iter.ASyncSorter.__aiter__" title="a_sync.iter.ASyncSorter.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <a class="reference internal" href="#a_sync.iter.ASyncSorter.__anext__" title="a_sync.iter.ASyncSorter.__anext__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code></a> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all items have been fetched from the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all items have been fetched from the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><strong>SyncModeInAsyncContextError</strong></a> – If the event loop is already running.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>T</em></p>
@@ -8532,6 +8596,13 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterable.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return an iterator that yields <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the <a class="reference internal" href="#a_sync.ASyncIterable" title="a_sync.ASyncIterable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterable</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Synchronous iteration leverages <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>, which uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+<a class="reference internal" href="#a_sync.ASyncIterator.__next__" title="a_sync.ASyncIterator.__next__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ASyncIterator.__next__()</span></code></a> raises a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> if the event loop is already running.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.ASyncIterable.__aiter__" title="a_sync.ASyncIterable.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.13)"><em>Iterator</em></a>[<em>T</em>]</p>
@@ -8670,6 +8741,14 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterator.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return the <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a> for iteration.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
+This RuntimeError will be caught and a more descriptive <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> will be raised in its place.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.ASyncIterator.__aiter__" title="a_sync.ASyncIterator.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <a class="reference internal" href="#a_sync.ASyncIterator.__anext__" title="a_sync.ASyncIterator.__anext__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code></a> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Self</em></p>
@@ -8681,9 +8760,20 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.__next__">
 <span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterator.__next__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterator.__next__" title="Link to this definition"></a></dt>
 <dd><p>Synchronously fetch the next item from the <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
+This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
+This RuntimeError will be caught and a more descriptive <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> will be raised in its place.</p>
+<p>If you encounter a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>, you are likely working in an async codebase
+and should consider asynchronous iteration using <a class="reference internal" href="#a_sync.ASyncIterator.__aiter__" title="a_sync.ASyncIterator.__aiter__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__aiter__()</span></code></a> and <a class="reference internal" href="#a_sync.ASyncIterator.__anext__" title="a_sync.ASyncIterator.__anext__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__anext__()</span></code></a> instead.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all items have been fetched from the <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all items have been fetched from the <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><strong>SyncModeInAsyncContextError</strong></a> – If the event loop is already running.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>T</em></p>

@@ -271,7 +271,16 @@
 <div class="viewcode-block" id="ASyncIterable.__iter__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncIterable.__iter__">[docs]</a>
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-        <span class="s2">&quot;Return an iterator that yields :obj:`T` objects from the </span><span class="si">{cls}</span><span class="s2">.&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return an iterator that yields :obj:`T` objects from the {cls}.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Synchronous iteration leverages :class:`ASyncIterator`, which uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.</span>
+<span class="sd">            :meth:`ASyncIterator.__next__` raises a :class:`SyncModeInAsyncContextError` if the event loop is already running. </span>
+
+<span class="sd">            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase</span>
+<span class="sd">            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">yield from</span> <span class="n">ASyncIterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__aiter__</span><span class="p">())</span></div>
 
 
@@ -312,8 +321,18 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Synchronously fetch the next item from the {cls}.</span>
 
+<span class="sd">        Note:</span>
+<span class="sd">            This method uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.</span>
+<span class="sd">            This raises a :class:`RuntimeError` if the event loop is already running. </span>
+<span class="sd">            This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.</span>
+
+<span class="sd">            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase</span>
+<span class="sd">            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.</span>
+<span class="sd">            </span>
 <span class="sd">        Raises:</span>
-<span class="sd">            :class:`StopIteration`: Once all items have been fetched from the {cls}.</span>
+<span class="sd">            StopIteration: Once all items have been fetched from the {cls}.</span>
+<span class="sd">            SyncModeInAsyncContextError: If the event loop is already running.</span>
+<span class="sd">            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__anext__</span><span class="p">())</span>
@@ -394,7 +413,17 @@
 <div class="viewcode-block" id="ASyncIterator.__iter__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncIterator.__iter__">[docs]</a>
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
-        <span class="s2">&quot;Return the </span><span class="si">{cls}</span><span class="s2"> for iteration.&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the {cls} for iteration.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Synchronous iteration uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.</span>
+<span class="sd">            This raises a :class:`RuntimeError` if the event loop is already running. </span>
+<span class="sd">            This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.</span>
+
+<span class="sd">            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase</span>
+<span class="sd">            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
