@@ -1,6 +1,3 @@
-Here is the updated Python file with corrected documentation:
-
-```python
 """
 This module provides type definitions and type-related utilities for the `a_sync` library.
 
@@ -260,4 +257,3 @@ AnyIterableOrAwaitableIterable = Union[AnyIterable[K], Awaitable[AnyIterable[K]]
 Type alias for any iterable, whether synchronous or asynchronous, 
 or an awaitable that resolves to any iterable, whether synchronous or asynchronous.
 """
-```
