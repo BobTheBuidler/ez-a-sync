@@ -57,6 +57,8 @@ class CounterLock(_DebugDaemonMixin):
         """
         Waits until the counter reaches or exceeds the specified value.
 
+        This method will ensure the debug daemon is running if the counter is not ready.
+
         Args:
             value: The value to wait for.
 
