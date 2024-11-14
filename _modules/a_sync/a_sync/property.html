@@ -288,7 +288,9 @@
 <span class="sd">    synchronously but can also be used asynchronously if needed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># TODO give all of these docstrings</span>
     <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;sync&quot;</span>
+    <span class="c1"># TODO and give these ones examples</span>
     <span class="nb">any</span><span class="p">:</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
     <span class="nb">all</span><span class="p">:</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
     <span class="nb">min</span><span class="p">:</span> <span class="n">ASyncFunctionSyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
@@ -324,7 +326,9 @@
 <span class="sd">    asynchronously but can also be used synchronously if needed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># TODO give all of these docstrings</span>
     <span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;async&quot;</span>
+    <span class="c1"># TODO and give these ones examples</span>
     <span class="nb">any</span><span class="p">:</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
     <span class="nb">all</span><span class="p">:</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
     <span class="nb">min</span><span class="p">:</span> <span class="n">ASyncFunctionAsyncDefault</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">T</span><span class="p">]</span>
@@ -333,6 +337,7 @@
 
 
 
+<span class="c1"># Give all of these docstrings</span>
 <span class="n">ASyncPropertyDecorator</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="nb">property</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span>
 <span class="n">ASyncPropertyDecoratorSyncDefault</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span>
     <span class="p">[</span><span class="n">AnyGetterFunction</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]],</span> <span class="n">ASyncPropertyDescriptorSyncDefault</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>

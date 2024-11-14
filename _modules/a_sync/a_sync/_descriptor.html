@@ -73,13 +73,15 @@
 <span class="sd">This module contains the :class:`ASyncDescriptor` class, which is used to create dual-function sync/async methods</span>
 <span class="sd">and properties.</span>
 
-<span class="sd">The :class:`ASyncDescriptor` class provides functionality for mapping operations across multiple instances</span>
-<span class="sd">and includes utility methods for common operations such as checking if all or any results are truthy, </span>
-<span class="sd">and finding the minimum, maximum, or sum of results of the method or property mapped across multiple instances.</span>
+<span class="sd">The :class:`ASyncDescriptor` class provides a base for creating descriptors that can handle both synchronous and asynchronous</span>
+<span class="sd">operations. It includes utility methods for mapping operations across multiple instances and provides access to common</span>
+<span class="sd">operations such as checking if all or any results are truthy, and finding the minimum, maximum, or sum of results of the</span>
+<span class="sd">method or property mapped across multiple instances through the use of :class:`~a_sync.a_sync.function.ASyncFunction`.</span>
 
 <span class="sd">See Also:</span>
 <span class="sd">    - :class:`~a_sync.a_sync.function.ASyncFunction`</span>
 <span class="sd">    - :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`</span>
+<span class="sd">    - :class:`~a_sync.a_sync.property.ASyncPropertyDescriptor`</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">functools</span>
@@ -101,7 +103,7 @@
 <span class="sd">    This class provides functionality for mapping operations across multiple instances</span>
 <span class="sd">    and includes utility methods for common operations such as checking if all or any</span>
 <span class="sd">    results are truthy, and finding the minimum, maximum, or sum of results of the method</span>
-<span class="sd">    or property mapped across multiple instances.</span>
+<span class="sd">    or property mapped across multiple instances through the use of :class:`~a_sync.a_sync.function.ASyncFunction`.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        To create a dual-function method or property, subclass :class:`ASyncDescriptor` and implement</span>
@@ -109,12 +111,10 @@
 <span class="sd">        across multiple instances.</span>
 
 <span class="sd">        ```python</span>
-<span class="sd">        class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">            def __init__(self, func):</span>
-<span class="sd">                super().__init__(func)</span>
-
 <span class="sd">        class MyClass:</span>
-<span class="sd">            my_method = MyDescriptor(lambda x: x * 2)</span>
+<span class="sd">            @ASyncDescriptor</span>
+<span class="sd">            def my_method(self, x):</span>
+<span class="sd">                return x * 2</span>
 
 <span class="sd">        instance = MyClass()</span>
 <span class="sd">        result = instance.my_method.map([1, 2, 3])</span>
@@ -197,12 +197,10 @@
 <span class="sd">            A :class:`TaskMapping` object.</span>
 
 <span class="sd">        Examples:</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x * 2)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x * 2</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = instance.my_method.map([1, 2, 3])</span>
@@ -221,12 +219,10 @@
 <span class="sd">            An :class:`ASyncFunction` object.</span>
 
 <span class="sd">        Examples:</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x &gt; 0)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x &gt; 0</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method.all([1, 2, 3])</span>
@@ -242,12 +238,10 @@
 <span class="sd">            An :class:`ASyncFunction` object.</span>
 
 <span class="sd">        Examples:</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x &gt; 0)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x &gt; 0</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method.any([-1, 0, 1])</span>
@@ -264,12 +258,10 @@
 
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method.min([3, 1, 2])</span>
@@ -286,12 +278,10 @@
 <span class="sd">            An :class:`ASyncFunction` object.</span>
 
 <span class="sd">        Examples:</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method.max([3, 1, 2])</span>
@@ -308,12 +298,10 @@
 
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method.sum([1, 2, 3])</span>
@@ -339,17 +327,12 @@
 <span class="sd">            name: Optional name for the task.</span>
 <span class="sd">            **kwargs: Additional keyword arguments.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            A boolean indicating if all results are truthy.</span>
-
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x &gt; 0)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x &gt; 0</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method._all([1, 2, 3])</span>
@@ -378,17 +361,12 @@
 <span class="sd">            name: Optional name for the task.</span>
 <span class="sd">            **kwargs: Additional keyword arguments.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            A boolean indicating if any result is truthy.</span>
-
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x &gt; 0)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x &gt; 0</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method._any([-1, 0, 1])</span>
@@ -417,17 +395,12 @@
 <span class="sd">            name: Optional name for the task.</span>
 <span class="sd">            **kwargs: Additional keyword arguments.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            The minimum result.</span>
-
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method._min([3, 1, 2])</span>
@@ -456,17 +429,12 @@
 <span class="sd">            name: Optional name for the task.</span>
 <span class="sd">            **kwargs: Additional keyword arguments.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            The maximum result.</span>
-
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method._max([3, 1, 2])</span>
@@ -495,17 +463,12 @@
 <span class="sd">            name: Optional name for the task.</span>
 <span class="sd">            **kwargs: Additional keyword arguments.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            The sum of the results.</span>
-
 <span class="sd">        Examples:</span>
 <span class="sd">            ```python</span>
-<span class="sd">            class MyDescriptor(ASyncDescriptor):</span>
-<span class="sd">                def __init__(self, func):</span>
-<span class="sd">                    super().__init__(func)</span>
-
 <span class="sd">            class MyClass:</span>
-<span class="sd">                my_method = MyDescriptor(lambda x: x)</span>
+<span class="sd">                @ASyncDescriptor</span>
+<span class="sd">                def my_method(self, x):</span>
+<span class="sd">                    return x</span>
 
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = await instance.my_method._sum([1, 2, 3])</span>

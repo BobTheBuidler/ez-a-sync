@@ -266,6 +266,12 @@ implemented.</p>
 <dd class="field-even"><p>The value of the modifier.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="p">[</span><span class="s1">&#39;cache_type&#39;</span><span class="p">]</span>
+<span class="go">&#39;memory&#39;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -289,6 +295,12 @@ implemented.</p>
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/modifiers/manager.html#ModifierManager.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Returns an iterator over the modifier keys.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">manager</span><span class="p">))</span>
+<span class="go">[&#39;cache_type&#39;]</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.13)"><em>Iterator</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>]</p>
@@ -374,6 +386,12 @@ implemented.</p>
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.items">
 <span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/modifiers/manager.html#ModifierManager.items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.items" title="Link to this definition"></a></dt>
 <dd><p>Returns the items of the modifiers.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+<span class="go">[(&#39;cache_type&#39;, &#39;memory&#39;)]</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ItemsView" title="(in Python v3.13)"><em>ItemsView</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>]</p>
@@ -385,6 +403,12 @@ implemented.</p>
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.keys">
 <span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/modifiers/manager.html#ModifierManager.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.keys" title="Link to this definition"></a></dt>
 <dd><p>Returns the keys of the modifiers.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="go">[&#39;cache_type&#39;]</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.KeysView" title="(in Python v3.13)"><em>KeysView</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>]</p>
@@ -426,6 +450,12 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.values">
 <span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/modifiers/manager.html#ModifierManager.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.values" title="Link to this definition"></a></dt>
 <dd><p>Returns the values of the modifiers.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">manager</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<span class="go">[&#39;memory&#39;]</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ValuesView" title="(in Python v3.13)"><em>ValuesView</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>]</p>
@@ -484,18 +514,36 @@ The executor is used to run the sync function in an asynchronous context.</p>
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.use_cache">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_cache</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.use_cache" title="Link to this definition"></a></dt>
 <dd><p>Determines if caching should be used.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">use_cache</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.use_limiter">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_limiter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.use_limiter" title="Link to this definition"></a></dt>
 <dd><p>Determines if a rate limiter should be used.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">use_limiter</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.use_semaphore">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">use_semaphore</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.use_semaphore" title="Link to this definition"></a></dt>
 <dd><p>Determines if a semaphore should be used.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">semaphore</span><span class="o">=</span><span class="n">SemaphoreSpec</span><span class="p">()))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">use_semaphore</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -520,7 +568,7 @@ or None if the semaphore is to be used as a decorator.</p></li>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If both <cite>coro_fn</cite> and <cite>semaphore</cite> are provided and the first argument is an integer or <cite>asyncio.Semaphore</cite>.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>coro_fn</cite> is an integer or <cite>asyncio.Semaphore</cite> and <cite>semaphore</cite> is not None.</p></li>
 <li><p><a class="reference internal" href="a_sync.html#a_sync.exceptions.FunctionNotAsync" title="a_sync.exceptions.FunctionNotAsync"><strong>exceptions.FunctionNotAsync</strong></a> – If the provided function is not a coroutine.</p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If the semaphore is not an integer, an <cite>asyncio.Semaphore</cite>, or a <cite>primitives.Semaphore</cite>.</p></li>
 </ul>

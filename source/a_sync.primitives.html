@@ -401,7 +401,7 @@
 <dt class="sig sig-object py" id="a_sync.primitives._debug._DebugDaemonMixin._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/_debug.html#_DebugDaemonMixin._ensure_debug_daemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -525,7 +525,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -534,8 +534,12 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -598,7 +602,7 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -607,8 +611,12 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -2554,18 +2562,44 @@ the queue.</p>
 <section id="module-a_sync.primitives">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-a_sync.primitives" title="Link to this heading"></a></h2>
 <p>This module includes both new primitives and modified versions of standard asyncio primitives.</p>
-<p>The primitives provided in this module are:</p>
+<p>The primitives provided in this module are:
+- <code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code>
+- <code class="xref py py-class docutils literal notranslate"><span class="pre">PrioritySemaphore</span></code>
+- <a class="reference internal" href="#a_sync.primitives.ThreadsafeSemaphore" title="a_sync.primitives.ThreadsafeSemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadsafeSemaphore</span></code></a>
+- <code class="xref py py-class docutils literal notranslate"><span class="pre">CounterLock</span></code>
+- <code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code>
+- <a class="reference internal" href="#a_sync.primitives.queue.Queue" title="a_sync.primitives.queue.Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Queue</span></code></a>
+- <a class="reference internal" href="#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessingQueue</span></code></a>
+- <a class="reference internal" href="#a_sync.primitives.queue.SmartProcessingQueue" title="a_sync.primitives.queue.SmartProcessingQueue"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmartProcessingQueue</span></code></a></p>
+<blockquote>
+<div><p>These primitives extend or modify the functionality of standard asyncio primitives to provide additional features or improved performance for specific use cases.</p>
+</div></blockquote>
+<p class="rubric">Examples</p>
+<p>Using a Semaphore to limit concurrent access:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">a_sync.primitives.locks</span> <span class="kn">import</span> <span class="n">Semaphore</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="c1"># perform some operation</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+</pre></div>
+</div>
+<p>Using a Queue to manage tasks:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">a_sync.primitives.queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;task1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">task</span> <span class="o">=</span> <span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+<span class="go">task1</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p>Semaphore</p></li>
-<li><p>ThreadsafeSemaphore</p></li>
-<li><p>PrioritySemaphore</p></li>
-<li><p>CounterLock</p></li>
-<li><p>Event</p></li>
-<li><p>Queue</p></li>
-<li><p>ProcessingQueue</p></li>
-<li><p>SmartProcessingQueue</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio.html#module-asyncio" title="(in Python v3.13)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asyncio</span></code></a> for standard asyncio primitives.</p></li>
+<li><p><a class="reference internal" href="a_sync.primitives.locks.html#module-a_sync.primitives.locks" title="a_sync.primitives.locks"><code class="xref py py-mod docutils literal notranslate"><span class="pre">a_sync.primitives.locks</span></code></a> for lock-related primitives.</p></li>
+<li><p><a class="reference internal" href="#module-a_sync.primitives.queue" title="a_sync.primitives.queue"><code class="xref py py-mod docutils literal notranslate"><span class="pre">a_sync.primitives.queue</span></code></a> for queue-related primitives.</p></li>
 </ul>
-<p>These primitives extend or modify the functionality of standard asyncio primitives to provide additional features or improved performance for specific use cases.</p>
+</div>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.</span></span><span class="sig-name descname"><span class="pre">CounterLock</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/counter.html#CounterLock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.CounterLock" title="Link to this definition"></a></dt>
@@ -2614,7 +2648,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.CounterLock._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2760,7 +2794,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock._events">
 <span class="sig-name descname"><span class="pre">_events</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.13)"><span class="pre">DefaultDict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.event.Event" title="a_sync.primitives.locks.event.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.CounterLock._events" title="Link to this definition"></a></dt>
-<dd><p>A defaultdict that maps each awaited value to an <a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Event" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Event</span></code></a> that manages the waiters for that value.</p>
+<dd><p>A defaultdict that maps each awaited value to an <a class="reference internal" href="#a_sync.primitives.Event" title="a_sync.primitives.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></a> that manages the waiters for that value.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -2799,7 +2833,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.CounterLock.is_ready">
 <span class="sig-name descname"><span class="pre">is_ready</span></span><a class="headerlink" href="#a_sync.primitives.CounterLock.is_ready" title="Link to this definition"></a></dt>
-<dd><p>A lambda function that indicates whether a given value has already been surpassed.</p>
+<dd><p>A lambda function that indicates whether the current counter value is greater than or equal to a given value.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -2814,7 +2848,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -2823,8 +2857,12 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -2887,7 +2925,7 @@ diagnosing and debugging potential deadlocks.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.Event._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.Event._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -3072,7 +3110,7 @@ true will not block at all.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -3081,8 +3119,12 @@ true will not block at all.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -3233,7 +3275,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -3348,6 +3390,7 @@ waiting.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.PrioritySemaphore.acquire">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore with the top priority.</p>
+<p>This method overrides <a class="reference internal" href="#a_sync.primitives.Semaphore.acquire" title="a_sync.primitives.Semaphore.acquire"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.acquire()</span></code></a> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">_AbstractPrioritySemaphore</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">semaphore</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
@@ -3490,7 +3533,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -3499,8 +3542,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -4256,7 +4303,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.Semaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.Semaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -4461,7 +4508,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -4470,8 +4517,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -4975,7 +5026,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -5185,7 +5236,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -5194,8 +5245,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>

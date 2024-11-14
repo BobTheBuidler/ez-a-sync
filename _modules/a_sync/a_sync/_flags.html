@@ -77,15 +77,11 @@
 
 <span class="sd">You can use any of the provided flags, whichever makes the most sense for your use case.</span>
 
-<span class="sd">AFFIRMATIVE_FLAGS: Set of flags indicating synchronous behavior. Currently includes &quot;sync&quot;.</span>
+<span class="sd">:obj:`AFFIRMATIVE_FLAGS`: Set of flags indicating synchronous behavior. Currently includes &quot;sync&quot;.</span>
 
-<span class="sd">NEGATIVE_FLAGS: Set of flags indicating asynchronous behavior. Currently includes &quot;asynchronous&quot;.</span>
+<span class="sd">:obj:`NEGATIVE_FLAGS`: Set of flags indicating asynchronous behavior. Currently includes &quot;asynchronous&quot;.</span>
 
-<span class="sd">VIABLE_FLAGS: Set of all valid flags, combining both synchronous and asynchronous indicators.</span>
-
-<span class="sd">Functions:</span>
-<span class="sd">    - negate_if_necessary: Negates the flag value if necessary based on the flag type.</span>
-<span class="sd">    - validate_flag_value: Validates that the flag value is a boolean.</span>
+<span class="sd">:obj:`VIABLE_FLAGS`: Set of all valid flags, combining both synchronous and asynchronous indicators.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
@@ -95,16 +91,26 @@
 <span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sync&quot;</span><span class="p">}</span>
 <span class="sd">&quot;&quot;&quot;Set of flags indicating synchronous behavior.</span>
 
+<span class="sd">This set currently contains only the flag &quot;sync&quot;, which is used to denote</span>
+<span class="sd">synchronous operations within the ez-a-sync library.</span>
+
 <span class="sd">Examples:</span>
 <span class="sd">    &gt;&gt;&gt; &#39;sync&#39; in AFFIRMATIVE_FLAGS</span>
 <span class="sd">    True</span>
 
 <span class="sd">    &gt;&gt;&gt; &#39;async&#39; in AFFIRMATIVE_FLAGS</span>
 <span class="sd">    False</span>
+
+<span class="sd">See Also:</span>
+<span class="sd">    :data:`NEGATIVE_FLAGS`: Flags indicating asynchronous behavior.</span>
+<span class="sd">    :data:`VIABLE_FLAGS`: All valid flags, combining both sync and async indicators.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">NEGATIVE_FLAGS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;asynchronous&quot;</span><span class="p">}</span>
 <span class="sd">&quot;&quot;&quot;Set of flags indicating asynchronous behavior.</span>
+
+<span class="sd">This set currently contains only the flag &quot;asynchronous&quot;, which is used to denote</span>
+<span class="sd">asynchronous operations within the ez-a-sync library.</span>
 
 <span class="sd">Examples:</span>
 <span class="sd">    &gt;&gt;&gt; &#39;asynchronous&#39; in NEGATIVE_FLAGS</span>
@@ -112,13 +118,18 @@
 
 <span class="sd">    &gt;&gt;&gt; &#39;sync&#39; in NEGATIVE_FLAGS</span>
 <span class="sd">    False</span>
+
+<span class="sd">See Also:</span>
+<span class="sd">    :data:`AFFIRMATIVE_FLAGS`: Flags indicating synchronous behavior.</span>
+<span class="sd">    :data:`VIABLE_FLAGS`: All valid flags, combining both sync and async indicators.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">VIABLE_FLAGS</span> <span class="o">=</span> <span class="n">AFFIRMATIVE_FLAGS</span> <span class="o">|</span> <span class="n">NEGATIVE_FLAGS</span>
 <span class="sd">&quot;&quot;&quot;Set of all valid flags, combining both synchronous and asynchronous indicators.</span>
 
-<span class="sd">A-Sync uses &#39;flags&#39; to indicate whether objects or function calls will be sync or async.</span>
-<span class="sd">You can use any of the provided flags, whichever makes most sense for your use case.</span>
+<span class="sd">The ez-a-sync library uses these flags to indicate whether objects or function</span>
+<span class="sd">calls will be synchronous or asynchronous. You can use any of the provided flags,</span>
+<span class="sd">whichever makes the most sense for your use case.</span>
 
 <span class="sd">Examples:</span>
 <span class="sd">    &gt;&gt;&gt; &#39;sync&#39; in VIABLE_FLAGS</span>
@@ -129,6 +140,10 @@
 
 <span class="sd">    &gt;&gt;&gt; &#39;invalid&#39; in VIABLE_FLAGS</span>
 <span class="sd">    False</span>
+
+<span class="sd">See Also:</span>
+<span class="sd">    :data:`AFFIRMATIVE_FLAGS`: Flags indicating synchronous behavior.</span>
+<span class="sd">    :data:`NEGATIVE_FLAGS`: Flags indicating asynchronous behavior.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 

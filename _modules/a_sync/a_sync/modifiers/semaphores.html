@@ -179,7 +179,7 @@
 <span class="sd">            The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: If both `coro_fn` and `semaphore` are provided and the first argument is an integer or `asyncio.Semaphore`.</span>
+<span class="sd">        ValueError: If `coro_fn` is an integer or `asyncio.Semaphore` and `semaphore` is not None.</span>
 <span class="sd">        exceptions.FunctionNotAsync: If the provided function is not a coroutine.</span>
 <span class="sd">        TypeError: If the semaphore is not an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.</span>
 

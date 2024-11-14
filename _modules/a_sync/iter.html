@@ -194,11 +194,23 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncIterable">[docs]</a>
 <span class="k">class</span> <span class="nc">ASyncIterable</span><span class="p">(</span><span class="n">_AwaitableAsyncIterableMixin</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols.</span>
+<span class="sd">    A hybrid Iterable/AsyncIterable implementation designed to offer</span>
+<span class="sd">    dual compatibility with both synchronous and asynchronous</span>
+<span class="sd">    iteration protocols.</span>
 
-<span class="sd">    This class allows objects to be iterated over using either a standard `for` loop or an `async for` loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.</span>
+<span class="sd">    This class allows objects to be iterated over using either a</span>
+<span class="sd">    standard `for` loop or an `async for` loop, making it versatile</span>
+<span class="sd">    in scenarios where the mode of iteration (synchronous or asynchronous)</span>
+<span class="sd">    needs to be flexible or is determined at runtime.</span>
 
-<span class="sd">    The class achieves this by implementing both `__iter__` and `__aiter__` methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. However, note that synchronous iteration relies on the :class:`ASyncIterator` class, which uses `asyncio.get_event_loop().run_until_complete` to fetch items. This can raise a `RuntimeError` if the event loop is already running, resulting in a :class:`SyncModeInAsyncContextError`.</span>
+<span class="sd">    The class achieves this by implementing both `__iter__` and `__aiter__`</span>
+<span class="sd">    methods, enabling it to return appropriate iterator objects that can</span>
+<span class="sd">    handle synchronous and asynchronous iteration, respectively. However,</span>
+<span class="sd">    note that synchronous iteration relies on the :class:`ASyncIterator`</span>
+<span class="sd">    class, which uses `asyncio.get_event_loop().run_until_complete` to</span>
+<span class="sd">    fetch items. This can raise a `RuntimeError` if the event loop is</span>
+<span class="sd">    already running, and in such cases, a :class:`SyncModeInAsyncContextError`</span>
+<span class="sd">    is raised from the `RuntimeError`.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; async_iterable = ASyncIterable(some_async_iterable)</span>
@@ -279,7 +291,7 @@
 <span class="sd">    By implementing both `__next__` and `__anext__` methods, ASyncIterator enables objects to be iterated using standard iteration protocols while internally managing the complexities of asynchronous iteration. This design simplifies the use of asynchronous iterables in environments or frameworks that are not inherently asynchronous, such as standard synchronous functions or older codebases being gradually migrated to asynchronous IO.</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        Synchronous iteration with `ASyncIterator` uses `asyncio.get_event_loop().run_until_complete`, which can raise a `RuntimeError` if the event loop is already running. In such cases, a :class:`SyncModeInAsyncContextError` is raised, indicating that synchronous iteration is not possible in an already running event loop.</span>
+<span class="sd">        Synchronous iteration with `ASyncIterator` uses `asyncio.get_event_loop().run_until_complete`, which can raise a `RuntimeError` if the event loop is already running. In such cases, a :class:`SyncModeInAsyncContextError` is raised from the `RuntimeError`, indicating that synchronous iteration is not possible in an already running event loop.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; async_iterator = ASyncIterator(some_async_iterator)</span>

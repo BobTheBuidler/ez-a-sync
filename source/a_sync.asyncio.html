@@ -113,11 +113,11 @@
 <p>Differences from <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.as_completed" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.as_completed()</span></code></a>:
 - Uses type hints for use with static type checkers.
 - Supports either individual awaitables or a k:v mapping of awaitables.
-- Can be used as an async iterator which yields the result values.
+- Can be used as an async iterator which yields the result values using <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code>.
 - Provides progress reporting using <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code> if ‘tqdm’ is set to True.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <cite>return_exceptions</cite> parameter is partially implemented. While exceptions can be wrapped and returned instead of being raised, this behavior may not be fully consistent across all scenarios. Users should test their specific use cases to ensure the desired behavior.</p>
+<p>The <cite>return_exceptions</cite> parameter is not directly used in this function but is relevant for wrapped awaitables in mappings. Users should test their specific use cases to ensure the desired behavior.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -125,7 +125,7 @@
 <li><p><strong>fs</strong> – The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</p></li>
 <li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
 <li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, returns an async iterator of results using <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code>. Defaults to False.</p></li>
 <li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, enables progress reporting using <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code>. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>) – Additional keyword arguments for <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code> if progress reporting is enabled.</p></li>
 </ul>
@@ -174,7 +174,7 @@
 <li><p><strong>mapping</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.13)"><em>Mapping</em></a><em>[</em><em>K</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>V</em><em>]</em><em>]</em>) – A dictionary-like object where keys are of type K and values are awaitable objects of type V.</p></li>
 <li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
 <li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, returns an async iterator of results using <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code>. Defaults to False.</p></li>
 <li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, enables progress reporting using <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code>. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>) – Additional keyword arguments for <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code> if progress reporting is enabled.</p></li>
 </ul>
@@ -377,11 +377,11 @@ features and improved functionality for asynchronous programming.</p>
 <p>Differences from <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.as_completed" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.as_completed()</span></code></a>:
 - Uses type hints for use with static type checkers.
 - Supports either individual awaitables or a k:v mapping of awaitables.
-- Can be used as an async iterator which yields the result values.
+- Can be used as an async iterator which yields the result values using <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code>.
 - Provides progress reporting using <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code> if ‘tqdm’ is set to True.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <cite>return_exceptions</cite> parameter is partially implemented. While exceptions can be wrapped and returned instead of being raised, this behavior may not be fully consistent across all scenarios. Users should test their specific use cases to ensure the desired behavior.</p>
+<p>The <cite>return_exceptions</cite> parameter is not directly used in this function but is relevant for wrapped awaitables in mappings. Users should test their specific use cases to ensure the desired behavior.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -389,7 +389,7 @@ features and improved functionality for asynchronous programming.</p>
 <li><p><strong>fs</strong> – The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</p></li>
 <li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
 <li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, returns an async iterator of results using <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code>. Defaults to False.</p></li>
 <li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, enables progress reporting using <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code>. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>) – Additional keyword arguments for <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code> if progress reporting is enabled.</p></li>
 </ul>

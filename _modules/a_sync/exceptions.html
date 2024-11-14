@@ -89,11 +89,21 @@
 <span class="sd">    Base exception class for flag-related errors in the a_sync library.</span>
 
 <span class="sd">    A-Sync uses &#39;flags&#39; to indicate whether objects or function calls will be sync or async.</span>
-<span class="sd">    You can use any of the provided flags, whichever makes most sense for your use case.</span>
+<span class="sd">    You can use any of the provided flags, which include &#39;sync&#39; and &#39;asynchronous&#39;, whichever makes most sense for your use case.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; try:</span>
+<span class="sd">        ...     raise ASyncFlagException(&quot;An error occurred with flags.&quot;)</span>
+<span class="sd">        ... except ASyncFlagException as e:</span>
+<span class="sd">        ...     print(e)</span>
+<span class="sd">        An error occurred with flags.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :const:`VIABLE_FLAGS`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">viable_flags</span> <span class="o">=</span> <span class="n">VIABLE_FLAGS</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The set of viable flags.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The set of viable flags: {&#39;sync&#39;, &#39;asynchronous&#39;}.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ASyncFlagException.desc">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncFlagException.desc">[docs]</a>

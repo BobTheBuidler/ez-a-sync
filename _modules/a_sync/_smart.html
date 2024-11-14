@@ -100,6 +100,26 @@
 <span class="sd">    Mixin class that provides common functionality for smart futures and tasks.</span>
 
 <span class="sd">    This mixin provides methods for managing waiters and integrating with a smart processing queue.</span>
+<span class="sd">    It uses weak references to manage resources efficiently.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        Creating a SmartFuture and awaiting it:</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        future = SmartFuture()</span>
+<span class="sd">        result = await future</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        Creating a SmartTask and awaiting it:</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        task = SmartTask(coro=my_coroutine())</span>
+<span class="sd">        result = await task</span>
+<span class="sd">        ```</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`SmartFuture`</span>
+<span class="sd">        - :class:`SmartTask`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;SmartProcessingQueue[Any, Any, T]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -144,18 +164,22 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">num_waiters</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="c1"># NOTE: we check .done() because the callback may not have ran yet and its very lightweight</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of waiters currently awaiting the future or task.</span>
+
+<span class="sd">        This property checks if the future or task is done to ensure accurate counting</span>
+<span class="sd">        of waiters, as the callback may not have run yet.</span>
 
 <span class="sd">        Example:</span>
 <span class="sd">            ```python</span>
 <span class="sd">            future = SmartFuture()</span>
 <span class="sd">            print(future.num_waiters)</span>
 <span class="sd">            ```</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`_waiter_done_cleanup_callback`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
-            <span class="c1"># if there are any waiters left, there won&#39;t be once the event loop runs once</span>
             <span class="k">return</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">waiter</span><span class="p">,</span> <span class="s2">&quot;num_waiters&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">waiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">)</span>
 
@@ -165,10 +189,13 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Callback to clean up waiters when a waiter task is done.</span>
 
-<span class="sd">        Removes the waiter from _waiters, and _queue._futs if applicable</span>
+<span class="sd">        Removes the waiter from _waiters, and _queue._futs if applicable.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            waiter: The waiter task to clean up.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            Automatically called when a waiter task completes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">waiter</span><span class="p">)</span>
@@ -176,6 +203,8 @@
     <span class="k">def</span> <span class="nf">_self_done_cleanup_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;SmartFuture&quot;</span><span class="p">,</span> <span class="s2">&quot;SmartTask&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Callback to clean up waiters and remove the future from the queue when done.</span>
+
+<span class="sd">        This method clears all waiters and removes the future from the associated queue.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">queue</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">:</span>
@@ -198,6 +227,10 @@
 <span class="sd">        future = SmartFuture()</span>
 <span class="sd">        await future</span>
 <span class="sd">        ```</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`_SmartFutureMixin`</span>
+<span class="sd">        - :class:`asyncio.Future`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_queue</span> <span class="o">=</span> <span class="kc">None</span>
@@ -224,6 +257,9 @@
 <span class="sd">            ```python</span>
 <span class="sd">            future = SmartFuture(queue=my_queue, key=my_key)</span>
 <span class="sd">            ```</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :class:`SmartProcessingQueue`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">queue</span><span class="p">:</span>
@@ -251,6 +287,9 @@
 <span class="sd">            future2 = SmartFuture()</span>
 <span class="sd">            print(future1 &lt; future2)</span>
 <span class="sd">            ```</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :meth:`num_waiters`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_waiters</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">num_waiters</span></div>
 
@@ -281,6 +320,9 @@
 <span class="sd">        ```python</span>
 <span class="sd">        future = create_future(queue=my_queue, key=my_key)</span>
 <span class="sd">        ```</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`SmartFuture`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">SmartFuture</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span> <span class="ow">or</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">())</span></div>
 
@@ -302,6 +344,10 @@
 <span class="sd">        task = SmartTask(coro=my_coroutine())</span>
 <span class="sd">        await task</span>
 <span class="sd">        ```</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        - :class:`_SmartFutureMixin`</span>
+<span class="sd">        - :class:`asyncio.Task`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="SmartTask.__init__">
@@ -325,6 +371,9 @@
 <span class="sd">            ```python</span>
 <span class="sd">            task = SmartTask(coro=my_coroutine(), name=&quot;my_task&quot;)</span>
 <span class="sd">            ```</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            - :func:`asyncio.create_task`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">coro</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;asyncio.Task[T]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -360,6 +409,7 @@
 
 <span class="sd">    See Also:</span>
 <span class="sd">        - :func:`set_smart_task_factory`</span>
+<span class="sd">        - :class:`SmartTask`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">SmartTask</span><span class="p">(</span><span class="n">coro</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span></div>
 

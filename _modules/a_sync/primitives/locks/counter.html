@@ -72,7 +72,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module provides two specialized async flow management classes, :class:`CounterLock` and :class:`CounterLockCluster`.</span>
 
-<span class="sd">These primitives manage :class:`asyncio.Task` objects that must wait for an internal counter to reach a specific value.</span>
+<span class="sd">These primitives manage synchronization of tasks that must wait for an internal counter to reach a specific value.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
@@ -123,10 +123,10 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;The current value of the counter.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_events</span><span class="p">:</span> <span class="n">DefaultDict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Event</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">Event</span><span class="p">)</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A defaultdict that maps each awaited value to an :class:`asyncio.Event` that manages the waiters for that value.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A defaultdict that maps each awaited value to an :class:`Event` that manages the waiters for that value.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">&gt;=</span> <span class="n">v</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A lambda function that indicates whether a given value has already been surpassed.&quot;&quot;&quot;</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A lambda function that indicates whether the current counter value is greater than or equal to a given value.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="CounterLock.wait_for">

@@ -232,13 +232,31 @@
 <span class="sd">        42</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        Some arithmetic operations are currently broken or incomplete. Use with caution.</span>
+<span class="sd">        Arithmetic operations are implemented, allowing for mathematical operations on future results.</span>
+<span class="sd">        You no longer have to choose between optimized async code and clean, readable code.</span>
 
-<span class="sd">    TODO include a simple mathematics example a one complex example with numerous variables and operations</span>
-<span class="sd">    TODO include attribute access examples</span>
-<span class="sd">    TODO describe a bit more about both of the above 2 TODOs somewhere in this class-level docstring</span>
-<span class="sd">    TODO describe why a user would want to use these (to write cleaner code that doesn&#39;t require as many ugly gathers)</span>
-<span class="sd">    TODO include comparisons between the &#39;new way&#39; with this future class and the &#39;old way&#39; with gathers</span>
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; future1 = ASyncFuture(asyncio.sleep(1, result=10))</span>
+<span class="sd">        &gt;&gt;&gt; future2 = ASyncFuture(asyncio.sleep(1, result=5))</span>
+<span class="sd">        &gt;&gt;&gt; future3 = ASyncFuture(asyncio.sleep(1, result=10))</span>
+<span class="sd">        &gt;&gt;&gt; future4 = ASyncFuture(asyncio.sleep(1, result=2))</span>
+<span class="sd">        &gt;&gt;&gt; result = (future1 + future2) / future3 ** future4</span>
+<span class="sd">        &gt;&gt;&gt; await result</span>
+<span class="sd">        0.15</span>
+
+<span class="sd">    Attribute Access:</span>
+<span class="sd">        The `ASyncFuture` allows attribute access on the materialized result.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; class Example:</span>
+<span class="sd">        ...     def __init__(self, value):</span>
+<span class="sd">        ...         self.value = value</span>
+<span class="sd">        &gt;&gt;&gt; future = ASyncFuture(asyncio.sleep(1, result=Example(42)))</span>
+<span class="sd">        &gt;&gt;&gt; future.value</span>
+<span class="sd">        42</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :func:`future` for creating `ASyncFuture` instances.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;__awaitable__&quot;</span><span class="p">,</span> <span class="s2">&quot;__dependencies&quot;</span><span class="p">,</span> <span class="s2">&quot;__dependants&quot;</span><span class="p">,</span> <span class="s2">&quot;__task&quot;</span>

@@ -2380,6 +2380,13 @@ for tracking waiters and integrating with a smart processing queue.</p>
 <span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture()</span>
 <span class="pre">await</span> <span class="pre">future</span>
 <span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a></p></li>
+</ul>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/_smart.html#SmartFuture.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync._smart.SmartFuture.__init__" title="Link to this definition"></a></dt>
@@ -2400,6 +2407,12 @@ for tracking waiters and integrating with a smart processing queue.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture(queue=my_queue,</span> <span class="pre">key=my_key)</span>
 <span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">SmartProcessingQueue</span></code></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -2425,6 +2438,7 @@ it erases the context exception value.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture._self_done_cleanup_callback">
 <span class="sig-name descname"><span class="pre">_self_done_cleanup_callback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartFuture._self_done_cleanup_callback" title="Link to this definition"></a></dt>
 <dd><p>Callback to clean up waiters and remove the future from the queue when done.</p>
+<p>This method clears all waiters and removes the future from the associated queue.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>self</strong> (<a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a><em> | </em><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>)</p>
@@ -2439,7 +2453,7 @@ it erases the context exception value.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture._waiter_done_cleanup_callback">
 <span class="sig-name descname"><span class="pre">_waiter_done_cleanup_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartFuture._waiter_done_cleanup_callback" title="Link to this definition"></a></dt>
 <dd><p>Callback to clean up waiters when a waiter task is done.</p>
-<p>Removes the waiter from _waiters, and _queue._futs if applicable</p>
+<p>Removes the waiter from _waiters, and _queue._futs if applicable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2451,6 +2465,8 @@ it erases the context exception value.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p>Automatically called when a waiter task completes.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2597,11 +2613,19 @@ InvalidStateError.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture.num_waiters">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync._smart.SmartFuture.num_waiters" title="Link to this definition"></a></dt>
 <dd><p>Get the number of waiters currently awaiting the future or task.</p>
+<p>This property checks if the future or task is done to ensure accurate counting
+of waiters, as the callback may not have run yet.</p>
 <p class="rubric">Example</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture()</span>
 <span class="pre">print(future.num_waiters)</span>
 <span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync._smart.SmartFuture._waiter_done_cleanup_callback" title="a_sync._smart.SmartFuture._waiter_done_cleanup_callback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_waiter_done_cleanup_callback()</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -2619,6 +2643,13 @@ for tracking waiters and integrating with a smart processing queue.</p>
 <span class="pre">task</span> <span class="pre">=</span> <span class="pre">SmartTask(coro=my_coroutine())</span>
 <span class="pre">await</span> <span class="pre">task</span>
 <span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code></p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task</span></code></a></p></li>
+</ul>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coro</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/_smart.html#SmartTask.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync._smart.SmartTask.__init__" title="Link to this definition"></a></dt>
@@ -2639,6 +2670,12 @@ for tracking waiters and integrating with a smart processing queue.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">task</span> <span class="pre">=</span> <span class="pre">SmartTask(coro=my_coroutine(),</span> <span class="pre">name=&quot;my_task&quot;)</span>
 <span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.create_task" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -2664,6 +2701,7 @@ it erases the context exception value.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask._self_done_cleanup_callback">
 <span class="sig-name descname"><span class="pre">_self_done_cleanup_callback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartTask._self_done_cleanup_callback" title="Link to this definition"></a></dt>
 <dd><p>Callback to clean up waiters and remove the future from the queue when done.</p>
+<p>This method clears all waiters and removes the future from the associated queue.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>self</strong> (<a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><em>SmartFuture</em></a><em> | </em><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><em>SmartTask</em></a>)</p>
@@ -2678,7 +2716,7 @@ it erases the context exception value.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask._waiter_done_cleanup_callback">
 <span class="sig-name descname"><span class="pre">_waiter_done_cleanup_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartTask._waiter_done_cleanup_callback" title="Link to this definition"></a></dt>
 <dd><p>Callback to clean up waiters when a waiter task is done.</p>
-<p>Removes the waiter from _waiters, and _queue._futs if applicable</p>
+<p>Removes the waiter from _waiters, and _queue._futs if applicable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2690,6 +2728,8 @@ it erases the context exception value.</p>
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<p>Automatically called when a waiter task completes.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2913,11 +2953,19 @@ InvalidStateError.</p>
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask.num_waiters">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync._smart.SmartTask.num_waiters" title="Link to this definition"></a></dt>
 <dd><p>Get the number of waiters currently awaiting the future or task.</p>
+<p>This property checks if the future or task is done to ensure accurate counting
+of waiters, as the callback may not have run yet.</p>
 <p class="rubric">Example</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture()</span>
 <span class="pre">print(future.num_waiters)</span>
 <span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync._smart.SmartTask._waiter_done_cleanup_callback" title="a_sync._smart.SmartTask._waiter_done_cleanup_callback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_waiter_done_cleanup_callback()</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -2946,6 +2994,12 @@ InvalidStateError.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">future</span> <span class="pre">=</span> <span class="pre">create_future(queue=my_queue,</span> <span class="pre">key=my_key)</span>
 <span class="pre">`</span></code></p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync._smart.SmartFuture" title="a_sync._smart.SmartFuture"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmartFuture</span></code></a></p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -3054,6 +3108,7 @@ you can combine shield() with a try/except clause, as follows:</p>
 <p class="admonition-title">See also</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#a_sync._smart.set_smart_task_factory" title="a_sync._smart.set_smart_task_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">set_smart_task_factory()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">SmartTask</span></code></a></p></li>
 </ul>
 </div>
 </dd></dl>
@@ -3484,7 +3539,21 @@ or an awaitable that resolves to any iterable, whether synchronous or asynchrono
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <p>Base exception class for flag-related errors in the a_sync library.</p>
 <p>A-Sync uses ‘flags’ to indicate whether objects or function calls will be sync or async.
-You can use any of the provided flags, whichever makes most sense for your use case.</p>
+You can use any of the provided flags, which include ‘sync’ and ‘asynchronous’, whichever makes most sense for your use case.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">raise</span> <span class="n">ASyncFlagException</span><span class="p">(</span><span class="s2">&quot;An error occurred with flags.&quot;</span><span class="p">)</span>
+<span class="gp">... </span><span class="k">except</span> <span class="n">ASyncFlagException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="go">An error occurred with flags.</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-const docutils literal notranslate"><span class="pre">VIABLE_FLAGS</span></code></p></li>
+</ul>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException.desc">
 <span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ASyncFlagException.desc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.desc" title="Link to this definition"></a></dt>
@@ -3512,7 +3581,12 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>The set of viable flags.</p>
+<dd><p>{‘sync’, ‘asynchronous’}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The set of viable flags</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -3627,7 +3701,12 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>The set of viable flags.</p>
+<dd><p>{‘sync’, ‘asynchronous’}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The set of viable flags</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -3774,7 +3853,12 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>The set of viable flags.</p>
+<dd><p>{‘sync’, ‘asynchronous’}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The set of viable flags</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -3839,7 +3923,12 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>The set of viable flags.</p>
+<dd><p>{‘sync’, ‘asynchronous’}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The set of viable flags</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -4031,7 +4120,12 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>The set of viable flags.</p>
+<dd><p>{‘sync’, ‘asynchronous’}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The set of viable flags</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -4175,7 +4269,12 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>The set of viable flags.</p>
+<dd><p>{‘sync’, ‘asynchronous’}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The set of viable flags</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -4264,7 +4363,7 @@ You can use any of the provided flags, whichever makes most sense for your use c
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -4597,7 +4696,7 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -4606,8 +4705,12 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -4705,7 +4808,7 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -5009,7 +5112,7 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -5018,8 +5121,12 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -5124,7 +5231,7 @@ A minimum of one thread will remain active to prevent locks.</p>
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -5440,7 +5547,7 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -5449,8 +5556,12 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -5528,13 +5639,36 @@ comparisons, and conversions, making it versatile for various use cases.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Some arithmetic operations are currently broken or incomplete. Use with caution.</p>
+<p>Arithmetic operations are implemented, allowing for mathematical operations on future results.
+You no longer have to choose between optimized async code and clean, readable code.</p>
 </div>
-<p>TODO include a simple mathematics example a one complex example with numerous variables and operations
-TODO include attribute access examples
-TODO describe a bit more about both of the above 2 TODOs somewhere in this class-level docstring
-TODO describe why a user would want to use these (to write cleaner code that doesn’t require as many ugly gathers)
-TODO include comparisons between the ‘new way’ with this future class and the ‘old way’ with gathers</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">future1</span> <span class="o">=</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future2</span> <span class="o">=</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future3</span> <span class="o">=</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future4</span> <span class="o">=</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">future1</span> <span class="o">+</span> <span class="n">future2</span><span class="p">)</span> <span class="o">/</span> <span class="n">future3</span> <span class="o">**</span> <span class="n">future4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">result</span>
+<span class="go">0.15</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Attribute Access:</dt><dd><p>The <cite>ASyncFuture</cite> allows attribute access on the materialized result.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Example</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">Example</span><span class="p">(</span><span class="mi">42</span><span class="p">)))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span><span class="o">.</span><span class="n">value</span>
+<span class="go">42</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#a_sync.future.future" title="a_sync.future.future"><code class="xref py py-func docutils literal notranslate"><span class="pre">future()</span></code></a> for creating <cite>ASyncFuture</cite> instances.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.future.ASyncFuture.__add">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.future.ASyncFuture.__add" title="Link to this definition"></a></dt>
@@ -6331,9 +6465,21 @@ included in the result. The filter function can be either synchronous or asynchr
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncIterable</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.iter.ASyncIterable" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AwaitableAsyncIterableMixin</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <blockquote>
-<div><p>A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols.</p>
-<p>This class allows objects to be iterated over using either a standard <cite>for</cite> loop or an <cite>async for</cite> loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.</p>
-<p>The class achieves this by implementing both <cite>__iter__</cite> and <cite>__aiter__</cite> methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. However, note that synchronous iteration relies on the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a> class, which uses <cite>asyncio.get_event_loop().run_until_complete</cite> to fetch items. This can raise a <cite>RuntimeError</cite> if the event loop is already running, resulting in a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>.</p>
+<div><p>A hybrid Iterable/AsyncIterable implementation designed to offer
+dual compatibility with both synchronous and asynchronous
+iteration protocols.</p>
+<p>This class allows objects to be iterated over using either a
+standard <cite>for</cite> loop or an <cite>async for</cite> loop, making it versatile
+in scenarios where the mode of iteration (synchronous or asynchronous)
+needs to be flexible or is determined at runtime.</p>
+<p>The class achieves this by implementing both <cite>__iter__</cite> and <cite>__aiter__</cite>
+methods, enabling it to return appropriate iterator objects that can
+handle synchronous and asynchronous iteration, respectively. However,
+note that synchronous iteration relies on the <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>
+class, which uses <cite>asyncio.get_event_loop().run_until_complete</cite> to
+fetch items. This can raise a <cite>RuntimeError</cite> if the event loop is
+already running, and in such cases, a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>
+is raised from the <cite>RuntimeError</cite>.</p>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">async_iterable</span> <span class="o">=</span> <span class="n">ASyncIterable</span><span class="p">(</span><span class="n">some_async_iterable</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">async_iterable</span><span class="p">:</span>
@@ -6457,7 +6603,7 @@ included in the result. The filter function can be either synchronous or asynchr
 <div><p>A hybrid Iterator/AsyncIterator implementation that bridges the gap between synchronous and asynchronous iteration. This class provides a unified interface for iteration that can seamlessly operate in both synchronous (<cite>for</cite> loop) and asynchronous (<cite>async for</cite> loop) contexts. It allows the wrapping of asynchronous iterable objects or async generator functions, making them usable in synchronous code without explicitly managing event loops or asynchronous context switches.</p>
 <p>By implementing both <cite>__next__</cite> and <cite>__anext__</cite> methods, ASyncIterator enables objects to be iterated using standard iteration protocols while internally managing the complexities of asynchronous iteration. This design simplifies the use of asynchronous iterables in environments or frameworks that are not inherently asynchronous, such as standard synchronous functions or older codebases being gradually migrated to asynchronous IO.</p>
 <dl>
-<dt>Note:</dt><dd><p>Synchronous iteration with <cite>ASyncIterator</cite> uses <cite>asyncio.get_event_loop().run_until_complete</cite>, which can raise a <cite>RuntimeError</cite> if the event loop is already running. In such cases, a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> is raised, indicating that synchronous iteration is not possible in an already running event loop.</p>
+<dt>Note:</dt><dd><p>Synchronous iteration with <cite>ASyncIterator</cite> uses <cite>asyncio.get_event_loop().run_until_complete</cite>, which can raise a <cite>RuntimeError</cite> if the event loop is already running. In such cases, a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> is raised from the <cite>RuntimeError</cite>, indicating that synchronous iteration is not possible in an already running event loop.</p>
 </dd>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">async_iterator</span> <span class="o">=</span> <span class="n">ASyncIterator</span><span class="p">(</span><span class="n">some_async_iterator</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">async_iterator</span><span class="p">:</span>
@@ -7725,26 +7871,20 @@ caching functionality, storing the computed value after the first access.</p>
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A boolean indicating if all results are truthy.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id41"><span class="problematic" id="id42">``</span></a><a href="#id43"><span class="problematic" id="id44">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
 <a href="#id45"><span class="problematic" id="id46">``</span></a><a href="#id47"><span class="problematic" id="id48">`</span></a></p>
@@ -7763,26 +7903,20 @@ result = await instance.my_method._all([1, 2, 3])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A boolean indicating if any result is truthy.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id49"><span class="problematic" id="id50">``</span></a><a href="#id51"><span class="problematic" id="id52">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
 <a href="#id53"><span class="problematic" id="id54">``</span></a><a href="#id55"><span class="problematic" id="id56">`</span></a></p>
@@ -7835,26 +7969,20 @@ result = await instance.my_method._any([-1, 0, 1])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The maximum result.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id57"><span class="problematic" id="id58">``</span></a><a href="#id59"><span class="problematic" id="id60">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
 <a href="#id61"><span class="problematic" id="id62">``</span></a><a href="#id63"><span class="problematic" id="id64">`</span></a></p>
@@ -7873,26 +8001,20 @@ result = await instance.my_method._max([3, 1, 2])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The minimum result.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id65"><span class="problematic" id="id66">``</span></a><a href="#id67"><span class="problematic" id="id68">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
 <a href="#id69"><span class="problematic" id="id70">``</span></a><a href="#id71"><span class="problematic" id="id72">`</span></a></p>
@@ -7911,26 +8033,20 @@ result = await instance.my_method._min([3, 1, 2])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The sum of the results.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id73"><span class="problematic" id="id74">``</span></a><a href="#id75"><span class="problematic" id="id76">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
 <a href="#id77"><span class="problematic" id="id78">``</span></a><a href="#id79"><span class="problematic" id="id80">`</span></a></p>
@@ -8104,13 +8220,12 @@ result = await instance.my_method._sum([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -8127,13 +8242,12 @@ result = await instance.my_method.all([1, 2, 3])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -8184,13 +8298,12 @@ result = await instance.my_method.any([-1, 0, 1])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -8208,17 +8321,14 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id81"><span class="problematic" id="id82">``</span></a><a href="#id83"><span class="problematic" id="id84">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
 <a href="#id85"><span class="problematic" id="id86">``</span></a><a href="#id87"><span class="problematic" id="id88">`</span></a></p>
@@ -8240,17 +8350,14 @@ result = await instance.my_method.min([3, 1, 2])
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id89"><span class="problematic" id="id90">``</span></a><a href="#id91"><span class="problematic" id="id92">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
 <a href="#id93"><span class="problematic" id="id94">``</span></a><a href="#id95"><span class="problematic" id="id96">`</span></a></p>
@@ -8278,7 +8385,8 @@ It uses a custom metaclass <code class="xref py py-class docutils literal notran
 while maintaining the singleton pattern within each context.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This class is abstract and cannot be instantiated directly. Subclasses should define
+<p>This class can be instantiated directly, but it is intended to be subclassed
+to define specific asynchronous behavior. Subclasses should define
 the necessary properties and methods to specify the asynchronous behavior, as outlined
 in <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncABC</span></code>.</p>
 </div>
@@ -8333,9 +8441,21 @@ in <code class="xref py py-class docutils literal notranslate"><span class="pre"
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">ASyncIterable</span></span><a class="reference internal" href="../_modules/a_sync/iter.html#ASyncIterable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.ASyncIterable" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AwaitableAsyncIterableMixin</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <blockquote>
-<div><p>A hybrid Iterable/AsyncIterable implementation designed to offer dual compatibility with both synchronous and asynchronous iteration protocols.</p>
-<p>This class allows objects to be iterated over using either a standard <cite>for</cite> loop or an <cite>async for</cite> loop, making it versatile in scenarios where the mode of iteration (synchronous or asynchronous) needs to be flexible or is determined at runtime.</p>
-<p>The class achieves this by implementing both <cite>__iter__</cite> and <cite>__aiter__</cite> methods, enabling it to return appropriate iterator objects that can handle synchronous and asynchronous iteration, respectively. However, note that synchronous iteration relies on the <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a> class, which uses <cite>asyncio.get_event_loop().run_until_complete</cite> to fetch items. This can raise a <cite>RuntimeError</cite> if the event loop is already running, resulting in a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>.</p>
+<div><p>A hybrid Iterable/AsyncIterable implementation designed to offer
+dual compatibility with both synchronous and asynchronous
+iteration protocols.</p>
+<p>This class allows objects to be iterated over using either a
+standard <cite>for</cite> loop or an <cite>async for</cite> loop, making it versatile
+in scenarios where the mode of iteration (synchronous or asynchronous)
+needs to be flexible or is determined at runtime.</p>
+<p>The class achieves this by implementing both <cite>__iter__</cite> and <cite>__aiter__</cite>
+methods, enabling it to return appropriate iterator objects that can
+handle synchronous and asynchronous iteration, respectively. However,
+note that synchronous iteration relies on the <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>
+class, which uses <cite>asyncio.get_event_loop().run_until_complete</cite> to
+fetch items. This can raise a <cite>RuntimeError</cite> if the event loop is
+already running, and in such cases, a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code>
+is raised from the <cite>RuntimeError</cite>.</p>
 <dl>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">async_iterable</span> <span class="o">=</span> <span class="n">ASyncIterable</span><span class="p">(</span><span class="n">some_async_iterable</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">async_iterable</span><span class="p">:</span>
@@ -8459,7 +8579,7 @@ in <code class="xref py py-class docutils literal notranslate"><span class="pre"
 <div><p>A hybrid Iterator/AsyncIterator implementation that bridges the gap between synchronous and asynchronous iteration. This class provides a unified interface for iteration that can seamlessly operate in both synchronous (<cite>for</cite> loop) and asynchronous (<cite>async for</cite> loop) contexts. It allows the wrapping of asynchronous iterable objects or async generator functions, making them usable in synchronous code without explicitly managing event loops or asynchronous context switches.</p>
 <p>By implementing both <cite>__next__</cite> and <cite>__anext__</cite> methods, ASyncIterator enables objects to be iterated using standard iteration protocols while internally managing the complexities of asynchronous iteration. This design simplifies the use of asynchronous iterables in environments or frameworks that are not inherently asynchronous, such as standard synchronous functions or older codebases being gradually migrated to asynchronous IO.</p>
 <dl>
-<dt>Note:</dt><dd><p>Synchronous iteration with <cite>ASyncIterator</cite> uses <cite>asyncio.get_event_loop().run_until_complete</cite>, which can raise a <cite>RuntimeError</cite> if the event loop is already running. In such cases, a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> is raised, indicating that synchronous iteration is not possible in an already running event loop.</p>
+<dt>Note:</dt><dd><p>Synchronous iteration with <cite>ASyncIterator</cite> uses <cite>asyncio.get_event_loop().run_until_complete</cite>, which can raise a <cite>RuntimeError</cite> if the event loop is already running. In such cases, a <code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code> is raised from the <cite>RuntimeError</cite>, indicating that synchronous iteration is not possible in an already running event loop.</p>
 </dd>
 <dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">async_iterator</span> <span class="o">=</span> <span class="n">ASyncIterator</span><span class="p">(</span><span class="n">some_async_iterator</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">async_iterator</span><span class="p">:</span>
@@ -8631,26 +8751,20 @@ in <code class="xref py py-class docutils literal notranslate"><span class="pre"
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A boolean indicating if all results are truthy.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id97"><span class="problematic" id="id98">``</span></a><a href="#id99"><span class="problematic" id="id100">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
 <a href="#id101"><span class="problematic" id="id102">``</span></a><a href="#id103"><span class="problematic" id="id104">`</span></a></p>
@@ -8669,26 +8783,20 @@ result = await instance.my_method._all([1, 2, 3])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A boolean indicating if any result is truthy.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id105"><span class="problematic" id="id106">``</span></a><a href="#id107"><span class="problematic" id="id108">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
 <a href="#id109"><span class="problematic" id="id110">``</span></a><a href="#id111"><span class="problematic" id="id112">`</span></a></p>
@@ -8731,26 +8839,20 @@ result = await instance.my_method._any([-1, 0, 1])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The maximum result.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id113"><span class="problematic" id="id114">``</span></a><a href="#id115"><span class="problematic" id="id116">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
 <a href="#id117"><span class="problematic" id="id118">``</span></a><a href="#id119"><span class="problematic" id="id120">`</span></a></p>
@@ -8769,26 +8871,20 @@ result = await instance.my_method._max([3, 1, 2])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The minimum result.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id121"><span class="problematic" id="id122">``</span></a><a href="#id123"><span class="problematic" id="id124">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
 <a href="#id125"><span class="problematic" id="id126">``</span></a><a href="#id127"><span class="problematic" id="id128">`</span></a></p>
@@ -8807,26 +8903,20 @@ result = await instance.my_method._min([3, 1, 2])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The sum of the results.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id129"><span class="problematic" id="id130">``</span></a><a href="#id131"><span class="problematic" id="id132">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
 <a href="#id133"><span class="problematic" id="id134">``</span></a><a href="#id135"><span class="problematic" id="id136">`</span></a></p>
@@ -8912,13 +9002,12 @@ result = await instance.my_method._sum([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -8935,13 +9024,12 @@ result = await instance.my_method.all([1, 2, 3])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -8992,13 +9080,12 @@ result = await instance.my_method.any([-1, 0, 1])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -9016,17 +9103,14 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id137"><span class="problematic" id="id138">``</span></a><a href="#id139"><span class="problematic" id="id140">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
 <a href="#id141"><span class="problematic" id="id142">``</span></a><a href="#id143"><span class="problematic" id="id144">`</span></a></p>
@@ -9048,17 +9132,14 @@ result = await instance.my_method.min([3, 1, 2])
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id145"><span class="problematic" id="id146">``</span></a><a href="#id147"><span class="problematic" id="id148">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
 <a href="#id149"><span class="problematic" id="id150">``</span></a><a href="#id151"><span class="problematic" id="id152">`</span></a></p>
@@ -9145,7 +9226,7 @@ result = await instance.my_method.sum([1, 2, 3])
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -9478,7 +9559,7 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -9487,8 +9568,12 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -9586,7 +9671,7 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -9890,7 +9975,7 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -9899,8 +9984,12 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -9982,7 +10071,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dt class="sig sig-object py" id="a_sync.CounterLock._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.CounterLock._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -10128,7 +10217,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.CounterLock._events">
 <span class="sig-name descname"><span class="pre">_events</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.DefaultDict" title="(in Python v3.13)"><span class="pre">DefaultDict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.event.Event" title="a_sync.primitives.locks.event.Event"><span class="pre">Event</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.CounterLock._events" title="Link to this definition"></a></dt>
-<dd><p>A defaultdict that maps each awaited value to an <a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Event" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Event</span></code></a> that manages the waiters for that value.</p>
+<dd><p>A defaultdict that maps each awaited value to an <a class="reference internal" href="#a_sync.Event" title="a_sync.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></a> that manages the waiters for that value.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -10167,7 +10256,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.CounterLock.is_ready">
 <span class="sig-name descname"><span class="pre">is_ready</span></span><a class="headerlink" href="#a_sync.CounterLock.is_ready" title="Link to this definition"></a></dt>
-<dd><p>A lambda function that indicates whether a given value has already been surpassed.</p>
+<dd><p>A lambda function that indicates whether the current counter value is greater than or equal to a given value.</p>
 </dd></dl>
 
 <dl class="py property">
@@ -10182,7 +10271,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -10191,8 +10280,12 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -10255,7 +10348,7 @@ diagnosing and debugging potential deadlocks.</p>
 <dt class="sig sig-object py" id="a_sync.Event._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Event._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -10440,7 +10533,7 @@ true will not block at all.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -10449,8 +10542,12 @@ true will not block at all.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -10601,7 +10698,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -10716,6 +10813,7 @@ waiting.</p>
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore.acquire">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore with the top priority.</p>
+<p>This method overrides <a class="reference internal" href="#a_sync.Semaphore.acquire" title="a_sync.Semaphore.acquire"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.acquire()</span></code></a> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">_AbstractPrioritySemaphore</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">semaphore</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
@@ -10858,7 +10956,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -10867,8 +10965,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -11300,7 +11402,7 @@ A minimum of one thread will remain active to prevent locks.</p>
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -11616,7 +11718,7 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -11625,8 +11727,12 @@ cancelled.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -12061,7 +12167,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dt class="sig sig-object py" id="a_sync.Semaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Semaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -12266,7 +12372,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -12275,8 +12381,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -13300,7 +13410,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._ensure_debug_daemon">
 <span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
-<p>This method checks if the debug daemon is already running and starts it if necessary. It will only start the daemon if it is not already running.</p>
+<p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -13510,7 +13620,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.MyClass.example&#39;</span>
+<span class="go">&#39;your_module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
@@ -13519,8 +13629,12 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span> <span class="o">=</span> <span class="n">another_instance</span><span class="o">.</span><span class="n">logger</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_logger</span><span class="o">.</span><span class="n">name</span>
-<span class="go">&#39;__main__.AnotherClass&#39;</span>
+<span class="go">&#39;your_module_name.AnotherClass&#39;</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <cite>your_module_name</cite> with the actual module name where the class is defined.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -13608,26 +13722,20 @@ become larger than zero again, wake up that coroutine.</p>
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A boolean indicating if all results are truthy.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id178"><span class="problematic" id="id179">``</span></a><a href="#id180"><span class="problematic" id="id181">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
 <a href="#id182"><span class="problematic" id="id183">``</span></a><a href="#id184"><span class="problematic" id="id185">`</span></a></p>
@@ -13646,26 +13754,20 @@ result = await instance.my_method._all([1, 2, 3])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A boolean indicating if any result is truthy.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id186"><span class="problematic" id="id187">``</span></a><a href="#id188"><span class="problematic" id="id189">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
 <a href="#id190"><span class="problematic" id="id191">``</span></a><a href="#id192"><span class="problematic" id="id193">`</span></a></p>
@@ -13718,26 +13820,20 @@ result = await instance.my_method._any([-1, 0, 1])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The maximum result.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id194"><span class="problematic" id="id195">``</span></a><a href="#id196"><span class="problematic" id="id197">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
 <a href="#id198"><span class="problematic" id="id199">``</span></a><a href="#id200"><span class="problematic" id="id201">`</span></a></p>
@@ -13756,26 +13852,20 @@ result = await instance.my_method._max([3, 1, 2])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The minimum result.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id202"><span class="problematic" id="id203">``</span></a><a href="#id204"><span class="problematic" id="id205">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
 <a href="#id206"><span class="problematic" id="id207">``</span></a><a href="#id208"><span class="problematic" id="id209">`</span></a></p>
@@ -13794,26 +13884,20 @@ result = await instance.my_method._min([3, 1, 2])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The sum of the results.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id210"><span class="problematic" id="id211">``</span></a><a href="#id212"><span class="problematic" id="id213">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
 <a href="#id214"><span class="problematic" id="id215">``</span></a><a href="#id216"><span class="problematic" id="id217">`</span></a></p>
@@ -13987,13 +14071,12 @@ result = await instance.my_method._sum([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -14010,13 +14093,12 @@ result = await instance.my_method.all([1, 2, 3])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -14067,13 +14149,12 @@ result = await instance.my_method.any([-1, 0, 1])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -14091,17 +14172,14 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id218"><span class="problematic" id="id219">``</span></a><a href="#id220"><span class="problematic" id="id221">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
 <a href="#id222"><span class="problematic" id="id223">``</span></a><a href="#id224"><span class="problematic" id="id225">`</span></a></p>
@@ -14123,17 +14201,14 @@ result = await instance.my_method.min([3, 1, 2])
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id226"><span class="problematic" id="id227">``</span></a><a href="#id228"><span class="problematic" id="id229">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
 <a href="#id230"><span class="problematic" id="id231">``</span></a><a href="#id232"><span class="problematic" id="id233">`</span></a></p>
@@ -14194,26 +14269,20 @@ result = await instance.my_method.sum([1, 2, 3])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A boolean indicating if all results are truthy.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id234"><span class="problematic" id="id235">``</span></a><a href="#id236"><span class="problematic" id="id237">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
 <a href="#id238"><span class="problematic" id="id239">``</span></a><a href="#id240"><span class="problematic" id="id241">`</span></a></p>
@@ -14232,26 +14301,20 @@ result = await instance.my_method._all([1, 2, 3])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A boolean indicating if any result is truthy.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id242"><span class="problematic" id="id243">``</span></a><a href="#id244"><span class="problematic" id="id245">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
 <a href="#id246"><span class="problematic" id="id247">``</span></a><a href="#id248"><span class="problematic" id="id249">`</span></a></p>
@@ -14294,26 +14357,20 @@ result = await instance.my_method._any([-1, 0, 1])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The maximum result.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id250"><span class="problematic" id="id251">``</span></a><a href="#id252"><span class="problematic" id="id253">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
 <a href="#id254"><span class="problematic" id="id255">``</span></a><a href="#id256"><span class="problematic" id="id257">`</span></a></p>
@@ -14332,26 +14389,20 @@ result = await instance.my_method._max([3, 1, 2])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The minimum result.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id258"><span class="problematic" id="id259">``</span></a><a href="#id260"><span class="problematic" id="id261">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
 <a href="#id262"><span class="problematic" id="id263">``</span></a><a href="#id264"><span class="problematic" id="id265">`</span></a></p>
@@ -14370,26 +14421,20 @@ result = await instance.my_method._min([3, 1, 2])
 <li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The sum of the results.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>T</em></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id266"><span class="problematic" id="id267">``</span></a><a href="#id268"><span class="problematic" id="id269">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
 <a href="#id270"><span class="problematic" id="id271">``</span></a><a href="#id272"><span class="problematic" id="id273">`</span></a></p>
@@ -14475,13 +14520,12 @@ result = await instance.my_method._sum([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -14498,13 +14542,12 @@ result = await instance.my_method.all([1, 2, 3])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x &gt; 0)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x &gt; 0</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -14555,13 +14598,12 @@ result = await instance.my_method.any([-1, 0, 1])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<dl class="simple">
-<dt>class MyDescriptor(ASyncDescriptor):</dt><dd><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
-</dd>
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
+<dl>
+<dt>class MyClass:</dt><dd><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
+</div></blockquote>
 </dd>
 </dl>
 <p>instance = MyClass()
@@ -14579,17 +14621,14 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id274"><span class="problematic" id="id275">``</span></a><a href="#id276"><span class="problematic" id="id277">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
 <a href="#id278"><span class="problematic" id="id279">``</span></a><a href="#id280"><span class="problematic" id="id281">`</span></a></p>
@@ -14611,17 +14650,14 @@ result = await instance.my_method.min([3, 1, 2])
 </dl>
 <p class="rubric">Examples</p>
 <p><a href="#id282"><span class="problematic" id="id283">``</span></a><a href="#id284"><span class="problematic" id="id285">`</span></a>python
-class MyDescriptor(ASyncDescriptor):</p>
+class MyClass:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>def __init__(self, func):</dt><dd><p>super().__init__(func)</p>
-</dd>
-</dl>
+<div><p>&#64;ASyncDescriptor
+def my_method(self, x):</p>
+<blockquote>
+<div><p>return x</p>
 </div></blockquote>
-<dl class="simple">
-<dt>class MyClass:</dt><dd><p>my_method = MyDescriptor(lambda x: x)</p>
-</dd>
-</dl>
+</div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
 <a href="#id286"><span class="problematic" id="id287">``</span></a><a href="#id288"><span class="problematic" id="id289">`</span></a></p>
@@ -14850,11 +14886,11 @@ It short-circuits on the first truthy value. If the iterable is empty, it return
 <p>Differences from <a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.as_completed" title="a_sync.asyncio.as_completed"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.as_completed()</span></code></a>:
 - Uses type hints for use with static type checkers.
 - Supports either individual awaitables or a k:v mapping of awaitables.
-- Can be used as an async iterator which yields the result values.
+- Can be used as an async iterator which yields the result values using <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.
 - Provides progress reporting using <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code> if ‘tqdm’ is set to True.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The <cite>return_exceptions</cite> parameter is partially implemented. While exceptions can be wrapped and returned instead of being raised, this behavior may not be fully consistent across all scenarios. Users should test their specific use cases to ensure the desired behavior.</p>
+<p>The <cite>return_exceptions</cite> parameter is not directly used in this function but is relevant for wrapped awaitables in mappings. Users should test their specific use cases to ensure the desired behavior.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -14862,7 +14898,7 @@ It short-circuits on the first truthy value. If the iterable is empty, it return
 <li><p><strong>fs</strong> – The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.</p></li>
 <li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>) – The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).</p></li>
 <li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.</p></li>
-<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, returns an async iterator of results. Defaults to False.</p></li>
+<li><p><strong>aiter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, returns an async iterator of results using <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>. Defaults to False.</p></li>
 <li><p><strong>tqdm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, enables progress reporting using <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code>. Defaults to False.</p></li>
 <li><p><strong>**tqdm_kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>) – Additional keyword arguments for <code class="xref py py-mod docutils literal notranslate"><span class="pre">tqdm</span></code> if progress reporting is enabled.</p></li>
 </ul>

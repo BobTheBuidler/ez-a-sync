@@ -227,7 +227,10 @@
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span>
             <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> waiters for any of: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_decorated</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has </span><span class="si">%s</span><span class="s2"> waiters for any of: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_decorated</span><span class="p">,</span>
             <span class="p">)</span></div>
 </div>
 
