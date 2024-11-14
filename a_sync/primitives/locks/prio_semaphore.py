@@ -31,9 +31,9 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 
     This semaphore manages waiters with associated priorities, ensuring that waiters with higher
     priorities are processed before those with lower priorities. Subclasses must define the
-    `_top_priority` property to specify the default top priority behavior.
+    `_top_priority` attribute to specify the default top priority behavior.
 
-    The `_context_manager_class` property should return the class used for managing semaphore contexts.
+    The `_context_manager_class` attribute should specify the class used for managing semaphore contexts.
 
     See Also:
         :class:`PrioritySemaphore` for an implementation using numeric priorities.

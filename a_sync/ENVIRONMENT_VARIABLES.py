@@ -26,7 +26,7 @@ DEBUG_MODE = envs.create_env(
 """bool: Enables debug mode on all classes.
 
 Set this environment variable to `True` to enable debug mode on all classes. 
-If `DEBUG_CLASS_NAME` is set to a truthy value other than an empty string, 
+If `DEBUG_CLASS_NAME` is set to a non-empty string, 
 `DEBUG_MODE` will default to `True`.
 
 Examples:

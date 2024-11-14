@@ -79,7 +79,7 @@ def as_completed(
     - Provides progress reporting using :mod:`tqdm` if 'tqdm' is set to True.
 
     Note:
-        The `return_exceptions` parameter is not directly used in this function but is relevant for wrapped awaitables in mappings. Users should test their specific use cases to ensure the desired behavior.
+        The `return_exceptions` parameter is used to wrap awaitables with exceptions if set to True, allowing exceptions to be returned as results instead of being raised.
 
     Args:
         fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.

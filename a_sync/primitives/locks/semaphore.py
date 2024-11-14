@@ -177,6 +177,7 @@ class DummySemaphore(asyncio.Semaphore):
         return f"<{self.__class__.__name__} name={self.name}>"
 
     async def acquire(self) -> Literal[True]:
+        """Acquire the dummy semaphore, which is a no-op."""
         return True
 
     def release(self) -> None:
@@ -184,6 +185,7 @@ class DummySemaphore(asyncio.Semaphore):
 
     async def __aenter__(self):
         """No-op context manager entry."""
+        return self
 
     async def __aexit__(self, *args):
         """No-op context manager exit."""

@@ -26,8 +26,8 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
         >>> get_flag_name({'sync': True})
         'sync'
 
-        >>> get_flag_name({'async': False})
-        'async'
+        >>> get_flag_name({'asynchronous': False})
+        'asynchronous'
 
         >>> get_flag_name({})
         None
@@ -56,7 +56,7 @@ def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:
         >>> is_sync('sync', {'sync': True})
         True
 
-        >>> is_sync('async', {'async': False})
+        >>> is_sync('asynchronous', {'asynchronous': False})
         False
 
         >>> is_sync('sync', {'sync': True}, pop_flag=True)

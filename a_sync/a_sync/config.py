@@ -15,10 +15,8 @@ Environment Variables:
     A_SYNC_CACHE_TYPED: Boolean flag to determine if cache keys should consider types.
     A_SYNC_RAM_CACHE_MAXSIZE: Sets the maximum size for the RAM cache. Defaults to -1.
     A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. If not specified,
-        defaults to None, meaning cache entries do not expire by default.
-        Note: Although the environment variable retrieval process uses 0 as a placeholder,
-        the actual default behavior is determined by `null_modifiers["ram_cache_ttl"]`, 
-        which is `None`.
+        defaults to 0, which is then checked against `null_modifiers["ram_cache_ttl"]` 
+        to potentially set it to `None`, meaning cache entries do not expire by default.
     A_SYNC_RUNS_PER_MINUTE: Sets the rate limit for function execution.
     A_SYNC_SEMAPHORE: Sets the semaphore limit for function execution.
 

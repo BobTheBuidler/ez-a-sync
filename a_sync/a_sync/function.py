@@ -127,7 +127,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
     Note:
         The logic for determining whether to execute the function synchronously or asynchronously
-        is handled by the `_run_sync` method, which checks for flags in the `kwargs` and defers
+        is handled by the `self.fn` property, which checks for flags in the `kwargs` and defers
         to the default execution mode if no flags are specified.
 
     Example:
@@ -289,12 +289,13 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         Calls the wrapped function either synchronously or asynchronously.
 
         This method determines whether to execute the wrapped function synchronously
-        or asynchronously based on the default mode and any provided flags.
+        or asynchronously based on the default mode and any provided flags. The
+        decision logic is encapsulated within the `self.fn` property, which uses
+        the `_run_sync` method to decide the execution mode.
 
         Note:
-            The logic for determining the execution mode is handled by the
-            :meth:`_run_sync` method, which checks for flags in the kwargs and
-            defers to the default execution mode if no flags are specified.
+            The `self.fn` property is responsible for selecting the appropriate
+            execution path (sync or async) by leveraging the `_run_sync` method.
 
         Args:
             *args: Positional arguments to pass to the wrapped function.

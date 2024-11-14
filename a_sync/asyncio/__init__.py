@@ -8,7 +8,7 @@ Modules:
 - :func:`create_task`: Extends `asyncio.create_task` to support any `Awaitable`, manage task lifecycle, and enhance error handling.
 - :func:`gather`: Provides an enhanced version of `asyncio.gather` with additional features like progress reporting and exclusion of results based on a condition.
 - :func:`as_completed`: Extends `asyncio.as_completed` with additional functionality such as progress reporting using `tqdm`.
-- :func:`get_event_loop`: Utility to get the current event loop, handling cases where no current event loop exists by raising a `RuntimeError`.
+- :func:`get_event_loop`: Utility to get the current event loop, creating a new one if none exists.
 
 See Also:
     - `asyncio <https://docs.python.org/3/library/asyncio.html>`_: The standard asyncio library documentation for more details on the original functions.
@@ -131,12 +131,17 @@ See Also:
 
 # Function: get_event_loop
 """
-Utility to get the current event loop, handling cases where no current event loop exists by raising a `RuntimeError`.
+Utility to get the current event loop, creating a new one if none exists.
 
-This function attempts to get the current event loop. If no event loop is found (which can occur in multi-threaded applications), it raises a `RuntimeError`.
+This function attempts to get the current event loop. If no event loop is found (which can occur in multi-threaded applications), it creates a new event loop and sets it as the current event loop.
 
 Examples:
     Basic usage:
+    ```
+    loop = get_event_loop()
+    ```
+
+    Handling in multi-threaded applications:
     ```
     try:
         loop = get_event_loop()

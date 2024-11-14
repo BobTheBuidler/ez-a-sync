@@ -15,6 +15,16 @@ def do_work(i, kwarg=None):
 
     Raises:
         AssertionError: If `kwarg` is provided and does not equal `i`.
+
+    Examples:
+        >>> do_work(2)
+        # Sleeps for 2 seconds.
+
+        >>> do_work(2, kwarg=2)
+        # Sleeps for 2 seconds and passes the assertion.
+
+        >>> do_work(2, kwarg=3)
+        # Raises AssertionError.
     """
     time.sleep(i)
     if kwarg:
@@ -35,6 +45,9 @@ def test_executor():
         - :class:`~a_sync.executor.AsyncProcessPoolExecutor`
         - :meth:`~a_sync.executor._AsyncExecutorMixin.run`
         - :meth:`~a_sync.executor._AsyncExecutorMixin.submit`
+
+    Examples:
+        This test does not include examples as it is intended to verify the behavior of the executor.
     """
     executor = ProcessPoolExecutor(1)
     assert isinstance(executor, AsyncProcessPoolExecutor)
