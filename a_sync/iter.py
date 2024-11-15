@@ -136,7 +136,7 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     note that synchronous iteration relies on the :class:`ASyncIterator`
     class, which uses `asyncio.get_event_loop().run_until_complete` to
     fetch items. This can raise a `RuntimeError` if the event loop is
-    already running, and in such cases, a :class:`SyncModeInAsyncContextError`
+    already running, and in such cases, a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`
     is raised from the `RuntimeError`.
 
     Example:
@@ -192,9 +192,9 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
 
         Note:
             Synchronous iteration leverages :class:`ASyncIterator`, which uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
-            :meth:`ASyncIterator.__next__` raises a :class:`SyncModeInAsyncContextError` if the event loop is already running.
+            :meth:`ASyncIterator.__next__` raises a :class:`~a_sync.exceptions.SyncModeInAsyncContextError` if the event loop is already running.
 
-            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase
+            If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
         """
         yield from ASyncIterator(self.__aiter__())
@@ -212,7 +212,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
     By implementing both `__next__` and `__anext__` methods, ASyncIterator enables objects to be iterated using standard iteration protocols while internally managing the complexities of asynchronous iteration. This design simplifies the use of asynchronous iterables in environments or frameworks that are not inherently asynchronous, such as standard synchronous functions or older codebases being gradually migrated to asynchronous IO.
 
     Note:
-        Synchronous iteration with `ASyncIterator` uses `asyncio.get_event_loop().run_until_complete`, which can raise a `RuntimeError` if the event loop is already running. In such cases, a :class:`SyncModeInAsyncContextError` is raised from the `RuntimeError`, indicating that synchronous iteration is not possible in an already running event loop.
+        Synchronous iteration with `ASyncIterator` uses `asyncio.get_event_loop().run_until_complete`, which can raise a `RuntimeError` if the event loop is already running. In such cases, a :class:`~a_sync.exceptions.SyncModeInAsyncContextError` is raised from the `RuntimeError`, indicating that synchronous iteration is not possible in an already running event loop.
 
     Example:
         >>> async_iterator = ASyncIterator(some_async_iterator)
@@ -234,9 +234,9 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         Note:
             This method uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
             This raises a :class:`RuntimeError` if the event loop is already running.
-            This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.
+            This RuntimeError will be caught and a more descriptive :class:`~a_sync.exceptions.SyncModeInAsyncContextError` will be raised in its place.
 
-            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase
+            If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
 
         Raises:
@@ -317,9 +317,9 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         Note:
             Synchronous iteration uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
             This raises a :class:`RuntimeError` if the event loop is already running.
-            This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.
+            This RuntimeError will be caught and a more descriptive :class:`~a_sync.exceptions.SyncModeInAsyncContextError` will be raised in its place.
 
-            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase
+            If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
         """
         return self

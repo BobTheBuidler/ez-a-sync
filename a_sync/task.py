@@ -163,7 +163,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 try:
                     return await wrapped_func(*args, **kwargs)
                 except exceptions.SyncModeInAsyncContextError as e:
-                    raise Exception(e, self.__wrapped__)
+                    e.args = *e.args, f"wrapped:{self.__wrapped__}"
+                    raise
                 except TypeError as e:
                     if __a_sync_recursion > 2 or not (
                         str(e).startswith(wrapped_func.__name__)
