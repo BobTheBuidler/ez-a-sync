@@ -860,7 +860,6 @@ class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
 
 
 __all__ = [
-    "create_task",
     "TaskMapping",
     "TaskMappingKeys",
     "TaskMappingValues",
