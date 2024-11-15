@@ -192,7 +192,7 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
 
         Note:
             Synchronous iteration leverages :class:`ASyncIterator`, which uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
-            :meth:`ASyncIterator.__next__` raises a :class:`SyncModeInAsyncContextError` if the event loop is already running. 
+            :meth:`ASyncIterator.__next__` raises a :class:`SyncModeInAsyncContextError` if the event loop is already running.
 
             If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
@@ -233,16 +233,16 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
 
         Note:
             This method uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
-            This raises a :class:`RuntimeError` if the event loop is already running. 
+            This raises a :class:`RuntimeError` if the event loop is already running.
             This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.
 
             If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
-            
+
         Raises:
             StopIteration: Once all items have been fetched from the {cls}.
             SyncModeInAsyncContextError: If the event loop is already running.
-            
+
         """
         try:
             return asyncio.get_event_loop().run_until_complete(self.__anext__())
@@ -316,7 +316,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
 
         Note:
             Synchronous iteration uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
-            This raises a :class:`RuntimeError` if the event loop is already running. 
+            This raises a :class:`RuntimeError` if the event loop is already running.
             This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.
 
             If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase
