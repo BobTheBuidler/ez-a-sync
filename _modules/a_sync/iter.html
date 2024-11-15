@@ -209,7 +209,7 @@
 <span class="sd">    note that synchronous iteration relies on the :class:`ASyncIterator`</span>
 <span class="sd">    class, which uses `asyncio.get_event_loop().run_until_complete` to</span>
 <span class="sd">    fetch items. This can raise a `RuntimeError` if the event loop is</span>
-<span class="sd">    already running, and in such cases, a :class:`SyncModeInAsyncContextError`</span>
+<span class="sd">    already running, and in such cases, a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`</span>
 <span class="sd">    is raised from the `RuntimeError`.</span>
 
 <span class="sd">    Example:</span>
@@ -276,9 +276,9 @@
 
 <span class="sd">        Note:</span>
 <span class="sd">            Synchronous iteration leverages :class:`ASyncIterator`, which uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.</span>
-<span class="sd">            :meth:`ASyncIterator.__next__` raises a :class:`SyncModeInAsyncContextError` if the event loop is already running.</span>
+<span class="sd">            :meth:`ASyncIterator.__next__` raises a :class:`~a_sync.exceptions.SyncModeInAsyncContextError` if the event loop is already running.</span>
 
-<span class="sd">            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase</span>
+<span class="sd">            If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase</span>
 <span class="sd">            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">yield from</span> <span class="n">ASyncIterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__aiter__</span><span class="p">())</span></div>
@@ -300,7 +300,7 @@
 <span class="sd">    By implementing both `__next__` and `__anext__` methods, ASyncIterator enables objects to be iterated using standard iteration protocols while internally managing the complexities of asynchronous iteration. This design simplifies the use of asynchronous iterables in environments or frameworks that are not inherently asynchronous, such as standard synchronous functions or older codebases being gradually migrated to asynchronous IO.</span>
 
 <span class="sd">    Note:</span>
-<span class="sd">        Synchronous iteration with `ASyncIterator` uses `asyncio.get_event_loop().run_until_complete`, which can raise a `RuntimeError` if the event loop is already running. In such cases, a :class:`SyncModeInAsyncContextError` is raised from the `RuntimeError`, indicating that synchronous iteration is not possible in an already running event loop.</span>
+<span class="sd">        Synchronous iteration with `ASyncIterator` uses `asyncio.get_event_loop().run_until_complete`, which can raise a `RuntimeError` if the event loop is already running. In such cases, a :class:`~a_sync.exceptions.SyncModeInAsyncContextError` is raised from the `RuntimeError`, indicating that synchronous iteration is not possible in an already running event loop.</span>
 
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; async_iterator = ASyncIterator(some_async_iterator)</span>
@@ -324,9 +324,9 @@
 <span class="sd">        Note:</span>
 <span class="sd">            This method uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.</span>
 <span class="sd">            This raises a :class:`RuntimeError` if the event loop is already running.</span>
-<span class="sd">            This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.</span>
+<span class="sd">            This RuntimeError will be caught and a more descriptive :class:`~a_sync.exceptions.SyncModeInAsyncContextError` will be raised in its place.</span>
 
-<span class="sd">            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase</span>
+<span class="sd">            If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase</span>
 <span class="sd">            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.</span>
 
 <span class="sd">        Raises:</span>
@@ -419,9 +419,9 @@
 <span class="sd">        Note:</span>
 <span class="sd">            Synchronous iteration uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.</span>
 <span class="sd">            This raises a :class:`RuntimeError` if the event loop is already running.</span>
-<span class="sd">            This RuntimeError will be caught and a more descriptive :class:`SyncModeInAsyncContextError` will be raised in its place.</span>
+<span class="sd">            This RuntimeError will be caught and a more descriptive :class:`~a_sync.exceptions.SyncModeInAsyncContextError` will be raised in its place.</span>
 
-<span class="sd">            If you encounter a :class:`SyncModeInAsyncContextError`, you are likely working in an async codebase</span>
+<span class="sd">            If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase</span>
 <span class="sd">            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
