@@ -4297,14 +4297,17 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 <section id="module-a_sync.executor">
 <span id="a-sync-executor-module"></span><h2>a_sync.executor module<a class="headerlink" href="#module-a_sync.executor" title="Link to this heading"></a></h2>
 <p>This module provides several executor classes that facilitate running synchronous functions asynchronously using <cite>asyncio</cite>.</p>
-<p>With these executors, you can run sync functions in your executor with <cite>await executor.run(fn, *args)</cite>.
-The <cite>executor.submit(fn, *args)</cite> method works similarly to the <cite>concurrent.futures</cite> implementation but
+<p>With these executors, you can run sync functions in your executor with <cite>await executor.run(fn, *args, **kwargs)</cite>.
+The <cite>executor.submit(fn, *args, **kwargs)</cite> method works similarly to the <cite>concurrent.futures</cite> implementation but
 returns an <cite>asyncio.Future</cite> instead of a <cite>concurrent.futures.Future</cite>.</p>
-<p>Executor Classes:
-- <code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code>: A mixin providing asynchronous run and submit methods, with support for synchronous mode.
-- <a class="reference internal" href="#a_sync.executor.AsyncProcessPoolExecutor" title="a_sync.executor.AsyncProcessPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor</span></code></a>: An async process pool executor.
-- <a class="reference internal" href="#a_sync.executor.AsyncThreadPoolExecutor" title="a_sync.executor.AsyncThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a>: An async thread pool executor.
-- <a class="reference internal" href="#a_sync.executor.PruningThreadPoolExecutor" title="a_sync.executor.PruningThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor</span></code></a>: A thread pool executor that prunes inactive threads after a timeout, ensuring at least one thread remains active to prevent locks.</p>
+<dl class="simple">
+<dt>Executor Classes:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.executor.AsyncProcessPoolExecutor" title="a_sync.executor.AsyncProcessPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncProcessPoolExecutor</span></code></a>: A process pool executor providing asynchronous run and submit methods, with support for synchronous mode</p></li>
+<li><p><a class="reference internal" href="#a_sync.executor.AsyncThreadPoolExecutor" title="a_sync.executor.AsyncThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a>: A thread pool executor providing asynchronous run and submit methods, with support for synchronous mode</p></li>
+<li><p><a class="reference internal" href="#a_sync.executor.PruningThreadPoolExecutor" title="a_sync.executor.PruningThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor</span></code></a>: An <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncThreadPoolExecutor</span></code> that prunes inactive threads after a timeout, ensuring at least one thread remains active to prevent locks.</p></li>
+</ul>
+</dd>
+</dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
@@ -4315,10 +4318,11 @@ returns an <cite>asyncio.Future</cite> instead of a <cite>concurrent.futures.Fut
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.executor.</span></span><span class="sig-name descname"><span class="pre">AsyncProcessPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#AsyncProcessPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></p>
-<p>An async process pool executor that allows use of kwargs.</p>
+<p>A :class:<a href="#id25"><span class="problematic" id="id26">`</span></a>concurrent.futures.ProcessPoolExecutor’ subclass providing asynchronous run and submit methods that support kwargs,
+with support for synchronous mode</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
 </pre></div>
 </div>
@@ -4499,7 +4503,7 @@ If set to one, the items in the list will be sent one at a time.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id25"><span class="problematic" id="id26">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id27"><span class="problematic" id="id28">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -4509,7 +4513,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.13)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id27"><span class="problematic" id="id28">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id29"><span class="problematic" id="id30">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -4568,7 +4572,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -4766,10 +4770,11 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.executor.</span></span><span class="sig-name descname"><span class="pre">AsyncThreadPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#AsyncThreadPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></p>
-<p>An async thread pool executor that allows use of kwargs.</p>
+<p>A :class:<a href="#id31"><span class="problematic" id="id32">`</span></a>concurrent.futures.ThreadPoolExecutor’ subclass providing asynchronous run and submit methods that support kwargs,
+with support for synchronous mode</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">&quot;MyThread&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
 </pre></div>
 </div>
@@ -4941,7 +4946,7 @@ ThreadPoolExecutor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id29"><span class="problematic" id="id30">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id33"><span class="problematic" id="id34">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -4951,7 +4956,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.13)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id31"><span class="problematic" id="id32">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id35"><span class="problematic" id="id36">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -5010,7 +5015,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -5188,7 +5193,7 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.executor.</span></span><span class="sig-name descname"><span class="pre">PruningThreadPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#PruningThreadPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.executor.AsyncThreadPoolExecutor" title="a_sync.executor.AsyncThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a></p>
-<p>This <cite>AsyncThreadPoolExecutor</cite> implementation prunes inactive threads after ‘timeout’ seconds without a work item.
+<p>This <a class="reference internal" href="#a_sync.executor.AsyncThreadPoolExecutor" title="a_sync.executor.AsyncThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a> implementation prunes inactive threads after ‘timeout’ seconds without a work item.
 Pruned threads will be automatically recreated as needed for future workloads. Up to ‘max_threads’ can be active at any one time.
 The executor ensures that at least one active thread remains to prevent locks.</p>
 <div class="admonition note">
@@ -5198,7 +5203,7 @@ This prevents the executor from having zero active threads, which could lead to 
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">PruningThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
 </pre></div>
 </div>
@@ -5375,7 +5380,7 @@ ThreadPoolExecutor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id33"><span class="problematic" id="id34">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id37"><span class="problematic" id="id38">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -5385,7 +5390,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.13)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id35"><span class="problematic" id="id36">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id39"><span class="problematic" id="id40">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -5444,7 +5449,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -5638,9 +5643,9 @@ including a decorator for converting callables into <cite>ASyncFuture</cite> obj
 utilities for managing asynchronous computations.</p>
 <dl class="simple">
 <dt>Functions:</dt><dd><dl class="simple">
-<dt>future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, <a href="#id37"><span class="problematic" id="id38">**</span></a>kwargs: Unpack[ModifierKwargs]) -&gt; Callable[P, Union[T, “ASyncFuture[T]”]]:</dt><dd><p>A decorator to convert a callable into an <cite>ASyncFuture</cite>, with optional modifiers.</p>
+<dt>future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, <a href="#id41"><span class="problematic" id="id42">**</span></a>kwargs: Unpack[ModifierKwargs]) -&gt; Callable[P, Union[T, “ASyncFuture[T]”]]:</dt><dd><p>A decorator to convert a callable into an <cite>ASyncFuture</cite>, with optional modifiers.</p>
 </dd>
-<dt>_gather_check_and_materialize(<a href="#id39"><span class="problematic" id="id40">*</span></a>things: Unpack[MaybeAwaitable[T]]) -&gt; List[T]:</dt><dd><p>Gathers and materializes a list of awaitable or non-awaitable items.</p>
+<dt>_gather_check_and_materialize(<a href="#id43"><span class="problematic" id="id44">*</span></a>things: Unpack[MaybeAwaitable[T]]) -&gt; List[T]:</dt><dd><p>Gathers and materializes a list of awaitable or non-awaitable items.</p>
 </dd>
 <dt>_check_and_materialize(thing: T) -&gt; T:</dt><dd><p>Checks if an item is awaitable and materializes it.</p>
 </dd>
@@ -7972,7 +7977,7 @@ caching functionality, storing the computed value after the first access.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id41"><span class="problematic" id="id42">``</span></a><a href="#id43"><span class="problematic" id="id44">`</span></a>python
+<p><a href="#id45"><span class="problematic" id="id46">``</span></a><a href="#id47"><span class="problematic" id="id48">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7983,7 +7988,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id45"><span class="problematic" id="id46">``</span></a><a href="#id47"><span class="problematic" id="id48">`</span></a></p>
+<a href="#id49"><span class="problematic" id="id50">``</span></a><a href="#id51"><span class="problematic" id="id52">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8004,7 +8009,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id49"><span class="problematic" id="id50">``</span></a><a href="#id51"><span class="problematic" id="id52">`</span></a>python
+<p><a href="#id53"><span class="problematic" id="id54">``</span></a><a href="#id55"><span class="problematic" id="id56">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8015,7 +8020,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id53"><span class="problematic" id="id54">``</span></a><a href="#id55"><span class="problematic" id="id56">`</span></a></p>
+<a href="#id57"><span class="problematic" id="id58">``</span></a><a href="#id59"><span class="problematic" id="id60">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8070,7 +8075,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id57"><span class="problematic" id="id58">``</span></a><a href="#id59"><span class="problematic" id="id60">`</span></a>python
+<p><a href="#id61"><span class="problematic" id="id62">``</span></a><a href="#id63"><span class="problematic" id="id64">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8081,7 +8086,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id61"><span class="problematic" id="id62">``</span></a><a href="#id63"><span class="problematic" id="id64">`</span></a></p>
+<a href="#id65"><span class="problematic" id="id66">``</span></a><a href="#id67"><span class="problematic" id="id68">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8102,7 +8107,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id65"><span class="problematic" id="id66">``</span></a><a href="#id67"><span class="problematic" id="id68">`</span></a>python
+<p><a href="#id69"><span class="problematic" id="id70">``</span></a><a href="#id71"><span class="problematic" id="id72">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8113,7 +8118,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id69"><span class="problematic" id="id70">``</span></a><a href="#id71"><span class="problematic" id="id72">`</span></a></p>
+<a href="#id73"><span class="problematic" id="id74">``</span></a><a href="#id75"><span class="problematic" id="id76">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8134,7 +8139,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id73"><span class="problematic" id="id74">``</span></a><a href="#id75"><span class="problematic" id="id76">`</span></a>python
+<p><a href="#id77"><span class="problematic" id="id78">``</span></a><a href="#id79"><span class="problematic" id="id80">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8145,7 +8150,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id77"><span class="problematic" id="id78">``</span></a><a href="#id79"><span class="problematic" id="id80">`</span></a></p>
+<a href="#id81"><span class="problematic" id="id82">``</span></a><a href="#id83"><span class="problematic" id="id84">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8416,7 +8421,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id81"><span class="problematic" id="id82">``</span></a><a href="#id83"><span class="problematic" id="id84">`</span></a>python
+<p><a href="#id85"><span class="problematic" id="id86">``</span></a><a href="#id87"><span class="problematic" id="id88">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8427,7 +8432,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id85"><span class="problematic" id="id86">``</span></a><a href="#id87"><span class="problematic" id="id88">`</span></a></p>
+<a href="#id89"><span class="problematic" id="id90">``</span></a><a href="#id91"><span class="problematic" id="id92">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -8445,7 +8450,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id89"><span class="problematic" id="id90">``</span></a><a href="#id91"><span class="problematic" id="id92">`</span></a>python
+<p><a href="#id93"><span class="problematic" id="id94">``</span></a><a href="#id95"><span class="problematic" id="id96">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8456,7 +8461,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id93"><span class="problematic" id="id94">``</span></a><a href="#id95"><span class="problematic" id="id96">`</span></a></p>
+<a href="#id97"><span class="problematic" id="id98">``</span></a><a href="#id99"><span class="problematic" id="id100">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -8878,7 +8883,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id97"><span class="problematic" id="id98">``</span></a><a href="#id99"><span class="problematic" id="id100">`</span></a>python
+<p><a href="#id101"><span class="problematic" id="id102">``</span></a><a href="#id103"><span class="problematic" id="id104">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8889,7 +8894,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id101"><span class="problematic" id="id102">``</span></a><a href="#id103"><span class="problematic" id="id104">`</span></a></p>
+<a href="#id105"><span class="problematic" id="id106">``</span></a><a href="#id107"><span class="problematic" id="id108">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8910,7 +8915,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id105"><span class="problematic" id="id106">``</span></a><a href="#id107"><span class="problematic" id="id108">`</span></a>python
+<p><a href="#id109"><span class="problematic" id="id110">``</span></a><a href="#id111"><span class="problematic" id="id112">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8921,7 +8926,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id109"><span class="problematic" id="id110">``</span></a><a href="#id111"><span class="problematic" id="id112">`</span></a></p>
+<a href="#id113"><span class="problematic" id="id114">``</span></a><a href="#id115"><span class="problematic" id="id116">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8966,7 +8971,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id113"><span class="problematic" id="id114">``</span></a><a href="#id115"><span class="problematic" id="id116">`</span></a>python
+<p><a href="#id117"><span class="problematic" id="id118">``</span></a><a href="#id119"><span class="problematic" id="id120">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8977,7 +8982,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id117"><span class="problematic" id="id118">``</span></a><a href="#id119"><span class="problematic" id="id120">`</span></a></p>
+<a href="#id121"><span class="problematic" id="id122">``</span></a><a href="#id123"><span class="problematic" id="id124">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8998,7 +9003,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id121"><span class="problematic" id="id122">``</span></a><a href="#id123"><span class="problematic" id="id124">`</span></a>python
+<p><a href="#id125"><span class="problematic" id="id126">``</span></a><a href="#id127"><span class="problematic" id="id128">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9009,7 +9014,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id125"><span class="problematic" id="id126">``</span></a><a href="#id127"><span class="problematic" id="id128">`</span></a></p>
+<a href="#id129"><span class="problematic" id="id130">``</span></a><a href="#id131"><span class="problematic" id="id132">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -9030,7 +9035,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id129"><span class="problematic" id="id130">``</span></a><a href="#id131"><span class="problematic" id="id132">`</span></a>python
+<p><a href="#id133"><span class="problematic" id="id134">``</span></a><a href="#id135"><span class="problematic" id="id136">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9041,7 +9046,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id133"><span class="problematic" id="id134">``</span></a><a href="#id135"><span class="problematic" id="id136">`</span></a></p>
+<a href="#id137"><span class="problematic" id="id138">``</span></a><a href="#id139"><span class="problematic" id="id140">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -9224,7 +9229,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id137"><span class="problematic" id="id138">``</span></a><a href="#id139"><span class="problematic" id="id140">`</span></a>python
+<p><a href="#id141"><span class="problematic" id="id142">``</span></a><a href="#id143"><span class="problematic" id="id144">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9235,7 +9240,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id141"><span class="problematic" id="id142">``</span></a><a href="#id143"><span class="problematic" id="id144">`</span></a></p>
+<a href="#id145"><span class="problematic" id="id146">``</span></a><a href="#id147"><span class="problematic" id="id148">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -9253,7 +9258,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id145"><span class="problematic" id="id146">``</span></a><a href="#id147"><span class="problematic" id="id148">`</span></a>python
+<p><a href="#id149"><span class="problematic" id="id150">``</span></a><a href="#id151"><span class="problematic" id="id152">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9264,7 +9269,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id149"><span class="problematic" id="id150">``</span></a><a href="#id151"><span class="problematic" id="id152">`</span></a></p>
+<a href="#id153"><span class="problematic" id="id154">``</span></a><a href="#id155"><span class="problematic" id="id156">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -9278,10 +9283,11 @@ result = await instance.my_method.sum([1, 2, 3])
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">AsyncProcessPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#AsyncProcessPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></p>
-<p>An async process pool executor that allows use of kwargs.</p>
+<p>A :class:<a href="#id157"><span class="problematic" id="id158">`</span></a>concurrent.futures.ProcessPoolExecutor’ subclass providing asynchronous run and submit methods that support kwargs,
+with support for synchronous mode</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
 </pre></div>
 </div>
@@ -9462,7 +9468,7 @@ If set to one, the items in the list will be sent one at a time.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id153"><span class="problematic" id="id154">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id159"><span class="problematic" id="id160">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -9472,7 +9478,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.13)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id155"><span class="problematic" id="id156">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id161"><span class="problematic" id="id162">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -9531,7 +9537,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -9729,10 +9735,11 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">AsyncThreadPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#AsyncThreadPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></p>
-<p>An async thread pool executor that allows use of kwargs.</p>
+<p>A :class:<a href="#id163"><span class="problematic" id="id164">`</span></a>concurrent.futures.ThreadPoolExecutor’ subclass providing asynchronous run and submit methods that support kwargs,
+with support for synchronous mode</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">&quot;MyThread&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
 </pre></div>
 </div>
@@ -9904,7 +9911,7 @@ ThreadPoolExecutor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id157"><span class="problematic" id="id158">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id165"><span class="problematic" id="id166">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -9914,7 +9921,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.13)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id159"><span class="problematic" id="id160">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id167"><span class="problematic" id="id168">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -9973,7 +9980,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -11460,7 +11467,7 @@ the queue.</p>
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">PruningThreadPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#PruningThreadPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.executor.AsyncThreadPoolExecutor" title="a_sync.executor.AsyncThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a></p>
-<p>This <cite>AsyncThreadPoolExecutor</cite> implementation prunes inactive threads after ‘timeout’ seconds without a work item.
+<p>This <a class="reference internal" href="#a_sync.AsyncThreadPoolExecutor" title="a_sync.AsyncThreadPoolExecutor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncThreadPoolExecutor</span></code></a> implementation prunes inactive threads after ‘timeout’ seconds without a work item.
 Pruned threads will be automatically recreated as needed for future workloads. Up to ‘max_threads’ can be active at any one time.
 The executor ensures that at least one active thread remains to prevent locks.</p>
 <div class="admonition note">
@@ -11470,7 +11477,7 @@ This prevents the executor from having zero active threads, which could lead to 
 </div>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">PruningThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">future</span>
 </pre></div>
 </div>
@@ -11647,7 +11654,7 @@ ThreadPoolExecutor.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>map(func, <a href="#id161"><span class="problematic" id="id162">*</span></a>iterables) but the calls may
+<dd class="field-even"><p>map(func, <a href="#id169"><span class="problematic" id="id170">*</span></a>iterables) but the calls may
 be evaluated out-of-order.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -11657,7 +11664,7 @@ be evaluated out-of-order.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TimeoutError" title="(in Python v3.13)"><strong>TimeoutError</strong></a> – If the entire result iterator could not be generated
     before the given timeout.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id163"><span class="problematic" id="id164">*</span></a>args) raises for any values.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – If fn(<a href="#id171"><span class="problematic" id="id172">*</span></a>args) raises for any values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -11716,7 +11723,7 @@ cancelled.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor.submit">
 <span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
-<dd><p>Submits a job to the executor and returns an <cite>asyncio.Future</cite> that can be awaited for the result without blocking.</p>
+<dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -12218,7 +12225,7 @@ the queue.</p>
 It allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.</p>
 <p class="rubric">Example</p>
 <p>You can write this pattern:</p>
-<p><a href="#id165"><span class="problematic" id="id166">``</span></a>`
+<p><a href="#id173"><span class="problematic" id="id174">``</span></a>`
 semaphore = Semaphore(5)</p>
 <dl class="simple">
 <dt>async def limited():</dt><dd><dl class="simple">
@@ -12227,16 +12234,16 @@ semaphore = Semaphore(5)</p>
 </dl>
 </dd>
 </dl>
-<p><a href="#id167"><span class="problematic" id="id168">``</span></a><a href="#id169"><span class="problematic" id="id170">`</span></a></p>
+<p><a href="#id175"><span class="problematic" id="id176">``</span></a><a href="#id177"><span class="problematic" id="id178">`</span></a></p>
 <p>like this:</p>
-<p><a href="#id171"><span class="problematic" id="id172">``</span></a>`
+<p><a href="#id179"><span class="problematic" id="id180">``</span></a>`
 semaphore = Semaphore(5)</p>
 <p>&#64;semaphore
 async def limited():</p>
 <blockquote>
 <div><p>return 1</p>
 </div></blockquote>
-<p><a href="#id173"><span class="problematic" id="id174">``</span></a><a href="#id175"><span class="problematic" id="id176">`</span></a></p>
+<p><a href="#id181"><span class="problematic" id="id182">``</span></a><a href="#id183"><span class="problematic" id="id184">`</span></a></p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code> for more details on debugging capabilities.</p>
@@ -13863,7 +13870,7 @@ become larger than zero again, wake up that coroutine.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id177"><span class="problematic" id="id178">``</span></a><a href="#id179"><span class="problematic" id="id180">`</span></a>python
+<p><a href="#id185"><span class="problematic" id="id186">``</span></a><a href="#id187"><span class="problematic" id="id188">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13874,7 +13881,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id181"><span class="problematic" id="id182">``</span></a><a href="#id183"><span class="problematic" id="id184">`</span></a></p>
+<a href="#id189"><span class="problematic" id="id190">``</span></a><a href="#id191"><span class="problematic" id="id192">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13895,7 +13902,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id185"><span class="problematic" id="id186">``</span></a><a href="#id187"><span class="problematic" id="id188">`</span></a>python
+<p><a href="#id193"><span class="problematic" id="id194">``</span></a><a href="#id195"><span class="problematic" id="id196">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13906,7 +13913,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id189"><span class="problematic" id="id190">``</span></a><a href="#id191"><span class="problematic" id="id192">`</span></a></p>
+<a href="#id197"><span class="problematic" id="id198">``</span></a><a href="#id199"><span class="problematic" id="id200">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13961,7 +13968,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id193"><span class="problematic" id="id194">``</span></a><a href="#id195"><span class="problematic" id="id196">`</span></a>python
+<p><a href="#id201"><span class="problematic" id="id202">``</span></a><a href="#id203"><span class="problematic" id="id204">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13972,7 +13979,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id197"><span class="problematic" id="id198">``</span></a><a href="#id199"><span class="problematic" id="id200">`</span></a></p>
+<a href="#id205"><span class="problematic" id="id206">``</span></a><a href="#id207"><span class="problematic" id="id208">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13993,7 +14000,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id201"><span class="problematic" id="id202">``</span></a><a href="#id203"><span class="problematic" id="id204">`</span></a>python
+<p><a href="#id209"><span class="problematic" id="id210">``</span></a><a href="#id211"><span class="problematic" id="id212">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14004,7 +14011,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id205"><span class="problematic" id="id206">``</span></a><a href="#id207"><span class="problematic" id="id208">`</span></a></p>
+<a href="#id213"><span class="problematic" id="id214">``</span></a><a href="#id215"><span class="problematic" id="id216">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14025,7 +14032,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id209"><span class="problematic" id="id210">``</span></a><a href="#id211"><span class="problematic" id="id212">`</span></a>python
+<p><a href="#id217"><span class="problematic" id="id218">``</span></a><a href="#id219"><span class="problematic" id="id220">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14036,7 +14043,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id213"><span class="problematic" id="id214">``</span></a><a href="#id215"><span class="problematic" id="id216">`</span></a></p>
+<a href="#id221"><span class="problematic" id="id222">``</span></a><a href="#id223"><span class="problematic" id="id224">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14307,7 +14314,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id217"><span class="problematic" id="id218">``</span></a><a href="#id219"><span class="problematic" id="id220">`</span></a>python
+<p><a href="#id225"><span class="problematic" id="id226">``</span></a><a href="#id227"><span class="problematic" id="id228">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14318,7 +14325,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id221"><span class="problematic" id="id222">``</span></a><a href="#id223"><span class="problematic" id="id224">`</span></a></p>
+<a href="#id229"><span class="problematic" id="id230">``</span></a><a href="#id231"><span class="problematic" id="id232">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -14336,7 +14343,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id225"><span class="problematic" id="id226">``</span></a><a href="#id227"><span class="problematic" id="id228">`</span></a>python
+<p><a href="#id233"><span class="problematic" id="id234">``</span></a><a href="#id235"><span class="problematic" id="id236">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14347,7 +14354,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id229"><span class="problematic" id="id230">``</span></a><a href="#id231"><span class="problematic" id="id232">`</span></a></p>
+<a href="#id237"><span class="problematic" id="id238">``</span></a><a href="#id239"><span class="problematic" id="id240">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -14410,7 +14417,7 @@ result = await instance.my_method.sum([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id233"><span class="problematic" id="id234">``</span></a><a href="#id235"><span class="problematic" id="id236">`</span></a>python
+<p><a href="#id241"><span class="problematic" id="id242">``</span></a><a href="#id243"><span class="problematic" id="id244">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14421,7 +14428,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id237"><span class="problematic" id="id238">``</span></a><a href="#id239"><span class="problematic" id="id240">`</span></a></p>
+<a href="#id245"><span class="problematic" id="id246">``</span></a><a href="#id247"><span class="problematic" id="id248">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14442,7 +14449,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id241"><span class="problematic" id="id242">``</span></a><a href="#id243"><span class="problematic" id="id244">`</span></a>python
+<p><a href="#id249"><span class="problematic" id="id250">``</span></a><a href="#id251"><span class="problematic" id="id252">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14453,7 +14460,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id245"><span class="problematic" id="id246">``</span></a><a href="#id247"><span class="problematic" id="id248">`</span></a></p>
+<a href="#id253"><span class="problematic" id="id254">``</span></a><a href="#id255"><span class="problematic" id="id256">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14498,7 +14505,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id249"><span class="problematic" id="id250">``</span></a><a href="#id251"><span class="problematic" id="id252">`</span></a>python
+<p><a href="#id257"><span class="problematic" id="id258">``</span></a><a href="#id259"><span class="problematic" id="id260">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14509,7 +14516,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id253"><span class="problematic" id="id254">``</span></a><a href="#id255"><span class="problematic" id="id256">`</span></a></p>
+<a href="#id261"><span class="problematic" id="id262">``</span></a><a href="#id263"><span class="problematic" id="id264">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14530,7 +14537,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id257"><span class="problematic" id="id258">``</span></a><a href="#id259"><span class="problematic" id="id260">`</span></a>python
+<p><a href="#id265"><span class="problematic" id="id266">``</span></a><a href="#id267"><span class="problematic" id="id268">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14541,7 +14548,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id261"><span class="problematic" id="id262">``</span></a><a href="#id263"><span class="problematic" id="id264">`</span></a></p>
+<a href="#id269"><span class="problematic" id="id270">``</span></a><a href="#id271"><span class="problematic" id="id272">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14562,7 +14569,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id265"><span class="problematic" id="id266">``</span></a><a href="#id267"><span class="problematic" id="id268">`</span></a>python
+<p><a href="#id273"><span class="problematic" id="id274">``</span></a><a href="#id275"><span class="problematic" id="id276">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14573,7 +14580,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id269"><span class="problematic" id="id270">``</span></a><a href="#id271"><span class="problematic" id="id272">`</span></a></p>
+<a href="#id277"><span class="problematic" id="id278">``</span></a><a href="#id279"><span class="problematic" id="id280">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14756,7 +14763,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id273"><span class="problematic" id="id274">``</span></a><a href="#id275"><span class="problematic" id="id276">`</span></a>python
+<p><a href="#id281"><span class="problematic" id="id282">``</span></a><a href="#id283"><span class="problematic" id="id284">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14767,7 +14774,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id277"><span class="problematic" id="id278">``</span></a><a href="#id279"><span class="problematic" id="id280">`</span></a></p>
+<a href="#id285"><span class="problematic" id="id286">``</span></a><a href="#id287"><span class="problematic" id="id288">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -14785,7 +14792,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id281"><span class="problematic" id="id282">``</span></a><a href="#id283"><span class="problematic" id="id284">`</span></a>python
+<p><a href="#id289"><span class="problematic" id="id290">``</span></a><a href="#id291"><span class="problematic" id="id292">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14796,7 +14803,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id285"><span class="problematic" id="id286">``</span></a><a href="#id287"><span class="problematic" id="id288">`</span></a></p>
+<a href="#id293"><span class="problematic" id="id294">``</span></a><a href="#id295"><span class="problematic" id="id296">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
