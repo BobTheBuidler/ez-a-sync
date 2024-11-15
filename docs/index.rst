@@ -24,9 +24,12 @@ Those objects will work for most use cases. If you need to do some iteration, th
    :members:
 
 
-There's this cool future class that doesn't interact with the rest of the lib but depending on your needs might be even better. WIP:
+There's this cool future class that doesn't interact with the rest of the lib but, depending on your needs, might be even better. WIP:
 
-.. automodule:: a_sync.future
+.. module:: a_sync.future
+   .. autodecorator:: a_sync.future.future
+
+   .. autoclass:: a_sync.future.ASyncFuture
 
 
 Everything else in ez-a-sync can be found by navigating the tree below. Enjoy!
