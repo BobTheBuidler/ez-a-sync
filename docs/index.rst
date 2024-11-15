@@ -10,9 +10,11 @@ ez-a-sync is a big library, but there are only a few things you need to know.
 
 There are two main entrypoints to ez-a-sync, the a_sync decorator and the ASyncGenericBase base class. The vast majority of the other objects in this library support these two entrypoints internally. There is some more you can do, I'll document that stuff later. For now, you have this: 
 
-.. autodecorator: a_sync.a_sync
+.. module:: a_sync
 
-.. autoclass: a_sync.ASyncGenericBase
+.. autodecorator:: a_sync.a_sync
+
+.. autoclass:: a_sync.ASyncGenericBase
    :members:
 
 Everything in ez-a-sync can be found by navigating the tree below. Enjoy!
