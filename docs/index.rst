@@ -17,7 +17,19 @@ There are two main entrypoints to ez-a-sync, the a_sync decorator and the ASyncG
 .. autoclass:: a_sync.ASyncGenericBase
    :members:
 
-Everything in ez-a-sync can be found by navigating the tree below. Enjoy!
+
+Those objects will work for most use cases. If you need to do some iteration, the `a_sync.iter` submodule has what you need:
+
+.. automodule:: a_sync.iter
+   :members:
+
+
+There's this cool future class that doesn't interact with the rest of the lib but depending on your needs might be even better. WIP:
+
+.. automodule:: a_sync.future
+
+
+Everything else in ez-a-sync can be found by navigating the tree below. Enjoy!
 
 .. toctree::
    :maxdepth: 3
