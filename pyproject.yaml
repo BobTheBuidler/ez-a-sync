@@ -1,2 +1,5 @@
+[build-system]
+requires = ["cython"]
+
 [tool.black]
 line-length = 100
