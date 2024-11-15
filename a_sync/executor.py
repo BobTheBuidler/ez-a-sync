@@ -8,7 +8,7 @@ returns an `asyncio.Future` instead of a `concurrent.futures.Future`.
 Executor Classes:
     - :class:`AsyncProcessPoolExecutor`: A process pool executor providing asynchronous run and submit methods, with support for synchronous mode
     - :class:`AsyncThreadPoolExecutor`: A thread pool executor providing asynchronous run and submit methods, with support for synchronous mode
-    - :class:`PruningThreadPoolExecutor`: An :class:`ASyncThreadPoolExecutor` that prunes inactive threads after a timeout, ensuring at least one thread remains active to prevent locks.
+    - :class:`PruningThreadPoolExecutor`: An :class:`AsyncThreadPoolExecutor` that prunes inactive threads after a timeout, ensuring at least one thread remains active to prevent locks.
 
 See Also:
     - :mod:`concurrent.futures` for the original synchronous executor implementations.
