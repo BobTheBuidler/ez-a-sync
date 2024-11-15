@@ -38,7 +38,7 @@ jobs:
           python-version: ${{ matrix.pyversion }}
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Install ez-a-sync
         run: |
