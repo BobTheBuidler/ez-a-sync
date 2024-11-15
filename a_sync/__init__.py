@@ -8,14 +8,14 @@ that can operate in both synchronous and asynchronous contexts. Additionally, it
 such as queues and locks, with extra functionality.
 
 Modules and components included:
-- :mod:`~aliases`, :mod:`~exceptions`, :mod:`~iter`, :mod:`~task`: Core modules of the library.
-- :class:`~ASyncGenericBase`, :class:`~ASyncGenericSingleton`, :func:`~a_sync`: Base classes and decorators for dual-context execution.
-- :class:`~ASyncCachedPropertyDescriptor`, :class:`~ASyncPropertyDescriptor`, `cached_property`, `property`: Property descriptors for async properties.
-- :func:`~as_completed`, :func:`~create_task`, :func:`~gather`: Enhanced asyncio functions.
-- Executors: :class:`~AsyncThreadPoolExecutor`, :class:`~AsyncProcessPoolExecutor`, :class:`~PruningThreadPoolExecutor` for async execution.
-- Iterators: :class:`~ASyncFilter`, :class:`~ASyncSorter`, :class:`~ASyncIterable`, :class:`~ASyncIterator` for async iteration.
-- Utilities: :func:`~all`, :func:`~any`, :func:`~as_yielded`, :func:`~exhaust_iterator`, :func:`~exhaust_iterators` for async utilities.
-- :func:`~apply_semaphore`: Function to apply semaphores to coroutines.
+    - :mod:`~a_sync.aliases`, :mod:`~a_sync.exceptions`, :mod:`~a_sync.iter`, :mod:`~a_sync.task`: Core modules of the library.
+    - :class:`~ASyncGenericBase`, :class:`~ASyncGenericSingleton`, :func:`~a_sync`: Base classes and decorators for dual-context execution.
+    - :class:`~ASyncCachedPropertyDescriptor`, :class:`~ASyncPropertyDescriptor`, `cached_property`, `property`: Property descriptors for async properties.
+    - :func:`~as_completed`, :func:`~create_task`, :func:`~gather`: Enhanced asyncio functions.
+    - Executors: :class:`~AsyncThreadPoolExecutor`, :class:`~AsyncProcessPoolExecutor`, :class:`~PruningThreadPoolExecutor` for async execution.
+    - Iterators: :class:`~ASyncIterable`, :class:`~ASyncIterator`, :class:`~filter`, :class:`~sorted` for async iteration.
+    - Utilities: :func:`~all`, :func:`~any`, :func:`~as_yielded` for async utilities.
+    - :func:`~a_sync.a_sync.modifiers.semaphores.apply_semaphore`: Function to apply semaphores to coroutines.
 
 Alias for backward compatibility:
 - :class:`~ASyncBase` is an alias for :class:`~ASyncGenericBase`, which will be removed eventually, probably in version 0.1.0.
@@ -91,8 +91,6 @@ __all__ = [
     "all",
     "any",
     "as_yielded",
-    "exhaust_iterator",
-    "exhaust_iterators",
     "map",
     # classes
     "ASyncIterable",
