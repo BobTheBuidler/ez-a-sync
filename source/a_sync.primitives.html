@@ -1062,17 +1062,6 @@ to be processed concurrently with a fixed number of workers.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.__worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
-<dd><p>The coroutine executed by worker tasks to process the queue.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._create_future">
 <span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue._create_future"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._create_future" title="Link to this definition"></a></dt>
 <dd><p>Creates a future for the task.</p>
@@ -1704,25 +1693,6 @@ task execution order is influenced by the number of waiters.</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">SmartProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">my_task_func</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smart_queue&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.__worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
-<dd><p>Worker coroutine responsible for processing tasks in the queue.</p>
-<p>Retrieves tasks, executes them, and sets the results or exceptions for the futures.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Any</strong> – Exceptions raised during task processing are logged.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">__worker_coro</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -3629,17 +3599,6 @@ to be processed concurrently with a fixed number of workers.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.__worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
-<dd><p>The coroutine executed by worker tasks to process the queue.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._create_future">
 <span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue._create_future"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._create_future" title="Link to this definition"></a></dt>
 <dd><p>Creates a future for the task.</p>
@@ -4602,25 +4561,6 @@ task execution order is influenced by the number of waiters.</p>
 </dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">SmartProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">my_task_func</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smart_queue&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.__worker_coro">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.__worker_coro" title="Link to this definition"></a></dt>
-<dd><p>Worker coroutine responsible for processing tasks in the queue.</p>
-<p>Retrieves tasks, executes them, and sets the results or exceptions for the futures.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Any</strong> – Exceptions raised during task processing are logged.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">__worker_coro</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
