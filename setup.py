@@ -1,3 +1,4 @@
+from Cython.Build import cythonize
 from setuptools import find_packages, setup
 
 with open("requirements.txt", "r") as f:
@@ -18,11 +19,12 @@ setup(
     url="https://github.com/BobTheBuidler/a-sync",
     license="MIT",
     install_requires=requirements,
-    setup_requires=[
-        "setuptools_scm",
-    ],
+    setup_requires=["setuptools_scm"],
     python_requires=">=3.8,<3.13",
     package_data={
         "a_sync": ["py.typed"],
     },
+    ext_modules=cythonize("a_sync/a_sync/_flags.pyx")
+    + cythonize("a_sync/a_sync/_kwargs.pyx"),
+    zip_safe=False,
 )

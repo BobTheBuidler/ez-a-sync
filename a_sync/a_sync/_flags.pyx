@@ -13,11 +13,11 @@ You can use any of the provided flags, whichever makes the most sense for your u
 :obj:`VIABLE_FLAGS`: Set of all valid flags, combining both synchronous and asynchronous indicators.
 """
 
-from typing import Any
+from typing import Any, Set
 
 from a_sync import exceptions
 
-AFFIRMATIVE_FLAGS = {"sync"}
+AFFIRMATIVE_FLAGS: Set[str] = {"sync"}
 """Set of flags indicating synchronous behavior.
 
 This set currently contains only the flag "sync", which is used to denote
@@ -35,7 +35,7 @@ See Also:
     :data:`VIABLE_FLAGS`: All valid flags, combining both sync and async indicators.
 """
 
-NEGATIVE_FLAGS = {"asynchronous"}
+NEGATIVE_FLAGS: Set[str] = {"asynchronous"}
 """Set of flags indicating asynchronous behavior.
 
 This set currently contains only the flag "asynchronous", which is used to denote
@@ -53,7 +53,7 @@ See Also:
     :data:`VIABLE_FLAGS`: All valid flags, combining both sync and async indicators.
 """
 
-VIABLE_FLAGS = AFFIRMATIVE_FLAGS | NEGATIVE_FLAGS
+VIABLE_FLAGS: Set[str] = AFFIRMATIVE_FLAGS | NEGATIVE_FLAGS
 """Set of all valid flags, combining both synchronous and asynchronous indicators.
 
 The ez-a-sync library uses these flags to indicate whether objects or function
@@ -104,9 +104,9 @@ def negate_if_necessary(flag: str, flag_value: bool) -> bool:
     """
     validate_flag_value(flag, flag_value)
     if flag in AFFIRMATIVE_FLAGS:
-        return bool(flag_value)
+        return flag_value
     elif flag in NEGATIVE_FLAGS:
-        return bool(not flag_value)
+        return not flag_value
     raise exceptions.InvalidFlag(flag)
 
 
