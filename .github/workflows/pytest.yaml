@@ -42,8 +42,8 @@ jobs:
 
       - name: Install ez-a-sync
         run: |
-          pip install setuptools
-          pip install .
+          python setup.py build_ext --inplace
+          python setup.py install
       
       - name: Run test suite
         run: pytest
