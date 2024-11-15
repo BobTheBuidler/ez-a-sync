@@ -628,12 +628,12 @@ result = await instance.my_method.sum([1, 2, 3])
 in the ez-a-sync library.</p>
 <p>ez-a-sync uses ‘flags’ to indicate whether objects or function calls will be synchronous or asynchronous.</p>
 <p>You can use any of the provided flags, whichever makes the most sense for your use case.</p>
-<p><a class="reference internal" href="#a_sync.a_sync._flags.AFFIRMATIVE_FLAGS" title="a_sync.a_sync._flags.AFFIRMATIVE_FLAGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AFFIRMATIVE_FLAGS</span></code></a>: Set of flags indicating synchronous behavior. Currently includes “sync”.</p>
-<p><a class="reference internal" href="#a_sync.a_sync._flags.NEGATIVE_FLAGS" title="a_sync.a_sync._flags.NEGATIVE_FLAGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NEGATIVE_FLAGS</span></code></a>: Set of flags indicating asynchronous behavior. Currently includes “asynchronous”.</p>
-<p><a class="reference internal" href="#a_sync.a_sync._flags.VIABLE_FLAGS" title="a_sync.a_sync._flags.VIABLE_FLAGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VIABLE_FLAGS</span></code></a>: Set of all valid flags, combining both synchronous and asynchronous indicators.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">AFFIRMATIVE_FLAGS</span></code>: Set of flags indicating synchronous behavior. Currently includes “sync”.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NEGATIVE_FLAGS</span></code>: Set of flags indicating asynchronous behavior. Currently includes “asynchronous”.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">VIABLE_FLAGS</span></code>: Set of all valid flags, combining both synchronous and asynchronous indicators.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.a_sync._flags.negate_if_necessary">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._flags.</span></span><span class="sig-name descname"><span class="pre">negate_if_necessary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/_flags.html#negate_if_necessary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync._flags.negate_if_necessary" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._flags.</span></span><span class="sig-name descname"><span class="pre">negate_if_necessary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync._flags.negate_if_necessary" title="Link to this definition"></a></dt>
 <dd><p>Negate the flag value if necessary based on the flag type.</p>
 <p>This function checks if the provided flag is in the set of affirmative or negative flags
 and negates the flag value accordingly. If the flag is not recognized, it raises an exception.</p>
@@ -673,7 +673,7 @@ and negates the flag value accordingly. If the flag is not recognized, it raises
 
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.a_sync._flags.validate_flag_value">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._flags.</span></span><span class="sig-name descname"><span class="pre">validate_flag_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/_flags.html#validate_flag_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync._flags.validate_flag_value" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._flags.</span></span><span class="sig-name descname"><span class="pre">validate_flag_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync._flags.validate_flag_value" title="Link to this definition"></a></dt>
 <dd><p>Validate that the flag value is a boolean.</p>
 <p>This function ensures that the provided flag value is of type boolean. If not, it raises an exception.</p>
 <dl class="field-list simple">
@@ -709,77 +709,6 @@ and negates the flag value accordingly. If the flag is not recognized, it raises
 <ul class="simple">
 <li><p><a class="reference internal" href="#a_sync.a_sync._flags.negate_if_necessary" title="a_sync.a_sync._flags.negate_if_necessary"><code class="xref py py-func docutils literal notranslate"><span class="pre">negate_if_necessary()</span></code></a>: Negates the flag value if necessary based on the flag type.</p></li>
 </ul>
-</div>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="a_sync.a_sync._flags.AFFIRMATIVE_FLAGS">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._flags.</span></span><span class="sig-name descname"><span class="pre">AFFIRMATIVE_FLAGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'sync'}</span></em><a class="headerlink" href="#a_sync.a_sync._flags.AFFIRMATIVE_FLAGS" title="Link to this definition"></a></dt>
-<dd><p>Set of flags indicating synchronous behavior.</p>
-<p>This set currently contains only the flag “sync”, which is used to denote
-synchronous operations within the ez-a-sync library.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sync&#39;</span> <span class="ow">in</span> <span class="n">AFFIRMATIVE_FLAGS</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;async&#39;</span> <span class="ow">in</span> <span class="n">AFFIRMATIVE_FLAGS</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#a_sync.a_sync._flags.NEGATIVE_FLAGS" title="a_sync.a_sync._flags.NEGATIVE_FLAGS"><code class="xref py py-data docutils literal notranslate"><span class="pre">NEGATIVE_FLAGS</span></code></a>: Flags indicating asynchronous behavior.
-<a class="reference internal" href="#a_sync.a_sync._flags.VIABLE_FLAGS" title="a_sync.a_sync._flags.VIABLE_FLAGS"><code class="xref py py-data docutils literal notranslate"><span class="pre">VIABLE_FLAGS</span></code></a>: All valid flags, combining both sync and async indicators.</p>
-</div>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="a_sync.a_sync._flags.NEGATIVE_FLAGS">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._flags.</span></span><span class="sig-name descname"><span class="pre">NEGATIVE_FLAGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous'}</span></em><a class="headerlink" href="#a_sync.a_sync._flags.NEGATIVE_FLAGS" title="Link to this definition"></a></dt>
-<dd><p>Set of flags indicating asynchronous behavior.</p>
-<p>This set currently contains only the flag “asynchronous”, which is used to denote
-asynchronous operations within the ez-a-sync library.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;asynchronous&#39;</span> <span class="ow">in</span> <span class="n">NEGATIVE_FLAGS</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sync&#39;</span> <span class="ow">in</span> <span class="n">NEGATIVE_FLAGS</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#a_sync.a_sync._flags.AFFIRMATIVE_FLAGS" title="a_sync.a_sync._flags.AFFIRMATIVE_FLAGS"><code class="xref py py-data docutils literal notranslate"><span class="pre">AFFIRMATIVE_FLAGS</span></code></a>: Flags indicating synchronous behavior.
-<a class="reference internal" href="#a_sync.a_sync._flags.VIABLE_FLAGS" title="a_sync.a_sync._flags.VIABLE_FLAGS"><code class="xref py py-data docutils literal notranslate"><span class="pre">VIABLE_FLAGS</span></code></a>: All valid flags, combining both sync and async indicators.</p>
-</div>
-</dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="a_sync.a_sync._flags.VIABLE_FLAGS">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._flags.</span></span><span class="sig-name descname"><span class="pre">VIABLE_FLAGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.a_sync._flags.VIABLE_FLAGS" title="Link to this definition"></a></dt>
-<dd><p>Set of all valid flags, combining both synchronous and asynchronous indicators.</p>
-<p>The ez-a-sync library uses these flags to indicate whether objects or function
-calls will be synchronous or asynchronous. You can use any of the provided flags,
-whichever makes the most sense for your use case.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;sync&#39;</span> <span class="ow">in</span> <span class="n">VIABLE_FLAGS</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;asynchronous&#39;</span> <span class="ow">in</span> <span class="n">VIABLE_FLAGS</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s1">&#39;invalid&#39;</span> <span class="ow">in</span> <span class="n">VIABLE_FLAGS</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#a_sync.a_sync._flags.AFFIRMATIVE_FLAGS" title="a_sync.a_sync._flags.AFFIRMATIVE_FLAGS"><code class="xref py py-data docutils literal notranslate"><span class="pre">AFFIRMATIVE_FLAGS</span></code></a>: Flags indicating synchronous behavior.
-<a class="reference internal" href="#a_sync.a_sync._flags.NEGATIVE_FLAGS" title="a_sync.a_sync._flags.NEGATIVE_FLAGS"><code class="xref py py-data docutils literal notranslate"><span class="pre">NEGATIVE_FLAGS</span></code></a>: Flags indicating asynchronous behavior.</p>
 </div>
 </dd></dl>
 
@@ -874,7 +803,7 @@ Ensure that your environment supports this usage or adjust the import if necessa
 <p>This module provides utility functions for handling keyword arguments related to synchronous and asynchronous flags.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.a_sync._kwargs.get_flag_name">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._kwargs.</span></span><span class="sig-name descname"><span class="pre">get_flag_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/_kwargs.html#get_flag_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync._kwargs.get_flag_name" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._kwargs.</span></span><span class="sig-name descname"><span class="pre">get_flag_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync._kwargs.get_flag_name" title="Link to this definition"></a></dt>
 <dd><p>Get the name of the flag present in the kwargs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -914,7 +843,7 @@ Ensure that your environment supports this usage or adjust the import if necessa
 
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.a_sync._kwargs.is_sync">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._kwargs.</span></span><span class="sig-name descname"><span class="pre">is_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/_kwargs.html#is_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync._kwargs.is_sync" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._kwargs.</span></span><span class="sig-name descname"><span class="pre">is_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop_flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync._kwargs.is_sync" title="Link to this definition"></a></dt>
 <dd><p>Determine if the operation should be synchronous based on the flag value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
