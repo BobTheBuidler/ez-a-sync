@@ -1222,24 +1222,24 @@ It includes functionality for setting up executors, defining default modifiers,
 and handling environment variable configurations.</p>
 <dl>
 <dt>Environment Variables:</dt><dd><dl class="simple">
-<dt>A_SYNC_EXECUTOR_TYPE: Specifies the type of executor to use. Valid values are</dt><dd><p>strings that start with ‘p’ for <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ProcessPoolExecutor" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">A_SYNC_EXECUTOR_TYPE</span></code>: Specifies the type of executor to use. Valid values are</dt><dd><p>strings that start with ‘p’ for <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ProcessPoolExecutor" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a>
 (e.g., ‘processes’) or ‘t’ for <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a>
 (e.g., ‘threads’). Defaults to ‘threads’.</p>
 </dd>
-<dt>A_SYNC_EXECUTOR_VALUE: Specifies the number of workers for the executor.</dt><dd><p>Defaults to 8.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">A_SYNC_EXECUTOR_VALUE</span></code>: Specifies the number of workers for the executor.</dt><dd><p>Defaults to 8.</p>
 </dd>
 </dl>
-<p>A_SYNC_DEFAULT_MODE: Sets the default mode for a_sync functions if not specified.
-A_SYNC_CACHE_TYPE: Sets the default cache type. If not specified, defaults to None.
-A_SYNC_CACHE_TYPED: Boolean flag to determine if cache keys should consider types.
-A_SYNC_RAM_CACHE_MAXSIZE: Sets the maximum size for the RAM cache. Defaults to -1.
-A_SYNC_RAM_CACHE_TTL: Sets the time-to-live for cache entries. If not specified,</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">A_SYNC_DEFAULT_MODE</span></code>: Sets the default mode for a_sync functions if not specified.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">A_SYNC_CACHE_TYPE</span></code>: Sets the default cache type. If not specified, defaults to None.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">A_SYNC_CACHE_TYPED</span></code>: Boolean flag to determine if cache keys should consider types.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">A_SYNC_RAM_CACHE_MAXSIZE</span></code>: Sets the maximum size for the RAM cache. Defaults to -1.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">A_SYNC_RAM_CACHE_TTL</span></code>: Sets the time-to-live for cache entries. If not specified,</p>
 <blockquote>
 <div><p>defaults to 0, which is then checked against <cite>null_modifiers[“ram_cache_ttl”]</cite>
 to potentially set it to <cite>None</cite>, meaning cache entries do not expire by default.</p>
 </div></blockquote>
-<p>A_SYNC_RUNS_PER_MINUTE: Sets the rate limit for function execution.
-A_SYNC_SEMAPHORE: Sets the semaphore limit for function execution.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">A_SYNC_RUNS_PER_MINUTE</span></code>: Sets the rate limit for function execution.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">A_SYNC_SEMAPHORE</span></code>: Sets the semaphore limit for function execution.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1254,6 +1254,7 @@ A_SYNC_SEMAPHORE: Sets the semaphore limit for function execution.</p>
 <span class="nb">export</span><span class="w"> </span><span class="nv">A_SYNC_RAM_CACHE_TTL</span><span class="o">=</span><span class="m">60</span>
 </pre></div>
 </div>
+<p>TODO: explain how and where these values are used</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
@@ -1293,6 +1294,66 @@ or <a class="reference external" href="https://docs.python.org/3/library/concurr
 <span class="go">True</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="a_sync.a_sync.config.CACHE_TYPE">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.config.</span></span><span class="sig-name descname"><span class="pre">CACHE_TYPE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'memory'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.config.CACHE_TYPE" title="Link to this definition"></a></dt>
+<dd><p>Sets the default cache type. If not specified, defaults to None.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="a_sync.a_sync.config.CACHE_TYPED">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.config.</span></span><span class="sig-name descname"><span class="pre">CACHE_TYPED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#a_sync.a_sync.config.CACHE_TYPED" title="Link to this definition"></a></dt>
+<dd><p>Boolean flag to determine if cache keys should consider types.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="a_sync.a_sync.config.DEFAULT_MODE">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.config.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_MODE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sync'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'async'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.config.DEFAULT_MODE" title="Link to this definition"></a></dt>
+<dd><p>Sets the default mode for a_sync functions if not specified.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="a_sync.a_sync.config.EXECUTOR_TYPE">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.config.</span></span><span class="sig-name descname"><span class="pre">EXECUTOR_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'threads'</span></em><a class="headerlink" href="#a_sync.a_sync.config.EXECUTOR_TYPE" title="Link to this definition"></a></dt>
+<dd><p>Specifies the type of executor to use.</p>
+<p>Valid values are strings that start with ‘p’ for <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ProcessPoolExecutor" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a>
+(e.g., ‘processes’) or ‘t’ for <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a> (e.g., ‘threads’).
+Defaults to ‘threads’.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="a_sync.a_sync.config.EXECUTOR_VALUE">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.config.</span></span><span class="sig-name descname"><span class="pre">EXECUTOR_VALUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#a_sync.a_sync.config.EXECUTOR_VALUE" title="Link to this definition"></a></dt>
+<dd><p>Specifies the number of workers for the executor. Defaults to 8.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="a_sync.a_sync.config.RAM_CACHE_MAXSIZE">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.config.</span></span><span class="sig-name descname"><span class="pre">RAM_CACHE_MAXSIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#a_sync.a_sync.config.RAM_CACHE_MAXSIZE" title="Link to this definition"></a></dt>
+<dd><p>Sets the maximum size for the RAM cache. Defaults to -1.
+# TODO: explain what -1 does</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="a_sync.a_sync.config.RAM_CACHE_TTL">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.config.</span></span><span class="sig-name descname"><span class="pre">RAM_CACHE_TTL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.config.RAM_CACHE_TTL" title="Link to this definition"></a></dt>
+<dd><p>Sets the time-to-live for cache entries. If not specified, defaults to 0, which is then checked against
+<cite>null_modifiers[“ram_cache_ttl”]</cite>  to potentially set it to <cite>None</cite>, meaning cache entries do not expire
+by default.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="a_sync.a_sync.config.RUNS_PER_MINUTE">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.config.</span></span><span class="sig-name descname"><span class="pre">RUNS_PER_MINUTE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.config.RUNS_PER_MINUTE" title="Link to this definition"></a></dt>
+<dd><p>Sets the rate limit for function execution.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="a_sync.a_sync.config.SEMAPHORE">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.config.</span></span><span class="sig-name descname"><span class="pre">SEMAPHORE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.config.SEMAPHORE" title="Link to this definition"></a></dt>
+<dd><p>Sets the semaphore limit for function execution.</p>
 </dd></dl>
 
 </section>
