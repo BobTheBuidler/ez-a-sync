@@ -1,5 +1,5 @@
 [build-system]
-requires = ["cython"]
+requires = ["Cython"]
 
 [tool.black]
 line-length = 100
