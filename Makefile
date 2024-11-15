@@ -6,3 +6,6 @@ docs:
 	rm -r ./docs/_templates -f
 	rm -r ./docs/_build -f
 	sphinx-apidoc --private -o ./docs/source ./a_sync
+
+cython:
+	python csetup.py build_ext --inplace
