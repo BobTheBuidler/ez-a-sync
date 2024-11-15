@@ -1,22 +1,21 @@
 """
 This module provides several executor classes that facilitate running synchronous functions asynchronously using `asyncio`.
 
-With these executors, you can run sync functions in your executor with `await executor.run(fn, *args)`.
-The `executor.submit(fn, *args)` method works similarly to the `concurrent.futures` implementation but
+With these executors, you can run sync functions in your executor with `await executor.run(fn, *args, **kwargs)`.
+The `executor.submit(fn, *args, **kwargs)` method works similarly to the `concurrent.futures` implementation but
 returns an `asyncio.Future` instead of a `concurrent.futures.Future`.
 
 Executor Classes:
-- :class:`_AsyncExecutorMixin`: A mixin providing asynchronous run and submit methods, with support for synchronous mode.
-- :class:`AsyncProcessPoolExecutor`: An async process pool executor.
-- :class:`AsyncThreadPoolExecutor`: An async thread pool executor.
-- :class:`PruningThreadPoolExecutor`: A thread pool executor that prunes inactive threads after a timeout, ensuring at least one thread remains active to prevent locks.
+    - :class:`AsyncProcessPoolExecutor`: A process pool executor providing asynchronous run and submit methods, with support for synchronous mode
+    - :class:`AsyncThreadPoolExecutor`: A thread pool executor providing asynchronous run and submit methods, with support for synchronous mode
+    - :class:`PruningThreadPoolExecutor`: An :class:`ASyncThreadPoolExecutor` that prunes inactive threads after a timeout, ensuring at least one thread remains active to prevent locks.
 
 See Also:
     - :mod:`concurrent.futures` for the original synchronous executor implementations.
 """
 
 import asyncio
-import concurrent.futures as cf
+import concurrent.futures
 import multiprocessing.context
 import queue
 import threading
@@ -33,11 +32,13 @@ TEN_MINUTES = 60 * 10
 Initializer = Callable[..., object]
 
 
-class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
+class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
     """
     A mixin for Executors to provide asynchronous run and submit methods.
 
-    This mixin allows executors to operate in both synchronous and asynchronous modes. In synchronous mode, functions are executed directly in the current thread. In asynchronous mode, functions are submitted to the executor and awaited.
+    This mixin allows executors to operate in both asynchronous (normal) mode and synchronous mode.
+    In asynchronous (normal) mode, functions are submitted to the executor and awaited.
+    In synchronous mode, functions are executed directly in the current thread.
 
     Examples:
         >>> async def example():
@@ -84,7 +85,7 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
 
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
         """
-        Submits a job to the executor and returns an `asyncio.Future` that can be awaited for the result without blocking.
+        Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.
 
         Args:
             fn: The function to submit.
@@ -174,13 +175,14 @@ class _AsyncExecutorMixin(cf.Executor, _DebugDaemonMixin):
 # Process
 
 
-class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
+class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPoolExecutor):
     """
-    An async process pool executor that allows use of kwargs.
+    A :class:`concurrent.futures.ProcessPoolExecutor' subclass providing asynchronous run and submit methods that support kwargs,
+    with support for synchronous mode
 
     Examples:
         >>> executor = AsyncProcessPoolExecutor(max_workers=4)
-        >>> future = executor.submit(some_function, arg1, arg2)
+        >>> future = executor.submit(some_function, arg1, arg2, kwarg1='kwarg1')
         >>> result = await future
     """
 
@@ -231,13 +233,14 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, cf.ProcessPoolExecutor):
 # Thread
 
 
-class AsyncThreadPoolExecutor(_AsyncExecutorMixin, cf.ThreadPoolExecutor):
+class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPoolExecutor):
     """
-    An async thread pool executor that allows use of kwargs.
-
+    A :class:`concurrent.futures.ThreadPoolExecutor' subclass providing asynchronous run and submit methods that support kwargs,
+    with support for synchronous mode
+    
     Examples:
         >>> executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix="MyThread")
-        >>> future = executor.submit(some_function, arg1, arg2)
+        >>> future = executor.submit(some_function, arg1, arg2, kwarg1='kwarg1')
         >>> result = await future
     """
 
@@ -364,7 +367,7 @@ def _worker(
 
 class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
     """
-    This `AsyncThreadPoolExecutor` implementation prunes inactive threads after 'timeout' seconds without a work item.
+    This :class:`~AsyncThreadPoolExecutor` implementation prunes inactive threads after 'timeout' seconds without a work item.
     Pruned threads will be automatically recreated as needed for future workloads. Up to 'max_threads' can be active at any one time.
     The executor ensures that at least one active thread remains to prevent locks.
 
@@ -374,7 +377,7 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
 
     Examples:
         >>> executor = PruningThreadPoolExecutor(max_workers=5, timeout=300)
-        >>> future = executor.submit(some_function, arg1, arg2)
+        >>> future = executor.submit(some_function, arg1, arg2, kwarg1='kwarg1')
         >>> result = await future
     """
 
