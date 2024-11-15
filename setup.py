@@ -1,3 +1,4 @@
+from Cython.Build import cythonize
 from setuptools import find_packages, setup
 
 with open("requirements.txt", "r") as f:
@@ -25,4 +26,6 @@ setup(
     package_data={
         "a_sync": ["py.typed"],
     },
+    ext_modules=cythonize("a_sync/a_sync/_flags.pyx") + cythonize("a_sync/a_sync/_kwargs.pyx"),
+    zip_safe=False,
 )
