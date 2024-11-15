@@ -107,6 +107,10 @@ def skip_undesired_members(app, what, name, obj, skip, options):
     ]:
         return True
 
+    # Skip all name-mangled methods, they're mangled for a reason and don't need to be exposed.
+    if name.startswith("__") and not name.endswith("__"):
+        return True
+
     return skip
 
 
