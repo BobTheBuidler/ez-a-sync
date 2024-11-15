@@ -175,7 +175,9 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
 # Process
 
 
-class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPoolExecutor):
+class AsyncProcessPoolExecutor(
+    _AsyncExecutorMixin, concurrent.futures.ProcessPoolExecutor
+):
     """
     A :class:`concurrent.futures.ProcessPoolExecutor' subclass providing asynchronous run and submit methods that support kwargs,
     with support for synchronous mode
@@ -233,11 +235,13 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPo
 # Thread
 
 
-class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPoolExecutor):
+class AsyncThreadPoolExecutor(
+    _AsyncExecutorMixin, concurrent.futures.ThreadPoolExecutor
+):
     """
     A :class:`concurrent.futures.ThreadPoolExecutor' subclass providing asynchronous run and submit methods that support kwargs,
     with support for synchronous mode
-    
+
     Examples:
         >>> executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix="MyThread")
         >>> future = executor.submit(some_function, arg1, arg2, kwarg1='kwarg1')
