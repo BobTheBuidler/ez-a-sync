@@ -21,6 +21,7 @@ setup(
     install_requires=requirements,
     setup_requires=[
         "setuptools_scm",
+        "Cython",
     ],
     python_requires=">=3.8,<3.13",
     package_data={
