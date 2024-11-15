@@ -26,6 +26,7 @@ setup(
     package_data={
         "a_sync": ["py.typed"],
     },
-    ext_modules=cythonize("a_sync/a_sync/_flags.pyx") + cythonize("a_sync/a_sync/_kwargs.pyx"),
+    ext_modules=cythonize("a_sync/a_sync/_flags.pyx")
+    + cythonize("a_sync/a_sync/_kwargs.pyx"),
     zip_safe=False,
 )
