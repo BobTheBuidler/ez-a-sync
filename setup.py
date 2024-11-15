@@ -19,10 +19,7 @@ setup(
     url="https://github.com/BobTheBuidler/a-sync",
     license="MIT",
     install_requires=requirements,
-    setup_requires=[
-        "setuptools_scm",
-        "cython",
-    ],
+    setup_requires=["setuptools_scm"],
     python_requires=">=3.8,<3.13",
     package_data={
         "a_sync": ["py.typed"],
