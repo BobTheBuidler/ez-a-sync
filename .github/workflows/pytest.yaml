@@ -42,7 +42,7 @@ jobs:
 
       - name: Install ez-a-sync
         run: |
-          pip install Cython
+          pip install cython
           pip install .
       
       - name: Run test suite
