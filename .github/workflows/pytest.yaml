@@ -41,9 +41,7 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Install ez-a-sync
-        run: |
-          python setup.py build_ext --inplace
-          python setup.py install
+        run: pip install .
       
       - name: Run test suite
         run: pytest
