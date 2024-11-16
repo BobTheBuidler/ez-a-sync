@@ -265,19 +265,21 @@
 
 <div class="viewcode-block" id="ASyncFunction.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncFunction.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="n">_skip_validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes an ASyncFunction instance.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            fn: The function to wrap.</span>
+<span class="sd">            _skip_validate: For internal use only. Skips validation of the wrapped function when its already been validated once before.</span>
 <span class="sd">            **modifiers: Keyword arguments for function modifiers.</span>
 
 <span class="sd">        See Also:</span>
 <span class="sd">            - :func:`_validate_wrapped_fn`</span>
 <span class="sd">            - :class:`ModifierManager`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_validate_wrapped_fn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_skip_validate</span><span class="p">:</span>
+            <span class="n">_validate_wrapped_fn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">modifiers</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">modifiers</span><span class="p">)</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;A :class:`~ModifierManager` instance managing function modifiers.&quot;&quot;&quot;</span>
