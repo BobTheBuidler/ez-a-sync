@@ -7,7 +7,11 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 from functools import cached_property
 from typing import Any
 
-__all__ = ['AsyncThreadPoolExecutor', 'AsyncProcessPoolExecutor', 'PruningThreadPoolExecutor']
+__all__ = [
+    "AsyncThreadPoolExecutor",
+    "AsyncProcessPoolExecutor",
+    "PruningThreadPoolExecutor",
+]
 
 Initializer = Callable[..., object]
 
@@ -27,6 +31,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
     See Also:
         - :meth:`submit` for submitting functions to the executor.
     """
+
     async def run(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs):
         """
         A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`.
@@ -48,7 +53,10 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         See Also:
             - :meth:`submit` for submitting functions to the executor.
         """
-    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> asyncio.Future[T]:
+
+    def submit(
+        self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs
+    ) -> asyncio.Future[T]:
         """
         Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.
 
@@ -65,26 +73,30 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         See Also:
             - :meth:`run` for running functions with the executor.
         """
+
     def __len__(self) -> int: ...
     @cached_property
     def sync_mode(self) -> bool:
-        '''
+        """
         Indicates if the executor is in synchronous mode (max_workers == 0).
 
         Examples:
             >>> if executor.sync_mode:
             >>>     print("Executor is in synchronous mode.")
-        '''
+        """
+
     @property
     def worker_count_current(self) -> int:
-        '''
+        """
         Returns the current number of workers.
 
         Examples:
             >>> print(f"Current worker count: {executor.worker_count_current}")
-        '''
+        """
 
-class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPoolExecutor):
+class AsyncProcessPoolExecutor(
+    _AsyncExecutorMixin, concurrent.futures.ProcessPoolExecutor
+):
     """
     A :class:`concurrent.futures.ProcessPoolExecutor' subclass providing asynchronous run and submit methods that support kwargs,
     with support for synchronous mode
@@ -94,7 +106,14 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPo
         >>> future = executor.submit(some_function, arg1, arg2, kwarg1='kwarg1')
         >>> result = await future
     """
-    def __init__(self, max_workers: Optional[int] = None, mp_context: Optional[multiprocessing.context.BaseContext] = None, initializer: Optional[Initializer] = None, initargs: Tuple[Any, ...] = ()) -> None:
+
+    def __init__(
+        self,
+        max_workers: Optional[int] = None,
+        mp_context: Optional[multiprocessing.context.BaseContext] = None,
+        initializer: Optional[Initializer] = None,
+        initargs: Tuple[Any, ...] = (),
+    ) -> None:
         """
         Initializes the AsyncProcessPoolExecutor.
 
@@ -110,8 +129,10 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPo
             >>> result = await future
         """
 
-class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPoolExecutor):
-    '''
+class AsyncThreadPoolExecutor(
+    _AsyncExecutorMixin, concurrent.futures.ThreadPoolExecutor
+):
+    """
     A :class:`concurrent.futures.ThreadPoolExecutor\' subclass providing asynchronous run and submit methods that support kwargs,
     with support for synchronous mode
 
@@ -119,9 +140,16 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPool
         >>> executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix="MyThread")
         >>> future = executor.submit(some_function, arg1, arg2, kwarg1=\'kwarg1\')
         >>> result = await future
-    '''
-    def __init__(self, max_workers: Optional[int] = None, thread_name_prefix: str = '', initializer: Optional[Initializer] = None, initargs: Tuple[Any, ...] = ()) -> None:
-        '''
+    """
+
+    def __init__(
+        self,
+        max_workers: Optional[int] = None,
+        thread_name_prefix: str = "",
+        initializer: Optional[Initializer] = None,
+        initargs: Tuple[Any, ...] = (),
+    ) -> None:
+        """
         Initializes the AsyncThreadPoolExecutor.
 
         Args:
@@ -134,7 +162,8 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPool
             >>> executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix="MyThread")
             >>> future = executor.submit(some_function, arg1, arg2)
             >>> result = await future
-        '''
+        """
+
 ProcessPoolExecutor = AsyncProcessPoolExecutor
 ThreadPoolExecutor = AsyncThreadPoolExecutor
 
@@ -153,7 +182,15 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
         >>> future = executor.submit(some_function, arg1, arg2, kwarg1='kwarg1')
         >>> result = await future
     """
-    def __init__(self, max_workers: Incomplete | None = None, thread_name_prefix: str = '', initializer: Incomplete | None = None, initargs=(), timeout=...) -> None:
+
+    def __init__(
+        self,
+        max_workers: Incomplete | None = None,
+        thread_name_prefix: str = "",
+        initializer: Incomplete | None = None,
+        initargs=(),
+        timeout=...,
+    ) -> None:
         """
         Initializes the PruningThreadPoolExecutor.
 
@@ -169,4 +206,5 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
             >>> future = executor.submit(some_function, arg1, arg2)
             >>> result = await future
         """
+
     def __len__(self) -> int: ...

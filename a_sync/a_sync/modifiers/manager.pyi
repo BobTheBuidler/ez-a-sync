@@ -1,7 +1,14 @@
 from a_sync._typing import *
 from _typeshed import Incomplete
-from a_sync.a_sync.config import null_modifiers as null_modifiers, user_set_default_modifiers as user_set_default_modifiers
-from a_sync.a_sync.modifiers import cache as cache, limiter as limiter, semaphores as semaphores
+from a_sync.a_sync.config import (
+    null_modifiers as null_modifiers,
+    user_set_default_modifiers as user_set_default_modifiers,
+)
+from a_sync.a_sync.modifiers import (
+    cache as cache,
+    limiter as limiter,
+    semaphores as semaphores,
+)
 from typing import Any
 
 valid_modifiers: Incomplete
@@ -37,6 +44,7 @@ class ModifierManager(Dict[str, Any]):
         - :class:`a_sync.a_sync.modifiers.limiter`
         - :class:`a_sync.a_sync.modifiers.semaphores`
     """
+
     default: DefaultMode
     cache_type: CacheType
     cache_typed: bool
@@ -54,6 +62,7 @@ class ModifierManager(Dict[str, Any]):
         Raises:
             ValueError: If an unsupported modifier is provided.
         """
+
     def __getattribute__(self, modifier_key: str) -> Any:
         """Gets the value of a modifier.
 
@@ -68,6 +77,7 @@ class ModifierManager(Dict[str, Any]):
             >>> manager.cache_type
             'memory'
         """
+
     @property
     def use_limiter(self) -> bool:
         """Determines if a rate limiter should be used.
@@ -77,6 +87,7 @@ class ModifierManager(Dict[str, Any]):
             >>> manager.use_limiter
             True
         """
+
     @property
     def use_semaphore(self) -> bool:
         """Determines if a semaphore should be used.
@@ -86,6 +97,7 @@ class ModifierManager(Dict[str, Any]):
             >>> manager.use_semaphore
             True
         """
+
     @property
     def use_cache(self) -> bool:
         """Determines if caching should be used.
@@ -95,6 +107,7 @@ class ModifierManager(Dict[str, Any]):
             >>> manager.use_cache
             True
         """
+
     def apply_async_modifiers(self, coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:
         """Applies asynchronous modifiers to a coroutine function.
 
@@ -110,6 +123,7 @@ class ModifierManager(Dict[str, Any]):
             >>> manager = ModifierManager(ModifierKwargs(runs_per_minute=60))
             >>> modified_coro = manager.apply_async_modifiers(my_coro)
         """
+
     def apply_sync_modifiers(self, function: SyncFn[P, T]) -> SyncFn[P, T]:
         """Wraps a synchronous function.
 
@@ -128,6 +142,7 @@ class ModifierManager(Dict[str, Any]):
             >>> manager = ModifierManager(ModifierKwargs())
             >>> modified_function = manager.apply_sync_modifiers(my_function)
         """
+
     def keys(self) -> KeysView[str]:
         """Returns the keys of the modifiers.
 
@@ -136,6 +151,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(manager.keys())
             ['cache_type']
         """
+
     def values(self) -> ValuesView[Any]:
         """Returns the values of the modifiers.
 
@@ -144,6 +160,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(manager.values())
             ['memory']
         """
+
     def items(self) -> ItemsView[str, Any]:
         """Returns the items of the modifiers.
 
@@ -152,6 +169,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(manager.items())
             [('cache_type', 'memory')]
         """
+
     def __contains__(self, key: str) -> bool:
         """Checks if a key is in the modifiers.
 
@@ -163,6 +181,7 @@ class ModifierManager(Dict[str, Any]):
             >>> 'cache_type' in manager
             True
         """
+
     def __iter__(self) -> Iterator[str]:
         """Returns an iterator over the modifier keys.
 
@@ -171,6 +190,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(iter(manager))
             ['cache_type']
         """
+
     def __len__(self) -> int:
         """Returns the number of modifiers.
 
@@ -179,6 +199,7 @@ class ModifierManager(Dict[str, Any]):
             >>> len(manager)
             1
         """
+
     def __getitem__(self, modifier_key: str):
         """Gets the value of a modifier by key.
 
