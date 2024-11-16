@@ -4,6 +4,21 @@ from setuptools import find_packages, setup
 with open("requirements.txt", "r") as f:
     requirements = list(map(str.strip, f.read().split("\n")))[:-1]
 
+
+cythoned = []
+
+for p in [
+    "a_sync/a_sync/_flags.pyx",
+    "a_sync/a_sync/_kwargs.pyx",
+    "a_sync/a_sync/abstract.pyx",
+    "a_sync/a_sync/modifiers/manager.pyx",
+    "a_sync/primitives/locks/prio_semaphore.pyx",
+    "a_sync/executor.pyx",
+    "a_sync/iter.pyx",
+]:
+    cythoned += cythonize(p)
+
+
 setup(
     name="ez-a-sync",
     packages=find_packages(),
@@ -24,7 +39,6 @@ setup(
     package_data={
         "a_sync": ["py.typed"],
     },
-    ext_modules=cythonize("a_sync/a_sync/_flags.pyx")
-    + cythonize("a_sync/a_sync/_kwargs.pyx"),
+    ext_modules=cythoned,
     zip_safe=False,
 )
