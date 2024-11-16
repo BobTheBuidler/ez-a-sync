@@ -1,5 +1,7 @@
+cython>=3.0.11
 pytest
 pytest-asyncio-cooperative
 pytest-cov
 setuptools
 tqdm
+wheel

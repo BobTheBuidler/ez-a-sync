@@ -6,6 +6,7 @@ on:
     branches: [ master, dev ]
     paths:
       - '**.py'
+      - '**.pyx'
       - '**/pytest.yaml'
       - '!**/docs/conf.py'
       
@@ -37,13 +38,10 @@ jobs:
         with:
           python-version: ${{ matrix.pyversion }}
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt -r requirements-dev.txt
-
       - name: Install ez-a-sync
         run: |
-          python setup.py build_ext --inplace
-          python setup.py install
+          pip install -r requirements-dev.txt
+          pip install -e .
       
       - name: Run test suite
         run: pytest
