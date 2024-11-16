@@ -24,6 +24,9 @@ setup(
     package_data={
         "a_sync": ["py.typed"],
     },
-    ext_modules=cythonize("a_sync/**/*.pyx"),
+    ext_modules=cythonize(
+        "a_sync/**/*.pyx",
+        compiler_directives={'embedsignature': True, 'linetrace': True},
+    ),
     zip_safe=False,
 )
