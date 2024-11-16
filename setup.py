@@ -12,9 +12,6 @@ for p in [
     "a_sync/a_sync/_kwargs.pyx",
     "a_sync/a_sync/abstract.pyx",
     "a_sync/a_sync/modifiers/manager.pyx",
-    "a_sync/primitives/locks/prio_semaphore.pyx",
-    "a_sync/executor.pyx",
-    "a_sync/iter.pyx",
 ]:
     cythoned += cythonize(p)
 
