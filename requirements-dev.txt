@@ -3,3 +3,4 @@ pytest-asyncio-cooperative
 pytest-cov
 setuptools
 tqdm
+wheel
