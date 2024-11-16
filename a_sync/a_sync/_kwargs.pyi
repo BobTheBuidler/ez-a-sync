@@ -1,7 +1,7 @@
 from typing import Optional
 
 def get_flag_name(kwargs: dict) -> Optional[str]:
-    """
+    '''
     Get the name of the flag present in the kwargs.
 
     Args:
@@ -26,8 +26,7 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
 
     See Also:
         :func:`is_sync`: Determines if the operation should be synchronous based on the flag value.
-    """
-
+    '''
 def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:
     """
     Determine if the operation should be synchronous based on the flag value.
