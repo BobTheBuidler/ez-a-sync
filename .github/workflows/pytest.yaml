@@ -39,7 +39,9 @@ jobs:
           python-version: ${{ matrix.pyversion }}
 
       - name: Install ez-a-sync
-        run: pip install -e .
+        run: |
+          pip install -r requirements-dev.txt
+          pip install -e .
       
       - name: Run test suite
         run: pytest
