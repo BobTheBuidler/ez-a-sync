@@ -60,7 +60,7 @@ class ASyncABC(metaclass=ASyncMeta):
     # Concrete Methods (overridable) #
     ##################################
 
-    def __a_sync_should_await__(self, kwargs: dict) -> bool:
+    def __a_sync_should_await__(self, kwargs: Dict[str, Any]) -> bool:
         """Determines if methods should be called asynchronously.
 
         This method first checks the provided keyword arguments for flags
@@ -97,7 +97,7 @@ class ASyncABC(metaclass=ASyncMeta):
             self.__a_sync_flag_name__, self.__a_sync_flag_value__
         )
 
-    def __a_sync_should_await_from_kwargs__(self, kwargs: dict) -> bool:
+    def __a_sync_should_await_from_kwargs__(self, kwargs: Dict[str, Any]) -> bool:
         """Determines execution mode from keyword arguments.
 
         This method can be overridden to customize how flags are extracted
@@ -119,7 +119,7 @@ class ASyncABC(metaclass=ASyncMeta):
         raise NoFlagsFound("kwargs", kwargs.keys())
 
     @classmethod
-    def __a_sync_instance_will_be_sync__(cls, args: tuple, kwargs: dict) -> bool:
+    def __a_sync_instance_will_be_sync__(cls, args: Tuple[Any, ...], kwargs: Dict[str, Any]) -> bool:
         """Determines if a new instance will be synchronous.
 
         This method checks the constructor's signature against provided
@@ -144,7 +144,7 @@ class ASyncABC(metaclass=ASyncMeta):
                 "kwargs indicate the new instance created with args %s %s is %ssynchronous",
                 args,
                 kwargs,
-                "a" if sync is False else "",
+                "" if sync else "a",
             )
             return sync
         logger.debug(
