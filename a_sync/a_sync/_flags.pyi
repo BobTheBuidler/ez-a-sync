@@ -30,6 +30,7 @@ def negate_if_necessary(flag: str, flag_value: bool) -> bool:
     See Also:
         - :func:`validate_flag_value`: Validates that the flag value is a boolean.
     """
+
 def validate_flag_value(flag: str, flag_value: Any) -> bool:
     """
     Validate that the flag value is a boolean.
