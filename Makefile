@@ -9,3 +9,6 @@ docs:
 
 cython:
 	python csetup.py build_ext --inplace
+
+stubs:
+	stubgen ./a_sync -o . --include-docstrings
