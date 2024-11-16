@@ -256,7 +256,7 @@ implemented.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__">
-<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modifier_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span> <span class="pre">modifier_key:</span> <span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__" title="Link to this definition"></a></dt>
 <dd><p>Gets the value of a modifier by key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -276,7 +276,7 @@ implemented.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the ModifierManager with the given modifiers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -293,7 +293,7 @@ implemented.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__iter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Returns an iterator over the modifier keys.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
@@ -310,7 +310,7 @@ implemented.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.apply_async_modifiers">
-<span class="sig-name descname"><span class="pre">apply_async_modifiers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coro_fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.apply_async_modifiers" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">apply_async_modifiers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coro_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CoroFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CoroFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.apply_async_modifiers" title="Link to this definition"></a></dt>
 <dd><p>Applies asynchronous modifiers to a coroutine function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -334,7 +334,7 @@ implemented.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.apply_sync_modifiers">
-<span class="sig-name descname"><span class="pre">apply_sync_modifiers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.apply_sync_modifiers" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">apply_sync_modifiers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SyncFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SyncFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.apply_sync_modifiers" title="Link to this definition"></a></dt>
 <dd><p>Wraps a synchronous function.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -384,7 +384,7 @@ implemented.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.items">
-<span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.items" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ItemsView</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.items" title="Link to this definition"></a></dt>
 <dd><p>Returns the items of the modifiers.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
@@ -401,7 +401,7 @@ implemented.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.keys">
-<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.keys" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KeysView</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.keys" title="Link to this definition"></a></dt>
 <dd><p>Returns the keys of the modifiers.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
@@ -448,7 +448,7 @@ In either case, this is followed by: for k in F:  D[k] = F[k]</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.values">
-<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.values" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ValuesView</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.values" title="Link to this definition"></a></dt>
 <dd><p>Returns the values of the modifiers.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">))</span>
