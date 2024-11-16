@@ -479,7 +479,8 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
             unbound = unbound.__wrapped__
-        ASyncFunction.__init__(self, unbound, **modifiers)
+        # NOTE: the wrapped function was validated when the descriptor was initialized
+        ASyncFunction.__init__(self, unbound, _skip_validate=True, **modifiers)
         self._is_async_def = async_def
         """True if `self.__wrapped__` is a coroutine function, False otherwise."""
         functools.update_wrapper(self, unbound)

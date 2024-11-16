@@ -181,19 +181,21 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             func = ASyncFunction(my_function, runs_per_minute=60)
         """
 
-    def __init__(self, fn: AnyFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
+    def __init__(self, fn: AnyFn[P, T], _skip_validate: bool = False, **modifiers: Unpack[ModifierKwargs]) -> None:
         """
         Initializes an ASyncFunction instance.
 
         Args:
             fn: The function to wrap.
+            _skip_validate: For internal use only. Skips validation of the wrapped function when its already been validated once before.
             **modifiers: Keyword arguments for function modifiers.
 
         See Also:
             - :func:`_validate_wrapped_fn`
             - :class:`ModifierManager`
         """
-        _validate_wrapped_fn(fn)
+        if not _skip_validate:
+            _validate_wrapped_fn(fn)
 
         self.modifiers = ModifierManager(modifiers)
         """A :class:`~ModifierManager` instance managing function modifiers."""

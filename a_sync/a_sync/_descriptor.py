@@ -17,7 +17,7 @@ import functools
 
 from a_sync._typing import *
 from a_sync.a_sync import decorator
-from a_sync.a_sync.function import ASyncFunction, ModifierManager, _ModifiedMixin
+from a_sync.a_sync.function import ASyncFunction, ModifierManager, _ModifiedMixin, _validate_wrapped_fn
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
@@ -81,10 +81,12 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             self.modifiers.update(_fget.modifiers)
             self.__wrapped__ = _fget
         elif asyncio.iscoroutinefunction(_fget):
+            _validate_wrapped_fn(_fget)
             self.__wrapped__: AsyncUnboundMethod[I, P, T] = (
                 self.modifiers.apply_async_modifiers(_fget)
             )
         else:
+            _validate_wrapped_fn(_fget)
             self.__wrapped__ = _fget
 
         self.field_name = field_name or _fget.__name__
