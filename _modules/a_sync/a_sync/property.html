@@ -301,17 +301,17 @@
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span> <span class="o">...</span>
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Self</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves the property value, either synchronously or asynchronously.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            instance: The instance from which the property is accessed.</span>
-<span class="sd">            owner: The owner class of the property.</span>
+    <span class="fm">__get__</span> <span class="o">=</span> <span class="n">_ASyncPropertyDescriptorBase</span><span class="o">.</span><span class="fm">__get__</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieves the property value, either synchronously or asynchronously.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            The property value, either as an awaitable or directly.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_ASyncPropertyDescriptorBase</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span></div>
+<span class="sd">    Args:</span>
+<span class="sd">        instance: The instance from which the property is accessed.</span>
+<span class="sd">        owner: The owner class of the property.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The property value, either as an awaitable or directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 
@@ -592,17 +592,17 @@
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span> <span class="o">...</span>
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span> <span class="o">...</span>
-    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">owner</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">I</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Self</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves the cached property value, either synchronously or asynchronously.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            instance: The instance from which the property is accessed.</span>
-<span class="sd">            owner: The owner class of the property.</span>
+    <span class="fm">__get__</span> <span class="o">=</span> <span class="n">_ASyncPropertyDescriptorBase</span><span class="o">.</span><span class="fm">__get__</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieves the cached property value, either synchronously or asynchronously.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            The cached property value, either as an awaitable or directly.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_ASyncPropertyDescriptorBase</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">owner</span><span class="p">)</span></div>
+<span class="sd">    Args:</span>
+<span class="sd">        instance: The instance from which the property is accessed.</span>
+<span class="sd">        owner: The owner class of the property.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The cached property value, either as an awaitable or directly.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 
