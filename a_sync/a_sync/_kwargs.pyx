@@ -2,13 +2,13 @@
 This module provides utility functions for handling keyword arguments related to synchronous and asynchronous flags.
 """
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from a_sync import exceptions
 from a_sync.a_sync import _flags
 
 
-def get_flag_name(kwargs: dict) -> Optional[str]:
+def get_flag_name(kwargs: Dict[str, Any]) -> Optional[str]:
     """
     Get the name of the flag present in the kwargs.
 
@@ -43,7 +43,7 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
     return present_flags[0]
 
 
-def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:
+def is_sync(flag: str, kwargs: Dict[str, Any], pop_flag: bool = False) -> bool:
     """
     Determine if the operation should be synchronous based on the flag value.
 
