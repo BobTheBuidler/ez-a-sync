@@ -102,11 +102,11 @@ def negate_if_necessary(flag: str, flag_value: bool) -> bool:
     See Also:
         - :func:`validate_flag_value`: Validates that the flag value is a boolean.
     """
-    validate_flag_value(flag, flag_value)
+    cdef bint value = validate_flag_value(flag, flag_value)
     if flag in AFFIRMATIVE_FLAGS:
-        return flag_value
+        return value
     elif flag in NEGATIVE_FLAGS:
-        return not flag_value
+        return not value
     raise exceptions.InvalidFlag(flag)
 
 
