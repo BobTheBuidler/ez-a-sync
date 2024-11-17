@@ -210,17 +210,17 @@ class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
-    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[Self, T]:
-        """Retrieves the property value, either synchronously or asynchronously.
 
-        Args:
-            instance: The instance from which the property is accessed.
-            owner: The owner class of the property.
+    __get__ = _ASyncPropertyDescriptorBase.__get__
+    """Retrieves the property value, either synchronously or asynchronously.
 
-        Returns:
-            The property value, either as an awaitable or directly.
-        """
-        return _ASyncPropertyDescriptorBase.__get__(self, instance, owner)
+    Args:
+        instance: The instance from which the property is accessed.
+        owner: The owner class of the property.
+
+    Returns:
+        The property value, either as an awaitable or directly.
+    """
 
 
 @final
@@ -474,17 +474,17 @@ class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
     def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
-    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[Self, T]:
-        """Retrieves the cached property value, either synchronously or asynchronously.
 
-        Args:
-            instance: The instance from which the property is accessed.
-            owner: The owner class of the property.
+    __get__ = _ASyncPropertyDescriptorBase.__get__
+    """Retrieves the cached property value, either synchronously or asynchronously.
 
-        Returns:
-            The cached property value, either as an awaitable or directly.
-        """
-        return _ASyncPropertyDescriptorBase.__get__(self, instance, owner)
+    Args:
+        instance: The instance from which the property is accessed.
+        owner: The owner class of the property.
+
+    Returns:
+        The cached property value, either as an awaitable or directly.
+    """
 
 
 @final
