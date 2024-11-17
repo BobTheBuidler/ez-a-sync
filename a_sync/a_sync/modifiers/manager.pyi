@@ -11,7 +11,7 @@ from a_sync.a_sync.modifiers import (
 )
 from typing import Any
 
-valid_modifiers: Incomplete
+valid_modifiers: Tuple[str, ...]
 
 class ModifierManager(Dict[str, Any]):
     """Manages modifiers for asynchronous and synchronous functions.
