@@ -134,7 +134,8 @@
             <span class="n">cls_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;You should not create instances of `</span><span class="si">{</span><span class="n">cls_name</span><span class="si">}</span><span class="s2">` directly, you should subclass `ASyncGenericBase` instead.&quot;</span>
-            <span class="p">)</span></div>
+            <span class="p">)</span>
+        <span class="n">ASyncABC</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>

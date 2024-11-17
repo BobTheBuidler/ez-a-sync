@@ -291,7 +291,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="a_sync.a_sync.html#module-a_sync.a_sync.abstract">a_sync.a_sync.abstract module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.abstract.ASyncABC"><code class="docutils literal notranslate"><span class="pre">ASyncABC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.abstract.ASyncABC"><code class="docutils literal notranslate"><span class="pre">ASyncABC</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.abstract.ASyncABC.__init__"><code class="docutils literal notranslate"><span class="pre">ASyncABC.__init__()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="a_sync.a_sync.html#module-a_sync.a_sync.base">a_sync.a_sync.base module</a><ul>
@@ -7203,7 +7206,7 @@ async for key, result in task_map.yield_completed():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMappingItems.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingItems.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.task.TaskMappingItems.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -7293,7 +7296,7 @@ async for key, result in task_map.yield_completed():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMappingKeys.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingKeys.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.task.TaskMappingKeys.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -7383,7 +7386,7 @@ async for key, result in task_map.yield_completed():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.task.TaskMappingValues.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">view</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.task.TaskMappingValues.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.task.TaskMappingValues.__init__" title="Link to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -8104,7 +8107,7 @@ in <a class="reference internal" href="../index.html#a_sync.ASyncGenericBase" ti
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncGenericSingleton.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ASyncGenericSingleton.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.ASyncGenericSingleton.__init__" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
