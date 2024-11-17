@@ -61,7 +61,6 @@ class ASyncABC(metaclass=ASyncMeta):
     """
 
     def __init__(self) -> None:
-        #self.__a_sync_should_await_cache__ = ShouldAwaitCache()
         cdef ShouldAwaitCache cache
         cache.is_cached = False
         cache.value = False
