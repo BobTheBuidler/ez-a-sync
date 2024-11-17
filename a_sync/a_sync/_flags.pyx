@@ -13,7 +13,7 @@ You can use any of the provided flags, whichever makes the most sense for your u
 :obj:`VIABLE_FLAGS`: Set of all valid flags, combining both synchronous and asynchronous indicators.
 """
 
-from typing import Any, Set
+from typing import Set
 
 from a_sync import exceptions
 
@@ -76,7 +76,7 @@ See Also:
 """
 
 
-def negate_if_necessary(flag: str, flag_value: bool) -> bool:
+cpdef bint negate_if_necessary(str flag, object flag_value) except +:
     """Negate the flag value if necessary based on the flag type.
 
     This function checks if the provided flag is in the set of affirmative or negative flags
@@ -109,8 +109,7 @@ def negate_if_necessary(flag: str, flag_value: bool) -> bool:
         return not value
     raise exceptions.InvalidFlag(flag)
 
-
-def validate_flag_value(flag: str, flag_value: Any) -> bool:
+cpdef bint validate_flag_value(str flag, object flag_value) except +:
     """
     Validate that the flag value is a boolean.
 
