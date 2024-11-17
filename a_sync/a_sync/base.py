@@ -60,6 +60,7 @@ class ASyncGenericBase(ASyncABC):
             raise NotImplementedError(
                 f"You should not create instances of `{cls_name}` directly, you should subclass `ASyncGenericBase` instead."
             )
+        ASyncABC.__init__(self)
 
     @functools.cached_property
     def __a_sync_flag_name__(self) -> str:

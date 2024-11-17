@@ -20,6 +20,7 @@ class TestClass(ASyncBase):
     def __init__(self, v: int, sync: bool = False):
         self.v = v
         self.sync = sync
+        super().__init__()
 
     async def test_fn(self) -> int:
         if self.sync == False and main_thread() != current_thread():
@@ -58,6 +59,7 @@ class TestSync(ASyncBase):
     def __init__(self, v: int, sync: bool):
         self.v = v
         self.sync = sync
+        super().__init__()
 
     def test_fn(self) -> int:
         # Sync bound methods are actually async functions that are run in an executor and awaited
@@ -127,6 +129,7 @@ class TestSemaphore(ASyncBase):
     def __init__(self, v: int, sync: bool):
         self.v = v
         self.sync = sync
+        super().__init__()
 
     # spec on class and function both working
     @a_sync.a_sync(semaphore=1)
