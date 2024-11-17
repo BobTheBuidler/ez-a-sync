@@ -1,17 +1,17 @@
 # mypy: disable-error-code=valid-type
 import functools
+from libc.stdint cimport uint8_t
 
 from a_sync._typing import *
 from a_sync.a_sync.config import user_set_default_modifiers, null_modifiers
 from a_sync.a_sync.modifiers import cache, limiter, semaphores
 
 # TODO give me a docstring
-valid_modifiers = [
+valid_modifiers: Tuple[str, ...] = tuple(
     key
     for key in ModifierKwargs.__annotations__
     if not key.startswith("_") and not key.endswith("_")
-]
-
+)
 
 class ModifierManager(Dict[str, Any]):
     """Manages modifiers for asynchronous and synchronous functions.
@@ -20,7 +20,7 @@ class ModifierManager(Dict[str, Any]):
     caching, rate limiting, and semaphores for asynchronous functions. It also
     handles synchronous functions, although no sync modifiers are currently
     implemented.
-
+    
     Examples:
         Creating a ModifierManager with specific modifiers:
 
@@ -45,6 +45,7 @@ class ModifierManager(Dict[str, Any]):
         - :class:`a_sync.a_sync.modifiers.semaphores`
     """
 
+    # Typed attributes
     # TODO give us docstrings
     default: DefaultMode
     cache_type: CacheType
@@ -72,6 +73,7 @@ class ModifierManager(Dict[str, Any]):
         Raises:
             ValueError: If an unsupported modifier is provided.
         """
+        cdef str key
         for key in modifiers.keys():
             if key not in valid_modifiers:
                 raise ValueError(f"'{key}' is not a supported modifier.")
@@ -81,7 +83,7 @@ class ModifierManager(Dict[str, Any]):
         """Returns a string representation of the modifiers."""
         return str(self._modifiers)
 
-    def __getattribute__(self, modifier_key: str) -> Any:
+    def __getattribute__(self, str modifier_key) -> Any:
         """Gets the value of a modifier.
 
         Args:
@@ -98,11 +100,13 @@ class ModifierManager(Dict[str, Any]):
         if modifier_key not in valid_modifiers:
             return super().__getattribute__(modifier_key)
         return (
-            self[modifier_key] if modifier_key in self else USER_DEFAULTS[modifier_key]
+            self._modifiers[modifier_key]
+            if modifier_key in self._modifiers
+            else USER_DEFAULTS[modifier_key]
         )
 
     @property
-    def use_limiter(self) -> bool:
+    def use_limiter(self) -> bint:
         """Determines if a rate limiter should be used.
 
         Examples:
@@ -113,7 +117,7 @@ class ModifierManager(Dict[str, Any]):
         return self.runs_per_minute != NULLS.runs_per_minute
 
     @property
-    def use_semaphore(self) -> bool:
+    def use_semaphore(self) -> bint:
         """Determines if a semaphore should be used.
 
         Examples:
@@ -124,7 +128,7 @@ class ModifierManager(Dict[str, Any]):
         return self.semaphore != NULLS.semaphore
 
     @property
-    def use_cache(self) -> bool:
+    def use_cache(self) -> bint:
         """Determines if caching should be used.
 
         Examples:
@@ -196,7 +200,7 @@ class ModifierManager(Dict[str, Any]):
 
         return sync_modifier_wrap
 
-    # Dictionary api
+    # Dictionary-like API
     def keys(self) -> KeysView[str]:  # type: ignore [override]
         """Returns the keys of the modifiers.
 
@@ -227,7 +231,7 @@ class ModifierManager(Dict[str, Any]):
         """
         return self._modifiers.items()
 
-    def __contains__(self, key: str) -> bool:  # type: ignore [override]
+    def __contains__(self, str key) -> bint:  # type: ignore [override]
         """Checks if a key is in the modifiers.
 
         Args:
@@ -250,7 +254,7 @@ class ModifierManager(Dict[str, Any]):
         """
         return self._modifiers.__iter__()
 
-    def __len__(self) -> int:
+    def __len__(self) -> uint8_t:
         """Returns the number of modifiers.
 
         Examples:
@@ -260,7 +264,7 @@ class ModifierManager(Dict[str, Any]):
         """
         return len(self._modifiers)
 
-    def __getitem__(self, modifier_key: str):
+    def __getitem__(self, str modifier_key) -> Any:
         """Gets the value of a modifier by key.
 
         Args:

@@ -181,7 +181,12 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             func = ASyncFunction(my_function, runs_per_minute=60)
         """
 
-    def __init__(self, fn: AnyFn[P, T], _skip_validate: bool = False, **modifiers: Unpack[ModifierKwargs]) -> None:
+    def __init__(
+        self,
+        fn: AnyFn[P, T],
+        _skip_validate: bool = False,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
         """
         Initializes an ASyncFunction instance.
 
