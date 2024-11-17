@@ -17,7 +17,12 @@ import functools
 
 from a_sync._typing import *
 from a_sync.a_sync import decorator
-from a_sync.a_sync.function import ASyncFunction, ModifierManager, _ModifiedMixin, _validate_wrapped_fn
+from a_sync.a_sync.function import (
+    ASyncFunction,
+    ModifierManager,
+    _ModifiedMixin,
+    _validate_wrapped_fn,
+)
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
