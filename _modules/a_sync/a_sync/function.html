@@ -917,13 +917,21 @@
 <span class="sd">            - :meth:`_await`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_modified_fn</span><span class="p">)</span>
+        <span class="n">modified_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified_fn</span>
+        <span class="n">await_helper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_await</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">modified_fn</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">async_wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MaybeAwaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>  <span class="c1"># type: ignore [name-defined]</span>
-            <span class="n">should_await</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_sync</span><span class="p">(</span>
-                <span class="n">kwargs</span>
-            <span class="p">)</span>  <span class="c1"># Must take place before coro is created, we&#39;re popping a kwarg.</span>
-            <span class="n">coro</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_await</span><span class="p">(</span><span class="n">coro</span><span class="p">)</span> <span class="k">if</span> <span class="n">should_await</span> <span class="k">else</span> <span class="n">coro</span>
+            <span class="c1"># sourcery skip: assign-if-exp</span>
+            <span class="c1"># we dont want this so profiler outputs are more useful</span>
+
+            <span class="c1"># Must take place before coro is created, we&#39;re popping a kwarg.</span>
+            <span class="n">should_await</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_sync</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">coro</span> <span class="o">=</span> <span class="n">modified_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">should_await</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">await_helper</span><span class="p">(</span><span class="n">coro</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">coro</span>
 
         <span class="k">return</span> <span class="n">async_wrap</span>
 
@@ -942,11 +950,14 @@
 <span class="sd">            - :meth:`_asyncified`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_modified_fn</span><span class="p">)</span>
+        <span class="n">modified_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified_fn</span>
+        <span class="n">asyncified</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asyncified</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">modified_fn</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">sync_wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MaybeAwaitable</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>  <span class="c1"># type: ignore [name-defined]</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_sync</span><span class="p">(</span><span class="n">kwargs</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_asyncified</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">modified_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">asyncified</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">sync_wrap</span>
 
