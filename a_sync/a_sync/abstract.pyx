@@ -90,7 +90,7 @@ class ASyncABC(metaclass=ASyncMeta):
             return self.__a_sync_instance_should_await__
 
     @property
-    cpdef bint __a_sync_instance_should_await__(self) -> bint:
+    def __a_sync_instance_should_await__(self) -> bint:
         """Indicates if the instance should default to asynchronous execution.
 
         This property can be overridden if dynamic behavior is needed. For
@@ -110,7 +110,7 @@ class ASyncABC(metaclass=ASyncMeta):
         return self.__a_sync_should_await_cache__.cache_value
             
 
-    cpdef bint __a_sync_should_await_from_kwargs__(self, Dict[str, Any] kwargs) -> bint:
+    def __a_sync_should_await_from_kwargs__(self, Dict[str, Any] kwargs) -> bint:
         """Determines execution mode from keyword arguments.
 
         This method can be overridden to customize how flags are extracted
