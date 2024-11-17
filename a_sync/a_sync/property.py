@@ -667,7 +667,8 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
 
     def __await__(self) -> Generator[Any, None, T]:
         """Returns an awaitable for the method."""
-        return self(sync=False).__await__()
+        # NOTE: self(sync=False).__await__() would be cleaner but requires way more compute for no real gain
+        return ASyncFunction.__call__(self, self.__self__, sync=False).__await__()
 
 
 @final
