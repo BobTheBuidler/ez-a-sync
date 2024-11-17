@@ -3,6 +3,7 @@ This module provides utility functions for handling keyword arguments related to
 """
 
 from typing import Optional
+from libc.stdint cimport uint8_t
 
 from a_sync import exceptions
 from a_sync.a_sync import _flags
@@ -35,10 +36,11 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
     See Also:
         :func:`is_sync`: Determines if the operation should be synchronous based on the flag value.
     """
-    present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in kwargs]
-    if len(present_flags) == 0:
+    cdef list present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in kwargs]
+    cdef uint8_t flags_count = len(present_flags)
+    if flags_count == 0:
         return None
-    if len(present_flags) != 1:
+    if flags_count != 1:
         raise exceptions.TooManyFlags("kwargs", present_flags)
     return present_flags[0]
 
