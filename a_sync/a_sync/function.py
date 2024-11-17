@@ -813,7 +813,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         @functools.wraps(modified_fn)
         def async_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
-            # sourcery skip: assign-if-exp 
+            # sourcery skip: assign-if-exp
             # we dont want this so profiler outputs are more useful
 
             # Must take place before coro is created, we're popping a kwarg.
