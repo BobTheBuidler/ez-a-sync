@@ -808,13 +808,21 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             - :meth:`_await`
         """
 
-        @functools.wraps(self._modified_fn)
+        modified_fn = self._modified_fn
+        await_helper = self._await
+
+        @functools.wraps(modified_fn)
         def async_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
-            should_await = self._run_sync(
-                kwargs
-            )  # Must take place before coro is created, we're popping a kwarg.
-            coro = self._modified_fn(*args, **kwargs)
-            return self._await(coro) if should_await else coro
+            # sourcery skip: assign-if-exp 
+            # we dont want this so profiler outputs are more useful
+
+            # Must take place before coro is created, we're popping a kwarg.
+            should_await = self._run_sync(kwargs)
+            coro = modified_fn(*args, **kwargs)
+            if should_await:
+                return await_helper(coro)
+            else:
+                return coro
 
         return async_wrap
 
@@ -833,11 +841,14 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             - :meth:`_asyncified`
         """
 
-        @functools.wraps(self._modified_fn)
+        modified_fn = self._modified_fn
+        asyncified = self._asyncified
+
+        @functools.wraps(modified_fn)
         def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
             if self._run_sync(kwargs):
-                return self._modified_fn(*args, **kwargs)
-            return self._asyncified(*args, **kwargs)
+                return modified_fn(*args, **kwargs)
+            return asyncified(*args, **kwargs)
 
         return sync_wrap
 
