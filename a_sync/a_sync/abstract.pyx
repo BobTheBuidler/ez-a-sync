@@ -10,8 +10,8 @@ is intended for more custom implementations if necessary.
 """
 
 import abc
-import functools
 import logging
+from typing import Dict, Any, Tuple
 
 from a_sync import exceptions
 from a_sync._typing import *
@@ -22,13 +22,17 @@ from a_sync.exceptions import NoFlagsFound
 logger = logging.getLogger(__name__)
 
 
+cdef struct ShouldAwaitCache:
+    bint is_cached
+    bint value
+
 class ASyncABC(metaclass=ASyncMeta):
     """Abstract Base Class for defining asynchronous and synchronous behavior.
 
     This class provides methods to determine the execution mode based on flags and keyword arguments.
     It is designed to be subclassed, allowing developers to create classes that can be used in both
     synchronous and asynchronous contexts.
-
+    
     See Also:
         - :class:`ASyncGenericBase`: A more user-friendly base class for creating dual-mode classes.
         - :class:`ASyncMeta`: Metaclass that facilitates asynchronous capabilities in class attributes.
@@ -56,11 +60,18 @@ class ASyncABC(metaclass=ASyncMeta):
         for the required abstract methods.
     """
 
+    def __init__(self) -> None:
+        #self.__a_sync_should_await_cache__ = ShouldAwaitCache()
+        cdef ShouldAwaitCache cache
+        cache.is_cached = False
+        cache.value = False
+        self.__a_sync_should_await_cache__ = cache
+
     ##################################
     # Concrete Methods (overridable) #
     ##################################
 
-    def __a_sync_should_await__(self, kwargs: Dict[str, Any]) -> bool:
+    def __a_sync_should_await__(self, Dict[str, Any] kwargs) -> bint:
         """Determines if methods should be called asynchronously.
 
         This method first checks the provided keyword arguments for flags
@@ -80,8 +91,8 @@ class ASyncABC(metaclass=ASyncMeta):
         except exceptions.NoFlagsFound:
             return self.__a_sync_instance_should_await__
 
-    @functools.cached_property
-    def __a_sync_instance_should_await__(self) -> bool:
+    @property
+    def __a_sync_instance_should_await__(self) -> bint:
         """Indicates if the instance should default to asynchronous execution.
 
         This property can be overridden if dynamic behavior is needed. For
@@ -93,11 +104,26 @@ class ASyncABC(metaclass=ASyncMeta):
             >>> instance.__a_sync_instance_should_await__
             True
         """
-        return _flags.negate_if_necessary(
-            self.__a_sync_flag_name__, self.__a_sync_flag_value__
-        )
 
-    def __a_sync_should_await_from_kwargs__(self, kwargs: Dict[str, Any]) -> bool:
+        cdef ShouldAwaitCache cache
+
+        try:
+            cache = self.__a_sync_should_await_cache__
+        except AttributeError:
+            raise RuntimeError(
+                f"{self} has not been properly initialized. "
+                f"Please ensure your `{type(self).__name__}.__init__` method calls `ASyncABC.__init__(self)`."
+            )
+
+        if not cache.is_cached:
+            cache.value = _flags.negate_if_necessary(
+                self.__a_sync_flag_name__, self.__a_sync_flag_value__
+            )
+            cache.is_cached = True
+        return cache.value
+            
+
+    def __a_sync_should_await_from_kwargs__(self, Dict[str, Any] kwargs) -> bint:
         """Determines execution mode from keyword arguments.
 
         This method can be overridden to customize how flags are extracted
@@ -114,12 +140,13 @@ class ASyncABC(metaclass=ASyncMeta):
             >>> instance.__a_sync_should_await_from_kwargs__({'sync': False})
             True
         """
+        cdef object flag
         if flag := _kwargs.get_flag_name(kwargs):
-            return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
+            return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)
         raise NoFlagsFound("kwargs", kwargs.keys())
 
     @classmethod
-    def __a_sync_instance_will_be_sync__(cls, args: Tuple[Any, ...], kwargs: Dict[str, Any]) -> bool:
+    def __a_sync_instance_will_be_sync__(cls, Tuple[Any, ...] args, Dict[str, Any] kwargs) -> bool:
         """Determines if a new instance will be synchronous.
 
         This method checks the constructor's signature against provided
@@ -138,8 +165,11 @@ class ASyncABC(metaclass=ASyncMeta):
             cls.__module__,
             cls.__name__,
         )
+
+        cdef object flag
+        cdef bint sync
         if flag := _kwargs.get_flag_name(kwargs):
-            sync = _kwargs.is_sync(flag, kwargs)  # type: ignore [arg-type]
+            sync = _kwargs.is_sync(<str>flag, kwargs)  # type: ignore [arg-type]
             logger.debug(
                 "kwargs indicate the new instance created with args %s %s is %ssynchronous",
                 args,
@@ -157,7 +187,7 @@ class ASyncABC(metaclass=ASyncMeta):
     ######################################
 
     @property
-    def __a_sync_modifiers__(self: "ASyncABC") -> ModifierKwargs:
+    def __a_sync_modifiers__(self) -> ModifierKwargs:
         """Retrieves modifiers for the instance.
 
         This method should not be overridden. It returns the modifiers
