@@ -1,5 +1,6 @@
 # mypy: disable-error-code=valid-type
 import functools
+from libc.stdint cimport uint8_t
 
 from a_sync._typing import *
 from a_sync.a_sync.config import user_set_default_modifiers, null_modifiers
@@ -82,7 +83,7 @@ class ModifierManager(Dict[str, Any]):
         """Returns a string representation of the modifiers."""
         return str(self._modifiers)
 
-    cpdef __getattribute__(self, str modifier_key) -> Any:
+    def __getattribute__(self, str modifier_key) -> Any:
         """Gets the value of a modifier.
 
         Args:
@@ -105,7 +106,7 @@ class ModifierManager(Dict[str, Any]):
         )
 
     @property
-    cpdef use_limiter(self) -> bint:
+    def use_limiter(self) -> bint:
         """Determines if a rate limiter should be used.
 
         Examples:
@@ -116,7 +117,7 @@ class ModifierManager(Dict[str, Any]):
         return self.runs_per_minute != NULLS.runs_per_minute
 
     @property
-    cpdef use_semaphore(self) -> bint:
+    def use_semaphore(self) -> bint:
         """Determines if a semaphore should be used.
 
         Examples:
@@ -127,7 +128,7 @@ class ModifierManager(Dict[str, Any]):
         return self.semaphore != NULLS.semaphore
 
     @property
-    cpdef use_cache(self) -> bint:
+    def use_cache(self) -> bint:
         """Determines if caching should be used.
 
         Examples:
@@ -144,7 +145,7 @@ class ModifierManager(Dict[str, Any]):
             ]
         )
 
-    cpdef apply_async_modifiers(self, CoroFn coro_fn) -> CoroFn:
+    def apply_async_modifiers(self, CoroFn coro_fn) -> CoroFn:
         """Applies asynchronous modifiers to a coroutine function.
 
         Args:
@@ -174,7 +175,7 @@ class ModifierManager(Dict[str, Any]):
             )
         return coro_fn
 
-    cpdef apply_sync_modifiers(self, SyncFn function) -> SyncFn:
+    def apply_sync_modifiers(self, SyncFn function) -> SyncFn:
         """Wraps a synchronous function.
 
         Note:
@@ -199,7 +200,7 @@ class ModifierManager(Dict[str, Any]):
         return sync_modifier_wrap
 
     # Dictionary-like API
-    cpdef KeysView[str] keys(self):  # type: ignore [override]
+    def keys(self) -> KeysView[str]:  # type: ignore [override]
         """Returns the keys of the modifiers.
 
         Examples:
@@ -209,7 +210,7 @@ class ModifierManager(Dict[str, Any]):
         """
         return self._modifiers.keys()
 
-    cpdef ValuesView[Any] values(self):  # type: ignore [override]
+    def values(self) -> ValuesView[Any]:  # type: ignore [override]
         """Returns the values of the modifiers.
 
         Examples:
@@ -219,7 +220,7 @@ class ModifierManager(Dict[str, Any]):
         """
         return self._modifiers.values()
 
-    cpdef ItemsView[str, Any] items(self):  # type: ignore [override]
+    def items(self) -> ItemsView[str, Any]:  # type: ignore [override]
         """Returns the items of the modifiers.
 
         Examples:
@@ -229,7 +230,7 @@ class ModifierManager(Dict[str, Any]):
         """
         return self._modifiers.items()
 
-    cpdef bint __contains__(self, str key):  # type: ignore [override]
+    def __contains__(self, str key) -> bint:  # type: ignore [override]
         """Checks if a key is in the modifiers.
 
         Args:
@@ -252,7 +253,7 @@ class ModifierManager(Dict[str, Any]):
         """
         return self._modifiers.__iter__()
 
-    cpdef int __len__(self) -> int:
+    def __len__(self) -> uint8_t:
         """Returns the number of modifiers.
 
         Examples:
@@ -262,7 +263,7 @@ class ModifierManager(Dict[str, Any]):
         """
         return len(self._modifiers)
 
-    cpdef __getitem__(self, str modifier_key):
+    def __getitem__(self, str modifier_key) -> Any:
         """Gets the value of a modifier by key.
 
         Args:

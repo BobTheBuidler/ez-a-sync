@@ -4,9 +4,10 @@ This module provides utility functions for handling keyword arguments related to
 
 
 from typing import Dict
+from libc.stdint cimport uint8_t
+
 from a_sync import exceptions
 from a_sync.a_sync import _flags
-from libc.stdint cimport uint8_t
 
 cpdef object get_flag_name(Dict[str, object] kwargs) except+:
     """
