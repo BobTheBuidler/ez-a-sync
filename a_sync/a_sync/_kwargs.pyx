@@ -2,14 +2,13 @@
 This module provides utility functions for handling keyword arguments related to synchronous and asynchronous flags.
 """
 
-
-from typing import Dict
-from libc.stdint cimport uint8_t
+from typing import Optional
 
 from a_sync import exceptions
 from a_sync.a_sync import _flags
 
-cpdef object get_flag_name(Dict[str, object] kwargs) except+:
+
+def get_flag_name(kwargs: dict) -> Optional[str]:
     """
     Get the name of the flag present in the kwargs.
 
@@ -36,15 +35,15 @@ cpdef object get_flag_name(Dict[str, object] kwargs) except+:
     See Also:
         :func:`is_sync`: Determines if the operation should be synchronous based on the flag value.
     """
-    cdef list present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in kwargs]
-    cdef uint8_t flags_count = len(present_flags)
-    if flags_count == 0:
+    present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in kwargs]
+    if len(present_flags) == 0:
         return None
-    if flags_count != 1:
+    if len(present_flags) != 1:
         raise exceptions.TooManyFlags("kwargs", present_flags)
     return present_flags[0]
 
-cpdef bint is_sync(flag: str, Dict[str, object] kwargs, bint pop_flag=False) except+:
+
+def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:
     """
     Determine if the operation should be synchronous based on the flag value.
 
@@ -66,9 +65,5 @@ cpdef bint is_sync(flag: str, Dict[str, object] kwargs, bint pop_flag=False) exc
     See Also:
         :func:`get_flag_name`: Retrieves the name of the flag present in the kwargs.
     """
-    cdef object flag_value
-    if pop_flag:
-        flag_value = kwargs.pop(flag)
-    else:
-        flag_value = kwargs[flag]
+    flag_value = kwargs.pop(flag) if pop_flag else kwargs[flag]
     return _flags.negate_if_necessary(flag, flag_value)
