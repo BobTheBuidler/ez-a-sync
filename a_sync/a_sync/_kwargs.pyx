@@ -67,5 +67,9 @@ def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:
     See Also:
         :func:`get_flag_name`: Retrieves the name of the flag present in the kwargs.
     """
-    flag_value = kwargs.pop(flag) if pop_flag else kwargs[flag]
+    cdef object flag_value
+    if pop_flag:
+        flag_value = kwargs.pop(flag)
+    else:
+        flag_value = kwargs[flag]
     return _flags.negate_if_necessary(flag, flag_value)
