@@ -22,6 +22,10 @@ from a_sync.exceptions import NoFlagsFound
 logger = logging.getLogger(__name__)
 
 
+cdef struct ShouldAwaitCache:
+    bint is_cached
+    bint cache_value
+
 class ASyncABC(metaclass=ASyncMeta):
     """Abstract Base Class for defining asynchronous and synchronous behavior.
 
@@ -56,9 +60,11 @@ class ASyncABC(metaclass=ASyncMeta):
         for the required abstract methods.
     """
 
-    # instance defaults
-    cdef bint __a_sync_instance_should_await_is_cached__ = False
-    cdef bint __a_sync_instance_should_await_cache_value__
+    cdef ShouldAwaitCache __a_sync_should_await_cache__
+
+    def __init__(self) -> None:
+        self.__a_sync_should_await_cache__.is_cached = False
+        self.__a_sync_should_await_cache__.cache_value = False
 
     ##################################
     # Concrete Methods (overridable) #
@@ -82,9 +88,10 @@ class ASyncABC(metaclass=ASyncMeta):
         try:
             return self.__a_sync_should_await_from_kwargs__(kwargs)
         except exceptions.NoFlagsFound:
-            return self._check_instance_should_await()
+            return self.__a_sync_instance_should_await__
 
-    property __a_sync_instance_should_await__:
+    @property
+    cpdef bint __a_sync_instance_should_await__(self) -> bint:
         """Indicates if the instance should default to asynchronous execution.
 
         This property can be overridden if dynamic behavior is needed. For
@@ -96,16 +103,12 @@ class ASyncABC(metaclass=ASyncMeta):
             >>> instance.__a_sync_instance_should_await__
             True
         """
-        def __get__(self) -> bint:
-            return self._check_instance_should_await()
-
-    cdef bint _check_instance_should_await(self):
-        if not self.__a_sync_instance_should_await_is_cached__:
-            self.__a_sync_instance_should_await_cache_value__ = _flags.negate_if_necessary(
+        if not self.__a_sync_should_await_cache__.is_cached:
+            self.__a_sync_should_await_cache__.cache_value = _flags.negate_if_necessary(
                 self.__a_sync_flag_name__, self.__a_sync_flag_value__
             )
-            self.__a_sync_instance_should_await_is_cached__ = True
-        return self.__a_sync_instance_should_await_cache_value__
+            self.__a_sync_should_await_cache__.is_cached = True
+        return self.__a_sync_should_await_cache__.cache_value
             
 
     cpdef bint __a_sync_should_await_from_kwargs__(self, Dict[str, Any] kwargs) -> bint:
