@@ -474,7 +474,7 @@ class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
     def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
-    
+
     __get__ = _ASyncPropertyDescriptorBase.__get__
     """Retrieves the cached property value, either synchronously or asynchronously.
 
