@@ -60,8 +60,6 @@ class ASyncABC(metaclass=ASyncMeta):
         for the required abstract methods.
     """
 
-    cdef ShouldAwaitCache __a_sync_should_await_cache__
-
     def __init__(self) -> None:
         self.__a_sync_should_await_cache__ = ShouldAwaitCache()
         self.__a_sync_should_await_cache__.is_cached = False
