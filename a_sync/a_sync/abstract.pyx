@@ -69,7 +69,7 @@ class ASyncABC(metaclass=ASyncMeta):
     # Concrete Methods (overridable) #
     ##################################
 
-    cpdef bint __a_sync_should_await__(self, Dict[str, Any] kwargs) -> bint:
+    def __a_sync_should_await__(self, Dict[str, Any] kwargs) -> bint:
         """Determines if methods should be called asynchronously.
 
         This method first checks the provided keyword arguments for flags
