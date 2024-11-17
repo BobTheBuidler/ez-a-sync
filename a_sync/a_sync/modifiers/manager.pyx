@@ -145,7 +145,7 @@ class ModifierManager(Dict[str, Any]):
             ]
         )
 
-    def apply_async_modifiers(self, CoroFn coro_fn) -> CoroFn:
+    def apply_async_modifiers(self, coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:
         """Applies asynchronous modifiers to a coroutine function.
 
         Args:
@@ -175,7 +175,7 @@ class ModifierManager(Dict[str, Any]):
             )
         return coro_fn
 
-    def apply_sync_modifiers(self, SyncFn function) -> SyncFn:
+    def apply_sync_modifiers(self, function: SyncFn[P, T]) -> SyncFn[P, T]:
         """Wraps a synchronous function.
 
         Note:
