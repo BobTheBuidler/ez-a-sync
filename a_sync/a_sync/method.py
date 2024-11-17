@@ -795,22 +795,6 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
         - :class:`ASyncMethodDescriptorSyncDefault`
     """
 
-    def __get__(
-        self, instance: Optional[I], owner: Type[I]
-    ) -> ASyncFunctionSyncDefault[P, T]:
-        """
-        Get the bound method or descriptor.
-
-        Args:
-            instance: The instance to bind the method to, or None.
-            owner: The owner class.
-
-        Examples:
-            >>> descriptor = ASyncMethodDescriptorSyncDefault(my_function)
-            >>> bound_method = descriptor.__get__(instance, MyClass)
-        """
-        return ASyncBoundMethod.__get__(self, instance, owner)
-
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
     @overload
@@ -868,20 +852,6 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
         - :class:`ASyncBoundMethod`
         - :class:`ASyncMethodDescriptorAsyncDefault`
     """
-
-    def __get__(self, instance: I, owner: Type[I]) -> ASyncFunctionAsyncDefault[P, T]:
-        """
-        Get the bound method or descriptor.
-
-        Args:
-            instance: The instance to bind the method to.
-            owner: The owner class.
-
-        Examples:
-            >>> descriptor = ASyncMethodDescriptorAsyncDefault(my_function)
-            >>> bound_method = descriptor.__get__(instance, MyClass)
-        """
-        return ASyncBoundMethod.__get__(self, instance, owner)
 
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
