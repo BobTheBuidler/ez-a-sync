@@ -8,7 +8,7 @@ from a_sync import exceptions
 from a_sync.a_sync import _flags
 from libc.stdint cimport uint8_t
 
-cpdef str or None get_flag_name(Dict[str, object] kwargs) except? -1:
+cpdef object get_flag_name(Dict[str, object] kwargs) except+:
     """
     Get the name of the flag present in the kwargs.
 
@@ -46,7 +46,7 @@ cpdef str or None get_flag_name(Dict[str, object] kwargs) except? -1:
     
     return present_flags[0]
 
-cpdef bint is_sync(flag: str, Dict[str, object] kwargs, bint pop_flag=False) except? -1:
+cpdef bint is_sync(flag: str, Dict[str, object] kwargs, bint pop_flag=False) except+:
     """
     Determine if the operation should be synchronous based on the flag value.
 
