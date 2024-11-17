@@ -36,7 +36,7 @@ cpdef object get_flag_name(Dict[str, object] kwargs) except+:
         :func:`is_sync`: Determines if the operation should be synchronous based on the flag value.
     """
     # Use a list comprehension in a generator pattern for minimum overhead
-    cdef tuple present_flags = tuple(flag for flag in _flags.VIABLE_FLAGS if flag in kwargs)
+    cdef list present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in kwargs]
     cdef uint8_t flags_count = len(present_flags)
     
     if flags_count == 0:
