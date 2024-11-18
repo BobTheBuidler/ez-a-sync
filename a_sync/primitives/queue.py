@@ -20,8 +20,8 @@ import logging
 import sys
 import weakref
 
+import a_sync.asyncio
 from a_sync import _smart
-from a_sync.asyncio.create_task import create_task
 from a_sync._typing import *
 
 logger = logging.getLogger(__name__)
@@ -442,14 +442,14 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         """Creates and manages the worker tasks for the queue."""
         logger.debug("starting worker task for %s", self)
         workers = [
-            create_task(
+            a_sync.asyncio.create_task(
                 coro=self._worker_coro(),
                 name=f"{self.name} [Task-{i}]",
                 log_destroy_pending=False,
             )
             for i in range(self.num_workers)
         ]
-        task = create_task(
+        task = a_sync.asyncio.create_task(
             asyncio.gather(*workers),
             name=f"{self.name} worker main Task",
             log_destroy_pending=False,
