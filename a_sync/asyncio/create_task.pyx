@@ -5,6 +5,7 @@ manage task lifecycle, and enhance error handling.
 
 import asyncio
 import logging
+from cython.parallel import prange
 
 from a_sync import exceptions
 from a_sync._typing import *
@@ -88,7 +89,7 @@ cdef void __set_task_name(object task, str name):
          set_name(name)
 
 
-cdef set __persisted_tasks = set()
+__persisted_tasks: Set["asyncio.Task[Any]"] = set()
 
 
 async def __await(awaitable: Awaitable[T]) -> T:
