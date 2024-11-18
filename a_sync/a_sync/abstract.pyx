@@ -15,9 +15,8 @@ from typing import Dict, Any, Tuple
 
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync import _kwargs, modifiers
-from a_sync.a_sync cimport _flags
-from a_sync.a_sync._kwargs cimport is_sync_c
+from a_sync.a_sync import modifiers
+from a_sync.a_sync cimport _flags, _kwargs
 from a_sync.a_sync._meta import ASyncMeta
 from a_sync.exceptions import NoFlagsFound
 
@@ -142,8 +141,8 @@ class ASyncABC(metaclass=ASyncMeta):
             True
         """
         cdef object flag
-        if flag := _kwargs.get_flag_name(kwargs):
-            return is_sync_c(<str>flag, kwargs, pop_flag=True)
+        if flag := _kwargs.get_flag_name_c(kwargs):
+            return _kwargs.is_sync_c(<str>flag, kwargs, pop_flag=True)
         raise NoFlagsFound("kwargs", kwargs.keys())
 
     @classmethod
@@ -169,7 +168,7 @@ class ASyncABC(metaclass=ASyncMeta):
 
         cdef object flag
         cdef bint sync
-        if flag := _kwargs.get_flag_name(kwargs):
+        if flag := _kwargs.get_flag_name_c(kwargs):
             sync = is_sync_c(<str>flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
             logger.debug(
                 "kwargs indicate the new instance created with args %s %s is %ssynchronous",

@@ -17,7 +17,8 @@ from a_sync.a_sync.method import (
     ASyncBoundMethodAsyncDefault,
     ASyncMethodDescriptorAsyncDefault,
 )
-from a_sync.a_sync.method cimport _update_cache_timer
+from a_sync.a_sync.method cimport _is_a_sync_instance, _update_cache_timer
+from a_sync.asyncio import create_task
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -371,6 +372,7 @@ def a_sync_property(  # type: ignore [misc]
         A property descriptor that supports both sync and async access.
     """
     func, modifiers = _parse_args(func, modifiers)
+    cdef object descriptor_class
     if modifiers.get("default") == "sync":
         descriptor_class = ASyncPropertyDescriptorSyncDefault
     elif modifiers.get("default") == "async":
@@ -432,7 +434,7 @@ class ASyncCachedPropertyDescriptor(
         task = instance_state.lock[self.field_name]
         if isinstance(task, asyncio.Lock):
             # default behavior uses lock but we want to use a Task so all waiters wake up together
-            task = asyncio.create_task(self._fget(instance))
+            task = create_task(self._fget(instance))
             instance_state.lock[self.field_name] = task
         return task
 
@@ -621,6 +623,7 @@ def a_sync_cached_property(  # type: ignore [misc]
         A cached property descriptor that supports both sync and async access.
     """
     func, modifiers = _parse_args(func, modifiers)
+    cdef object descriptor_class
     if modifiers.get("default") == "sync":
         descriptor_class = ASyncCachedPropertyDescriptorSyncDefault
     elif modifiers.get("default") == "async":
@@ -740,27 +743,6 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
             logger.debug("new hidden method: %s", bound)
         _update_cache_timer(self.field_name, instance, bound)
         return bound
-
-
-cdef dict _is_a_sync_instance_cache = {}
-
-cdef bint _is_a_sync_instance(object instance):
-    """Checks if an instance is an ASync instance.
-
-    Args:
-        instance: The instance to check.
-
-    Returns:
-        A boolean indicating if the instance is an ASync instance.
-    """
-    cdef object instance_type = type(instance)
-    cdef long long instance_type_uid = id(instance_type)
-    if instance_type_uid in _is_a_sync_instance_cache:
-        return _is_a_sync_instance_cache[instance_type_uid]
-    from a_sync.a_sync.abstract import ASyncABC
-    cdef bint is_a_sync = issubclass(instance_type, ASyncABC)
-    _is_a_sync_instance_cache[instance_type_uid] = is_a_sync
-    return is_a_sync
 
 
 def _parse_args(

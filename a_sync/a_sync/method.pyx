@@ -16,9 +16,9 @@ from inspect import isawaitable
 
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync import _helpers, _kwargs
+from a_sync.a_sync import _helpers
+from a_sync.a_sync cimport _kwargs
 from a_sync.a_sync._descriptor import ASyncDescriptor
-from a_sync.a_sync._kwargs cimport is_sync_c
 from a_sync.a_sync.function import (
     ASyncFunction,
     ASyncFunctionAsyncDefault,
@@ -411,6 +411,27 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         return bound
 
 
+cdef dict _is_a_sync_instance_cache = {}
+
+cdef bint _is_a_sync_instance(object instance):
+    """Checks if an instance is an ASync instance.
+
+    Args:
+        instance: The instance to check.
+
+    Returns:
+        A boolean indicating if the instance is an ASync instance.
+    """
+    cdef object instance_type = type(instance)
+    cdef long long instance_type_uid = id(instance_type)
+    if instance_type_uid in _is_a_sync_instance_cache:
+        return _is_a_sync_instance_cache[instance_type_uid]
+    from a_sync.a_sync.abstract import ASyncABC
+    cdef bint is_a_sync = issubclass(instance_type, ASyncABC)
+    _is_a_sync_instance_cache[instance_type_uid] = is_a_sync
+    return is_a_sync
+
+
 class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     """
     A bound method that can be called both synchronously and asynchronously.
@@ -589,20 +610,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             return instance
         raise ReferenceError(self)
 
-    @functools.cached_property
-    def __bound_to_a_sync_instance__(self) -> bool:
-        """
-        Check if the method is bound to an ASyncABC instance.
-
-        Examples:
-            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
-            >>> bound_method.__bound_to_a_sync_instance__
-            True
-        """
-        from a_sync.a_sync.abstract import ASyncABC
-
-        return isinstance(self.__self__, ASyncABC)
-
     def map(
         self,
         *iterables: AnyIterable[I],
@@ -765,11 +772,11 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> should_await = bound_method._should_await(kwargs)
         """
         cdef object flag
-        if flag := _kwargs.get_flag_name(kwargs):
-            return is_sync_c(<str>flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
+        if flag := _kwargs.get_flag_name_c(kwargs):
+            return _kwargs.is_sync_c(<str>flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
         elif self.default:
             return self.default == "sync"
-        elif self.__bound_to_a_sync_instance__:
+        elif _is_a_sync_instance(self.__self__):
             self.__self__: "ASyncABC"
             return self.__self__.__a_sync_should_await__(kwargs)
         return self._is_async_def
