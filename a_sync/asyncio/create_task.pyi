@@ -1,10 +1,16 @@
 from a_sync._typing import *
 import asyncio
 
-__all__ = ['create_task']
+__all__ = ["create_task"]
 
-def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until_done: bool = False, log_destroy_pending: bool = True) -> asyncio.Task[T]:
-    '''
+def create_task(
+    coro: Awaitable[T],
+    *,
+    name: Optional[str] = None,
+    skip_gc_until_done: bool = False,
+    log_destroy_pending: bool = True
+) -> asyncio.Task[T]:
+    """
     Extends :func:`asyncio.create_task` to support any :class:`Awaitable`, manage task lifecycle, and enhance error handling.
 
     This function accepts any :class:`Awaitable`, ensuring broader compatibility. If the Awaitable is not a coroutine,
@@ -37,4 +43,4 @@ def create_task(coro: Awaitable[T], *, name: Optional[str] = None, skip_gc_until
     See Also:
         - :func:`asyncio.create_task`
         - :class:`asyncio.Task`
-    '''
+    """
