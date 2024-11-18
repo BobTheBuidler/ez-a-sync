@@ -3826,7 +3826,7 @@ If no flag is specified, it defers to the default execution mode.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod._cache_handle">
-<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TimerHandle</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._cache_handle" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TimerHandle</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._cache_handle" title="Link to this definition"></a></dt>
 <dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
 </dd></dl>
 
@@ -4319,7 +4319,7 @@ If no flag is specified, it defers to the default execution mode.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._cache_handle">
-<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.13)"><span class="pre">asyncio.TimerHandle</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._cache_handle" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.13)"><span class="pre">asyncio.TimerHandle</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._cache_handle" title="Link to this definition"></a></dt>
 <dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
 </dd></dl>
 
@@ -4812,7 +4812,7 @@ If no flag is specified, it defers to the default execution mode.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault._cache_handle">
-<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.13)"><span class="pre">asyncio.TimerHandle</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._cache_handle" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.13)"><span class="pre">asyncio.TimerHandle</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._cache_handle" title="Link to this definition"></a></dt>
 <dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
 </dd></dl>
 
@@ -5098,28 +5098,6 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptor._get_cache_handle">
-<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/method.html#ASyncMethodDescriptor._get_cache_handle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptor._get_cache_handle" title="Link to this definition"></a></dt>
-<dd><p>Get a cache handle for the instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>instance</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a>) – The instance to create a cache handle for.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A timer handle for cache management.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>TimerHandle</em></p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">ASyncMethodDescriptor</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cache_handle</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">_get_cache_handle</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptor._max">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptor._max" title="Link to this definition"></a></dt>
 <dd><p>Find the maximum result.</p>
@@ -5213,6 +5191,23 @@ def my_method(self, x):</p>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
 <a href="#id119"><span class="problematic" id="id120">``</span></a><a href="#id121"><span class="problematic" id="id122">`</span></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptor._update_cache_handle">
+<span class="sig-name descname"><span class="pre">_update_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/method.html#ASyncMethodDescriptor._update_cache_handle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptor._update_cache_handle" title="Link to this definition"></a></dt>
+<dd><p>Update the TTL for the cache handle for the instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance to create a cache handle for.</p></li>
+<li><p><strong>bound</strong> (<a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethod" title="a_sync.a_sync.method.ASyncBoundMethod"><em>ASyncBoundMethod</em></a>) – The bound method we are caching.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -5576,28 +5571,6 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._get_cache_handle">
-<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._get_cache_handle" title="Link to this definition"></a></dt>
-<dd><p>Get a cache handle for the instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>instance</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a>) – The instance to create a cache handle for.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A timer handle for cache management.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>TimerHandle</em></p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">ASyncMethodDescriptor</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cache_handle</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">_get_cache_handle</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._max">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._max" title="Link to this definition"></a></dt>
 <dd><p>Find the maximum result.</p>
@@ -5691,6 +5664,23 @@ def my_method(self, x):</p>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
 <a href="#id175"><span class="problematic" id="id176">``</span></a><a href="#id177"><span class="problematic" id="id178">`</span></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._update_cache_handle">
+<span class="sig-name descname"><span class="pre">_update_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault._update_cache_handle" title="Link to this definition"></a></dt>
+<dd><p>Update the TTL for the cache handle for the instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance to create a cache handle for.</p></li>
+<li><p><strong>bound</strong> (<a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethod" title="a_sync.a_sync.method.ASyncBoundMethod"><em>ASyncBoundMethod</em></a>) – The bound method we are caching.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -5960,28 +5950,6 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptorSyncDefault._get_cache_handle">
-<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptorSyncDefault._get_cache_handle" title="Link to this definition"></a></dt>
-<dd><p>Get a cache handle for the instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>instance</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a>) – The instance to create a cache handle for.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A timer handle for cache management.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>TimerHandle</em></p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">ASyncMethodDescriptor</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cache_handle</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">_get_cache_handle</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptorSyncDefault._max">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptorSyncDefault._max" title="Link to this definition"></a></dt>
 <dd><p>Find the maximum result.</p>
@@ -6075,6 +6043,23 @@ def my_method(self, x):</p>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
 <a href="#id215"><span class="problematic" id="id216">``</span></a><a href="#id217"><span class="problematic" id="id218">`</span></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncMethodDescriptorSyncDefault._update_cache_handle">
+<span class="sig-name descname"><span class="pre">_update_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.method.ASyncMethodDescriptorSyncDefault._update_cache_handle" title="Link to this definition"></a></dt>
+<dd><p>Update the TTL for the cache handle for the instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance to create a cache handle for.</p></li>
+<li><p><strong>bound</strong> (<a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethod" title="a_sync.a_sync.method.ASyncBoundMethod"><em>ASyncBoundMethod</em></a>) – The bound method we are caching.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -9434,7 +9419,7 @@ If no flag is specified, it defers to the default execution mode.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod._cache_handle">
-<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.13)"><span class="pre">asyncio.TimerHandle</span></a></em><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._cache_handle" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.13)"><span class="pre">asyncio.TimerHandle</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._cache_handle" title="Link to this definition"></a></dt>
 <dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
 </dd></dl>
 
@@ -9690,28 +9675,6 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethodDescriptor._get_cache_handle">
-<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethodDescriptor._get_cache_handle" title="Link to this definition"></a></dt>
-<dd><p>Get a cache handle for the instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>instance</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a>) – The instance to create a cache handle for.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A timer handle for cache management.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>TimerHandle</em></p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">ASyncMethodDescriptor</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cache_handle</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">_get_cache_handle</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethodDescriptor._max">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethodDescriptor._max" title="Link to this definition"></a></dt>
 <dd><p>Find the maximum result.</p>
@@ -9805,6 +9768,23 @@ def my_method(self, x):</p>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
 <a href="#id591"><span class="problematic" id="id592">``</span></a><a href="#id593"><span class="problematic" id="id594">`</span></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethodDescriptor._update_cache_handle">
+<span class="sig-name descname"><span class="pre">_update_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethodDescriptor._update_cache_handle" title="Link to this definition"></a></dt>
+<dd><p>Update the TTL for the cache handle for the instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance to create a cache handle for.</p></li>
+<li><p><strong>bound</strong> (<a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethod" title="a_sync.a_sync.method.ASyncBoundMethod"><em>ASyncBoundMethod</em></a>) – The bound method we are caching.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -13334,7 +13314,7 @@ If no flag is specified, it defers to the default execution mode.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod._cache_handle">
-<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.13)"><span class="pre">asyncio.TimerHandle</span></a></em><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._cache_handle" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.TimerHandle" title="(in Python v3.13)"><span class="pre">asyncio.TimerHandle</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._cache_handle" title="Link to this definition"></a></dt>
 <dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
 </dd></dl>
 
@@ -13590,28 +13570,6 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethodDescriptor._get_cache_handle">
-<span class="sig-name descname"><span class="pre">_get_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.HiddenMethodDescriptor._get_cache_handle" title="Link to this definition"></a></dt>
-<dd><p>Get a cache handle for the instance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>instance</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a>) – The instance to create a cache handle for.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A timer handle for cache management.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>TimerHandle</em></p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">ASyncMethodDescriptor</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cache_handle</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">_get_cache_handle</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethodDescriptor._max">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concurrency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.HiddenMethodDescriptor._max" title="Link to this definition"></a></dt>
 <dd><p>Find the maximum result.</p>
@@ -13705,6 +13663,23 @@ def my_method(self, x):</p>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
 <a href="#id921"><span class="problematic" id="id922">``</span></a><a href="#id923"><span class="problematic" id="id924">`</span></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethodDescriptor._update_cache_handle">
+<span class="sig-name descname"><span class="pre">_update_cache_handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bound</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.HiddenMethodDescriptor._update_cache_handle" title="Link to this definition"></a></dt>
+<dd><p>Update the TTL for the cache handle for the instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instance</strong> – The instance to create a cache handle for.</p></li>
+<li><p><strong>bound</strong> (<a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethod" title="a_sync.a_sync.method.ASyncBoundMethod"><em>ASyncBoundMethod</em></a>) – The bound method we are caching.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
