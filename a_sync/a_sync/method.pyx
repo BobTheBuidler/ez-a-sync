@@ -748,7 +748,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
         ).sum(pop=True, sync=False)
 
-    cpdef bint _should_await(self, dict kwargs):
+    def _should_await(self, dict kwargs) -> bint:
         """
         Determine if the method should be awaited.
 
@@ -769,7 +769,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             return self.__self__.__a_sync_should_await__(kwargs)
         return self._is_async_def
 
-    cpdef void __cancel_cache_handle(self, object instance):
+    def __cancel_cache_handle(self, object instance) -> None:
         """
         Cancel the cache handle.
 
