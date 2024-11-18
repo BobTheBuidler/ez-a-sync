@@ -5,7 +5,7 @@ from contextlib import suppress
 
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync import _flags
+from a_sync.a_sync._flags import VIABLE_FLAGS, negate_if_necessary
 from a_sync.a_sync.abstract import ASyncABC
 
 
@@ -76,9 +76,7 @@ class ASyncGenericBase(ASyncABC):
                 self.__class__.__name__,
                 self,
             )
-            present_flags = [
-                flag for flag in _flags.VIABLE_FLAGS if hasattr(self, flag)
-            ]
+            present_flags = [flag for flag in VIABLE_FLAGS if hasattr(self, flag)]
             if not present_flags:
                 raise exceptions.NoFlagsFound(self) from None
             if len(present_flags) > 1:
@@ -106,7 +104,7 @@ class ASyncGenericBase(ASyncABC):
         except exceptions.NoFlagsFound:
             flag = cls.__get_a_sync_flag_name_from_class_def()
             flag_value = cls.__get_a_sync_flag_value_from_class_def(flag)
-        sync = _flags.negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
+        sync = negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
         logger.debug(
             "`%s.%s` indicates default mode is %ssynchronous",
             cls,
@@ -164,7 +162,7 @@ class ASyncGenericBase(ASyncABC):
 
     @classmethod
     def __parse_flag_name_from_list(cls, items: Dict[str, Any]) -> str:
-        present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in items]
+        present_flags = [flag for flag in VIABLE_FLAGS if flag in items]
         if not present_flags:
             logger.debug("There are too many flags defined on %s", cls)
             raise exceptions.NoFlagsFound(cls, items.keys())
