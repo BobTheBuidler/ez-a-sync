@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 def create_task(
     coro: Awaitable[T],
     *,
-    name: Optional[str] = None,
+    name: str = "",
     skip_gc_until_done: bint = False,
     log_destroy_pending: bint = True,
 ) -> "asyncio.Task[T]":
@@ -54,17 +54,22 @@ def create_task(
         - :func:`asyncio.create_task`
         - :class:`asyncio.Task`
     """
+    return ccreate_task(coro, name, skip_gc_until_done, log_destroy_pending)
+
+cdef ccreate_task(object coro, str name, bint skip_gc_until_done, bint log_destroy_pending):
     if not asyncio.iscoroutine(coro):
         coro = __await(coro)
 
     create_task = asyncio.get_running_loop().create_task
     task = create_task(coro)
     
-    __set_task_name(task, name)
+    if name:
+        __set_task_name(task, name)
 
     if skip_gc_until_done:
         persisted = __persisted_task_exc_wrap(task)
-        __set_task_name(persisted, name)
+        if name:
+            __set_task_name(persisted, name)
         __persisted_tasks.add(create_task(persisted))
 
     if log_destroy_pending is False:
@@ -76,9 +81,8 @@ def create_task(
 
 
 cdef void __set_task_name(object task, str name):
-    if name is not None:
-        if set_name := getattr(task, "set_name", None):
-            set_name(name)
+    if set_name := getattr(task, "set_name", None):
+         set_name(name)
 
 
 cdef set[asyncio.Task[Any]] __persisted_tasks = set()

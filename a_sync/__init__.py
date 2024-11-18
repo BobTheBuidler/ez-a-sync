@@ -63,7 +63,7 @@ from a_sync.iter import ASyncSorter as sorted
 from a_sync.iter import ASyncIterable, ASyncIterator
 from a_sync.primitives import *
 from a_sync.task import TaskMapping as map
-from a_sync.task import TaskMapping, create_task
+from a_sync.task import TaskMapping
 from a_sync.utils import all, any, as_yielded
 
 # I alias the aliases for your convenience.
