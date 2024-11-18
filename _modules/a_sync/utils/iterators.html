@@ -82,6 +82,7 @@
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">TracebackType</span>
 
+<span class="kn">import</span> <span class="nn">a_sync.asyncio</span>
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.primitives.queue</span> <span class="kn">import</span> <span class="n">Queue</span>
 
@@ -307,7 +308,7 @@
             <span class="n">traceback</span><span class="o">.</span><span class="n">clear_frames</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
             <span class="n">queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="n">_Done</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
 
-    <span class="n">task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+    <span class="n">task</span> <span class="o">=</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
         <span class="n">coro</span><span class="o">=</span><span class="n">exhaust_iterators</span><span class="p">(</span><span class="n">iterators</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="n">queue</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;a_sync.as_yielded queue populating task for </span><span class="si">{</span><span class="n">iterators</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
     <span class="p">)</span>

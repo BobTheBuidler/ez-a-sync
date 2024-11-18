@@ -6724,6 +6724,7 @@ convenient methods for creating, managing, and iterating over these tasks asynch
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task</span></code></a></p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.create_task" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code></a></p></li>
+<li><p><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.create_task" title="a_sync.asyncio.create_task"><code class="xref py py-func docutils literal notranslate"><span class="pre">a_sync.asyncio.create_task()</span></code></a></p></li>
 </ul>
 </div>
 <dl class="py method">
@@ -12535,6 +12536,7 @@ convenient methods for creating, managing, and iterating over these tasks asynch
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task</span></code></a></p></li>
 <li><p><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.create_task" title="a_sync.asyncio.create_task"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code></a></p></li>
+<li><p><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.create_task" title="a_sync.asyncio.create_task"><code class="xref py py-func docutils literal notranslate"><span class="pre">a_sync.asyncio.create_task()</span></code></a></p></li>
 </ul>
 </div>
 <dl class="py method">
@@ -14670,7 +14672,7 @@ The <code class="xref py py-class docutils literal notranslate"><span class="pre
 
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.create_task">
-<span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">create_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coro</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_gc_until_done</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_destroy_pending</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/asyncio/create_task.html#create_task"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.create_task" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">create_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">coro:</span> <span class="pre">Awaitable[T],</span> <span class="pre">*,</span> <span class="pre">str</span> <span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'',</span> <span class="pre">skip_gc_until_done:</span> <span class="pre">bint</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">log_destroy_pending:</span> <span class="pre">bint</span> <span class="pre">=</span> <span class="pre">True</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Task[T]'</span></span></span></span><a class="headerlink" href="#a_sync.create_task" title="Link to this definition"></a></dt>
 <dd><p>Extends <a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.create_task" title="a_sync.asyncio.create_task"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code></a> to support any <code class="xref py py-class docutils literal notranslate"><span class="pre">Awaitable</span></code>, manage task lifecycle, and enhance error handling.</p>
 <p>This function accepts any <code class="xref py py-class docutils literal notranslate"><span class="pre">Awaitable</span></code>, ensuring broader compatibility. If the Awaitable is not a coroutine,
 it is awaited directly using a private helper function <cite>__await</cite>, which can handle non-coroutine Awaitable objects.</p>
@@ -14681,16 +14683,16 @@ it is awaited directly using a private helper function <cite>__await</cite>, whi
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – An <code class="xref py py-class docutils literal notranslate"><span class="pre">Awaitable</span></code> object from which to create the task.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> | </em><em>None</em>) – Optional name for the task, aiding in debugging.</p></li>
-<li><p><strong>skip_gc_until_done</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, the task is kept alive until it completes, preventing garbage collection.
+<li><p><strong>coro</strong> (<em>Awaitable</em><em>[</em><em>T</em><em>]</em>) – An <code class="xref py py-class docutils literal notranslate"><span class="pre">Awaitable</span></code> object from which to create the task.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task, aiding in debugging.</p></li>
+<li><p><strong>skip_gc_until_done</strong> (<em>bint</em>) – If True, the task is kept alive until it completes, preventing garbage collection.
 Exceptions are wrapped in <code class="xref py py-class docutils literal notranslate"><span class="pre">PersistedTaskException</span></code> for special handling within the
 <cite>__persisted_task_exc_wrap</cite> function.</p></li>
-<li><p><strong>log_destroy_pending</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If False, asyncio’s default error log when a pending task is destroyed is suppressed.</p></li>
+<li><p><strong>log_destroy_pending</strong> (<em>bint</em>) – If False, asyncio’s default error log when a pending task is destroyed is suppressed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Task</em>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.13)">asyncio.Task</a>[T]</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>

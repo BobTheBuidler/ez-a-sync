@@ -86,8 +86,8 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 
+<span class="kn">import</span> <span class="nn">a_sync.asyncio</span>
 <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">exceptions</span>
-<span class="kn">from</span> <span class="nn">a_sync.asyncio.create_task</span> <span class="kn">import</span> <span class="n">create_task</span>
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">_kwargs</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync.base</span> <span class="kn">import</span> <span class="n">ASyncGenericBase</span>
@@ -98,8 +98,7 @@
     <span class="n">ASyncMethodDescriptorSyncDefault</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync.property</span> <span class="kn">import</span> <span class="n">_ASyncPropertyDescriptorBase</span>
-<span class="kn">from</span> <span class="nn">a_sync.asyncio.as_completed</span> <span class="kn">import</span> <span class="n">as_completed</span>
-<span class="kn">from</span> <span class="nn">a_sync.asyncio.gather</span> <span class="kn">import</span> <span class="n">Excluder</span><span class="p">,</span> <span class="n">gather</span>
+<span class="kn">from</span> <span class="nn">a_sync.asyncio.gather</span> <span class="kn">import</span> <span class="n">Excluder</span>
 <span class="kn">from</span> <span class="nn">a_sync.iter</span> <span class="kn">import</span> <span class="n">ASyncIterator</span><span class="p">,</span> <span class="n">ASyncGeneratorFunction</span><span class="p">,</span> <span class="n">ASyncSorter</span>
 <span class="kn">from</span> <span class="nn">a_sync.primitives.queue</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">ProcessingQueue</span>
 <span class="kn">from</span> <span class="nn">a_sync.primitives.locks.event</span> <span class="kn">import</span> <span class="n">Event</span>
@@ -142,6 +141,7 @@
 <span class="sd">    See Also:</span>
 <span class="sd">        - :class:`asyncio.Task`</span>
 <span class="sd">        - :func:`asyncio.create_task`</span>
+<span class="sd">        - :func:`a_sync.asyncio.create_task`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -303,9 +303,10 @@
                 <span class="c1"># NOTE: we use a queue instead of a Semaphore to reduce memory use for use cases involving many many tasks</span>
                 <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">coro</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func_kwargs</span><span class="p">)</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,)</span>
-                <span class="n">fut</span> <span class="o">=</span> <span class="n">create_task</span><span class="p">(</span><span class="n">coro</span><span class="o">=</span><span class="n">coro</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">fut</span> <span class="o">=</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+                    <span class="n">coro</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func_kwargs</span><span class="p">),</span>
+                    <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">[</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">fut</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">fut</span></div>
 
@@ -348,11 +349,15 @@
             <span class="c1"># if there are any tasks that still need to complete, we need to await them and yield them</span>
             <span class="k">if</span> <span class="n">unyielded</span> <span class="o">:=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yielded</span><span class="p">}:</span>
                 <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
-                    <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">unyielded</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span>
+                        <span class="n">unyielded</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
                         <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">unyielded</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span>
+                        <span class="n">unyielded</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">):</span>
                         <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span></div>
@@ -453,11 +458,15 @@
 
             <span class="k">if</span> <span class="bp">self</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
-                    <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">):</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
                         <span class="k">yield</span> <span class="n">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">yields</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="k">async</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="nb">aiter</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">):</span>
                         <span class="k">yield</span> <span class="n">_yield</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">yields</span><span class="p">)</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_if_pop_clear</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span></div>
@@ -594,7 +603,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span><span class="p">:</span>
             <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_raise_if_empty</span><span class="p">()</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="n">gather</span><span class="p">(</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">return_exceptions</span><span class="o">=</span><span class="n">return_exceptions</span><span class="p">,</span>
             <span class="n">exclude_if</span><span class="o">=</span><span class="n">exclude_if</span><span class="p">,</span>
@@ -667,7 +676,9 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;starting </span><span class="si">%s</span><span class="s2"> init loader&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
             <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> init loader loading </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__iterables__</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">task</span> <span class="o">=</span> <span class="n">create_task</span><span class="p">(</span><span class="n">coro</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__init_loader_coro</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">task</span> <span class="o">=</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+                    <span class="n">coro</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__init_loader_coro</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span>
+                <span class="p">)</span>
             <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">_NoRunningLoop</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;no running event loop&quot;</span> <span class="k">else</span> <span class="n">e</span>
             <span class="n">task</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__cleanup</span><span class="p">)</span>
@@ -753,7 +764,9 @@
         <span class="c1"># NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always</span>
         <span class="n">done</span><span class="p">,</span> <span class="n">pending</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span>
             <span class="p">[</span>
-                <span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init_loader_next</span><span class="p">(),</span> <span class="n">log_destroy_pending</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+                <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader_next</span><span class="p">(),</span> <span class="n">log_destroy_pending</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span><span class="p">,</span>
             <span class="p">],</span>
             <span class="n">return_when</span><span class="o">=</span><span class="n">asyncio</span><span class="o">.</span><span class="n">FIRST_COMPLETED</span><span class="p">,</span>

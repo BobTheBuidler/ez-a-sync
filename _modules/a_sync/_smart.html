@@ -375,7 +375,7 @@
 <span class="sd">        See Also:</span>
 <span class="sd">            - :func:`asyncio.create_task`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">coro</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coro</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_waiters</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="s2">&quot;asyncio.Task[T]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="n">SmartTask</span><span class="o">.</span><span class="n">_self_done_cleanup_callback</span><span class="p">)</span></div>
 </div>

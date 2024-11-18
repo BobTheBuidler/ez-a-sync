@@ -91,8 +91,8 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 
+<span class="kn">import</span> <span class="nn">a_sync.asyncio</span>
 <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">_smart</span>
-<span class="kn">from</span> <span class="nn">a_sync.asyncio.create_task</span> <span class="kn">import</span> <span class="n">create_task</span>
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -566,14 +566,14 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates and manages the worker tasks for the queue.&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;starting worker task for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="n">workers</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">create_task</span><span class="p">(</span>
+            <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
                 <span class="n">coro</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_worker_coro</span><span class="p">(),</span>
                 <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> [Task-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                 <span class="n">log_destroy_pending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span><span class="p">)</span>
         <span class="p">]</span>
-        <span class="n">task</span> <span class="o">=</span> <span class="n">create_task</span><span class="p">(</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
             <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">workers</span><span class="p">),</span>
             <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> worker main Task&quot;</span><span class="p">,</span>
             <span class="n">log_destroy_pending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
