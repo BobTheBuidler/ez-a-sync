@@ -394,6 +394,9 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         """
         if instance is None:
             return self
+        
+        cdef object bound
+
         try:
             bound = instance.__dict__[self.field_name]
             # we will set a new one in the finally block
@@ -498,6 +501,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> repr(bound_method)
             '<ASyncBoundMethod for function module.ClassName.method_name bound to instance>'
         """
+        cdef object instance_type
         try:
             instance_type = type(self.__self__)
             return "<{} for function {}.{}.{} bound to {}>".format(
