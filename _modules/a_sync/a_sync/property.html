@@ -869,7 +869,7 @@
             <span class="p">)</span>
             <span class="n">instance</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bound</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;new hidden method: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cache_handle</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">bound</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_cache_timer</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">bound</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">bound</span></div>
 
 
