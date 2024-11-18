@@ -169,7 +169,7 @@ class ASyncABC(metaclass=ASyncMeta):
         cdef object flag
         cdef bint sync
         if flag := _kwargs.get_flag_name_c(kwargs):
-            sync = is_sync_c(<str>flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
+            sync = _kwargs.is_sync_c(<str>flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
             logger.debug(
                 "kwargs indicate the new instance created with args %s %s is %ssynchronous",
                 args,
