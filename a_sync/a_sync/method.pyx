@@ -407,7 +407,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         return bound
 
 
-cpdef bint _should_await(object instance, dict kwargs):
+cdef bint _should_await(object instance, dict kwargs):
     """Determines if the method should be awaited.
 
     Args:
