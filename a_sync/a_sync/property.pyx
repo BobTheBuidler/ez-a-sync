@@ -18,7 +18,7 @@ from a_sync.a_sync.method import (
     ASyncMethodDescriptorAsyncDefault,
 )
 from a_sync.a_sync.method cimport _is_a_sync_instance, _update_cache_timer
-from a_sync.asyncio._create_task cimport ccreate_task_simple
+from a_sync.asyncio.create_task cimport ccreate_task_simple
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping

@@ -8,7 +8,7 @@ import abc
 import asyncio
 from typing import Optional
 
-from a_sync.asyncio._create_task cimport ccreate_task_simple
+from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.primitives._loggable import _LoggerMixin
 
 
