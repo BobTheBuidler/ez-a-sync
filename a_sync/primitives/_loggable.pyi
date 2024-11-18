@@ -11,9 +11,10 @@ class _LoggerMixin:
         - :func:`logging.getLogger`
         - :class:`logging.Logger`
     """
+
     @cached_property
     def logger(self) -> Logger:
-        '''
+        """
         Provides a logger instance specific to the class using this mixin.
 
         The logger ID is constructed from the module and class name, and optionally includes an instance name if available.
@@ -41,7 +42,8 @@ class _LoggerMixin:
         See Also:
             - :func:`logging.getLogger`
             - :class:`logging.Logger`
-        '''
+        """
+
     @property
     def debug_logs_enabled(self) -> bool:
         """
