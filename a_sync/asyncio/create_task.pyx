@@ -88,7 +88,7 @@ cdef void __set_task_name(object task, str name):
          set_name(name)
 
 
-cdef set[asyncio.Task[Any]] __persisted_tasks = set()
+cdef set[asyncio.Task] __persisted_tasks = set()
 
 
 async def __await(awaitable: Awaitable[T]) -> T:
