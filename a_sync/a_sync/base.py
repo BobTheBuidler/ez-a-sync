@@ -76,9 +76,7 @@ class ASyncGenericBase(ASyncABC):
                 self.__class__.__name__,
                 self,
             )
-            present_flags = [
-                flag for flag in VIABLE_FLAGS if hasattr(self, flag)
-            ]
+            present_flags = [flag for flag in VIABLE_FLAGS if hasattr(self, flag)]
             if not present_flags:
                 raise exceptions.NoFlagsFound(self) from None
             if len(present_flags) > 1:
