@@ -291,7 +291,7 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
         See Also:
             - :func:`asyncio.create_task`
         """
-        super().__init__(coro, loop=loop, name=name)
+        asyncio.Task.__init__(self, coro, loop=loop, name=name)
         self._waiters: Set["asyncio.Task[T]"] = set()
         self.add_done_callback(SmartTask._self_done_cleanup_callback)
 
