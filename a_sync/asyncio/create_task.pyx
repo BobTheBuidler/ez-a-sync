@@ -54,20 +54,19 @@ def create_task(
         - :func:`asyncio.create_task`
         - :class:`asyncio.Task`
     """
-
+    cdef object task
     if not asyncio.iscoroutine(coro):
         coro = __await(coro)
     task = asyncio.create_task(coro, name=name)
     if skip_gc_until_done:
         __persisted_tasks.add(asyncio.create_task(__persisted_task_exc_wrap(task)))
     if log_destroy_pending is False:
-        asyncio.Task.__del__
         task._log_destroy_pending = False
     __prune_persisted_tasks()
     return task
 
 
-__persisted_tasks: Set["asyncio.Task[Any]"] = set()
+cdef set[asyncio.Task[Any]] __persisted_tasks = set()
 
 
 async def __await(awaitable: Awaitable[T]) -> T:
@@ -98,7 +97,7 @@ async def __await(awaitable: Awaitable[T]) -> T:
         raise RuntimeError(*args) from None
 
 
-def __prune_persisted_tasks():
+cdef void __prune_persisted_tasks():
     """Remove completed tasks from the set of persisted tasks.
 
     This function checks each task in the persisted tasks set. If a task is done and has an exception,
@@ -108,6 +107,8 @@ def __prune_persisted_tasks():
     See Also:
         - :class:`PersistedTaskException`
     """
+    cdef object task
+    cdef dict context
     for task in tuple(__persisted_tasks):
         if task.done() and (e := task.exception()):
             # force exceptions related to this lib to bubble up
