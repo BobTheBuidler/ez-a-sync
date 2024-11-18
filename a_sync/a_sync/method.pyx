@@ -570,6 +570,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             # We can return the value.
             pass
         elif _should_await(self.__self__, kwargs):
+            raise Exception(self.__self__, kwargs)
             # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
             logger.debug(
                 "awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs
