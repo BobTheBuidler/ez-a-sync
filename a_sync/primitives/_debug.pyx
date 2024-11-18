@@ -8,6 +8,7 @@ import abc
 import asyncio
 from typing import Optional
 
+import a_sync.asyncio
 from a_sync.primitives._loggable import _LoggerMixin
 
 
@@ -72,9 +73,10 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
         See Also:
             :meth:`_ensure_debug_daemon` for ensuring the daemon is running.
         """
-        if self.debug_logs_enabled and asyncio.get_event_loop().is_running():
-            return asyncio.create_task(self._debug_daemon(*args, **kwargs))
-        return asyncio.get_event_loop().create_future()
+        loop = asyncio.get_event_loop()
+        if self.debug_logs_enabled and loop.is_running():
+            return a_sync.asyncio.create_task(self._debug_daemon(*args, **kwargs))
+        return loop.create_future()
 
     def _ensure_debug_daemon(self, *args, **kwargs) -> "asyncio.Future[None]":
         """
