@@ -436,7 +436,6 @@ def shield(
     return outer
 
 
-
 __all__ = [
     "create_future",
     "shield",
