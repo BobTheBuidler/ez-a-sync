@@ -2,7 +2,11 @@ from a_sync._typing import *
 import functools
 from _typeshed import Incomplete
 from a_sync import TaskMapping as TaskMapping
-from a_sync.a_sync.method import ASyncBoundMethod as ASyncBoundMethod, ASyncBoundMethodAsyncDefault as ASyncBoundMethodAsyncDefault, ASyncBoundMethodSyncDefault as ASyncBoundMethodSyncDefault
+from a_sync.a_sync.method import (
+    ASyncBoundMethod as ASyncBoundMethod,
+    ASyncBoundMethodAsyncDefault as ASyncBoundMethodAsyncDefault,
+    ASyncBoundMethodSyncDefault as ASyncBoundMethodSyncDefault,
+)
 from a_sync.a_sync.modifiers.manager import ModifierManager as ModifierManager
 from typing import Any
 
@@ -21,6 +25,7 @@ class _ModifiedMixin:
         - :class:`~ASyncFunction`
         - :class:`~ModifierManager`
     """
+
     modifiers: ModifierManager
     @functools.cached_property
     def default(self) -> DefaultMode:
@@ -35,7 +40,7 @@ class _ModifiedMixin:
         """
 
 class ASyncFunction(_ModifiedMixin, Generic[P, T]):
-    '''
+    """
     A callable wrapper object that can be executed both synchronously and asynchronously.
 
     This class wraps a function or coroutine function, allowing it to be called in both
@@ -65,7 +70,8 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     See Also:
         - :class:`_ModifiedMixin`
         - :class:`ModifierManager`
-    '''
+    """
+
     @overload
     def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         """
@@ -81,6 +87,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             func = ASyncFunction(my_coroutine, cache_type='memory')
         """
+
     @overload
     def __init__(self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         """
@@ -96,6 +103,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             func = ASyncFunction(my_function, runs_per_minute=60)
         """
+
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
         """
@@ -109,8 +117,11 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         Example:
             result = func(5, sync=True)
         """
+
     @overload
-    def __call__(self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
         """
         Calls the wrapped function asynchronously.
 
@@ -122,8 +133,11 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         Example:
             result = await func(5, sync=False)
         """
+
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T:
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T:
         """
         Calls the wrapped function synchronously.
 
@@ -135,8 +149,11 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         Example:
             result = func(5, asynchronous=False)
         """
+
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]:
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
         """
         Calls the wrapped function asynchronously.
 
@@ -148,6 +165,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         Example:
             result = await func(5, asynchronous=True)
         """
+
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """
@@ -160,6 +178,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         Example:
             result = func(5)
         """
+
     @functools.cached_property
     def fn(self):
         """
@@ -172,102 +191,144 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             - :meth:`_async_wrap`
             - :meth:`_sync_wrap`
         """
-    def map(self, *iterables: AnyIterable[P.args], concurrency: Optional[int] = None, task_name: str = '', **function_kwargs: P.kwargs) -> TaskMapping[P, T]:
+
+    def map(
+        self,
+        *iterables: AnyIterable[P.args],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **function_kwargs: P.kwargs
+    ) -> TaskMapping[P, T]:
         """
-            Creates a TaskMapping for the wrapped function with the given iterables.
+        Creates a TaskMapping for the wrapped function with the given iterables.
 
-            Args:
-                *iterables: Iterable objects to be used as arguments for the function.
-                concurrency: Optional maximum number of concurrent tasks.
-                task_name: Optional name for the tasks.
-                **function_kwargs: Additional keyword arguments to pass to the function.
+        Args:
+            *iterables: Iterable objects to be used as arguments for the function.
+            concurrency: Optional maximum number of concurrent tasks.
+            task_name: Optional name for the tasks.
+            **function_kwargs: Additional keyword arguments to pass to the function.
 
-            Returns:
-                A TaskMapping object for managing concurrent execution.
+        Returns:
+            A TaskMapping object for managing concurrent execution.
 
-            See Also:
-                - :class:`TaskMapping`
-            """
-    async def any(self, *iterables: AnyIterable[P.args], concurrency: Optional[int] = None, task_name: str = '', **function_kwargs: P.kwargs) -> bool:
+        See Also:
+            - :class:`TaskMapping`
         """
-            Checks if any result of the function applied to the iterables is truthy.
 
-            Args:
-                *iterables: Iterable objects to be used as arguments for the function.
-                concurrency: Optional maximum number of concurrent tasks.
-                task_name: Optional name for the tasks.
-                **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                True if any result is truthy, otherwise False.
-
-            See Also:
-                - :meth:`map`
-            """
-    async def all(self, *iterables: AnyIterable[P.args], concurrency: Optional[int] = None, task_name: str = '', **function_kwargs: P.kwargs) -> bool:
+    async def any(
+        self,
+        *iterables: AnyIterable[P.args],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **function_kwargs: P.kwargs
+    ) -> bool:
         """
-            Checks if all results of the function applied to the iterables are truthy.
+        Checks if any result of the function applied to the iterables is truthy.
 
-            Args:
-                *iterables: Iterable objects to be used as arguments for the function.
-                concurrency: Optional maximum number of concurrent tasks.
-                task_name: Optional name for the tasks.
-                **function_kwargs: Additional keyword arguments to pass to the function.
+        Args:
+            *iterables: Iterable objects to be used as arguments for the function.
+            concurrency: Optional maximum number of concurrent tasks.
+            task_name: Optional name for the tasks.
+            **function_kwargs: Additional keyword arguments to pass to the function.
 
-            Returns:
-                True if all results are truthy, otherwise False.
+        Returns:
+            True if any result is truthy, otherwise False.
 
-            See Also:
-                - :meth:`map`
-            """
-    async def min(self, *iterables: AnyIterable[P.args], concurrency: Optional[int] = None, task_name: str = '', **function_kwargs: P.kwargs) -> T:
+        See Also:
+            - :meth:`map`
         """
-            Finds the minimum result of the function applied to the iterables.
 
-            Args:
-                *iterables: Iterable objects to be used as arguments for the function.
-                concurrency: Optional maximum number of concurrent tasks.
-                task_name: Optional name for the tasks.
-                **function_kwargs: Additional keyword arguments to pass to the function.
-
-            Returns:
-                The minimum result.
-
-            See Also:
-                - :meth:`map`
-            """
-    async def max(self, *iterables: AnyIterable[P.args], concurrency: Optional[int] = None, task_name: str = '', **function_kwargs: P.kwargs) -> T:
+    async def all(
+        self,
+        *iterables: AnyIterable[P.args],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **function_kwargs: P.kwargs
+    ) -> bool:
         """
-            Finds the maximum result of the function applied to the iterables.
+        Checks if all results of the function applied to the iterables are truthy.
 
-            Args:
-                *iterables: Iterable objects to be used as arguments for the function.
-                concurrency: Optional maximum number of concurrent tasks.
-                task_name: Optional name for the tasks.
-                **function_kwargs: Additional keyword arguments to pass to the function.
+        Args:
+            *iterables: Iterable objects to be used as arguments for the function.
+            concurrency: Optional maximum number of concurrent tasks.
+            task_name: Optional name for the tasks.
+            **function_kwargs: Additional keyword arguments to pass to the function.
 
-            Returns:
-                The maximum result.
+        Returns:
+            True if all results are truthy, otherwise False.
 
-            See Also:
-                - :meth:`map`
-            """
-    async def sum(self, *iterables: AnyIterable[P.args], concurrency: Optional[int] = None, task_name: str = '', **function_kwargs: P.kwargs) -> T:
+        See Also:
+            - :meth:`map`
         """
-            Calculates the sum of the results of the function applied to the iterables.
 
-            Args:
-                *iterables: Iterable objects to be used as arguments for the function.
-                concurrency: Optional maximum number of concurrent tasks.
-                task_name: Optional name for the tasks.
-                **function_kwargs: Additional keyword arguments to pass to the function.
+    async def min(
+        self,
+        *iterables: AnyIterable[P.args],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **function_kwargs: P.kwargs
+    ) -> T:
+        """
+        Finds the minimum result of the function applied to the iterables.
 
-            Returns:
-                The sum of the results.
+        Args:
+            *iterables: Iterable objects to be used as arguments for the function.
+            concurrency: Optional maximum number of concurrent tasks.
+            task_name: Optional name for the tasks.
+            **function_kwargs: Additional keyword arguments to pass to the function.
 
-            See Also:
-                - :meth:`map`
-            """
+        Returns:
+            The minimum result.
+
+        See Also:
+            - :meth:`map`
+        """
+
+    async def max(
+        self,
+        *iterables: AnyIterable[P.args],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **function_kwargs: P.kwargs
+    ) -> T:
+        """
+        Finds the maximum result of the function applied to the iterables.
+
+        Args:
+            *iterables: Iterable objects to be used as arguments for the function.
+            concurrency: Optional maximum number of concurrent tasks.
+            task_name: Optional name for the tasks.
+            **function_kwargs: Additional keyword arguments to pass to the function.
+
+        Returns:
+            The maximum result.
+
+        See Also:
+            - :meth:`map`
+        """
+
+    async def sum(
+        self,
+        *iterables: AnyIterable[P.args],
+        concurrency: Optional[int] = None,
+        task_name: str = "",
+        **function_kwargs: P.kwargs
+    ) -> T:
+        """
+        Calculates the sum of the results of the function applied to the iterables.
+
+        Args:
+            *iterables: Iterable objects to be used as arguments for the function.
+            concurrency: Optional maximum number of concurrent tasks.
+            task_name: Optional name for the tasks.
+            **function_kwargs: Additional keyword arguments to pass to the function.
+
+        Returns:
+            The sum of the results.
+
+        See Also:
+            - :meth:`map`
+        """
     __docstring_append__: str
 
 class ASyncDecorator(_ModifiedMixin):
@@ -285,6 +346,7 @@ class ASyncDecorator(_ModifiedMixin):
         See Also:
             - :class:`ModifierManager`
         """
+
     def validate_inputs(self) -> None:
         """
         Validates the input modifiers.
@@ -295,6 +357,7 @@ class ASyncDecorator(_ModifiedMixin):
         See Also:
             - :attr:`ModifierManager.default`
         """
+
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> ASyncBoundMethod[B, P, T]:
         """
@@ -309,6 +372,7 @@ class ASyncDecorator(_ModifiedMixin):
         See Also:
             - :class:`ASyncBoundMethod`
         """
+
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:
         """
@@ -325,7 +389,7 @@ class ASyncDecorator(_ModifiedMixin):
         """
 
 class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
-    '''A specialized :class:`~ASyncFunction` that defaults to synchronous execution.
+    """A specialized :class:`~ASyncFunction` that defaults to synchronous execution.
 
     This class is used when the :func:`~a_sync` decorator is applied with `default=\'sync\'`.
     It provides type hints to indicate that the default call behavior is synchronous and
@@ -344,21 +408,28 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
 
         # Asynchronous call
         result = await my_function(5, sync=False)  # returns "5"
-    '''
+    """
+
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
     @overload
-    def __call__(self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T: ...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
     __docstring_append__: str
 
 class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
-    '''
+    """
     A specialized :class:`~ASyncFunction` that defaults to asynchronous execution.
 
     This class is used when the :func:`~a_sync` decorator is applied with `default=\'async\'`.
@@ -378,22 +449,31 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
 
         # Synchronous call
         result = my_function(5, sync=True)  # returns "5"
-    '''
+    """
+
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
     @overload
-    def __call__(self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T: ...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T: ...
     @overload
-    def __call__(self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
     __docstring_append__: str
 
 class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
-    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> ASyncBoundMethodSyncDefault[P, T]:
+    def __call__(
+        self, func: AnyFn[Concatenate[B, P], T]
+    ) -> ASyncBoundMethodSyncDefault[P, T]:
         """
         Decorates a bound method with synchronous default behavior.
 
@@ -406,6 +486,7 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
         See Also:
             - :class:`ASyncBoundMethodSyncDefault`
         """
+
     @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionSyncDefault[P, T]:
         """
@@ -420,6 +501,7 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
         See Also:
             - :class:`ASyncFunctionSyncDefault`
         """
+
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:
         """
@@ -437,7 +519,9 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
 
 class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
-    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> ASyncBoundMethodAsyncDefault[P, T]:
+    def __call__(
+        self, func: AnyFn[Concatenate[B, P], T]
+    ) -> ASyncBoundMethodAsyncDefault[P, T]:
         """
         Decorates a bound method with asynchronous default behavior.
 
@@ -450,6 +534,7 @@ class ASyncDecoratorAsyncDefault(ASyncDecorator):
         See Also:
             - :class:`ASyncBoundMethodAsyncDefault`
         """
+
     @overload
     def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
         """
@@ -464,6 +549,7 @@ class ASyncDecoratorAsyncDefault(ASyncDecorator):
         See Also:
             - :class:`ASyncFunctionAsyncDefault`
         """
+
     @overload
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
         """
