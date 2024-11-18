@@ -401,7 +401,7 @@ def shield(
             DeprecationWarning,
             stacklevel=2,
         )
-    inner = ensure_future(arg, loop=loop)
+    inner = asyncio.ensure_future(arg, loop=loop)
     if inner.done():
         # Shortcut.
         return inner
@@ -435,35 +435,6 @@ def shield(
     outer.add_done_callback(_outer_done_callback)
     return outer
 
-
-
-cdef object ensure_future(coro_or_future, *, loop=None):
-    """Wrap a coroutine or an awaitable in a future.
-
-    If the argument is a Future, it is returned directly.
-    """
-    if asyncio.futures.isfuture(coro_or_future):
-        if loop is not None and loop is not asyncio.futures._get_loop(coro_or_future):
-            raise ValueError('The future belongs to a different loop than '
-                            'the one specified as the loop argument')
-        return coro_or_future
-    
-    cdef bint called_wrap_awaitable = False
-    if not asyncio.coroutines.iscoroutine(coro_or_future):
-        if inspect.isawaitable(coro_or_future):
-            coro_or_future = _wrap_awaitable(coro_or_future)
-            called_wrap_awaitable = True
-        else:
-            raise TypeError('An asyncio.Future, a coroutine or an awaitable is required')
-
-    if loop is None:
-        loop = asyncio.events._get_event_loop(stacklevel=4)
-    try:
-        return loop.create_task(coro_or_future)
-    except RuntimeError: 
-        if not called_wrap_awaitable:
-            coro_or_future.close()
-        raise
 
 
 __all__ = [
