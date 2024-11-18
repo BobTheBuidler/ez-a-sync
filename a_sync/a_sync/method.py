@@ -9,6 +9,7 @@ asynchronously based on various conditions and configurations.
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 import functools
+import heapq
 import logging
 import weakref
 from inspect import isawaitable
@@ -156,8 +157,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                 )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        # Handler for popping unused bound methods from bound method cache
-        bound._cache_handle = self._get_cache_handle(instance)
+        self._update_cache_handle(instance, bound)
         return bound
 
     def __set__(self, instance, value):
@@ -210,25 +210,24 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             True
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
-
-    def _get_cache_handle(self, instance: I) -> asyncio.TimerHandle:
+    
+    def _update_cache_handle(self, instance, bound: "ASyncBoundMethod") -> None:
         """
-        Get a cache handle for the instance.
+        Update the TTL for the cache handle for the instance.
 
         Args:
             instance: The instance to create a cache handle for.
-
-        Returns:
-            A timer handle for cache management.
-
-        Examples:
-            >>> descriptor = ASyncMethodDescriptor(my_function)
-            >>> cache_handle = descriptor._get_cache_handle(instance)
+            bound: The bound method we are caching.
         """
-        # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
-        return asyncio.get_event_loop().call_later(
-            300, instance.__dict__.pop, self.field_name
-        )
+        # Handler for popping unused bound methods from bound method cache
+        loop = asyncio.get_event_loop()
+        if handle := bound._cache_handle:
+            handle._when = loop.time() + 300
+        else:
+            # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
+            bound._cache_handle = loop.call_at(
+                loop.time() + 300, instance.__dict__.pop, self.field_name
+            )
 
 
 @final
@@ -314,8 +313,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
             )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        # Handler for popping unused bound methods from bound method cache
-        bound._cache_handle = self._get_cache_handle(instance)
+        self._update_cache_handle(instance, bound)
         return bound
 
 
@@ -399,8 +397,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
             )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        # Handler for popping unused bound methods from bound method cache
-        bound._cache_handle = self._get_cache_handle(instance)
+        self._update_cache_handle(instance, bound)
         return bound
 
 
@@ -435,7 +432,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
     # NOTE: this is created by the Descriptor
 
-    _cache_handle: asyncio.TimerHandle
+    _cache_handle: asyncio.TimerHandle = None
     """An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."""
 
     __weakself__: "weakref.ref[I]"

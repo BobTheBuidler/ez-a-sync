@@ -730,7 +730,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
             )
             instance.__dict__[self.field_name] = bound
             logger.debug("new hidden method: %s", bound)
-        bound._cache_handle = self._get_cache_handle(instance)
+        self._update_cache_handle(instance, bound)
         return bound
 
 
