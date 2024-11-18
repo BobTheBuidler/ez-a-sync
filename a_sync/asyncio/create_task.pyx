@@ -17,8 +17,8 @@ def create_task(
     coro: Awaitable[T],
     *,
     name: Optional[str] = None,
-    skip_gc_until_done: bool = False,
-    log_destroy_pending: bool = True,
+    skip_gc_until_done: bint = False,
+    log_destroy_pending: bint = True,
 ) -> "asyncio.Task[T]":
     """
     Extends :func:`asyncio.create_task` to support any :class:`Awaitable`, manage task lifecycle, and enhance error handling.
@@ -54,16 +54,31 @@ def create_task(
         - :func:`asyncio.create_task`
         - :class:`asyncio.Task`
     """
-    cdef object task
     if not asyncio.iscoroutine(coro):
         coro = __await(coro)
-    task = asyncio.create_task(coro, name=name)
+
+    create_task = asyncio.get_running_loop().create_task
+    task = create_task(coro)
+    
+    __set_task_name(task, name)
+
     if skip_gc_until_done:
-        __persisted_tasks.add(asyncio.create_task(__persisted_task_exc_wrap(task)))
+        persisted = __persisted_task_exc_wrap(task)
+        __set_task_name(persisted, name)
+        __persisted_tasks.add(create_task(persisted))
+
     if log_destroy_pending is False:
         task._log_destroy_pending = False
+
     __prune_persisted_tasks()
+
     return task
+
+
+cdef void __set_task_name(object task, str name):
+    if name is not None:
+        if set_name := getattr(task, "set_name", None):
+            set_name(name)
 
 
 cdef set[asyncio.Task[Any]] __persisted_tasks = set()
