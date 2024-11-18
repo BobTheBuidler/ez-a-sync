@@ -226,7 +226,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 fut = self._queue.put_nowait(item)
             else:
                 fut = a_sync.asyncio.create_task(
-                    coro=self._wrapped_func(item, **self._wrapped_func_kwargs), 
+                    coro=self._wrapped_func(item, **self._wrapped_func_kwargs),
                     name=f"{self._name}[{item}]" if self._name else f"{item}",
                 )
             super().__setitem__(item, fut)
