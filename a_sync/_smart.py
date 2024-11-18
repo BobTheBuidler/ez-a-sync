@@ -82,9 +82,14 @@ class _SmartFutureMixin(Generic[T]):
         """
         if self.done():
             return self.result()  # May raise too.
+            
         self._asyncio_future_blocking = True
-        self._waiters.add(current_task := asyncio.current_task(self._loop))
-        current_task.add_done_callback(self._waiter_done_cleanup_callback)  # type: ignore [union-attr]
+        if current_task := asyncio.current_task(self._loop):
+            self._waiters.add(current_task)
+            current_task.add_done_callback(
+                self._waiter_done_cleanup_callback  # type: ignore [union-attr]
+            )
+            
         logger.debug("awaiting %s", self)
         yield self  # This tells Task to wait for completion.
         if not self.done():
