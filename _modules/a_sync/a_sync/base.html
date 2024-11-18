@@ -76,7 +76,7 @@
 
 <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">exceptions</span>
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">_flags</span>
+<span class="kn">from</span> <span class="nn">a_sync.a_sync._flags</span> <span class="kn">import</span> <span class="n">VIABLE_FLAGS</span><span class="p">,</span> <span class="n">negate_if_necessary</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync.abstract</span> <span class="kn">import</span> <span class="n">ASyncABC</span>
 
 
@@ -152,9 +152,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                 <span class="bp">self</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="n">present_flags</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">flag</span> <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">_flags</span><span class="o">.</span><span class="n">VIABLE_FLAGS</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">)</span>
-            <span class="p">]</span>
+            <span class="n">present_flags</span> <span class="o">=</span> <span class="p">[</span><span class="n">flag</span> <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">VIABLE_FLAGS</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">)]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">present_flags</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoFlagsFound</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="kn">from</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">present_flags</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -182,7 +180,7 @@
         <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoFlagsFound</span><span class="p">:</span>
             <span class="n">flag</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__get_a_sync_flag_name_from_class_def</span><span class="p">()</span>
             <span class="n">flag_value</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__get_a_sync_flag_value_from_class_def</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
-        <span class="n">sync</span> <span class="o">=</span> <span class="n">_flags</span><span class="o">.</span><span class="n">negate_if_necessary</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span>
+        <span class="n">sync</span> <span class="o">=</span> <span class="n">negate_if_necessary</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">)</span>  <span class="c1"># type: ignore [arg-type]</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
             <span class="s2">&quot;`</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">` indicates default mode is </span><span class="si">%s</span><span class="s2">synchronous&quot;</span><span class="p">,</span>
             <span class="bp">cls</span><span class="p">,</span>
@@ -240,7 +238,7 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">__parse_flag_name_from_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="n">present_flags</span> <span class="o">=</span> <span class="p">[</span><span class="n">flag</span> <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">_flags</span><span class="o">.</span><span class="n">VIABLE_FLAGS</span> <span class="k">if</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span>
+        <span class="n">present_flags</span> <span class="o">=</span> <span class="p">[</span><span class="n">flag</span> <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">VIABLE_FLAGS</span> <span class="k">if</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">present_flags</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;There are too many flags defined on </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">NoFlagsFound</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">items</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>

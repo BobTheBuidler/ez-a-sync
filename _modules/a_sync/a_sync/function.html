@@ -79,7 +79,8 @@
 <span class="kn">from</span> <span class="nn">async_property.cached</span> <span class="kn">import</span> <span class="n">AsyncCachedPropertyDescriptor</span>  <span class="c1"># type: ignore [import]</span>
 
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">_flags</span><span class="p">,</span> <span class="n">_helpers</span><span class="p">,</span> <span class="n">_kwargs</span>
+<span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">_helpers</span><span class="p">,</span> <span class="n">_kwargs</span>
+<span class="kn">from</span> <span class="nn">a_sync.a_sync._flags</span> <span class="kn">import</span> <span class="n">VIABLE_FLAGS</span>
 <span class="kn">from</span> <span class="nn">a_sync.a_sync.modifiers.manager</span> <span class="kn">import</span> <span class="n">ModifierManager</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -186,10 +187,10 @@
         <span class="n">fn</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">__wrapped__</span>
     <span class="n">_check_not_genfunc</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
     <span class="n">fn_args</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">fn</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">_flags</span><span class="o">.</span><span class="n">VIABLE_FLAGS</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">VIABLE_FLAGS</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">fn_args</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2"> must not have any arguments with the following names: </span><span class="si">{</span><span class="n">_flags</span><span class="o">.</span><span class="n">VIABLE_FLAGS</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">fn</span><span class="si">}</span><span class="s2"> must not have any arguments with the following names: </span><span class="si">{</span><span class="n">VIABLE_FLAGS</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span></div>
 
 
