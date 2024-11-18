@@ -302,14 +302,14 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         self.__wrapped__ = async_iterator
         "The wrapped :class:`AsyncIterator`."
 
-    async def __anext__(self) -> T:
+    def __anext__(self) -> Coroutine[Any, Any, T]:
         """
         Asynchronously fetch the next item from the {cls}.
 
         Raises:
             :class:`StopAsyncIteration`: Once all items have been fetched from the {cls}.
         """
-        return await self.__wrapped__.__anext__()
+        return self.__wrapped__.__anext__()
 
     def __iter__(self) -> Self:
         """
