@@ -14,6 +14,7 @@ import logging
 import weakref
 from inspect import isawaitable
 
+from a_sync import exceptions
 from a_sync._typing import *
 from a_sync.a_sync import _helpers, _kwargs
 from a_sync.a_sync._descriptor import ASyncDescriptor
@@ -160,7 +161,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                 )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        self._update_cache_timer(instance, bound)
+        _update_cache_timer(self.field_name, instance, bound)
         return bound
 
     def __set__(self, instance, value):
@@ -214,27 +215,25 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
 
-    def _update_cache_timer(
-        self, instance: I, bound: "ASyncBoundMethod[I, P, T]"
-    ) -> None:
-        """
-        Update the TTL for the cache handle for the instance.
 
-        Args:
-            instance: The instance to create a cache handle for.
-            bound: The bound method we are caching.
-        """
-        # Handler for popping unused bound methods from bound method cache
-        if handle := bound._cache_handle:
-            # update the timer handle
-            handle._when = handle._loop.time() + METHOD_CACHE_TTL
-        else:
-            # create and assign the timer handle
-            loop = asyncio.get_event_loop()
-            # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
-            bound._cache_handle = loop.call_at(
-                loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, self.field_name
-            )
+cdef void _update_cache_timer(field_name: str, instance: I, bound: "ASyncBoundMethod"):
+    """
+    Update the TTL for the cache handle for the instance.
+
+    Args:
+        instance: The instance to create a cache handle for.
+        bound: The bound method we are caching.
+    """
+    # Handler for popping unused bound methods from bound method cache
+    cdef object handle, loop
+    if handle := bound._cache_handle:
+        # update the timer handle
+        handle._when = handle._loop.time() + METHOD_CACHE_TTL
+    else:
+        # create and assign the timer handle
+        loop = asyncio.get_event_loop()
+        # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
+        bound._cache_handle = loop.call_at(loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, field_name)
 
 
 @final
@@ -320,7 +319,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
             )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        self._update_cache_timer(instance, bound)
+        _update_cache_timer(self.field_name, instance, bound)
         return bound
 
 
@@ -404,7 +403,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
             )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        self._update_cache_timer(instance, bound)
+        _update_cache_timer(self.field_name, instance, bound)
         return bound
 
 
@@ -500,9 +499,19 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         """
         try:
             instance_type = type(self.__self__)
-            return f"<{self.__class__.__name__} for function {instance_type.__module__}.{instance_type.__name__}.{self.__name__} bound to {self.__self__}>"
+            return "<{} for function {}.{}.{} bound to {}>".format(
+                self.__class__.__name__,
+                instance_type.__module__,
+                instance_type.__name__,
+                self.__name__,
+                self.__self__
+            )
         except ReferenceError:
-            return f"<{self.__class__.__name__} for function COLLECTED.COLLECTED.{self.__name__} bound to {self.__weakself__}>"
+            return "<{} for function COLLECTED.COLLECTED.{} bound to {}>".format(
+                self.__class__.__name__,
+                self.__name__,
+                self.__weakself__
+            )
 
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
@@ -536,6 +545,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> await bound_method(arg1, arg2, kwarg1=value1)
             >>> bound_method(arg1, arg2, kwarg1=value1, sync=True)
         """
+        cdef object retval, coro
         logger.debug("calling %s with args: %s kwargs: %s", self, args, kwargs)
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
@@ -568,6 +578,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method.__self__
             <MyClass instance>
         """
+        cdef object instance
         instance = self.__weakself__()
         if instance is not None:
             return instance
@@ -737,7 +748,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
         ).sum(pop=True, sync=False)
 
-    def _should_await(self, kwargs: dict) -> bool:
+    def _should_await(self, dict kwargs) -> bint:
         """
         Determine if the method should be awaited.
 
@@ -748,8 +759,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> should_await = bound_method._should_await(kwargs)
         """
+        cdef object flag
         if flag := _kwargs.get_flag_name(kwargs):
-            return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
+            return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
         elif self.default:
             return self.default == "sync"
         elif self.__bound_to_a_sync_instance__:
@@ -757,7 +769,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             return self.__self__.__a_sync_should_await__(kwargs)
         return self._is_async_def
 
-    def __cancel_cache_handle(self, instance: I) -> None:
+    def __cancel_cache_handle(self, object instance) -> None:
         """
         Cancel the cache handle.
 
@@ -768,8 +780,11 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> bound_method.__cancel_cache_handle(instance)
         """
-        cache_handle: asyncio.TimerHandle = self._cache_handle
-        cache_handle.cancel()
+        try:
+            self._cache_handle.cancel()
+        except AttributeError:
+            # this runs if _cache_handle is None
+            return
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):

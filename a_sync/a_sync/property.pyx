@@ -4,7 +4,7 @@ import logging
 import async_property as ap  # type: ignore [import]
 from typing_extensions import Unpack
 
-from a_sync import _smart, exceptions
+from a_sync import _smart
 from a_sync._typing import *
 from a_sync.a_sync import _helpers, config
 from a_sync.a_sync._descriptor import ASyncDescriptor
@@ -17,6 +17,7 @@ from a_sync.a_sync.method import (
     ASyncBoundMethodAsyncDefault,
     ASyncMethodDescriptorAsyncDefault,
 )
+from a_sync.a_sync.method cimport _update_cache_timer
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -69,6 +70,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             field_name: Optional name for the field. If not provided, the function's name will be used.
             **modifiers: Additional modifier arguments.
         """
+        cdef dict hidden_modifiers
         super().__init__(_fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
@@ -99,8 +101,11 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         """
         if instance is None:
             return self
-        awaitable = super().__get__(instance, owner)
+        
+        cdef object awaitable = super().__get__(instance, owner)
+
         # if the user didn't specify a default behavior, we will defer to the instance
+        cdef bint should_await
         if _is_a_sync_instance(instance):
             should_await = (
                 self.default == "sync"
@@ -113,6 +118,9 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
                 if self.default
                 else not asyncio.get_event_loop().is_running()
             )
+        
+        cdef object retval
+        
         if should_await:
             logger.debug(
                 "awaiting awaitable for %s for instance: %s owner: %s",
@@ -124,6 +132,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             retval = _helpers._await(awaitable)
         else:
             retval = awaitable
+
         logger.debug(
             "returning %s for %s for instance: %s owner: %s",
             retval,
@@ -131,6 +140,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             instance,
             owner,
         )
+
         return retval
 
     async def get(self, instance: I, owner: Optional[Type[I]] = None) -> T:
@@ -649,21 +659,13 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     def __repr__(self) -> str:
         """Returns a string representation of the HiddenMethod."""
         instance_type = type(self.__self__)
-        return f"<{self.__class__.__name__} for property {instance_type.__module__}.{instance_type.__name__}.{self.__name__[2:-2]} bound to {self.__self__}>"
-
-    def _should_await(self, kwargs: dict) -> bool:
-        """Determines if the method should be awaited.
-
-        Args:
-            kwargs: The keyword arguments passed to the method.
-
-        Returns:
-            A boolean indicating if the method should be awaited.
-        """
-        try:
-            return self.__self__.__a_sync_should_await_from_kwargs__(kwargs)
-        except (AttributeError, exceptions.NoFlagsFound):
-            return False
+        return "<{} for property {}.{}.{} bound to {}>".format(
+            self.__class__.__name__,
+            instance_type.__module__,
+            instance_type.__name__,
+            self.__name__[2:-2],
+            self.__self__,
+        )
 
     def __await__(self) -> Generator[Any, None, T]:
         """Returns an awaitable for the method."""
@@ -717,6 +719,8 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
         """
         if instance is None:
             return self
+    
+        cdef object bound
         try:
             bound = instance.__dict__[self.field_name]
             bound._cache_handle.cancel()
@@ -730,11 +734,11 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
             )
             instance.__dict__[self.field_name] = bound
             logger.debug("new hidden method: %s", bound)
-        self._update_cache_timer(instance, bound)
+        _update_cache_timer(self.field_name, instance, bound)
         return bound
 
 
-def _is_a_sync_instance(instance: object) -> bool:
+cdef bint _is_a_sync_instance(object instance):
     """Checks if an instance is an ASync instance.
 
     Args:
@@ -743,11 +747,11 @@ def _is_a_sync_instance(instance: object) -> bool:
     Returns:
         A boolean indicating if the instance is an ASync instance.
     """
+    cdef bint is_a_sync
     try:
         return instance.__is_a_sync_instance__  # type: ignore [attr-defined]
     except AttributeError:
         from a_sync.a_sync.abstract import ASyncABC
-
         is_a_sync = isinstance(instance, ASyncABC)
         instance.__is_a_sync_instance__ = is_a_sync
         return is_a_sync
