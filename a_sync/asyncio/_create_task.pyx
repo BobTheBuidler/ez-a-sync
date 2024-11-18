@@ -58,13 +58,13 @@ def create_task(
 
 cdef object ccreate_task_simple(object coro):
     return ccreate_task(coro, "", False, True)
-    
+
 cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint log_destroy_pending):
     if not asyncio.iscoroutine(coro):
         coro = __await(coro)
 
-    create_task = asyncio.get_running_loop().create_task
-    task = create_task(coro)
+    _create_task = asyncio.get_running_loop().create_task
+    task = _create_task(coro)
     
     if name:
         __set_task_name(task, name)
@@ -73,7 +73,7 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
         persisted = __persisted_task_exc_wrap(task)
         if name:
             __set_task_name(persisted, name)
-        __persisted_tasks.add(create_task(persisted))
+        __persisted_tasks.add(_create_task(persisted))
 
     if log_destroy_pending is False:
         task._log_destroy_pending = False
