@@ -27,6 +27,9 @@ if TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.abstract import ASyncABC
 
+
+METHOD_CACHE_TTL = 300
+
 logger = logging.getLogger(__name__)
 
 
@@ -157,7 +160,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                 )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        self._update_cache_handle(instance, bound)
+        self._update_cache_timer(instance, bound)
         return bound
 
     def __set__(self, instance, value):
@@ -210,8 +213,8 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             True
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
-
-    def _update_cache_handle(self, instance, bound: "ASyncBoundMethod") -> None:
+    
+    def _update_cache_timer(self, instance: I, bound: "ASyncBoundMethod[I, P, T]") -> None:
         """
         Update the TTL for the cache handle for the instance.
 
@@ -220,14 +223,14 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             bound: The bound method we are caching.
         """
         # Handler for popping unused bound methods from bound method cache
-        loop = asyncio.get_event_loop()
         if handle := bound._cache_handle:
-            handle._when = loop.time() + 300
+            # update the timer handle
+            handle._when = handle._loop.time() + METHOD_CACHE_TTL
         else:
+            # create and assign the timer handle
+            loop = asyncio.get_event_loop()
             # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
-            bound._cache_handle = loop.call_at(
-                loop.time() + 300, instance.__dict__.pop, self.field_name
-            )
+            bound._cache_handle = loop.call_at(loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, self.field_name)
 
 
 @final
@@ -313,7 +316,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
             )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        self._update_cache_handle(instance, bound)
+        self._update_cache_timer(instance, bound)
         return bound
 
 
@@ -397,7 +400,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
             )
             instance.__dict__[self.field_name] = bound
             logger.debug("new bound method: %s", bound)
-        self._update_cache_handle(instance, bound)
+        self._update_cache_timer(instance, bound)
         return bound
 
 
