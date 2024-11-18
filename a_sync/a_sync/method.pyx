@@ -18,6 +18,7 @@ from a_sync import exceptions
 from a_sync._typing import *
 from a_sync.a_sync import _helpers, _kwargs
 from a_sync.a_sync._descriptor import ASyncDescriptor
+from a_sync.a_sync._kwargs cimport is_sync_c
 from a_sync.a_sync.function import (
     ASyncFunction,
     ASyncFunctionAsyncDefault,
@@ -761,7 +762,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         """
         cdef object flag
         if flag := _kwargs.get_flag_name(kwargs):
-            return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
+            return is_sync_c(<str>flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
         elif self.default:
             return self.default == "sync"
         elif self.__bound_to_a_sync_instance__:
