@@ -1,5 +1,6 @@
 import functools
 import logging
+from cpython cimport Py_ssize_t
 
 import async_property as ap  # type: ignore [import]
 from typing_extensions import Unpack
@@ -750,7 +751,7 @@ cdef bint _is_a_sync_instance(object instance):
         A boolean indicating if the instance is an ASync instance.
     """
     cdef object instance_type = type(instance)
-    cdef long long instance_type_uid = id(instance_type)
+    cdef Py_ssize_t instance_type_uid = id(instance_type)
     if instance_type_uid in _is_a_sync_instance_cache:
         return _is_a_sync_instance_cache[instance_type_uid]
     from a_sync.a_sync.abstract import ASyncABC
