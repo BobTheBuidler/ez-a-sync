@@ -213,8 +213,10 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             True
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
-    
-    def _update_cache_timer(self, instance: I, bound: "ASyncBoundMethod[I, P, T]") -> None:
+
+    def _update_cache_timer(
+        self, instance: I, bound: "ASyncBoundMethod[I, P, T]"
+    ) -> None:
         """
         Update the TTL for the cache handle for the instance.
 
@@ -230,7 +232,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             # create and assign the timer handle
             loop = asyncio.get_event_loop()
             # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
-            bound._cache_handle = loop.call_at(loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, self.field_name)
+            bound._cache_handle = loop.call_at(
+                loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, self.field_name
+            )
 
 
 @final
