@@ -158,6 +158,12 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, owner)
 
+    @functools.cached_property
+    def _TaskMapping(self) -> Type[TaskMapping]:
+        """This silly helper just fixes a circular import"""
+        from a_sync.task import TaskMapping
+        return TaskMapping
+
     def map(
         self,
         instances: AnyIterable[I],
@@ -176,10 +182,8 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         Returns:
             A TaskMapping object.
         """
-        from a_sync.task import TaskMapping
-
         logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
-        return TaskMapping(
+        return self._TaskMapping(
             self,
             instances,
             owner=owner,
