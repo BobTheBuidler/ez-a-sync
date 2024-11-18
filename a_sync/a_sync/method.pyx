@@ -555,7 +555,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             # We can return the value.
             pass
         elif self._should_await(kwargs):
-            raise Exception(self.__self__, kwargs)
             # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
             logger.debug(
                 "awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs
@@ -749,7 +748,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
         ).sum(pop=True, sync=False)
 
-    def _should_await(self, kwargs: dict) -> bool:
+    cdef bint _should_await(self, dict kwargs):
         """
         Determine if the method should be awaited.
 
@@ -760,8 +759,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> should_await = bound_method._should_await(kwargs)
         """
+        cdef object flag
         if flag := _kwargs.get_flag_name(kwargs):
-            return _kwargs.is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
+            return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
         elif self.default:
             return self.default == "sync"
         elif self.__bound_to_a_sync_instance__:
@@ -780,8 +780,11 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> bound_method.__cancel_cache_handle(instance)
         """
-        cache_handle: asyncio.TimerHandle = self._cache_handle
-        cache_handle.cancel()
+        try:
+            self._cache_handle.cancel()
+        except AttributeError:
+            # this runs if _cache_handle is None
+            return
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
