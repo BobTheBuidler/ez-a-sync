@@ -75,7 +75,7 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
         """
         loop = asyncio.get_event_loop()
         if self.debug_logs_enabled and loop.is_running():
-            return a_sync.asyncio.create_task(self._debug_daemon(*args, **kwargs))
+            return a_sync.asyncio.ccreate_task_simple(self._debug_daemon(*args, **kwargs))
         return loop.create_future()
 
     def _ensure_debug_daemon(self, *args, **kwargs) -> "asyncio.Future[None]":

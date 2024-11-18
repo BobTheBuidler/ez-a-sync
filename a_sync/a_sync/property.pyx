@@ -371,7 +371,6 @@ def a_sync_property(  # type: ignore [misc]
     Returns:
         A property descriptor that supports both sync and async access.
     """
-    cdef object descriptor_class
     func, modifiers = _parse_args(func, modifiers)
     cdef object descriptor_class
     if modifiers.get("default") == "sync":
@@ -435,7 +434,7 @@ class ASyncCachedPropertyDescriptor(
         task = instance_state.lock[self.field_name]
         if isinstance(task, asyncio.Lock):
             # default behavior uses lock but we want to use a Task so all waiters wake up together
-            task = a_sync.asyncio.ccreate_task(self._fget(instance))
+            task = a_sync.asyncio.ccreate_task_simple(self._fget(instance))
             instance_state.lock[self.field_name] = task
         return task
 

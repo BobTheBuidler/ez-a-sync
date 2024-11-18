@@ -56,7 +56,10 @@ def create_task(
     """
     return ccreate_task(coro, name, skip_gc_until_done, log_destroy_pending)
 
-cdef ccreate_task(object coro, str name, bint skip_gc_until_done, bint log_destroy_pending):
+cdef object ccreate_task_simple(object coro):
+    return ccreate_task(coro, "", False, True)
+    
+cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint log_destroy_pending):
     if not asyncio.iscoroutine(coro):
         coro = __await(coro)
 
