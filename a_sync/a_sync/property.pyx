@@ -4,6 +4,7 @@ import logging
 import async_property as ap  # type: ignore [import]
 from typing_extensions import Unpack
 
+cimport a_sync.asyncio
 from a_sync import _smart
 from a_sync._typing import *
 from a_sync.a_sync import _helpers, config
@@ -18,7 +19,6 @@ from a_sync.a_sync.method import (
     ASyncMethodDescriptorAsyncDefault,
 )
 from a_sync.a_sync.method cimport _is_a_sync_instance, _update_cache_timer
-from a_sync.asyncio import create_task
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -371,6 +371,7 @@ def a_sync_property(  # type: ignore [misc]
     Returns:
         A property descriptor that supports both sync and async access.
     """
+    cdef object descriptor_class
     func, modifiers = _parse_args(func, modifiers)
     cdef object descriptor_class
     if modifiers.get("default") == "sync":
@@ -434,7 +435,7 @@ class ASyncCachedPropertyDescriptor(
         task = instance_state.lock[self.field_name]
         if isinstance(task, asyncio.Lock):
             # default behavior uses lock but we want to use a Task so all waiters wake up together
-            task = create_task(self._fget(instance))
+            task = a_sync.asyncio.ccreate_task(self._fget(instance))
             instance_state.lock[self.field_name] = task
         return task
 

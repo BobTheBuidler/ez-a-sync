@@ -8,7 +8,7 @@ import abc
 import asyncio
 from typing import Optional
 
-import a_sync.asyncio
+cimport a_sync.asyncio
 from a_sync.primitives._loggable import _LoggerMixin
 
 
