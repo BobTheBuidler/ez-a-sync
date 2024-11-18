@@ -15,8 +15,8 @@ import inspect
 import logging
 import weakref
 
+import a_sync.asyncio
 from a_sync import exceptions
-from a_sync.asyncio.create_task import create_task
 from a_sync._typing import *
 from a_sync.a_sync import _kwargs
 from a_sync.a_sync.base import ASyncGenericBase
@@ -27,8 +27,6 @@ from a_sync.a_sync.method import (
     ASyncMethodDescriptorSyncDefault,
 )
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
-from a_sync.asyncio.as_completed import as_completed
-from a_sync.asyncio.gather import Excluder, gather
 from a_sync.iter import ASyncIterator, ASyncGeneratorFunction, ASyncSorter
 from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.primitives.locks.event import Event
@@ -69,6 +67,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     See Also:
         - :class:`asyncio.Task`
         - :func:`asyncio.create_task`
+        - :func:`a_sync.asyncio.create_task`
     """
 
     concurrency: Optional[int] = None
@@ -227,7 +226,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             else:
                 coro = self._wrapped_func(item, **self._wrapped_func_kwargs)
                 name = (f"{self._name}[{item}]" if self._name else f"{item}",)
-                fut = create_task(coro=coro, name=name)
+                fut = a_sync.asyncio.create_task(coro=coro, name=name)
             super().__setitem__(item, fut)
             return fut
 
@@ -267,11 +266,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             # if there are any tasks that still need to complete, we need to await them and yield them
             if unyielded := {key: self[key] for key in self if key not in yielded}:
                 if pop:
-                    async for key, value in as_completed(unyielded, aiter=True):
+                    async for key, value in a_sync.asyncio.as_completed(unyielded, aiter=True):
                         self.pop(key)
                         yield key, value
                 else:
-                    async for key, value in as_completed(unyielded, aiter=True):
+                    async for key, value in a_sync.asyncio.as_completed(unyielded, aiter=True):
                         yield key, value
         finally:
             await self._if_pop_clear(pop)
@@ -357,11 +356,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
             if self:
                 if pop:
-                    async for key, value in as_completed(self, aiter=True):
+                    async for key, value in a_sync.asyncio.as_completed(self, aiter=True):
                         self.pop(key)
                         yield _yield(key, value, yields)
                 else:
-                    async for key, value in as_completed(self, aiter=True):
+                    async for key, value in a_sync.asyncio.as_completed(self, aiter=True):
                         yield _yield(key, value, yields)
         finally:
             await self._if_pop_clear(pop)
@@ -477,7 +476,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if self._init_loader:
             await self._init_loader
         self._raise_if_empty()
-        return await gather(
+        return await a_sync.asyncio.gather(
             self,
             return_exceptions=return_exceptions,
             exclude_if=exclude_if,
@@ -543,7 +542,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             logger.debug("starting %s init loader", self)
             name = f"{type(self).__name__} init loader loading {self.__iterables__} for {self}"
             try:
-                task = create_task(coro=self.__init_loader_coro, name=name)
+                task = a_sync.asyncio.create_task(coro=self.__init_loader_coro, name=name)
             except RuntimeError as e:
                 raise _NoRunningLoop if str(e) == "no running event loop" else e
             task.add_done_callback(self.__cleanup)
@@ -612,7 +611,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
         done, pending = await asyncio.wait(
             [
-                create_task(self._init_loader_next(), log_destroy_pending=False),
+                a_sync.asyncio.create_task(self._init_loader_next(), log_destroy_pending=False),
                 self._init_loader,
             ],
             return_when=asyncio.FIRST_COMPLETED,
