@@ -17,7 +17,7 @@ from a_sync import exceptions
 from a_sync._typing import *
 from a_sync.a_sync import _kwargs, modifiers
 from a_sync.a_sync cimport _flags
-from a_sync.a_sync._kwargs import is_sync_c
+from a_sync.a_sync._kwargs cimport is_sync_c
 from a_sync.a_sync._meta import ASyncMeta
 from a_sync.exceptions import NoFlagsFound
 
