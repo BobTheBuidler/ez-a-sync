@@ -407,22 +407,6 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         return bound
 
 
-cdef bint _should_await(object instance, dict kwargs):
-    """Determines if the method should be awaited.
-
-    Args:
-        kwargs: The keyword arguments passed to the method.
-
-    Returns:
-        A boolean indicating if the method should be awaited.
-    """
-    try:
-        return instance.__a_sync_should_await_from_kwargs__(kwargs)
-    #except (AttributeError, exceptions.NoFlagsFound):
-    except exceptions.NoFlagsFound:
-        return False
-
-
 class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     """
     A bound method that can be called both synchronously and asynchronously.
@@ -570,7 +554,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
             pass
-        elif _should_await(self.__self__, kwargs):
+        elif self._should_await(kwargs):
             raise Exception(self.__self__, kwargs)
             # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
             logger.debug(
