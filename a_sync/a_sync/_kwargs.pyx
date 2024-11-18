@@ -6,7 +6,7 @@ from typing import Optional
 from libc.stdint cimport uint8_t
 
 from a_sync import exceptions
-from a_sync.a_sync import _flags
+from a_sync.a_sync._flags import VIABLE_FLAGS
 from a_sync.a_sync._flags cimport cnegate_if_necessary
 
 
@@ -37,7 +37,7 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
     See Also:
         :func:`is_sync`: Determines if the operation should be synchronous based on the flag value.
     """
-    cdef list present_flags = [flag for flag in _flags.VIABLE_FLAGS if flag in kwargs]
+    cdef list present_flags = [flag for flag in VIABLE_FLAGS if flag in kwargs]
     cdef uint8_t flags_count = len(present_flags)
     if flags_count == 0:
         return None
