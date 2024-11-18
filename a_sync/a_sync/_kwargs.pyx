@@ -37,13 +37,16 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
     See Also:
         :func:`is_sync`: Determines if the operation should be synchronous based on the flag value.
     """
+    return get_flag_name_c(kwargs)
+
+cdef object get_flag_name_c(dict kwargs):
     cdef list present_flags = [flag for flag in VIABLE_FLAGS if flag in kwargs]
     cdef uint8_t flags_count = len(present_flags)
     if flags_count == 0:
         return None
-    if flags_count != 1:
-        raise exceptions.TooManyFlags("kwargs", present_flags)
-    return present_flags[0]
+    elif flags_count == 1:
+        return present_flags[0]
+    raise exceptions.TooManyFlags("kwargs", present_flags)
 
 
 def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:

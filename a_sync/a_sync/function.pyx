@@ -8,7 +8,8 @@ from async_property.base import AsyncPropertyDescriptor  # type: ignore [import]
 from async_property.cached import AsyncCachedPropertyDescriptor  # type: ignore [import]
 
 from a_sync._typing import *
-from a_sync.a_sync import _helpers, _kwargs
+from a_sync.a_sync import _helpers
+from a_sync.a_sync cimport _kwargs
 from a_sync.a_sync._flags import VIABLE_FLAGS
 from a_sync.a_sync.modifiers.manager import ModifierManager
 
@@ -107,6 +108,16 @@ def _validate_wrapped_fn(fn: Callable) -> None:
     if isinstance(fn, _LRUCacheWrapper):
         fn = fn.__wrapped__
     _check_not_genfunc(fn)
+    try:
+        _validate_argspec(fn)
+    except TypeError:
+        __validate_argspec(fn)
+
+@functools.lru_cache(maxsize=4096)
+def _validate_argspec(fn: Callable):
+    __validate_argspec(fn)
+
+def __validate_argspec(fn: Callable):
     fn_args = inspect.getfullargspec(fn)[0]
     for flag in VIABLE_FLAGS:
         if flag in fn_args:
@@ -115,6 +126,31 @@ def _validate_wrapped_fn(fn: Callable) -> None:
             )
 
 
+cdef bint _run_sync(object function, dict kwargs):
+    """
+    Determines whether to run the function synchronously or asynchronously.
+
+    This method checks for a flag in the kwargs and defers to it if present.
+    If no flag is specified, it defers to the default execution mode.
+
+    Args:
+        kwargs: The keyword arguments passed to the function.
+
+    Returns:
+        True if the function should run synchronously, otherwise False.
+
+    See Also:
+        - :func:`_kwargs.get_flag_name`
+        - :func:`_kwargs.is_sync`
+    """
+    cdef object flag
+    if flag := _kwargs.get_flag_name_c(kwargs):
+        # If a flag was specified in the kwargs, we will defer to it.
+        return _kwargs.is_sync_c(<str>flag, kwargs, pop_flag=True)
+    else:
+        # No flag specified in the kwargs, we will defer to 'default'.
+        return function._sync_default
+    
 class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     """
     A callable wrapper object that can be executed both synchronously and asynchronously.
@@ -322,7 +358,9 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         return self.fn(*args, **kwargs)
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} {self.__module__}.{self.__name__} at {hex(id(self))}>"
+        return "<{} {}.{} at {}>".format(
+            self.__class__.__name__, self.__module__, self.__name__, hex(id(self))
+        )
 
     @functools.cached_property
     def fn(self):
@@ -731,30 +769,6 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
 
-    def _run_sync(self, kwargs: dict) -> bool:
-        """
-        Determines whether to run the function synchronously or asynchronously.
-
-        This method checks for a flag in the kwargs and defers to it if present.
-        If no flag is specified, it defers to the default execution mode.
-
-        Args:
-            kwargs: The keyword arguments passed to the function.
-
-        Returns:
-            True if the function should run synchronously, otherwise False.
-
-        See Also:
-            - :func:`_kwargs.get_flag_name`
-            - :func:`_kwargs.is_sync`
-        """
-        if flag := _kwargs.get_flag_name(kwargs):
-            # If a flag was specified in the kwargs, we will defer to it.
-            return _kwargs.is_sync(flag, kwargs, pop_flag=True)
-        else:
-            # No flag specified in the kwargs, we will defer to 'default'.
-            return self._sync_default
-
     @functools.cached_property
     def _asyncified(self) -> CoroFn[P, T]:
         """
@@ -818,7 +832,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             # we dont want this so profiler outputs are more useful
 
             # Must take place before coro is created, we're popping a kwarg.
-            should_await = self._run_sync(kwargs)
+            should_await = _run_sync(self, kwargs)
             coro = modified_fn(*args, **kwargs)
             if should_await:
                 return await_helper(coro)
@@ -847,7 +861,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         @functools.wraps(modified_fn)
         def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
-            if self._run_sync(kwargs):
+            if _run_sync(self, kwargs):
                 return modified_fn(*args, **kwargs)
             return asyncified(*args, **kwargs)
 
