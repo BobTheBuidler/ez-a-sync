@@ -738,6 +738,8 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
         return bound
 
 
+cdef dict _is_a_sync_instance_cache = {}
+
 cdef bint _is_a_sync_instance(object instance):
     """Checks if an instance is an ASync instance.
 
@@ -747,14 +749,14 @@ cdef bint _is_a_sync_instance(object instance):
     Returns:
         A boolean indicating if the instance is an ASync instance.
     """
-    cdef bint is_a_sync
-    try:
-        return instance.__is_a_sync_instance__  # type: ignore [attr-defined]
-    except AttributeError:
-        from a_sync.a_sync.abstract import ASyncABC
-        is_a_sync = isinstance(instance, ASyncABC)
-        instance.__is_a_sync_instance__ = is_a_sync
-        return is_a_sync
+    cdef object instance_type = type(instance)
+    cdef long instance_type_uid = id(instance_type)
+    if instance_type_uid in _is_a_sync_instance_cache:
+        return _is_a_sync_instance_cache[instance_type_uid]
+    from a_sync.a_sync.abstract import ASyncABC
+    cdef bint is_a_sync = issubclass(instance_type, ASyncABC)
+    _is_a_sync_instance_cache[instance_type_uid] = is_a_sync
+    return is_a_sync
 
 
 def _parse_args(
