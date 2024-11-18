@@ -18,7 +18,7 @@ from a_sync.a_sync.method import (
     ASyncMethodDescriptorAsyncDefault,
 )
 from a_sync.a_sync.method cimport _is_a_sync_instance, _update_cache_timer
-from a_sync.asyncio import create_task
+from a_sync.asyncio.create_task cimport ccreate_task_simple
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -434,7 +434,7 @@ class ASyncCachedPropertyDescriptor(
         task = instance_state.lock[self.field_name]
         if isinstance(task, asyncio.Lock):
             # default behavior uses lock but we want to use a Task so all waiters wake up together
-            task = create_task(self._fget(instance))
+            task = ccreate_task_simple(self._fget(instance))
             instance_state.lock[self.field_name] = task
         return task
 

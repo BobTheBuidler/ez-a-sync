@@ -10,6 +10,7 @@ import logging
 import traceback
 from types import TracebackType
 
+import a_sync.asyncio
 from a_sync._typing import *
 from a_sync.primitives.queue import Queue
 
@@ -227,7 +228,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
             traceback.clear_frames(e.__traceback__)
             queue.put_nowait(_Done(e))
 
-    task = asyncio.create_task(
+    task = a_sync.asyncio.create_task(
         coro=exhaust_iterators(iterators, queue=queue, join=True),
         name=f"a_sync.as_yielded queue populating task for {iterators}",
     )

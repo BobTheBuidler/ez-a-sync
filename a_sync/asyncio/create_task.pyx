@@ -5,6 +5,7 @@ manage task lifecycle, and enhance error handling.
 
 import asyncio
 import logging
+from cython.parallel import prange
 
 from a_sync import exceptions
 from a_sync._typing import *
@@ -16,9 +17,9 @@ logger = logging.getLogger(__name__)
 def create_task(
     coro: Awaitable[T],
     *,
-    name: Optional[str] = None,
-    skip_gc_until_done: bool = False,
-    log_destroy_pending: bool = True,
+    name: str = "",
+    skip_gc_until_done: bint = False,
+    log_destroy_pending: bint = True,
 ) -> "asyncio.Task[T]":
     """
     Extends :func:`asyncio.create_task` to support any :class:`Awaitable`, manage task lifecycle, and enhance error handling.
@@ -54,17 +55,38 @@ def create_task(
         - :func:`asyncio.create_task`
         - :class:`asyncio.Task`
     """
+    return ccreate_task(coro, name, skip_gc_until_done, log_destroy_pending)
 
+cdef object ccreate_task_simple(object coro):
+    return ccreate_task(coro, "", False, True)
+    
+cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint log_destroy_pending):
     if not asyncio.iscoroutine(coro):
         coro = __await(coro)
-    task = asyncio.create_task(coro, name=name)
+
+    create_task = asyncio.get_running_loop().create_task
+    task = create_task(coro)
+    
+    if name:
+        __set_task_name(task, name)
+
     if skip_gc_until_done:
-        __persisted_tasks.add(asyncio.create_task(__persisted_task_exc_wrap(task)))
+        persisted = __persisted_task_exc_wrap(task)
+        if name:
+            __set_task_name(persisted, name)
+        __persisted_tasks.add(create_task(persisted))
+
     if log_destroy_pending is False:
-        asyncio.Task.__del__
         task._log_destroy_pending = False
+
     __prune_persisted_tasks()
+
     return task
+
+
+cdef void __set_task_name(object task, str name):
+    if set_name := getattr(task, "set_name", None):
+         set_name(name)
 
 
 __persisted_tasks: Set["asyncio.Task[Any]"] = set()
@@ -98,7 +120,7 @@ async def __await(awaitable: Awaitable[T]) -> T:
         raise RuntimeError(*args) from None
 
 
-def __prune_persisted_tasks():
+cdef void __prune_persisted_tasks():
     """Remove completed tasks from the set of persisted tasks.
 
     This function checks each task in the persisted tasks set. If a task is done and has an exception,
@@ -108,6 +130,8 @@ def __prune_persisted_tasks():
     See Also:
         - :class:`PersistedTaskException`
     """
+    cdef object task
+    cdef dict context
     for task in tuple(__persisted_tasks):
         if task.done() and (e := task.exception()):
             # force exceptions related to this lib to bubble up
