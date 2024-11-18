@@ -210,7 +210,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             True
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
-    
+
     def _update_cache_handle(self, instance, bound: "ASyncBoundMethod") -> None:
         """
         Update the TTL for the cache handle for the instance.
