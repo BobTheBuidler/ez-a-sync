@@ -8,7 +8,8 @@ from async_property.base import AsyncPropertyDescriptor  # type: ignore [import]
 from async_property.cached import AsyncCachedPropertyDescriptor  # type: ignore [import]
 
 from a_sync._typing import *
-from a_sync.a_sync import _flags, _helpers, _kwargs
+from a_sync.a_sync import _helpers, _kwargs
+from a_sync.a_sync._flags import VIABLE_FLAGS
 from a_sync.a_sync.modifiers.manager import ModifierManager
 
 if TYPE_CHECKING:
@@ -107,10 +108,10 @@ def _validate_wrapped_fn(fn: Callable) -> None:
         fn = fn.__wrapped__
     _check_not_genfunc(fn)
     fn_args = inspect.getfullargspec(fn)[0]
-    for flag in _flags.VIABLE_FLAGS:
+    for flag in VIABLE_FLAGS:
         if flag in fn_args:
             raise RuntimeError(
-                f"{fn} must not have any arguments with the following names: {_flags.VIABLE_FLAGS}"
+                f"{fn} must not have any arguments with the following names: {VIABLE_FLAGS}"
             )
 
 
