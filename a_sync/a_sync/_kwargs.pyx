@@ -7,6 +7,7 @@ from libc.stdint cimport uint8_t
 
 from a_sync import exceptions
 from a_sync.a_sync import _flags
+from a_sync.a_sync._flags cimport cnegate_if_necessary
 
 
 def get_flag_name(kwargs: dict) -> Optional[str]:
@@ -67,9 +68,10 @@ def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:
     See Also:
         :func:`get_flag_name`: Retrieves the name of the flag present in the kwargs.
     """
-    cdef object flag_value
+    return is_sync_c(flag, kwargs, pop_flag)
+
+cdef bint is_sync_c(str flag, dict kwargs, bint pop_flag):
     if pop_flag:
-        flag_value = kwargs.pop(flag)
+        return cnegate_if_necessary(flag, kwargs.pop(flag))
     else:
-        flag_value = kwargs[flag]
-    return _flags.negate_if_necessary(flag, flag_value)
+        return cnegate_if_necessary(flag, kwargs[flag])
