@@ -225,9 +225,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 # NOTE: we use a queue instead of a Semaphore to reduce memory use for use cases involving many many tasks
                 fut = self._queue.put_nowait(item)
             else:
-                coro = self._wrapped_func(item, **self._wrapped_func_kwargs)
-                name = (f"{self._name}[{item}]" if self._name else f"{item}",)
-                fut = a_sync.asyncio.create_task(coro=coro, name=name)
+                fut = a_sync.asyncio.create_task(
+                    coro=self._wrapped_func(item, **self._wrapped_func_kwargs), 
+                    name=f"{self._name}[{item}]" if self._name else f"{item}",
+                )
             super().__setitem__(item, fut)
             return fut
 
