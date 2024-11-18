@@ -416,10 +416,11 @@ cdef bint _should_await(object instance, dict kwargs):
     Returns:
         A boolean indicating if the method should be awaited.
     """
-    #try:
-    return instance.__a_sync_should_await_from_kwargs__(kwargs)
+    try:
+        return instance.__a_sync_should_await_from_kwargs__(kwargs)
     #except (AttributeError, exceptions.NoFlagsFound):
-    #    return False
+    except exceptions.NoFlagsFound:
+        return False
 
 
 class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
