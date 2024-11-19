@@ -95,18 +95,19 @@ class ASyncABC(metaclass=ASyncMeta):
 
         try:
             cache = self.__a_sync_should_await_cache__
-            if not cache.is_cached:
-                cache.value = _flags.cnegate_if_necessary(
-                    self.__a_sync_flag_name__, self.__a_sync_flag_value__
-                )
-                cache.is_cached = True
-                self.__a_sync_should_await_cache__ = cache
-            return cache.value
         except AttributeError:
             raise RuntimeError(
                 f"{self} has not been properly initialized. "
                 f"Please ensure your `{type(self).__name__}.__init__` method calls `ASyncABC.__init__(self)`."
             )
+
+        if not cache.is_cached:
+            cache.value = _flags.cnegate_if_necessary(
+                self.__a_sync_flag_name__, self.__a_sync_flag_value__
+            )
+            cache.is_cached = True
+            self.__a_sync_should_await_cache__ = cache
+        return cache.value
 
     @property
     def __a_sync_instance_should_await__(self) -> bint:
@@ -122,7 +123,23 @@ class ASyncABC(metaclass=ASyncMeta):
             >>> instance.__a_sync_instance_should_await__
             True
         """
+        cdef ShouldAwaitCache cache
 
+        try:
+            cache = self.__a_sync_should_await_cache__
+        except AttributeError:
+            raise RuntimeError(
+                f"{self} has not been properly initialized. "
+                f"Please ensure your `{type(self).__name__}.__init__` method calls `ASyncABC.__init__(self)`."
+            )
+
+        if not cache.is_cached:
+            cache.value = _flags.cnegate_if_necessary(
+                self.__a_sync_flag_name__, self.__a_sync_flag_value__
+            )
+            cache.is_cached = True
+            self.__a_sync_should_await_cache__ = cache
+        return cache.value
 
     @classmethod
     def __a_sync_instance_will_be_sync__(cls, Tuple[Any, ...] args, Dict[str, Any] kwargs) -> bool:
