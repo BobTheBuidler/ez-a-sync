@@ -332,12 +332,13 @@ async def test_async_iterator_aiter_method(async_generator):
     async_iterator = ait.__aiter__()
     assert async_iterator is ait  # Should return self
 
+
 @test_both
 def test_class_docstring_empty(cls_to_test):
     """Test if the class with no docstring was correctly assigned a docstring."""
-    class SampleClassNoDocstring(cls_to_test[int]):
-        ...
-    
+
+    class SampleClassNoDocstring(cls_to_test[int]): ...
+
     assert SampleClassNoDocstring.__doc__ == (
         "When awaited, a list of all :class:`~builtins.int` will be returned.\n"
         "\n"
@@ -350,11 +351,13 @@ def test_class_docstring_empty(cls_to_test):
         "    True\n"
     )
 
+
 @test_both
 def test_class_docstring_append(cls_to_test):
     """
     Test if the class docstring suffix is correctly formatted and appended using regular expressions.
     """
+
     class SampleClassWithDocstring(cls_to_test[int]):
         """Sample class with a docstring."""
 
@@ -367,46 +370,56 @@ def test_class_docstring_append(cls_to_test):
         r" {4}>>> isinstance\(all_contents\[0\], int\)\n"
         r" {4}True\n"
     )
-    assert re.search(expected_pattern, SampleClassWithDocstring.__doc__), f"Docstring does not match expected pattern. \nDocstring: {SampleClassWithDocstring.__doc__}"
+    assert re.search(
+        expected_pattern, SampleClassWithDocstring.__doc__
+    ), f"Docstring does not match expected pattern. \nDocstring: {SampleClassWithDocstring.__doc__}"
+
 
 @test_both
 def test_method_docstring_replacement(cls_to_test):
     """Test if the method docstring is correctly formatted."""
+
     class SampleClass(cls_to_test[str]):
         def sample_method(self):
             """This method processes {obj}."""
-    
+
     assert ":class:`~builtins.str`" in SampleClass.sample_method.__doc__
+
 
 @test_both
 def test_typevar_default(cls_to_test):
     """Ensure that when T is unspecified, 'objects' is used."""
+
     class UnspecifiedTypeClass(cls_to_test):
         """Class dealing with {obj}."""
-        
+
         def sample_method(self):
             """This works with {obj}."""
-    
+
     assert "objects" in UnspecifiedTypeClass.sample_method.__doc__
+
 
 @test_both
 def test_typevar_specified(cls_to_test):
     """Ensure the typevar T reflects the specific type used."""
+
     class IntClass(cls_to_test[int]):
         """Collection of {obj}."""
-        
+
         def sample_method(self):
             """Yield {obj}."""
-    
+
     assert "int" in IntClass.sample_method.__doc__
+
 
 @test_both
 def test_typevar_default(cls_to_test):
     """Ensure that when T is unspecified, ':obj:`T` objects' is used."""
+
     class UnspecifiedTypeClass(cls_to_test):
         """Class dealing with {obj}."""
-        
+
         def sample_method(self):
             """This works with {obj}."""
-    
+
     assert ":obj:`T` objects" in UnspecifiedTypeClass.sample_method.__doc__

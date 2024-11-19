@@ -27,6 +27,7 @@ else:
 
 _FORMAT_PATTERNS = ("{cls}", "{obj}")
 
+
 class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     """
     A mixin class defining logic for making an AsyncIterable awaitable.
@@ -109,8 +110,8 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         # Determine the type used for T in the subclass
         type_argument = T  # Default value
         type_string = ":obj:`T` objects"
-        for base in getattr(cls, '__orig_bases__', []):
-            if not hasattr(base, '__args__'):
+        for base in getattr(cls, "__orig_bases__", []):
+            if not hasattr(base, "__args__"):
                 continue
 
             args = get_args(base)
@@ -118,12 +119,21 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
                 type_argument = args[0]
                 if not isinstance(type_argument, type):
                     # type_argument = str(type_argument)
-                    raise NotImplementedError("I think this is prevented by the rules of python Generic", type_argument)
-                elif hasattr(type_argument, "__module__") and hasattr(type_argument, '__qualname__'):
+                    raise NotImplementedError(
+                        "I think this is prevented by the rules of python Generic",
+                        type_argument,
+                    )
+                elif hasattr(type_argument, "__module__") and hasattr(
+                    type_argument, "__qualname__"
+                ):
                     type_string = f":class:`~{type_argument.__module__}.{type_argument.__qualname__}`"
-                elif hasattr(type_argument, "__module__") and hasattr(type_argument, "__name__"):
-                    type_string = f":class:`~{type_argument.__module__}.{type_argument.__name__}`"
-                elif hasattr(type_argument, '__qualname__'):
+                elif hasattr(type_argument, "__module__") and hasattr(
+                    type_argument, "__name__"
+                ):
+                    type_string = (
+                        f":class:`~{type_argument.__module__}.{type_argument.__name__}`"
+                    )
+                elif hasattr(type_argument, "__qualname__"):
                     type_string = f":class:`{type_argument.__qualname__}`"
                 elif hasattr(type_argument, "__name__"):
                     type_string = f":class:`{type_argument.__name__}`"
@@ -145,9 +155,9 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
 
         if cls.__doc__ is None:
             cls.__doc__ = new
-        elif not cls.__doc__ or cls.__doc__.endswith('\n\n'):
+        elif not cls.__doc__ or cls.__doc__.endswith("\n\n"):
             cls.__doc__ += new
-        elif cls.__doc__.endswith('\n'):
+        elif cls.__doc__.endswith("\n"):
             cls.__doc__ += f"\n{new}"
         else:
             cls.__doc__ += f"\n\n{new}"
@@ -156,10 +166,10 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         # This is necessary because, by default, subclasses inherit methods from their bases
         # which means if we just update the docstring we might edit docs for unrelated objects
         functions_to_redefine = {
-            attr_name: attr_value 
-            for attr_name in dir(cls) 
+            attr_name: attr_value
+            for attr_name in dir(cls)
             if isinstance(
-                attr_value:=getattr(cls, attr_name, None), 
+                attr_value := getattr(cls, attr_name, None),
                 FunctionType,
             )
             and attr_value.__doc__
@@ -169,15 +179,15 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         for function_name, function_obj in functions_to_redefine.items():
             # Create a new function object with the docstring formatted appropriately for this class
             redefined_function_obj = FunctionType(
-                function_obj.__code__, 
+                function_obj.__code__,
                 function_obj.__globals__,
-                name=function_obj.__name__, 
+                name=function_obj.__name__,
                 argdefs=function_obj.__defaults__,
                 closure=function_obj.__closure__,
             )
 
             redefined_function_obj.__doc__ = function_obj.__doc__.format(
-                cls=cls.__name__, 
+                cls=cls.__name__,
                 obj=type_string,
             )
 
