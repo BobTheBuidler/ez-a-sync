@@ -86,25 +86,11 @@ class ASyncABC(metaclass=ASyncMeta):
             >>> instance.__a_sync_should_await__({'sync': True})
             False
         """
-        try:
-            return self.__a_sync_should_await_from_kwargs__(kwargs)
-        except exceptions.NoFlagsFound:
-            return self.__a_sync_instance_should_await__
-
-    @property
-    def __a_sync_instance_should_await__(self) -> bint:
-        """Indicates if the instance should default to asynchronous execution.
-
-        This property can be overridden if dynamic behavior is needed. For
-        instance, to allow hot-swapping of instance modes, redefine this as a
-        non-cached property.
-
-        Examples:
-            >>> instance = MyASyncClass()
-            >>> instance.__a_sync_instance_should_await__
-            True
-        """
-
+        
+        cdef object flag
+        if flag := _kwargs.get_flag_name_c(kwargs):
+            return _kwargs.is_sync_c(<str>flag, kwargs, pop_flag=True)
+        
         cdef ShouldAwaitCache cache
 
         try:
@@ -120,30 +106,40 @@ class ASyncABC(metaclass=ASyncMeta):
                 self.__a_sync_flag_name__, self.__a_sync_flag_value__
             )
             cache.is_cached = True
+            self.__a_sync_should_await_cache__ = cache
         return cache.value
-            
 
-    def __a_sync_should_await_from_kwargs__(self, Dict[str, Any] kwargs) -> bint:
-        """Determines execution mode from keyword arguments.
+    @property
+    def __a_sync_instance_should_await__(self) -> bint:
+        # TODO: refactor this out
+        """Indicates if the instance should default to asynchronous execution.
 
-        This method can be overridden to customize how flags are extracted
-        from keyword arguments.
-
-        Args:
-            kwargs: A dictionary of keyword arguments to check for flags.
-
-        Raises:
-            NoFlagsFound: If no valid flags are found in the keyword arguments.
+        This property can be overridden if dynamic behavior is needed. For
+        instance, to allow hot-swapping of instance modes, redefine this as a
+        non-cached property.
 
         Examples:
             >>> instance = MyASyncClass()
-            >>> instance.__a_sync_should_await_from_kwargs__({'sync': False})
+            >>> instance.__a_sync_instance_should_await__
             True
         """
-        cdef object flag
-        if flag := _kwargs.get_flag_name_c(kwargs):
-            return _kwargs.is_sync_c(<str>flag, kwargs, pop_flag=True)
-        raise NoFlagsFound("kwargs", kwargs.keys())
+        cdef ShouldAwaitCache cache
+
+        try:
+            cache = self.__a_sync_should_await_cache__
+        except AttributeError:
+            raise RuntimeError(
+                f"{self} has not been properly initialized. "
+                f"Please ensure your `{type(self).__name__}.__init__` method calls `ASyncABC.__init__(self)`."
+            )
+
+        if not cache.is_cached:
+            cache.value = _flags.cnegate_if_necessary(
+                self.__a_sync_flag_name__, self.__a_sync_flag_value__
+            )
+            cache.is_cached = True
+            self.__a_sync_should_await_cache__ = cache
+        return cache.value
 
     @classmethod
     def __a_sync_instance_will_be_sync__(cls, Tuple[Any, ...] args, Dict[str, Any] kwargs) -> bool:
@@ -181,24 +177,6 @@ class ASyncABC(metaclass=ASyncMeta):
             "No valid flags found in kwargs, checking class definition for defined default"
         )
         return cls.__a_sync_default_mode__()  # type: ignore [arg-type]
-
-    ######################################
-    # Concrete Methods (non-overridable) #
-    ######################################
-
-    @property
-    def __a_sync_modifiers__(self) -> ModifierKwargs:
-        """Retrieves modifiers for the instance.
-
-        This method should not be overridden. It returns the modifiers
-        associated with the instance, which are used to customize behavior.
-
-        Examples:
-            >>> instance = MyASyncClass()
-            >>> instance.__a_sync_modifiers__
-            {'cache_type': 'memory'}
-        """
-        return modifiers.get_modifiers_from(self)
 
     ####################
     # Abstract Methods #
