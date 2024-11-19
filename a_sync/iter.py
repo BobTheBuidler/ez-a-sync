@@ -51,20 +51,20 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
 
     def __await__(self) -> Generator[Any, Any, List[T]]:
         """
-        Asynchronously iterate through the {cls} and return all objects.
+        Asynchronously iterate through the {cls} and return all {obj}.
 
         Returns:
-            A list of the objects yielded by the {cls}.
+            A list of the {obj} yielded by the {cls}.
         """
         return self._materialized.__await__()
 
     @property
     def materialized(self) -> List[T]:
         """
-        Synchronously iterate through the {cls} and return all objects.
+        Synchronously iterate through the {cls} and return all {obj}.
 
         Returns:
-            A list of the objects yielded by the {cls}.
+            A list of the {obj} yielded by the {cls}.
         """
         return _helpers._await(self._materialized)
 
@@ -72,36 +72,36 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         self, *, key: SortKey[T] = None, reverse: bool = False
     ) -> "ASyncSorter[T]":
         """
-        Sort the contents of the {cls}.
+        Sort the {obj} yielded by the {cls}.
 
         Args:
             key (optional): A function of one argument that is used to extract a comparison key from each list element. If None, the elements themselves will be sorted. Defaults to None.
             reverse (optional): If True, the yielded elements will be sorted in reverse order. Defaults to False.
 
         Returns:
-            An instance of :class:`~ASyncSorter` that will yield the objects yielded from this {cls}, but sorted.
+            An instance of :class:`~ASyncSorter` that will yield the {obj} yielded from this {cls}, but sorted.
         """
         return ASyncSorter(self, key=key, reverse=reverse)
 
     def filter(self, function: ViewFn[T]) -> "ASyncFilter[T]":
         """
-        Filters the contents of the {cls} based on a function.
+        Filters the {obj} yielded by the {cls} based on a function.
 
         Args:
             function: A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.
 
         Returns:
-            An instance of :class:`~ASyncFilter` that yields the filtered objects from the {cls}.
+            An instance of :class:`~ASyncFilter` that yields the filtered {obj} from the {cls}.
         """
         return ASyncFilter(function, self)
 
     @async_cached_property
     async def _materialized(self) -> List[T]:
         """
-        Asynchronously iterate through the {cls} and return all objects.
+        Asynchronously iterate through the {cls} and return all {obj}.
 
         Returns:
-            A list of the objects yielded by the {cls}.
+            A list of the {obj} yielded by the {cls}.
         """
         return [obj async for obj in self]
 
@@ -168,10 +168,8 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         functions_to_redefine = {
             attr_name: attr_value
             for attr_name in dir(cls)
-            if isinstance(
-                attr_value := getattr(cls, attr_name, None),
-                FunctionType,
-            )
+            if (attr_value := getattr(cls, attr_name, None))
+            and isinstance(attr_value, FunctionType)
             and attr_value.__doc__
             and any(pattern in attr_value.__doc__ for pattern in _FORMAT_PATTERNS)
         }
@@ -261,13 +259,13 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
 
     def __aiter__(self) -> AsyncIterator[T]:
         """
-        Return an async iterator that yields :obj:`T` objects from the {cls}.
+        Return an async iterator that yields {obj} from the {cls}.
         """
         return self.__wrapped__.__aiter__()
 
     def __iter__(self) -> Iterator[T]:
         """
-        Return an iterator that yields :obj:`T` objects from the {cls}.
+        Return an iterator that yields {obj} from the {cls}.
 
         Note:
             Synchronous iteration leverages :class:`ASyncIterator`, which uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
@@ -311,7 +309,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         Synchronously fetch the next item from the {cls}.
 
         Note:
-            This method uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
+            This method uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch {obj}.
             This raises a :class:`RuntimeError` if the event loop is already running.
             This RuntimeError will be caught and a more descriptive :class:`~a_sync.exceptions.SyncModeInAsyncContextError` will be raised in its place.
 
@@ -319,7 +317,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
 
         Raises:
-            StopIteration: Once all items have been fetched from the {cls}.
+            StopIteration: Once all {obj} have been fetched from the {cls}.
             SyncModeInAsyncContextError: If the event loop is already running.
 
         """
@@ -354,7 +352,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
 
     @classmethod
     def wrap(cls, wrapped):
-        "Class method to wrap either an AsyncIterator or an async generator function."
+        """Class method to wrap either an AsyncIterator or an async generator function."""
         if isinstance(wrapped, AsyncIterator):
             logger.warning(
                 "This use case for ASyncIterator.wrap will be removed soon. Please replace uses with simple instantiation ie `ASyncIterator(wrapped)`"
@@ -385,7 +383,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         Asynchronously fetch the next item from the {cls}.
 
         Raises:
-            :class:`StopAsyncIteration`: Once all items have been fetched from the {cls}.
+            :class:`StopAsyncIteration`: Once all {obj} have been fetched from the {cls}.
         """
         return self.__wrapped__.__anext__()
 
@@ -394,7 +392,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         Return the {cls} for iteration.
 
         Note:
-            Synchronous iteration uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.
+            Synchronous iteration uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch {obj}.
             This raises a :class:`RuntimeError` if the event loop is already running.
             This RuntimeError will be caught and a more descriptive :class:`~a_sync.exceptions.SyncModeInAsyncContextError` will be raised in its place.
 
@@ -656,7 +654,7 @@ class ASyncSorter(_ASyncView[T]):
             RuntimeError: If the ASyncSorter instance has already been consumed.
 
         Returns:
-            An async iterator that will yield the sorting results.
+            An async iterator that will yield the sorted {obj}.
         """
         if self._consumed:
             raise RuntimeError(f"{self} has already been consumed")
