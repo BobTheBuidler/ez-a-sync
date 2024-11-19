@@ -122,20 +122,20 @@
 
     <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Asynchronously iterate through the {cls} and return all objects.</span>
+<span class="sd">        Asynchronously iterate through the {cls} and return all {obj}.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A list of the objects yielded by the {cls}.</span>
+<span class="sd">            A list of the {obj} yielded by the {cls}.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_materialized</span><span class="o">.</span><span class="fm">__await__</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">materialized</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Synchronously iterate through the {cls} and return all objects.</span>
+<span class="sd">        Synchronously iterate through the {cls} and return all {obj}.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A list of the objects yielded by the {cls}.</span>
+<span class="sd">            A list of the {obj} yielded by the {cls}.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_helpers</span><span class="o">.</span><span class="n">_await</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_materialized</span><span class="p">)</span>
 
@@ -143,36 +143,36 @@
         <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">SortKey</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncSorter[T]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sort the contents of the {cls}.</span>
+<span class="sd">        Sort the {obj} yielded by the {cls}.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            key (optional): A function of one argument that is used to extract a comparison key from each list element. If None, the elements themselves will be sorted. Defaults to None.</span>
 <span class="sd">            reverse (optional): If True, the yielded elements will be sorted in reverse order. Defaults to False.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An instance of :class:`~ASyncSorter` that will yield the objects yielded from this {cls}, but sorted.</span>
+<span class="sd">            An instance of :class:`~ASyncSorter` that will yield the {obj} yielded from this {cls}, but sorted.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ASyncSorter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">:</span> <span class="n">ViewFn</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFilter[T]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Filters the contents of the {cls} based on a function.</span>
+<span class="sd">        Filters the {obj} yielded by the {cls} based on a function.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            function: A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An instance of :class:`~ASyncFilter` that yields the filtered objects from the {cls}.</span>
+<span class="sd">            An instance of :class:`~ASyncFilter` that yields the filtered {obj} from the {cls}.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ASyncFilter</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
     <span class="nd">@async_cached_property</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_materialized</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Asynchronously iterate through the {cls} and return all objects.</span>
+<span class="sd">        Asynchronously iterate through the {cls} and return all {obj}.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A list of the objects yielded by the {cls}.</span>
+<span class="sd">            A list of the {obj} yielded by the {cls}.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">obj</span> <span class="k">async</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
 
@@ -239,10 +239,8 @@
         <span class="n">functions_to_redefine</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">attr_name</span><span class="p">:</span> <span class="n">attr_value</span>
             <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
-                <span class="n">attr_value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                <span class="n">FunctionType</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">attr_value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr_value</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">)</span>
             <span class="ow">and</span> <span class="n">attr_value</span><span class="o">.</span><span class="vm">__doc__</span>
             <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">pattern</span> <span class="ow">in</span> <span class="n">attr_value</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">_FORMAT_PATTERNS</span><span class="p">)</span>
         <span class="p">}</span>
@@ -342,7 +340,7 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncIterable.__aiter__">[docs]</a>
     <span class="k">def</span> <span class="fm">__aiter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return an async iterator that yields :obj:`T` objects from the {cls}.</span>
+<span class="sd">        Return an async iterator that yields {obj} from the {cls}.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="o">.</span><span class="fm">__aiter__</span><span class="p">()</span></div>
 
@@ -351,7 +349,7 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncIterable.__iter__">[docs]</a>
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Return an iterator that yields :obj:`T` objects from the {cls}.</span>
+<span class="sd">        Return an iterator that yields {obj} from the {cls}.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Synchronous iteration leverages :class:`ASyncIterator`, which uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.</span>
@@ -401,7 +399,7 @@
 <span class="sd">        Synchronously fetch the next item from the {cls}.</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            This method uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.</span>
+<span class="sd">            This method uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch {obj}.</span>
 <span class="sd">            This raises a :class:`RuntimeError` if the event loop is already running.</span>
 <span class="sd">            This RuntimeError will be caught and a more descriptive :class:`~a_sync.exceptions.SyncModeInAsyncContextError` will be raised in its place.</span>
 
@@ -409,7 +407,7 @@
 <span class="sd">            and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            StopIteration: Once all items have been fetched from the {cls}.</span>
+<span class="sd">            StopIteration: Once all {obj} have been fetched from the {cls}.</span>
 <span class="sd">            SyncModeInAsyncContextError: If the event loop is already running.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -447,7 +445,7 @@
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.iter.ASyncIterator.wrap">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">wrapped</span><span class="p">):</span>
-        <span class="s2">&quot;Class method to wrap either an AsyncIterator or an async generator function.&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Class method to wrap either an AsyncIterator or an async generator function.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">AsyncIterator</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="s2">&quot;This use case for ASyncIterator.wrap will be removed soon. Please replace uses with simple instantiation ie `ASyncIterator(wrapped)`&quot;</span>
@@ -484,7 +482,7 @@
 <span class="sd">        Asynchronously fetch the next item from the {cls}.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            :class:`StopAsyncIteration`: Once all items have been fetched from the {cls}.</span>
+<span class="sd">            :class:`StopAsyncIteration`: Once all {obj} have been fetched from the {cls}.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="o">.</span><span class="fm">__anext__</span><span class="p">()</span></div>
 
@@ -496,7 +494,7 @@
 <span class="sd">        Return the {cls} for iteration.</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            Synchronous iteration uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch items.</span>
+<span class="sd">            Synchronous iteration uses :meth:`asyncio.BaseEventLoop.run_until_complete` to fetch {obj}.</span>
 <span class="sd">            This raises a :class:`RuntimeError` if the event loop is already running.</span>
 <span class="sd">            This RuntimeError will be caught and a more descriptive :class:`~a_sync.exceptions.SyncModeInAsyncContextError` will be raised in its place.</span>
 
@@ -788,7 +786,7 @@
 <span class="sd">            RuntimeError: If the ASyncSorter instance has already been consumed.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An async iterator that will yield the sorting results.</span>
+<span class="sd">            An async iterator that will yield the sorted {obj}.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumed</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> has already been consumed&quot;</span><span class="p">)</span>
