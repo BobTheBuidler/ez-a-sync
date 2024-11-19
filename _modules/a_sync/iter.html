@@ -75,6 +75,8 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">get_args</span>
 
 <span class="kn">from</span> <span class="nn">async_property</span> <span class="kn">import</span> <span class="n">async_cached_property</span>
 
@@ -92,6 +94,9 @@
 <span class="k">else</span><span class="p">:</span>
     <span class="n">SortKey</span> <span class="o">=</span> <span class="n">SyncFn</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
     <span class="n">ViewFn</span> <span class="o">=</span> <span class="n">AnyFn</span><span class="p">[[</span><span class="n">T</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
+
+
+<span class="n">_FORMAT_PATTERNS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{cls}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{obj}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">_AwaitableAsyncIterableMixin</span><span class="p">(</span><span class="n">AsyncIterable</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
@@ -172,19 +177,92 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">obj</span> <span class="k">async</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">new</span> <span class="o">=</span> <span class="s2">&quot;When awaited, a list of all elements will be returned.&quot;</span>
+
+        <span class="c1"># Determine the type used for T in the subclass</span>
+        <span class="n">type_argument</span> <span class="o">=</span> <span class="n">T</span>  <span class="c1"># Default value</span>
+        <span class="n">type_string</span> <span class="o">=</span> <span class="s2">&quot;:obj:`T` objects&quot;</span>
+        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;__orig_bases__&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;__args__&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">args</span> <span class="ow">and</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">T</span><span class="p">:</span>
+                <span class="n">type_argument</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_argument</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+                    <span class="c1"># type_argument = str(type_argument)</span>
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                        <span class="s2">&quot;I think this is prevented by the rules of python Generic&quot;</span><span class="p">,</span>
+                        <span class="n">type_argument</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_argument</span><span class="p">,</span> <span class="s2">&quot;__module__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span>
+                    <span class="n">type_argument</span><span class="p">,</span> <span class="s2">&quot;__qualname__&quot;</span>
+                <span class="p">):</span>
+                    <span class="n">type_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;:class:`~</span><span class="si">{</span><span class="n">type_argument</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">type_argument</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">`&quot;</span>
+                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_argument</span><span class="p">,</span> <span class="s2">&quot;__module__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span>
+                    <span class="n">type_argument</span><span class="p">,</span> <span class="s2">&quot;__name__&quot;</span>
+                <span class="p">):</span>
+                    <span class="n">type_string</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;:class:`~</span><span class="si">{</span><span class="n">type_argument</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">type_argument</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">`&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_argument</span><span class="p">,</span> <span class="s2">&quot;__qualname__&quot;</span><span class="p">):</span>
+                    <span class="n">type_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;:class:`</span><span class="si">{</span><span class="n">type_argument</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">`&quot;</span>
+                <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_argument</span><span class="p">,</span> <span class="s2">&quot;__name__&quot;</span><span class="p">):</span>
+                    <span class="n">type_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;:class:`</span><span class="si">{</span><span class="n">type_argument</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">`&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">type_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">type_argument</span><span class="p">)</span>
 
         <span class="c1"># modify the class docstring</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;When awaited, a list of all </span><span class="si">{</span><span class="n">type_string</span><span class="si">}</span><span class="s2"> will be returned.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;Example:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;    &gt;&gt;&gt; my_object = </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(...)</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    &gt;&gt;&gt; all_contents = await my_object</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    &gt;&gt;&gt; isinstance(all_contents, list)</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    True</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;    &gt;&gt;&gt; isinstance(all_contents[0], </span><span class="si">{</span><span class="n">type_argument</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    True</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">new</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="n">new</span>
+        <span class="k">elif</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">new</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="si">{</span><span class="n">new</span><span class="si">}</span><span class="s2">&quot;</span>
 
-        <span class="c1"># format the member docstrings</span>
-        <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-            <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">and</span> <span class="s2">&quot;</span><span class="si">{cls}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">:</span>
-                <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{cls}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;:class:`</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span>
+        <span class="c1"># Update method docstrings by redefining methods</span>
+        <span class="c1"># This is necessary because, by default, subclasses inherit methods from their bases</span>
+        <span class="c1"># which means if we just update the docstring we might edit docs for unrelated objects</span>
+        <span class="n">functions_to_redefine</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">attr_name</span><span class="p">:</span> <span class="n">attr_value</span>
+            <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">attr_value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="n">FunctionType</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="n">attr_value</span><span class="o">.</span><span class="vm">__doc__</span>
+            <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">pattern</span> <span class="ow">in</span> <span class="n">attr_value</span><span class="o">.</span><span class="vm">__doc__</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">_FORMAT_PATTERNS</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">function_obj</span> <span class="ow">in</span> <span class="n">functions_to_redefine</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Create a new function object with the docstring formatted appropriately for this class</span>
+            <span class="n">redefined_function_obj</span> <span class="o">=</span> <span class="n">FunctionType</span><span class="p">(</span>
+                <span class="n">function_obj</span><span class="o">.</span><span class="vm">__code__</span><span class="p">,</span>
+                <span class="n">function_obj</span><span class="o">.</span><span class="vm">__globals__</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">function_obj</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">argdefs</span><span class="o">=</span><span class="n">function_obj</span><span class="o">.</span><span class="vm">__defaults__</span><span class="p">,</span>
+                <span class="n">closure</span><span class="o">=</span><span class="n">function_obj</span><span class="o">.</span><span class="vm">__closure__</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">redefined_function_obj</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">function_obj</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">cls</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">obj</span><span class="o">=</span><span class="n">type_string</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">redefined_function_obj</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init_subclass__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
