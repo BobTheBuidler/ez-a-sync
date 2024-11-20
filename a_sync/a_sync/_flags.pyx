@@ -13,70 +13,11 @@ You can use any of the provided flags, whichever makes the most sense for your u
 :obj:`VIABLE_FLAGS`: Set of all valid flags, combining both synchronous and asynchronous indicators.
 """
 
-from typing import Any, Set
-
 from a_sync import exceptions
-
-AFFIRMATIVE_FLAGS: Set[str] = {"sync"}
-"""Set of flags indicating synchronous behavior.
-
-This set currently contains only the flag "sync", which is used to denote
-synchronous operations within the ez-a-sync library.
-
-Examples:
-    >>> 'sync' in AFFIRMATIVE_FLAGS
-    True
-
-    >>> 'async' in AFFIRMATIVE_FLAGS
-    False
-
-See Also:
-    :data:`NEGATIVE_FLAGS`: Flags indicating asynchronous behavior.
-    :data:`VIABLE_FLAGS`: All valid flags, combining both sync and async indicators.
-"""
-
-NEGATIVE_FLAGS: Set[str] = {"asynchronous"}
-"""Set of flags indicating asynchronous behavior.
-
-This set currently contains only the flag "asynchronous", which is used to denote
-asynchronous operations within the ez-a-sync library.
-
-Examples:
-    >>> 'asynchronous' in NEGATIVE_FLAGS
-    True
-
-    >>> 'sync' in NEGATIVE_FLAGS
-    False
-
-See Also:
-    :data:`AFFIRMATIVE_FLAGS`: Flags indicating synchronous behavior.
-    :data:`VIABLE_FLAGS`: All valid flags, combining both sync and async indicators.
-"""
-
-VIABLE_FLAGS: Set[str] = AFFIRMATIVE_FLAGS | NEGATIVE_FLAGS
-"""Set of all valid flags, combining both synchronous and asynchronous indicators.
-
-The ez-a-sync library uses these flags to indicate whether objects or function
-calls will be synchronous or asynchronous. You can use any of the provided flags,
-whichever makes the most sense for your use case.
-
-Examples:
-    >>> 'sync' in VIABLE_FLAGS
-    True
-
-    >>> 'asynchronous' in VIABLE_FLAGS
-    True
-
-    >>> 'invalid' in VIABLE_FLAGS
-    False
-
-See Also:
-    :data:`AFFIRMATIVE_FLAGS`: Flags indicating synchronous behavior.
-    :data:`NEGATIVE_FLAGS`: Flags indicating asynchronous behavior.
-"""
+from a_sync.a_sync.flags import AFFIRMATIVE_FLAGS, NEGATIVE_FLAGS
 
 
-def negate_if_necessary(flag: str, flag_value: bool) -> bool:
+cdef bint negate_if_necessary(str flag, object flag_value):
     """Negate the flag value if necessary based on the flag type.
 
     This function checks if the provided flag is in the set of affirmative or negative flags
@@ -102,19 +43,16 @@ def negate_if_necessary(flag: str, flag_value: bool) -> bool:
     See Also:
         - :func:`validate_flag_value`: Validates that the flag value is a boolean.
     """
-    return cnegate_if_necessary(flag, flag_value)
-
-
-cdef bint cnegate_if_necessary(str flag, object flag_value):
-    cdef bint value = validate_flag_value(flag, flag_value)
+    if not isinstance(flag_value, bool):
+        raise exceptions.InvalidFlagValue(flag, flag_value)
     if flag in AFFIRMATIVE_FLAGS:
-        return value
+        return <bint>flag_value
     elif flag in NEGATIVE_FLAGS:
-        return not value
+        return not <bint>flag_value
     raise exceptions.InvalidFlag(flag)
 
 
-def validate_flag_value(flag: str, flag_value: Any) -> bool:
+cdef bint validate_flag_value(str flag, object flag_value):
     """
     Validate that the flag value is a boolean.
 

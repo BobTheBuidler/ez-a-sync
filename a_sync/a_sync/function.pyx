@@ -10,7 +10,7 @@ from async_property.cached import AsyncCachedPropertyDescriptor  # type: ignore 
 from a_sync._typing import *
 from a_sync.a_sync import _helpers
 from a_sync.a_sync cimport _kwargs
-from a_sync.a_sync._flags import VIABLE_FLAGS
+from a_sync.a_sync.flags import VIABLE_FLAGS
 from a_sync.a_sync.modifiers.manager import ModifierManager
 
 if TYPE_CHECKING:
@@ -141,12 +141,11 @@ cdef bint _run_sync(object function, dict kwargs):
 
     See Also:
         - :func:`_kwargs.get_flag_name`
-        - :func:`_kwargs.is_sync`
     """
     cdef object flag
     if flag := _kwargs.get_flag_name_c(kwargs):
         # If a flag was specified in the kwargs, we will defer to it.
-        return _kwargs.is_sync_c(<str>flag, kwargs, pop_flag=True)
+        return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)
     else:
         # No flag specified in the kwargs, we will defer to 'default'.
         return function._sync_default

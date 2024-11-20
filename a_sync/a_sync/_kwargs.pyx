@@ -6,8 +6,8 @@ from typing import Optional
 from libc.stdint cimport uint8_t
 
 from a_sync import exceptions
-from a_sync.a_sync._flags import VIABLE_FLAGS
-from a_sync.a_sync._flags cimport cnegate_if_necessary
+from a_sync.a_sync._flags cimport negate_if_necessary
+from a_sync.a_sync.flags import VIABLE_FLAGS
 
 
 def get_flag_name(kwargs: dict) -> Optional[str]:
@@ -33,11 +33,9 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
 
         >>> get_flag_name({})
         None
-
-    See Also:
-        :func:`is_sync`: Determines if the operation should be synchronous based on the flag value.
     """
     return get_flag_name_c(kwargs)
+
 
 cdef object get_flag_name_c(dict kwargs):
     cdef list present_flags = [flag for flag in VIABLE_FLAGS if flag in kwargs]
@@ -49,7 +47,7 @@ cdef object get_flag_name_c(dict kwargs):
     raise exceptions.TooManyFlags("kwargs", present_flags)
 
 
-def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:
+cdef bint is_sync(str flag, dict kwargs, bint pop_flag):
     """
     Determine if the operation should be synchronous based on the flag value.
 
@@ -58,23 +56,10 @@ def is_sync(flag: str, kwargs: dict, pop_flag: bool = False) -> bool:
         kwargs (dict): A dictionary of keyword arguments.
         pop_flag (bool, optional): Whether to remove the flag from kwargs. Defaults to False.
 
-    Examples:
-        >>> is_sync('sync', {'sync': True})
-        True
-
-        >>> is_sync('asynchronous', {'asynchronous': False})
-        False
-
-        >>> is_sync('sync', {'sync': True}, pop_flag=True)
-        True
-
     See Also:
         :func:`get_flag_name`: Retrieves the name of the flag present in the kwargs.
     """
-    return is_sync_c(flag, kwargs, pop_flag)
-
-cdef bint is_sync_c(str flag, dict kwargs, bint pop_flag):
     if pop_flag:
-        return cnegate_if_necessary(flag, kwargs.pop(flag))
+        return negate_if_necessary(flag, kwargs.pop(flag))
     else:
-        return cnegate_if_necessary(flag, kwargs[flag])
+        return negate_if_necessary(flag, kwargs[flag])
