@@ -48,11 +48,13 @@ class ASyncGenericBase(ASyncABC):
         automatically wrapped to support both sync and async calls. This allows for
         seamless usage in different contexts without changing the underlying implementation.
     """
+
     def __init__(self) -> None: ...
     @functools.cached_property
     def __a_sync_flag_name__(self) -> str: ...
     @functools.cached_property
     def __a_sync_flag_value__(self) -> bool:
         """If you wish to be able to hotswap default modes, just duplicate this def as a non-cached property."""
+
     @classmethod
     def __a_sync_default_mode__(cls) -> bool: ...
