@@ -87,8 +87,8 @@ class ASyncABC(metaclass=ASyncMeta):
             False
         """
         
-        cdef object flag
-        if flag := _kwargs.get_flag_name_c(kwargs):
+        cdef const str flag = _kwargs.get_flag_name_c(kwargs)
+        if flag:
             return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)
         
         cdef ShouldAwaitCache cache
@@ -176,9 +176,9 @@ class ASyncABC(metaclass=ASyncMeta):
             cls.__name__,
         )
 
-        cdef object flag
+        cdef const str flag = _kwargs.get_flag_name_c(kwargs)
         cdef bint sync
-        if flag := _kwargs.get_flag_name_c(kwargs):
+        if flag:
             sync = _kwargs.is_sync(<str>flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
             logger.debug(
                 "kwargs indicate the new instance created with args %s %s is %ssynchronous",

@@ -34,14 +34,14 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
         >>> get_flag_name({})
         None
     """
-    return get_flag_name_c(kwargs)
+    return get_flag_name_c(kwargs) or None
 
 
-cdef object get_flag_name_c(dict kwargs):
+cdef str get_flag_name_c(dict kwargs):
     cdef list present_flags = [flag for flag in VIABLE_FLAGS if flag in kwargs]
     cdef uint8_t flags_count = len(present_flags)
     if flags_count == 0:
-        return None
+        return ""  # indicates no flag is present
     elif flags_count == 1:
         return present_flags[0]
     raise exceptions.TooManyFlags("kwargs", present_flags)
