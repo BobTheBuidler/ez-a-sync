@@ -93,6 +93,15 @@ a\_sync.a\_sync.decorator module
    :show-inheritance:
    :private-members:
 
+a\_sync.a\_sync.flags module
+----------------------------
+
+.. automodule:: a_sync.a_sync.flags
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 a\_sync.a\_sync.function module
 -------------------------------
 
