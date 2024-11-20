@@ -120,8 +120,7 @@ class ASyncGenericBase(ASyncABC):
                 flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
             return cnegate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
 
-        # we need some extra vars so we can log them
-        cdef object flag
+        # we need an extra var so we can log it
         cdef bint sync
         
         try:
