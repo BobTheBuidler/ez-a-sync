@@ -13,6 +13,7 @@ import abc
 import logging
 from typing import Dict, Any, Tuple
 
+from a_sync import exceptions
 from a_sync._typing import *
 from a_sync.a_sync cimport _kwargs
 from a_sync.a_sync._flags cimport negate_if_necessary
@@ -101,9 +102,16 @@ class ASyncABC(metaclass=ASyncMeta):
             )
 
         if not cache.is_cached:
-            cache.value = negate_if_necessary(
-                self.__a_sync_flag_name__, self.__a_sync_flag_value__
-            )
+            try:
+                cache.value = negate_if_necessary(
+                    self.__a_sync_flag_name__, self.__a_sync_flag_value__
+                )
+            except TypeError as e:
+                raise exceptions.InvalidFlagValue(
+                    self.__a_sync_flag_name__,
+                    self.__a_sync_flag_value__,
+                ) from e.__cause__
+                
             cache.is_cached = True
             self.__a_sync_should_await_cache__ = cache
         return cache.value
@@ -133,9 +141,16 @@ class ASyncABC(metaclass=ASyncMeta):
             )
 
         if not cache.is_cached:
-            cache.value = negate_if_necessary(
-                self.__a_sync_flag_name__, self.__a_sync_flag_value__
-            )
+            try:
+                cache.value = negate_if_necessary(
+                    self.__a_sync_flag_name__, self.__a_sync_flag_value__
+                )
+            except TypeError as e:
+                raise exceptions.InvalidFlagValue(
+                    self.__a_sync_flag_name__,
+                    self.__a_sync_flag_value__,
+                ) from e.__cause__
+
             cache.is_cached = True
             self.__a_sync_should_await_cache__ = cache
         return cache.value

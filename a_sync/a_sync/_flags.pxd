@@ -1,1 +1,1 @@
-cdef bint negate_if_necessary(str flag, object flag_value)
+cdef bint negate_if_necessary(str flag, bint flag_value)
