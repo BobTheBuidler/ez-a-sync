@@ -6,12 +6,20 @@ and converting synchronous functions to asynchronous ones.
 import asyncio
 import functools
 
-import a_sync.asyncio.utils
 from a_sync import exceptions
 from a_sync._typing import *
 
 
-cdef object get_event_loop = a_sync.asyncio.utils.get_event_loop
+cpdef object get_event_loop():
+    cdef object loop
+    try:
+        return asyncio.get_event_loop()
+    except RuntimeError as e:  # Necessary for use with multi-threaded applications.
+        if not str(e).startswith("There is no current event loop in thread"):
+            raise
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+    return loop
 
 
 cpdef object _await(object awaitable):

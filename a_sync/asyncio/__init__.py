@@ -14,10 +14,10 @@ See Also:
     - `asyncio <https://docs.python.org/3/library/asyncio.html>`_: The standard asyncio library documentation for more details on the original functions.
 """
 
+from a_sync.a_sync._helpers import get_event_loop
 from a_sync.asyncio.create_task import create_task
 from a_sync.asyncio.as_completed import as_completed
 from a_sync.asyncio.gather import gather
-from a_sync.asyncio.utils import get_event_loop
 
 __all__ = ["create_task", "gather", "as_completed", "get_event_loop"]
 
