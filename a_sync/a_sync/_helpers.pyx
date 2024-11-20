@@ -91,7 +91,9 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
     if asyncio.iscoroutinefunction(func) or isinstance(func, ASyncFunction):
         raise exceptions.FunctionNotSync(func)
     
-    cdef object sumbit = executor.submit
+    cdef object sumbit
+    
+    submit = executor.submit
 
     @functools.wraps(func)
     async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
