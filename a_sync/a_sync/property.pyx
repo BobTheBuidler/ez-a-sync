@@ -6,7 +6,8 @@ from typing_extensions import Unpack
 
 from a_sync import _smart
 from a_sync._typing import *
-from a_sync.a_sync import _helpers, config
+from a_sync.a_sync import config
+from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync._descriptor import ASyncDescriptor
 from a_sync.a_sync.function import (
     ASyncFunction,
@@ -82,7 +83,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         if asyncio.iscoroutinefunction(_fget):
             self._fget = self.__wrapped__
         else:
-            self._fget = _helpers._asyncify(self.__wrapped__, self.modifiers.executor)
+            self._fget = _asyncify(self.__wrapped__, self.modifiers.executor)
 
     @overload
     def __get__(self, instance: None, owner: Type[I]) -> Self: ...
@@ -130,7 +131,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
                 instance,
                 owner,
             )
-            retval = _helpers._await(awaitable)
+            retval = _await(awaitable)
         else:
             retval = awaitable
 

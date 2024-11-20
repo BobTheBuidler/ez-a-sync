@@ -9,16 +9,14 @@ asynchronously based on various conditions and configurations.
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 import functools
-import heapq
 import logging
 import weakref
 from inspect import isawaitable
 
-from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync import _helpers
 from a_sync.a_sync cimport _kwargs
 from a_sync.a_sync._descriptor import ASyncDescriptor
+from a_sync.a_sync._helpers cimport _await
 from a_sync.a_sync.function import (
     ASyncFunction,
     ASyncFunctionAsyncDefault,
@@ -585,7 +583,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             logger.debug(
                 "awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs
             )
-            retval = _helpers._await(coro)
+            retval = _await(coro)
         logger.debug(
             "returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs
         )
