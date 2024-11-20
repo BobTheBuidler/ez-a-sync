@@ -14,7 +14,7 @@ You can use any of the provided flags, whichever makes the most sense for your u
 """
 
 from a_sync import exceptions
-from a_sync.flags import AFFIRMATIVE_FLAGS, NEGATIVE_FLAGS
+from a_sync.a_sync.flags import AFFIRMATIVE_FLAGS, NEGATIVE_FLAGS
 
 
 cdef bint negate_if_necessary(str flag, object flag_value):
