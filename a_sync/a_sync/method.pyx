@@ -769,8 +769,8 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> should_await = bound_method._should_await(kwargs)
         """
-        cdef object flag
-        if flag := _kwargs.get_flag_name_c(kwargs):
+        cdef str flag = _kwargs.get_flag_name_c(kwargs)
+        if flag:
             return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
         elif self.default:
             return self.default == "sync"

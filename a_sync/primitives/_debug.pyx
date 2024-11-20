@@ -8,6 +8,7 @@ import abc
 import asyncio
 from typing import Optional
 
+from a_sync.a_sync._helpers cimport get_event_loop
 from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.primitives._loggable import _LoggerMixin
 
@@ -73,7 +74,7 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
         See Also:
             :meth:`_ensure_debug_daemon` for ensuring the daemon is running.
         """
-        loop = asyncio.get_event_loop()
+        cdef object loop = get_event_loop()
         if self.debug_logs_enabled and loop.is_running():
             return ccreate_task_simple(self._debug_daemon(*args, **kwargs))
         return loop.create_future()
@@ -103,7 +104,7 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
             :meth:`_start_debug_daemon` for starting the daemon.
         """
         if not self.debug_logs_enabled:
-            self._daemon = asyncio.get_event_loop().create_future()
+            self._daemon = get_event_loop().create_future()
         if not hasattr(self, "_daemon") or self._daemon is None:
             self._daemon = self._start_debug_daemon(*args, **kwargs)
             self._daemon.add_done_callback(self._stop_debug_daemon)

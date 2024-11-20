@@ -139,8 +139,8 @@ cdef bint _run_sync(object function, dict kwargs):
     See Also:
         - :func:`_kwargs.get_flag_name`
     """
-    cdef object flag
-    if flag := _kwargs.get_flag_name_c(kwargs):
+    cdef str flag = _kwargs.get_flag_name_c(kwargs)
+    if flag:
         # If a flag was specified in the kwargs, we will defer to it.
         return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)
     else:

@@ -88,7 +88,6 @@ SKIP_MODULES = [
     "a_sync.asyncio.as_completed",
     # "a_sync.asyncio._create_task",
     "a_sync.asyncio.gather",
-    "a_sync.asyncio.utils",
     "a_sync.utils.iterators",
 ]
 
