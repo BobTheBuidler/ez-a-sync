@@ -192,7 +192,7 @@ cdef str _get_a_sync_flag_name_from_signature(object cls):
     return _parse_flag_name_from_list(cls, parameters)
 
 
-cdef str _parse_flag_name_from_list(object cls, dict items):
+cdef str _parse_flag_name_from_list(object cls, object items):
     cdef list[str] present_flags
     cdef str flag
     present_flags = [flag for flag in VIABLE_FLAGS if flag in items]
