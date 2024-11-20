@@ -142,10 +142,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._wrapped_func = wrapped_func
         "The function used to create tasks for each key."
 
-        if (
-            isinstance(wrapped_func, ASyncMethodDescriptor)
-            and not _kwargs.get_flag_name(wrapped_func_kwargs)
-        ):
+        if isinstance(
+            wrapped_func, ASyncMethodDescriptor
+        ) and not _kwargs.get_flag_name(wrapped_func_kwargs):
             wrapped_func_kwargs["sync"] = False
         if wrapped_func_kwargs:
             self._wrapped_func_kwargs = wrapped_func_kwargs
