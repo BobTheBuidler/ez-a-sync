@@ -11,7 +11,7 @@ from async_property import async_cached_property
 
 import a_sync.asyncio
 from a_sync._typing import *
-from a_sync.a_sync import _helpers
+from a_sync.a_sync._helpers import _await
 from a_sync.exceptions import SyncModeInAsyncContextError
 
 
@@ -66,7 +66,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         Returns:
             A list of the {obj} yielded by the {cls}.
         """
-        return _helpers._await(self._materialized)
+        return _await(self._materialized)
 
     def sort(
         self, *, key: SortKey[T] = None, reverse: bool = False

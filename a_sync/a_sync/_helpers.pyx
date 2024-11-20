@@ -10,7 +10,6 @@ import a_sync.asyncio
 from a_sync import exceptions
 from a_sync._typing import *
 
-cdef object get_event_loop = a_sync.asyncio.get_event_loop
 
 cpdef object _await(object awaitable):
     """
@@ -91,3 +90,5 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
         )
 
     return _asyncify_wrap
+
+cdef object get_event_loop = a_sync.asyncio.get_event_loop
