@@ -8,8 +8,8 @@ from async_property.base import AsyncPropertyDescriptor  # type: ignore [import]
 from async_property.cached import AsyncCachedPropertyDescriptor  # type: ignore [import]
 
 from a_sync._typing import *
-from a_sync.a_sync import _helpers
 from a_sync.a_sync cimport _kwargs
+from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync.flags import VIABLE_FLAGS
 from a_sync.a_sync.modifiers.manager import ModifierManager
 
@@ -54,11 +54,9 @@ class _ModifiedMixin:
             The asynchronous version of the function with applied modifiers.
 
         See Also:
-            - :func:`_helpers._asyncify`
             - :meth:`ModifierManager.apply_async_modifiers`
         """
-        coro_fn = _helpers._asyncify(func, self.modifiers.executor)
-        return self.modifiers.apply_async_modifiers(coro_fn)
+        return self.modifiers.apply_async_modifiers(_asyncify(func, self.modifiers.executor))
 
     @functools.cached_property
     def _await(self) -> Callable[[Awaitable[T]], T]:
@@ -69,10 +67,9 @@ class _ModifiedMixin:
             The modified _await function.
 
         See Also:
-            - :func:`_helpers._await`
             - :meth:`ModifierManager.apply_sync_modifiers`
         """
-        return self.modifiers.apply_sync_modifiers(_helpers._await)
+        return self.modifiers.apply_sync_modifiers(_await)
 
     @functools.cached_property
     def default(self) -> DefaultMode:

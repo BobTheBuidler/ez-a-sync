@@ -738,6 +738,8 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
     _get_from_item: Callable[[Tuple[K, V]], T]
     _pop: bool = False
 
+    __slots__ = "__view__", "__mapping__"
+
     def __init__(
         self, view: Iterable[T], task_mapping: TaskMapping[K, V], pop: bool = False
     ) -> None:
@@ -751,15 +753,10 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
         return iter(self.__view__)
 
     def __await__(self) -> Generator[Any, None, List[T]]:
-        return self._await().__await__()
+        return self.__await().__await__()
 
     def __len__(self) -> int:
         return len(self.__view__)
-
-    async def _await(self) -> List[T]:
-        return [result async for result in self]
-
-    __slots__ = "__view__", "__mapping__"
 
     async def aiterbykeys(self, reverse: bool = False) -> ASyncIterator[T]:
         async for tup in ASyncSorter(
@@ -772,6 +769,9 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
             self.__mapping__.items(pop=self._pop), key=_get_value, reverse=reverse
         ):
             yield self._get_from_item(tup)
+
+    async def __await(self) -> List[T]:
+        return [result async for result in self]
 
 
 class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
