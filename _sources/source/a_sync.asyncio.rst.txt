@@ -31,15 +31,6 @@ a\_sync.asyncio.gather module
    :show-inheritance:
    :private-members:
 
-a\_sync.asyncio.utils module
-----------------------------
-
-.. automodule:: a_sync.asyncio.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
 Module contents
 ---------------
 

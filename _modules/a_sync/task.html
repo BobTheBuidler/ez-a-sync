@@ -217,10 +217,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func</span> <span class="o">=</span> <span class="n">wrapped_func</span>
         <span class="s2">&quot;The function used to create tasks for each key.&quot;</span>
 
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">wrapped_func</span><span class="p">,</span> <span class="n">ASyncMethodDescriptor</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">get_flag_name</span><span class="p">(</span><span class="n">wrapped_func_kwargs</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
-        <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">wrapped_func</span><span class="p">,</span> <span class="n">ASyncMethodDescriptor</span>
+        <span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_kwargs</span><span class="o">.</span><span class="n">get_flag_name</span><span class="p">(</span><span class="n">wrapped_func_kwargs</span><span class="p">):</span>
             <span class="n">wrapped_func_kwargs</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">wrapped_func_kwargs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func_kwargs</span> <span class="o">=</span> <span class="n">wrapped_func_kwargs</span>
@@ -881,6 +880,8 @@
     <span class="n">_get_from_item</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]],</span> <span class="n">T</span><span class="p">]</span>
     <span class="n">_pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;__view__&quot;</span><span class="p">,</span> <span class="s2">&quot;__mapping__&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">view</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">task_mapping</span><span class="p">:</span> <span class="n">TaskMapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -894,15 +895,10 @@
         <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__view__</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_await</span><span class="p">()</span><span class="o">.</span><span class="fm">__await__</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__await</span><span class="p">()</span><span class="o">.</span><span class="fm">__await__</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__view__</span><span class="p">)</span>
-
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_await</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">result</span> <span class="k">async</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
-
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;__view__&quot;</span><span class="p">,</span> <span class="s2">&quot;__mapping__&quot;</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">aiterbykeys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
         <span class="k">async</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">ASyncSorter</span><span class="p">(</span>
@@ -915,6 +911,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="n">pop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_pop</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">_get_value</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span>
         <span class="p">):</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_from_item</span><span class="p">(</span><span class="n">tup</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__await</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">result</span> <span class="k">async</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="TaskMappingKeys">

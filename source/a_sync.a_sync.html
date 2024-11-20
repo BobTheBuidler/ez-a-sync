@@ -321,7 +321,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -466,7 +465,6 @@ result = instance.my_method.map([1, 2, 3])</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -637,84 +635,9 @@ in the ez-a-sync library.</p>
 <p>This module provides utility functions for handling asynchronous operations
 and converting synchronous functions to asynchronous ones.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="a_sync.a_sync._helpers._asyncify">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._helpers.</span></span><span class="sig-name descname"><span class="pre">_asyncify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/_helpers.html#_asyncify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync._helpers._asyncify" title="Link to this definition"></a></dt>
-<dd><p>Convert a synchronous function to a coroutine function using an executor.</p>
-<p>This function submits the synchronous function to the provided executor and wraps
-the resulting future in a coroutine function. This allows the synchronous function
-to be executed asynchronously.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The function <cite>_asyncify</cite> uses <cite>asyncio.futures.wrap_future</cite> to wrap the future
-returned by the executor, specifying the event loop with <cite>a_sync.asyncio.get_event_loop()</cite>.
-Ensure that your environment supports this usage or adjust the import if necessary.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> (<em>SyncFn</em><em>[</em><em>P</em><em>, </em><em>T</em><em>]</em>) – The synchronous function to be converted.</p></li>
-<li><p><strong>executor</strong> (<em>Executor</em>) – The executor used to run the synchronous function.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="a_sync.html#a_sync.exceptions.FunctionNotSync" title="a_sync.exceptions.FunctionNotSync"><strong>exceptions.FunctionNotSync</strong></a> – If the input function is a coroutine function or an instance of <a class="reference internal" href="#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code></a>.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>[[~P], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<em>T</em>]]</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">sync_function</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">2</span>
-<span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">async_function</span> <span class="o">=</span> <span class="n">_asyncify</span><span class="p">(</span><span class="n">sync_function</span><span class="p">,</span> <span class="n">executor</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">async_function</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<span class="go">6</span>
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.Executor" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">concurrent.futures.Executor</span></code></a>: For managing pools of threads or processes.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.to_thread" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.to_thread()</span></code></a>: For running blocking code in a separate thread.</p></li>
-</ul>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="a_sync.a_sync._helpers._await">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._helpers.</span></span><span class="sig-name descname"><span class="pre">_await</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">awaitable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/a_sync/_helpers.html#_await"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.a_sync._helpers._await" title="Link to this definition"></a></dt>
-<dd><p>Await an awaitable object in a synchronous context.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>awaitable</strong> (<em>Awaitable</em><em>[</em><em>T</em><em>]</em>) – The awaitable object to be awaited.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="a_sync.html#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><strong>exceptions.SyncModeInAsyncContextError</strong></a> – If the event loop is already running.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example_coroutine</span><span class="p">():</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="mi">42</span>
-<span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">_await</span><span class="p">(</span><span class="n">example_coroutine</span><span class="p">())</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<span class="go">42</span>
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-runner.html#asyncio.run" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.run()</span></code></a>: For running the main entry point of an asyncio program.</p></li>
-</ul>
-</div>
-</dd></dl>
+<dt class="sig sig-object py" id="a_sync.a_sync._helpers.get_event_loop">
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync._helpers.</span></span><span class="sig-name descname"><span class="pre">get_event_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync._helpers.get_event_loop" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </section>
 <section id="module-a_sync.a_sync._kwargs">
@@ -1466,7 +1389,6 @@ whichever makes the most sense for your use case.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -1504,7 +1426,6 @@ whichever makes the most sense for your use case.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -1597,7 +1518,6 @@ whichever makes the most sense for your use case.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -1635,7 +1555,6 @@ whichever makes the most sense for your use case.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -1728,7 +1647,6 @@ whichever makes the most sense for your use case.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -1766,7 +1684,6 @@ whichever makes the most sense for your use case.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -1913,7 +1830,6 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -2155,7 +2071,6 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -2360,7 +2275,6 @@ default behavior.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -2602,7 +2516,6 @@ default behavior.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -2807,7 +2720,6 @@ default behavior.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -3049,7 +2961,6 @@ default behavior.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -3194,7 +3105,6 @@ such as converting sync functions to async, applying caching, or rate limiting.<
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -3212,7 +3122,6 @@ such as converting sync functions to async, applying caching, or rate limiting.<
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -3421,7 +3330,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -3662,7 +3570,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -3888,7 +3795,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -4129,7 +4035,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -4355,7 +4260,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -4596,7 +4500,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -4880,7 +4783,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -5025,7 +4927,6 @@ result = instance.my_method.map([1, 2, 3])</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -5336,7 +5237,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -5481,7 +5381,6 @@ result = instance.my_method.map([1, 2, 3])</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -5781,7 +5680,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -5926,7 +5824,6 @@ result = instance.my_method.map([1, 2, 3])</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -6181,7 +6078,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -6451,7 +6347,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -6725,7 +6620,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -6995,7 +6889,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -7269,7 +7162,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -7539,7 +7431,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -7809,7 +7700,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -7981,7 +7871,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -8253,7 +8142,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -8425,7 +8313,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -8685,7 +8572,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -8857,7 +8743,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -9080,7 +8965,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -9321,7 +9205,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -9575,7 +9458,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -9720,7 +9602,6 @@ result = instance.my_method.map([1, 2, 3])</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -9971,7 +9852,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -10133,7 +10013,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -10405,7 +10284,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -10675,7 +10553,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -10945,7 +10822,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -11117,7 +10993,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -11532,7 +11407,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._asyncify" title="a_sync.a_sync._helpers._asyncify"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -11802,7 +11676,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._await" title="a_sync.a_sync._helpers._await"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -12079,7 +11952,6 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._asyncify" title="a_sync.a_sync._helpers._asyncify"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -12321,7 +12193,6 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._await" title="a_sync.a_sync._helpers._await"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -12588,7 +12459,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._asyncify" title="a_sync.a_sync._helpers._asyncify"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -12760,7 +12630,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._await" title="a_sync.a_sync._helpers._await"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -12995,7 +12864,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._asyncify" title="a_sync.a_sync._helpers._asyncify"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -13236,7 +13104,6 @@ the provided flags and the method’s configuration.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._await" title="a_sync.a_sync._helpers._await"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -13490,7 +13357,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._asyncify" title="a_sync.a_sync._helpers._asyncify"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -13635,7 +13501,6 @@ result = instance.my_method.map([1, 2, 3])</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._await" title="a_sync.a_sync._helpers._await"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -13885,7 +13750,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._asyncify" title="a_sync.a_sync._helpers._asyncify"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -14155,7 +14019,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._await" title="a_sync.a_sync._helpers._await"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -14425,7 +14288,6 @@ result = await instance.my_method._any([-1, 0, 1])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._asyncify" title="a_sync.a_sync._helpers._asyncify"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._asyncify()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></p></li>
 </ul>
 </div>
@@ -14597,7 +14459,6 @@ result = await instance.my_method._sum([1, 2, 3])
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync._helpers._await" title="a_sync.a_sync._helpers._await"><code class="xref py py-func docutils literal notranslate"><span class="pre">_helpers._await()</span></code></a></p></li>
 <li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></p></li>
 </ul>
 </div>
