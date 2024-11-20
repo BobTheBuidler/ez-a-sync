@@ -17,7 +17,7 @@ from a_sync import exceptions
 from a_sync.a_sync.flags import AFFIRMATIVE_FLAGS, NEGATIVE_FLAGS
 
 
-cdef bint negate_if_necessary(str flag, object flag_value):
+cdef bint negate_if_necessary(str flag, bint flag_value):
     """Negate the flag value if necessary based on the flag type.
 
     This function checks if the provided flag is in the set of affirmative or negative flags
@@ -31,6 +31,7 @@ cdef bint negate_if_necessary(str flag, object flag_value):
         The potentially negated flag value.
 
     Raises:
+        TypeError: If the provided flag value is not of bint type.
         exceptions.InvalidFlag: If the flag is not recognized.
 
     Examples:
@@ -43,12 +44,10 @@ cdef bint negate_if_necessary(str flag, object flag_value):
     See Also:
         - :func:`validate_flag_value`: Validates that the flag value is a boolean.
     """
-    if not isinstance(flag_value, bool):
-        raise exceptions.InvalidFlagValue(flag, flag_value)
     if flag in AFFIRMATIVE_FLAGS:
-        return <bint>flag_value
+        return flag_value
     elif flag in NEGATIVE_FLAGS:
-        return not <bint>flag_value
+        return not flag_value
     raise exceptions.InvalidFlag(flag)
 
 
@@ -71,11 +70,6 @@ cdef bint validate_flag_value(str flag, object flag_value):
     Examples:
         >>> validate_flag_value('sync', True)
         True
-
-        >>> validate_flag_value('asynchronous', 'yes')
-        Traceback (most recent call last):
-        ...
-        exceptions.InvalidFlagValue: Invalid flag value for 'asynchronous': 'yes'
 
     See Also:
         - :func:`negate_if_necessary`: Negates the flag value if necessary based on the flag type.

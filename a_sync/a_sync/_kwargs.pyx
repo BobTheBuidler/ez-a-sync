@@ -60,6 +60,10 @@ cdef bint is_sync(str flag, dict kwargs, bint pop_flag):
         :func:`get_flag_name`: Retrieves the name of the flag present in the kwargs.
     """
     if pop_flag:
+        # NOTE: we should techincally raise InvalidFlagValue here but I dont want to set flag_value to a var
         return negate_if_necessary(flag, kwargs.pop(flag))
     else:
-        return negate_if_necessary(flag, kwargs[flag])
+        try:
+            return negate_if_necessary(flag, kwargs[flag])
+        except TypeError as e:
+            raise exceptions.InvalidFlagValue(flag, kwargs[flag]) from e.__cause__

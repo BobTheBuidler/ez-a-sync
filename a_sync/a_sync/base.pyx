@@ -118,7 +118,10 @@ class ASyncGenericBase(ASyncABC):
             except exceptions.NoFlagsFound:
                 flag = _get_a_sync_flag_name_from_class_def(cls)
                 flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
-            return negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
+            try:
+                return negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
+            except TypeError as e:
+                raise exceptions.InvalidFlagValue(flag, flag_value) from e.__cause__
 
         # we need an extra var so we can log it
         cdef bint sync
@@ -130,7 +133,11 @@ class ASyncGenericBase(ASyncABC):
             flag = _get_a_sync_flag_name_from_class_def(cls)
             flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
         
-        sync = negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
+        try:
+            sync = negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
+        except TypeError as e:
+            raise exceptions.InvalidFlagValue(flag, flag_value) from e.__cause__
+
         logger._log(
             logging.DEBUG,
             "`%s.%s` indicates default mode is %ssynchronous",
