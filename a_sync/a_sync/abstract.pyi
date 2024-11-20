@@ -73,24 +73,6 @@ class ASyncABC(metaclass=ASyncMeta):
             True
         """
 
-    def __a_sync_should_await_from_kwargs__(self, kwargs: dict) -> bool:
-        """Determines execution mode from keyword arguments.
-
-        This method can be overridden to customize how flags are extracted
-        from keyword arguments.
-
-        Args:
-            kwargs: A dictionary of keyword arguments to check for flags.
-
-        Raises:
-            NoFlagsFound: If no valid flags are found in the keyword arguments.
-
-        Examples:
-            >>> instance = MyASyncClass()
-            >>> instance.__a_sync_should_await_from_kwargs__({'sync': False})
-            True
-        """
-
     @classmethod
     def __a_sync_instance_will_be_sync__(cls, args: tuple, kwargs: dict) -> bool:
         """Determines if a new instance will be synchronous.

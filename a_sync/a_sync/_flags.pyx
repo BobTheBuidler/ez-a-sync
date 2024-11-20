@@ -76,7 +76,7 @@ See Also:
 """
 
 
-def negate_if_necessary(flag: str, flag_value: bool) -> bool:
+cdef bint negate_if_necessary(str flag, object flag_value):
     """Negate the flag value if necessary based on the flag type.
 
     This function checks if the provided flag is in the set of affirmative or negative flags
@@ -102,19 +102,16 @@ def negate_if_necessary(flag: str, flag_value: bool) -> bool:
     See Also:
         - :func:`validate_flag_value`: Validates that the flag value is a boolean.
     """
-    return cnegate_if_necessary(flag, flag_value)
-
-
-cdef bint cnegate_if_necessary(str flag, object flag_value):
-    cdef bint value = validate_flag_value(flag, flag_value)
+    if not isinstance(flag_value, bool):
+        raise exceptions.InvalidFlagValue(flag, flag_value)
     if flag in AFFIRMATIVE_FLAGS:
-        return value
+        return <bint>flag_value
     elif flag in NEGATIVE_FLAGS:
-        return not value
+        return not <bint>flag_value
     raise exceptions.InvalidFlag(flag)
 
 
-def validate_flag_value(flag: str, flag_value: Any) -> bool:
+cdef bint validate_flag_value(str flag, object flag_value):
     """
     Validate that the flag value is a boolean.
 

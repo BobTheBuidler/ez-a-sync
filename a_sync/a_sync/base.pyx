@@ -6,7 +6,7 @@ from contextlib import suppress
 from a_sync import exceptions
 from a_sync._typing import *
 from a_sync.a_sync._flags import VIABLE_FLAGS
-from a_sync.a_sync._flags cimport cnegate_if_necessary
+from a_sync.a_sync._flags cimport negate_if_necessary
 from a_sync.a_sync.abstract import ASyncABC
 
 
@@ -118,7 +118,7 @@ class ASyncGenericBase(ASyncABC):
             except exceptions.NoFlagsFound:
                 flag = _get_a_sync_flag_name_from_class_def(cls)
                 flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
-            return cnegate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
+            return negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
 
         # we need an extra var so we can log it
         cdef bint sync
@@ -130,7 +130,7 @@ class ASyncGenericBase(ASyncABC):
             flag = _get_a_sync_flag_name_from_class_def(cls)
             flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
         
-        sync = cnegate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
+        sync = negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
         logger._log(
             logging.DEBUG,
             "`%s.%s` indicates default mode is %ssynchronous",
