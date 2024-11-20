@@ -5,9 +5,9 @@ from contextlib import suppress
 
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync._flags import VIABLE_FLAGS
 from a_sync.a_sync._flags cimport negate_if_necessary
 from a_sync.a_sync.abstract import ASyncABC
+from a_sync.a_sync.flags import VIABLE_FLAGS
 
 
 logger = logging.getLogger(__name__)

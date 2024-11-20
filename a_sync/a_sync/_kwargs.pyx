@@ -6,8 +6,8 @@ from typing import Optional
 from libc.stdint cimport uint8_t
 
 from a_sync import exceptions
-from a_sync.a_sync._flags import VIABLE_FLAGS
 from a_sync.a_sync._flags cimport negate_if_necessary
+from a_sync.a_sync.flags import VIABLE_FLAGS
 
 
 def get_flag_name(kwargs: dict) -> Optional[str]:

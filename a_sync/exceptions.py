@@ -5,7 +5,7 @@ This module defines custom exceptions for the a_sync library.
 import asyncio
 
 from a_sync._typing import *
-from a_sync.a_sync._flags import VIABLE_FLAGS
+from a_sync.a_sync.flags import VIABLE_FLAGS
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
