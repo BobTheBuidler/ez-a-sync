@@ -89,7 +89,7 @@ class ASyncABC(metaclass=ASyncMeta):
         
         cdef object flag
         if flag := _kwargs.get_flag_name_c(kwargs):
-            return _kwargs.is_sync_c(<str>flag, kwargs, pop_flag=True)
+            return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)
         
         cdef ShouldAwaitCache cache
 
