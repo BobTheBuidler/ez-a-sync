@@ -133,7 +133,7 @@ class ASyncGenericBase(ASyncABC):
         
         sync = cnegate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
         logger._log(
-            logging.DEBUG
+            logging.DEBUG,
             "`%s.%s` indicates default mode is %ssynchronous",
             cls,
             flag,
