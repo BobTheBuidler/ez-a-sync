@@ -87,7 +87,7 @@ class ASyncABC(metaclass=ASyncMeta):
             False
         """
         
-        cdef const str flag = _kwargs.get_flag_name_c(kwargs)
+        cdef str flag = _kwargs.get_flag_name_c(kwargs)
         if flag:
             return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)
         
@@ -176,7 +176,7 @@ class ASyncABC(metaclass=ASyncMeta):
             cls.__name__,
         )
 
-        cdef const str flag = _kwargs.get_flag_name_c(kwargs)
+        cdef str flag = _kwargs.get_flag_name_c(kwargs)
         cdef bint sync
         if flag:
             sync = _kwargs.is_sync(<str>flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
