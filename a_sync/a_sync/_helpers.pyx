@@ -22,7 +22,7 @@ cpdef object get_event_loop():
     return loop
 
 
-cpdef object _await(object awaitable):
+cdef object _await(object awaitable):
     """
     Await an awaitable object in a synchronous context.
 

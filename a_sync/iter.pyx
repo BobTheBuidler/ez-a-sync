@@ -11,7 +11,7 @@ from async_property import async_cached_property
 
 import a_sync.asyncio
 from a_sync._typing import *
-from a_sync.a_sync._helpers import _await
+from a_sync.a_sync._helpers cimport _await
 from a_sync.exceptions import SyncModeInAsyncContextError
 
 
