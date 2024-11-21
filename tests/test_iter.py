@@ -428,6 +428,5 @@ def test_typevar_default(cls_to_test):
 @test_both
 def test_init_subclass_with_typevar(cls_to_test):
     _T = TypeVar("_T")
-    class MySubclass(cls_to_test[_T]):
-        ...
-    
+
+    class MySubclass(cls_to_test[_T]): ...
