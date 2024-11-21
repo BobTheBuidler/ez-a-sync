@@ -1,6 +1,6 @@
 import pytest
 import re
-from typing import AsyncIterator, Iterator
+from typing import AsyncIterator, Iterator, TypeVar
 
 from a_sync import ASyncIterable, ASyncIterator
 from a_sync.exceptions import SyncModeInAsyncContextError
@@ -423,3 +423,10 @@ def test_typevar_default(cls_to_test):
             """This works with {obj}."""
 
     assert ":obj:`T` objects" in UnspecifiedTypeClass.sample_method.__doc__
+
+
+@test_both
+def test_init_subclass_with_typevar(cls_to_test):
+    _T = TypeVar("_T")
+
+    class MySubclass(cls_to_test[_T]): ...
