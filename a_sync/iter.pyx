@@ -126,7 +126,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
                     # type_argument = str(type_argument)
                     raise NotImplementedError(
                         "I think this is prevented by the rules of python Generic",
-                        type_argument,
+                        type_argument, type(type_argument)
                     )
                 elif hasattr(type_argument, "__module__") and hasattr(
                     type_argument, "__qualname__"
