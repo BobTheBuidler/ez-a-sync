@@ -1,3 +1,6 @@
+"""
+This module provides a mixin class to add debug logging capabilities to other classes.
+"""
 from functools import cached_property as cached_property
 from logging import Logger
 

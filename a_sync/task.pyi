@@ -1,3 +1,12 @@
+"""
+This module provides asynchronous task management utilities, specifically focused on creating and handling mappings of tasks.
+
+The main components include:
+- TaskMapping: A class for managing and asynchronously generating tasks based on input iterables.
+- TaskMappingKeys: A view to asynchronously iterate over the keys of a TaskMapping.
+- TaskMappingValues: A view to asynchronously iterate over the values of a TaskMapping.
+- TaskMappingItems: A view to asynchronously iterate over the items (key-value pairs) of a TaskMapping.
+"""
 from a_sync._typing import *
 import asyncio
 from _typeshed import Incomplete

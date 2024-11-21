@@ -1,3 +1,10 @@
+"""
+This module provides classes for implementing dual-functional sync/async methods in Python.
+
+It includes descriptors and bound methods that can be used to create flexible
+asynchronous interfaces, allowing methods to be called both synchronously and
+asynchronously based on various conditions and configurations.
+"""
 from a_sync._typing import *
 import functools
 import weakref

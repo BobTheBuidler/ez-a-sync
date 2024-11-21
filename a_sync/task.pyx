@@ -19,7 +19,6 @@ import a_sync.asyncio
 from a_sync import exceptions
 from a_sync._typing import *
 from a_sync.a_sync._kwargs cimport get_flag_name
-from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
 from a_sync.a_sync.method import (
     ASyncBoundMethod,
