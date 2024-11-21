@@ -1567,6 +1567,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.Semaphore.locked"><code class="docutils literal notranslate"><span class="pre">Semaphore.locked()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.Semaphore.release"><code class="docutils literal notranslate"><span class="pre">Semaphore.release()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.Semaphore._loop"><code class="docutils literal notranslate"><span class="pre">Semaphore._loop</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.Semaphore._value"><code class="docutils literal notranslate"><span class="pre">Semaphore._value</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.Semaphore.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">Semaphore.debug_logs_enabled</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.Semaphore.logger"><code class="docutils literal notranslate"><span class="pre">Semaphore.logger</span></code></a></li>
 </ul>
@@ -1624,6 +1625,7 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.locked"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.locked()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.release"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.release()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._loop"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._loop</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore._value"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore._value</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.debug_logs_enabled"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.debug_logs_enabled</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.logger"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.logger</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.ThreadsafeSemaphore.semaphore"><code class="docutils literal notranslate"><span class="pre">ThreadsafeSemaphore.semaphore</span></code></a></li>
@@ -11837,7 +11839,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.Semaphore.acquire" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Semaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.</p>
 <p>If the internal counter is larger than zero on entry, decrement it by one and return
 True immediately.  If it is zero on entry, block, waiting until some other coroutine
@@ -11846,9 +11848,6 @@ has called release() to make it larger than 0, and then return True.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True when the semaphore is successfully acquired.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -11876,7 +11875,7 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.Semaphore.locked">
-<span class="sig-name descname"><span class="pre">locked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.Semaphore.locked" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">locked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.Semaphore.locked" title="Link to this definition"></a></dt>
 <dd><p>Returns True if semaphore cannot be acquired immediately.</p>
 </dd></dl>
 
@@ -11895,6 +11894,17 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_LoopBoundMixin._loop</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.Semaphore._value">
+<span class="sig-name descname"><span class="pre">_value</span></span><a class="headerlink" href="#a_sync.Semaphore._value" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._value</p>
 </dd>
 </dl>
 </dd></dl>
@@ -12978,7 +12988,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.acquire" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.</p>
 <p>If the internal counter is larger than zero on entry, decrement it by one and return
 True immediately.  If it is zero on entry, block, waiting until some other coroutine
@@ -12987,9 +12997,6 @@ has called release() to make it larger than 0, and then return True.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True when the semaphore is successfully acquired.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -13017,7 +13024,7 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore.locked">
-<span class="sig-name descname"><span class="pre">locked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.locked" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">locked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore.locked" title="Link to this definition"></a></dt>
 <dd><p>Returns True if semaphore cannot be acquired immediately.</p>
 </dd></dl>
 
@@ -13036,6 +13043,17 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_LoopBoundMixin._loop</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._value">
+<span class="sig-name descname"><span class="pre">_value</span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._value" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._value</p>
 </dd>
 </dl>
 </dd></dl>
