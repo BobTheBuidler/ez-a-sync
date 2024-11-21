@@ -5,7 +5,6 @@ This module provides an enhanced version of :func:`asyncio.gather`.
 from typing import Any, Awaitable, Dict, List, Mapping, Union, overload
 
 from a_sync._typing import *
-from a_sync.asyncio.as_completed import _exc_wrap
 from a_sync.asyncio.as_completed cimport as_completed_mapping
 
 try:
@@ -202,3 +201,18 @@ async def gather_mapping(
 
 cdef bint _is_mapping(object awaitables):
     return len(awaitables) == 1 and isinstance(awaitables[0], Mapping)
+
+
+async def _exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
+    """Wraps an awaitable to catch exceptions and return them instead of raising.
+
+    Args:
+        awaitable: The awaitable to wrap.
+
+    Returns:
+        The result of the awaitable or the exception if one is raised.
+    """
+    try:
+        return await awaitable
+    except Exception as e:
+        return e

@@ -26,7 +26,11 @@ setup(
     },
     ext_modules=cythonize(
         "a_sync/**/*.pyx",
-        compiler_directives={"embedsignature": True, "linetrace": True},
+        compiler_directives={
+            "language_level": 3, 
+            "embedsignature": True, 
+            "linetrace": True,
+        },
     ),
     zip_safe=False,
 )

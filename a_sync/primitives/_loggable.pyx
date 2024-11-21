@@ -2,11 +2,10 @@
 This module provides a mixin class to add debug logging capabilities to other classes.
 """
 
-from functools import cached_property
 from logging import Logger, getLogger, DEBUG
 
 
-class _LoggerMixin:
+cdef class _LoggerMixin:
     """
     A mixin class that adds logging capabilities to other classes.
 
@@ -17,7 +16,7 @@ class _LoggerMixin:
         - :class:`logging.Logger`
     """
 
-    @cached_property
+    @property
     def logger(self) -> Logger:
         """
         Provides a logger instance specific to the class using this mixin.
@@ -48,10 +47,19 @@ class _LoggerMixin:
             - :func:`logging.getLogger`
             - :class:`logging.Logger`
         """
-        logger_id = f"{type(self).__module__}.{type(self).__qualname__}"
-        if hasattr(self, "_name") and self._name:
-            logger_id += f".{self._name}"
-        return getLogger(logger_id)
+        return self.get_logger()
+    
+    cdef object get_logger(self):
+        cdef str logger_id
+        cdef object logger, cls
+        logger = self._logger
+        if not logger:
+            cls = type(self)
+            logger_id = "{}.{}".format(cls.__module__, cls.__qualname__)
+            if hasattr(self, "_name") and self._name:
+                logger_id += ".{}".format(self._name)
+            logger = getLogger(logger_id)
+        return logger
 
     @property
     def debug_logs_enabled(self) -> bool:
@@ -69,4 +77,7 @@ class _LoggerMixin:
         See Also:
             - :attr:`logging.Logger.isEnabledFor`
         """
-        return self.logger.isEnabledFor(DEBUG)
+        return self.get_logger().isEnabledFor(DEBUG)
+
+    cdef bint check_debug_logs_enabled(self):
+        return self.get_logger().isEnabledFor(DEBUG)
