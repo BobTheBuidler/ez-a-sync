@@ -6,7 +6,7 @@ The mixin provides a framework for managing a debug daemon task, which can be us
 import abc
 from a_sync.primitives._loggable import _LoggerMixin
 
-class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
+class _DebugDaemonMixin(_LoggerMixin):
     """
     A mixin class that provides a framework for debugging capabilities using a daemon task.
 

@@ -6,14 +6,19 @@ These primitives manage synchronization of tasks that must wait for an internal 
 
 import asyncio
 from collections import defaultdict
-from time import time
-from typing import DefaultDict, Iterable, Optional
+from libc.string cimport strcpy
+from libc.stdlib cimport malloc, free
+from libc.time cimport time
+from typing import DefaultDict, Iterable
 
-from a_sync.primitives._debug import _DebugDaemonMixin
-from a_sync.primitives.locks.event import Event
+from a_sync.primitives._debug cimport _DebugDaemonMixin
+from a_sync.primitives.locks.event cimport CythonEvent as Event
+
+cdef extern from "time.h":
+    ctypedef long time_t
 
 
-class CounterLock(_DebugDaemonMixin):
+cdef class CounterLock(_DebugDaemonMixin):
     """
     An async primitive that uses an internal counter to manage task synchronization.
 
@@ -26,9 +31,7 @@ class CounterLock(_DebugDaemonMixin):
         :class:`CounterLockCluster` for managing multiple :class:`CounterLock` instances.
     """
 
-    __slots__ = "is_ready", "_name", "_value", "_events"
-
-    def __init__(self, start_value: int = 0, name: Optional[str] = None):
+    def __init__(self, start_value: int = 0, str name = ""):
         """
         Initializes the :class:`CounterLock` with a starting value and an optional name.
 
@@ -41,8 +44,18 @@ class CounterLock(_DebugDaemonMixin):
             >>> counter.value
             0
         """
-        self._name = name
+        # we need a constant to coerce to char*
+        cdef bytes encoded_name = name.encode("utf-8")
+        cdef Py_ssize_t length = len(encoded_name)
+
+        # Allocate memory for the char* and add 1 for the null character
+        self.__name = <char*>malloc(length + 1)
         """An optional name for the counter, used in debug logs."""
+
+        if self.__name == NULL:
+            raise MemoryError("Failed to allocate memory for __name.")
+        # Copy the bytes data into the char*
+        strcpy(self.__name, encoded_name)
 
         self._value = start_value
         """The current value of the counter."""
@@ -52,6 +65,25 @@ class CounterLock(_DebugDaemonMixin):
 
         self.is_ready = lambda v: self._value >= v
         """A lambda function that indicates whether the current counter value is greater than or equal to a given value."""
+
+    def __dealloc__(self):
+        # Free the memory allocated for __name
+        if self.__name is not NULL:
+            free(self.__name)
+
+    def __repr__(self) -> str:
+        """
+        Returns a string representation of the :class:`CounterLock` instance.
+
+        The representation includes the name, current value, and the number of waiters for each awaited value.
+
+        Examples:
+            >>> counter = CounterLock(start_value=0, name="example_counter")
+            >>> repr(counter)
+            '<CounterLock name=example_counter value=0 waiters={}>'
+        """
+        cdef dict[int, Py_ssize_t] waiters = {v: len(self._events[v]._waiters) for v in sorted(self._events)}
+        return "<CounterLock name={} value={} waiters={}>".format(self.__name.decode("utf-8"), self._value, waiters)
 
     async def wait_for(self, value: int) -> bool:
         """
@@ -71,10 +103,10 @@ class CounterLock(_DebugDaemonMixin):
         """
         if not self.is_ready(value):
             self._ensure_debug_daemon()
-            await self._events[value].wait()
+            await self._events[value].c_wait()
         return True
 
-    def set(self, value: int) -> None:
+    cpdef void set(self, int value):
         """
         Sets the counter to the specified value.
 
@@ -95,21 +127,7 @@ class CounterLock(_DebugDaemonMixin):
         See Also:
             :meth:`CounterLock.value` for direct value assignment.
         """
-        self.value = value
-
-    def __repr__(self) -> str:
-        """
-        Returns a string representation of the :class:`CounterLock` instance.
-
-        The representation includes the name, current value, and the number of waiters for each awaited value.
-
-        Examples:
-            >>> counter = CounterLock(start_value=0, name="example_counter")
-            >>> repr(counter)
-            '<CounterLock name=example_counter value=0 waiters={}>'
-        """
-        waiters = {v: len(self._events[v]._waiters) for v in sorted(self._events)}
-        return f"<CounterLock name={self._name} value={self._value} waiters={waiters}>"
+        self.c_set(value)
 
     @property
     def value(self) -> int:
@@ -144,6 +162,9 @@ class CounterLock(_DebugDaemonMixin):
             ...
             ValueError: You cannot decrease the value.
         """
+        self.c_set(value)
+
+    cdef void c_set(self, int value):
         if value > self._value:
             self._value = value
             ready = [
@@ -156,18 +177,29 @@ class CounterLock(_DebugDaemonMixin):
         elif value < self._value:
             raise ValueError("You cannot decrease the value.")
 
+    @property
+    def _name(self) -> str:
+        return self.__name.decode("utf-8")
+
     async def _debug_daemon(self) -> None:
         """
         Periodically logs debug information about the counter state and waiters.
 
         This method is used internally to provide debugging information when debug logging is enabled.
         """
-        start = time()
+        cdef time_t start, now 
+        start = time(NULL)
         while self._events:
-            self.logger.debug(
-                "%s is still locked after %sm", self, round(time() - start / 60, 2)
+            now = time(NULL)
+            self.get_logger().debug(
+                "%s is still locked after %sm", self, round(now - start / 60, 2)
             )
             await asyncio.sleep(300)
+
+    def __dealloc__(self):
+        # Free the memory allocated for __name
+        if self.__name is not NULL:
+            free(self.__name)
 
 
 class CounterLockCluster:

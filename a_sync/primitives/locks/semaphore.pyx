@@ -6,17 +6,16 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 import asyncio
 import functools
 import logging
-import sys
 from collections import defaultdict
 from threading import Thread, current_thread
 
 from a_sync._typing import *
-from a_sync.primitives._debug import _DebugDaemonMixin
+from a_sync.primitives._debug cimport _DebugDaemonMixin
 
 logger = logging.getLogger(__name__)
 
 
-class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
+cdef class Semaphore(_DebugDaemonMixin):
     """
     A semaphore with additional debugging capabilities inherited from :class:`_DebugDaemonMixin`.
 
@@ -47,13 +46,14 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     See Also:
         :class:`_DebugDaemonMixin` for more details on debugging capabilities.
     """
+    cdef str name
+    cdef int _value
+    cdef object _waiters
+    cdef set _decorated
+    cdef dict __dict__
 
-    if sys.version_info >= (3, 10):
-        __slots__ = "name", "_value", "_waiters", "_decorated"
-    else:
-        __slots__ = "name", "_value", "_waiters", "_loop", "_decorated"
 
-    def __init__(self, value: int, name=None, **kwargs) -> None:
+    def __init__(self, value: int=1, name=None, loop=None, **kwargs) -> None:
         """
         Initialize the semaphore with a given value and optional name for debugging.
 
@@ -61,7 +61,12 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
             value: The initial value for the semaphore.
             name (optional): An optional name used only to provide useful context in debug logs.
         """
-        super().__init__(value, **kwargs)
+        super().__init__(loop=loop)
+        if value < 0:
+            raise ValueError("Semaphore initial value must be >= 0")
+
+        self._waiters = None
+        self._value = value
         self.name = name or self.__origin__ if hasattr(self, "__origin__") else None
         self._decorated: Set[str] = set()
 
@@ -85,6 +90,20 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         if self._decorated:
             representation = f"{representation[:-1]} decorates={self._decorated}"
         return representation
+
+    async def __aenter__(self):
+        await self.acquire()
+        # We have no use for the "as ..."  clause in the with
+        # statement for locks.
+        return None
+
+    async def __aexit__(self, exc_type, exc, tb):
+        self.c_release()
+
+    def locked(self):
+        """Returns True if semaphore cannot be acquired immediately."""
+        return self._value == 0 or (
+            any(not w.cancelled() for w in (self._waiters or ())))
 
     def __len__(self) -> int:
         return len(self._waiters) if self._waiters else 0
@@ -115,6 +134,10 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         """
         Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.
 
+        If the internal counter is larger than zero on entry, decrement it by one and return
+        True immediately.  If it is zero on entry, block, waiting until some other coroutine 
+        has called release() to make it larger than 0, and then return True.
+
         If the semaphore value is zero or less, the debug daemon is started to log the state of the semaphore.
 
         Returns:
@@ -122,8 +145,58 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         """
         if self._value <= 0:
             self._ensure_debug_daemon()
-        return await super().acquire()
 
+        if not self.locked():
+            self._value -= 1
+            return True
+        import collections
+        if self._waiters is None:
+            self._waiters = collections.deque()
+        fut = self._c_get_loop().create_future()
+        self._waiters.append(fut)
+
+        # Finally block should be called before the CancelledError
+        # handling as we don't want CancelledError to call
+        # _wake_up_first() and attempt to wake up itself.
+        try:
+            try:
+                await fut
+            finally:
+                self._waiters.remove(fut)
+        except asyncio.exceptions.CancelledError:
+            if not fut.cancelled():
+                self._value += 1
+                self._wake_up_next()
+            raise
+
+        if self._value > 0:
+            self._wake_up_next()
+        return True
+
+    cpdef void release(self):
+        """Release a semaphore, incrementing the internal counter by one.
+
+        When it was zero on entry and another coroutine is waiting for it to
+        become larger than zero again, wake up that coroutine.
+        """
+        self._value += 1
+        self._wake_up_next()
+    
+    cdef void c_release(self):
+        self._value += 1
+        self._wake_up_next()
+
+    cdef void _wake_up_next(self):
+        """Wake up the first waiter that isn't done."""
+        if not self._waiters:
+            return
+
+        for fut in self._waiters:
+            if not fut.done():
+                self._value -= 1
+                fut.set_result(True)
+                return
+            
     async def _debug_daemon(self) -> None:
         """
         Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.
@@ -139,7 +212,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         """
         while self._waiters:
             await asyncio.sleep(60)
-            self.logger.debug(
+            self.get_logger().debug(
                 "%s has %s waiters for any of: %s",
                 self,
                 len(self),
@@ -147,7 +220,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
             )
 
 
-class DummySemaphore(asyncio.Semaphore):
+cdef class DummySemaphore(Semaphore):
     """
     A dummy semaphore that implements the standard :class:`asyncio.Semaphore` API but does nothing.
 
@@ -161,7 +234,9 @@ class DummySemaphore(asyncio.Semaphore):
                 return 1
     """
 
-    __slots__ = "name", "_value"
+    def __cinit__(self):
+        self._value = 0
+        self._waiters = None
 
     def __init__(self, name: Optional[str] = None):
         """
@@ -171,16 +246,18 @@ class DummySemaphore(asyncio.Semaphore):
             name (optional): An optional name for the dummy semaphore.
         """
         self.name = name
-        self._value = 0
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} name={self.name}>"
+        return "<{} name={}>".format(self.__class__.__name__, self.name)
 
     async def acquire(self) -> Literal[True]:
         """Acquire the dummy semaphore, which is a no-op."""
         return True
 
-    def release(self) -> None:
+    cpdef void release(self):
+        """No-op release method."""
+    
+    cdef void c_release(self):
         """No-op release method."""
 
     async def __aenter__(self):
@@ -191,7 +268,7 @@ class DummySemaphore(asyncio.Semaphore):
         """No-op context manager exit."""
 
 
-class ThreadsafeSemaphore(Semaphore):
+cdef class ThreadsafeSemaphore(Semaphore):
     """
     A semaphore that works in a multi-threaded environment.
 
@@ -210,7 +287,8 @@ class ThreadsafeSemaphore(Semaphore):
         :class:`Semaphore` for the base class implementation.
     """
 
-    __slots__ = "semaphores", "dummy"
+    cdef object semaphores, dummy
+    cdef bint use_dummy
 
     def __init__(self, value: Optional[int], name: Optional[str] = None) -> None:
         """
@@ -222,21 +300,17 @@ class ThreadsafeSemaphore(Semaphore):
         """
         assert isinstance(value, int), f"{value} should be an integer."
         super().__init__(value, name=name)
-        self.semaphores: DefaultDict[Thread, Semaphore] = defaultdict(lambda: Semaphore(value, name=self.name))  # type: ignore [arg-type]
-        self.dummy = DummySemaphore(name=name)
+        
+        self.use_dummy = value is -1
+        if self.use_dummy:
+            self.semaphores = {}
+            self.dummy = DummySemaphore(name=name)
+        else:
+            self.semaphores: DefaultDict[Thread, Semaphore] = defaultdict(lambda: Semaphore(value, name=self.name))  # type: ignore [arg-type]
+            self.dummy = None
 
     def __len__(self) -> int:
         return sum(len(sem._waiters) for sem in self.semaphores.values())
-
-    @functools.cached_property
-    def use_dummy(self) -> bool:
-        """
-        Determine whether to use a dummy semaphore.
-
-        Returns:
-            True if the semaphore value is None, indicating the use of a dummy semaphore.
-        """
-        return self._value is None
 
     @property
     def semaphore(self) -> Semaphore:
@@ -252,10 +326,12 @@ class ThreadsafeSemaphore(Semaphore):
                 async with semaphore.semaphore:
                     return 1
         """
+    
+    cdef Semaphore c_get_semaphore(self):
         return self.dummy if self.use_dummy else self.semaphores[current_thread()]
 
     async def __aenter__(self):
-        await self.semaphore.acquire()
+        await self.c_get_semaphore().acquire()
 
     async def __aexit__(self, *args):
-        self.semaphore.release()
+        self.c_get_semaphore().c_release()

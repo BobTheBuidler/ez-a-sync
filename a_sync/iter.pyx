@@ -726,7 +726,8 @@ class ASyncSorter(_ASyncView[T]):
                     items.append(obj)
                     sort_tasks.append(a_sync.asyncio.create_task(self._function(obj)))
                 for sort_value, obj in sorted(
-                    zip(await asyncio.gather(*sort_tasks), items), reverse=reverse
+                    zip(await asyncio.gather(*sort_tasks), items),
+                    reverse=reverse,
                 ):
                     yield obj
         else:

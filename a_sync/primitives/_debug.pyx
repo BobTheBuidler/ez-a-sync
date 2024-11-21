@@ -4,8 +4,9 @@ This module provides a mixin class used to facilitate the creation of debugging 
 The mixin provides a framework for managing a debug daemon task, which can be used to emit rich debug logs from subclass instances whenever debug logging is enabled. Subclasses must implement the specific logging behavior.
 """
 
-import abc
 import asyncio
+from asyncio.events import _running_loop
+from threading import Lock
 from typing import Optional
 
 from a_sync.a_sync._helpers cimport get_event_loop
@@ -13,7 +14,61 @@ from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.primitives._loggable import _LoggerMixin
 
 
-class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
+cdef extern from "unistd.h":
+    int getpid()
+
+
+_global_lock = Lock()
+
+
+cdef object _get_running_loop():
+    """Return the running event loop or None.
+
+    This is a low-level function intended to be used by event loops.
+    This function is thread-specific.
+    """
+    cdef object running_loop, pid
+    running_loop, pid = _running_loop.loop_pid
+    if running_loop is not None and <int>pid == getpid():
+        return running_loop
+
+
+cdef class _LoopBoundMixin(_LoggerMixin):
+    def __cinit__(self):
+        self.__loop = None
+    def __init__(self, *, loop=None):
+        if loop is not None:
+            raise TypeError(
+                'The loop parameter is not supported. '
+                'As of 3.10, the *loop* parameter was removed'
+                '{}() since it is no longer necessary.'.format(type(self).__name__)
+            )
+    @property
+    def _loop(self) -> asyncio.AbstractEventLoop:
+        return self.__loop
+    @_loop.setter
+    def _loop(self, loop: asyncio.AbstractEventLoop):
+        self.__loop = loop
+    cpdef object _get_loop(self):
+        return self._c_get_loop()
+    cdef object _c_get_loop(self):
+        cdef object loop = _get_running_loop()
+        if self.__loop is None:
+            with _global_lock:
+                if self.__loop is None:
+                    self.__loop = loop
+        if loop is None:
+            return get_event_loop()
+        elif loop is not self.__loop:
+            raise RuntimeError(
+                f'{self!r} is bound to a different event loop', 
+                "running loop: ".format(loop), 
+                "bound to: ".format(self.__loop),
+            )
+        return loop
+
+
+cdef class _DebugDaemonMixin(_LoopBoundMixin):
     """
     A mixin class that provides a framework for debugging capabilities using a daemon task.
 
@@ -23,9 +78,6 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
         :class:`_LoggerMixin` for logging capabilities.
     """
 
-    __slots__ = ("_daemon",)
-
-    @abc.abstractmethod
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """
         Abstract method to define the debug daemon's behavior.
@@ -49,6 +101,7 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
                             self.logger.debug("Debugging...")
                             await asyncio.sleep(1)
         """
+        raise NotImplementedError
 
     def _start_debug_daemon(self, *args, **kwargs) -> "asyncio.Future[None]":
         """
@@ -74,8 +127,8 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
         See Also:
             :meth:`_ensure_debug_daemon` for ensuring the daemon is running.
         """
-        cdef object loop = get_event_loop()
-        if self.debug_logs_enabled and loop.is_running():
+        cdef object loop = self._c_get_loop()
+        if self.check_debug_logs_enabled() and loop.is_running():
             return ccreate_task_simple(self._debug_daemon(*args, **kwargs))
         return loop.create_future()
 
@@ -103,11 +156,13 @@ class _DebugDaemonMixin(_LoggerMixin, metaclass=abc.ABCMeta):
         See Also:
             :meth:`_start_debug_daemon` for starting the daemon.
         """
-        if not self.debug_logs_enabled:
-            self._daemon = get_event_loop().create_future()
-        if not hasattr(self, "_daemon") or self._daemon is None:
-            self._daemon = self._start_debug_daemon(*args, **kwargs)
-            self._daemon.add_done_callback(self._stop_debug_daemon)
+        cdef object daemon = self._daemon
+        if daemon is None:
+            if self.check_debug_logs_enabled():
+                self._daemon = self._start_debug_daemon(*args, **kwargs)
+                self._daemon.add_done_callback(self._stop_debug_daemon)
+            else:
+                self._daemon = get_event_loop().create_future()
         return self._daemon
 
     def _stop_debug_daemon(self, t: Optional[asyncio.Task] = None) -> None:

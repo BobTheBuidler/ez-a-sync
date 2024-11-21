@@ -101,7 +101,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
             - :meth:`run` for running functions with the executor.
         """
         if self.sync_mode:
-            fut = asyncio.get_event_loop().create_future()
+            fut = self._get_loop().create_future()
             try:
                 fut.set_result(fn(*args, **kwargs))
             except Exception as e:
