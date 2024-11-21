@@ -18,7 +18,7 @@ import weakref
 import a_sync.asyncio
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync import _kwargs
+from a_sync.a_sync._kwargs cimport get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
 from a_sync.a_sync.method import (
@@ -144,7 +144,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
         if isinstance(
             wrapped_func, ASyncMethodDescriptor
-        ) and not _kwargs.get_flag_name(wrapped_func_kwargs):
+        ) and not get_flag_name(wrapped_func_kwargs):
             wrapped_func_kwargs["sync"] = False
         if wrapped_func_kwargs:
             self._wrapped_func_kwargs = wrapped_func_kwargs
@@ -153,7 +153,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._name = name
 
         if iterables:
-            self._next = Event(name=f"{self} `_next`")
+            self._next = Event(name="{} `_next`".format(self))
 
             @functools.wraps(wrapped_func)
             async def _wrapped_set_next(
@@ -162,7 +162,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 try:
                     return await wrapped_func(*args, **kwargs)
                 except exceptions.SyncModeInAsyncContextError as e:
-                    e.args = *e.args, f"wrapped:{self.__wrapped__}"
+                    e.args = *e.args, "wrapped:{}".format(self.__wrapped__)
                     raise
                 except TypeError as e:
                     if __a_sync_recursion > 2 or not (
@@ -208,7 +208,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._init_loader_next = init_loader_queue.get_all
 
     def __repr__(self) -> str:
-        return f"<{type(self).__name__} for {self._wrapped_func} kwargs={self._wrapped_func_kwargs} tasks={len(self)} at {hex(id(self))}>"
+        return "<{} for {} kwargs={} tasks={} at {}>".format(
+            type(self).__name__,
+            self._wrapped_func,
+            self._wrapped_func_kwargs,
+            len(self),
+            hex(id(self)),
+        )
 
     def __hash__(self) -> int:
         return id(self)
@@ -217,6 +223,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         raise NotImplementedError("You cannot manually set items in a TaskMapping")
 
     def __getitem__(self, item: K) -> "asyncio.Task[V]":
+        cdef object fut
         try:
             return super().__getitem__(item)
         except KeyError:
@@ -226,7 +233,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             else:
                 fut = a_sync.asyncio.create_task(
                     coro=self._wrapped_func(item, **self._wrapped_func_kwargs),
-                    name=f"{self._name}[{item}]" if self._name else f"{item}",
+                    name="{}[{}]".format(self._name, item) if self._name else "{}".format(item),
                 )
             super().__setitem__(item, fut)
             return fut
@@ -237,14 +244,16 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     async def __aiter__(self, pop: bool = False) -> AsyncIterator[Tuple[K, V]]:
         """Asynchronously iterate through all key-task pairs, yielding the key-result pair as each task completes."""
-        self._if_pop_check_destroyed(pop)
+        cdef dict ready
+        cdef object key, task, unyielded, value
+        _if_pop_check_destroyed(self, pop)
 
         # if you inited the TaskMapping with some iterators, we will load those
-        yielded = set()
+        cdef set yielded = set()
         try:
             if self._init_loader is None:
                 # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
-                self._raise_if_empty()
+                _raise_if_empty(self, "")
             else:
                 while not self._init_loader.done():
                     await self._wait_for_next_key()
@@ -281,7 +290,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             await self._if_pop_clear(pop)
 
     def __delitem__(self, item: K) -> None:
-        task_or_fut = dict.__getitem__(self, item)
+        cdef object task_or_fut = dict.__getitem__(self, item)
         if not task_or_fut.done():
             task_or_fut.cancel()
         super().__delitem__(item)
@@ -326,7 +335,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key, result in task_map.map([1, 2, 3]):
                 print(f"Processed {key}: {result}")
         """
-        self._if_pop_check_destroyed(pop)
+        cdef object init_loader, key, value, _
+        _if_pop_check_destroyed(self, pop)
 
         # make sure the init loader is started if needed
         init_loader = self._init_loader
@@ -337,7 +347,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
         try:
             if iterables:
-                self._raise_if_not_empty()
+                _raise_if_not_empty(self)
                 try:
                     async for _ in self._tasks_for_iterables(*iterables):
                         async for key, value in self.yield_completed(pop=pop):
@@ -355,8 +365,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 await init_loader
 
             else:
-                self._raise_if_empty(
-                    "You must either initialize your TaskMapping with an iterable(s) or provide them during your call to map"
+                _raise_if_empty(
+                    self,
+                    "You must either initialize your TaskMapping with an iterable(s) or provide them during your call to map",
                 )
 
             if self:
@@ -376,6 +387,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @ASyncMethodDescriptorSyncDefault
     async def all(self, pop: bool = True) -> bool:
+        cdef object key, result
         try:
             async for key, result in self.__aiter__(pop=pop):
                 if not bool(result):
@@ -388,6 +400,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @ASyncMethodDescriptorSyncDefault
     async def any(self, pop: bool = True) -> bool:
+        cdef object key, result
         try:
             async for key, result in self.__aiter__(pop=pop):
                 if bool(result):
@@ -400,6 +413,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @ASyncMethodDescriptorSyncDefault
     async def max(self, pop: bool = True) -> V:
+        cdef object max, key, result
         max = None
         try:
             async for key, result in self.__aiter__(pop=pop):
@@ -418,6 +432,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     @ASyncMethodDescriptorSyncDefault
     async def min(self, pop: bool = True) -> V:
         """Return the minimum result from the tasks in the mapping."""
+        cdef object min, key, result
         min = None
         try:
             async for key, result in self.__aiter__(pop=pop):
@@ -436,7 +451,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     @ASyncMethodDescriptorSyncDefault
     async def sum(self, pop: bool = False) -> V:
         """Return the sum of the results from the tasks in the mapping."""
-        retval = 0
+        cdef object key, result, retval
         try:
             async for key, result in self.__aiter__(pop=pop):
                 retval += result
@@ -464,6 +479,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key, result in task_map.yield_completed():
                 print(f"Completed {key}: {result}")
         """
+        cdef object k, task
         if pop:
             for k, task in dict(self).items():
                 if task.done():
@@ -484,7 +500,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         """Wait for all tasks to complete and return a dictionary of the results."""
         if self._init_loader:
             await self._init_loader
-        self._raise_if_empty()
+        _raise_if_empty(self, "")
         return await a_sync.asyncio.gather(
             self,
             return_exceptions=return_exceptions,
@@ -525,13 +541,16 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             *args: One key to pop.
             cancel: Whether to cancel the task when popping it.
         """
-        fut_or_task = super().pop(*args)
+        cdef object fut_or_task = super().pop(*args)
         if cancel:
             fut_or_task.cancel()
         return fut_or_task
 
     def clear(self, cancel: bool = False) -> None:
         """# TODO write docs for this"""
+        cdef tuple keys
+        cdef object key
+
         if cancel and self._init_loader and not self._init_loader.done():
             logger.debug("cancelling %s", self._init_loader)
             # temporary, remove later
@@ -542,14 +561,17 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._init_loader.cancel()
         if keys := tuple(self.keys()):
             logger.debug("popping remaining %s tasks", self)
-            for k in keys:
-                self.pop(k, cancel=cancel)
+            for key in keys:
+                self.pop(key, cancel=cancel)
 
     @functools.cached_property
     def _init_loader(self) -> Optional["asyncio.Task[None]"]:
+        cdef str name
+        cdef object task
+
         if self.__init_loader_coro:
             logger.debug("starting %s init loader", self)
-            name = f"{type(self).__name__} init loader loading {self.__iterables__} for {self}"
+            name = "{} init loader loading {} for {}".format(type(self).__name__, self.__iterables__, self)
             try:
                 task = a_sync.asyncio.create_task(
                     coro=self.__init_loader_coro, name=name
@@ -561,22 +583,20 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @functools.cached_property
     def _queue(self) -> ProcessingQueue:
-        fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
-        return ProcessingQueue(fn, self.concurrency, name=self._name)
-
-    def _raise_if_empty(self, msg: str = "") -> None:
-        if not self:
-            raise exceptions.MappingIsEmptyError(self, msg)
-
-    def _raise_if_not_empty(self) -> None:
-        if self:
-            raise exceptions.MappingNotEmptyError(self)
+        return ProcessingQueue(
+            functools.partial(self._wrapped_func, **self._wrapped_func_kwargs), 
+            self.concurrency, 
+            name=self._name,
+        )
 
     @ASyncGeneratorFunction
     async def _tasks_for_iterables(
         self, *iterables: AnyIterableOrAwaitableIterable[K]
     ) -> AsyncIterator[Tuple[K, "asyncio.Task[V]"]]:
         """Ensure tasks are running for each key in the provided iterables."""
+        cdef object iterable, key
+        cdef list containers, remaining
+        
         # if we have any regular containers we can yield their contents right away
         containers = [
             iterable
@@ -601,12 +621,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     "DEV: figure out how to handle this situation"
                 ) from None
 
-    def _if_pop_check_destroyed(self, pop: bool) -> None:
-        if pop:
-            if self._destroyed:
-                raise RuntimeError(f"{self} has already been consumed")
-            self._destroyed = True
-
     async def _if_pop_clear(self, pop: bool) -> None:
         if pop:
             self._destroyed = True
@@ -620,6 +634,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     async def _wait_for_next_key(self) -> None:
         # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
+        cdef set done, pending
+        cdef object task
+
         done, pending = await asyncio.wait(
             [
                 a_sync.asyncio.create_task(
@@ -638,18 +655,28 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         del self.__init_loader_coro
 
 
+
+cdef void _if_pop_check_destroyed(object mapping, bint pop):
+    if pop:
+        if mapping._destroyed:
+            raise RuntimeError("{} has already been consumed".format(mapping))
+        mapping._destroyed = True
+
+
+cdef void _raise_if_empty(object mapping, str msg):
+    if not mapping:
+        raise exceptions.MappingIsEmptyError(mapping, msg)
+
+
+cdef void _raise_if_not_empty(object mapping):
+    if mapping:
+        raise exceptions.MappingNotEmptyError(mapping)
+
+
 class _NoRunningLoop(Exception): ...
 
 
-@overload
-def _yield(
-    key: K, value: V, yields: Literal["keys"]
-) -> K: ...  # TODO write specific docs for this overload
-@overload
-def _yield(
-    key: K, value: V, yields: Literal["both"]
-) -> Tuple[K, V]: ...  # TODO write specific docs for this overload
-def _yield(key: K, value: V, yields: Literal["keys", "both"]) -> Union[K, Tuple[K, V]]:
+cdef object _yield(object key, object value, str yields):
     """
     Yield either the key, value, or both based on the 'yields' parameter.
 
@@ -665,8 +692,7 @@ def _yield(key: K, value: V, yields: Literal["keys", "both"]) -> Union[K, Tuple[
         return key, value
     elif yields == "keys":
         return key
-    else:
-        raise ValueError(f"`yields` must be 'keys' or 'both'. You passed {yields}")
+    raise ValueError("`yields` must be 'keys' or 'both'. You passed {}".format(yields))
 
 
 class _EmptySequenceError(ValueError): ...
@@ -729,7 +755,7 @@ _get_key: Callable[[Tuple[K, V]], K] = lambda k_and_v: k_and_v[0]
 _get_value: Callable[[Tuple[K, V]], V] = lambda k_and_v: k_and_v[1]
 
 
-class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
+cdef class _TaskMappingView(Iterable[T], Generic[T, K, V]):
     """
     Base class for TaskMapping views that provides common functionality.
     """
@@ -757,12 +783,14 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
     def __len__(self) -> int:
         return len(self.__view__)
 
+    @ASyncIterator.wrap
     async def aiterbykeys(self, reverse: bool = False) -> ASyncIterator[T]:
         async for tup in ASyncSorter(
             self.__mapping__.items(pop=self._pop), key=_get_key, reverse=reverse
         ):
             yield self._get_from_item(tup)
 
+    @ASyncIterator.wrap
     async def aiterbyvalues(self, reverse: bool = False) -> ASyncIterator[T]:
         async for tup in ASyncSorter(
             self.__mapping__.items(pop=self._pop), key=_get_value, reverse=reverse
@@ -783,7 +811,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
     async def __aiter__(self) -> AsyncIterator[K]:
         # strongref
         mapping = self.__mapping__
-        mapping._if_pop_check_destroyed(self._pop)
+        _if_pop_check_destroyed(mapping, self._pop)
         yielded = set()
         for key in self.__load_existing():
             yielded.add(key)
@@ -844,7 +872,7 @@ class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
     async def __aiter__(self) -> AsyncIterator[Tuple[K, V]]:
         # strongref
         mapping = self.__mapping__
-        mapping._if_pop_check_destroyed(self._pop)
+        _if_pop_check_destroyed(mapping, self._pop)
         if self._pop:
             async for key in mapping.keys():
                 yield key, await mapping.pop(key)
@@ -863,7 +891,7 @@ class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
     async def __aiter__(self) -> AsyncIterator[V]:
         # strongref
         mapping = self.__mapping__
-        mapping._if_pop_check_destroyed(self._pop)
+        _if_pop_check_destroyed(mapping, self._pop)
         if self._pop:
             async for key in mapping.keys():
                 yield await mapping.pop(key)

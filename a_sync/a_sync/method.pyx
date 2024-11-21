@@ -14,7 +14,7 @@ import weakref
 from inspect import isawaitable
 
 from a_sync._typing import *
-from a_sync.a_sync cimport _kwargs
+from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._descriptor import ASyncDescriptor
 from a_sync.a_sync._helpers cimport _await
 from a_sync.a_sync.function import (
@@ -30,7 +30,15 @@ if TYPE_CHECKING:
 
 METHOD_CACHE_TTL = 300
 
+cdef int _METHOD_CACHE_TTL = 300
+
+
 logger = logging.getLogger(__name__)
+
+cdef object c_logger = logger
+
+
+cdef object get_event_loop = asyncio.get_event_loop
 
 
 class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
@@ -87,7 +95,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             >>> await descriptor(instance, arg1, arg2, kwarg1=value1)
         """
         # NOTE: This is only used by TaskMapping atm  # TODO: use it elsewhere
-        logger.debug(
+        c_logger.debug(
             "awaiting %s for instance: %s args: %s kwargs: %s",
             self,
             instance,
@@ -159,7 +167,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                     instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
                 )
             instance.__dict__[self.field_name] = bound
-            logger.debug("new bound method: %s", bound)
+            c_logger.debug("new bound method: %s", bound)
         _update_cache_timer(self.field_name, instance, bound)
         return bound
 
@@ -227,12 +235,12 @@ cdef void _update_cache_timer(field_name: str, instance: I, bound: "ASyncBoundMe
     cdef object handle, loop
     if handle := bound._cache_handle:
         # update the timer handle
-        handle._when = handle._loop.time() + METHOD_CACHE_TTL
+        handle._when = handle._loop.time() + _METHOD_CACHE_TTL
     else:
         # create and assign the timer handle
-        loop = asyncio.get_event_loop()
+        loop = get_event_loop()
         # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
-        bound._cache_handle = loop.call_at(loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, field_name)
+        bound._cache_handle = loop.call_at(loop.time() + _METHOD_CACHE_TTL, instance.__dict__.pop, field_name)
 
 
 @final
@@ -317,7 +325,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
                 instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
             )
             instance.__dict__[self.field_name] = bound
-            logger.debug("new bound method: %s", bound)
+            c_logger.debug("new bound method: %s", bound)
         _update_cache_timer(self.field_name, instance, bound)
         return bound
 
@@ -404,7 +412,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
                 instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
             )
             instance.__dict__[self.field_name] = bound
-            logger.debug("new bound method: %s", bound)
+            c_logger.debug("new bound method: %s", bound)
         _update_cache_timer(self.field_name, instance, bound)
         return bound
 
@@ -428,6 +436,28 @@ cdef bint _is_a_sync_instance(object instance):
     cdef bint is_a_sync = issubclass(instance_type, ASyncABC)
     _is_a_sync_instance_cache[instance_type_uid] = is_a_sync
     return is_a_sync
+
+
+cdef bint _should_await(object self, dict kwargs):
+    """
+    Determine if the method should be awaited.
+
+    Args:
+        kwargs: Keyword arguments passed to the method.
+
+    Examples:
+        >>> bound_method = ASyncBoundMethod(instance, my_function, True)
+        >>> should_await = _should_await(bound_method, kwargs)
+    """
+    cdef str flag = get_flag_name(kwargs)
+    if flag:
+        return is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
+    elif self.default:
+        return self.default == "sync"
+    elif _is_a_sync_instance(self.__self__):
+        self.__self__: "ASyncABC"
+        return self.__self__.__a_sync_should_await__(kwargs)
+    return self._is_async_def
 
 
 class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
@@ -570,7 +600,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method(arg1, arg2, kwarg1=value1, sync=True)
         """
         cdef object retval, coro
-        logger.debug("calling %s with args: %s kwargs: %s", self, args, kwargs)
+        c_logger.debug("calling %s with args: %s kwargs: %s", self, args, kwargs)
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
         retval = coro = ASyncFunction.__call__(self, self.__self__, *args, **kwargs)
@@ -578,13 +608,13 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
             pass
-        elif self._should_await(kwargs):
+        elif _should_await(self, kwargs):
             # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-            logger.debug(
+            c_logger.debug(
                 "awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs
             )
             retval = _await(coro)
-        logger.debug(
+        c_logger.debug(
             "returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs
         )
         return retval  # type: ignore [call-overload, return-value]
@@ -757,27 +787,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         return await self.map(
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
         ).sum(pop=True, sync=False)
-
-    def _should_await(self, dict kwargs) -> bint:
-        """
-        Determine if the method should be awaited.
-
-        Args:
-            kwargs: Keyword arguments passed to the method.
-
-        Examples:
-            >>> bound_method = ASyncBoundMethod(instance, my_function, True)
-            >>> should_await = bound_method._should_await(kwargs)
-        """
-        cdef str flag = _kwargs.get_flag_name_c(kwargs)
-        if flag:
-            return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
-        elif self.default:
-            return self.default == "sync"
-        elif _is_a_sync_instance(self.__self__):
-            self.__self__: "ASyncABC"
-            return self.__self__.__a_sync_should_await__(kwargs)
-        return self._is_async_def
 
     def __cancel_cache_handle(self, object instance) -> None:
         """

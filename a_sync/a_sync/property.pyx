@@ -27,6 +27,11 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+cdef object c_logger = logger
+
+
+cdef object get_event_loop = asyncio.get_event_loop
+
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     """Base class for creating asynchronous properties.
@@ -118,13 +123,13 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             should_await = (
                 self.default == "sync"
                 if self.default
-                else not asyncio.get_event_loop().is_running()
+                else not get_event_loop().is_running()
             )
         
         cdef object retval
         
         if should_await:
-            logger.debug(
+            c_logger.debug(
                 "awaiting awaitable for %s for instance: %s owner: %s",
                 awaitable,
                 self,
@@ -135,7 +140,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         else:
             retval = awaitable
 
-        logger.debug(
+        c_logger.debug(
             "returning %s for %s for instance: %s owner: %s",
             retval,
             self,
@@ -157,7 +162,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         """
         if instance is None:
             raise ValueError(instance)
-        logger.debug("awaiting %s for instance %s", self, instance)
+        c_logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, owner)
 
     @functools.cached_property
@@ -184,7 +189,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         Returns:
             A TaskMapping object.
         """
-        logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
+        c_logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
         return self._TaskMapping(
             self,
             instances,
@@ -678,7 +683,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     def __await__(self) -> Generator[Any, None, T]:
         """Returns an awaitable for the method."""
         # NOTE: self(sync=False).__await__() would be cleaner but requires way more compute for no real gain
-        logger.debug("awaiting %s", self)
+        c_logger.debug("awaiting %s", self)
         return self.fn(self.__self__, sync=False).__await__()
 
 
@@ -741,7 +746,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
                 **self.modifiers,
             )
             instance.__dict__[self.field_name] = bound
-            logger.debug("new hidden method: %s", bound)
+            c_logger.debug("new hidden method: %s", bound)
         _update_cache_timer(self.field_name, instance, bound)
         return bound
 

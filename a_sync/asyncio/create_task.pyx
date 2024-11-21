@@ -5,13 +5,14 @@ manage task lifecycle, and enhance error handling.
 
 import asyncio
 import logging
-from cython.parallel import prange
 
 from a_sync import exceptions
 from a_sync._typing import *
 
 
 logger = logging.getLogger(__name__)
+
+cdef object c_logger = logger
 
 
 def create_task(
@@ -136,7 +137,7 @@ cdef void __prune_persisted_tasks():
         if task.done() and (e := task.exception()):
             # force exceptions related to this lib to bubble up
             if not isinstance(e, exceptions.PersistedTaskException):
-                logger.exception(e)
+                c_logger.exception(e)
                 raise e
             # we have to manually log the traceback that asyncio would usually log
             # since we already got the exception from the task and the usual handler will now not run

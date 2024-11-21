@@ -366,13 +366,19 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         """Class method to wrap either an AsyncIterator or an async generator function."""
         if isinstance(wrapped, AsyncIterator):
             logger.warning(
-                "This use case for ASyncIterator.wrap will be removed soon. Please replace uses with simple instantiation ie `ASyncIterator(wrapped)`"
+                "This use case for ASyncIterator.wrap will be removed soon. "
+                "Please replace uses with simple instantiation ie `ASyncIterator(wrapped)`"
             )
             return cls(wrapped)
-        elif inspect.isasyncgenfunction(wrapped):
+        
+        # We're going to assume that a dev writing cython knows what they're doing.
+        # Plus, we need it for this lib's internals to work properly.
+        elif inspect.isasyncgenfunction(wrapped) or type(wrapped).__name__ == "cython_function_or_method":
             return ASyncGeneratorFunction(wrapped)
+        
         raise TypeError(
-            "`wrapped` must be an AsyncIterator or an async generator function. You passed {}".format(wrapped)
+            "`wrapped` must be an AsyncIterator or an async generator function. "
+            "You passed {} of type {}".format(wrapped, type(wrapped))
         )
 
     def __init__(self, async_iterator: AsyncIterator[T]):
