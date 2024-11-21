@@ -115,33 +115,27 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         cdef str type_string = ":obj:`T` objects"
 
         cdef object base, args
+        cdef str module, qualname, name
         for base in getattr(cls, "__orig_bases__", []):
             if not hasattr(base, "__args__"):
                 continue
 
             args = get_args(base)
-            if args and args[0] != T:
+            if args and not isinstance(args[0], TypeVar):
                 type_argument = args[0]
-                if not isinstance(type_argument, type):
-                    # type_argument = str(type_argument)
-                    raise NotImplementedError(
-                        "I think this is prevented by the rules of python Generic",
-                        type_argument, type(type_argument)
-                    )
-                elif hasattr(type_argument, "__module__") and hasattr(
-                    type_argument, "__qualname__"
-                ):
-                    type_string = ":class:`~{}.{}`".format(type_argument.__module__, type_argument.__qualname__)
-                elif hasattr(type_argument, "__module__") and hasattr(
-                    type_argument, "__name__"
-                ):
-                    type_string = (
-                        ":class:`~{}.{}`".format(type_argument.__module__, type_argument.__name__)
-                    )
-                elif hasattr(type_argument, "__qualname__"):
-                    type_string = ":class:`{}`".format(type_argument.__qualname__)
-                elif hasattr(type_argument, "__name__"):
-                    type_string = ":class:`{}`".format(type_argument.__name__)
+
+                module = getattr(type_argument, "__module__", "")
+                qualname = getattr(type_argument, "__qualname__", "")
+                name = getattr(type_argument, "__name__", "")
+                
+                if module and qualname:
+                    type_string = ":class:`~{}.{}`".format(module, qualname)
+                elif module and name:
+                    type_string = (":class:`~{}.{}`".format(module, name))
+                elif qualname:
+                    type_string = ":class:`{}`".format(qualname)
+                elif name:
+                    type_string = ":class:`{}`".format(name)
                 else:
                     type_string = str(type_argument)
 
