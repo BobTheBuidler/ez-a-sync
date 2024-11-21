@@ -5,7 +5,7 @@ import logging
 import sys
 import weakref
 from types import FunctionType
-from typing import get_args
+from typing import _GenericAlias, get_args
 
 from async_property import async_cached_property
 
@@ -140,6 +140,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
                     type_string = str(type_argument)
 
         # modify the class docstring
+        example_text = type_argument._name if isinstance(type_argument, _GenericAlias) else name
         cdef str new_chunk = (
             "When awaited, a list of all {} will be returned.\n".format(type_string) +
             "\n"
@@ -148,7 +149,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
             "    >>> all_contents = await my_object\n"
             "    >>> isinstance(all_contents, list)\n"
             "    True\n"
-            "    >>> isinstance(all_contents[0], {})\n".format(type_argument.__name__) +
+            "    >>> isinstance(all_contents[0], {})\n".format(example_text) +
             "    True\n"
         )
 
