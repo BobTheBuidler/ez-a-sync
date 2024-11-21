@@ -1,15 +1,22 @@
 from a_sync._typing import *
 from typing import Any, Awaitable, Dict, List, Mapping, overload
 
-__all__ = ['gather', 'gather_mapping']
+__all__ = ["gather", "gather_mapping"]
 
 class tqdm_asyncio:
     @staticmethod
     async def gather(*args, **kwargs) -> None: ...
+
 Excluder = Callable[[T], bool]
 
 @overload
-async def gather(awaitables: Mapping[K, Awaitable[V]], return_exceptions: bool = False, exclude_if: Optional[Excluder[V]] = None, tqdm: bool = False, **tqdm_kwargs: Any) -> Dict[K, V]:
+async def gather(
+    awaitables: Mapping[K, Awaitable[V]],
+    return_exceptions: bool = False,
+    exclude_if: Optional[Excluder[V]] = None,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> Dict[K, V]:
     """
     Concurrently awaits a k:v mapping of awaitables and returns the results.
 
@@ -31,8 +38,15 @@ async def gather(awaitables: Mapping[K, Awaitable[V]], return_exceptions: bool =
     See Also:
         :func:`asyncio.gather`
     """
+
 @overload
-async def gather(*awaitables: Awaitable[T], return_exceptions: bool = False, exclude_if: Optional[Excluder[T]] = None, tqdm: bool = False, **tqdm_kwargs: Any) -> List[T]:
+async def gather(
+    *awaitables: Awaitable[T],
+    return_exceptions: bool = False,
+    exclude_if: Optional[Excluder[T]] = None,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> List[T]:
     """
     Concurrently awaits a series of awaitable objects and returns the results.
 
@@ -53,8 +67,15 @@ async def gather(*awaitables: Awaitable[T], return_exceptions: bool = False, exc
     See Also:
         :func:`asyncio.gather`
     """
-async def gather_mapping(mapping: Mapping[K, Awaitable[V]], return_exceptions: bool = False, exclude_if: Optional[Excluder[V]] = None, tqdm: bool = False, **tqdm_kwargs: Any) -> Dict[K, V]:
-    '''
+
+async def gather_mapping(
+    mapping: Mapping[K, Awaitable[V]],
+    return_exceptions: bool = False,
+    exclude_if: Optional[Excluder[V]] = None,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> Dict[K, V]:
+    """
     Concurrently awaits a mapping of awaitable objects and returns a dictionary of results.
 
     This function is designed to await a mapping of awaitable objects, where each key-value pair represents a unique awaitable. It enables concurrent execution and gathers results into a dictionary.
@@ -76,4 +97,4 @@ async def gather_mapping(mapping: Mapping[K, Awaitable[V]], return_exceptions: b
 
     See Also:
         :func:`asyncio.gather`
-    '''
+    """

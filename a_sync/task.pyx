@@ -755,7 +755,7 @@ _get_key: Callable[[Tuple[K, V]], K] = lambda k_and_v: k_and_v[0]
 _get_value: Callable[[Tuple[K, V]], V] = lambda k_and_v: k_and_v[1]
 
 
-cdef class _TaskMappingView(Iterable[T], Generic[T, K, V]):
+class _TaskMappingView(Iterable[T], Generic[T, K, V]):
     """
     Base class for TaskMapping views that provides common functionality.
     """
