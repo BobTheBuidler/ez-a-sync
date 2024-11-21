@@ -140,7 +140,6 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
                     type_string = str(type_argument)
 
         # modify the class docstring
-        example_text = type_argument._name if isinstance(type_argument, _GenericAlias) else name
         cdef str new_chunk = (
             "When awaited, a list of all {} will be returned.\n".format(type_string) +
             "\n"
@@ -149,9 +148,19 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
             "    >>> all_contents = await my_object\n"
             "    >>> isinstance(all_contents, list)\n"
             "    True\n"
-            "    >>> isinstance(all_contents[0], {})\n".format(example_text) +
-            "    True\n"
         )
+
+        cdef str example_text = (
+            type_argument._name 
+            if isinstance(type_argument, _GenericAlias) 
+            else getattr(type_argument, "__name__", "")
+        )
+        
+        if example_text:
+            new_chunk += (
+                "    >>> isinstance(all_contents[0], {})\n".format(example_text) +
+                "    True\n"
+            )
 
         if cls.__doc__ is None:
             cls.__doc__ = new_chunk
