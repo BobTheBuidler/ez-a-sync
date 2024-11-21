@@ -1,3 +1,13 @@
+"""
+This module provides an abstract base class for defining asynchronous and synchronous behavior.
+
+The :class:`ASyncABC` class uses the :class:`ASyncMeta` metaclass to facilitate the creation of classes
+that can operate in both asynchronous and synchronous contexts. It provides concrete methods to determine
+the execution mode based on flags and keyword arguments.
+
+Note: It is recommended to use :class:`ASyncGenericBase` for most use cases. This class
+is intended for more custom implementations if necessary.
+"""
 from a_sync._typing import *
 import abc
 import functools
