@@ -5,6 +5,7 @@ The mixin provides a framework for managing a debug daemon task, which can be us
 """
 
 import asyncio
+import os
 from asyncio.events import _running_loop
 from threading import Lock
 from typing import Optional
@@ -12,10 +13,6 @@ from typing import Optional
 from a_sync.a_sync._helpers cimport get_event_loop
 from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.primitives._loggable import _LoggerMixin
-
-
-cdef extern from "unistd.h":
-    int getpid()
 
 
 _global_lock = Lock()
@@ -29,7 +26,7 @@ cdef object _get_running_loop():
     """
     cdef object running_loop, pid
     running_loop, pid = _running_loop.loop_pid
-    if running_loop is not None and <int>pid == getpid():
+    if running_loop is not None and <int>pid == <int>os.getpid():
         return running_loop
 
 
