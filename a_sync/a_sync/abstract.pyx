@@ -15,12 +15,14 @@ from typing import Dict, Any, Tuple
 
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync cimport _kwargs
+from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._flags cimport negate_if_necessary
 from a_sync.a_sync._meta import ASyncMeta
 
 
 logger = logging.getLogger(__name__)
+
+cdef object c_logger = logger
 
 
 cdef struct ShouldAwaitCache:
@@ -87,9 +89,9 @@ class ASyncABC(metaclass=ASyncMeta):
             False
         """
         
-        cdef str flag = _kwargs.get_flag_name_c(kwargs)
+        cdef str flag = get_flag_name(kwargs)
         if flag:
-            return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)
+            return is_sync(flag, kwargs, pop_flag=True)
         
         cdef ShouldAwaitCache cache
 
@@ -170,24 +172,24 @@ class ASyncABC(metaclass=ASyncMeta):
             >>> MyASyncClass.__a_sync_instance_will_be_sync__((), {'sync': True})
             True
         """
-        logger.debug(
+        c_logger.debug(
             "checking `%s.%s.__init__` signature against provided kwargs to determine a_sync mode for the new instance",
             cls.__module__,
             cls.__name__,
         )
 
-        cdef str flag = _kwargs.get_flag_name_c(kwargs)
+        cdef str flag = get_flag_name(kwargs)
         cdef bint sync
         if flag:
-            sync = _kwargs.is_sync(<str>flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
-            logger.debug(
+            sync = is_sync(flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
+            c_logger.debug(
                 "kwargs indicate the new instance created with args %s %s is %ssynchronous",
                 args,
                 kwargs,
                 "" if sync else "a",
             )
             return sync
-        logger.debug(
+        c_logger.debug(
             "No valid flags found in kwargs, checking class definition for defined default"
         )
         return cls.__a_sync_default_mode__()  # type: ignore [arg-type]

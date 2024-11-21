@@ -8,7 +8,7 @@ from async_property.base import AsyncPropertyDescriptor  # type: ignore [import]
 from async_property.cached import AsyncCachedPropertyDescriptor  # type: ignore [import]
 
 from a_sync._typing import *
-from a_sync.a_sync cimport _kwargs
+from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync.flags import VIABLE_FLAGS
 from a_sync.a_sync.modifiers.manager import ModifierManager
@@ -22,6 +22,8 @@ if TYPE_CHECKING:
     )
 
 logger = logging.getLogger(__name__)
+
+cdef object c_logger = logger
 
 
 class _ModifiedMixin:
@@ -139,10 +141,10 @@ cdef bint _run_sync(object function, dict kwargs):
     See Also:
         - :func:`_kwargs.get_flag_name`
     """
-    cdef str flag = _kwargs.get_flag_name_c(kwargs)
+    cdef str flag = get_flag_name(kwargs)
     if flag:
         # If a flag was specified in the kwargs, we will defer to it.
-        return _kwargs.is_sync(<str>flag, kwargs, pop_flag=True)
+        return is_sync(flag, kwargs, pop_flag=True)
     else:
         # No flag specified in the kwargs, we will defer to 'default'.
         return function._sync_default
@@ -348,7 +350,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             - :attr:`default`
             - :meth:`_run_sync`
         """
-        logger.debug(
+        c_logger.debug(
             "calling %s fn: %s with args: %s kwargs: %s", self, self.fn, args, kwargs
         )
         return self.fn(*args, **kwargs)

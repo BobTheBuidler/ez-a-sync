@@ -12,6 +12,8 @@ from a_sync.a_sync.flags import VIABLE_FLAGS
 
 logger = logging.getLogger(__name__)
 
+cdef object c_logger = logger
+
 
 class ASyncGenericBase(ASyncABC):
     """
@@ -67,14 +69,14 @@ class ASyncGenericBase(ASyncABC):
     @functools.cached_property
     def __a_sync_flag_name__(self) -> str:
         # TODO: cythonize this cache
-        logger.debug("checking a_sync flag for %s", self)
+        c_logger.debug("checking a_sync flag for %s", self)
         try:
             flag = _get_a_sync_flag_name_from_signature(type(self))
         except exceptions.ASyncFlagException:
             # We can't get the flag name from the __init__ signature,
             # but maybe the implementation sets the flag somewhere else.
             # Let's check the instance's atributes
-            logger.debug(
+            c_logger.debug(
                 "unable to find flag name using `%s.__init__` signature, checking for flag attributes defined on %s",
                 self.__class__.__name__,
                 self,
@@ -93,10 +95,10 @@ class ASyncGenericBase(ASyncABC):
     def __a_sync_flag_value__(self) -> bool:
         # TODO: cythonize this cache
         """If you wish to be able to hotswap default modes, just duplicate this def as a non-cached property."""
-        if logger.isEnabledFor(logging.DEBUG):
+        if c_logger.isEnabledFor(logging.DEBUG):
             flag = self.__a_sync_flag_name__
             flag_value = getattr(self, flag)
-            logger._log(logging.DEBUG, "`%s.%s` is currently %s", self, flag, flag_value)
+            c_logger._log(logging.DEBUG, "`%s.%s` is currently %s", self, flag, flag_value)
 
         else:
             flag_value = getattr(self, self.__a_sync_flag_name__)
@@ -110,7 +112,7 @@ class ASyncGenericBase(ASyncABC):
     def __a_sync_default_mode__(cls) -> bint:  # type: ignore [override]
         cdef object flag
         cdef bint flag_value
-        if not logger.isEnabledFor(logging.DEBUG):
+        if not c_logger.isEnabledFor(logging.DEBUG):
             # we can optimize this if we dont need to log `flag` and the return value
             try:
                 flag = _get_a_sync_flag_name_from_signature(cls)
@@ -138,7 +140,7 @@ class ASyncGenericBase(ASyncABC):
         except TypeError as e:
             raise exceptions.InvalidFlagValue(flag, flag_value) from e.__cause__
 
-        logger._log(
+        c_logger._log(
             logging.DEBUG,
             "`%s.%s` indicates default mode is %ssynchronous",
             cls,
@@ -150,7 +152,7 @@ class ASyncGenericBase(ASyncABC):
 
 
 cdef str _get_a_sync_flag_name_from_class_def(object cls):
-    logger.debug("Searching for flags defined on %s", cls)
+    c_logger.debug("Searching for flags defined on %s", cls)
     try:
         return _parse_flag_name_from_list(cls, cls.__dict__)  # type: ignore [arg-type]
         # idk why __dict__ doesn't type check as a dict
@@ -164,11 +166,11 @@ cdef str _get_a_sync_flag_name_from_class_def(object cls):
 
 cdef bint _a_sync_flag_default_value_from_signature(object cls):
     cdef object signature = inspect.signature(cls.__init__)
-    if not logger.isEnabledFor(logging.DEBUG):
+    if not c_logger.isEnabledFor(logging.DEBUG):
         # we can optimize this much better
         return signature.parameters[_get_a_sync_flag_name_from_signature(cls)].default
     
-    logger._log(
+    c_logger._log(
         logging.DEBUG, "checking `__init__` signature for default %s a_sync flag value", cls
     )
     cdef str flag = _get_a_sync_flag_name_from_signature(cls)
@@ -177,25 +179,25 @@ cdef bint _a_sync_flag_default_value_from_signature(object cls):
         raise NotImplementedError(
             "The implementation for 'cls' uses an arg to specify sync mode, instead of a kwarg. We are unable to proceed. I suppose we can extend the code to accept positional arg flags if necessary"
         )
-    logger._log(logging.DEBUG, "%s defines %s, default value %s", cls, flag, flag_value)
+    c_logger._log(logging.DEBUG, "%s defines %s, default value %s", cls, flag, flag_value)
     return flag_value
 
 
 cdef str _get_a_sync_flag_name_from_signature(object cls):
     if cls.__name__ == "ASyncGenericBase":
-        logger.debug(
+        c_logger.debug(
             "There are no flags defined on the base class, this is expected. Skipping."
         )
         return None
 
     # if we fail this one there's no need to check again
-    if not logger.isEnabledFor(logging.DEBUG):
+    if not c_logger.isEnabledFor(logging.DEBUG):
         # we can also skip assigning params to a var
         return _parse_flag_name_from_list(cls, inspect.signature(cls.__init__).parameters)
 
-    logger._log(logging.DEBUG, "Searching for flags defined on %s.__init__", cls)
+    c_logger._log(logging.DEBUG, "Searching for flags defined on %s.__init__", cls)
     cdef object parameters = inspect.signature(cls.__init__).parameters
-    logger._log(logging.DEBUG, "parameters: %s", parameters)
+    c_logger._log(logging.DEBUG, "parameters: %s", parameters)
     return _parse_flag_name_from_list(cls, parameters)
 
 
@@ -204,14 +206,14 @@ cdef str _parse_flag_name_from_list(object cls, object items):
     cdef str flag
     present_flags = [flag for flag in VIABLE_FLAGS if flag in items]
     if not present_flags:
-        logger.debug("There are too many flags defined on %s", cls)
+        c_logger.debug("There are too many flags defined on %s", cls)
         raise exceptions.NoFlagsFound(cls, items.keys())
     if len(present_flags) > 1:
-        logger.debug("There are too many flags defined on %s", cls)
+        c_logger.debug("There are too many flags defined on %s", cls)
         raise exceptions.TooManyFlags(cls, present_flags)
-    if logger.isEnabledFor(logging.DEBUG):
+    if c_logger.isEnabledFor(logging.DEBUG):
         flag = present_flags[0]
-        logger._log(logging.DEBUG, "found flag %s", flag)
+        c_logger._log(logging.DEBUG, "found flag %s", flag)
         return flag
     else:
         return present_flags[0]

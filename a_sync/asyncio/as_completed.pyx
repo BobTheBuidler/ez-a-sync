@@ -116,12 +116,12 @@ def as_completed(
     """
     if isinstance(fs, Mapping):
         return as_completed_mapping(
-            fs,
-            timeout=timeout,
+            mapping=fs,
+            timeout=timeout or 0,
             return_exceptions=return_exceptions,
             aiter=aiter,
             tqdm=tqdm,
-            **tqdm_kwargs
+            tqdm_kwargs=tqdm_kwargs,
         )
     if return_exceptions:
         fs = [_exc_wrap(f) for f in fs]
@@ -138,35 +138,14 @@ def as_completed(
     )
 
 
-@overload
-def as_completed_mapping(
-    mapping: Mapping[K, Awaitable[V]],
-    *,
-    timeout: Optional[float] = None,
-    return_exceptions: bool = False,
-    aiter: Literal[True] = True,
-    tqdm: bool = False,
-    **tqdm_kwargs: Any
-) -> ASyncIterator[Tuple[K, V]]: ...
-@overload
-def as_completed_mapping(
-    mapping: Mapping[K, Awaitable[V]],
-    *,
-    timeout: Optional[float] = None,
-    return_exceptions: bool = False,
-    aiter: Literal[False] = False,
-    tqdm: bool = False,
-    **tqdm_kwargs: Any
-) -> Iterator[Coroutine[Any, Any, Tuple[K, V]]]: ...
-def as_completed_mapping(
-    mapping: Mapping[K, Awaitable[V]],
-    *,
-    timeout: Optional[float] = None,
-    return_exceptions: bool = False,
-    aiter: bool = False,
-    tqdm: bool = False,
-    **tqdm_kwargs: Any
-) -> Union[Iterator[Coroutine[Any, Any, Tuple[K, V]]], ASyncIterator[Tuple[K, V]]]:
+cdef object as_completed_mapping(
+    object mapping,
+    unsigned int timeout,
+    bint return_exceptions,
+    bint aiter,
+    bint tqdm,
+    dict[str, object] tqdm_kwargs,
+):
     """
     Concurrently awaits a mapping of awaitable objects and returns an iterator or async iterator of results.
 
@@ -198,7 +177,7 @@ def as_completed_mapping(
             __mapping_wrap(k, v, return_exceptions=return_exceptions)
             for k, v in mapping.items()
         ],
-        timeout=timeout,
+        timeout=timeout or None,
         aiter=aiter,
         tqdm=tqdm,
         **tqdm_kwargs
@@ -274,6 +253,3 @@ async def __mapping_wrap(
         if return_exceptions:
             return k, e
         raise
-
-
-__all__ = ["as_completed", "as_completed_mapping"]

@@ -5,7 +5,8 @@ This module provides an enhanced version of :func:`asyncio.gather`.
 from typing import Any, Awaitable, Dict, List, Mapping, Union, overload
 
 from a_sync._typing import *
-from a_sync.asyncio.as_completed import as_completed_mapping, _exc_wrap
+from a_sync.asyncio.as_completed import _exc_wrap
+from a_sync.asyncio.as_completed cimport as_completed_mapping
 
 try:
     from tqdm.asyncio import tqdm_asyncio
@@ -187,20 +188,17 @@ async def gather_mapping(
     results = {
         k: v
         async for k, v in as_completed_mapping(
-            mapping,
+            mapping=mapping,
+            timeout=0,
             return_exceptions=return_exceptions,
             aiter=True,
             tqdm=tqdm,
-            **tqdm_kwargs,
+            tqdm_kwargs=tqdm_kwargs,
         )
         if exclude_if is None or not exclude_if(v)
     }
     # return data in same order as input mapping
     return {k: results[k] for k in mapping}
 
-
-_is_mapping = lambda awaitables: len(awaitables) == 1 and isinstance(
-    awaitables[0], Mapping
-)
-
-__all__ = ["gather", "gather_mapping"]
+cdef bint _is_mapping(object awaitables):
+    return len(awaitables) == 1 and isinstance(awaitables[0], Mapping)

@@ -2,7 +2,6 @@
 This module provides utility functions for handling keyword arguments related to synchronous and asynchronous flags.
 """
 
-from typing import Optional
 from libc.stdint cimport uint8_t
 
 from a_sync import exceptions
@@ -10,7 +9,7 @@ from a_sync.a_sync._flags cimport negate_if_necessary
 from a_sync.a_sync.flags import VIABLE_FLAGS
 
 
-def get_flag_name(kwargs: dict) -> Optional[str]:
+cdef str get_flag_name(dict kwargs):
     """
     Get the name of the flag present in the kwargs.
 
@@ -18,7 +17,7 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
         kwargs: A dictionary of keyword arguments.
 
     Returns:
-        The name of the flag if present, None otherwise.
+        The name of the flag if present, an empty string otherwise.
 
     Raises:
         :class:`exceptions.TooManyFlags`: If more than one flag is present in the kwargs,
@@ -32,12 +31,8 @@ def get_flag_name(kwargs: dict) -> Optional[str]:
         'asynchronous'
 
         >>> get_flag_name({})
-        None
+        ''
     """
-    return get_flag_name_c(kwargs) or None
-
-
-cdef str get_flag_name_c(dict kwargs):
     cdef list present_flags = [flag for flag in VIABLE_FLAGS if flag in kwargs]
     cdef uint8_t flags_count = len(present_flags)
     if flags_count == 0:
