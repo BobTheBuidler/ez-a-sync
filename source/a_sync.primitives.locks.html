@@ -744,7 +744,7 @@ waiters to be assigned priorities, ensuring that higher priority waiters are
 processed before lower priority ones.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.Priority">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">Priority</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#Priority"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.Priority" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">Priority</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.Priority" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.Priority.__init__">
@@ -755,8 +755,8 @@ processed before lower priority ones.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">PrioritySemaphore</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#PrioritySemaphore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Decimal</span></code></a>, <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager</span></code></a>]</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">PrioritySemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a></p>
 <p>Semaphore that uses numeric priorities for waiters.</p>
 <p>This class extends <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a> and provides a concrete implementation
 using numeric priorities. The <cite>_context_manager_class</cite> is set to <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager</span></code></a>,
@@ -778,12 +778,6 @@ and the <cite>_top_priority</cite> is set to -1, which is the highest priority.<
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a> for the base class implementation.</p>
 </div>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._context_manager_class">
-<span class="sig-name descname"><span class="pre">_context_manager_class</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._context_manager_class" title="Link to this definition"></a></dt>
-<dd><p>alias of <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">_PrioritySemaphoreContextManager</span></code></a></p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__call__" title="Link to this definition"></a></dt>
@@ -800,17 +794,14 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__getitem__">
-<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__getitem__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__getitem__" title="Link to this definition"></a></dt>
 <dd><p>Gets the context manager for a given priority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>priority</strong> (<em>PT</em><em> | </em><em>None</em>) – The priority for which to get the context manager. If None, uses the top priority.</p>
+<dd class="field-odd"><p><strong>priority</strong> – The priority for which to get the context manager. If None, uses the top priority.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The context manager associated with the given priority.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><em>_AbstractPrioritySemaphoreContextManager</em></a>[<em>PT</em>]</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -822,40 +813,18 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the priority semaphore.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The initial capacity of the semaphore.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> | </em><em>None</em>) – An optional name for the semaphore, used for debugging.</p></li>
+<li><p><strong>value</strong> – The initial capacity of the semaphore.</p></li>
+<li><p><strong>name</strong> – An optional name for the semaphore, used for debugging.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">_AbstractPrioritySemaphore</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_semaphore&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._count_waiters">
-<span class="sig-name descname"><span class="pre">_count_waiters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._count_waiters" title="Link to this definition"></a></dt>
-<dd><p>Counts the number of waiters for each priority.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary mapping each priority to the number of waiters.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><em>Dict</em></a>[<em>PT</em>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>]</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">_AbstractPrioritySemaphore</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span><span class="o">.</span><span class="n">_count_waiters</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -976,7 +945,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._wake_up_next">
-<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._wake_up_next" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._wake_up_next" title="Link to this definition"></a></dt>
 <dd><p>Wakes up the next waiter in line.</p>
 <p>This method handles the waking of waiters based on priority. It includes an emergency
 procedure to handle potential lost waiters, ensuring that no waiter is left indefinitely
@@ -996,7 +965,7 @@ waiting.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore with the top priority.</p>
 <p>This method overrides <code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.acquire()</span></code> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
@@ -1034,14 +1003,11 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.locked">
-<span class="sig-name descname"><span class="pre">locked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.locked" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">locked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.locked" title="Link to this definition"></a></dt>
 <dd><p>Checks if the semaphore is locked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if the semaphore cannot be acquired immediately, False otherwise.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1060,18 +1026,6 @@ become larger than zero again, wake up that coroutine.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._capacity">
-<span class="sig-name descname"><span class="pre">_capacity</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._capacity" title="Link to this definition"></a></dt>
-<dd><p>The initial capacity of the semaphore.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._context_managers">
-<span class="sig-name descname"><span class="pre">_context_managers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._context_managers" title="Link to this definition"></a></dt>
-<dd><p>A dictionary mapping priorities to their context managers.</p>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._loop">
 <span class="sig-name descname"><span class="pre">_loop</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._loop" title="Link to this definition"></a></dt>
 <dd><p>asyncio.AbstractEventLoop</p>
@@ -1083,25 +1037,25 @@ become larger than zero again, wake up that coroutine.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._potential_lost_waiters">
-<span class="sig-name descname"><span class="pre">_potential_lost_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._potential_lost_waiters" title="Link to this definition"></a></dt>
-<dd><p>A list of futures representing waiters that might have been lost.</p>
+<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._value">
+<span class="sig-name descname"><span class="pre">_value</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._value" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._value</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._top_priority">
-<span class="sig-name descname"><span class="pre">_top_priority</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._top_priority" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._value">
-<span class="sig-name descname"><span class="pre">_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._waiters">
-<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>A heap queue of context managers, sorted by priority.</p>
+<span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._waiters" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._waiters</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -1176,15 +1130,22 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.name" title="Link to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore.name</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">_AbstractPrioritySemaphore</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">PT</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">CM</span></code>]</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">_AbstractPrioritySemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
+<p>_AbstractPrioritySemaphore(int value: int = 1, name: Optional[str] = None, <a href="#id3"><span class="problematic" id="id4">*</span></a>) -&gt; None</p>
 <p>A semaphore that allows prioritization of waiters.</p>
 <p>This semaphore manages waiters with associated priorities, ensuring that waiters with higher
 priorities are processed before those with lower priorities. Subclasses must define the
@@ -1210,17 +1171,14 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__getitem__">
-<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priority</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphore.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__getitem__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__getitem__" title="Link to this definition"></a></dt>
 <dd><p>Gets the context manager for a given priority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>priority</strong> (<em>PT</em><em> | </em><em>None</em>) – The priority for which to get the context manager. If None, uses the top priority.</p>
+<dd class="field-odd"><p><strong>priority</strong> – The priority for which to get the context manager. If None, uses the top priority.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The context manager associated with the given priority.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><em>_AbstractPrioritySemaphoreContextManager</em></a>[<em>PT</em>]</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1232,40 +1190,18 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphore.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the priority semaphore.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The initial capacity of the semaphore.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> | </em><em>None</em>) – An optional name for the semaphore, used for debugging.</p></li>
+<li><p><strong>value</strong> – The initial capacity of the semaphore.</p></li>
+<li><p><strong>name</strong> – An optional name for the semaphore, used for debugging.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">_AbstractPrioritySemaphore</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_semaphore&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._count_waiters">
-<span class="sig-name descname"><span class="pre">_count_waiters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphore._count_waiters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._count_waiters" title="Link to this definition"></a></dt>
-<dd><p>Counts the number of waiters for each priority.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary mapping each priority to the number of waiters.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><em>Dict</em></a>[<em>PT</em>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a>]</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">_AbstractPrioritySemaphore</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span><span class="o">.</span><span class="n">_count_waiters</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1386,7 +1322,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._wake_up_next">
-<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphore._wake_up_next"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._wake_up_next" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._wake_up_next" title="Link to this definition"></a></dt>
 <dd><p>Wakes up the next waiter in line.</p>
 <p>This method handles the waking of waiters based on priority. It includes an emergency
 procedure to handle potential lost waiters, ensuring that no waiter is left indefinitely
@@ -1406,7 +1342,7 @@ waiting.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphore.acquire"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.acquire" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore with the top priority.</p>
 <p>This method overrides <code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.acquire()</span></code> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
@@ -1444,14 +1380,11 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.locked">
-<span class="sig-name descname"><span class="pre">locked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphore.locked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.locked" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">locked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.locked" title="Link to this definition"></a></dt>
 <dd><p>Checks if the semaphore is locked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>True if the semaphore cannot be acquired immediately, False otherwise.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1470,23 +1403,6 @@ become larger than zero again, wake up that coroutine.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._capacity">
-<span class="sig-name descname"><span class="pre">_capacity</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._capacity" title="Link to this definition"></a></dt>
-<dd><p>The initial capacity of the semaphore.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._context_manager_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_context_manager_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.13)"><span class="pre">Type</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._context_manager_class" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._context_managers">
-<span class="sig-name descname"><span class="pre">_context_managers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._context_managers" title="Link to this definition"></a></dt>
-<dd><p>A dictionary mapping priorities to their context managers.</p>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._loop">
 <span class="sig-name descname"><span class="pre">_loop</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._loop" title="Link to this definition"></a></dt>
 <dd><p>asyncio.AbstractEventLoop</p>
@@ -1498,32 +1414,25 @@ become larger than zero again, wake up that coroutine.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._potential_lost_waiters">
-<span class="sig-name descname"><span class="pre">_potential_lost_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._potential_lost_waiters" title="Link to this definition"></a></dt>
-<dd><p>A list of futures representing waiters that might have been lost.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._top_priority">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_top_priority</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">PT</span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._top_priority" title="Link to this definition"></a></dt>
-<dd><p>Defines the top priority for the semaphore.</p>
-<p>Subclasses must implement this property to specify the default top priority.</p>
+<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._value">
+<span class="sig-name descname"><span class="pre">_value</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._value" title="Link to this definition"></a></dt>
+<dd><p>int</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> – If not implemented in a subclass.</p>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._value</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._value">
-<span class="sig-name descname"><span class="pre">_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._waiters">
-<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>A heap queue of context managers, sorted by priority.</p>
+<span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._waiters" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._waiters</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -1598,18 +1507,36 @@ become larger than zero again, wake up that coroutine.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.name" title="Link to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore.name</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphoreContextManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">PT</span></code>]</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
+<p>_AbstractPrioritySemaphoreContextManager(_AbstractPrioritySemaphore parent: _AbstractPrioritySemaphore, priority: PT, name: Optional[str] = None) -&gt; None</p>
 <p>A context manager for priority semaphore waiters.</p>
 <p>This context manager is associated with a specific priority and handles
 the acquisition and release of the semaphore for waiters with that priority.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._AbstractPrioritySemaphoreContextManager__acquire">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_AbstractPrioritySemaphoreContextManager__acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._AbstractPrioritySemaphoreContextManager__acquire" title="Link to this definition"></a></dt>
+<dd><p>_AbstractPrioritySemaphoreContextManager.__acquire(self) -&gt; Literal[True]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.__call__" title="Link to this definition"></a></dt>
@@ -1626,18 +1553,15 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphoreContextManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the context manager for a specific priority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> (<a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><em>_AbstractPrioritySemaphore</em></a>) – The parent semaphore.</p></li>
-<li><p><strong>priority</strong> (<em>PT</em>) – The priority associated with this context manager.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> | </em><em>None</em>) – An optional name for the context manager, used for debugging.</p></li>
+<li><p><strong>parent</strong> – The parent semaphore.</p></li>
+<li><p><strong>priority</strong> – The priority associated with this context manager.</p></li>
+<li><p><strong>name</strong> – An optional name for the context manager, used for debugging.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1704,13 +1628,8 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._repr_no_parent_">
-<span class="sig-name descname"><span class="pre">_repr_no_parent_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphoreContextManager._repr_no_parent_"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._repr_no_parent_" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_repr_no_parent_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">unicode</span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._repr_no_parent_" title="Link to this definition"></a></dt>
 <dd><p>Returns a string representation of the context manager without the parent.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1773,8 +1692,14 @@ about the semaphore’s state when it is being waited on.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._wake_up_next">
+<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">void</span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._wake_up_next" title="Link to this definition"></a></dt>
+<dd><p>Wake up the first waiter that isn’t done.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphoreContextManager.acquire"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.acquire" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore for this context manager.</p>
 <p>If the internal counter is larger than zero on entry,
 decrement it by one and return True immediately. If it is
@@ -1787,11 +1712,6 @@ True.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">context_manager</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1823,7 +1743,7 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.release">
-<span class="sig-name descname"><span class="pre">release</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_AbstractPrioritySemaphoreContextManager.release"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.release" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">release</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">void</span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.release" title="Link to this definition"></a></dt>
 <dd><p>Releases the semaphore for this context manager.</p>
 <p>This method overrides <code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.release()</span></code> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
@@ -1831,16 +1751,11 @@ async def limited():</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">context_manager</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._loop">
-<span class="sig-name descname"><span class="pre">_loop</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AbstractEventLoop</span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._loop" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_loop</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._loop" title="Link to this definition"></a></dt>
 <dd><p>asyncio.AbstractEventLoop</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -1848,23 +1763,6 @@ async def limited():</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._parent">
-<span class="sig-name descname"><span class="pre">_parent</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._parent" title="Link to this definition"></a></dt>
-<dd><p>The parent semaphore.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._priority">
-<span class="sig-name descname"><span class="pre">_priority</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._priority" title="Link to this definition"></a></dt>
-<dd><p>The priority associated with this context manager.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._priority_name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_priority_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._priority_name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._value">
@@ -1879,8 +1777,14 @@ async def limited():</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._waiters">
-<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Deque" title="(in Python v3.13)"><span class="pre">Deque</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._waiters" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._waiters" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._waiters</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.debug_logs_enabled">
@@ -1952,25 +1856,35 @@ async def limited():</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.loop">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loop</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AbstractEventLoop</span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.loop" title="Link to this definition"></a></dt>
-<dd><p>Gets the event loop associated with this context manager.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.waiters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Deque" title="(in Python v3.13)"><span class="pre">Deque</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.waiters" title="Link to this definition"></a></dt>
-<dd><p>Gets the deque of waiters for this context manager.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager.name" title="Link to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore.name</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">_PrioritySemaphoreContextManager</span></span><a class="reference internal" href="../_modules/a_sync/primitives/locks/prio_semaphore.html#_PrioritySemaphoreContextManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Decimal</span></code></a>]</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">_PrioritySemaphoreContextManager</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></code></a></p>
 <p>Context manager for numeric priority semaphores.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._AbstractPrioritySemaphoreContextManager__acquire">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_AbstractPrioritySemaphoreContextManager__acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._AbstractPrioritySemaphoreContextManager__acquire" title="Link to this definition"></a></dt>
+<dd><p>_AbstractPrioritySemaphoreContextManager.__acquire(self) -&gt; Literal[True]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.__call__" title="Link to this definition"></a></dt>
@@ -1987,18 +1901,15 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the context manager for a specific priority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> (<a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><em>_AbstractPrioritySemaphore</em></a>) – The parent semaphore.</p></li>
-<li><p><strong>priority</strong> (<em>PT</em>) – The priority associated with this context manager.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> | </em><em>None</em>) – An optional name for the context manager, used for debugging.</p></li>
+<li><p><strong>parent</strong> – The parent semaphore.</p></li>
+<li><p><strong>priority</strong> – The priority associated with this context manager.</p></li>
+<li><p><strong>name</strong> – An optional name for the context manager, used for debugging.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2065,13 +1976,8 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._repr_no_parent_">
-<span class="sig-name descname"><span class="pre">_repr_no_parent_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._repr_no_parent_" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_repr_no_parent_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">unicode</span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._repr_no_parent_" title="Link to this definition"></a></dt>
 <dd><p>Returns a string representation of the context manager without the parent.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2134,8 +2040,14 @@ about the semaphore’s state when it is being waited on.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._wake_up_next">
+<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">void</span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._wake_up_next" title="Link to this definition"></a></dt>
+<dd><p>Wake up the first waiter that isn’t done.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.acquire" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore for this context manager.</p>
 <p>If the internal counter is larger than zero on entry,
 decrement it by one and return True immediately. If it is
@@ -2148,11 +2060,6 @@ True.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">context_manager</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2184,7 +2091,7 @@ async def limited():</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.release">
-<span class="sig-name descname"><span class="pre">release</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.release" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">release</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">void</span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.release" title="Link to this definition"></a></dt>
 <dd><p>Releases the semaphore for this context manager.</p>
 <p>This method overrides <code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.release()</span></code> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
@@ -2192,16 +2099,11 @@ async def limited():</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">context_manager</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._loop">
-<span class="sig-name descname"><span class="pre">_loop</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AbstractEventLoop</span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._loop" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_loop</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._loop" title="Link to this definition"></a></dt>
 <dd><p>asyncio.AbstractEventLoop</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -2209,23 +2111,6 @@ async def limited():</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._parent">
-<span class="sig-name descname"><span class="pre">_parent</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._parent" title="Link to this definition"></a></dt>
-<dd><p>The parent semaphore.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._priority">
-<span class="sig-name descname"><span class="pre">_priority</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._priority" title="Link to this definition"></a></dt>
-<dd><p>The priority associated with this context manager.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._priority_name">
-<span class="sig-name descname"><span class="pre">_priority_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'priority'</span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._priority_name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._value">
@@ -2240,8 +2125,14 @@ async def limited():</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._waiters">
-<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Deque" title="(in Python v3.13)"><span class="pre">Deque</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._waiters" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._waiters" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._waiters</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.debug_logs_enabled">
@@ -2313,16 +2204,15 @@ async def limited():</p>
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.loop">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">loop</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">AbstractEventLoop</span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.loop" title="Link to this definition"></a></dt>
-<dd><p>Gets the event loop associated with this context manager.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.waiters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Deque" title="(in Python v3.13)"><span class="pre">Deque</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Future</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.waiters" title="Link to this definition"></a></dt>
-<dd><p>Gets the deque of waiters for this context manager.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager.name" title="Link to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore.name</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -2488,6 +2378,12 @@ about the semaphore’s state when it is being waited on.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.DummySemaphore._wake_up_next">
+<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">void</span></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore._wake_up_next" title="Link to this definition"></a></dt>
+<dd><p>Wake up the first waiter that isn’t done.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.DummySemaphore.acquire">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquire the dummy semaphore, which is a no-op.</p>
@@ -2564,6 +2460,17 @@ async def limited():</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.DummySemaphore._waiters">
+<span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore._waiters" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._waiters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.DummySemaphore.debug_logs_enabled">
 <span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>bool</p>
@@ -2633,19 +2540,30 @@ async def limited():</p>
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.DummySemaphore.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore.name" title="Link to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore.name</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.Semaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.semaphore.</span></span><span class="sig-name descname"><span class="pre">Semaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="a_sync.primitives.html#a_sync.primitives._debug._DebugDaemonMixin" title="a_sync.primitives._debug._DebugDaemonMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a></p>
-<p>Semaphore(int value: int = 1, name=None, loop=None, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs) -&gt; None</p>
+<p>Semaphore(int value: int = 1, name=None, loop=None, <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs) -&gt; None</p>
 <p>A semaphore with additional debugging capabilities inherited from <code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code>.</p>
 <p>This semaphore includes debug logging capabilities that are activated when the semaphore has waiters.
 It allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.</p>
 <p class="rubric">Example</p>
 <p>You can write this pattern:</p>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a>`
+<p><a href="#id7"><span class="problematic" id="id8">``</span></a>`
 semaphore = Semaphore(5)</p>
 <dl class="simple">
 <dt>async def limited():</dt><dd><dl class="simple">
@@ -2654,16 +2572,16 @@ semaphore = Semaphore(5)</p>
 </dl>
 </dd>
 </dl>
-<p><a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a></p>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
 <p>like this:</p>
-<p><a href="#id11"><span class="problematic" id="id12">``</span></a>`
+<p><a href="#id13"><span class="problematic" id="id14">``</span></a>`
 semaphore = Semaphore(5)</p>
 <p>&#64;semaphore
 async def limited():</p>
 <blockquote>
 <div><p>return 1</p>
 </div></blockquote>
-<p><a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+<p><a href="#id15"><span class="problematic" id="id16">``</span></a><a href="#id17"><span class="problematic" id="id18">`</span></a></p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code> for more details on debugging capabilities.</p>
@@ -2811,6 +2729,12 @@ about the semaphore’s state when it is being waited on.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.Semaphore._wake_up_next">
+<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">void</span></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore._wake_up_next" title="Link to this definition"></a></dt>
+<dd><p>Wake up the first waiter that isn’t done.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.Semaphore.acquire">
 <span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.</p>
@@ -2883,6 +2807,17 @@ become larger than zero again, wake up that coroutine.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.Semaphore._waiters">
+<span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore._waiters" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._waiters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.Semaphore.debug_logs_enabled">
 <span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>bool</p>
@@ -2948,6 +2883,17 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_LoggerMixin.logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.Semaphore.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore.name" title="Link to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore.name</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3119,6 +3065,12 @@ about the semaphore’s state when it is being waited on.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._wake_up_next">
+<span class="sig-name descname"><span class="pre">_wake_up_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">void</span></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._wake_up_next" title="Link to this definition"></a></dt>
+<dd><p>Wake up the first waiter that isn’t done.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.acquire">
 <span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.</p>
@@ -3191,6 +3143,17 @@ become larger than zero again, wake up that coroutine.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._waiters">
+<span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._waiters" title="Link to this definition"></a></dt>
+<dd><p>int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore._waiters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.debug_logs_enabled">
 <span class="sig-name descname"><span class="pre">debug_logs_enabled</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.debug_logs_enabled" title="Link to this definition"></a></dt>
 <dd><p>bool</p>
@@ -3256,6 +3219,17 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_LoggerMixin.logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore.name" title="Link to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Semaphore.name</p>
 </dd>
 </dl>
 </dd></dl>
