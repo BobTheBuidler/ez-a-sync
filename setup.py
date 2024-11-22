@@ -22,8 +22,9 @@ setup(
     setup_requires=["setuptools_scm", "cython"],
     python_requires=">=3.8,<3.13",
     package_data={
-        "a_sync": ["py.typed"],
+        "a_sync": ["py.typed", "*.pxd", "**/*.pxd"],
     },
+    include_package_data=True,
     ext_modules=cythonize(
         "a_sync/**/*.pyx",
         compiler_directives={
