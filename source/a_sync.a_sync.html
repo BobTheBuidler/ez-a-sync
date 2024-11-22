@@ -1753,13 +1753,13 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_validate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_validate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bint</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes an ASyncFunction instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to wrap.</p></li>
-<li><p><strong>_skip_validate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – For internal use only. Skips validation of the wrapped function when its already been validated once before.</p></li>
+<li><p><strong>fn</strong> (<em>AnyFn</em><em>[</em><em>P</em><em>, </em><em>T</em><em>]</em>) – The function to wrap.</p></li>
+<li><p><strong>_skip_validate</strong> (<em>bint</em>) – For internal use only. Skips validation of the wrapped function when its already been validated once before.</p></li>
 <li><p><strong>**modifiers</strong> (<em>Unpack</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a><em>]</em>) – Keyword arguments for function modifiers.</p></li>
 </ul>
 </dd>
@@ -1801,22 +1801,22 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction.all">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.all" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bint</span></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.all" title="Link to this definition"></a></dt>
 <dd><p>Checks if all results of the function applied to the iterables are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if all results are truthy, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p>bint</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1829,22 +1829,22 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction.any">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.any" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bint</span></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.any" title="Link to this definition"></a></dt>
 <dd><p>Checks if any result of the function applied to the iterables is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if any result is truthy, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p>bint</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1969,7 +1969,7 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction._async_def">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction._async_def" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction._async_def" title="Link to this definition"></a></dt>
 <dd><p>Checks if the wrapped function is an asynchronous function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2062,7 +2062,7 @@ If the wrapped function is a synchronous function, this method applies sync modi
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction._sync_default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction._sync_default" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction._sync_default" title="Link to this definition"></a></dt>
 <dd><p>Determines the default execution mode (sync or async) for the function.</p>
 <p>If the user did not specify a default, this method defers to the function’s
 definition (sync vs async def).</p>
@@ -2198,13 +2198,13 @@ default behavior.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_validate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_validate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bint</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes an ASyncFunction instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to wrap.</p></li>
-<li><p><strong>_skip_validate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – For internal use only. Skips validation of the wrapped function when its already been validated once before.</p></li>
+<li><p><strong>fn</strong> (<em>AnyFn</em><em>[</em><em>P</em><em>, </em><em>T</em><em>]</em>) – The function to wrap.</p></li>
+<li><p><strong>_skip_validate</strong> (<em>bint</em>) – For internal use only. Skips validation of the wrapped function when its already been validated once before.</p></li>
 <li><p><strong>**modifiers</strong> (<em>Unpack</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a><em>]</em>) – Keyword arguments for function modifiers.</p></li>
 </ul>
 </dd>
@@ -2246,22 +2246,22 @@ default behavior.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault.all">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.all" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bint</span></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.all" title="Link to this definition"></a></dt>
 <dd><p>Checks if all results of the function applied to the iterables are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if all results are truthy, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p>bint</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -2274,22 +2274,22 @@ default behavior.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault.any">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.any" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bint</span></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.any" title="Link to this definition"></a></dt>
 <dd><p>Checks if any result of the function applied to the iterables is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if any result is truthy, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p>bint</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -2414,7 +2414,7 @@ default behavior.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault._async_def">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault._async_def" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault._async_def" title="Link to this definition"></a></dt>
 <dd><p>Checks if the wrapped function is an asynchronous function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2507,7 +2507,7 @@ If the wrapped function is a synchronous function, this method applies sync modi
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault._sync_default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault._sync_default" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault._sync_default" title="Link to this definition"></a></dt>
 <dd><p>Determines the default execution mode (sync or async) for the function.</p>
 <p>If the user did not specify a default, this method defers to the function’s
 definition (sync vs async def).</p>
@@ -2643,13 +2643,13 @@ default behavior.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_validate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_validate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bint</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes an ASyncFunction instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to wrap.</p></li>
-<li><p><strong>_skip_validate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – For internal use only. Skips validation of the wrapped function when its already been validated once before.</p></li>
+<li><p><strong>fn</strong> (<em>AnyFn</em><em>[</em><em>P</em><em>, </em><em>T</em><em>]</em>) – The function to wrap.</p></li>
+<li><p><strong>_skip_validate</strong> (<em>bint</em>) – For internal use only. Skips validation of the wrapped function when its already been validated once before.</p></li>
 <li><p><strong>**modifiers</strong> (<em>Unpack</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a><em>]</em>) – Keyword arguments for function modifiers.</p></li>
 </ul>
 </dd>
@@ -2691,22 +2691,22 @@ default behavior.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault.all">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.all" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bint</span></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.all" title="Link to this definition"></a></dt>
 <dd><p>Checks if all results of the function applied to the iterables are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if all results are truthy, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p>bint</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -2719,22 +2719,22 @@ default behavior.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault.any">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.any" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bint</span></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.any" title="Link to this definition"></a></dt>
 <dd><p>Checks if any result of the function applied to the iterables is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if any result is truthy, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p>bint</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -2859,7 +2859,7 @@ default behavior.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault._async_def">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault._async_def" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault._async_def" title="Link to this definition"></a></dt>
 <dd><p>Checks if the wrapped function is an asynchronous function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -2952,7 +2952,7 @@ If the wrapped function is a synchronous function, this method applies sync modi
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault._sync_default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault._sync_default" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault._sync_default" title="Link to this definition"></a></dt>
 <dd><p>Determines the default execution mode (sync or async) for the function.</p>
 <p>If the user did not specify a default, this method defers to the function’s
 definition (sync vs async def).</p>
@@ -3449,7 +3449,7 @@ the provided flags and the method’s configuration.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod._async_def">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._async_def" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._async_def" title="Link to this definition"></a></dt>
 <dd><p>Checks if the wrapped function is an asynchronous function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -3552,7 +3552,7 @@ If the wrapped function is a synchronous function, this method applies sync modi
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod._sync_default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._sync_default" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._sync_default" title="Link to this definition"></a></dt>
 <dd><p>Determines the default execution mode (sync or async) for the function.</p>
 <p>If the user did not specify a default, this method defers to the function’s
 definition (sync vs async def).</p>
@@ -3895,7 +3895,7 @@ the provided flags and the method’s configuration.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._async_def">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._async_def" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._async_def" title="Link to this definition"></a></dt>
 <dd><p>Checks if the wrapped function is an asynchronous function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -3998,7 +3998,7 @@ If the wrapped function is a synchronous function, this method applies sync modi
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._sync_default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._sync_default" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._sync_default" title="Link to this definition"></a></dt>
 <dd><p>Determines the default execution mode (sync or async) for the function.</p>
 <p>If the user did not specify a default, this method defers to the function’s
 definition (sync vs async def).</p>
@@ -4341,7 +4341,7 @@ the provided flags and the method’s configuration.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault._async_def">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._async_def" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._async_def" title="Link to this definition"></a></dt>
 <dd><p>Checks if the wrapped function is an asynchronous function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -4444,7 +4444,7 @@ If the wrapped function is a synchronous function, this method applies sync modi
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault._sync_default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._sync_default" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._sync_default" title="Link to this definition"></a></dt>
 <dd><p>Determines the default execution mode (sync or async) for the function.</p>
 <p>If the user did not specify a default, this method defers to the function’s
 definition (sync vs async def).</p>
@@ -9027,7 +9027,7 @@ the provided flags and the method’s configuration.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod._async_def">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._async_def" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._async_def" title="Link to this definition"></a></dt>
 <dd><p>Checks if the wrapped function is an asynchronous function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -9130,7 +9130,7 @@ If the wrapped function is a synchronous function, this method applies sync modi
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod._sync_default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._sync_default" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._sync_default" title="Link to this definition"></a></dt>
 <dd><p>Determines the default execution mode (sync or async) for the function.</p>
 <p>If the user did not specify a default, this method defers to the function’s
 definition (sync vs async def).</p>
@@ -11799,13 +11799,13 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_validate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyFn</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_validate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bint</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes an ASyncFunction instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to wrap.</p></li>
-<li><p><strong>_skip_validate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – For internal use only. Skips validation of the wrapped function when its already been validated once before.</p></li>
+<li><p><strong>fn</strong> (<em>AnyFn</em><em>[</em><em>P</em><em>, </em><em>T</em><em>]</em>) – The function to wrap.</p></li>
+<li><p><strong>_skip_validate</strong> (<em>bint</em>) – For internal use only. Skips validation of the wrapped function when its already been validated once before.</p></li>
 <li><p><strong>**modifiers</strong> (<em>Unpack</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a><em>]</em>) – Keyword arguments for function modifiers.</p></li>
 </ul>
 </dd>
@@ -11847,22 +11847,22 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction.all">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.all" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bint</span></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.all" title="Link to this definition"></a></dt>
 <dd><p>Checks if all results of the function applied to the iterables are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if all results are truthy, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p>bint</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -11875,22 +11875,22 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction.any">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.any" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bint</span></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.any" title="Link to this definition"></a></dt>
 <dd><p>Checks if any result of the function applied to the iterables is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if any result is truthy, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+<dd class="field-odd"><p>bint</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -12015,7 +12015,7 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction._async_def">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.ASyncFunction._async_def" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.ASyncFunction._async_def" title="Link to this definition"></a></dt>
 <dd><p>Checks if the wrapped function is an asynchronous function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -12108,7 +12108,7 @@ If the wrapped function is a synchronous function, this method applies sync modi
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction._sync_default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.ASyncFunction._sync_default" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.ASyncFunction._sync_default" title="Link to this definition"></a></dt>
 <dd><p>Determines the default execution mode (sync or async) for the function.</p>
 <p>If the user did not specify a default, this method defers to the function’s
 definition (sync vs async def).</p>
@@ -12907,7 +12907,7 @@ the provided flags and the method’s configuration.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod._async_def">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._async_def" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_async_def</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._async_def" title="Link to this definition"></a></dt>
 <dd><p>Checks if the wrapped function is an asynchronous function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -13010,7 +13010,7 @@ If the wrapped function is a synchronous function, this method applies sync modi
 
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod._sync_default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._sync_default" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_sync_default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bint</span></em><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._sync_default" title="Link to this definition"></a></dt>
 <dd><p>Determines the default execution mode (sync or async) for the function.</p>
 <p>If the user did not specify a default, this method defers to the function’s
 definition (sync vs async def).</p>
