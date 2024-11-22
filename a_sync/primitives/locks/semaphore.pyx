@@ -61,12 +61,18 @@ cdef class Semaphore(_DebugDaemonMixin):
             value: The initial value for the semaphore.
             name (optional): An optional name used only to provide useful context in debug logs.
         """
-        if value is None:
-            raise ValueError(value)
         super().__init__(loop=loop)
         if value < 0:
             raise ValueError("Semaphore initial value must be >= 0")
-        self.__value = value
+
+        try:
+            self.__value = value
+        except OverflowError as e:
+            raise OverflowError(
+                {"error": str(e), "value": value, "max value": 18446744073709551615},
+                "If you need a Semaphore with a larger value, you should just use asyncio.Semaphore",
+            ) from e.__cause__
+            
         self._name = name or getattr(self, "__origin__", "")
 
     def __call__(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
@@ -220,7 +226,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         return self.__value
     
     @_value.setter
-    def _value(self, int value):
+    def _value(self, unsigned long long value):
         # required for subclass compatability
         self.__value = value
 
