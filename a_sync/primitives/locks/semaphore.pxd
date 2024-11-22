@@ -15,3 +15,10 @@ cdef class Semaphore(_DebugDaemonMixin):
     cpdef void _wake_up_next(self)
     cdef void _c_wake_up_next(self)
             
+cdef class DummySemaphore(Semaphore):
+    pass
+
+cdef class ThreadsafeSemaphore(Semaphore):
+    cdef object semaphores, dummy
+    cdef bint use_dummy
+    cdef Semaphore c_get_semaphore(self)
