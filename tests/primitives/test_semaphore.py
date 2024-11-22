@@ -307,6 +307,7 @@ async def test_exception_in_release():
 
     assert semaphore._value == 1
 
+
 """
 @pytest.mark.asyncio_cooperative
 async def test_external_interruptions():
