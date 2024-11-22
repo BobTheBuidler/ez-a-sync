@@ -5,11 +5,11 @@ These primitives manage synchronization of tasks that must wait for an internal 
 """
 
 import asyncio
-from collections import defaultdict
+import heapq
 from libc.string cimport strcpy
 from libc.stdlib cimport malloc, free
 from libc.time cimport time
-from typing import DefaultDict, Iterable
+from typing import Iterable
 
 from a_sync.primitives._debug cimport _DebugDaemonMixin
 from a_sync.primitives.locks.event cimport CythonEvent as Event
@@ -34,6 +34,8 @@ cdef class CounterLock(_DebugDaemonMixin):
     def __cinit__(self):
         self._events = {}
         """A defaultdict that maps each awaited value to an :class:`Event` that manages the waiters for that value."""
+
+        self._heap = []
 
     def __init__(self, start_value: int = 0, str name = ""):
         """
@@ -111,6 +113,7 @@ cdef class CounterLock(_DebugDaemonMixin):
             if event is None:
                 event = Event()
                 self._events[value] = event
+                heapq.heappush(self._heap, value)
             self._c_ensure_debug_daemon((),{})
             await (<Event>event).c_wait()
         return True
@@ -174,15 +177,17 @@ cdef class CounterLock(_DebugDaemonMixin):
         self.c_set(value)
 
     cdef void c_set(self, long long value):
+        cdef long long key
         if value > self._value:
             self._value = value
-            ready = [
-                self._events.pop(key)
-                for key in list(self._events.keys())
-                if key <= self._value
-            ]
-            for event in ready:
-                event.set()
+            while self._heap:
+                key = heapq.heappop(self._heap)
+                if key <= self._value:
+                    event = self._events.pop(key)
+                    event.set()
+                else:
+                    heapq.heappush(self._heap, key)
+                    return
         elif value < self._value:
             raise ValueError("You cannot decrease the value.")
 
