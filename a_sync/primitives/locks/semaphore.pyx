@@ -5,15 +5,12 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 
 import asyncio
 import functools
-import logging
 from collections import defaultdict, deque
 from threading import Thread, current_thread
 from typing import Container
 
 from a_sync._typing import *
 from a_sync.primitives._debug cimport _DebugDaemonMixin
-
-logger = logging.getLogger(__name__)
 
 
 async def __acquire() -> Literal[True]:
@@ -95,7 +92,6 @@ cdef class Semaphore(_DebugDaemonMixin):
 
     async def __aenter__(self):
         coro = self.c_acquire()
-        print(coro)
         await coro
         # We have no use for the "as ..."  clause in the with
         # statement for locks.
@@ -110,12 +106,9 @@ cdef class Semaphore(_DebugDaemonMixin):
     
     cdef bint c_locked(self):
         """Returns True if semaphore cannot be acquired immediately."""
-        print('in locked')
         if self.__value == 0:
-            print('return true')
             return True
         waiters = self.__waiters 
-        print('waiters %s'.format(waiters))
         if any(not w.cancelled() for w in (waiters or ())):
             return True
 
@@ -172,13 +165,10 @@ cdef class Semaphore(_DebugDaemonMixin):
         Returns:
             True when the semaphore is successfully acquired.
         """
-        print(self.__value)
         if self.__value <= 0:
             self._ensure_debug_daemon()
 
-        print('daemon ensured')
         if not self.c_locked():
-            print('not locked')
             self.__value -= 1
             return __acquire()
 

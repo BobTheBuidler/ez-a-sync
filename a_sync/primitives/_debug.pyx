@@ -153,19 +153,13 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         See Also:
             :meth:`_start_debug_daemon` for starting the daemon.
         """
-        print('in debug daemon')
         cdef object daemon = self._daemon
-        print("daemon: ".format(daemon))
         if daemon is None:
             if self.check_debug_logs_enabled():
-                print('enabled')
                 self._daemon = self._start_debug_daemon(*args, **kwargs)
                 self._daemon.add_done_callback(self._stop_debug_daemon)
             else:
-                print('not enabled')
                 self._daemon = self._c_get_loop().create_future()
-                print("daemon: ".format(self._daemon))
-        print('returning')
         return self._daemon
 
     def _stop_debug_daemon(self, t: Optional[asyncio.Task] = None) -> None:
