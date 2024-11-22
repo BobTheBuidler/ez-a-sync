@@ -2,6 +2,7 @@ import pytest
 import asyncio
 from a_sync.primitives import Event
 
+
 @pytest.mark.asyncio_cooperative
 async def test_event_basic_functionality():
     event = Event()
@@ -11,19 +12,21 @@ async def test_event_basic_functionality():
     event.clear()
     assert not event.is_set()
 
+
 @pytest.mark.asyncio_cooperative
 async def test_event_wait():
     event = Event()
 
     async def waiter():
         await event.wait()
-        return 'done'
+        return "done"
 
     waiter_task = asyncio.create_task(waiter())
     await asyncio.sleep(0.1)  # Ensure the waiter is waiting
     event.set()
     result = await waiter_task
-    assert result == 'done'
+    assert result == "done"
+
 
 @pytest.mark.asyncio_cooperative
 async def test_event_multiple_waiters():
@@ -40,6 +43,7 @@ async def test_event_multiple_waiters():
     await asyncio.gather(*tasks)
     assert results == [0, 1, 2, 3, 4]
 
+
 @pytest.mark.asyncio_cooperative
 async def test_event_reset():
     event = Event()
@@ -50,13 +54,14 @@ async def test_event_reset():
 
     async def waiter():
         await event.wait()
-        return 'done'
+        return "done"
 
     waiter_task = asyncio.create_task(waiter())
     await asyncio.sleep(0.1)  # Ensure the waiter is waiting
     event.set()
     result = await waiter_task
-    assert result == 'done'
+    assert result == "done"
+
 
 @pytest.mark.asyncio_cooperative
 async def test_event_timeout():
@@ -66,10 +71,11 @@ async def test_event_timeout():
         try:
             await asyncio.wait_for(event.wait(), timeout=0.1)
         except asyncio.TimeoutError:
-            return 'timeout'
+            return "timeout"
 
     result = await waiter()
-    assert result == 'timeout'
+    assert result == "timeout"
+
 
 @pytest.mark.asyncio_cooperative
 async def test_event_cancellation():
@@ -79,13 +85,14 @@ async def test_event_cancellation():
         try:
             await event.wait()
         except asyncio.CancelledError:
-            return 'cancelled'
+            return "cancelled"
 
     waiter_task = asyncio.create_task(waiter())
     await asyncio.sleep(0.1)  # Ensure the waiter is waiting
     waiter_task.cancel()
     result = await waiter_task
-    assert result == 'cancelled'
+    assert result == "cancelled"
+
 
 @pytest.mark.asyncio_cooperative
 async def test_event_set_already_set():
@@ -95,11 +102,13 @@ async def test_event_set_already_set():
     event.set()  # Set again, should have no adverse effect
     assert event.is_set()
 
+
 @pytest.mark.asyncio_cooperative
 async def test_event_clear_already_cleared():
     event = Event()
     event.clear()  # Clear when already cleared, should have no adverse effect
     assert not event.is_set()
+
 
 @pytest.mark.asyncio_cooperative
 async def test_event_wait_after_set():
@@ -112,6 +121,7 @@ async def test_event_wait_after_set():
     result = await waiter()
     assert result is True
 
+
 @pytest.mark.asyncio_cooperative
 async def test_event_wait_after_clear():
     event = Event()
@@ -122,10 +132,11 @@ async def test_event_wait_after_clear():
         try:
             await asyncio.wait_for(event.wait(), timeout=0.1)
         except asyncio.TimeoutError:
-            return 'timeout'
+            return "timeout"
 
     result = await waiter()
-    assert result == 'timeout'
+    assert result == "timeout"
+
 
 @pytest.mark.asyncio_cooperative
 async def test_simultaneous_set_and_wait():
@@ -141,12 +152,14 @@ async def test_simultaneous_set_and_wait():
     await asyncio.gather(*tasks)
     assert results == [0, 1, 2, 3, 4]
 
+
 @pytest.mark.asyncio_cooperative
 async def test_reentrant_set():
     event = Event()
     event.set()
     event.set()  # Reentrant set
     assert event.is_set()
+
 
 @pytest.mark.asyncio_cooperative
 async def test_large_number_of_waiters():
@@ -163,12 +176,14 @@ async def test_large_number_of_waiters():
     await asyncio.gather(*tasks)
     assert results == list(range(num_waiters))
 
+
 @pytest.mark.asyncio_cooperative
 async def test_event_with_no_waiters():
     event = Event()
     event.set()
     event.clear()
     assert not event.is_set()
+
 
 @pytest.mark.asyncio_cooperative
 async def test_immediate_set_and_wait():
@@ -180,6 +195,7 @@ async def test_immediate_set_and_wait():
 
     result = await waiter()
     assert result is True
+
 
 @pytest.mark.asyncio_cooperative
 async def test_event_with_exception_handling():
@@ -196,6 +212,7 @@ async def test_event_with_exception_handling():
     result = await waiter()
     assert result == "Intentional error"
 
+
 @pytest.mark.asyncio_cooperative
 async def test_event_with_loop_reentrancy():
     event = Event()
@@ -208,19 +225,21 @@ async def test_event_with_loop_reentrancy():
 
     await loop_task()
 
+
 @pytest.mark.asyncio_cooperative
 async def test_event_with_delayed_set():
     event = Event()
 
     async def waiter():
         await event.wait()
-        return 'done'
+        return "done"
 
     waiter_task = asyncio.create_task(waiter())
     await asyncio.sleep(0.5)  # Delay before setting the event
     event.set()
     result = await waiter_task
-    assert result == 'done'
+    assert result == "done"
+
 
 @pytest.mark.asyncio_cooperative
 async def test_event_with_multiple_clears():
