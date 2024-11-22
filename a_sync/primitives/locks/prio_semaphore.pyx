@@ -50,8 +50,15 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         # NOTE: This should (hopefully) be temporary
         self._potential_lost_waiters: List["asyncio.Future[None]"] = []
         """A list of futures representing waiters that might have been lost."""
-
-    def __init__(self, value: int = 1, *, name: Optional[str] = None) -> None:
+    
+    def __init__(
+        self, 
+        context_manager_class: Type[_AbstractPrioritySemaphoreContextManager],
+        top_priority: object,
+        value: int = 1, 
+        *, 
+        name: Optional[str] = None, 
+    ) -> None:
         """Initializes the priority semaphore.
 
         Args:
@@ -61,10 +68,14 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         Examples:
             >>> semaphore = _AbstractPrioritySemaphore(5, name="test_semaphore")
         """
+        # context manager class is some temporary hacky shit, just ignore this
         super().__init__(value, name=name)
 
         self._capacity = value
         """The initial capacity of the semaphore."""
+
+        self._top_priority = top_priority
+        self._context_manager_class = context_manager_class
 
     def __repr__(self) -> str:
         """Returns a string representation of the semaphore."""
@@ -431,10 +442,7 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):  # type: ignore [type-
         :class:`_AbstractPrioritySemaphore` for the base class implementation.
     """
 
-    def __cinit__(self):
-        self._top_priority = -1
-        self._context_manager_class = _PrioritySemaphoreContextManager
-        
+    def __cinit__(self):        
         # _AbstractPrioritySemaphore.__cinit__(self)
 
         self._context_managers = {}
@@ -446,6 +454,15 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):  # type: ignore [type-
         # NOTE: This should (hopefully) be temporary
         self._potential_lost_waiters: List["asyncio.Future[None]"] = []
         """A list of futures representing waiters that might have been lost."""
+    
+    def __init__(
+        self, 
+        value: int = 1, 
+        *, 
+        name: Optional[str] = None, 
+    ) -> None:
+        # context manager class is some temporary hacky shit, just ignore this
+        super().__init__(_PrioritySemaphoreContextManager, -1, value, name=name)
 
     def __getitem__(
         self, priority: Optional[PT]
