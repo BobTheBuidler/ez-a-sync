@@ -166,7 +166,7 @@ cdef class Semaphore(_DebugDaemonMixin):
             True when the semaphore is successfully acquired.
         """
         if self.__value <= 0:
-            self._ensure_debug_daemon()
+            self._c_ensure_debug_daemon((),{})
 
         if not self.c_locked():
             self.__value -= 1
@@ -189,11 +189,11 @@ cdef class Semaphore(_DebugDaemonMixin):
         except asyncio.exceptions.CancelledError:
             if not fut.cancelled():
                 self.__value += 1
-                self._wake_up_next()
+                self._c_wake_up_next()
             raise
 
         if self.__value > 0:
-            self._wake_up_next()
+            self._c_wake_up_next()
 
         return True
 
@@ -204,11 +204,11 @@ cdef class Semaphore(_DebugDaemonMixin):
         become larger than zero again, wake up that coroutine.
         """
         self.__value += 1
-        self._wake_up_next()
+        self._c_wake_up_next()
     
     cdef void c_release(self):
         self.__value += 1
-        self._wake_up_next()
+        self._c_wake_up_next()
 
     @property
     def name(self) -> str:
@@ -349,9 +349,6 @@ cdef class ThreadsafeSemaphore(Semaphore):
     See Also:
         :class:`Semaphore` for the base class implementation.
     """
-
-    cdef object semaphores, dummy
-    cdef bint use_dummy
 
     def __init__(self, value: Optional[int], name: Optional[str] = None) -> None:
         """

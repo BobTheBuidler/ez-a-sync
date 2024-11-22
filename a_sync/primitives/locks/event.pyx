@@ -145,7 +145,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
         if self._value:
             return _return_true()
 
-        self._ensure_debug_daemon()
+        self._c_ensure_debug_daemon((),{})
 
         cdef object fut = self._c_get_loop().create_future()
         self._waiters.append(fut)

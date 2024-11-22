@@ -153,6 +153,9 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         See Also:
             :meth:`_start_debug_daemon` for starting the daemon.
         """
+        return self._c_ensure_debug_daemon(args, kwargs)
+    
+    cdef object _c_ensure_debug_daemon(self, tuple[object] args, dict[str, object] kwargs):
         cdef object daemon = self._daemon
         if daemon is None:
             if self.check_debug_logs_enabled():

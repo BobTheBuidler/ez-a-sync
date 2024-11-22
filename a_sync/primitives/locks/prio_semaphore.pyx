@@ -40,31 +40,6 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         :class:`PrioritySemaphore` for an implementation using numeric priorities.
     """
 
-    name: Optional[str]
-    cdef dict[object, _AbstractPrioritySemaphoreContextManager] _context_managers
-    cdef Py_ssize_t _capacity
-    cdef list _potential_lost_waiters
-    cdef object _top_priority
-    cdef object _context_manager_class
-    cdef list[_AbstractPrioritySemaphoreContextManager] __waiters
-
-    #@property
-    #def _context_manager_class(
-    #    self,
-    #) -> Type["_AbstractPrioritySemaphoreContextManager[PT]"]:
-    #    raise NotImplementedError
-
-    #@property
-    #def _top_priority(self) -> PT:
-    #    """Defines the top priority for the semaphore.
-    #
-    #    Subclasses must implement this property to specify the default top priority.
-    #
-    #    Raises:
-    #        NotImplementedError: If not implemented in a subclass.
-    #    """
-    #    raise NotImplementedError
-
     def __cinit__(self) -> None:
         self._context_managers = {}
         """A dictionary mapping priorities to their context managers."""
@@ -277,12 +252,6 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
     the acquisition and release of the semaphore for waiters with that priority.
     """
 
-    _loop: asyncio.AbstractEventLoop
-    __waiters: Deque[asyncio.Future]  # type: ignore [assignment]
-    cdef _AbstractPrioritySemaphore _parent
-    cdef object _priority
-    cdef str _priority_name
-
     def __init__(
         self,
         parent: _AbstractPrioritySemaphore,
@@ -358,12 +327,12 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
             >>> await context_manager.acquire()
         """
         if self._parent._Semaphore__value <= 0:
-            self._ensure_debug_daemon()
+            self._c_ensure_debug_daemon((),{})
         return self.__acquire()
     
     cdef object c_acquire(self):
         if self._parent._Semaphore__value <= 0:
-            self._ensure_debug_daemon()
+            self._c_ensure_debug_daemon((),{})
         return self.__acquire()
     
     async def __acquire(self) -> Literal[True]:

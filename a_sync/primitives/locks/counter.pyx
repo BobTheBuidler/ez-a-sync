@@ -102,7 +102,7 @@ cdef class CounterLock(_DebugDaemonMixin):
             :meth:`CounterLock.set` to set the counter value.
         """
         if not self.is_ready(value):
-            self._ensure_debug_daemon()
+            self._c_ensure_debug_daemon((),{})
             await self._events[value].c_wait()
         return True
 
