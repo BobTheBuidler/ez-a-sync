@@ -2,7 +2,7 @@ from a_sync.primitives._debug cimport _DebugDaemonMixin
 
 cdef class Semaphore(_DebugDaemonMixin):
     cdef str _name
-    cdef int __value
+    cdef unsigned long long __value
     cdef object _waiters
     cdef set _decorated
     cdef dict __dict__
