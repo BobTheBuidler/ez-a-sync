@@ -3,6 +3,7 @@ This module provides a mixin class used to facilitate the creation of debugging 
 
 The mixin provides a framework for managing a debug daemon task, which can be used to emit rich debug logs from subclass instances whenever debug logging is enabled. Subclasses must implement the specific logging behavior.
 """
+
 import abc
 from a_sync.primitives._loggable import _LoggerMixin
 

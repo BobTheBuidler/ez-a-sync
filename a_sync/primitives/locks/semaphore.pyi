@@ -38,6 +38,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     See Also:
         :class:`_DebugDaemonMixin` for more details on debugging capabilities.
     """
+
     name: Incomplete
     def __init__(self, value: int, name: Incomplete | None = None, **kwargs) -> None:
         """
@@ -47,6 +48,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
             value: The initial value for the semaphore.
             name (optional): An optional name used only to provide useful context in debug logs.
         """
+
     def __call__(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
         """
         Decorator method to wrap coroutine functions with the semaphore.
@@ -60,6 +62,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
             async def limited():
                 return 1
         """
+
     def __len__(self) -> int: ...
     def decorate(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
         """
@@ -72,6 +75,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
             async def limited():
                 return 1
         """
+
     async def acquire(self) -> Literal[True]:
         """
         Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.
@@ -95,6 +99,7 @@ class DummySemaphore(asyncio.Semaphore):
             async with dummy_semaphore:
                 return 1
     """
+
     name: Incomplete
     def __init__(self, name: Optional[str] = None) -> None:
         """
@@ -103,12 +108,16 @@ class DummySemaphore(asyncio.Semaphore):
         Args:
             name (optional): An optional name for the dummy semaphore.
         """
+
     async def acquire(self) -> Literal[True]:
         """Acquire the dummy semaphore, which is a no-op."""
+
     def release(self) -> None:
         """No-op release method."""
+
     async def __aenter__(self):
         """No-op context manager entry."""
+
     async def __aexit__(self, *args) -> None:
         """No-op context manager exit."""
 
@@ -130,6 +139,7 @@ class ThreadsafeSemaphore(Semaphore):
     See Also:
         :class:`Semaphore` for the base class implementation.
     """
+
     semaphores: Incomplete
     dummy: Incomplete
     def __init__(self, value: Optional[int], name: Optional[str] = None) -> None:
@@ -140,6 +150,7 @@ class ThreadsafeSemaphore(Semaphore):
             value: The initial value for the semaphore, should be an integer.
             name (optional): An optional name for the semaphore.
         """
+
     def __len__(self) -> int: ...
     @functools.cached_property
     def use_dummy(self) -> bool:
@@ -149,6 +160,7 @@ class ThreadsafeSemaphore(Semaphore):
         Returns:
             True if the semaphore value is None, indicating the use of a dummy semaphore.
         """
+
     @property
     def semaphore(self) -> Semaphore:
         """
@@ -163,5 +175,6 @@ class ThreadsafeSemaphore(Semaphore):
                 async with semaphore.semaphore:
                     return 1
         """
+
     async def __aenter__(self) -> None: ...
     async def __aexit__(self, *args) -> None: ...

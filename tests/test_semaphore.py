@@ -25,7 +25,7 @@ async def test_semaphore(i: int):
     assert await instance.test_fn() == 1
     duration = time() - start
     # There is a 1 second sleep in this fn. If the semaphore is not working, all tests will complete in 1 second.
-    assert i < 3 or duration > i 
+    assert i < 3 or duration > i
 
 
 @increment
@@ -35,7 +35,7 @@ async def test_semaphore_property(i: int):
     assert await instance.test_property == 2
     duration = time() - start
     # There is a 1 second sleep in this fn. If the semaphore is not working, all tests will complete in 1 second.
-    assert i < 3 or duration > i 
+    assert i < 3 or duration > i
 
 
 @increment
