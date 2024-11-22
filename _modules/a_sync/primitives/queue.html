@@ -101,6 +101,7 @@
 
     <span class="k">class</span> <span class="nc">_Queue</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
         <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;_queue&quot;</span><span class="p">,</span>
             <span class="s2">&quot;_maxsize&quot;</span><span class="p">,</span>
             <span class="s2">&quot;_loop&quot;</span><span class="p">,</span>
             <span class="s2">&quot;_getters&quot;</span><span class="p">,</span>
@@ -114,7 +115,14 @@
 <div class="viewcode-block" id="_Queue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._Queue">[docs]</a>
     <span class="k">class</span> <span class="nc">_Queue</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
-        <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;_maxsize&quot;</span><span class="p">,</span> <span class="s2">&quot;_getters&quot;</span><span class="p">,</span> <span class="s2">&quot;_putters&quot;</span><span class="p">,</span> <span class="s2">&quot;_unfinished_tasks&quot;</span><span class="p">,</span> <span class="s2">&quot;_finished&quot;</span></div>
+        <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;_queue&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;_maxsize&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;_getters&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;_putters&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;_unfinished_tasks&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;_finished&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 
@@ -143,10 +151,17 @@
 <span class="sd">        [&#39;task2&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">def</span> <span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A Queue will always exist, even without items.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of items currently in the queue.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span>
+
 <div class="viewcode-block" id="Queue.get">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.Queue.get">[docs]</a>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Asynchronously retrieves and removes the next item from the queue.</span>
 
@@ -192,7 +207,7 @@
 <span class="sd">        Example:</span>
 <span class="sd">            &gt;&gt;&gt; await queue.put(item=&#39;task&#39;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_Queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span></div>
+        <span class="k">await</span> <span class="n">_Queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Queue.put_nowait">
