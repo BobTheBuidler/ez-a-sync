@@ -9,7 +9,7 @@ def test_prio_semaphore_init():
     assert with_name._value == 10 and with_name.name == "test"
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_prio_semaphore_use():
     semaphore = PrioritySemaphore(1)
     assert semaphore._value == 1

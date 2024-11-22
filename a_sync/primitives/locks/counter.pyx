@@ -80,17 +80,17 @@ cdef class CounterLock(_DebugDaemonMixin):
             >>> repr(counter)
             '<CounterLock name=example_counter value=0 waiters={}>'
         """
-        cdef dict[int, Py_ssize_t] waiters = {v: len(self._events[v]._waiters) for v in sorted(self._events)}
+        cdef dict[long long, Py_ssize_t] waiters = {v: len(self._events[v]._waiters) for v in sorted(self._events)}
         return "<CounterLock name={} value={} waiters={}>".format(self.__name.decode("utf-8"), self._value, waiters)
 
-    cpdef bint is_ready(self, int v):
+    cpdef bint is_ready(self, long long v):
         """A function that indicates whether the current counter value is greater than or equal to a given value."""
         return self._value >= v
     
-    cdef bint c_is_ready(self, int v):
+    cdef bint c_is_ready(self, long long v):
         return self._value >= v
 
-    async def wait_for(self, int value) -> bint:
+    async def wait_for(self, long long value) -> bint:
         """
         Waits until the counter reaches or exceeds the specified value.
 
@@ -115,7 +115,7 @@ cdef class CounterLock(_DebugDaemonMixin):
             await (<Event>event).c_wait()
         return True
 
-    cpdef void set(self, int value):
+    cpdef void set(self, long long value):
         """
         Sets the counter to the specified value.
 
@@ -151,7 +151,7 @@ cdef class CounterLock(_DebugDaemonMixin):
         return self._value
 
     @value.setter
-    def value(self, int value) -> None:
+    def value(self, long long value) -> None:
         """
         Sets the counter to a new value, waking up any waiters if the value increases beyond the value they are awaiting.
 
@@ -173,7 +173,7 @@ cdef class CounterLock(_DebugDaemonMixin):
         """
         self.c_set(value)
 
-    cdef void c_set(self, int value):
+    cdef void c_set(self, long long value):
         if value > self._value:
             self._value = value
             ready = [
