@@ -92,7 +92,7 @@ class ASyncGenericBase(ASyncABC):
         return flag
 
     @functools.cached_property
-    def __a_sync_flag_value__(self) -> bool:
+    def __a_sync_flag_value__(self) -> bint:
         # TODO: cythonize this cache
         """If you wish to be able to hotswap default modes, just duplicate this def as a non-cached property."""
         if c_logger.isEnabledFor(logging.DEBUG):
@@ -202,9 +202,8 @@ cdef str _get_a_sync_flag_name_from_signature(object cls):
 
 
 cdef str _parse_flag_name_from_list(object cls, object items):
-    cdef list[str] present_flags
     cdef str flag
-    present_flags = [flag for flag in VIABLE_FLAGS if flag in items]
+    cdef list[str] present_flags = [flag for flag in VIABLE_FLAGS if flag in items]
     if not present_flags:
         c_logger.debug("There are too many flags defined on %s", cls)
         raise exceptions.NoFlagsFound(cls, items.keys())
@@ -215,8 +214,7 @@ cdef str _parse_flag_name_from_list(object cls, object items):
         flag = present_flags[0]
         c_logger._log(logging.DEBUG, "found flag %s", flag)
         return flag
-    else:
-        return present_flags[0]
+    return present_flags[0]
 
 
 cdef bint _get_a_sync_flag_value_from_class_def(object cls, str flag):

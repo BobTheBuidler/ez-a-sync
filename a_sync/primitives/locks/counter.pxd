@@ -6,6 +6,7 @@ cdef class CounterLock(_DebugDaemonMixin):
     cdef char* __name
     cdef int _value
     cdef dict[int, Event] _events
-    cdef object is_ready
+    cpdef bint is_ready(self, int v)
+    cdef bint c_is_ready(self, int v)
     cpdef void set(self, int value)
     cdef void c_set(self, int value)

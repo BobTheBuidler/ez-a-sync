@@ -219,7 +219,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     def __init__(
         self,
         fn: AnyFn[P, T],
-        _skip_validate: bool = False,
+        _skip_validate: bint = False,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
         """
@@ -416,7 +416,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             concurrency: Optional[int] = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
-        ) -> bool:
+        ) -> bint:
             """
             Checks if any result of the function applied to the iterables is truthy.
 
@@ -445,7 +445,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             concurrency: Optional[int] = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
-        ) -> bool:
+        ) -> bint:
             """
             Checks if all results of the function applied to the iterables are truthy.
 
@@ -595,7 +595,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             concurrency: Optional[int] = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
-        ) -> bool:
+        ) -> bint:
             """
             Checks if any result of the function applied to the iterables is truthy.
 
@@ -624,7 +624,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             concurrency: Optional[int] = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
-        ) -> bool:
+        ) -> bint:
             """
             Checks if all results of the function applied to the iterables are truthy.
 
@@ -735,7 +735,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             ).sum(pop=True, sync=False)
 
     @functools.cached_property
-    def _sync_default(self) -> bool:
+    def _sync_default(self) -> bint:
         """
         Determines the default execution mode (sync or async) for the function.
 
@@ -755,7 +755,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         )
 
     @functools.cached_property
-    def _async_def(self) -> bool:
+    def _async_def(self) -> bint:
         """
         Checks if the wrapped function is an asynchronous function.
 
