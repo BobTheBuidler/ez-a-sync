@@ -13,19 +13,14 @@ def test_prio_semaphore_init():
 async def test_prio_semaphore_use():
     semaphore = PrioritySemaphore(1)
     assert semaphore._value == 1
-    # await semaphore.acquire()
-    # assert semaphore._value == 0
-    # semaphore.release()
+    await semaphore.acquire()
+    assert semaphore._value == 0
+    semaphore.release()
     assert semaphore._value == 1
-    print("entering")
 
     cm = semaphore[100]
-    # print(cm)
     async with cm:
-        print("entered")
         assert semaphore._value == 0
-        print("exiting")
-    print("exited")
     assert semaphore._value == 1
     async with semaphore:
         assert semaphore._value == 0
