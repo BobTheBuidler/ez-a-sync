@@ -78,7 +78,7 @@ class Queue(_Queue[T]):
     def __bool__(self) -> Literal[True]:
         """A Queue will always exist, even without items."""
         return True
-    
+
     def __len__(self) -> int:
         """Returns the number of items currently in the queue."""
         return len(self._queue)
