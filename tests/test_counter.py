@@ -114,9 +114,9 @@ async def test_reentrant_set():
     assert counter.value == 10
 
 
-def test_counterlock_negative_start_value():
-    with pytest.raises(ValueError):
-        CounterLock(start_value=-1)
+def test_counterlock_invalid_start_value():
+    with pytest.raises(TypeError):
+        CounterLock(None)
 
 
 @pytest.mark.asyncio_cooperative
