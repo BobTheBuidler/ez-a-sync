@@ -3,6 +3,7 @@ import pytest
 import asyncio
 from a_sync.asyncio.create_task import create_task
 
+
 @pytest.mark.asyncio_cooperative
 async def test_create_task_with_coroutine():
     async def sample_coroutine():
@@ -11,6 +12,7 @@ async def test_create_task_with_coroutine():
     task = create_task(sample_coroutine())
     result = await task
     assert result == "Hello, World!"
+
 
 @pytest.mark.asyncio_cooperative
 async def test_create_task_with_future():
@@ -22,6 +24,7 @@ async def test_create_task_with_future():
     result = await task
     assert result == "Future Result"
 
+
 @pytest.mark.asyncio_cooperative
 async def test_create_task_with_name():
     async def sample_coroutine():
@@ -29,6 +32,7 @@ async def test_create_task_with_name():
 
     task = create_task(sample_coroutine(), name="TestTask")
     assert task.get_name() == "TestTask"
+
 
 @pytest.mark.asyncio_cooperative
 async def test_create_task_skip_gc_until_done():
@@ -39,6 +43,7 @@ async def test_create_task_skip_gc_until_done():
     result = await task
     assert result == "GC Test"
 
+
 @pytest.mark.asyncio_cooperative
 async def test_create_task_log_destroy_pending():
     async def sample_coroutine():
@@ -46,6 +51,7 @@ async def test_create_task_log_destroy_pending():
 
     task = create_task(sample_coroutine(), log_destroy_pending=False)
     assert not task._log_destroy_pending
+
 
 @pytest.mark.asyncio_cooperative
 async def test_create_task_handles_non_coroutine_awaitable():
