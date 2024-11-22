@@ -8,12 +8,13 @@ import asyncio
 import heapq
 import logging
 from collections import deque
-from functools import cached_property
 
 from a_sync._typing import *
-from a_sync.primitives.locks.semaphore import Semaphore
+from a_sync.primitives.locks.semaphore cimport Semaphore
 
 logger = logging.getLogger(__name__)
+
+cdef object c_logger = logger
 
 
 class Priority(Protocol):
@@ -25,7 +26,7 @@ PT = TypeVar("PT", bound=Priority)
 CM = TypeVar("CM", bound="_AbstractPrioritySemaphoreContextManager[Priority]")
 
 
-class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
+cdef class _AbstractPrioritySemaphore(Semaphore):
     """
     A semaphore that allows prioritization of waiters.
 
@@ -40,34 +41,40 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     """
 
     name: Optional[str]
-    _value: int
-    _waiters: List["_AbstractPrioritySemaphoreContextManager[PT]"]  # type: ignore [assignment]
-    _context_managers: Dict[PT, "_AbstractPrioritySemaphoreContextManager[PT]"]
-    __slots__ = (
-        "name",
-        "_value",
-        "_waiters",
-        "_context_managers",
-        "_capacity",
-        "_potential_lost_waiters",
-    )
+    cdef dict[object, _AbstractPrioritySemaphoreContextManager] _context_managers
+    cdef Py_ssize_t _capacity
+    cdef list _potential_lost_waiters
+    cdef object _top_priority
+    cdef object _context_manager_class
+    cdef list[_AbstractPrioritySemaphoreContextManager] __waiters
 
-    @property
-    def _context_manager_class(
-        self,
-    ) -> Type["_AbstractPrioritySemaphoreContextManager[PT]"]:
-        raise NotImplementedError
+    #@property
+    #def _context_manager_class(
+    #    self,
+    #) -> Type["_AbstractPrioritySemaphoreContextManager[PT]"]:
+    #    raise NotImplementedError
 
-    @property
-    def _top_priority(self) -> PT:
-        """Defines the top priority for the semaphore.
+    #@property
+    #def _top_priority(self) -> PT:
+    #    """Defines the top priority for the semaphore.
+    #
+    #    Subclasses must implement this property to specify the default top priority.
+    #
+    #    Raises:
+    #        NotImplementedError: If not implemented in a subclass.
+    #    """
+    #    raise NotImplementedError
 
-        Subclasses must implement this property to specify the default top priority.
+    def __cinit__(self) -> None:
+        self._context_managers = {}
+        """A dictionary mapping priorities to their context managers."""
+    
+        self.__waiters = []
+        """A heap queue of context managers, sorted by priority."""
 
-        Raises:
-            NotImplementedError: If not implemented in a subclass.
-        """
-        raise NotImplementedError
+        # NOTE: This should (hopefully) be temporary
+        self._potential_lost_waiters: List["asyncio.Future[None]"] = []
+        """A list of futures representing waiters that might have been lost."""
 
     def __init__(self, value: int = 1, *, name: Optional[str] = None) -> None:
         """Initializes the priority semaphore.
@@ -79,24 +86,14 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         Examples:
             >>> semaphore = _AbstractPrioritySemaphore(5, name="test_semaphore")
         """
-
-        self._context_managers = {}
-        """A dictionary mapping priorities to their context managers."""
+        super().__init__(value, name=name)
 
         self._capacity = value
         """The initial capacity of the semaphore."""
 
-        super().__init__(value, name=name)
-        self._waiters = []
-        """A heap queue of context managers, sorted by priority."""
-
-        # NOTE: This should (hopefully) be temporary
-        self._potential_lost_waiters: List["asyncio.Future[None]"] = []
-        """A list of futures representing waiters that might have been lost."""
-
     def __repr__(self) -> str:
         """Returns a string representation of the semaphore."""
-        return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._value} waiters={self._count_waiters()}>"
+        return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._Semaphore__value} waiters={self._count_waiters()}>"
 
     async def __aenter__(self) -> None:
         """Enters the semaphore context, acquiring it with the top priority.
@@ -108,7 +105,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             >>> async with semaphore:
             ...     await do_stuff()
         """
-        await self[self._top_priority].acquire()
+        await (<_AbstractPrioritySemaphoreContextManager>self.c_getitem(self._top_priority)).c_acquire()
 
     async def __aexit__(self, *_) -> None:
         """Exits the semaphore context, releasing it with the top priority.
@@ -120,7 +117,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             >>> async with semaphore:
             ...     await do_stuff()
         """
-        self[self._top_priority].release()
+        (<_AbstractPrioritySemaphoreContextManager>self.c_getitem(self._top_priority)).c_release()
 
     async def acquire(self) -> Literal[True]:
         """Acquires the semaphore with the top priority.
@@ -131,7 +128,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> await semaphore.acquire()
         """
-        return await self[self._top_priority].acquire()
+        return await (<_AbstractPrioritySemaphoreContextManager>self.c_getitem(self._top_priority)).c_acquire()
 
     def __getitem__(
         self, priority: Optional[PT]
@@ -148,16 +145,24 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> context_manager = semaphore[priority]
         """
+        return self.c_getitem(priority)
+    
+    cdef object c_getitem(self, object priority):
+        if self._Semaphore__value is None:
+            raise ValueError(self._Semaphore__value)
+        
+        cdef _AbstractPrioritySemaphoreContextManager context_manager
+
         priority = self._top_priority if priority is None else priority
         if priority not in self._context_managers:
             context_manager = self._context_manager_class(
                 self, priority, name=self.name
             )
-            heapq.heappush(self._waiters, context_manager)  # type: ignore [misc]
+            heapq.heappush(self.__waiters, context_manager)  # type: ignore [misc]
             self._context_managers[priority] = context_manager
         return self._context_managers[priority]
 
-    def locked(self) -> bool:
+    cpdef bint locked(self):
         """Checks if the semaphore is locked.
 
         Returns:
@@ -167,14 +172,19 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> semaphore.locked()
         """
-        return self._value == 0 or (
+        return self.c_locked()
+    
+    cdef bint c_locked(self):
+        cdef _AbstractPrioritySemaphoreContextManager cm
+        cdef object w
+        return self._Semaphore__value == 0 or (
             any(
                 cm._waiters and any(not w.cancelled() for w in cm._waiters)
                 for cm in (self._context_managers.values() or ())
             )
         )
 
-    def _count_waiters(self) -> Dict[PT, int]:
+    cdef dict[object, int] _count_waiters(self):
         """Counts the number of waiters for each priority.
 
         Returns:
@@ -184,9 +194,10 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> semaphore._count_waiters()
         """
+        cdef _AbstractPrioritySemaphoreContextManager manager
         return {
-            manager._priority: len(manager.waiters)
-            for manager in sorted(self._waiters, key=lambda m: m._priority)
+            manager._priority: len(manager._waiters)
+            for manager in sorted(self.__waiters, key=lambda m: m._priority)
         }
 
     def _wake_up_next(self) -> None:
@@ -202,31 +213,32 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> semaphore._wake_up_next()
         """
-        while self._waiters:
-            manager = heapq.heappop(self._waiters)
+        cdef _AbstractPrioritySemaphoreContextManager manager
+        while self.__waiters:
+            manager = heapq.heappop(self.__waiters)
             if len(manager) == 0:
                 # There are no more waiters, get rid of the empty manager
-                logger.debug(
+                c_logger.debug(
                     "manager %s has no more waiters, popping from %s",
-                    manager._repr_no_parent_(),
+                    manager._c_repr_no_parent_(),
                     self,
                 )
                 self._context_managers.pop(manager._priority)
                 continue
-            logger.debug("waking up next for %s", manager._repr_no_parent_())
+            c_logger.debug("waking up next for %s", manager._c_repr_no_parent_())
 
             woke_up = False
             start_len = len(manager)
 
             if not manager._waiters:
-                logger.debug("not manager._waiters")
+                c_logger.debug("not manager._waiters")
 
             while manager._waiters:
                 waiter = manager._waiters.popleft()
                 self._potential_lost_waiters.remove(waiter)
                 if not waiter.done():
                     waiter.set_result(None)
-                    logger.debug("woke up %s", waiter)
+                    c_logger.debug("woke up %s", waiter)
                     woke_up = True
                     break
 
@@ -240,7 +252,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 
             if end_len:
                 # There are still waiters, put the manager back
-                heapq.heappush(self._waiters, manager)  # type: ignore [misc]
+                heapq.heappush(self.__waiters, manager)  # type: ignore [misc]
             else:
                 # There are no more waiters, get rid of the empty manager
                 self._context_managers.pop(manager._priority)
@@ -249,15 +261,15 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         # emergency procedure (hopefully temporary):
         while self._potential_lost_waiters:
             waiter = self._potential_lost_waiters.pop(0)
-            logger.debug("we found a lost waiter %s", waiter)
+            c_logger.debug("we found a lost waiter %s", waiter)
             if not waiter.done():
                 waiter.set_result(None)
-                logger.debug("woke up lost waiter %s", waiter)
+                c_logger.debug("woke up lost waiter %s", waiter)
                 return
-        logger.debug("%s has no waiters to wake", self)
+        c_logger.debug("%s has no waiters to wake", self)
 
 
-class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
+cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
     """
     A context manager for priority semaphore waiters.
 
@@ -266,12 +278,10 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     """
 
     _loop: asyncio.AbstractEventLoop
-    _waiters: Deque[asyncio.Future]  # type: ignore [assignment]
-    __slots__ = "_parent", "_priority"
-
-    @property
-    def _priority_name(self) -> str:
-        raise NotImplementedError
+    __waiters: Deque[asyncio.Future]  # type: ignore [assignment]
+    cdef _AbstractPrioritySemaphore _parent
+    cdef object _priority
+    cdef str _priority_name
 
     def __init__(
         self,
@@ -303,7 +313,11 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         """Returns a string representation of the context manager."""
         return f"<{self.__class__.__name__} parent={self._parent} {self._priority_name}={self._priority} waiters={len(self)}>"
 
-    def _repr_no_parent_(self) -> str:
+    cpdef str _repr_no_parent_(self):
+        """Returns a string representation of the context manager without the parent."""
+        return self._c_repr_no_parent_()
+
+    cdef str _c_repr_no_parent_(self):
         """Returns a string representation of the context manager without the parent."""
         return f"<{self.__class__.__name__} parent_name={self._parent.name} {self._priority_name}={self._priority} waiters={len(self)}>"
 
@@ -328,19 +342,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
             raise TypeError(f"{other} is not type {self.__class__.__name__}")
         return self._priority < other._priority
 
-    @cached_property
-    def loop(self) -> asyncio.AbstractEventLoop:
-        """Gets the event loop associated with this context manager."""
-        return self._loop or asyncio.get_event_loop()
-
-    @property
-    def waiters(self) -> Deque[asyncio.Future]:
-        """Gets the deque of waiters for this context manager."""
-        if self._waiters is None:
-            self._waiters = deque()
-        return self._waiters
-
-    async def acquire(self) -> Literal[True]:
+    cpdef object acquire(self):
         """Acquires the semaphore for this context manager.
 
         If the internal counter is larger than zero on entry,
@@ -355,24 +357,35 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
             >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
             >>> await context_manager.acquire()
         """
-        if self._parent._value <= 0:
+        if self._parent._Semaphore__value <= 0:
             self._ensure_debug_daemon()
-        while self._parent._value <= 0:
-            fut = self.loop.create_future()
-            self.waiters.append(fut)
+        return self.__acquire()
+    
+    cdef object c_acquire(self):
+        if self._parent._Semaphore__value <= 0:
+            self._ensure_debug_daemon()
+        return self.__acquire()
+    
+    async def __acquire(self) -> Literal[True]:
+        cdef object loop, fut
+        while self._parent._Semaphore__value <= 0:
+            if self.__waiters is None:
+                self.__waiters = deque()
+            fut = (self.__loop or self._c_get_loop()).create_future()
+            self.__waiters.append(fut)
             self._parent._potential_lost_waiters.append(fut)
             try:
                 await fut
             except:
                 # See the similar code in Queue.get.
                 fut.cancel()
-                if self._parent._value > 0 and not fut.cancelled():
+                if self._parent._Semaphore__value > 0 and not fut.cancelled():
                     self._parent._wake_up_next()
                 raise
-        self._parent._value -= 1
+        self._parent._Semaphore__value -= 1
         return True
 
-    def release(self) -> None:
+    cpdef void release(self):
         """Releases the semaphore for this context manager.
 
         This method overrides :meth:`Semaphore.release` to handle priority-based logic.
@@ -381,18 +394,51 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
             >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
             >>> context_manager.release()
         """
-        self._parent.release()
+        self._parent.c_release()
+
+    cdef void c_release(self):
+        """Releases the semaphore for this context manager.
+
+        This method overrides :meth:`Semaphore.release` to handle priority-based logic.
+
+        Examples:
+            >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
+            >>> context_manager.release()
+        """
+        self._parent.c_release()
 
 
-class _PrioritySemaphoreContextManager(
-    _AbstractPrioritySemaphoreContextManager[Numeric]
-):
+cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager):
     """Context manager for numeric priority semaphores."""
 
-    _priority_name = "priority"
+    def __cinit__(self):
+        self._priority_name = "priority"
+        # Semaphore.__cinit__(self)
+        self.__AbstractPrioritySemaphoreContextManager__waiters = deque()
+        self._decorated: Set[str] = set()
 
+    def __lt__(self, _PrioritySemaphoreContextManager other) -> bool:
+        """Compares this context manager with another based on priority.
 
-class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreContextManager]):  # type: ignore [type-var]
+        Args:
+            other: The other context manager to compare with.
+
+        Returns:
+            True if this context manager has a lower priority than the other, False otherwise.
+
+        Raises:
+            TypeError: If the other object is not of the same type.
+
+        Examples:
+            >>> cm1 = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
+            >>> cm2 = _AbstractPrioritySemaphoreContextManager(parent, priority=2)
+            >>> cm1 < cm2
+        """
+        if other.__class__ is not self.__class__:
+            raise TypeError(f"{other} is not type {self.__class__.__name__}")
+        return <int>self._priority < <int>other._priority
+
+cdef class PrioritySemaphore(_AbstractPrioritySemaphore):  # type: ignore [type-var]
     """Semaphore that uses numeric priorities for waiters.
 
     This class extends :class:`_AbstractPrioritySemaphore` and provides a concrete implementation
@@ -416,5 +462,52 @@ class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreCo
         :class:`_AbstractPrioritySemaphore` for the base class implementation.
     """
 
-    _context_manager_class = _PrioritySemaphoreContextManager
-    _top_priority = -1
+    def __cinit__(self):
+        self._top_priority = -1
+        self._context_manager_class = _PrioritySemaphoreContextManager
+        
+        # _AbstractPrioritySemaphore.__cinit__(self)
+
+        self._context_managers = {}
+        """A dictionary mapping priorities to their context managers."""
+    
+        self.__waiters = []
+        """A heap queue of context managers, sorted by priority."""
+
+        # NOTE: This should (hopefully) be temporary
+        self._potential_lost_waiters: List["asyncio.Future[None]"] = []
+        """A list of futures representing waiters that might have been lost."""
+
+    def __getitem__(
+        self, priority: Optional[PT]
+    ) -> "_PrioritySemaphoreContextManager[PT]":
+        """Gets the context manager for a given priority.
+
+        Args:
+            priority: The priority for which to get the context manager. If None, uses the top priority.
+
+        Returns:
+            The context manager associated with the given priority.
+
+        Examples:
+            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> context_manager = semaphore[priority]
+        """
+        return self.c_getitem(priority or -1)
+    
+    cdef object c_getitem(self, object priority):
+        if self._Semaphore__value is None:
+            raise ValueError(self._Semaphore__value)
+        
+        cdef _PrioritySemaphoreContextManager context_manager
+
+        cdef dict[int, _PrioritySemaphoreContextManager] context_managers = self._context_managers
+        if <int>priority not in context_managers:
+            context_manager = _PrioritySemaphoreContextManager(self, <int>priority, name=self.name)
+            heapq.heappush(
+                <list[_PrioritySemaphoreContextManager]>self.__waiters,
+                context_manager,
+            )  # type: ignore [misc]
+            context_managers[<int>priority] = context_manager
+            return context_manager
+        return context_managers[<int>priority]

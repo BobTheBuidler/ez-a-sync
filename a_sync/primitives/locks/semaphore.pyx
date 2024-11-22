@@ -5,14 +5,12 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 
 import asyncio
 import functools
-import logging
 from collections import defaultdict, deque
 from threading import Thread, current_thread
+from typing import Container
 
 from a_sync._typing import *
 from a_sync.primitives._debug cimport _DebugDaemonMixin
-
-logger = logging.getLogger(__name__)
 
 
 async def __acquire() -> Literal[True]:
@@ -50,12 +48,10 @@ cdef class Semaphore(_DebugDaemonMixin):
     See Also:
         :class:`_DebugDaemonMixin` for more details on debugging capabilities.
     """
-    cdef str name
-    cdef int __value
-    cdef object _waiters
-    cdef set _decorated
-    cdef dict __dict__
 
+    def __cinit__(self) -> None:
+        self.__waiters = deque()
+        self._decorated: Set[str] = set()
     
     def __init__(self, value: int=1, name=None, loop=None, **kwargs) -> None:
         """
@@ -65,14 +61,13 @@ cdef class Semaphore(_DebugDaemonMixin):
             value: The initial value for the semaphore.
             name (optional): An optional name used only to provide useful context in debug logs.
         """
+        if value is None:
+            raise ValueError(value)
         super().__init__(loop=loop)
         if value < 0:
             raise ValueError("Semaphore initial value must be >= 0")
-
-        self._waiters = None
         self.__value = value
-        self.name = name or self.__origin__ if hasattr(self, "__origin__") else None
-        self._decorated: Set[str] = set()
+        self._name = name or getattr(self, "__origin__", "")
 
     def __call__(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
         """
@@ -90,13 +85,14 @@ cdef class Semaphore(_DebugDaemonMixin):
         return self.decorate(fn)  # type: ignore [arg-type, return-value]
 
     def __repr__(self) -> str:
-        representation = f"<{self.__class__.__name__} name={self.name} value={self.__value} waiters={len(self)}>"
+        representation = f"<{self.__class__.__name__} name={self._name} value={self.__value} waiters={len(self)}>"
         if self._decorated:
             representation = f"{representation[:-1]} decorates={self._decorated}"
         return representation
 
     async def __aenter__(self):
-        await self.c_acquire()
+        coro = self.c_acquire()
+        await coro
         # We have no use for the "as ..."  clause in the with
         # statement for locks.
         return None
@@ -110,11 +106,14 @@ cdef class Semaphore(_DebugDaemonMixin):
     
     cdef bint c_locked(self):
         """Returns True if semaphore cannot be acquired immediately."""
-        return self.__value == 0 or (
-            any(not w.cancelled() for w in (self._waiters or ())))
+        if self.__value == 0:
+            return True
+        waiters = self.__waiters 
+        if any(not w.cancelled() for w in (waiters or ())):
+            return True
 
     def __len__(self) -> int:
-        return len(self._waiters) if self._waiters else 0
+        return len(self.__waiters)
 
     def decorate(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
         """
@@ -172,9 +171,6 @@ cdef class Semaphore(_DebugDaemonMixin):
         if not self.c_locked():
             self.__value -= 1
             return __acquire()
-        
-        if self._waiters is None:
-            self._waiters = deque()
 
         return self.__acquire()
 
@@ -184,12 +180,12 @@ cdef class Semaphore(_DebugDaemonMixin):
         # _wake_up_first() and attempt to wake up itself.
         
         cdef object fut = self._c_get_loop().create_future()
-        self._waiters.append(fut)
+        self.__waiters.append(fut)
         try:
             try:
                 await fut
             finally:
-                self._waiters.remove(fut)
+                self.__waiters.remove(fut)
         except asyncio.exceptions.CancelledError:
             if not fut.cancelled():
                 self.__value += 1
@@ -198,6 +194,7 @@ cdef class Semaphore(_DebugDaemonMixin):
 
         if self.__value > 0:
             self._wake_up_next()
+
         return True
 
     cpdef void release(self):
@@ -214,15 +211,46 @@ cdef class Semaphore(_DebugDaemonMixin):
         self._wake_up_next()
 
     @property
-    def _value(self) -> int:
-        return self.__value
+    def name(self) -> str:
+        return self._name
 
-    cdef void _wake_up_next(self):
+    @property
+    def _value(self) -> int:
+        # required for subclass compatability
+        return self.__value
+    
+    @_value.setter
+    def _value(self, int value):
+        # required for subclass compatability
+        self.__value = value
+
+    @property
+    def _waiters(self) -> int:
+        # required for subclass compatability
+        return self.__waiters
+    
+    @_waiters.setter
+    def _waiters(self, value: Container):
+        # required for subclass compatability
+        self.__waiters = value
+
+    cpdef void _wake_up_next(self):
         """Wake up the first waiter that isn't done."""
-        if not self._waiters:
+        if not self.__waiters:
             return
 
-        for fut in self._waiters:
+        for fut in self.__waiters:
+            if not fut.done():
+                self.__value -= 1
+                fut.set_result(True)
+                return
+    
+    cdef void _c_wake_up_next(self):
+        """Wake up the first waiter that isn't done."""
+        if not self.__waiters:
+            return
+
+        for fut in self.__waiters:
             if not fut.done():
                 self.__value -= 1
                 fut.set_result(True)
@@ -241,7 +269,7 @@ cdef class Semaphore(_DebugDaemonMixin):
             async def monitor():
                 await semaphore._debug_daemon()
         """
-        while self._waiters:
+        while self.__waiters:
             await asyncio.sleep(60)
             self.get_logger().debug(
                 "%s has %s waiters for any of: %s",
@@ -267,7 +295,8 @@ cdef class DummySemaphore(Semaphore):
 
     def __cinit__(self):
         self.__value = 0
-        self._waiters = None
+        self.__waiters = deque()
+        self._decorated = None
 
     def __init__(self, name: Optional[str] = None):
         """
@@ -276,10 +305,10 @@ cdef class DummySemaphore(Semaphore):
         Args:
             name (optional): An optional name for the dummy semaphore.
         """
-        self.name = name
+        self._name = name
 
     def __repr__(self) -> str:
-        return "<{} name={}>".format(self.__class__.__name__, self.name)
+        return "<{} name={}>".format(self.__class__.__name__, self._name)
 
     async def acquire(self) -> Literal[True]:
         """Acquire the dummy semaphore, which is a no-op."""
@@ -340,7 +369,7 @@ cdef class ThreadsafeSemaphore(Semaphore):
             self.semaphores = {}
             self.dummy = DummySemaphore(name=name)
         else:
-            self.semaphores: DefaultDict[Thread, Semaphore] = defaultdict(lambda: Semaphore(value, name=self.name))  # type: ignore [arg-type]
+            self.semaphores: DefaultDict[Thread, Semaphore] = defaultdict(lambda: Semaphore(value, name=self._name))  # type: ignore [arg-type]
             self.dummy = None
 
     def __len__(self) -> int:

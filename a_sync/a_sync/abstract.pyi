@@ -8,6 +8,7 @@ the execution mode based on flags and keyword arguments.
 Note: It is recommended to use :class:`ASyncGenericBase` for most use cases. This class
 is intended for more custom implementations if necessary.
 """
+
 from a_sync._typing import *
 import abc
 import functools

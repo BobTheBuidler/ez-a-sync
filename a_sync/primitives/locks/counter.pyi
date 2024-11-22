@@ -15,9 +15,10 @@ class CounterLock(_DebugDaemonMixin):
     See Also:
         :class:`CounterLockCluster` for managing multiple :class:`CounterLock` instances.
     """
+
     is_ready: Incomplete
     def __init__(self, start_value: int = 0, name: Optional[str] = None) -> None:
-        '''
+        """
         Initializes the :class:`CounterLock` with a starting value and an optional name.
 
         Args:
@@ -28,7 +29,8 @@ class CounterLock(_DebugDaemonMixin):
             >>> counter = CounterLock(start_value=0, name="example_counter")
             >>> counter.value
             0
-        '''
+        """
+
     async def wait_for(self, value: int) -> bool:
         """
         Waits until the counter reaches or exceeds the specified value.
@@ -45,6 +47,7 @@ class CounterLock(_DebugDaemonMixin):
         See Also:
             :meth:`CounterLock.set` to set the counter value.
         """
+
     def set(self, value: int) -> None:
         """
         Sets the counter to the specified value.
@@ -66,6 +69,7 @@ class CounterLock(_DebugDaemonMixin):
         See Also:
             :meth:`CounterLock.value` for direct value assignment.
         """
+
     @property
     def value(self) -> int:
         """
@@ -76,6 +80,7 @@ class CounterLock(_DebugDaemonMixin):
             >>> counter.value
             0
         """
+
     @value.setter
     def value(self, value: int) -> None:
         """
@@ -107,6 +112,7 @@ class CounterLockCluster:
     See Also:
         :class:`CounterLock` for managing individual counters.
     """
+
     locks: Incomplete
     def __init__(self, counter_locks: Iterable[CounterLock]) -> None:
         """
@@ -120,6 +126,7 @@ class CounterLockCluster:
             >>> lock2 = CounterLock(start_value=0)
             >>> cluster = CounterLockCluster([lock1, lock2])
         """
+
     async def wait_for(self, value: int) -> bool:
         """
         Waits until the value of all :class:`CounterLock` objects in the cluster reaches or exceeds the specified value.

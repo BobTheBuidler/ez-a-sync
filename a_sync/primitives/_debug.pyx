@@ -159,7 +159,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
                 self._daemon = self._start_debug_daemon(*args, **kwargs)
                 self._daemon.add_done_callback(self._stop_debug_daemon)
             else:
-                self._daemon = get_event_loop().create_future()
+                self._daemon = self._c_get_loop().create_future()
         return self._daemon
 
     def _stop_debug_daemon(self, t: Optional[asyncio.Task] = None) -> None:

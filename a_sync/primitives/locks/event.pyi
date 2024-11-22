@@ -10,7 +10,14 @@ class Event(asyncio.Event, _DebugDaemonMixin):
     detailed information about the event state and waiters, which can be useful for
     diagnosing and debugging potential deadlocks.
     """
-    def __init__(self, name: str = '', debug_daemon_interval: int = 300, *, loop: Optional[asyncio.AbstractEventLoop] = None) -> None:
+
+    def __init__(
+        self,
+        name: str = "",
+        debug_daemon_interval: int = 300,
+        *,
+        loop: Optional[asyncio.AbstractEventLoop] = None
+    ) -> None:
         """
         Initializes the Event.
 
@@ -19,6 +26,7 @@ class Event(asyncio.Event, _DebugDaemonMixin):
             debug_daemon_interval (int): The interval in seconds for the debug daemon to log information.
             loop (Optional[asyncio.AbstractEventLoop]): The event loop to use.
         """
+
     async def wait(self) -> Literal[True]:
         """
         Wait until the event is set.
