@@ -31,6 +31,10 @@ cdef class CounterLock(_DebugDaemonMixin):
         :class:`CounterLockCluster` for managing multiple :class:`CounterLock` instances.
     """
 
+    def __cinit__(self):
+        self._events = {}
+        """A defaultdict that maps each awaited value to an :class:`Event` that manages the waiters for that value."""
+
     def __init__(self, start_value: int = 0, str name = ""):
         """
         Initializes the :class:`CounterLock` with a starting value and an optional name.
@@ -60,12 +64,6 @@ cdef class CounterLock(_DebugDaemonMixin):
         self._value = start_value
         """The current value of the counter."""
 
-        self._events: DefaultDict[int, Event] = defaultdict(Event)
-        """A defaultdict that maps each awaited value to an :class:`Event` that manages the waiters for that value."""
-
-        self.is_ready = lambda v: self._value >= v
-        """A lambda function that indicates whether the current counter value is greater than or equal to a given value."""
-
     def __dealloc__(self):
         # Free the memory allocated for __name
         if self.__name is not NULL:
@@ -85,7 +83,14 @@ cdef class CounterLock(_DebugDaemonMixin):
         cdef dict[int, Py_ssize_t] waiters = {v: len(self._events[v]._waiters) for v in sorted(self._events)}
         return "<CounterLock name={} value={} waiters={}>".format(self.__name.decode("utf-8"), self._value, waiters)
 
-    async def wait_for(self, value: int) -> bool:
+    cpdef bint is_ready(self, int v):
+        """A function that indicates whether the current counter value is greater than or equal to a given value."""
+        return self._value >= v
+    
+    cdef bint c_is_ready(self, int v):
+        return self._value >= v
+
+    async def wait_for(self, int value) -> bint:
         """
         Waits until the counter reaches or exceeds the specified value.
 
@@ -101,7 +106,9 @@ cdef class CounterLock(_DebugDaemonMixin):
         See Also:
             :meth:`CounterLock.set` to set the counter value.
         """
-        if not self.is_ready(value):
+        if not self.c_is_ready(value):
+            if value not in self._events:
+                self._events[value] = Event()
             self._c_ensure_debug_daemon((),{})
             await self._events[value].c_wait()
         return True
@@ -142,7 +149,7 @@ cdef class CounterLock(_DebugDaemonMixin):
         return self._value
 
     @value.setter
-    def value(self, value: int) -> None:
+    def value(self, int value) -> None:
         """
         Sets the counter to a new value, waking up any waiters if the value increases beyond the value they are awaiting.
 
@@ -228,7 +235,7 @@ class CounterLockCluster:
         """
         self.locks = list(counter_locks)
 
-    async def wait_for(self, value: int) -> bool:
+    async def wait_for(self, value: int) -> bint:
         """
         Waits until the value of all :class:`CounterLock` objects in the cluster reaches or exceeds the specified value.
 
