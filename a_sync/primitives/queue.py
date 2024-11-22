@@ -30,6 +30,7 @@ if sys.version_info < (3, 9):
 
     class _Queue(asyncio.Queue, Generic[T]):
         __slots__ = (
+            "_queue", 
             "_maxsize",
             "_loop",
             "_getters",
@@ -41,7 +42,7 @@ if sys.version_info < (3, 9):
 else:
 
     class _Queue(asyncio.Queue[T]):
-        __slots__ = "_maxsize", "_getters", "_putters", "_unfinished_tasks", "_finished"
+        __slots__ = "_queue", "_maxsize", "_getters", "_putters", "_unfinished_tasks", "_finished"
 
 
 class Queue(_Queue[T]):
@@ -67,8 +68,10 @@ class Queue(_Queue[T]):
         ['task2']
     """
 
+    def __len__(self) -> int:
+        return len(self._queue)
+
     async def get(self) -> T:
-        self._queue
         """
         Asynchronously retrieves and removes the next item from the queue.
 
@@ -108,7 +111,7 @@ class Queue(_Queue[T]):
         Example:
             >>> await queue.put(item='task')
         """
-        return _Queue.put(self, item)
+        await _Queue.put(self, item)
 
     def put_nowait(self, item: T) -> None:
         """

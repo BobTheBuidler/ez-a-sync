@@ -6,7 +6,7 @@ import pytest
 from a_sync import ProcessPoolExecutor, ThreadPoolExecutor, PruningThreadPoolExecutor
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_process_pool_executor_run():
     """Test the :class:`ProcessPoolExecutor` by running and submitting the work function asynchronously.
 
@@ -23,7 +23,7 @@ async def test_process_pool_executor_run():
     await coro
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_thread_pool_executor_run():
     """Test the :class:`ThreadPoolExecutor` by running and submitting the work function asynchronously.
 
@@ -40,7 +40,7 @@ async def test_thread_pool_executor_run():
     await coro
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_pruning_thread_pool_executor_run():
     """Test the :class:`PruningThreadPoolExecutor` by running and submitting the work function asynchronously.
 
@@ -57,7 +57,7 @@ async def test_pruning_thread_pool_executor_run():
     await coro
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_process_pool_executor_submit():
     """Test the :class:`ProcessPoolExecutor` by submitting the work function.
 
@@ -79,7 +79,7 @@ async def test_process_pool_executor_submit():
     await fut
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_thread_pool_executor_submit():
     """Test the :class:`ThreadPoolExecutor` by submitting the work function.
 
@@ -101,7 +101,7 @@ async def test_thread_pool_executor_submit():
     await fut
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_pruning_thread_pool_executor_submit():
     """Test the :class:`PruningThreadPoolExecutor` by submitting the work function.
 
@@ -123,7 +123,7 @@ async def test_pruning_thread_pool_executor_submit():
     await fut
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_process_pool_executor_sync_run():
     """Test the :class:`ProcessPoolExecutor` by running and submitting the work function synchronously.
 
@@ -140,7 +140,7 @@ async def test_process_pool_executor_sync_run():
     await coro
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_thread_pool_executor_sync_run():
     """Test the :class:`ThreadPoolExecutor` by running and submitting the work function synchronously.
 
@@ -157,7 +157,7 @@ async def test_thread_pool_executor_sync_run():
     await coro
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_pruning_thread_pool_executor_sync_run():
     """Test the :class:`PruningThreadPoolExecutor` by running and submitting the work function synchronously.
 
@@ -174,7 +174,7 @@ async def test_pruning_thread_pool_executor_sync_run():
     await coro
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_process_pool_executor_sync_submit():
     """Test the :class:`ProcessPoolExecutor` by submitting the work function synchronously.
 
@@ -196,7 +196,7 @@ async def test_process_pool_executor_sync_submit():
     await fut
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_thread_pool_executor_sync_submit():
     """Test the :class:`ThreadPoolExecutor` by submitting the work function synchronously.
 
@@ -218,7 +218,7 @@ async def test_thread_pool_executor_sync_submit():
     await fut
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio_cooperative
 async def test_pruning_thread_pool_executor_sync_submit():
     """Test the :class:`PruningThreadPoolExecutor` by submitting the work function synchronously.
 
