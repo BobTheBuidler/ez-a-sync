@@ -52,6 +52,7 @@ async def test_semaphore_cached_property(i: int):
     # We increased the threshold from 1.05 to 1.4 to help tests pass on slow github runners
     assert i == 1 or duration < 1.4
 
+
 @pytest.mark.asyncio_cooperative
 async def test_semaphore_acquire_release():
     semaphore = Semaphore(2)
@@ -59,6 +60,7 @@ async def test_semaphore_acquire_release():
     assert semaphore._value == 1
     semaphore.release()
     assert semaphore._value == 2
+
 
 @pytest.mark.asyncio_cooperative
 async def test_semaphore_blocking():
@@ -76,6 +78,7 @@ async def test_semaphore_blocking():
     semaphore.release()
     await task1
 
+
 @pytest.mark.asyncio_cooperative
 async def test_semaphore_multiple_tasks():
     semaphore = Semaphore(2)
@@ -91,20 +94,22 @@ async def test_semaphore_multiple_tasks():
     await asyncio.gather(*tasks)
     assert results == [0, 1, 2, 3]
 
+
 @pytest.mark.asyncio_cooperative
 async def test_semaphore_with_zero_initial_value():
     semaphore = Semaphore(0)
 
     async def task():
         await semaphore.acquire()
-        return 'done'
+        return "done"
 
     task1 = asyncio.create_task(task())
     await asyncio.sleep(0.1)
     assert not task1.done()
     semaphore.release()
     result = await task1
-    assert result == 'done'
+    assert result == "done"
+
 
 def test_semaphore_negative_initial_value():
     with pytest.raises(ValueError):
@@ -113,6 +118,8 @@ def test_semaphore_negative_initial_value():
         Semaphore(None)
     with pytest.raises(TypeError):
         Semaphore("None")
+
+
 """
 @pytest.mark.asyncio_cooperative
 async def test_semaphore_releasing_without_acquiring():
