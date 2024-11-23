@@ -9,6 +9,10 @@ from a_sync.a_sync._flags cimport negate_if_necessary
 from a_sync.a_sync.flags import VIABLE_FLAGS
 
 
+def get_flag_name_legacy(dict kwargs) -> str:
+    return get_flag_name(kwargs)
+
+
 cdef str get_flag_name(dict kwargs):
     """
     Get the name of the flag present in the kwargs.
