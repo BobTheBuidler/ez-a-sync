@@ -32,7 +32,7 @@ cdef object _get_running_loop():
 
 cdef class _LoopBoundMixin(_LoggerMixin):
     def __cinit__(self):
-        self.__loop = None
+        self._LoopBoundMixin__loop = None
     def __init__(self, *, loop=None):
         if loop is not None:
             raise TypeError(
@@ -42,25 +42,25 @@ cdef class _LoopBoundMixin(_LoggerMixin):
             )
     @property
     def _loop(self) -> asyncio.AbstractEventLoop:
-        return self.__loop
+        return self._LoopBoundMixin__loop
     @_loop.setter
     def _loop(self, loop: asyncio.AbstractEventLoop):
-        self.__loop = loop
+        self._LoopBoundMixin__loop = loop
     cpdef object _get_loop(self):
         return self._c_get_loop()
     cdef object _c_get_loop(self):
         cdef object loop = _get_running_loop()
-        if self.__loop is None:
+        if self._LoopBoundMixin__loop is None:
             with _global_lock:
-                if self.__loop is None:
-                    self.__loop = loop
+                if self._LoopBoundMixin__loop is None:
+                    self._LoopBoundMixin__loop = loop
         if loop is None:
             return get_event_loop()
-        elif loop is not self.__loop:
+        elif loop is not self._LoopBoundMixin__loop:
             raise RuntimeError(
                 f'{self!r} is bound to a different event loop', 
                 "running loop: ".format(loop), 
-                "bound to: ".format(self.__loop),
+                "bound to: ".format(self._LoopBoundMixin__loop),
             )
         return loop
 
