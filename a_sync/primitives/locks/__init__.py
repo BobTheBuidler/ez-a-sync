@@ -6,3 +6,12 @@ from a_sync.primitives.locks.semaphore import (
     Semaphore,
     ThreadsafeSemaphore,
 )
+
+__all__ = [
+    "Event",
+    "Semaphore",
+    "PrioritySemaphore",
+    "CounterLock",
+    "ThreadsafeSemaphore",
+    "DummySemaphore",
+]
