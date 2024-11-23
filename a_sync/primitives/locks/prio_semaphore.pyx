@@ -351,7 +351,7 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         while self._parent._Semaphore__value <= 0:
             if self._AbstractPrioritySemaphoreContextManager__waiters is None:
                 self._AbstractPrioritySemaphoreContextManager__waiters = deque()
-            fut = (self.__loop or self._c_get_loop()).create_future()
+            fut = self._c_get_loop().create_future()
             self._AbstractPrioritySemaphoreContextManager__waiters.append(fut)
             self._parent._potential_lost_waiters.append(fut)
             try:
