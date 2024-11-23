@@ -4,6 +4,7 @@ import pytest
 from a_sync import TaskMapping, create_task
 from a_sync.task import _EmptySequenceError
 
+
 async def _coro_fn(key):
     """Coroutine function for testing.
 
@@ -18,6 +19,7 @@ async def _coro_fn(key):
     """
     await asyncio.sleep(0.1)
     return str(key + 1) * (key + 1)
+
 
 @pytest.mark.asyncio_cooperative
 async def test_create_task():
@@ -337,6 +339,7 @@ async def test_task_mapping_empty_iterable():
     with pytest.raises(_EmptySequenceError, match="\[\]"):
         await tasks
 
+
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_single_item():
     """Test TaskMapping with a single-item iterable."""
@@ -345,15 +348,18 @@ async def test_task_mapping_single_item():
     assert len(tasks) == 1
     assert await tasks == {0: "1"}
 
+
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_error_handling():
     """Test TaskMapping with a function that raises an exception."""
+
     async def error_fn(key):
         raise ValueError("Intentional error")
 
     tasks = TaskMapping(error_fn, [0])
     with pytest.raises(ValueError):
         await tasks
+
 
 @pytest.mark.asyncio_cooperative
 async def test_task_mapping_concurrency():
