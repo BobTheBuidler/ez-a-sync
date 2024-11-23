@@ -1,7 +1,24 @@
 import asyncio
 import pytest
 
-from a_sync import TaskMapping, create_task, exceptions
+from a_sync import TaskMapping, create_task
+from a_sync.task import _EmptySequenceError
+
+
+async def _coro_fn(key):
+    """Coroutine function for testing.
+
+    Args:
+        i: An integer input.
+
+    Returns:
+        A string representation of the incremented input.
+
+    See Also:
+        - :func:`a_sync.TaskMapping`
+    """
+    await asyncio.sleep(0.1)
+    return str(key + 1) * (key + 1)
 
 
 @pytest.mark.asyncio_cooperative
@@ -314,23 +331,45 @@ def test_taskmapping_views_sync():
         assert isinstance(k, int)
 
 
+@pytest.mark.asyncio_cooperative
+async def test_task_mapping_empty_iterable():
+    """Test TaskMapping with an empty iterable."""
+    tasks = TaskMapping(_coro_fn, [])
+    assert len(tasks) == 0
+    with pytest.raises(_EmptySequenceError, match="\[\]"):
+        await tasks
+
+
+@pytest.mark.asyncio_cooperative
+async def test_task_mapping_single_item():
+    """Test TaskMapping with a single-item iterable."""
+    tasks = TaskMapping(_coro_fn, [0])
+    await asyncio.sleep(0.01)
+    assert len(tasks) == 1
+    assert await tasks == {0: "1"}
+
+
+@pytest.mark.asyncio_cooperative
+async def test_task_mapping_error_handling():
+    """Test TaskMapping with a function that raises an exception."""
+
+    async def error_fn(key):
+        raise ValueError("Intentional error")
+
+    tasks = TaskMapping(error_fn, [0])
+    with pytest.raises(ValueError):
+        await tasks
+
+
+@pytest.mark.asyncio_cooperative
+async def test_task_mapping_concurrency():
+    """Test TaskMapping with a concurrency limit."""
+    tasks = TaskMapping(_coro_fn, range(10), concurrency=3)
+    running_tasks = [task for task in tasks.values() if not task.done()]
+    assert len(running_tasks) <= 3
+
+
 def _assert_len_dictviews(tasks, i):
     assert len(tasks.keys()) == i
     assert len(tasks.values()) == i
     assert len(tasks.items()) == i
-
-
-async def _coro_fn(i: int) -> str:
-    """Coroutine function for testing.
-
-    Args:
-        i: An integer input.
-
-    Returns:
-        A string representation of the incremented input.
-
-    See Also:
-        - :func:`a_sync.TaskMapping`
-    """
-    i += 1
-    return str(i) * i
