@@ -144,7 +144,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
         if isinstance(
             wrapped_func, ASyncMethodDescriptor
-        ) and not _kwargs.get_flag_name(wrapped_func_kwargs):
+        ) and not _kwargs.get_flag_name_legacy(wrapped_func_kwargs):
             wrapped_func_kwargs["sync"] = False
         if wrapped_func_kwargs:
             self._wrapped_func_kwargs = wrapped_func_kwargs
