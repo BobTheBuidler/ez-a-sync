@@ -349,10 +349,10 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
     async def __acquire(self) -> Literal[True]:
         cdef object loop, fut
         while self._parent._Semaphore__value <= 0:
-            if self.__waiters is None:
-                self.__waiters = deque()
+            if self._AbstractPrioritySemaphoreContextManager__waiters is None:
+                self._AbstractPrioritySemaphoreContextManager__waiters = deque()
             fut = (self.__loop or self._c_get_loop()).create_future()
-            self.__waiters.append(fut)
+            self._AbstractPrioritySemaphoreContextManager__waiters.append(fut)
             self._parent._potential_lost_waiters.append(fut)
             try:
                 await fut
@@ -394,7 +394,7 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
     def __cinit__(self):
         self._priority_name = "priority"
         # Semaphore.__cinit__(self)
-        self.__AbstractPrioritySemaphoreContextManager__waiters = deque()
+        self._AbstractPrioritySemaphoreContextManager__waiters = deque()
         self._decorated: Set[str] = set()
 
     def __lt__(self, _PrioritySemaphoreContextManager other) -> bool:
