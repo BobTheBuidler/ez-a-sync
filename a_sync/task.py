@@ -29,8 +29,8 @@ from a_sync.a_sync.method import (
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio.gather import Excluder
 from a_sync.iter import ASyncIterator, ASyncGeneratorFunction, ASyncSorter
+from a_sync.primitives.locks import Event
 from a_sync.primitives.queue import Queue, ProcessingQueue
-from a_sync.primitives.locks.event import Event
 from a_sync.utils.iterators import as_yielded, exhaust_iterator
 
 
