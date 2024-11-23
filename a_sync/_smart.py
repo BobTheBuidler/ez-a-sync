@@ -6,6 +6,7 @@ to protect tasks from cancellation.
 """
 
 import asyncio
+import contextvars
 import logging
 import warnings
 import weakref
@@ -197,7 +198,9 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         if key:
             self._key = key
         self._waiters = weakref.WeakSet()
-        self.add_done_callback(SmartFuture._self_done_cleanup_callback)
+        self._callbacks.append(
+            (SmartFuture._self_done_cleanup_callback, contextvars.copy_context())
+        )
 
     def __repr__(self):
         return f"<{type(self).__name__} key={self._key} waiters={self.num_waiters} {self._state}>"
@@ -298,7 +301,9 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
         """
         asyncio.Task.__init__(self, coro, loop=loop, name=name)
         self._waiters: Set["asyncio.Task[T]"] = set()
-        self.add_done_callback(SmartTask._self_done_cleanup_callback)
+        self._callbacks.append(
+            (SmartTask._self_done_cleanup_callback, contextvars.copy_context())
+        )
 
 
 def smart_task_factory(
