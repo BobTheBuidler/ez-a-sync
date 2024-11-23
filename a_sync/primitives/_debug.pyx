@@ -124,6 +124,9 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         See Also:
             :meth:`_ensure_debug_daemon` for ensuring the daemon is running.
         """
+        return self._c_start_debug_daemon(args, kwargs)
+    
+    cdef object _c_start_debug_daemon(self, tuple[object] args, dict[str, object] kwargs):
         cdef object loop = self._c_get_loop()
         if self.check_debug_logs_enabled() and loop.is_running():
             return ccreate_task_simple(self._debug_daemon(*args, **kwargs))
@@ -159,7 +162,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         cdef object daemon = self._daemon
         if daemon is None:
             if self.check_debug_logs_enabled():
-                self._daemon = self._start_debug_daemon(*args, **kwargs)
+                self._daemon = self._c_start_debug_daemon(args, kwargs)
                 self._daemon.add_done_callback(self._stop_debug_daemon)
             else:
                 self._daemon = self._c_get_loop().create_future()

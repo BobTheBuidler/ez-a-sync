@@ -50,15 +50,17 @@ cdef class _LoggerMixin:
         return self.get_logger()
     
     cdef object get_logger(self):
-        cdef str logger_id
         cdef object logger, cls
+        cdef str cls_key, name
         logger = self._logger
-        if not logger:
+        if logger is None:
             cls = type(self)
-            logger_id = "{}.{}".format(cls.__module__, cls.__qualname__)
-            if hasattr(self, "_name") and self._name:
-                logger_id += ".{}".format(self._name)
-            logger = getLogger(logger_id)
+            name = getattr(self, "_name", "")
+            if name:
+                logger = getLogger(f"{cls.__module__}.{cls.__qualname__}.{name}")
+            else:
+                logger = _get_logger_for_cls(f"{cls.__module__}.{cls.__qualname__}")
+            self._logger = logger
         return logger
 
     @property
@@ -81,3 +83,14 @@ cdef class _LoggerMixin:
 
     cdef bint check_debug_logs_enabled(self):
         return self.get_logger().isEnabledFor(DEBUG)
+
+
+cdef dict[str, object] _class_loggers = {}
+
+cdef object _get_logger_for_cls(str cls_key):
+    cdef object logger = _class_loggers.get(cls_key)
+    if logger is None:
+        logger = getLogger(cls_key)
+        _class_loggers[cls_key] = logger
+    return logger
+
