@@ -7,4 +7,11 @@ from a_sync.primitives.locks.semaphore import (
     ThreadsafeSemaphore,
 )
 
-__all__ = ["Event", "Semaphore", "PrioritySemaphore", "CounterLock", "ThreadsafeSemaphore", "DummySemaphore"]
+__all__ = [
+    "Event",
+    "Semaphore",
+    "PrioritySemaphore",
+    "CounterLock",
+    "ThreadsafeSemaphore",
+    "DummySemaphore",
+]
