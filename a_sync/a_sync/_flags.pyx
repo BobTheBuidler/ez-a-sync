@@ -1,3 +1,4 @@
+#cython: profile=False
 """
 This module provides functionality for handling synchronous and asynchronous flags
 in the ez-a-sync library.
@@ -17,7 +18,7 @@ from a_sync import exceptions
 from a_sync.a_sync.flags import AFFIRMATIVE_FLAGS, NEGATIVE_FLAGS
 
 
-cdef bint negate_if_necessary(str flag, bint flag_value):
+cdef inline bint negate_if_necessary(str flag, bint flag_value):
     """Negate the flag value if necessary based on the flag type.
 
     This function checks if the provided flag is in the set of affirmative or negative flags
@@ -51,7 +52,7 @@ cdef bint negate_if_necessary(str flag, bint flag_value):
     raise exceptions.InvalidFlag(flag)
 
 
-cdef bint validate_flag_value(str flag, object flag_value):
+cdef inline bint validate_flag_value(str flag, object flag_value):
     """
     Validate that the flag value is a boolean.
 
