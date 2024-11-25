@@ -209,8 +209,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                     c_logger._log(
                         DEBUG,
                         "manager %s has no more waiters, popping from %s",
-                        manager._c_repr_no_parent_(),
-                        self,
+                        (manager._c_repr_no_parent_(), self),
                     )
                 self._context_managers.pop(manager._priority)
                 continue
@@ -219,7 +218,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             start_len = len(manager)
 
             if debug_logs:
-                c_logger._log(DEBUG, "waking up next for %s", manager._c_repr_no_parent_())
+                c_logger._log(DEBUG, "waking up next for %s", (manager._c_repr_no_parent_(), ))
                 if not manager._waiters:
                     c_logger._log(DEBUG, "not manager._waiters")
 
@@ -230,7 +229,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                     waiter.set_result(None)
                     woke_up = True
                     if debug_logs:
-                        c_logger._log(DEBUG, "woke up %s", waiter)
+                        c_logger._log(DEBUG, "woke up %s", (waiter, ))
                     break
 
             if not woke_up:
@@ -259,13 +258,13 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             
         while self._potential_lost_waiters:
             waiter = self._potential_lost_waiters.pop(0)
-            c_logger._log(DEBUG, "we found a lost waiter %s", waiter)
+            c_logger._log(DEBUG, "we found a lost waiter %s", (waiter, ))
             if not waiter.done():
                 waiter.set_result(None)
-                c_logger._log(DEBUG, "woke up lost waiter %s", waiter)
+                c_logger._log(DEBUG, "woke up lost waiter %s", (waiter, ))
                 return
 
-        c_logger._log(DEBUG, "%s has no waiters to wake", self)
+        c_logger._log(DEBUG, "%s has no waiters to wake", (self, ))
 
 
 cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):

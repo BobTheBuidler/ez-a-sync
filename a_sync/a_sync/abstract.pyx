@@ -162,8 +162,7 @@ class ASyncABC(metaclass=ASyncMeta):
             c_logger._log(
                 DEBUG,
                 "checking `%s.%s.__init__` signature against provided kwargs to determine a_sync mode for the new instance",
-                cls.__module__,
-                cls.__name__,
+                (cls.__module__, cls.__name__),
             )
 
         cdef str flag = get_flag_name(kwargs)
@@ -181,9 +180,7 @@ class ASyncABC(metaclass=ASyncMeta):
         c_logger._log(
             DEBUG,
             "kwargs indicate the new instance created with args %s %s is %ssynchronous",
-            args,
-            kwargs,
-            "" if sync else "a",
+            (args, kwargs, "" if sync else "a"),
         )
         return sync
 

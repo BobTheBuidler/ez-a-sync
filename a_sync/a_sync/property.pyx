@@ -133,10 +133,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
                 c_logger._log(
                     DEBUG,
                     "awaiting awaitable for %s for instance: %s owner: %s",
-                    awaitable,
-                    self,
-                    instance,
-                    owner,
+                    (awaitable, self, instance, owner),
                 )
             retval = _await(awaitable)
         else:
@@ -146,10 +143,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             c_logger._log(
                 DEBUG,
                 "returning %s for %s for instance: %s owner: %s",
-                retval,
-                self,
-                instance,
-                owner,
+                (retval, self, instance, owner), 
             )
 
         return retval
