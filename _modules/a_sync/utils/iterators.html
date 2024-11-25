@@ -78,15 +78,15 @@
 
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">asyncio.futures</span>
-<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">DEBUG</span><span class="p">,</span> <span class="n">getLogger</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">TracebackType</span>
 
 <span class="kn">import</span> <span class="nn">a_sync.asyncio</span>
 <span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">a_sync.primitives.queue</span> <span class="kn">import</span> <span class="n">Queue</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="exhaust_iterator">
@@ -117,9 +117,12 @@
     <span class="k">if</span> <span class="n">queue</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">async</span> <span class="k">for</span> <span class="n">thing</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
             <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">thing</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s2">&quot;putting </span><span class="si">%s</span><span class="s2"> from </span><span class="si">%s</span><span class="s2"> to queue </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">thing</span><span class="p">,</span> <span class="n">iterator</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
+            <span class="n">queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">async</span> <span class="k">for</span> <span class="n">thing</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;putting </span><span class="si">%s</span><span class="s2"> from </span><span class="si">%s</span><span class="s2"> to queue </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">thing</span><span class="p">,</span> <span class="n">iterator</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
             <span class="n">queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span></div>
 
 
