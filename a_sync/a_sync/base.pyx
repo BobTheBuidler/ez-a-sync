@@ -202,7 +202,7 @@ cdef str _parse_flag_name_from_list(object cls, object items):
     return present_flags[0]
 
 
-cdef bint _get_a_sync_flag_value_from_class_def(object cls, str flag):
+cdef inline bint _get_a_sync_flag_value_from_class_def(object cls, str flag):
     cdef object spec
     for spec in [cls, *cls.__bases__]:
         if flag in spec.__dict__:
