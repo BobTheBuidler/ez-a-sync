@@ -1,5 +1,5 @@
 import functools
-import logging
+from logging import DEBUG, getLogger
 
 import async_property as ap  # type: ignore [import]
 from typing_extensions import Unpack
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from a_sync.task import TaskMapping
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 cdef object c_logger = logger
 
@@ -127,26 +127,30 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             )
         
         cdef object retval
-        
+        cdef bint debug_logs = c_logger.isEnabledFor(DEBUG)
         if should_await:
-            c_logger.debug(
-                "awaiting awaitable for %s for instance: %s owner: %s",
-                awaitable,
-                self,
-                instance,
-                owner,
-            )
+            if debug_logs:
+                c_logger._log(
+                    DEBUG,
+                    "awaiting awaitable for %s for instance: %s owner: %s",
+                    awaitable,
+                    self,
+                    instance,
+                    owner,
+                )
             retval = _await(awaitable)
         else:
             retval = awaitable
 
-        c_logger.debug(
-            "returning %s for %s for instance: %s owner: %s",
-            retval,
-            self,
-            instance,
-            owner,
-        )
+        if debug_logs:
+            c_logger._log(
+                DEBUG,
+                "returning %s for %s for instance: %s owner: %s",
+                retval,
+                self,
+                instance,
+                owner,
+            )
 
         return retval
 
