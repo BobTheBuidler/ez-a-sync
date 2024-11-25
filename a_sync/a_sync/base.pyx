@@ -71,7 +71,7 @@ class ASyncGenericBase(ASyncABC):
         # TODO: cythonize this cache
         cdef bint debug_logs 
         if debug_logs := c_logger.isEnabledFor(DEBUG):
-            c_logger._log(DEBUG, "checking a_sync flag for %s", self)
+            c_logger._log(DEBUG, "checking a_sync flag for %s", (self, ))
         try:
             flag = _get_a_sync_flag_name_from_signature(type(self))
         except exceptions.ASyncFlagException:
@@ -82,8 +82,7 @@ class ASyncGenericBase(ASyncABC):
                 c_logger._log(
                     DEBUG,
                     "unable to find flag name using `%s.__init__` signature, checking for flag attributes defined on %s",
-                    self.__class__.__name__,
-                    self,
+                    (self.__class__.__name__, self),
                 )
             present_flags = [flag for flag in VIABLE_FLAGS if hasattr(self, flag)]
             if not present_flags:
@@ -132,9 +131,7 @@ class ASyncGenericBase(ASyncABC):
         c_logger._log(
             DEBUG,
             "`%s.%s` indicates default mode is %ssynchronous",
-            cls,
-            flag,
-            "a" if sync is False else "",
+            (cls, flag, "a" if sync is False else ""),
         )
         return sync
 
@@ -160,7 +157,7 @@ cdef bint _a_sync_flag_default_value_from_signature(object cls):
         return signature.parameters[_get_a_sync_flag_name_from_signature(cls)].default
     
     c_logger._log(
-        DEBUG, "checking `__init__` signature for default %s a_sync flag value", cls
+        DEBUG, "checking `__init__` signature for default %s a_sync flag value", (cls, )
     )
     cdef str flag = _get_a_sync_flag_name_from_signature(cls)
     cdef object flag_value = signature.parameters[flag].default
@@ -168,7 +165,7 @@ cdef bint _a_sync_flag_default_value_from_signature(object cls):
         raise NotImplementedError(
             "The implementation for 'cls' uses an arg to specify sync mode, instead of a kwarg. We are unable to proceed. I suppose we can extend the code to accept positional arg flags if necessary"
         )
-    c_logger._log(DEBUG, "%s defines %s, default value %s", cls, flag, flag_value)
+    c_logger._log(DEBUG, "%s defines %s, default value %s", (cls, flag, flag_value))
     return flag_value
 
 
@@ -184,9 +181,9 @@ cdef str _get_a_sync_flag_name_from_signature(object cls):
         # we can also skip assigning params to a var
         return _parse_flag_name_from_list(cls, inspect.signature(cls.__init__).parameters)
 
-    c_logger._log(DEBUG, "Searching for flags defined on %s.__init__", cls)
+    c_logger._log(DEBUG, "Searching for flags defined on %s.__init__", (cls, ))
     cdef object parameters = inspect.signature(cls.__init__).parameters
-    c_logger._log(DEBUG, "parameters: %s", parameters)
+    c_logger._log(DEBUG, "parameters: %s", (parameters, ))
     return _parse_flag_name_from_list(cls, parameters)
 
 
@@ -201,7 +198,7 @@ cdef str _parse_flag_name_from_list(object cls, object items):
         raise exceptions.TooManyFlags(cls, present_flags)
     if c_logger.isEnabledFor(DEBUG):
         flag = present_flags[0]
-        c_logger._log(DEBUG, "found flag %s", flag)
+        c_logger._log(DEBUG, "found flag %s", (flag, ))
         return flag
     return present_flags[0]
 

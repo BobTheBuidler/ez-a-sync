@@ -602,7 +602,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         cdef object retval, coro
         cdef bint debug_logs
         if debug_logs := c_logger.isEnabledFor(DEBUG):
-            c_logger._log(DEBUG, "calling %s with args: %s kwargs: %s", self, args, kwargs)
+            c_logger._log(DEBUG, "calling %s with args: %s kwargs: %s", (self, args, kwargs))
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
         retval = coro = ASyncFunction.__call__(self, self.__self__, *args, **kwargs)
@@ -614,12 +614,12 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
             if debug_logs:
                 c_logger._log(
-                    DEBUG, "awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs
+                    DEBUG, "awaiting %s for %s args: %s kwargs: %s", (coro, self, args, kwargs)
                 )
             retval = _await(coro)
         if debug_logs:
             c_logger._log(
-                DEBUG, "returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs
+                DEBUG, "returning %s for %s args: %s kwargs: %s", (retval, self, args, kwargs)
             )
         return retval  # type: ignore [call-overload, return-value]
 

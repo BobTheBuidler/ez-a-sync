@@ -45,7 +45,7 @@ async def exhaust_iterator(
             pass
     elif logger.isEnabledFor(DEBUG):
         async for thing in iterator:
-            logger._log(DEBUG, "putting %s from %s to queue %s", thing, iterator, queue)
+            logger._log(DEBUG, "putting %s from %s to queue %s", (thing, iterator, queue))
             queue.put_nowait(thing)
     else:
         async for thing in iterator:
