@@ -125,7 +125,7 @@ def __validate_argspec(fn: Callable):
             )
 
 
-cdef bint _run_sync(object function, dict kwargs):
+cdef inline bint _run_sync(object function, dict kwargs):
     """
     Determines whether to run the function synchronously or asynchronously.
 

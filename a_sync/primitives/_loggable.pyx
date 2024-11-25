@@ -81,7 +81,7 @@ cdef class _LoggerMixin:
         """
         return self.get_logger().isEnabledFor(DEBUG)
 
-    cdef bint check_debug_logs_enabled(self):
+    cdef inline bint check_debug_logs_enabled(self):
         return self.get_logger().isEnabledFor(DEBUG)
 
 
