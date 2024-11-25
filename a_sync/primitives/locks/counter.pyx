@@ -89,7 +89,7 @@ cdef class CounterLock(_DebugDaemonMixin):
         """A function that indicates whether the current counter value is greater than or equal to a given value."""
         return self._value >= v
     
-    cdef bint c_is_ready(self, long long v):
+    cdef inline bint c_is_ready(self, long long v):
         return self._value >= v
 
     async def wait_for(self, long long value) -> bint:

@@ -199,7 +199,7 @@ async def gather_mapping(
     # return data in same order as input mapping
     return {k: results[k] for k in mapping}
 
-cdef bint _is_mapping(object awaitables):
+cdef inline bint _is_mapping(object awaitables):
     return len(awaitables) == 1 and isinstance(awaitables[0], Mapping)
 
 

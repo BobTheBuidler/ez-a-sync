@@ -50,6 +50,11 @@ cdef inline bint negate_if_necessary(str flag, bint flag_value):
         return not flag_value
     raise exceptions.InvalidFlag(flag)
 
+cdef inline bint validate_and_negate_if_necessary(str flag, object flag_value):
+    try:
+        return negate_if_necessary(flag, flag_value)
+    except TypeError as e:
+        raise exceptions.InvalidFlagValue(flag, flag_value) from e.__cause__
 
 cdef inline bint validate_flag_value(str flag, object flag_value):
     """

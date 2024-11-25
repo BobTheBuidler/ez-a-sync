@@ -5,7 +5,7 @@ from contextlib import suppress
 
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync._flags cimport negate_if_necessary
+from a_sync.a_sync._flags cimport validate_and_negate_if_necessary, validate_flag_value
 from a_sync.a_sync.abstract import ASyncABC
 from a_sync.a_sync.flags import VIABLE_FLAGS
 
@@ -95,18 +95,10 @@ class ASyncGenericBase(ASyncABC):
     def __a_sync_flag_value__(self) -> bint:
         # TODO: cythonize this cache
         """If you wish to be able to hotswap default modes, just duplicate this def as a non-cached property."""
-        if c_logger.isEnabledFor(logging.DEBUG):
-            flag = self.__a_sync_flag_name__
-            flag_value = getattr(self, flag)
-            c_logger._log(logging.DEBUG, "`%s.%s` is currently %s", self, flag, flag_value)
-
-        else:
-            flag_value = getattr(self, self.__a_sync_flag_name__)
-
-        if not isinstance(flag_value, bool):
-            raise exceptions.InvalidFlagValue(flag, flag_value)
-
-        return flag_value
+        cdef str flag = self.__a_sync_flag_name__
+        flag_value = getattr(self, flag)
+        c_logger.debug("`%s.%s` is currently %s", self, flag, flag_value)
+        return validate_flag_value(flag, flag_value)
 
     @classmethod  # type: ignore [misc]
     def __a_sync_default_mode__(cls) -> bint:  # type: ignore [override]
@@ -120,10 +112,7 @@ class ASyncGenericBase(ASyncABC):
             except exceptions.NoFlagsFound:
                 flag = _get_a_sync_flag_name_from_class_def(cls)
                 flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
-            try:
-                return negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
-            except TypeError as e:
-                raise exceptions.InvalidFlagValue(flag, flag_value) from e.__cause__
+            return validate_and_negate_if_necessary(flag, flag_value)
 
         # we need an extra var so we can log it
         cdef bint sync
@@ -135,11 +124,7 @@ class ASyncGenericBase(ASyncABC):
             flag = _get_a_sync_flag_name_from_class_def(cls)
             flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
         
-        try:
-            sync = negate_if_necessary(flag, flag_value)  # type: ignore [arg-type]
-        except TypeError as e:
-            raise exceptions.InvalidFlagValue(flag, flag_value) from e.__cause__
-
+        sync = validate_and_negate_if_necessary(flag, flag_value)
         c_logger._log(
             logging.DEBUG,
             "`%s.%s` indicates default mode is %ssynchronous",
@@ -217,7 +202,7 @@ cdef str _parse_flag_name_from_list(object cls, object items):
     return present_flags[0]
 
 
-cdef bint _get_a_sync_flag_value_from_class_def(object cls, str flag):
+cdef inline bint _get_a_sync_flag_value_from_class_def(object cls, str flag):
     cdef object spec
     for spec in [cls, *cls.__bases__]:
         if flag in spec.__dict__:

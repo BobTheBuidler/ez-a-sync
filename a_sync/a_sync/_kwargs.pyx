@@ -5,7 +5,7 @@ This module provides utility functions for handling keyword arguments related to
 from libc.stdint cimport uint8_t
 
 from a_sync import exceptions
-from a_sync.a_sync._flags cimport negate_if_necessary
+from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync.flags import VIABLE_FLAGS
 
 
@@ -58,12 +58,4 @@ cdef inline bint is_sync(str flag, dict kwargs, bint pop_flag):
     See Also:
         :func:`get_flag_name`: Retrieves the name of the flag present in the kwargs.
     """
-    if pop_flag:
-        # NOTE: we should techincally raise InvalidFlagValue here but I dont want
-        #       to set flag_value to a var and it will raise a TypeError anyway.
-        return negate_if_necessary(flag, kwargs.pop(flag))
-    else:
-        try:
-            return negate_if_necessary(flag, kwargs[flag])
-        except TypeError as e:
-            raise exceptions.InvalidFlagValue(flag, kwargs[flag]) from e.__cause__
+    return validate_and_negate_if_necessary(flag, kwargs.pop(flag) if pop_flag else kwargs[flag])

@@ -8,6 +8,6 @@ cdef class CounterLock(_DebugDaemonMixin):
     cdef list _heap
     cdef dict[long long, Event] _events
     cpdef bint is_ready(self, long long v)
-    cdef bint c_is_ready(self, long long v)
+    cdef inline bint c_is_ready(self, long long v)
     cpdef void set(self, long long value)
     cdef void c_set(self, long long value)
