@@ -13,7 +13,7 @@ def get_flag_name_legacy(dict kwargs) -> str:
     return get_flag_name(kwargs)
 
 
-cdef str get_flag_name(dict kwargs):
+cdef inline str get_flag_name(dict kwargs):
     """
     Get the name of the flag present in the kwargs.
 
@@ -46,7 +46,7 @@ cdef str get_flag_name(dict kwargs):
     raise exceptions.TooManyFlags("kwargs", present_flags)
 
 
-cdef bint is_sync(str flag, dict kwargs, bint pop_flag):
+cdef inline bint is_sync(str flag, dict kwargs, bint pop_flag):
     """
     Determine if the operation should be synchronous based on the flag value.
 
