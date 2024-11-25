@@ -40,8 +40,11 @@ async def exhaust_iterator(
         - :func:`exhaust_iterators`
         - :func:`as_yielded`
     """
-    async for thing in iterator:
-        if queue:
+    if queue is None:
+        async for thing in iterator:
+            pass
+    else:
+        async for thing in iterator:
             logger.debug("putting %s from %s to queue %s", thing, iterator, queue)
             queue.put_nowait(thing)
 
@@ -71,6 +74,9 @@ async def exhaust_iterators(
         - :func:`exhaust_iterator`
         - :func:`as_yielded`
     """
+    if queue is None and join:
+        raise ValueError("You must provide a `queue` to use kwarg `join`")
+
     for x in await asyncio.gather(
         *[exhaust_iterator(iterator, queue=queue) for iterator in iterators],
         return_exceptions=True,
@@ -78,12 +84,11 @@ async def exhaust_iterators(
         if isinstance(x, Exception):
             # raise it with its original traceback instead of from here
             raise x.with_traceback(x.__traceback__)
-    if queue:
+
+    if queue is not None:
         queue.put_nowait(_Done())
         if join:
             await queue.join()
-    elif join:
-        raise ValueError("You must provide a `queue` to use kwarg `join`")
 
 
 T0 = TypeVar("T0")
