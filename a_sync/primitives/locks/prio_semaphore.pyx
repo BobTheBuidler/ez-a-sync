@@ -5,14 +5,14 @@ processed before lower priority ones.
 """
 
 import asyncio
-import heapq
-import logging
 from collections import deque
+from heapq import heappop, heappush
+from logging import DEBUG, getLogger
 
 from a_sync._typing import *
 from a_sync.primitives.locks.semaphore cimport Semaphore
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 cdef object c_logger = logger
 
@@ -144,7 +144,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             context_manager = self._context_manager_class(
                 self, priority, name=self.name
             )
-            heapq.heappush(self.__waiters, context_manager)  # type: ignore [misc]
+            heappush(self.__waiters, context_manager)  # type: ignore [misc]
             self._context_managers[priority] = context_manager
         return self._context_managers[priority]
 
@@ -200,32 +200,37 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore._wake_up_next()
         """
         cdef _AbstractPrioritySemaphoreContextManager manager
+        cdef bint debug_logs = c_logger.isEnabledFor(DEBUG)
         while self.__waiters:
-            manager = heapq.heappop(self.__waiters)
+            manager = heappop(self.__waiters)
             if len(manager) == 0:
                 # There are no more waiters, get rid of the empty manager
-                c_logger.debug(
-                    "manager %s has no more waiters, popping from %s",
-                    manager._c_repr_no_parent_(),
-                    self,
-                )
+                if debug_logs:
+                    c_logger._log(
+                        DEBUG,
+                        "manager %s has no more waiters, popping from %s",
+                        manager._c_repr_no_parent_(),
+                        self,
+                    )
                 self._context_managers.pop(manager._priority)
                 continue
-            c_logger.debug("waking up next for %s", manager._c_repr_no_parent_())
 
             woke_up = False
             start_len = len(manager)
 
-            if not manager._waiters:
-                c_logger.debug("not manager._waiters")
+            if debug_logs:
+                c_logger._log(DEBUG, "waking up next for %s", manager._c_repr_no_parent_())
+                if not manager._waiters:
+                    c_logger._log(DEBUG, "not manager._waiters")
 
             while manager._waiters:
                 waiter = manager._waiters.popleft()
                 self._potential_lost_waiters.remove(waiter)
                 if not waiter.done():
                     waiter.set_result(None)
-                    c_logger.debug("woke up %s", waiter)
                     woke_up = True
+                    if debug_logs:
+                        c_logger._log(DEBUG, "woke up %s", waiter)
                     break
 
             if not woke_up:
@@ -238,21 +243,29 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
 
             if end_len:
                 # There are still waiters, put the manager back
-                heapq.heappush(self.__waiters, manager)  # type: ignore [misc]
+                heappush(self.__waiters, manager)  # type: ignore [misc]
             else:
                 # There are no more waiters, get rid of the empty manager
                 self._context_managers.pop(manager._priority)
             return
 
         # emergency procedure (hopefully temporary):
+        if not debug_logs:
+            while self._potential_lost_waiters:
+                waiter = self._potential_lost_waiters.pop(0)
+                if not waiter.done():
+                    waiter.set_result(None)
+                    return
+            
         while self._potential_lost_waiters:
             waiter = self._potential_lost_waiters.pop(0)
-            c_logger.debug("we found a lost waiter %s", waiter)
+            c_logger._log(DEBUG, "we found a lost waiter %s", waiter)
             if not waiter.done():
                 waiter.set_result(None)
-                c_logger.debug("woke up lost waiter %s", waiter)
+                c_logger._log(DEBUG, "woke up lost waiter %s", waiter)
                 return
-        c_logger.debug("%s has no waiters to wake", self)
+
+        c_logger._log(DEBUG, "%s has no waiters to wake", self)
 
 
 cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
@@ -490,7 +503,7 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):  # type: ignore [type-
         cdef dict[int, _PrioritySemaphoreContextManager] context_managers = self._context_managers
         if <int>priority not in context_managers:
             context_manager = _PrioritySemaphoreContextManager(self, <int>priority, name=self.name)
-            heapq.heappush(
+            heappush(
                 <list[_PrioritySemaphoreContextManager]>self.__waiters,
                 context_manager,
             )  # type: ignore [misc]

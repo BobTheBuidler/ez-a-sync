@@ -10,7 +10,7 @@ is intended for more custom implementations if necessary.
 """
 
 import abc
-import logging
+from logging import DEBUG, getLogger
 from typing import Dict, Any, Tuple
 
 from a_sync._typing import *
@@ -19,7 +19,7 @@ from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync._meta import ASyncMeta
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 cdef object c_logger = logger
 
@@ -157,27 +157,35 @@ class ASyncABC(metaclass=ASyncMeta):
             >>> MyASyncClass.__a_sync_instance_will_be_sync__((), {'sync': True})
             True
         """
-        c_logger.debug(
-            "checking `%s.%s.__init__` signature against provided kwargs to determine a_sync mode for the new instance",
-            cls.__module__,
-            cls.__name__,
-        )
+        cdef bint debug_logs 
+        if debug_logs := c_logger.isEnabledFor(DEBUG):
+            c_logger._log(
+                DEBUG,
+                "checking `%s.%s.__init__` signature against provided kwargs to determine a_sync mode for the new instance",
+                cls.__module__,
+                cls.__name__,
+            )
 
         cdef str flag = get_flag_name(kwargs)
-        cdef bint sync
-        if flag:
-            sync = is_sync(flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
-            c_logger.debug(
-                "kwargs indicate the new instance created with args %s %s is %ssynchronous",
-                args,
-                kwargs,
-                "" if sync else "a",
+        if not debug_logs:
+            return is_sync(flag, kwargs, pop_flag=False) if flag else cls.__a_sync_default_mode__()  # type: ignore [arg-type]
+        
+        if not flag:
+            c_logger._log(
+                DEBUG,
+                "No valid flags found in kwargs, checking class definition for defined default"
             )
-            return sync
-        c_logger.debug(
-            "No valid flags found in kwargs, checking class definition for defined default"
+            return cls.__a_sync_default_mode__()  # type: ignore [arg-type]
+
+        cdef bint sync = is_sync(flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
+        c_logger._log(
+            DEBUG,
+            "kwargs indicate the new instance created with args %s %s is %ssynchronous",
+            args,
+            kwargs,
+            "" if sync else "a",
         )
-        return cls.__a_sync_default_mode__()  # type: ignore [arg-type]
+        return sync
 
     ####################
     # Abstract Methods #

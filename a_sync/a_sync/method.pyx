@@ -9,9 +9,9 @@ asynchronously based on various conditions and configurations.
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 import functools
-import logging
 import weakref
 from inspect import isawaitable
+from logging import DEBUG, getLogger
 
 from a_sync._typing import *
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
@@ -33,7 +33,7 @@ METHOD_CACHE_TTL = 300
 cdef int _METHOD_CACHE_TTL = 300
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 cdef object c_logger = logger
 
@@ -600,7 +600,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method(arg1, arg2, kwarg1=value1, sync=True)
         """
         cdef object retval, coro
-        c_logger.debug("calling %s with args: %s kwargs: %s", self, args, kwargs)
+        cdef bint debug_logs
+        if debug_logs := c_logger.isEnabledFor(DEBUG):
+            c_logger._log(DEBUG, "calling %s with args: %s kwargs: %s", self, args, kwargs)
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
         retval = coro = ASyncFunction.__call__(self, self.__self__, *args, **kwargs)
@@ -610,13 +612,15 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             pass
         elif _should_await(self, kwargs):
             # The awaitable was not awaited, so now we need to check the flag as defined on 'self' and await if appropriate.
-            c_logger.debug(
-                "awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs
-            )
+            if debug_logs:
+                c_logger._log(
+                    DEBUG, "awaiting %s for %s args: %s kwargs: %s", coro, self, args, kwargs
+                )
             retval = _await(coro)
-        c_logger.debug(
-            "returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs
-        )
+        if debug_logs:
+            c_logger._log(
+                DEBUG, "returning %s for %s args: %s kwargs: %s", retval, self, args, kwargs
+            )
         return retval  # type: ignore [call-overload, return-value]
 
     @property

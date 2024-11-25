@@ -1,7 +1,7 @@
 import functools
 import inspect
-import logging
 from contextlib import suppress
+from logging import DEBUG, getLogger
 
 from a_sync import exceptions
 from a_sync._typing import *
@@ -10,7 +10,7 @@ from a_sync.a_sync.abstract import ASyncABC
 from a_sync.a_sync.flags import VIABLE_FLAGS
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 cdef object c_logger = logger
 
@@ -69,18 +69,22 @@ class ASyncGenericBase(ASyncABC):
     @functools.cached_property
     def __a_sync_flag_name__(self) -> str:
         # TODO: cythonize this cache
-        c_logger.debug("checking a_sync flag for %s", self)
+        cdef bint debug_logs 
+        if debug_logs := c_logger.isEnabledFor(DEBUG):
+            c_logger._log(DEBUG, "checking a_sync flag for %s", self)
         try:
             flag = _get_a_sync_flag_name_from_signature(type(self))
         except exceptions.ASyncFlagException:
             # We can't get the flag name from the __init__ signature,
             # but maybe the implementation sets the flag somewhere else.
             # Let's check the instance's atributes
-            c_logger.debug(
-                "unable to find flag name using `%s.__init__` signature, checking for flag attributes defined on %s",
-                self.__class__.__name__,
-                self,
-            )
+            if debug_logs:
+                c_logger._log(
+                    DEBUG,
+                    "unable to find flag name using `%s.__init__` signature, checking for flag attributes defined on %s",
+                    self.__class__.__name__,
+                    self,
+                )
             present_flags = [flag for flag in VIABLE_FLAGS if hasattr(self, flag)]
             if not present_flags:
                 raise exceptions.NoFlagsFound(self) from None

@@ -6,15 +6,15 @@ flow of items in an asynchronous context.
 
 import asyncio
 import asyncio.futures
-import logging
 import traceback
+from logging import DEBUG, getLogger
 from types import TracebackType
 
 import a_sync.asyncio
 from a_sync._typing import *
 from a_sync.primitives.queue import Queue
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 async def exhaust_iterator(
@@ -43,9 +43,12 @@ async def exhaust_iterator(
     if queue is None:
         async for thing in iterator:
             pass
+    elif logger.isEnabledFor(DEBUG):
+        async for thing in iterator:
+            logger._log(DEBUG, "putting %s from %s to queue %s", thing, iterator, queue)
+            queue.put_nowait(thing)
     else:
         async for thing in iterator:
-            logger.debug("putting %s from %s to queue %s", thing, iterator, queue)
             queue.put_nowait(thing)
 
 
