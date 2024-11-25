@@ -1,4 +1,3 @@
-#cython: profile=False
 """
 This module provides functionality for handling synchronous and asynchronous flags
 in the ez-a-sync library.
