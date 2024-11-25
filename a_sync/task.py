@@ -27,6 +27,7 @@ from a_sync.a_sync.method import (
     ASyncMethodDescriptorSyncDefault,
 )
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
+from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.asyncio.gather import Excluder
 from a_sync.iter import ASyncIterator, ASyncGeneratorFunction, ASyncSorter
 from a_sync.primitives.locks import Event
@@ -218,17 +219,17 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     def __getitem__(self, item: K) -> "asyncio.Task[V]":
         try:
-            return super().__getitem__(item)
+            return dict.__getitem__(self, item)
         except KeyError:
             if self.concurrency:
                 # NOTE: we use a queue instead of a Semaphore to reduce memory use for use cases involving many many tasks
                 fut = self._queue.put_nowait(item)
             else:
-                fut = a_sync.asyncio.create_task(
+                fut = create_task(
                     coro=self._wrapped_func(item, **self._wrapped_func_kwargs),
                     name=f"{self._name}[{item}]" if self._name else f"{item}",
                 )
-            super().__setitem__(item, fut)
+            dict.__setitem__(self, item, fut)
             return fut
 
     def __await__(self) -> Generator[Any, None, Dict[K, V]]:
@@ -267,15 +268,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             # if there are any tasks that still need to complete, we need to await them and yield them
             if unyielded := {key: self[key] for key in self if key not in yielded}:
                 if pop:
-                    async for key, value in a_sync.asyncio.as_completed(
-                        unyielded, aiter=True
-                    ):
+                    async for key, value in as_completed(unyielded, aiter=True):
                         self.pop(key)
                         yield key, value
                 else:
-                    async for key, value in a_sync.asyncio.as_completed(
-                        unyielded, aiter=True
-                    ):
+                    async for key, value in as_completed(unyielded, aiter=True):
                         yield key, value
         finally:
             await self._if_pop_clear(pop)
@@ -284,16 +281,16 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         task_or_fut = dict.__getitem__(self, item)
         if not task_or_fut.done():
             task_or_fut.cancel()
-        super().__delitem__(item)
+        dict.__delitem__(self, item)
 
     def keys(self, pop: bool = False) -> "TaskMappingKeys[K, V]":
-        return TaskMappingKeys(super().keys(), self, pop=pop)
+        return TaskMappingKeys(dict.keys(self), self, pop=pop)
 
     def values(self, pop: bool = False) -> "TaskMappingValues[K, V]":
-        return TaskMappingValues(super().values(), self, pop=pop)
+        return TaskMappingValues(dict.values(self), self, pop=pop)
 
     def items(self, pop: bool = False) -> "TaskMappingValues[K, V]":
-        return TaskMappingItems(super().items(), self, pop=pop)
+        return TaskMappingItems(dict.items(self), self, pop=pop)
 
     async def close(self) -> None:
         await self._if_pop_clear(True)
@@ -361,15 +358,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
             if self:
                 if pop:
-                    async for key, value in a_sync.asyncio.as_completed(
-                        self, aiter=True
-                    ):
+                    async for key, value in as_completed(self, aiter=True):
                         self.pop(key)
                         yield _yield(key, value, yields)
                 else:
-                    async for key, value in a_sync.asyncio.as_completed(
-                        self, aiter=True
-                    ):
+                    async for key, value in as_completed(self, aiter=True):
                         yield _yield(key, value, yields)
         finally:
             await self._if_pop_clear(pop)
@@ -485,7 +478,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if self._init_loader:
             await self._init_loader
         self._raise_if_empty()
-        return await a_sync.asyncio.gather(
+        return await gather(
             self,
             return_exceptions=return_exceptions,
             exclude_if=exclude_if,
@@ -525,7 +518,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             *args: One key to pop.
             cancel: Whether to cancel the task when popping it.
         """
-        fut_or_task = super().pop(*args)
+        fut_or_task = dict.pop(self, *args)
         if cancel:
             fut_or_task.cancel()
         return fut_or_task
@@ -551,9 +544,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             logger.debug("starting %s init loader", self)
             name = f"{type(self).__name__} init loader loading {self.__iterables__} for {self}"
             try:
-                task = a_sync.asyncio.create_task(
-                    coro=self.__init_loader_coro, name=name
-                )
+                task = create_task(coro=self.__init_loader_coro, name=name)
             except RuntimeError as e:
                 raise _NoRunningLoop if str(e) == "no running event loop" else e
             task.add_done_callback(self.__cleanup)
@@ -622,9 +613,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
         done, pending = await asyncio.wait(
             [
-                a_sync.asyncio.create_task(
-                    self._init_loader_next(), log_destroy_pending=False
-                ),
+                create_task(self._init_loader_next(), log_destroy_pending=False),
                 self._init_loader,
             ],
             return_when=asyncio.FIRST_COMPLETED,
