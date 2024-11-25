@@ -95,14 +95,9 @@ class ASyncGenericBase(ASyncABC):
     def __a_sync_flag_value__(self) -> bint:
         # TODO: cythonize this cache
         """If you wish to be able to hotswap default modes, just duplicate this def as a non-cached property."""
-        if c_logger.isEnabledFor(logging.DEBUG):
-            flag = self.__a_sync_flag_name__
-            flag_value = getattr(self, flag)
-            c_logger._log(logging.DEBUG, "`%s.%s` is currently %s", self, flag, flag_value)
-
-        else:
-            flag_value = getattr(self, self.__a_sync_flag_name__)
-
+        cdef str flag = self.__a_sync_flag_name__
+        flag_value = getattr(self, flag)
+        c_logger.debug("`%s.%s` is currently %s", self, flag, flag_value)
         return validate_flag_value(flag, flag_value)
 
     @classmethod  # type: ignore [misc]
