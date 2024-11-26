@@ -126,8 +126,6 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             return self
         try:
             bound = instance.__dict__[self.field_name]
-            # we will set a new one in the finally block
-            bound._cache_handle.cancel()
         except KeyError:
             from a_sync.a_sync.abstract import ASyncABC
 
@@ -318,8 +316,6 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
             return self
         try:
             bound = instance.__dict__[self.field_name]
-            # we will set a new one in the finally block
-            bound._cache_handle.cancel()
         except KeyError:
             bound = ASyncBoundMethodSyncDefault(
                 instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
@@ -405,8 +401,6 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
 
         try:
             bound = instance.__dict__[self.field_name]
-            # we will set a new one in the finally block
-            bound._cache_handle.cancel()
         except KeyError:
             bound = ASyncBoundMethodAsyncDefault(
                 instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
@@ -792,7 +786,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
         ).sum(pop=True, sync=False)
 
-    def __cancel_cache_handle(self, object instance) -> None:
+    def __cancel_cache_handle(self, instance: I) -> None:
         """
         Cancel the cache handle.
 
