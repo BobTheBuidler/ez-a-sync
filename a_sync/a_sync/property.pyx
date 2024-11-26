@@ -734,7 +734,6 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
         cdef object bound
         try:
             bound = instance.__dict__[self.field_name]
-            bound._cache_handle.cancel()
         except KeyError:
             bound = HiddenMethod(
                 instance,
