@@ -6,9 +6,6 @@ import functools
 from a_sync import exceptions, primitives
 from a_sync._typing import *
 
-# We keep this here for now so we don't break downstream deps. Eventually will be removed.
-from a_sync.primitives import ThreadsafeSemaphore, DummySemaphore
-
 
 @overload
 def apply_semaphore(  # type: ignore [misc]
@@ -134,7 +131,7 @@ def apply_semaphore(
         `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.
     """
     # Parse Inputs
-    if isinstance(coro_fn, (int, asyncio.Semaphore)):
+    if isinstance(coro_fn, (int, asyncio.Semaphore, primitives.Semaphore)):
         if semaphore is not None:
             raise ValueError("You can only pass in one arg.")
         semaphore = coro_fn
@@ -146,7 +143,7 @@ def apply_semaphore(
     # Create the semaphore if necessary
     if isinstance(semaphore, int):
         semaphore = primitives.ThreadsafeSemaphore(semaphore)
-    elif not isinstance(semaphore, asyncio.Semaphore):
+    elif not isinstance(semaphore, (asyncio.Semaphore, primitives.Semaphore)):
         raise TypeError(
             f"'semaphore' must either be an integer or a Semaphore object. You passed {semaphore}"
         )
