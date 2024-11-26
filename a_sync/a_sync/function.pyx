@@ -87,7 +87,7 @@ class _ModifiedMixin:
         return self.modifiers.default
 
 
-def _validate_wrapped_fn(fn: Callable) -> None:
+cpdef void _validate_wrapped_fn(fn: Callable):
     """Ensures 'fn' is an appropriate function for wrapping with a_sync.
 
     Args:
@@ -102,10 +102,11 @@ def _validate_wrapped_fn(fn: Callable) -> None:
     """
     if isinstance(fn, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
         return  # These are always valid
-    if not callable(fn):
-        raise TypeError(f"Input is not callable. Unable to decorate {fn}")
-    if isinstance(fn, _LRUCacheWrapper):
+    elif isinstance(fn, _LRUCacheWrapper):
         fn = fn.__wrapped__
+    elif not callable(fn):
+        raise TypeError(f"Input is not callable. Unable to decorate {fn}")
+    
     _check_not_genfunc(fn)
     try:
         _validate_argspec(fn)
@@ -960,7 +961,7 @@ class ASyncDecorator(_ModifiedMixin):
             return ASyncFunctionSyncDefault(func, **self.modifiers)
 
 
-def _check_not_genfunc(func: Callable) -> None:
+cdef void _check_not_genfunc(func: Callable):
     """Raises an error if the function is a generator or async generator.
 
     Args:
