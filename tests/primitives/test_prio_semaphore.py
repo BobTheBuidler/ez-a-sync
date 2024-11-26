@@ -9,12 +9,14 @@ def test_prio_semaphore_init():
     with_name = PrioritySemaphore(10, name="test")
     assert with_name._value == 10 and with_name.name == "test"
 
+
 @pytest.mark.asyncio_cooperative
 async def test_prio_semaphore_count_waiters():
     semaphore = PrioritySemaphore(1)
     tasks = [asyncio.create_task(semaphore[i].acquire()) for i in range(5)]
     await asyncio.sleep(1)
     print(semaphore)
+
 
 @pytest.mark.asyncio_cooperative
 async def test_prio_semaphore_use():
