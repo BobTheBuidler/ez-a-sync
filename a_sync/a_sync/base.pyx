@@ -58,11 +58,9 @@ class ASyncGenericBase(ASyncABC):
     """
 
     def __init__(self):
-        cdef str cls_name
         if type(self) is ASyncGenericBase:
-            cls_name = type(self).__name__
             raise NotImplementedError(
-                f"You should not create instances of `{cls_name}` directly, you should subclass `ASyncGenericBase` instead."
+                f"You should not create instances of `ASyncGenericBase` directly, you should subclass `ASyncGenericBase` instead."
             )
         ASyncABC.__init__(self)
 
