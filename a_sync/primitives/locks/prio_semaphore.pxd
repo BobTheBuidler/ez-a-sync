@@ -6,7 +6,6 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
     cdef list _potential_lost_waiters
     cdef object _top_priority
     cdef object _context_manager_class
-    cdef list[_AbstractPrioritySemaphoreContextManager] __waiters
     cdef object c_getitem(self, object priority)
     cdef dict[object, int] _count_waiters(self)
 

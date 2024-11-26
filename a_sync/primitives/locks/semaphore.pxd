@@ -1,9 +1,10 @@
 from a_sync.primitives._debug cimport _DebugDaemonMixin
 
 cdef class Semaphore(_DebugDaemonMixin):
-    cdef str _name
     cdef unsigned long long __value
-    cdef object _waiters
+    cdef object __waiters
+    cdef char* _name
+    cdef str decode_name(self)
     cdef set _decorated
     cdef dict __dict__
     cpdef bint locked(self)

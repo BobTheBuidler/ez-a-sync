@@ -6,6 +6,8 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 import asyncio
 import functools
 from collections import defaultdict, deque
+from libc.string cimport strcpy
+from libc.stdlib cimport malloc, free
 from threading import Thread, current_thread
 from typing import Container
 
@@ -50,10 +52,15 @@ cdef class Semaphore(_DebugDaemonMixin):
     """
 
     def __cinit__(self) -> None:
-        self.__waiters = deque()
+        self._Semaphore__waiters = deque()
         self._decorated: Set[str] = set()
     
-    def __init__(self, value: int=1, name=None, loop=None, **kwargs) -> None:
+    def __init__(
+        self, 
+        value: int = 1, 
+        str name = "", 
+        object loop = None,
+    ) -> None:
         """
         Initialize the semaphore with a given value and optional name for debugging.
 
@@ -66,14 +73,32 @@ cdef class Semaphore(_DebugDaemonMixin):
             raise ValueError("Semaphore initial value must be >= 0")
 
         try:
-            self.__value = value
+            self._Semaphore__value = value
         except OverflowError as e:
+            if value < 0:
+                raise ValueError("'value' must be a positive integer") from e.__cause__
             raise OverflowError(
                 {"error": str(e), "value": value, "max value": 18446744073709551615},
                 "If you need a Semaphore with a larger value, you should just use asyncio.Semaphore",
             ) from e.__cause__
             
-        self._name = name or getattr(self, "__origin__", "")
+        # we need a constant to coerce to char*
+        cdef bytes encoded_name = (name or getattr(self, "__origin__", "")).encode("utf-8")
+        cdef Py_ssize_t length = len(encoded_name)
+
+        # Allocate memory for the char* and add 1 for the null character
+        self._name = <char*>malloc(length + 1)
+        """An optional name for the counter, used in debug logs."""
+
+        if self._name == NULL:
+            raise MemoryError("Failed to allocate memory for __name.")
+        # Copy the bytes data into the char*
+        strcpy(self._name, encoded_name)
+
+    def __dealloc__(self):
+        # Free the memory allocated for _name
+        if self._name is not NULL:
+            free(self._name)
 
     def __call__(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
         """
@@ -91,7 +116,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         return self.decorate(fn)  # type: ignore [arg-type, return-value]
 
     def __repr__(self) -> str:
-        representation = f"<{self.__class__.__name__} name={self._name} value={self.__value} waiters={len(self)}>"
+        representation = f"<{self.__class__.__name__} name={self.__name.decode('utf-8')} value={self._Semaphore__value} waiters={len(self)}>"
         if self._decorated:
             representation = f"{representation[:-1]} decorates={self._decorated}"
         return representation
@@ -112,14 +137,14 @@ cdef class Semaphore(_DebugDaemonMixin):
     
     cdef bint c_locked(self):
         """Returns True if semaphore cannot be acquired immediately."""
-        if self.__value == 0:
+        if self._Semaphore__value == 0:
             return True
-        waiters = self.__waiters 
+        cdef object waiters = self._Semaphore__waiters 
         if any(not w.cancelled() for w in (waiters or ())):
             return True
 
     def __len__(self) -> int:
-        return len(self.__waiters)
+        return len(self._Semaphore__waiters)
 
     def decorate(self, fn: CoroFn[P, T]) -> CoroFn[P, T]:
         """
@@ -171,11 +196,11 @@ cdef class Semaphore(_DebugDaemonMixin):
         Returns:
             True when the semaphore is successfully acquired.
         """
-        if self.__value <= 0:
+        if self._Semaphore__value <= 0:
             self._c_ensure_debug_daemon((),{})
 
         if not self.c_locked():
-            self.__value -= 1
+            self._Semaphore__value -= 1
             return __acquire()
 
         return self.__acquire()
@@ -186,19 +211,19 @@ cdef class Semaphore(_DebugDaemonMixin):
         # _wake_up_first() and attempt to wake up itself.
         
         cdef object fut = self._c_get_loop().create_future()
-        self.__waiters.append(fut)
+        self._Semaphore__waiters.append(fut)
         try:
             try:
                 await fut
             finally:
-                self.__waiters.remove(fut)
+                self._Semaphore__waiters.remove(fut)
         except asyncio.exceptions.CancelledError:
             if not fut.cancelled():
-                self.__value += 1
+                self._Semaphore__value += 1
                 self._c_wake_up_next()
             raise
 
-        if self.__value > 0:
+        if self._Semaphore__value > 0:
             self._c_wake_up_next()
 
         return True
@@ -209,56 +234,59 @@ cdef class Semaphore(_DebugDaemonMixin):
         When it was zero on entry and another coroutine is waiting for it to
         become larger than zero again, wake up that coroutine.
         """
-        self.__value += 1
+        self._Semaphore__value += 1
         self._c_wake_up_next()
     
     cdef void c_release(self):
-        self.__value += 1
+        self._Semaphore__value += 1
         self._c_wake_up_next()
 
     @property
     def name(self) -> str:
-        return self._name
+        return self.decode_name()
+    
+    cdef str decode_name(self):
+        return (self._name or b"").decode("utf-8")
 
     @property
     def _value(self) -> int:
         # required for subclass compatability
-        return self.__value
+        return self._Semaphore__value
     
     @_value.setter
     def _value(self, unsigned long long value):
         # required for subclass compatability
-        self.__value = value
+        self._Semaphore__value = value
 
     @property
-    def _waiters(self) -> int:
+    def _waiters(self) -> List[asyncio.Future]:
         # required for subclass compatability
-        return self.__waiters
+        return self._Semaphore__waiters
     
     @_waiters.setter
     def _waiters(self, value: Container):
         # required for subclass compatability
-        self.__waiters = value
+        self._Semaphore__waiters = value
 
     cpdef void _wake_up_next(self):
         """Wake up the first waiter that isn't done."""
-        if not self.__waiters:
+        if not self._Semaphore__waiters:
             return
 
-        for fut in self.__waiters:
+        for fut in self._Semaphore__waiters:
             if not fut.done():
-                self.__value -= 1
+                self._Semaphore__value -= 1
                 fut.set_result(True)
                 return
     
     cdef void _c_wake_up_next(self):
         """Wake up the first waiter that isn't done."""
-        if not self.__waiters:
+        if not self._Semaphore__waiters:
             return
 
-        for fut in self.__waiters:
+        for fut in self._Semaphore__waiters:
             if not fut.done():
-                self.__value -= 1
+                self._Semaphore__value -= 1
                 fut.set_result(True)
                 return
             
@@ -275,7 +303,7 @@ cdef class Semaphore(_DebugDaemonMixin):
             async def monitor():
                 await semaphore._debug_daemon()
         """
-        while self.__waiters:
+        while self._Semaphore__waiters:
             await asyncio.sleep(60)
             self.get_logger().debug(
                 "%s has %s waiters for any of: %s",
@@ -300,8 +328,8 @@ cdef class DummySemaphore(Semaphore):
     """
 
     def __cinit__(self):
-        self.__value = 0
-        self.__waiters = deque()
+        self._Semaphore__value = 0
+        self._Semaphore__waiters = deque()
         self._decorated = None
 
     def __init__(self, name: Optional[str] = None):
@@ -311,10 +339,27 @@ cdef class DummySemaphore(Semaphore):
         Args:
             name (optional): An optional name for the dummy semaphore.
         """
-        self._name = name
+            
+        # we need a constant to coerce to char*
+        cdef bytes encoded_name = (name or getattr(self, "__origin__", "")).encode("utf-8")
+        cdef Py_ssize_t length = len(encoded_name)
+
+        # Allocate memory for the char* and add 1 for the null character
+        self._name = <char*>malloc(length + 1)
+        """An optional name for the counter, used in debug logs."""
+
+        if self._name == NULL:
+            raise MemoryError("Failed to allocate memory for __name.")
+        # Copy the bytes data into the char*
+        strcpy(self._name, encoded_name)
+
+    def __dealloc__(self):
+        # Free the memory allocated for _name
+        if self._name is not NULL:
+            free(self._name)
 
     def __repr__(self) -> str:
-        return "<{} name={}>".format(self.__class__.__name__, self._name)
+        return "<{} name={}>".format(self.__class__.__name__, self.decode_name())
 
     async def acquire(self) -> Literal[True]:
         """Acquire the dummy semaphore, which is a no-op."""
@@ -372,11 +417,12 @@ cdef class ThreadsafeSemaphore(Semaphore):
             self.semaphores = {}
             self.dummy = DummySemaphore(name=name)
         else:
-            self.semaphores: DefaultDict[Thread, Semaphore] = defaultdict(lambda: Semaphore(value, name=self._name))  # type: ignore [arg-type]
+            self.semaphores: DefaultDict[Thread, Semaphore] = defaultdict(lambda: Semaphore(value, name=name))  # type: ignore [arg-type]
             self.dummy = None
 
     def __len__(self) -> int:
-        return sum(len(sem._waiters) for sem in self.semaphores.values())
+        cdef dict[object, Semaphore] semaphores = self.semaphores
+        return sum(len(sem) for sem in semaphores.values())
 
     @property
     def semaphore(self) -> Semaphore:
