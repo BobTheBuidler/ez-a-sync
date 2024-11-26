@@ -100,31 +100,41 @@ cpdef void _validate_wrapped_fn(fn: Callable):
     See Also:
         - :func:`_check_not_genfunc`
     """
-    if isinstance(fn, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
+    typ = type(fn)
+    if typ is _function_type:
+        _check_not_genfunc_cached(fn)
+        _validate_argspec_cached(fn)
+        return
+    if issubclass(typ, (AsyncPropertyDescriptor, AsyncCachedPropertyDescriptor)):
         return  # These are always valid
-    elif isinstance(fn, _LRUCacheWrapper):
+    elif issubclass(typ, _LRUCacheWrapper):
         fn = fn.__wrapped__
+        if type(fn) is _function_type:
+            _check_not_genfunc_cached(fn)
+            _validate_argspec_cached(fn)
+            return
     elif not callable(fn):
         raise TypeError(f"Input is not callable. Unable to decorate {fn}")
-    
     _check_not_genfunc(fn)
-    try:
+    _validate_argspec(fn)
+
+cdef object _function_type = type(logging.getLogger)
+
+cdef set[Py_ssize_t] _argspec_validated = set()
+
+cdef void _validate_argspec_cached(fn: Callable):
+    cdef Py_ssize_t fid = id(fn)
+    if fid not in _argspec_validated:
         _validate_argspec(fn)
-    except TypeError:
-        __validate_argspec(fn)
+        _argspec_validated.add(fid)
 
-@functools.lru_cache(maxsize=4096)
-def _validate_argspec(fn: Callable):
-    __validate_argspec(fn)
-
-def __validate_argspec(fn: Callable):
+cdef void _validate_argspec(fn: Callable):
     fn_args = inspect.getfullargspec(fn)[0]
     for flag in VIABLE_FLAGS:
         if flag in fn_args:
             raise RuntimeError(
                 f"{fn} must not have any arguments with the following names: {VIABLE_FLAGS}"
             )
-
 
 cdef inline bint _run_sync(object function, dict kwargs):
     """
@@ -960,6 +970,14 @@ class ASyncDecorator(_ModifiedMixin):
         else:
             return ASyncFunctionSyncDefault(func, **self.modifiers)
 
+
+cdef set[Py_ssize_t] _is_genfunc_cache = set()
+
+cdef void _check_not_genfunc_cached(func: Callable):
+    cdef Py_ssize_t fid = id(func)
+    if fid not in _is_genfunc_cache:
+        _check_not_genfunc(func)
+        _is_genfunc_cache.add(fid)
 
 cdef void _check_not_genfunc(func: Callable):
     """Raises an error if the function is a generator or async generator.
