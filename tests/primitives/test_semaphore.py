@@ -18,6 +18,7 @@ instance = TestSemaphore(1, sync=False)
 
 def test_semaphore_init():
     assert Semaphore(1)._value == Semaphore()._value == 1
+    repr(Semaphore(1))
 
 
 @increment

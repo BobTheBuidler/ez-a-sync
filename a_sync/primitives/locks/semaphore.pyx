@@ -116,7 +116,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         return self.decorate(fn)  # type: ignore [arg-type, return-value]
 
     def __repr__(self) -> str:
-        representation = f"<{self.__class__.__name__} name={self.__name.decode('utf-8')} value={self._Semaphore__value} waiters={len(self)}>"
+        representation = f"<{self.__class__.__name__} name={self.decode_name()} value={self._Semaphore__value} waiters={len(self)}>"
         if self._decorated:
             representation = f"{representation[:-1]} decorates={self._decorated}"
         return representation
