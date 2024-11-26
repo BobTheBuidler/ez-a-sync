@@ -209,11 +209,6 @@ cdef class CounterLock(_DebugDaemonMixin):
             )
             await asyncio.sleep(300)
 
-    def __dealloc__(self):
-        # Free the memory allocated for __name
-        if self.__name is not NULL:
-            free(self.__name)
-
 
 class CounterLockCluster:
     """
