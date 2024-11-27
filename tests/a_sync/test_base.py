@@ -98,24 +98,16 @@ def test_method_sync(cls: type, i: int):
     if isinstance(sync_instance, TestSync):
         # this raises an assertion error inside of the test_fn execution. this is okay.
         with pytest.raises(WrongThreadError):
-            asyncio.get_event_loop().run_until_complete(
-                sync_instance.test_fn(sync=False)
-            )
+            asyncio.get_event_loop().run_until_complete(sync_instance.test_fn(sync=False))
         with pytest.raises(WrongThreadError):
-            asyncio.get_event_loop().run_until_complete(
-                sync_instance.test_fn(asynchronous=True)
-            )
+            asyncio.get_event_loop().run_until_complete(sync_instance.test_fn(asynchronous=True))
     else:
         assert isinstance(
-            asyncio.get_event_loop().run_until_complete(
-                sync_instance.test_fn(sync=False)
-            ),
+            asyncio.get_event_loop().run_until_complete(sync_instance.test_fn(sync=False)),
             int,
         )
         assert isinstance(
-            asyncio.get_event_loop().run_until_complete(
-                sync_instance.test_fn(asynchronous=True)
-            ),
+            asyncio.get_event_loop().run_until_complete(sync_instance.test_fn(asynchronous=True)),
             int,
         )
 

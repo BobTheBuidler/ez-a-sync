@@ -204,9 +204,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         self, instance: None, owner: Type[I]
     ) -> ASyncMethodDescriptorAsyncDefault[I, P, T]: ...
     @overload
-    def __get__(
-        self, instance: I, owner: Type[I]
-    ) -> ASyncBoundMethodAsyncDefault[I, P, T]: ...
+    def __get__(self, instance: I, owner: Type[I]) -> ASyncBoundMethodAsyncDefault[I, P, T]: ...
 
 class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     """
@@ -275,9 +273,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
+    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T: ...
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
@@ -473,9 +469,7 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
+    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T: ...
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
@@ -518,9 +512,7 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
+    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T: ...
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs

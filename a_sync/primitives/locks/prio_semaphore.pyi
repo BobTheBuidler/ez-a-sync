@@ -71,9 +71,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             >>> await semaphore.acquire()
         """
 
-    def __getitem__(
-        self, priority: Optional[PT]
-    ) -> _AbstractPrioritySemaphoreContextManager[PT]:
+    def __getitem__(self, priority: Optional[PT]) -> _AbstractPrioritySemaphoreContextManager[PT]:
         """Gets the context manager for a given priority.
 
         Args:
@@ -176,14 +174,10 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
             >>> context_manager.release()
         """
 
-class _PrioritySemaphoreContextManager(
-    _AbstractPrioritySemaphoreContextManager[Numeric]
-):
+class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager[Numeric]):
     """Context manager for numeric priority semaphores."""
 
-class PrioritySemaphore(
-    _AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreContextManager]
-):
+class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreContextManager]):
     """Semaphore that uses numeric priorities for waiters.
 
     This class extends :class:`_AbstractPrioritySemaphore` and provides a concrete implementation

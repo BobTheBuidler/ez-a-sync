@@ -39,9 +39,7 @@ def apply_async_memory_cache(**kwargs: Unpack[CacheKwargs]) -> AsyncDecorator[P,
 
 
 @overload
-def apply_async_memory_cache(
-    coro_fn: int, **kwargs: Unpack[CacheKwargs]
-) -> AsyncDecorator[P, T]:
+def apply_async_memory_cache(coro_fn: int, **kwargs: Unpack[CacheKwargs]) -> AsyncDecorator[P, T]:
     """Creates a decorator with maxsize set by an integer.
 
     This overload is used when an integer is provided as the coroutine function,
@@ -63,9 +61,7 @@ def apply_async_memory_cache(
 
 
 @overload
-def apply_async_memory_cache(
-    coro_fn: CoroFn[P, T], **kwargs: Unpack[CacheKwargs]
-) -> CoroFn[P, T]:
+def apply_async_memory_cache(coro_fn: CoroFn[P, T], **kwargs: Unpack[CacheKwargs]) -> CoroFn[P, T]:
     """
     Applies an asynchronous LRU cache to a provided coroutine function.
 
@@ -158,9 +154,7 @@ def apply_async_memory_cache(
     # Validate
     elif coro_fn is None:
         if maxsize not in [None, -1] and (not isinstance(maxsize, int) or maxsize <= 0):
-            raise TypeError(
-                "'lru_cache_maxsize' must be a positive integer or None.", maxsize
-            )
+            raise TypeError("'lru_cache_maxsize' must be a positive integer or None.", maxsize)
 
     elif not asyncio.iscoroutinefunction(coro_fn):
         raise exceptions.FunctionNotAsync(coro_fn)

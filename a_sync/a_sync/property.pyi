@@ -84,9 +84,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             A TaskMapping object.
         """
 
-class ASyncPropertyDescriptor(
-    _ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor
-):
+class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
     """Descriptor class for asynchronous properties."""
 
 class property(ASyncPropertyDescriptor[I, T]):
@@ -169,21 +167,15 @@ def a_sync_property(
 ) -> ASyncPropertyDecoratorAsyncDefault[I, T]: ...
 @overload
 def a_sync_property(
-    func: AnyGetterFunction[I, T],
-    default: Literal["sync"],
-    **modifiers: Unpack[ModifierKwargs]
+    func: AnyGetterFunction[I, T], default: Literal["sync"], **modifiers: Unpack[ModifierKwargs]
 ) -> ASyncPropertyDescriptorSyncDefault[I, T]: ...
 @overload
 def a_sync_property(
-    func: AnyGetterFunction[I, T],
-    default: Literal["async"],
-    **modifiers: Unpack[ModifierKwargs]
+    func: AnyGetterFunction[I, T], default: Literal["async"], **modifiers: Unpack[ModifierKwargs]
 ) -> ASyncPropertyDescriptorAsyncDefault[I, T]: ...
 @overload
 def a_sync_property(
-    func: AnyGetterFunction[I, T],
-    default: DefaultMode = ...,
-    **modifiers: Unpack[ModifierKwargs]
+    func: AnyGetterFunction[I, T], default: DefaultMode = ..., **modifiers: Unpack[ModifierKwargs]
 ) -> ASyncPropertyDescriptor[I, T]: ...
 
 class ASyncCachedPropertyDescriptor(
@@ -269,9 +261,7 @@ class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[I, T]):
 
     default: Literal["async"]
 
-ASyncCachedPropertyDecorator = Callable[
-    [AnyGetterFunction[I, T]], cached_property[I, T]
-]
+ASyncCachedPropertyDecorator = Callable[[AnyGetterFunction[I, T]], cached_property[I, T]]
 ASyncCachedPropertyDecoratorSyncDefault = Callable[
     [AnyGetterFunction[I, T]], ASyncCachedPropertyDescriptorSyncDefault[I, T]
 ]
@@ -309,21 +299,15 @@ def a_sync_cached_property(
 ) -> ASyncCachedPropertyDecoratorAsyncDefault[I, T]: ...
 @overload
 def a_sync_cached_property(
-    func: AnyGetterFunction[I, T],
-    default: Literal["sync"],
-    **modifiers: Unpack[ModifierKwargs]
+    func: AnyGetterFunction[I, T], default: Literal["sync"], **modifiers: Unpack[ModifierKwargs]
 ) -> ASyncCachedPropertyDescriptorSyncDefault[I, T]: ...
 @overload
 def a_sync_cached_property(
-    func: AnyGetterFunction[I, T],
-    default: Literal["async"],
-    **modifiers: Unpack[ModifierKwargs]
+    func: AnyGetterFunction[I, T], default: Literal["async"], **modifiers: Unpack[ModifierKwargs]
 ) -> ASyncCachedPropertyDescriptorAsyncDefault[I, T]: ...
 @overload
 def a_sync_cached_property(
-    func: AnyGetterFunction[I, T],
-    default: DefaultMode = ...,
-    **modifiers: Unpack[ModifierKwargs]
+    func: AnyGetterFunction[I, T], default: DefaultMode = ..., **modifiers: Unpack[ModifierKwargs]
 ) -> ASyncCachedPropertyDescriptor[I, T]: ...
 
 class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):

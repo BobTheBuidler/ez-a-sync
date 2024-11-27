@@ -87,8 +87,8 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             self.__wrapped__ = _fget
         elif asyncio.iscoroutinefunction(_fget):
             _validate_wrapped_fn(_fget)
-            self.__wrapped__: AsyncUnboundMethod[I, P, T] = (
-                self.modifiers.apply_async_modifiers(_fget)
+            self.__wrapped__: AsyncUnboundMethod[I, P, T] = self.modifiers.apply_async_modifiers(
+                _fget
             )
         else:
             _validate_wrapped_fn(_fget)
@@ -264,9 +264,9 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method._all([1, 2, 3])
             ```
         """
-        return await self.map(
-            *instances, concurrency=concurrency, name=name, **kwargs
-        ).all(pop=True, sync=False)
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).all(
+            pop=True, sync=False
+        )
 
     async def _any(
         self,
@@ -295,9 +295,9 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method._any([-1, 0, 1])
             ```
         """
-        return await self.map(
-            *instances, concurrency=concurrency, name=name, **kwargs
-        ).any(pop=True, sync=False)
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).any(
+            pop=True, sync=False
+        )
 
     async def _min(
         self,
@@ -326,9 +326,9 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method._min([3, 1, 2])
             ```
         """
-        return await self.map(
-            *instances, concurrency=concurrency, name=name, **kwargs
-        ).min(pop=True, sync=False)
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).min(
+            pop=True, sync=False
+        )
 
     async def _max(
         self,
@@ -357,9 +357,9 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method._max([3, 1, 2])
             ```
         """
-        return await self.map(
-            *instances, concurrency=concurrency, name=name, **kwargs
-        ).max(pop=True, sync=False)
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).max(
+            pop=True, sync=False
+        )
 
     async def _sum(
         self,
@@ -388,9 +388,9 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method._sum([1, 2, 3])
             ```
         """
-        return await self.map(
-            *instances, concurrency=concurrency, name=name, **kwargs
-        ).sum(pop=True, sync=False)
+        return await self.map(*instances, concurrency=concurrency, name=name, **kwargs).sum(
+            pop=True, sync=False
+        )
 
     def __init_subclass__(cls) -> None:
         for attr in cls.__dict__.values():

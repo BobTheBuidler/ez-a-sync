@@ -66,9 +66,7 @@ async def test_get_multi_nowait():
     result = queue.get_multi_nowait(2)
     assert result == ["item9", "item10"]
 
-    with pytest.raises(
-        ValueError, match="`i` must be an integer greater than 1. You passed 1"
-    ):
+    with pytest.raises(ValueError, match="`i` must be an integer greater than 1. You passed 1"):
         queue.get_multi_nowait(1)
     with pytest.raises(asyncio.QueueEmpty):
         queue.get_multi_nowait(2)

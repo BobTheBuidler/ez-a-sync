@@ -123,18 +123,14 @@ class ASyncMeta(ABCMeta):
                     attr_name,
                     fn_modifiers,
                 )
-                if isinstance(
-                    attr_value, (ASyncPropertyDescriptor, ASyncCachedPropertyDescriptor)
-                ):
+                if isinstance(attr_value, (ASyncPropertyDescriptor, ASyncCachedPropertyDescriptor)):
                     # Wrap property
                     logger.debug("`%s is a property, now let's wrap it", attr_name)
                     logger.debug(
                         "since `%s` is a property, we will add a hidden dundermethod so you can still access it both sync and async",
                         attr_name,
                     )
-                    attrs[attr_value.hidden_method_name] = (
-                        attr_value.hidden_method_descriptor
-                    )
+                    attrs[attr_value.hidden_method_name] = attr_value.hidden_method_descriptor
                     logger.debug(
                         "`%s.%s` is now %s",
                         new_class_name,
@@ -178,9 +174,7 @@ class ASyncSingletonMeta(ASyncMeta):
         - :class:`~a_sync.a_sync._meta.ASyncMeta`
     """
 
-    def __init__(
-        cls, name: str, bases: Tuple[type, ...], namespace: Dict[str, Any]
-    ) -> None:
+    def __init__(cls, name: str, bases: Tuple[type, ...], namespace: Dict[str, Any]) -> None:
         cls.__instances: Dict[bool, object] = {}
         """Dictionary to store singleton instances."""
         cls.__lock = threading.Lock()
@@ -203,10 +197,7 @@ def _update_logger(new_class_name: str) -> None:
     Args:
         new_class_name: The name of the new class being created.
     """
-    if (
-        ENVIRONMENT_VARIABLES.DEBUG_MODE
-        or ENVIRONMENT_VARIABLES.DEBUG_CLASS_NAME == new_class_name
-    ):
+    if ENVIRONMENT_VARIABLES.DEBUG_MODE or ENVIRONMENT_VARIABLES.DEBUG_CLASS_NAME == new_class_name:
         logger.addHandler(_debug_handler)
         logger.setLevel(logging.DEBUG)
         logger.info("debug mode activated")
