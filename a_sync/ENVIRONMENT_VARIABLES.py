@@ -20,9 +20,7 @@ See Also:
     :func:`DEBUG_MODE` for enabling debug mode on all classes.
 """
 
-DEBUG_MODE = envs.create_env(
-    "DEBUG_MODE", bool, default=bool(DEBUG_CLASS_NAME), verbose=False
-)
+DEBUG_MODE = envs.create_env("DEBUG_MODE", bool, default=bool(DEBUG_CLASS_NAME), verbose=False)
 """bool: Enables debug mode on all classes.
 
 Set this environment variable to `True` to enable debug mode on all classes. 

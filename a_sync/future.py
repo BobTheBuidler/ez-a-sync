@@ -134,9 +134,7 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
         ) from e
 
 
-MetaNumeric = Union[
-    Numeric, "ASyncFuture[int]", "ASyncFuture[float]", "ASyncFuture[Decimal]"
-]
+MetaNumeric = Union[Numeric, "ASyncFuture[int]", "ASyncFuture[float]", "ASyncFuture[Decimal]"]
 
 
 @final
@@ -339,9 +337,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             True
         """
         return _materialize(
-            ASyncFuture(
-                self.__contains(key), dependencies=self.__list_dependencies(key)
-            )
+            ASyncFuture(self.__contains(key), dependencies=self.__list_dependencies(key))
         )
 
     def __await__(self) -> Generator[Any, None, T]:
@@ -446,9 +442,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __add__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    def __add__(
-        self: "ASyncFuture[Decimal]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    def __add__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
     def __add__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
@@ -457,24 +451,16 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __add__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __add__(
-        self: "ASyncFuture[int]", other: Awaitable[int]
-    ) -> "ASyncFuture[int]": ...
+    def __add__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
-    def __add__(
-        self: "ASyncFuture[float]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    def __add__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
-    def __add__(
-        self: "ASyncFuture[float]", other: Awaitable[int]
-    ) -> "ASyncFuture[float]": ...
+    def __add__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    def __add__(
-        self: "ASyncFuture[int]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    def __add__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
     def __add__(
@@ -482,14 +468,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __add__(
-        self: "ASyncFuture[Decimal]", other: Awaitable[int]
-    ) -> "ASyncFuture[Decimal]": ...
+    def __add__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __add__(
-        self: "ASyncFuture[int]", other: Awaitable[Decimal]
-    ) -> "ASyncFuture[Decimal]": ...
+    def __add__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
 
     def __add__(self, other: MetaNumeric) -> "ASyncFuture":
         """
@@ -508,9 +490,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             15
         """
-        return ASyncFuture(
-            self.__add(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__add(other), dependencies=self.__list_dependencies(other))
 
     @overload
     def __sub__(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
@@ -525,9 +505,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __sub__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    def __sub__(
-        self: "ASyncFuture[Decimal]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    def __sub__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
     def __sub__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
@@ -536,24 +514,16 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __sub__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __sub__(
-        self: "ASyncFuture[int]", other: Awaitable[int]
-    ) -> "ASyncFuture[int]": ...
+    def __sub__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
-    def __sub__(
-        self: "ASyncFuture[float]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    def __sub__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
-    def __sub__(
-        self: "ASyncFuture[float]", other: Awaitable[int]
-    ) -> "ASyncFuture[float]": ...
+    def __sub__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    def __sub__(
-        self: "ASyncFuture[int]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    def __sub__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
     def __sub__(
@@ -561,14 +531,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __sub__(
-        self: "ASyncFuture[Decimal]", other: Awaitable[int]
-    ) -> "ASyncFuture[Decimal]": ...
+    def __sub__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __sub__(
-        self: "ASyncFuture[int]", other: Awaitable[Decimal]
-    ) -> "ASyncFuture[Decimal]": ...
+    def __sub__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
 
     def __sub__(self, other: MetaNumeric) -> "ASyncFuture":
         """
@@ -587,9 +553,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             5
         """
-        return ASyncFuture(
-            self.__sub(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__sub(other), dependencies=self.__list_dependencies(other))
 
     def __mul__(self, other) -> "ASyncFuture":
         """
@@ -608,9 +572,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             50
         """
-        return ASyncFuture(
-            self.__mul(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__mul(other), dependencies=self.__list_dependencies(other))
 
     def __pow__(self, other) -> "ASyncFuture":
         """
@@ -629,9 +591,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             8
         """
-        return ASyncFuture(
-            self.__pow(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__pow(other), dependencies=self.__list_dependencies(other))
 
     def __truediv__(self, other) -> "ASyncFuture":
         """
@@ -650,9 +610,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             5.0
         """
-        return ASyncFuture(
-            self.__truediv(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__truediv(other), dependencies=self.__list_dependencies(other))
 
     def __floordiv__(self, other) -> "ASyncFuture":
         """
@@ -671,9 +629,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             3
         """
-        return ASyncFuture(
-            self.__floordiv(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__floordiv(other), dependencies=self.__list_dependencies(other))
 
     def __pow__(self, other) -> "ASyncFuture":
         """
@@ -692,9 +648,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             8
         """
-        return ASyncFuture(
-            self.__pow(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__pow(other), dependencies=self.__list_dependencies(other))
 
     @overload
     def __radd__(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
@@ -709,39 +663,25 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __radd__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    def __radd__(
-        self: "ASyncFuture[Decimal]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    def __radd__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __radd__(
-        self: "ASyncFuture[Decimal]", other: int
-    ) -> "ASyncFuture[Decimal]": ...
+    def __radd__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __radd__(
-        self: "ASyncFuture[int]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    def __radd__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __radd__(
-        self: "ASyncFuture[int]", other: Awaitable[int]
-    ) -> "ASyncFuture[int]": ...
+    def __radd__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
-    def __radd__(
-        self: "ASyncFuture[float]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    def __radd__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
-    def __radd__(
-        self: "ASyncFuture[float]", other: Awaitable[int]
-    ) -> "ASyncFuture[float]": ...
+    def __radd__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    def __radd__(
-        self: "ASyncFuture[int]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    def __radd__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
     def __radd__(
@@ -749,14 +689,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __radd__(
-        self: "ASyncFuture[Decimal]", other: Awaitable[int]
-    ) -> "ASyncFuture[Decimal]": ...
+    def __radd__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __radd__(
-        self: "ASyncFuture[int]", other: Awaitable[Decimal]
-    ) -> "ASyncFuture[Decimal]": ...
+    def __radd__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
 
     def __radd__(self, other) -> "ASyncFuture":
         """
@@ -774,9 +710,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             15
         """
-        return ASyncFuture(
-            self.__radd(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__radd(other), dependencies=self.__list_dependencies(other))
 
     @overload
     def __rsub__(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
@@ -791,39 +725,25 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __rsub__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    def __rsub__(
-        self: "ASyncFuture[Decimal]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    def __rsub__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __rsub__(
-        self: "ASyncFuture[Decimal]", other: int
-    ) -> "ASyncFuture[Decimal]": ...
+    def __rsub__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __rsub__(
-        self: "ASyncFuture[int]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    def __rsub__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __rsub__(
-        self: "ASyncFuture[int]", other: Awaitable[int]
-    ) -> "ASyncFuture[int]": ...
+    def __rsub__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
-    def __rsub__(
-        self: "ASyncFuture[float]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    def __rsub__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
-    def __rsub__(
-        self: "ASyncFuture[float]", other: Awaitable[int]
-    ) -> "ASyncFuture[float]": ...
+    def __rsub__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    def __rsub__(
-        self: "ASyncFuture[int]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    def __rsub__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
     def __rsub__(
@@ -831,14 +751,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __rsub__(
-        self: "ASyncFuture[Decimal]", other: Awaitable[int]
-    ) -> "ASyncFuture[Decimal]": ...
+    def __rsub__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __rsub__(
-        self: "ASyncFuture[int]", other: Awaitable[Decimal]
-    ) -> "ASyncFuture[Decimal]": ...
+    def __rsub__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
 
     def __rsub__(self, other) -> "ASyncFuture":
         """
@@ -856,9 +772,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             10
         """
-        return ASyncFuture(
-            self.__rsub(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__rsub(other), dependencies=self.__list_dependencies(other))
 
     def __rmul__(self, other) -> "ASyncFuture":
         """
@@ -876,9 +790,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             20
         """
-        return ASyncFuture(
-            self.__rmul(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__rmul(other), dependencies=self.__list_dependencies(other))
 
     def __rtruediv__(self, other) -> "ASyncFuture":
         """
@@ -896,9 +808,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             5.0
         """
-        return ASyncFuture(
-            self.__rtruediv(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__rtruediv(other), dependencies=self.__list_dependencies(other))
 
     def __rfloordiv__(self, other) -> "ASyncFuture":
         """
@@ -916,9 +826,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             3
         """
-        return ASyncFuture(
-            self.__rfloordiv(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__rfloordiv(other), dependencies=self.__list_dependencies(other))
 
     def __rpow__(self, other) -> "ASyncFuture":
         """
@@ -936,9 +844,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             8
         """
-        return ASyncFuture(
-            self.__rpow(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__rpow(other), dependencies=self.__list_dependencies(other))
 
     def __eq__(self, other) -> "ASyncFuture":
         """
@@ -957,9 +863,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             True
         """
-        return bool(
-            ASyncFuture(self.__eq(other), dependencies=self.__list_dependencies(other))
-        )
+        return bool(ASyncFuture(self.__eq(other), dependencies=self.__list_dependencies(other)))
 
     def __gt__(self, other) -> "ASyncFuture":
         """
@@ -978,9 +882,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             True
         """
-        return ASyncFuture(
-            self.__gt(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__gt(other), dependencies=self.__list_dependencies(other))
 
     def __ge__(self, other) -> "ASyncFuture":
         """
@@ -999,9 +901,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             True
         """
-        return ASyncFuture(
-            self.__ge(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__ge(other), dependencies=self.__list_dependencies(other))
 
     def __lt__(self, other) -> "ASyncFuture":
         """
@@ -1020,9 +920,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             True
         """
-        return ASyncFuture(
-            self.__lt(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__lt(other), dependencies=self.__list_dependencies(other))
 
     def __le__(self, other) -> "ASyncFuture":
         """
@@ -1041,9 +939,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             >>> await result
             True
         """
-        return ASyncFuture(
-            self.__le(other), dependencies=self.__list_dependencies(other)
-        )
+        return ASyncFuture(self.__le(other), dependencies=self.__list_dependencies(other))
 
     # Maths
 
@@ -1051,9 +947,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     async def __add(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[float]", other: float
-    ) -> "ASyncFuture[float]": ...
+    async def __add(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
     async def __add(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
@@ -1062,24 +956,16 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     async def __add(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[Decimal]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __add(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[Decimal]", other: int
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __add(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[int]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __add(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[int]", other: Awaitable[int]
-    ) -> "ASyncFuture[int]": ...
+    async def __add(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
     async def __add(
@@ -1087,14 +973,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[float]", other: Awaitable[int]
-    ) -> "ASyncFuture[float]": ...
+    async def __add(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[int]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    async def __add(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
     async def __add(
@@ -1119,9 +1001,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     async def __sub(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[float]", other: float
-    ) -> "ASyncFuture[float]": ...
+    async def __sub(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
     async def __sub(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
@@ -1130,24 +1010,16 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     async def __sub(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[Decimal]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __sub(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[Decimal]", other: int
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __sub(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[int]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __sub(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[int]", other: Awaitable[int]
-    ) -> "ASyncFuture[int]": ...
+    async def __sub(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
     async def __sub(
@@ -1155,14 +1027,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[float]", other: Awaitable[int]
-    ) -> "ASyncFuture[float]": ...
+    async def __sub(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[int]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    async def __sub(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
     async def __sub(
@@ -1204,39 +1072,25 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     async def __radd(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[float]", other: float
-    ) -> "ASyncFuture[float]": ...
+    async def __radd(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[float]", other: int
-    ) -> "ASyncFuture[float]": ...
+    async def __radd(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[int]", other: float
-    ) -> "ASyncFuture[float]": ...
+    async def __radd(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[Decimal]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __radd(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[Decimal]", other: int
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __radd(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[int]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __radd(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[int]", other: Awaitable[int]
-    ) -> "ASyncFuture[int]": ...
+    async def __radd(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
     async def __radd(
@@ -1244,14 +1098,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[float]", other: Awaitable[int]
-    ) -> "ASyncFuture[float]": ...
+    async def __radd(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[int]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    async def __radd(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
     async def __radd(
@@ -1276,39 +1126,25 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     async def __rsub(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[float]", other: float
-    ) -> "ASyncFuture[float]": ...
+    async def __rsub(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[float]", other: int
-    ) -> "ASyncFuture[float]": ...
+    async def __rsub(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[int]", other: float
-    ) -> "ASyncFuture[float]": ...
+    async def __rsub(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[Decimal]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __rsub(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[Decimal]", other: int
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __rsub(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[int]", other: Decimal
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __rsub(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[int]", other: Awaitable[int]
-    ) -> "ASyncFuture[int]": ...
+    async def __rsub(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
     async def __rsub(
@@ -1316,14 +1152,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[float]", other: Awaitable[int]
-    ) -> "ASyncFuture[float]": ...
+    async def __rsub(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[int]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    async def __rsub(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
     async def __rsub(
@@ -1473,9 +1305,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
     def __sizeof__(self) -> int:
         if isinstance(self.__awaitable__, Coroutine):
-            return sum(
-                sys.getsizeof(v) for v in self.__awaitable__.cr_frame.f_locals.values()
-            )
+            return sum(sys.getsizeof(v) for v in self.__awaitable__.cr_frame.f_locals.values())
         elif isinstance(self.__awaitable__, asyncio.Future):
             raise NotImplementedError
         raise NotImplementedError
@@ -1619,7 +1449,9 @@ class _ASyncFutureInstanceMethod(Generic[I, P, T]):
         self.__wrapper = wrapper
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} for {self.__wrapper.callable} bound to {self.__instance}>"
+        return (
+            f"<{self.__class__.__name__} for {self.__wrapper.callable} bound to {self.__instance}>"
+        )
 
     def __call__(self, /, *fn_args: P.args, **fn_kwargs: P.kwargs) -> T:
         return self.__wrapper(self.__instance, *fn_args, **fn_kwargs)

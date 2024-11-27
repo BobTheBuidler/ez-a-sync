@@ -77,11 +77,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         See Also:
             - :meth:`submit` for submitting functions to the executor.
         """
-        return (
-            fn(*args, **kwargs)
-            if self.sync_mode
-            else await self.submit(fn, *args, **kwargs)
-        )
+        return fn(*args, **kwargs) if self.sync_mode else await self.submit(fn, *args, **kwargs)
 
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
         """
@@ -175,9 +171,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
 # Process
 
 
-class AsyncProcessPoolExecutor(
-    _AsyncExecutorMixin, concurrent.futures.ProcessPoolExecutor
-):
+class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPoolExecutor):
     """
     A :class:`concurrent.futures.ProcessPoolExecutor' subclass providing asynchronous run and submit methods that support kwargs,
     with support for synchronous mode
@@ -235,9 +229,7 @@ class AsyncProcessPoolExecutor(
 # Thread
 
 
-class AsyncThreadPoolExecutor(
-    _AsyncExecutorMixin, concurrent.futures.ThreadPoolExecutor
-):
+class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPoolExecutor):
     """
     A :class:`concurrent.futures.ThreadPoolExecutor' subclass providing asynchronous run and submit methods that support kwargs,
     with support for synchronous mode
@@ -294,9 +286,7 @@ ThreadPoolExecutor = AsyncThreadPoolExecutor
 # Pruning thread pool
 
 
-def _worker(
-    executor_reference, work_queue, initializer, initargs, timeout
-):  # NOTE: NEW 'timeout'
+def _worker(executor_reference, work_queue, initializer, initargs, timeout):  # NOTE: NEW 'timeout'
     """
     Worker function for the PruningThreadPoolExecutor.
 

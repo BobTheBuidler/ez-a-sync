@@ -49,9 +49,7 @@ async def test_taskmapping_views_async(view_class, expected):
     assert results == expected
 
 
-@pytest.mark.parametrize(
-    "view_class", [TaskMappingKeys, TaskMappingValues, TaskMappingItems]
-)
+@pytest.mark.parametrize("view_class", [TaskMappingKeys, TaskMappingValues, TaskMappingItems])
 def test_empty_taskmapping_views_sync(view_class):
     # sourcery skip: simplify-empty-collection-comparison
     tasks = TaskMapping(sample_task)
@@ -61,9 +59,7 @@ def test_empty_taskmapping_views_sync(view_class):
 
 
 @pytest.mark.asyncio_cooperative
-@pytest.mark.parametrize(
-    "view_class", [TaskMappingKeys, TaskMappingValues, TaskMappingItems]
-)
+@pytest.mark.parametrize("view_class", [TaskMappingKeys, TaskMappingValues, TaskMappingItems])
 async def test_empty_taskmapping_views_async(view_class):
     # sourcery skip: simplify-empty-collection-comparison
     tasks = TaskMapping(sample_task)

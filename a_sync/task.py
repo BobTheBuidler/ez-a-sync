@@ -81,9 +81,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     _init_loader: Optional["asyncio.Task[None]"] = None
     "An asyncio Task used to preload values from the iterables."
 
-    _init_loader_next: Optional[
-        Callable[[], Awaitable[Tuple[Tuple[K, "asyncio.Task[V]"]]]]
-    ] = None
+    _init_loader_next: Optional[Callable[[], Awaitable[Tuple[Tuple[K, "asyncio.Task[V]"]]]]] = None
     "A coro function that blocks until the _init_loader starts a new task(s), and then returns a `Tuple[Tuple[K, asyncio.Task[V]]]` with all of the new tasks and the keys that started them."
 
     _name: Optional[str] = None
@@ -143,9 +141,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         self._wrapped_func = wrapped_func
         "The function used to create tasks for each key."
 
-        if isinstance(
-            wrapped_func, ASyncMethodDescriptor
-        ) and not _kwargs.get_flag_name_legacy(wrapped_func_kwargs):
+        if isinstance(wrapped_func, ASyncMethodDescriptor) and not _kwargs.get_flag_name_legacy(
+            wrapped_func_kwargs
+        ):
             wrapped_func_kwargs["sync"] = False
         if wrapped_func_kwargs:
             self._wrapped_func_kwargs = wrapped_func_kwargs
@@ -176,9 +174,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                     new_args = list(args)
                     new_kwargs = dict(kwargs)
                     try:
-                        for i, arg in enumerate(
-                            inspect.getfullargspec(self.__wrapped__).args
-                        ):
+                        for i, arg in enumerate(inspect.getfullargspec(self.__wrapped__).args):
                             if arg in kwargs:
                                 new_args.insert(i, new_kwargs.pop(arg))
                             else:
@@ -241,9 +237,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 while not self._init_loader.done():
                     await self._wait_for_next_key()
                     while unyielded := [key for key in self if key not in yielded]:
-                        if ready := {
-                            key: task for key in unyielded if (task := self[key]).done()
-                        }:
+                        if ready := {key: task for key in unyielded if (task := self[key]).done()}:
                             if pop:
                                 for key, task in ready.items():
                                     yield key, await self.pop(key)
@@ -390,13 +384,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 if max is None or result > max:
                     max = result
         except _EmptySequenceError:
-            raise exceptions.EmptySequenceError(
-                "max() arg is an empty sequence"
-            ) from None
+            raise exceptions.EmptySequenceError("max() arg is an empty sequence") from None
         if max is None:
-            raise exceptions.EmptySequenceError(
-                "max() arg is an empty sequence"
-            ) from None
+            raise exceptions.EmptySequenceError("max() arg is an empty sequence") from None
         return max
 
     @ASyncMethodDescriptorSyncDefault
@@ -408,13 +398,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 if min is None or result < min:
                     min = result
         except _EmptySequenceError:
-            raise exceptions.EmptySequenceError(
-                "min() arg is an empty sequence"
-            ) from None
+            raise exceptions.EmptySequenceError("min() arg is an empty sequence") from None
         if min is None:
-            raise exceptions.EmptySequenceError(
-                "min() arg is an empty sequence"
-            ) from None
+            raise exceptions.EmptySequenceError("min() arg is an empty sequence") from None
         return min
 
     @ASyncMethodDescriptorSyncDefault
@@ -478,9 +464,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         )
 
     @overload
-    def pop(
-        self, item: K, *, cancel: bool = False
-    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
+    def pop(self, item: K, *, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
         """Pop a task from the TaskMapping.
 
         Args:
@@ -500,9 +484,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             cancel: Whether to cancel the task when popping it.
         """
 
-    def pop(
-        self, *args: K, cancel: bool = False
-    ) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
+    def pop(self, *args: K, cancel: bool = False) -> "Union[asyncio.Task[V], asyncio.Future[V]]":
         """Pop a task from the TaskMapping.
 
         Args:
@@ -563,25 +545,20 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         containers = [
             iterable
             for iterable in iterables
-            if not isinstance(iterable, AsyncIterable)
-            and isinstance(iterable, Iterable)
+            if not isinstance(iterable, AsyncIterable) and isinstance(iterable, Iterable)
         ]
         for iterable in containers:
             async for key in _yield_keys(iterable):
                 yield key, self[key]
 
-        if remaining := [
-            iterable for iterable in iterables if iterable not in containers
-        ]:
+        if remaining := [iterable for iterable in iterables if iterable not in containers]:
             try:
                 async for key in as_yielded(*[_yield_keys(iterable) for iterable in remaining]):  # type: ignore [attr-defined]
                     yield key, self[key]  # ensure task is running
             except _EmptySequenceError:
                 if len(iterables) == 1:
                     raise
-                raise RuntimeError(
-                    "DEV: figure out how to handle this situation"
-                ) from None
+                raise RuntimeError("DEV: figure out how to handle this situation") from None
 
     @ASyncGeneratorFunction
     async def _start_tasks_for_iterables(
@@ -592,25 +569,20 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         containers = [
             iterable
             for iterable in iterables
-            if not isinstance(iterable, AsyncIterable)
-            and isinstance(iterable, Iterable)
+            if not isinstance(iterable, AsyncIterable) and isinstance(iterable, Iterable)
         ]
         for iterable in containers:
             async for key in _yield_keys(iterable):
                 yield key, self.__start_task(key)
 
-        if remaining := [
-            iterable for iterable in iterables if iterable not in containers
-        ]:
+        if remaining := [iterable for iterable in iterables if iterable not in containers]:
             try:
                 async for key in as_yielded(*[_yield_keys(iterable) for iterable in remaining]):  # type: ignore [attr-defined]
                     yield key, self.__start_task(key)
             except _EmptySequenceError:
                 if len(iterables) == 1:
                     raise
-                raise RuntimeError(
-                    "DEV: figure out how to handle this situation"
-                ) from None
+                raise RuntimeError("DEV: figure out how to handle this situation") from None
 
     def _if_pop_check_destroyed(self, pop: bool) -> None:
         if pop:
@@ -736,9 +708,7 @@ def _unwrap(
         # this speeds things up a bit by bypassing some logic
         # TODO implement it like this elsewhere if profilers suggest
         unwrapped = (
-            wrapped_func._modified_fn
-            if wrapped_func._async_def
-            else wrapped_func._asyncified
+            wrapped_func._modified_fn if wrapped_func._async_def else wrapped_func._asyncified
         )
     else:
         unwrapped = wrapped_func

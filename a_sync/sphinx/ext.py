@@ -66,9 +66,7 @@ class _ASyncWrapperDocumenter:
         Returns:
             bool: True if the member can be documented, False otherwise.
         """
-        return (
-            isinstance(member, cls.typ) and getattr(member, "__wrapped__") is not None
-        )
+        return isinstance(member, cls.typ) and getattr(member, "__wrapped__") is not None
 
     def document_members(self, all_members=False):
         """Document members of the object.
@@ -245,9 +243,9 @@ def autodoc_skip_member_handler(app, what, name, obj, skip, options):
     Returns:
         bool: True if the member should be skipped, False otherwise.
     """
-    if isinstance(
-        obj, (ASyncFunction, ASyncDescriptor, ASyncGeneratorFunction)
-    ) and getattr(obj, "__wrapped__"):
+    if isinstance(obj, (ASyncFunction, ASyncDescriptor, ASyncGeneratorFunction)) and getattr(
+        obj, "__wrapped__"
+    ):
         if skip:
             return False
     return None
@@ -269,12 +267,8 @@ def setup(app):
     app.add_autodocumenter(ASyncFunctionSyncDocumenter)
     app.add_autodocumenter(ASyncFunctionAsyncDocumenter)
     app.add_directive_to_domain("py", "a_sync_function", ASyncFunctionDirective)
-    app.add_directive_to_domain(
-        "py", "a_sync_function_sync", ASyncFunctionSyncDirective
-    )
-    app.add_directive_to_domain(
-        "py", "a_sync_function_async", ASyncFunctionAsyncDirective
-    )
+    app.add_directive_to_domain("py", "a_sync_function_sync", ASyncFunctionSyncDirective)
+    app.add_directive_to_domain("py", "a_sync_function_async", ASyncFunctionAsyncDirective)
     app.add_config_value("a_sync_function_sync_prefix", "ASyncFunction (sync)", True)
     app.add_config_value("a_sync_function_async_prefix", "ASyncFunction (async)", True)
     app.add_config_value("a_sync_function_prefix", "ASyncFunction", True)
@@ -287,12 +281,8 @@ def setup(app):
     # generator
 
     app.add_autodocumenter(ASyncGeneratorFunctionDocumenter)
-    app.add_directive_to_domain(
-        "py", "a_sync_generator_function", ASyncGeneratorFunctionDirective
-    )
-    app.add_config_value(
-        "a_sync_generator_function_prefix", "ASyncGeneratorFunction", True
-    )
+    app.add_directive_to_domain("py", "a_sync_generator_function", ASyncGeneratorFunctionDirective)
+    app.add_config_value("a_sync_generator_function_prefix", "ASyncGeneratorFunction", True)
 
     app.connect("autodoc-skip-member", autodoc_skip_member_handler)
 

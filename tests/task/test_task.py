@@ -243,12 +243,8 @@ async def test_task_mapping_map_with_async_iter():
         assert isinstance(k, int)
     assert await tasks.keys().aiterbykeys() == list(range(5))
     assert await tasks.keys().aiterbyvalues() == list(range(5))
-    assert await tasks.keys().aiterbykeys(reverse=True) == sorted(
-        range(5), reverse=True
-    )
-    assert await tasks.keys().aiterbyvalues(reverse=True) == sorted(
-        range(5), reverse=True
-    )
+    assert await tasks.keys().aiterbykeys(reverse=True) == sorted(range(5), reverse=True)
+    assert await tasks.keys().aiterbyvalues(reverse=True) == sorted(range(5), reverse=True)
 
     # test values
     for v in tasks.values():
@@ -282,12 +278,8 @@ async def test_task_mapping_map_with_async_iter():
     async for k, v in tasks.items():
         assert isinstance(k, int)
         assert isinstance(v, str)
-    assert await tasks.items().aiterbykeys() == [
-        (i, str(i + 1) * (i + 1)) for i in range(5)
-    ]
-    assert await tasks.items().aiterbyvalues() == [
-        (i, str(i + 1) * (i + 1)) for i in range(5)
-    ]
+    assert await tasks.items().aiterbykeys() == [(i, str(i + 1) * (i + 1)) for i in range(5)]
+    assert await tasks.items().aiterbyvalues() == [(i, str(i + 1) * (i + 1)) for i in range(5)]
     assert await tasks.items().aiterbykeys(reverse=True) == [
         (i, str(i + 1) * (i + 1)) for i in sorted(range(5), reverse=True)
     ]

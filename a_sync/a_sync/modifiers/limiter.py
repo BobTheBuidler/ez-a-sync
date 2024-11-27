@@ -110,9 +110,7 @@ def apply_rate_limit(
         coro_fn = None
 
     elif coro_fn is None:
-        if runs_per_minute is not None and not isinstance(
-            runs_per_minute, (int, AsyncLimiter)
-        ):
+        if runs_per_minute is not None and not isinstance(runs_per_minute, (int, AsyncLimiter)):
             raise TypeError("'runs_per_minute' must be an integer.", runs_per_minute)
 
     elif not asyncio.iscoroutinefunction(coro_fn):

@@ -201,9 +201,7 @@ class Queue(_Queue[T]):
         items = []
         while len(items) < i and not can_return_less:
             try:
-                items.extend(
-                    self.get_multi_nowait(i - len(items), can_return_less=True)
-                )
+                items.extend(self.get_multi_nowait(i - len(items), can_return_less=True))
             except asyncio.QueueEmpty:
                 items = [await self.get()]
         return items
@@ -518,9 +516,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                             )
                     self.task_done()
                 except Exception as e:
-                    logger.error(
-                        "%s for %s is broken!!!", type(self).__name__, self.func
-                    )
+                    logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
                     logger.exception(e)
                     raise
 
@@ -543,9 +539,7 @@ def _validate_args(i: int, can_return_less: bool) -> None:
     if not isinstance(i, int):
         raise TypeError(f"`i` must be an integer greater than 1. You passed {i}")
     if not isinstance(can_return_less, bool):
-        raise TypeError(
-            f"`can_return_less` must be boolean. You passed {can_return_less}"
-        )
+        raise TypeError(f"`can_return_less` must be boolean. You passed {can_return_less}")
     if i <= 1:
         raise ValueError(f"`i` must be an integer greater than 1. You passed {i}")
 
@@ -639,9 +633,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         :class:`~ProcessingQueue`
     """
 
-    async def put(
-        self, priority: Any, *args: P.args, **kwargs: P.kwargs
-    ) -> "asyncio.Future[V]":
+    async def put(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         """
         Asynchronously adds a task with priority to the queue.
 
@@ -662,9 +654,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         await super().put(self, (priority, args, kwargs, fut))
         return fut
 
-    def put_nowait(
-        self, priority: Any, *args: P.args, **kwargs: P.kwargs
-    ) -> "asyncio.Future[V]":
+    def put_nowait(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         """
         Immediately adds a task with priority to the queue without waiting.
 
@@ -765,9 +755,7 @@ class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueu
     """
 
 
-class SmartProcessingQueue(
-    _VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]
-):
+class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Concatenate[T, P], V]):
     """
     A processing queue that will execute jobs with the most waiters first, supporting dynamic priorities.
 

@@ -91,9 +91,7 @@ def get_default_executor() -> Executor:
         return ProcessPoolExecutor(EXECUTOR_VALUE)
     elif EXECUTOR_TYPE.lower().startswith("t"):  # t, T, thread, THREADS, etc
         return ThreadPoolExecutor(EXECUTOR_VALUE)
-    raise ValueError(
-        "Invalid value for A_SYNC_EXECUTOR_TYPE. Please use 'threads' or 'processes'."
-    )
+    raise ValueError("Invalid value for A_SYNC_EXECUTOR_TYPE. Please use 'threads' or 'processes'.")
 
 
 default_sync_executor = get_default_executor()
@@ -154,9 +152,7 @@ RUNS_PER_MINUTE = (
 """Sets the rate limit for function execution."""
 
 SEMAPHORE = (
-    rpm
-    if (rpm := int(os.environ.get("A_SYNC_SEMAPHORE", 0)))
-    else null_modifiers["semaphore"]
+    rpm if (rpm := int(os.environ.get("A_SYNC_SEMAPHORE", 0))) else null_modifiers["semaphore"]
 )
 """Sets the semaphore limit for function execution."""
 

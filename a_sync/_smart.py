@@ -301,9 +301,7 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
         self.add_done_callback(SmartTask._self_done_cleanup_callback)
 
 
-def smart_task_factory(
-    loop: asyncio.AbstractEventLoop, coro: Awaitable[T]
-) -> SmartTask[T]:
+def smart_task_factory(loop: asyncio.AbstractEventLoop, coro: Awaitable[T]) -> SmartTask[T]:
     """
     Task factory function that an event loop calls to create new tasks.
 

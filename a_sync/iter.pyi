@@ -235,9 +235,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
     __weakself__: weakref.ref[object]
     field_name: Incomplete
     __wrapped__: Incomplete
-    def __init__(
-        self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None
-    ) -> None:
+    def __init__(self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None) -> None:
         """
         Initializes the ASyncGeneratorFunction with the given async generator function and optionally an instance.
 
@@ -322,11 +320,7 @@ class ASyncSorter(_ASyncView[T]):
 
     reversed: bool
     def __init__(
-        self,
-        iterable: AsyncIterable[T],
-        *,
-        key: SortKey[T] = None,
-        reverse: bool = False
+        self, iterable: AsyncIterable[T], *, key: SortKey[T] = None, reverse: bool = False
     ) -> None:
         """
         Initializes the ASyncSorter with an iterable and an optional sorting configuration (key function, and reverse flag).

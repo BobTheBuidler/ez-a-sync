@@ -135,9 +135,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         """
 
     @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T:
+    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T:
         """
         Calls the wrapped function synchronously.
 
@@ -417,9 +415,7 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
+    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T: ...
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
@@ -458,9 +454,7 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
         self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
     ) -> Coroutine[Any, Any, T]: ...
     @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
+    def __call__(self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs) -> T: ...
     @overload
     def __call__(
         self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
@@ -471,9 +465,7 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
 
 class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
-    def __call__(
-        self, func: AnyFn[Concatenate[B, P], T]
-    ) -> ASyncBoundMethodSyncDefault[P, T]:
+    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> ASyncBoundMethodSyncDefault[P, T]:
         """
         Decorates a bound method with synchronous default behavior.
 
@@ -519,9 +511,7 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
 
 class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
-    def __call__(
-        self, func: AnyFn[Concatenate[B, P], T]
-    ) -> ASyncBoundMethodAsyncDefault[P, T]:
+    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> ASyncBoundMethodAsyncDefault[P, T]:
         """
         Decorates a bound method with asynchronous default behavior.
 

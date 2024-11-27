@@ -24,9 +24,7 @@ class TestClass(ASyncBase):
 
     async def test_fn(self) -> int:
         if self.sync == False and main_thread() != current_thread():
-            raise WrongThreadError(
-                "This should be running on an event loop in the main thread."
-            )
+            raise WrongThreadError("This should be running on an event loop in the main thread.")
         elif self.sync == True and main_thread() != current_thread():
             raise WrongThreadError("This should be awaited in the main thread")
         return self.v
@@ -34,9 +32,7 @@ class TestClass(ASyncBase):
     @a_sync.aka.property
     async def test_property(self) -> int:
         if self.sync == False and main_thread() != current_thread():
-            raise WrongThreadError(
-                "This should be running on an event loop in the main thread."
-            )
+            raise WrongThreadError("This should be running on an event loop in the main thread.")
         elif self.sync == True and main_thread() != current_thread():
             raise WrongThreadError("This should be awaited in the main thread")
         return self.v * 2
@@ -44,9 +40,7 @@ class TestClass(ASyncBase):
     @a_sync.alias.cached_property
     async def test_cached_property(self) -> int:
         if self.sync == False and main_thread() != current_thread():
-            raise WrongThreadError(
-                "This should be running on an event loop in the main thread."
-            )
+            raise WrongThreadError("This should be running on an event loop in the main thread.")
         elif self.sync == True and main_thread() != current_thread():
             raise WrongThreadError("This should be awaited in the main thread")
         await asyncio.sleep(2)
@@ -64,39 +58,27 @@ class TestSync(ASyncBase):
     def test_fn(self) -> int:
         # Sync bound methods are actually async functions that are run in an executor and awaited
         if self.sync == False and main_thread() == current_thread():
-            raise WrongThreadError(
-                "This should be running in an executor, not the main thread."
-            )
+            raise WrongThreadError("This should be running in an executor, not the main thread.")
         elif self.sync == True and main_thread() != current_thread():
-            raise WrongThreadError(
-                "This should be running synchronously in the main thread"
-            )
+            raise WrongThreadError("This should be running synchronously in the main thread")
         return self.v
 
     @a_sync.aka.property
     def test_property(self) -> int:
         if self.sync == False and main_thread() == current_thread():
-            raise WrongThreadError(
-                "This should be running in an executor, not the main thread."
-            )
+            raise WrongThreadError("This should be running in an executor, not the main thread.")
         if self.sync == True and main_thread() == current_thread():
             # Sync properties are actually async functions that are run in an executor and awaited
-            raise WrongThreadError(
-                "This should be running in an executor, not the main thread."
-            )
+            raise WrongThreadError("This should be running in an executor, not the main thread.")
         return self.v * 2
 
     @a_sync.alias.cached_property
     def test_cached_property(self) -> int:
         if self.sync == False and main_thread() == current_thread():
-            raise WrongThreadError(
-                "This should be running in an executor, not the main thread."
-            )
+            raise WrongThreadError("This should be running in an executor, not the main thread.")
         if self.sync == True and main_thread() == current_thread():
             # Sync properties are actually async functions that are run in an executor and awaited
-            raise WrongThreadError(
-                "This should be running in an executor, not the main thread."
-            )
+            raise WrongThreadError("This should be running in an executor, not the main thread.")
         time.sleep(2)
         return self.v * 3
 

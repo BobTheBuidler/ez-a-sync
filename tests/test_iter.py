@@ -179,9 +179,7 @@ async def test_stop_iteration_async(cls_to_test, async_generator):
 
 
 def test_aiterable_decorated_func_sync():
-    with pytest.raises(
-        TypeError, match="`async_iterable` must be an AsyncIterable. You passed "
-    ):
+    with pytest.raises(TypeError, match="`async_iterable` must be an AsyncIterable. You passed "):
 
         @ASyncIterable.wrap
         async def decorated():
@@ -190,9 +188,7 @@ def test_aiterable_decorated_func_sync():
 
 @pytest.mark.asyncio_cooperative
 async def test_aiterable_decorated_func_async(async_generator):
-    with pytest.raises(
-        TypeError, match="`async_iterable` must be an AsyncIterable. You passed "
-    ):
+    with pytest.raises(TypeError, match="`async_iterable` must be an AsyncIterable. You passed "):
 
         @ASyncIterable.wrap
         async def decorated():

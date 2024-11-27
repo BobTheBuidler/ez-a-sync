@@ -16,9 +16,7 @@ def test_decorator_async_with_cache_type():
     assert asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
     assert asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
     duration = time() - start
-    assert (
-        duration < 1.5
-    ), "There is a 1 second sleep in this function but it should only run once."
+    assert duration < 1.5, "There is a 1 second sleep in this function but it should only run once."
     _test_kwargs(some_test_fn, "async")
 
 
@@ -32,9 +30,7 @@ def test_decorator_async_with_cache_maxsize():
     assert asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
     assert asyncio.get_event_loop().run_until_complete(some_test_fn()) == 2
     duration = time() - start
-    assert (
-        duration < 1.5
-    ), "There is a 1 second sleep in this function but it should only run once."
+    assert duration < 1.5, "There is a 1 second sleep in this function but it should only run once."
     _test_kwargs(some_test_fn, "async")
 
 
@@ -60,9 +56,7 @@ def test_decorator_sync_with_cache_type():
     assert some_test_fn() == 2
     assert some_test_fn() == 2
     duration = time() - start
-    assert (
-        duration < 1.5
-    ), "There is a 1 second sleep in this function but it should only run once."
+    assert duration < 1.5, "There is a 1 second sleep in this function but it should only run once."
     _test_kwargs(some_test_fn, "sync")
 
 
@@ -80,7 +74,5 @@ def test_decorator_sync_with_cache_maxsize():
     assert some_test_fn() == 2
     assert some_test_fn() == 2
     duration = time() - start
-    assert (
-        duration < 1.5
-    ), "There is a 1 second sleep in this function but it should only run once."
+    assert duration < 1.5, "There is a 1 second sleep in this function but it should only run once."
     _test_kwargs(some_test_fn, "sync")
