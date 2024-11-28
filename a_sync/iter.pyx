@@ -617,7 +617,13 @@ class ASyncFilter(_ASyncView[T]):
             True if the object passes the filter, False otherwise.
         """
         cdef object checked = self._function(obj)
-        return bool(await checked) if inspect.isawaitable(checked) else bool(checked)
+        try:
+            return bool(await checked)
+        except AttributeError as e:
+            if "__await__" in str(e):
+                # NOTE: this try, except is faster than using inspect.isawaitable
+                return bool(checked)
+            raise
 
 
 cdef object _key_if_no_key(object obj):

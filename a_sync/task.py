@@ -15,7 +15,6 @@ import inspect
 import logging
 import weakref
 
-import a_sync.asyncio
 from a_sync import exceptions
 from a_sync._typing import *
 from a_sync.a_sync import _kwargs
@@ -680,11 +679,16 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
     elif isinstance(iterable, Iterable):
         for key in iterable:
             yield key
-    elif inspect.isawaitable(iterable):
-        async for key in _yield_keys(await iterable):
-            yield key
     else:
-        raise TypeError(iterable)
+        try:
+            iterable = await iterable
+        except AttributeError as e:
+            if "__await__" not in str(e):
+                raise
+            raise TypeError(iterable) from e.__cause__
+
+        async for key in _yield_keys(iterable):
+            yield key
 
 
 __unwrapped = weakref.WeakKeyDictionary()

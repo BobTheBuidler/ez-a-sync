@@ -28,7 +28,6 @@ TODO include comparisons between the 'new way' with this future class and the 'o
 import asyncio
 import concurrent.futures
 from functools import partial, wraps
-from inspect import isawaitable
 
 import a_sync.asyncio
 from a_sync._typing import *
@@ -102,7 +101,13 @@ async def _check_and_materialize(thing: T) -> T:
         >>> await _check_and_materialize(async_fn())
         42
     """
-    return await thing if isawaitable(thing) else thing
+    try:
+        return await thing
+    except AttributeError as e:
+        # NOTE: this try, except is faster than using inspect.isawaitable
+        if "__await__" in str(e):
+            return thing
+        raise
 
 
 def _materialize(meta: "ASyncFuture[T]") -> T:
