@@ -500,11 +500,6 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         """# TODO write docs for this"""
         if cancel and self._init_loader and not self._init_loader.done():
             logger.debug("cancelling %s", self._init_loader)
-            # temporary, remove later
-            try:
-                raise Exception
-            except Exception as e:
-                logger.exception(e)
             self._init_loader.cancel()
         if keys := tuple(self.keys()):
             logger.debug("popping remaining %s tasks", self)
@@ -515,9 +510,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     def _init_loader(self) -> Optional["asyncio.Task[None]"]:
         if self.__init_loader_coro:
             logger.debug("starting %s init loader", self)
-            name = f"{type(self).__name__} init loader loading {self.__iterables__} for {self}"
             try:
-                task = create_task(coro=self.__init_loader_coro, name=name)
+                task = create_task(
+                    coro=self.__init_loader_coro,
+                    name=f"{type(self).__name__} init loader loading {self.__iterables__} for {self}",
+                )
             except RuntimeError as e:
                 raise _NoRunningLoop if str(e) == "no running event loop" else e
             task.add_done_callback(self.__cleanup)

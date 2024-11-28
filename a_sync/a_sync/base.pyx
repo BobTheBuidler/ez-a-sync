@@ -2,6 +2,7 @@ import functools
 import inspect
 from contextlib import suppress
 from logging import DEBUG, getLogger
+from libc.stdint cimport uintptr_t
 
 from a_sync import exceptions
 from a_sync._typing import *
@@ -57,10 +58,43 @@ class ASyncGenericBase(ASyncABC):
         seamless usage in different contexts without changing the underlying implementation.
     """
 
+    @classmethod  # type: ignore [misc]
+    def __a_sync_default_mode__(cls) -> bint:  # type: ignore [override]
+        cdef object flag
+        cdef bint flag_value
+        if not c_logger.isEnabledFor(DEBUG):
+            # we can optimize this if we dont need to log `flag` and the return value
+            try:
+                flag = _get_a_sync_flag_name_from_signature(cls, False)
+                flag_value = _a_sync_flag_default_value_from_signature(cls)
+            except exceptions.NoFlagsFound:
+                flag = _get_a_sync_flag_name_from_class_def(cls)
+                flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
+            return validate_and_negate_if_necessary(flag, flag_value)
+
+        # we need an extra var so we can log it
+        cdef bint sync
+        
+        try:
+            flag = _get_a_sync_flag_name_from_signature(cls, True)
+            flag_value = _a_sync_flag_default_value_from_signature(cls)
+        except exceptions.NoFlagsFound:
+            flag = _get_a_sync_flag_name_from_class_def(cls)
+            flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
+        
+        sync = validate_and_negate_if_necessary(flag, flag_value)
+        c_logger._log(
+            DEBUG,
+            "`%s.%s` indicates default mode is %ssynchronous",
+            (cls, flag, "a" if sync is False else ""),
+        )
+        return sync
+
     def __init__(self):
         if type(self) is ASyncGenericBase:
             raise NotImplementedError(
-                f"You should not create instances of `ASyncGenericBase` directly, you should subclass `ASyncGenericBase` instead."
+                "You should not create instances of `ASyncGenericBase` directly, "
+                "you should subclass `ASyncGenericBase` instead."
             )
         ASyncABC.__init__(self)
 
@@ -71,7 +105,7 @@ class ASyncGenericBase(ASyncABC):
         if debug_logs := c_logger.isEnabledFor(DEBUG):
             c_logger._log(DEBUG, "checking a_sync flag for %s", (self, ))
         try:
-            flag = _get_a_sync_flag_name_from_signature(type(self))
+            flag = _get_a_sync_flag_name_from_signature(type(self), debug_logs)
         except exceptions.ASyncFlagException:
             # We can't get the flag name from the __init__ signature,
             # but maybe the implementation sets the flag somewhere else.
@@ -101,38 +135,6 @@ class ASyncGenericBase(ASyncABC):
         c_logger.debug("`%s.%s` is currently %s", self, flag, flag_value)
         return validate_flag_value(flag, flag_value)
 
-    @classmethod  # type: ignore [misc]
-    def __a_sync_default_mode__(cls) -> bint:  # type: ignore [override]
-        cdef object flag
-        cdef bint flag_value
-        if not c_logger.isEnabledFor(DEBUG):
-            # we can optimize this if we dont need to log `flag` and the return value
-            try:
-                flag = _get_a_sync_flag_name_from_signature(cls)
-                flag_value = _a_sync_flag_default_value_from_signature(cls)
-            except exceptions.NoFlagsFound:
-                flag = _get_a_sync_flag_name_from_class_def(cls)
-                flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
-            return validate_and_negate_if_necessary(flag, flag_value)
-
-        # we need an extra var so we can log it
-        cdef bint sync
-        
-        try:
-            flag = _get_a_sync_flag_name_from_signature(cls)
-            flag_value = _a_sync_flag_default_value_from_signature(cls)
-        except exceptions.NoFlagsFound:
-            flag = _get_a_sync_flag_name_from_class_def(cls)
-            flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
-        
-        sync = validate_and_negate_if_necessary(flag, flag_value)
-        c_logger._log(
-            DEBUG,
-            "`%s.%s` indicates default mode is %ssynchronous",
-            (cls, flag, "a" if sync is False else ""),
-        )
-        return sync
-
 
 
 cdef str _get_a_sync_flag_name_from_class_def(object cls):
@@ -149,15 +151,15 @@ cdef str _get_a_sync_flag_name_from_class_def(object cls):
 
 
 cdef bint _a_sync_flag_default_value_from_signature(object cls):
-    cdef object signature = inspect.signature(cls.__init__)
+    cdef object signature = _get_init_signature(cls)
     if not c_logger.isEnabledFor(DEBUG):
         # we can optimize this much better
-        return signature.parameters[_get_a_sync_flag_name_from_signature(cls)].default
+        return signature.parameters[_get_a_sync_flag_name_from_signature(cls, False)].default
     
     c_logger._log(
         DEBUG, "checking `__init__` signature for default %s a_sync flag value", (cls, )
     )
-    cdef str flag = _get_a_sync_flag_name_from_signature(cls)
+    cdef str flag = _get_a_sync_flag_name_from_signature(cls, True)
     cdef object flag_value = signature.parameters[flag].default
     if flag_value is inspect._empty:  # type: ignore [attr-defined]
         raise NotImplementedError(
@@ -167,20 +169,21 @@ cdef bint _a_sync_flag_default_value_from_signature(object cls):
     return flag_value
 
 
-cdef str _get_a_sync_flag_name_from_signature(object cls):
+cdef str _get_a_sync_flag_name_from_signature(object cls, bint debug_logs):
     if cls.__name__ == "ASyncGenericBase":
-        c_logger.debug(
-            "There are no flags defined on the base class, this is expected. Skipping."
-        )
-        return None
+        if debug_logs:
+            c_logger._log(
+                DEBUG, "There are no flags defined on the base class, this is expected. Skipping.", ()
+            )
+        return ""
 
     # if we fail this one there's no need to check again
-    if not c_logger.isEnabledFor(DEBUG):
+    if not debug_logs:
         # we can also skip assigning params to a var
-        return _parse_flag_name_from_list(cls, inspect.signature(cls.__init__).parameters)
+        return _parse_flag_name_from_list(cls, _get_init_signature(cls).parameters)
 
     c_logger._log(DEBUG, "Searching for flags defined on %s.__init__", (cls, ))
-    cdef object parameters = inspect.signature(cls.__init__).parameters
+    cdef object parameters = _get_init_signature(cls).parameters
     c_logger._log(DEBUG, "parameters: %s", (parameters, ))
     return _parse_flag_name_from_list(cls, parameters)
 
@@ -207,3 +210,15 @@ cdef inline bint _get_a_sync_flag_value_from_class_def(object cls, str flag):
         if flag in spec.__dict__:
             return spec.__dict__[flag]
     raise exceptions.FlagNotDefined(cls, flag)
+
+
+cdef dict[uintptr_t, object] _init_signature_cache = {}
+
+
+cdef _get_init_signature(object cls):
+    cdef uintptr_t cls_init_id = id(cls.__init__)
+    signature = _init_signature_cache.get(cls_init_id)
+    if signature is None:
+        signature = inspect.signature(cls.__init__)
+        _init_signature_cache[cls_init_id] = signature
+    return signature
