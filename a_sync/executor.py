@@ -179,8 +179,8 @@ class AsyncProcessPoolExecutor(
     _AsyncExecutorMixin, concurrent.futures.ProcessPoolExecutor
 ):
     """
-    A :class:`concurrent.futures.ProcessPoolExecutor' subclass providing asynchronous run and submit methods that support kwargs,
-    with support for synchronous mode
+    A :class:`concurrent.futures.ProcessPoolExecutor' subclass providing asynchronous 
+    run and submit methods that support kwargs, with support for synchronous mode
 
     Examples:
         >>> executor = AsyncProcessPoolExecutor(max_workers=4)
@@ -239,8 +239,8 @@ class AsyncThreadPoolExecutor(
     _AsyncExecutorMixin, concurrent.futures.ThreadPoolExecutor
 ):
     """
-    A :class:`concurrent.futures.ThreadPoolExecutor' subclass providing asynchronous run and submit methods that support kwargs,
-    with support for synchronous mode
+    A :class:`concurrent.futures.ThreadPoolExecutor' subclass providing asynchronous 
+    run and submit methods that support kwargs, with support for synchronous mode
 
     Examples:
         >>> executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix="MyThread")
