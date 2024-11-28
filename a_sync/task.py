@@ -685,7 +685,7 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
         except AttributeError as e:
             if "__await__" not in str(e):
                 raise
-            raise TypeError(iterable) from e.__cause__
+            raise TypeError(iterable) from e
 
         async for key in _yield_keys(iterable):
             yield key
