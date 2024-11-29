@@ -11,6 +11,7 @@ asynchronously based on various conditions and configurations.
 import functools
 import weakref
 from inspect import isawaitable
+from libc.stdint cimport uintptr_t
 from logging import DEBUG, getLogger
 
 from a_sync._typing import *
@@ -411,7 +412,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         return bound
 
 
-cdef dict _is_a_sync_instance_cache = {}
+cdef dict[uintptr_t, bint] _is_a_sync_instance_cache = {}
 
 cdef bint _is_a_sync_instance(object instance):
     """Checks if an instance is an ASync instance.
@@ -423,7 +424,7 @@ cdef bint _is_a_sync_instance(object instance):
         A boolean indicating if the instance is an ASync instance.
     """
     cdef object instance_type = type(instance)
-    cdef long long instance_type_uid = id(instance_type)
+    cdef uintptr_t instance_type_uid = id(instance_type)
     if instance_type_uid in _is_a_sync_instance_cache:
         return _is_a_sync_instance_cache[instance_type_uid]
     from a_sync.a_sync.abstract import ASyncABC
