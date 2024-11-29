@@ -9,9 +9,9 @@ from typing import _GenericAlias, get_args
 
 from async_property import async_cached_property
 
-import a_sync.asyncio
 from a_sync._typing import *
 from a_sync.a_sync._helpers cimport _await
+from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.exceptions import SyncModeInAsyncContextError
 
 
@@ -720,11 +720,15 @@ class ASyncSorter(_ASyncView[T]):
             if self.__aiterator__:
                 async for obj in self.__aiterator__:
                     items.append(obj)
-                    sort_tasks.append(a_sync.asyncio.create_task(self._function(obj)))
+                    sort_tasks.append(
+                        ccreate_task_simple(self._function(obj))
+                    )
             elif self.__iterator__:
                 for obj in self.__iterator__:
                     items.append(obj)
-                    sort_tasks.append(a_sync.asyncio.create_task(self._function(obj)))
+                    sort_tasks.append(
+                        ccreate_task_simple(self._function(obj))
+                    )
                 for sort_value, obj in sorted(
                     zip(await asyncio.gather(*sort_tasks), items),
                     reverse=reverse,
