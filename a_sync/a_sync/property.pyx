@@ -158,8 +158,6 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         Returns:
             The property value.
         """
-        if instance is None:
-            raise ValueError(instance)
         c_logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, owner)
 
@@ -189,7 +187,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         """
         c_logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
         return self._TaskMapping(
-            self,
+            self.hidden_method_descriptor,
             instances,
             owner=owner,
             name=name or self.field_name,
