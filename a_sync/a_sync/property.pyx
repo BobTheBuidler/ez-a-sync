@@ -158,8 +158,6 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         Returns:
             The property value.
         """
-        if instance is None:
-            raise ValueError(instance)
         c_logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, owner)
 
