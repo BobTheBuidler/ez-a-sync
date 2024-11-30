@@ -30,6 +30,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "tqdm": ("https://tqdm.github.io/", None),
+    "typed_envs": ("https://bobthebuidler.github.io/typed-envs/", None),
     "typing_extensions": ("https://typing-extensions.readthedocs.io/en/latest/", None),
 }
 
