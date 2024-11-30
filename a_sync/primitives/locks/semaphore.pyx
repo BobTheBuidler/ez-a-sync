@@ -349,7 +349,8 @@ cdef class DummySemaphore(Semaphore):
         """An optional name for the counter, used in debug logs."""
 
         if self._name == NULL:
-            raise MemoryError("Failed to allocate memory for __name.")
+            raise MemoryError("Failed to allocate memory for _name.")
+            
         # Copy the bytes data into the char*
         strcpy(self._name, encoded_name)
 

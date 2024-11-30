@@ -43,7 +43,7 @@ def apply_semaphore(  # type: ignore [misc]
         - :class:`primitives.Semaphore`
 
     Note:
-        `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.
+        `primitives.Semaphore` implements the same API as `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other implementations that conform to the same interface.
     """
 
 
@@ -81,7 +81,7 @@ def apply_semaphore(
         - :class:`primitives.Semaphore`
 
     Note:
-        `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.
+        `primitives.Semaphore` implements the same API as `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other implementations that conform to the same interface.
     """
 
 
@@ -128,7 +128,7 @@ def apply_semaphore(
         - :class:`primitives.Semaphore`
 
     Note:
-        `primitives.Semaphore` is a subclass of `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other subclasses.
+        `primitives.Semaphore` implements the same API as `asyncio.Semaphore`. Therefore, when the documentation refers to `asyncio.Semaphore`, it also includes `primitives.Semaphore` and any other implementations that conform to the same interface.
     """
     # Parse Inputs
     if isinstance(coro_fn, (int, asyncio.Semaphore, primitives.Semaphore)):

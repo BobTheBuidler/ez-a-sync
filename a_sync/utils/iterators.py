@@ -258,9 +258,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
                 del task
                 del queue
                 if item._exc:
-                    raise type(item._exc)(*item._exc.args).with_traceback(
-                        item._tb
-                    ) from item._exc.__cause__
+                    raise item._exc.with_traceback(item._tb) from item._exc.__cause__
                 return
             yield item
 
