@@ -175,17 +175,13 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         # Update method docstrings by redefining methods
         # This is necessary because, by default, subclasses inherit methods from their bases
         # which means if we just update the docstring we might edit docs for unrelated objects
-        def is_function(name: str, obj: Any) -> bool:
-            return (
-                isinstance(obj, (FunctionType, property)) 
-                or "cython_function_or_method" in type(obj).__name__
-            )
+        is_function = lambda obj: isinstance(obj, (FunctionType, property)) or "cython_function_or_method" in type(obj).__name__
 
         cdef dict functions_to_redefine = {
             attr_name: attr_value
             for attr_name in dir(cls)
             if (attr_value := getattr(cls, attr_name, None))
-            and is_function(attr_name, attr_value)
+            and is_function(attr_value)
             and attr_value.__doc__
             and any(pattern in attr_value.__doc__ for pattern in _FORMAT_PATTERNS)
         }
