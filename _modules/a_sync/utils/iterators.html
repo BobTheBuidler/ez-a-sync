@@ -119,9 +119,7 @@
             <span class="k">pass</span>
     <span class="k">elif</span> <span class="n">logger</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">):</span>
         <span class="k">async</span> <span class="k">for</span> <span class="n">thing</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span>
-                <span class="n">DEBUG</span><span class="p">,</span> <span class="s2">&quot;putting </span><span class="si">%s</span><span class="s2"> from </span><span class="si">%s</span><span class="s2"> to queue </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">thing</span><span class="p">,</span> <span class="n">iterator</span><span class="p">,</span> <span class="n">queue</span><span class="p">)</span>
-            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">_log</span><span class="p">(</span><span class="n">DEBUG</span><span class="p">,</span> <span class="s2">&quot;putting </span><span class="si">%s</span><span class="s2"> from </span><span class="si">%s</span><span class="s2"> to queue </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">thing</span><span class="p">,</span> <span class="n">iterator</span><span class="p">,</span> <span class="n">queue</span><span class="p">))</span>
             <span class="n">queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">async</span> <span class="k">for</span> <span class="n">thing</span> <span class="ow">in</span> <span class="n">iterator</span><span class="p">:</span>
@@ -340,9 +338,7 @@
                 <span class="k">del</span> <span class="n">task</span>
                 <span class="k">del</span> <span class="n">queue</span>
                 <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">_exc</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">_exc</span><span class="p">)(</span><span class="o">*</span><span class="n">item</span><span class="o">.</span><span class="n">_exc</span><span class="o">.</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span>
-                        <span class="n">item</span><span class="o">.</span><span class="n">_tb</span>
-                    <span class="p">)</span> <span class="kn">from</span> <span class="nn">item._exc.__cause__</span>
+                    <span class="k">raise</span> <span class="n">item</span><span class="o">.</span><span class="n">_exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">_tb</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">item._exc.__cause__</span>
                 <span class="k">return</span>
             <span class="k">yield</span> <span class="n">item</span>
 

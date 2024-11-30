@@ -3131,42 +3131,8 @@ such as converting sync functions to async, applying caching, or rate limiting.<
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="a_sync.a_sync.function._check_not_genfunc">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.function.</span></span><span class="sig-name descname"><span class="pre">_check_not_genfunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function._check_not_genfunc" title="Link to this definition"></a></dt>
-<dd><p>Raises an error if the function is a generator or async generator.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>) – The function to check.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the function is a generator or async generator.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/inspect.html#inspect.isasyncgenfunction" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">inspect.isasyncgenfunction()</span></code></a></p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/inspect.html#inspect.isgeneratorfunction" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">inspect.isgeneratorfunction()</span></code></a></p></li>
-</ul>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="a_sync.a_sync.function._validate_argspec">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.function.</span></span><span class="sig-name descname"><span class="pre">_validate_argspec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.function._validate_argspec" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="a_sync.a_sync.function._validate_wrapped_fn">
-<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.function.</span></span><span class="sig-name descname"><span class="pre">_validate_wrapped_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function._validate_wrapped_fn" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.function.</span></span><span class="sig-name descname"><span class="pre">_validate_wrapped_fn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">void</span></span></span><a class="headerlink" href="#a_sync.a_sync.function._validate_wrapped_fn" title="Link to this definition"></a></dt>
 <dd><p>Ensures ‘fn’ is an appropriate function for wrapping with a_sync.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3178,14 +3144,11 @@ such as converting sync functions to async, applying caching, or rate limiting.<
 <li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><strong>RuntimeError</strong></a> – If the function has arguments with names that conflict with viable flags.</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
 </dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.function._check_not_genfunc" title="a_sync.a_sync.function._check_not_genfunc"><code class="xref py py-func docutils literal notranslate"><span class="pre">_check_not_genfunc()</span></code></a></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">_check_not_genfunc()</span></code></p></li>
 </ul>
 </div>
 </dd></dl>
@@ -6435,6 +6398,10 @@ result = await instance.my_method.sum([1, 2, 3])
 <p>A variant of <a class="reference internal" href="#a_sync.a_sync.property.ASyncCachedPropertyDescriptor" title="a_sync.a_sync.property.ASyncCachedPropertyDescriptor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncCachedPropertyDescriptor</span></code></a> that defaults to asynchronous behavior.</p>
 <p>This class is used for cached properties that are primarily intended to be
 accessed asynchronously but can also be used synchronously if needed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You should never create these yourself. They are automatically generated by ez-a-sync internally.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_fget</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncGetterFunction</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_fset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_fdel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.property.ASyncCachedPropertyDescriptorAsyncDefault.__init__" title="Link to this definition"></a></dt>
@@ -6977,6 +6944,10 @@ result = await instance.my_method.sum([1, 2, 3])
 <p>A variant of <a class="reference internal" href="#a_sync.a_sync.property.ASyncCachedPropertyDescriptor" title="a_sync.a_sync.property.ASyncCachedPropertyDescriptor"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncCachedPropertyDescriptor</span></code></a> that defaults to synchronous behavior.</p>
 <p>This class is used for cached properties that are primarily intended to be
 accessed synchronously but can also be used asynchronously if needed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You should never create these yourself. They are automatically generated by ez-a-sync internally.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_fget</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncGetterFunction</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_fset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_fdel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">modifiers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Unpack</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><span class="pre">ModifierKwargs</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.property.ASyncCachedPropertyDescriptorSyncDefault.__init__" title="Link to this definition"></a></dt>
@@ -8817,8 +8788,11 @@ result = await instance.my_method.sum([1, 2, 3])
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.property.</span></span><span class="sig-name descname"><span class="pre">HiddenMethod</span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault" title="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncBoundMethodAsyncDefault</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[()], <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <p>Represents a hidden method for asynchronous properties.</p>
-<p>This class is used internally to manage hidden methods associated with
-asynchronous properties.</p>
+<p>This class is used internally to manage hidden getter methods associated with a/sync properties.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You should never create these yourself. They are automatically generated by ez-a-sync internally.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MaybeCoro</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod.__call__" title="Link to this definition"></a></dt>
@@ -9228,8 +9202,11 @@ definition (sync vs async def).</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.property.</span></span><span class="sig-name descname"><span class="pre">HiddenMethodDescriptor</span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethodDescriptor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault" title="a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncMethodDescriptorAsyncDefault</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[()], <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <p>Descriptor for hidden methods associated with asynchronous properties.</p>
-<p>This class is used internally to manage hidden methods associated with
-asynchronous properties.</p>
+<p>This class is used internally to manage hidden getter methods associated with a/sync properties.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You should never create these yourself. They are automatically generated by ez-a-sync internally.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethodDescriptor.__call__">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethodDescriptor.__call__" title="Link to this definition"></a></dt>
@@ -12697,8 +12674,11 @@ result = await instance.my_method.sum([1, 2, 3])
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.</span></span><span class="sig-name descname"><span class="pre">HiddenMethod</span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethod" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault" title="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncBoundMethodAsyncDefault</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[()], <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <p>Represents a hidden method for asynchronous properties.</p>
-<p>This class is used internally to manage hidden methods associated with
-asynchronous properties.</p>
+<p>This class is used internally to manage hidden getter methods associated with a/sync properties.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You should never create these yourself. They are automatically generated by ez-a-sync internally.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">MaybeCoro</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethod.__call__" title="Link to this definition"></a></dt>
@@ -13108,8 +13088,11 @@ definition (sync vs async def).</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.</span></span><span class="sig-name descname"><span class="pre">HiddenMethodDescriptor</span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethodDescriptor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault" title="a_sync.a_sync.method.ASyncMethodDescriptorAsyncDefault"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncMethodDescriptorAsyncDefault</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[()], <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <p>Descriptor for hidden methods associated with asynchronous properties.</p>
-<p>This class is used internally to manage hidden methods associated with
-asynchronous properties.</p>
+<p>This class is used internally to manage hidden getter methods associated with a/sync properties.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You should never create these yourself. They are automatically generated by ez-a-sync internally.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethodDescriptor.__call__">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethodDescriptor.__call__" title="Link to this definition"></a></dt>

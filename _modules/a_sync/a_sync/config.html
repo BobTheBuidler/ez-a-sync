@@ -164,9 +164,7 @@
         <span class="k">return</span> <span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">EXECUTOR_VALUE</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">EXECUTOR_TYPE</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">):</span>  <span class="c1"># t, T, thread, THREADS, etc</span>
         <span class="k">return</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">EXECUTOR_VALUE</span><span class="p">)</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-        <span class="s2">&quot;Invalid value for A_SYNC_EXECUTOR_TYPE. Please use &#39;threads&#39; or &#39;processes&#39;.&quot;</span>
-    <span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid value for A_SYNC_EXECUTOR_TYPE. Please use &#39;threads&#39; or &#39;processes&#39;.&quot;</span><span class="p">)</span></div>
 
 
 
@@ -228,9 +226,7 @@
 <span class="sd">&quot;&quot;&quot;Sets the rate limit for function execution.&quot;&quot;&quot;</span>
 
 <span class="n">SEMAPHORE</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">rpm</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">rpm</span> <span class="o">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_SEMAPHORE&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
-    <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s2">&quot;semaphore&quot;</span><span class="p">]</span>
+    <span class="n">rpm</span> <span class="k">if</span> <span class="p">(</span><span class="n">rpm</span> <span class="o">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_SEMAPHORE&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span> <span class="k">else</span> <span class="n">null_modifiers</span><span class="p">[</span><span class="s2">&quot;semaphore&quot;</span><span class="p">]</span>
 <span class="p">)</span>
 <span class="sd">&quot;&quot;&quot;Sets the semaphore limit for function execution.&quot;&quot;&quot;</span>
 

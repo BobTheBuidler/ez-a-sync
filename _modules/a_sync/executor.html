@@ -148,11 +148,7 @@
 <span class="sd">        See Also:</span>
 <span class="sd">            - :meth:`submit` for submitting functions to the executor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span>
-            <span class="k">else</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span> <span class="k">else</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[T]&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore [override]</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -248,12 +244,10 @@
 
 <div class="viewcode-block" id="AsyncProcessPoolExecutor">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncProcessPoolExecutor">[docs]</a>
-<span class="k">class</span> <span class="nc">AsyncProcessPoolExecutor</span><span class="p">(</span>
-    <span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ProcessPoolExecutor</span>
-<span class="p">):</span>
+<span class="k">class</span> <span class="nc">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ProcessPoolExecutor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A :class:`concurrent.futures.ProcessPoolExecutor&#39; subclass providing asynchronous run and submit methods that support kwargs,</span>
-<span class="sd">    with support for synchronous mode</span>
+<span class="sd">    A :class:`concurrent.futures.ProcessPoolExecutor&#39; subclass providing asynchronous</span>
+<span class="sd">    run and submit methods that support kwargs, with support for synchronous mode</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; executor = AsyncProcessPoolExecutor(max_workers=4)</span>
@@ -314,12 +308,10 @@
 
 <div class="viewcode-block" id="AsyncThreadPoolExecutor">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncThreadPoolExecutor">[docs]</a>
-<span class="k">class</span> <span class="nc">AsyncThreadPoolExecutor</span><span class="p">(</span>
-    <span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span>
-<span class="p">):</span>
+<span class="k">class</span> <span class="nc">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A :class:`concurrent.futures.ThreadPoolExecutor&#39; subclass providing asynchronous run and submit methods that support kwargs,</span>
-<span class="sd">    with support for synchronous mode</span>
+<span class="sd">    A :class:`concurrent.futures.ThreadPoolExecutor&#39; subclass providing asynchronous</span>
+<span class="sd">    run and submit methods that support kwargs, with support for synchronous mode</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; executor = AsyncThreadPoolExecutor(max_workers=10, thread_name_prefix=&quot;MyThread&quot;)</span>
@@ -377,9 +369,7 @@
 <span class="c1"># Pruning thread pool</span>
 
 
-<span class="k">def</span> <span class="nf">_worker</span><span class="p">(</span>
-    <span class="n">executor_reference</span><span class="p">,</span> <span class="n">work_queue</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">,</span> <span class="n">timeout</span>
-<span class="p">):</span>  <span class="c1"># NOTE: NEW &#39;timeout&#39;</span>
+<span class="k">def</span> <span class="nf">_worker</span><span class="p">(</span><span class="n">executor_reference</span><span class="p">,</span> <span class="n">work_queue</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>  <span class="c1"># NOTE: NEW &#39;timeout&#39;</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Worker function for the PruningThreadPoolExecutor.</span>
 

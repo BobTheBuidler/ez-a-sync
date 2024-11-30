@@ -432,8 +432,6 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function._ModifiedMixin.wrapped"><code class="docutils literal notranslate"><span class="pre">_ModifiedMixin.wrapped</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function._check_not_genfunc"><code class="docutils literal notranslate"><span class="pre">_check_not_genfunc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function._validate_argspec"><code class="docutils literal notranslate"><span class="pre">_validate_argspec()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function._validate_wrapped_fn"><code class="docutils literal notranslate"><span class="pre">_validate_wrapped_fn()</span></code></a></li>
 </ul>
 </li>
@@ -4291,8 +4289,8 @@ returns an <cite>asyncio.Future</cite> instead of a <cite>concurrent.futures.Fut
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.executor.</span></span><span class="sig-name descname"><span class="pre">AsyncProcessPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#AsyncProcessPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></p>
-<p>A :class:<a href="#id25"><span class="problematic" id="id26">`</span></a>concurrent.futures.ProcessPoolExecutor’ subclass providing asynchronous run and submit methods that support kwargs,
-with support for synchronous mode</p>
+<p>A :class:<a href="#id25"><span class="problematic" id="id26">`</span></a>concurrent.futures.ProcessPoolExecutor’ subclass providing asynchronous
+run and submit methods that support kwargs, with support for synchronous mode</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
@@ -4766,8 +4764,8 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.executor.</span></span><span class="sig-name descname"><span class="pre">AsyncThreadPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#AsyncThreadPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></p>
-<p>A :class:<a href="#id31"><span class="problematic" id="id32">`</span></a>concurrent.futures.ThreadPoolExecutor’ subclass providing asynchronous run and submit methods that support kwargs,
-with support for synchronous mode</p>
+<p>A :class:<a href="#id31"><span class="problematic" id="id32">`</span></a>concurrent.futures.ThreadPoolExecutor’ subclass providing asynchronous
+run and submit methods that support kwargs, with support for synchronous mode</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">&quot;MyThread&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
@@ -6029,7 +6027,7 @@ included in the result. The filter function can be either synchronous or asynchr
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Return the {cls} for aiteration.</p>
+<dd><p>Return the ASyncIterator for aiteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Self</em></p>
@@ -6050,7 +6048,7 @@ included in the result. The filter function can be either synchronous or asynchr
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ViewFn</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AnyIterable</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the {cls} with a function and an iterable.</p>
+<dd><p>Initializes the _ASyncView with a function and an iterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -6067,10 +6065,10 @@ included in the result. The filter function can be either synchronous or asynchr
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__iter__" title="Link to this definition"></a></dt>
-<dd><p>Return the {cls} for iteration.</p>
+<dd><p>Return the ASyncIterator for iteration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch {obj}.
+<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.
 This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
 This RuntimeError will be caught and a more descriptive <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a> will be raised in its place.</p>
 <p>If you encounter a <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a>, you are likely working in an async codebase
@@ -6086,10 +6084,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__next__">
 <span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__next__" title="Link to this definition"></a></dt>
-<dd><p>Synchronously fetch the next item from the {cls}.</p>
+<dd><p>Synchronously fetch the next item from the ASyncIterator.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch {obj}.
+<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.
 This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
 This RuntimeError will be caught and a more descriptive <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a> will be raised in its place.</p>
 <p>If you encounter a <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a>, you are likely working in an async codebase
@@ -6098,7 +6096,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all {obj} have been fetched from the {cls}.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects have been fetched from the ASyncIterator.</p></li>
 <li><p><a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><strong>SyncModeInAsyncContextError</strong></a> – If the event loop is already running.</p></li>
 </ul>
 </dd>
@@ -6128,13 +6126,13 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ViewFn</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncFilter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.filter" title="Link to this definition"></a></dt>
-<dd><p>Filters the {obj} yielded by the {cls} based on a function.</p>
+<dd><p>Filters the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable based on a function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that yields the filtered {obj} from the {cls}.</p>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that yields the filtered <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
@@ -6145,7 +6143,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SortKey</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncSorter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.sort" title="Link to this definition"></a></dt>
-<dd><p>Sort the {obj} yielded by the {cls}.</p>
+<dd><p>Sort the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -6154,7 +6152,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the {obj} yielded from this {cls}, but sorted.</p>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded from this ASyncIterable, but sorted.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
@@ -6171,10 +6169,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.materialized">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">materialized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.iter.ASyncFilter.materialized" title="Link to this definition"></a></dt>
-<dd><p>Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>Synchronously iterate through the ASyncIterable and return all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
+<dd class="field-odd"><p>A list of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6295,7 +6293,7 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AsyncIterator</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Return an async iterator that yields {obj} from the {cls}.</p>
+<dd><p>Return an async iterator that yields <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
@@ -6317,7 +6315,7 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__iter__" title="Link to this definition"></a></dt>
-<dd><p>Return an iterator that yields {obj} from the {cls}.</p>
+<dd><p>Return an iterator that yields <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Synchronous iteration leverages <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>, which uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
@@ -6335,13 +6333,13 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ViewFn</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncFilter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterable.filter" title="Link to this definition"></a></dt>
-<dd><p>Filters the {obj} yielded by the {cls} based on a function.</p>
+<dd><p>Filters the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable based on a function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that yields the filtered {obj} from the {cls}.</p>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that yields the filtered <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
@@ -6352,7 +6350,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SortKey</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncSorter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterable.sort" title="Link to this definition"></a></dt>
-<dd><p>Sort the {obj} yielded by the {cls}.</p>
+<dd><p>Sort the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -6361,7 +6359,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the {obj} yielded from this {cls}, but sorted.</p>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded from this ASyncIterable, but sorted.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
@@ -6386,10 +6384,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.materialized">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">materialized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.iter.ASyncIterable.materialized" title="Link to this definition"></a></dt>
-<dd><p>Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>Synchronously iterate through the ASyncIterable and return all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
+<dd class="field-odd"><p>A list of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6435,7 +6433,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Return the {cls} for aiteration.</p>
+<dd><p>Return the ASyncIterator for aiteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Self</em></p>
@@ -6446,10 +6444,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__anext__">
 <span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Coroutine</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__anext__" title="Link to this definition"></a></dt>
-<dd><p>Asynchronously fetch the next item from the {cls}.</p>
+<dd><p>Asynchronously fetch the next item from the ASyncIterator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopAsyncIteration" title="(in Python v3.13)"><strong>StopAsyncIteration</strong></a> – Once all {obj} have been fetched from the {cls}.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopAsyncIteration" title="(in Python v3.13)"><strong>StopAsyncIteration</strong></a> – Once all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects have been fetched from the ASyncIterator.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Coroutine" title="(in Python v3.13)"><em>Coroutine</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>, <em>T</em>]</p>
@@ -6471,10 +6469,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__iter__" title="Link to this definition"></a></dt>
-<dd><p>Return the {cls} for iteration.</p>
+<dd><p>Return the ASyncIterator for iteration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch {obj}.
+<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.
 This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
 This RuntimeError will be caught and a more descriptive <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a> will be raised in its place.</p>
 <p>If you encounter a <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a>, you are likely working in an async codebase
@@ -6490,10 +6488,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__next__">
 <span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__next__" title="Link to this definition"></a></dt>
-<dd><p>Synchronously fetch the next item from the {cls}.</p>
+<dd><p>Synchronously fetch the next item from the ASyncIterator.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch {obj}.
+<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.
 This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
 This RuntimeError will be caught and a more descriptive <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a> will be raised in its place.</p>
 <p>If you encounter a <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a>, you are likely working in an async codebase
@@ -6502,7 +6500,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all {obj} have been fetched from the {cls}.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects have been fetched from the ASyncIterator.</p></li>
 <li><p><a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><strong>SyncModeInAsyncContextError</strong></a> – If the event loop is already running.</p></li>
 </ul>
 </dd>
@@ -6515,13 +6513,13 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ViewFn</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncFilter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.filter" title="Link to this definition"></a></dt>
-<dd><p>Filters the {obj} yielded by the {cls} based on a function.</p>
+<dd><p>Filters the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable based on a function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that yields the filtered {obj} from the {cls}.</p>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that yields the filtered <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
@@ -6532,7 +6530,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SortKey</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncSorter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.sort" title="Link to this definition"></a></dt>
-<dd><p>Sort the {obj} yielded by the {cls}.</p>
+<dd><p>Sort the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -6541,7 +6539,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the {obj} yielded from this {cls}, but sorted.</p>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded from this ASyncIterable, but sorted.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
@@ -6558,10 +6556,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.materialized">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">materialized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.iter.ASyncIterator.materialized" title="Link to this definition"></a></dt>
-<dd><p>Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>Synchronously iterate through the ASyncIterable and return all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
+<dd class="field-odd"><p>A list of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6605,13 +6603,13 @@ either synchronous or asynchronous. Note that the ASyncSorter instance can only 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AsyncIterator</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Return an async iterator for the {cls}.</p>
+<dd><p>Return an async iterator for the ASyncSorter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><strong>RuntimeError</strong></a> – If the ASyncSorter instance has already been consumed.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An async iterator that will yield the sorted {obj}.</p>
+<dd class="field-even"><p>An async iterator that will yield the sorted <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
@@ -6650,10 +6648,10 @@ either synchronous or asynchronous. Note that the ASyncSorter instance can only 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__iter__" title="Link to this definition"></a></dt>
-<dd><p>Return the {cls} for iteration.</p>
+<dd><p>Return the ASyncIterator for iteration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch {obj}.
+<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.
 This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
 This RuntimeError will be caught and a more descriptive <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a> will be raised in its place.</p>
 <p>If you encounter a <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a>, you are likely working in an async codebase
@@ -6669,10 +6667,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__next__">
 <span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__next__" title="Link to this definition"></a></dt>
-<dd><p>Synchronously fetch the next item from the {cls}.</p>
+<dd><p>Synchronously fetch the next item from the ASyncIterator.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch {obj}.
+<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.
 This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
 This RuntimeError will be caught and a more descriptive <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a> will be raised in its place.</p>
 <p>If you encounter a <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a>, you are likely working in an async codebase
@@ -6681,7 +6679,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all {obj} have been fetched from the {cls}.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects have been fetched from the ASyncIterator.</p></li>
 <li><p><a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><strong>SyncModeInAsyncContextError</strong></a> – If the event loop is already running.</p></li>
 </ul>
 </dd>
@@ -6694,13 +6692,13 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ViewFn</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncFilter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter.filter" title="Link to this definition"></a></dt>
-<dd><p>Filters the {obj} yielded by the {cls} based on a function.</p>
+<dd><p>Filters the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable based on a function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that yields the filtered {obj} from the {cls}.</p>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code></a> that yields the filtered <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
@@ -6711,7 +6709,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SortKey</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncSorter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter.sort" title="Link to this definition"></a></dt>
-<dd><p>Sort the {obj} yielded by the {cls}.</p>
+<dd><p>Sort the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -6720,7 +6718,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the {obj} yielded from this {cls}, but sorted.</p>
+<dd class="field-even"><p>An instance of <a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code></a> that will yield the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded from this ASyncIterable, but sorted.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
@@ -6742,10 +6740,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.materialized">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">materialized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.iter.ASyncSorter.materialized" title="Link to this definition"></a></dt>
-<dd><p>Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>Synchronously iterate through the ASyncIterable and return all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
+<dd class="field-odd"><p>A list of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7565,6 +7563,7 @@ such as queues and locks, with extra functionality.</p>
 <li><p>Iterators: <a class="reference internal" href="#a_sync.ASyncIterable" title="a_sync.ASyncIterable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterable</span></code></a>, <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>, <a class="reference internal" href="#a_sync.filter" title="a_sync.filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">filter</span></code></a>, <a class="reference internal" href="#a_sync.sorted" title="a_sync.sorted"><code class="xref py py-class docutils literal notranslate"><span class="pre">sorted</span></code></a> for async iteration.</p></li>
 <li><p>Utilities: <a class="reference internal" href="#a_sync.all" title="a_sync.all"><code class="xref py py-func docutils literal notranslate"><span class="pre">all()</span></code></a>, <a class="reference internal" href="#a_sync.any" title="a_sync.any"><code class="xref py py-func docutils literal notranslate"><span class="pre">any()</span></code></a>, <a class="reference internal" href="#a_sync.as_yielded" title="a_sync.as_yielded"><code class="xref py py-func docutils literal notranslate"><span class="pre">as_yielded()</span></code></a> for async utilities.</p></li>
 <li><p><a class="reference internal" href="a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.semaphores.apply_semaphore" title="a_sync.a_sync.modifiers.semaphores.apply_semaphore"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply_semaphore()</span></code></a>: Function to apply semaphores to coroutines.</p></li>
+<li><p><a class="reference internal" href="#a_sync.TaskMapping" title="a_sync.TaskMapping"><code class="xref py py-class docutils literal notranslate"><span class="pre">TaskMapping</span></code></a>: A class for managing and asynchronously generating tasks based on input iterables.</p></li>
 </ul>
 </dd>
 </dl>
@@ -7586,6 +7585,13 @@ such as queues and locks, with extra functionality.</p>
 &gt;&gt;&gt; obj = MyClass()
 &gt;&gt;&gt; result = await obj.my_method()
 &gt;&gt;&gt; print(result)</p>
+<p>Using <cite>TaskMapping</cite> for asynchronous task management:
+&gt;&gt;&gt; from a_sync import TaskMapping
+&gt;&gt;&gt; async def fetch_data(url):
+…     return f”Data from {url}”
+&gt;&gt;&gt; tasks = TaskMapping(fetch_data, [’<a class="reference external" href="http://example.com">http://example.com</a>’, ‘<a class="reference external" href="https://www.python.org">https://www.python.org</a>’])
+&gt;&gt;&gt; async for key, result in tasks:
+…     print(f”Data for {key}: {result}”)</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
@@ -8252,7 +8258,7 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AsyncIterator</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Return an async iterator that yields {obj} from the {cls}.</p>
+<dd><p>Return an async iterator that yields <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
@@ -8274,7 +8280,7 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.ASyncIterable.__iter__" title="Link to this definition"></a></dt>
-<dd><p>Return an iterator that yields {obj} from the {cls}.</p>
+<dd><p>Return an iterator that yields <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Synchronous iteration leverages <a class="reference internal" href="#a_sync.ASyncIterator" title="a_sync.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>, which uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch items.
@@ -8292,13 +8298,13 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ViewFn</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncFilter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.ASyncIterable.filter" title="Link to this definition"></a></dt>
-<dd><p>Filters the {obj} yielded by the {cls} based on a function.</p>
+<dd><p>Filters the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable based on a function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code> that yields the filtered {obj} from the {cls}.</p>
+<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code> that yields the filtered <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
@@ -8309,7 +8315,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SortKey</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncSorter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.ASyncIterable.sort" title="Link to this definition"></a></dt>
-<dd><p>Sort the {obj} yielded by the {cls}.</p>
+<dd><p>Sort the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -8318,7 +8324,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code> that will yield the {obj} yielded from this {cls}, but sorted.</p>
+<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code> that will yield the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded from this ASyncIterable, but sorted.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
@@ -8343,10 +8349,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.ASyncIterable.materialized">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">materialized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncIterable.materialized" title="Link to this definition"></a></dt>
-<dd><p>Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>Synchronously iterate through the ASyncIterable and return all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
+<dd class="field-odd"><p>A list of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -8392,7 +8398,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.__aiter__">
 <span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
-<dd><p>Return the {cls} for aiteration.</p>
+<dd><p>Return the ASyncIterator for aiteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>Self</em></p>
@@ -8403,10 +8409,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.__anext__">
 <span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Coroutine</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.ASyncIterator.__anext__" title="Link to this definition"></a></dt>
-<dd><p>Asynchronously fetch the next item from the {cls}.</p>
+<dd><p>Asynchronously fetch the next item from the ASyncIterator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopAsyncIteration" title="(in Python v3.13)"><strong>StopAsyncIteration</strong></a> – Once all {obj} have been fetched from the {cls}.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopAsyncIteration" title="(in Python v3.13)"><strong>StopAsyncIteration</strong></a> – Once all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects have been fetched from the ASyncIterator.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Coroutine" title="(in Python v3.13)"><em>Coroutine</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>, <em>T</em>]</p>
@@ -8428,10 +8434,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.ASyncIterator.__iter__" title="Link to this definition"></a></dt>
-<dd><p>Return the {cls} for iteration.</p>
+<dd><p>Return the ASyncIterator for iteration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch {obj}.
+<p>Synchronous iteration uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.
 This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
 This RuntimeError will be caught and a more descriptive <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a> will be raised in its place.</p>
 <p>If you encounter a <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a>, you are likely working in an async codebase
@@ -8447,10 +8453,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.__next__">
 <span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#a_sync.ASyncIterator.__next__" title="Link to this definition"></a></dt>
-<dd><p>Synchronously fetch the next item from the {cls}.</p>
+<dd><p>Synchronously fetch the next item from the ASyncIterator.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch {obj}.
+<p>This method uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseEventLoop.run_until_complete()</span></code> to fetch <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.
 This raises a <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a> if the event loop is already running.
 This RuntimeError will be caught and a more descriptive <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a> will be raised in its place.</p>
 <p>If you encounter a <a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SyncModeInAsyncContextError</span></code></a>, you are likely working in an async codebase
@@ -8459,7 +8465,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all {obj} have been fetched from the {cls}.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopIteration" title="(in Python v3.13)"><strong>StopIteration</strong></a> – Once all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects have been fetched from the ASyncIterator.</p></li>
 <li><p><a class="reference internal" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="a_sync.exceptions.SyncModeInAsyncContextError"><strong>SyncModeInAsyncContextError</strong></a> – If the event loop is already running.</p></li>
 </ul>
 </dd>
@@ -8472,13 +8478,13 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ViewFn</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncFilter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.ASyncIterator.filter" title="Link to this definition"></a></dt>
-<dd><p>Filters the {obj} yielded by the {cls} based on a function.</p>
+<dd><p>Filters the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable based on a function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>T</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – A function that returns a boolean that indicates if an item should be included in the filtered result. Can be sync or async.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code> that yields the filtered {obj} from the {cls}.</p>
+<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFilter</span></code> that yields the filtered <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects from the ASyncIterable.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncFilter" title="a_sync.iter.ASyncFilter"><em>ASyncFilter</em></a>[<em>T</em>]</p>
@@ -8489,7 +8495,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.sort">
 <span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SortKey</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'ASyncSorter[T]'</span></span></span></span><a class="headerlink" href="#a_sync.ASyncIterator.sort" title="Link to this definition"></a></dt>
-<dd><p>Sort the {obj} yielded by the {cls}.</p>
+<dd><p>Sort the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -8498,7 +8504,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code> that will yield the {obj} yielded from this {cls}, but sorted.</p>
+<dd class="field-even"><p>An instance of <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncSorter</span></code> that will yield the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded from this ASyncIterable, but sorted.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#a_sync.iter.ASyncSorter" title="a_sync.iter.ASyncSorter"><em>ASyncSorter</em></a>[<em>T</em>]</p>
@@ -8515,10 +8521,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.ASyncIterator.materialized">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">materialized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncIterator.materialized" title="Link to this definition"></a></dt>
-<dd><p>Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>Synchronously iterate through the ASyncIterable and return all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
+<dd class="field-odd"><p>A list of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects yielded by the ASyncIterable.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -8969,8 +8975,8 @@ result = await instance.my_method.sum([1, 2, 3])
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">AsyncProcessPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#AsyncProcessPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></p>
-<p>A :class:<a href="#id157"><span class="problematic" id="id158">`</span></a>concurrent.futures.ProcessPoolExecutor’ subclass providing asynchronous run and submit methods that support kwargs,
-with support for synchronous mode</p>
+<p>A :class:<a href="#id157"><span class="problematic" id="id158">`</span></a>concurrent.futures.ProcessPoolExecutor’ subclass providing asynchronous
+run and submit methods that support kwargs, with support for synchronous mode</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
@@ -9444,8 +9450,8 @@ cancelled.</p></li>
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">AsyncThreadPoolExecutor</span></span><a class="reference internal" href="../_modules/a_sync/executor.html#AsyncThreadPoolExecutor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_AsyncExecutorMixin</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></p>
-<p>A :class:<a href="#id163"><span class="problematic" id="id164">`</span></a>concurrent.futures.ThreadPoolExecutor’ subclass providing asynchronous run and submit methods that support kwargs,
-with support for synchronous mode</p>
+<p>A :class:<a href="#id163"><span class="problematic" id="id164">`</span></a>concurrent.futures.ThreadPoolExecutor’ subclass providing asynchronous
+run and submit methods that support kwargs, with support for synchronous mode</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">&quot;MyThread&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">some_function</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="p">,</span> <span class="n">kwarg1</span><span class="o">=</span><span class="s1">&#39;kwarg1&#39;</span><span class="p">)</span>
@@ -10487,7 +10493,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.PrioritySemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -11705,13 +11711,13 @@ the queue.</p>
 <dt class="sig sig-object py" id="a_sync.Semaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">Semaphore</span></span><a class="headerlink" href="#a_sync.Semaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="a_sync.primitives.html#a_sync.primitives._debug._DebugDaemonMixin" title="a_sync.primitives._debug._DebugDaemonMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a></p>
-<p>Semaphore(int value: int = 1, name=None, loop=None, <a href="#id175"><span class="problematic" id="id176">**</span></a>kwargs) -&gt; None</p>
+<p>Semaphore(int value: int = 1, unicode name=u’’, loop=None) -&gt; None</p>
 <p>A semaphore with additional debugging capabilities inherited from <code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code>.</p>
 <p>This semaphore includes debug logging capabilities that are activated when the semaphore has waiters.
 It allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.</p>
 <p class="rubric">Example</p>
 <p>You can write this pattern:</p>
-<p><a href="#id177"><span class="problematic" id="id178">``</span></a>`
+<p><a href="#id175"><span class="problematic" id="id176">``</span></a>`
 semaphore = Semaphore(5)</p>
 <dl class="simple">
 <dt>async def limited():</dt><dd><dl class="simple">
@@ -11720,16 +11726,16 @@ semaphore = Semaphore(5)</p>
 </dl>
 </dd>
 </dl>
-<p><a href="#id179"><span class="problematic" id="id180">``</span></a><a href="#id181"><span class="problematic" id="id182">`</span></a></p>
+<p><a href="#id177"><span class="problematic" id="id178">``</span></a><a href="#id179"><span class="problematic" id="id180">`</span></a></p>
 <p>like this:</p>
-<p><a href="#id183"><span class="problematic" id="id184">``</span></a>`
+<p><a href="#id181"><span class="problematic" id="id182">``</span></a>`
 semaphore = Semaphore(5)</p>
 <p>&#64;semaphore
 async def limited():</p>
 <blockquote>
 <div><p>return 1</p>
 </div></blockquote>
-<p><a href="#id185"><span class="problematic" id="id186">``</span></a><a href="#id187"><span class="problematic" id="id188">`</span></a></p>
+<p><a href="#id183"><span class="problematic" id="id184">``</span></a><a href="#id185"><span class="problematic" id="id186">`</span></a></p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code> for more details on debugging capabilities.</p>
@@ -11957,7 +11963,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.Semaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.Semaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -13198,7 +13204,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ThreadsafeSemaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.ThreadsafeSemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -13354,7 +13360,7 @@ become larger than zero again, wake up that coroutine.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id189"><span class="problematic" id="id190">``</span></a><a href="#id191"><span class="problematic" id="id192">`</span></a>python
+<p><a href="#id187"><span class="problematic" id="id188">``</span></a><a href="#id189"><span class="problematic" id="id190">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13365,7 +13371,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id193"><span class="problematic" id="id194">``</span></a><a href="#id195"><span class="problematic" id="id196">`</span></a></p>
+<a href="#id191"><span class="problematic" id="id192">``</span></a><a href="#id193"><span class="problematic" id="id194">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13386,7 +13392,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id197"><span class="problematic" id="id198">``</span></a><a href="#id199"><span class="problematic" id="id200">`</span></a>python
+<p><a href="#id195"><span class="problematic" id="id196">``</span></a><a href="#id197"><span class="problematic" id="id198">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13397,7 +13403,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id201"><span class="problematic" id="id202">``</span></a><a href="#id203"><span class="problematic" id="id204">`</span></a></p>
+<a href="#id199"><span class="problematic" id="id200">``</span></a><a href="#id201"><span class="problematic" id="id202">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13451,7 +13457,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id205"><span class="problematic" id="id206">``</span></a><a href="#id207"><span class="problematic" id="id208">`</span></a>python
+<p><a href="#id203"><span class="problematic" id="id204">``</span></a><a href="#id205"><span class="problematic" id="id206">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13462,7 +13468,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id209"><span class="problematic" id="id210">``</span></a><a href="#id211"><span class="problematic" id="id212">`</span></a></p>
+<a href="#id207"><span class="problematic" id="id208">``</span></a><a href="#id209"><span class="problematic" id="id210">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13483,7 +13489,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id213"><span class="problematic" id="id214">``</span></a><a href="#id215"><span class="problematic" id="id216">`</span></a>python
+<p><a href="#id211"><span class="problematic" id="id212">``</span></a><a href="#id213"><span class="problematic" id="id214">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13494,7 +13500,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id217"><span class="problematic" id="id218">``</span></a><a href="#id219"><span class="problematic" id="id220">`</span></a></p>
+<a href="#id215"><span class="problematic" id="id216">``</span></a><a href="#id217"><span class="problematic" id="id218">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13515,7 +13521,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id221"><span class="problematic" id="id222">``</span></a><a href="#id223"><span class="problematic" id="id224">`</span></a>python
+<p><a href="#id219"><span class="problematic" id="id220">``</span></a><a href="#id221"><span class="problematic" id="id222">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13526,7 +13532,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id225"><span class="problematic" id="id226">``</span></a><a href="#id227"><span class="problematic" id="id228">`</span></a></p>
+<a href="#id223"><span class="problematic" id="id224">``</span></a><a href="#id225"><span class="problematic" id="id226">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13801,7 +13807,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id229"><span class="problematic" id="id230">``</span></a><a href="#id231"><span class="problematic" id="id232">`</span></a>python
+<p><a href="#id227"><span class="problematic" id="id228">``</span></a><a href="#id229"><span class="problematic" id="id230">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13812,7 +13818,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id233"><span class="problematic" id="id234">``</span></a><a href="#id235"><span class="problematic" id="id236">`</span></a></p>
+<a href="#id231"><span class="problematic" id="id232">``</span></a><a href="#id233"><span class="problematic" id="id234">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -13830,7 +13836,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id237"><span class="problematic" id="id238">``</span></a><a href="#id239"><span class="problematic" id="id240">`</span></a>python
+<p><a href="#id235"><span class="problematic" id="id236">``</span></a><a href="#id237"><span class="problematic" id="id238">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13841,7 +13847,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id241"><span class="problematic" id="id242">``</span></a><a href="#id243"><span class="problematic" id="id244">`</span></a></p>
+<a href="#id239"><span class="problematic" id="id240">``</span></a><a href="#id241"><span class="problematic" id="id242">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -13904,7 +13910,7 @@ result = await instance.my_method.sum([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id245"><span class="problematic" id="id246">``</span></a><a href="#id247"><span class="problematic" id="id248">`</span></a>python
+<p><a href="#id243"><span class="problematic" id="id244">``</span></a><a href="#id245"><span class="problematic" id="id246">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13915,7 +13921,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id249"><span class="problematic" id="id250">``</span></a><a href="#id251"><span class="problematic" id="id252">`</span></a></p>
+<a href="#id247"><span class="problematic" id="id248">``</span></a><a href="#id249"><span class="problematic" id="id250">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13936,7 +13942,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id253"><span class="problematic" id="id254">``</span></a><a href="#id255"><span class="problematic" id="id256">`</span></a>python
+<p><a href="#id251"><span class="problematic" id="id252">``</span></a><a href="#id253"><span class="problematic" id="id254">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -13947,7 +13953,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id257"><span class="problematic" id="id258">``</span></a><a href="#id259"><span class="problematic" id="id260">`</span></a></p>
+<a href="#id255"><span class="problematic" id="id256">``</span></a><a href="#id257"><span class="problematic" id="id258">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -13991,7 +13997,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id261"><span class="problematic" id="id262">``</span></a><a href="#id263"><span class="problematic" id="id264">`</span></a>python
+<p><a href="#id259"><span class="problematic" id="id260">``</span></a><a href="#id261"><span class="problematic" id="id262">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14002,7 +14008,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id265"><span class="problematic" id="id266">``</span></a><a href="#id267"><span class="problematic" id="id268">`</span></a></p>
+<a href="#id263"><span class="problematic" id="id264">``</span></a><a href="#id265"><span class="problematic" id="id266">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14023,7 +14029,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id269"><span class="problematic" id="id270">``</span></a><a href="#id271"><span class="problematic" id="id272">`</span></a>python
+<p><a href="#id267"><span class="problematic" id="id268">``</span></a><a href="#id269"><span class="problematic" id="id270">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14034,7 +14040,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id273"><span class="problematic" id="id274">``</span></a><a href="#id275"><span class="problematic" id="id276">`</span></a></p>
+<a href="#id271"><span class="problematic" id="id272">``</span></a><a href="#id273"><span class="problematic" id="id274">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14055,7 +14061,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id277"><span class="problematic" id="id278">``</span></a><a href="#id279"><span class="problematic" id="id280">`</span></a>python
+<p><a href="#id275"><span class="problematic" id="id276">``</span></a><a href="#id277"><span class="problematic" id="id278">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14066,7 +14072,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id281"><span class="problematic" id="id282">``</span></a><a href="#id283"><span class="problematic" id="id284">`</span></a></p>
+<a href="#id279"><span class="problematic" id="id280">``</span></a><a href="#id281"><span class="problematic" id="id282">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -14253,7 +14259,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id285"><span class="problematic" id="id286">``</span></a><a href="#id287"><span class="problematic" id="id288">`</span></a>python
+<p><a href="#id283"><span class="problematic" id="id284">``</span></a><a href="#id285"><span class="problematic" id="id286">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14264,7 +14270,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id289"><span class="problematic" id="id290">``</span></a><a href="#id291"><span class="problematic" id="id292">`</span></a></p>
+<a href="#id287"><span class="problematic" id="id288">``</span></a><a href="#id289"><span class="problematic" id="id290">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -14282,7 +14288,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id293"><span class="problematic" id="id294">``</span></a><a href="#id295"><span class="problematic" id="id296">`</span></a>python
+<p><a href="#id291"><span class="problematic" id="id292">``</span></a><a href="#id293"><span class="problematic" id="id294">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -14293,7 +14299,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id297"><span class="problematic" id="id298">``</span></a><a href="#id299"><span class="problematic" id="id300">`</span></a></p>
+<a href="#id295"><span class="problematic" id="id296">``</span></a><a href="#id297"><span class="problematic" id="id298">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">

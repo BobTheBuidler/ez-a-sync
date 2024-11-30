@@ -1046,7 +1046,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -1423,7 +1423,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -1774,7 +1774,7 @@ async def limited():</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -2122,7 +2122,7 @@ async def limited():</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -2458,7 +2458,7 @@ async def limited():</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.DummySemaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -2553,13 +2553,13 @@ async def limited():</p>
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.Semaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.semaphore.</span></span><span class="sig-name descname"><span class="pre">Semaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="a_sync.primitives.html#a_sync.primitives._debug._DebugDaemonMixin" title="a_sync.primitives._debug._DebugDaemonMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a></p>
-<p>Semaphore(int value: int = 1, name=None, loop=None, <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs) -&gt; None</p>
+<p>Semaphore(int value: int = 1, unicode name=u’’, loop=None) -&gt; None</p>
 <p>A semaphore with additional debugging capabilities inherited from <code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code>.</p>
 <p>This semaphore includes debug logging capabilities that are activated when the semaphore has waiters.
 It allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.</p>
 <p class="rubric">Example</p>
 <p>You can write this pattern:</p>
-<p><a href="#id9"><span class="problematic" id="id10">``</span></a>`
+<p><a href="#id7"><span class="problematic" id="id8">``</span></a>`
 semaphore = Semaphore(5)</p>
 <dl class="simple">
 <dt>async def limited():</dt><dd><dl class="simple">
@@ -2568,16 +2568,16 @@ semaphore = Semaphore(5)</p>
 </dl>
 </dd>
 </dl>
-<p><a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a></p>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
 <p>like this:</p>
-<p><a href="#id15"><span class="problematic" id="id16">``</span></a>`
+<p><a href="#id13"><span class="problematic" id="id14">``</span></a>`
 semaphore = Semaphore(5)</p>
 <p>&#64;semaphore
 async def limited():</p>
 <blockquote>
 <div><p>return 1</p>
 </div></blockquote>
-<p><a href="#id17"><span class="problematic" id="id18">``</span></a><a href="#id19"><span class="problematic" id="id20">`</span></a></p>
+<p><a href="#id15"><span class="problematic" id="id16">``</span></a><a href="#id17"><span class="problematic" id="id18">`</span></a></p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code> for more details on debugging capabilities.</p>
@@ -2805,7 +2805,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.Semaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -3141,7 +3141,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -3805,7 +3805,7 @@ async def limited():</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.DummySemaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.DummySemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -3906,7 +3906,7 @@ async def limited():</p>
 <dt class="sig sig-object py" id="a_sync.primitives.locks.PrioritySemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.</span></span><span class="sig-name descname"><span class="pre">PrioritySemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.PrioritySemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a></p>
-<p>PrioritySemaphore(int value: int = 1, name: Optional[str] = None, <a href="#id21"><span class="problematic" id="id22">*</span></a>) -&gt; None
+<p>PrioritySemaphore(int value: int = 1, name: Optional[str] = None, <a href="#id19"><span class="problematic" id="id20">*</span></a>) -&gt; None
 Semaphore that uses numeric priorities for waiters.</p>
 <blockquote>
 <div><p>This class extends <code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code> and provides a concrete implementation
@@ -4189,7 +4189,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.PrioritySemaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.PrioritySemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -4284,13 +4284,13 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.locks.Semaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.</span></span><span class="sig-name descname"><span class="pre">Semaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.Semaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="a_sync.primitives.html#a_sync.primitives._debug._DebugDaemonMixin" title="a_sync.primitives._debug._DebugDaemonMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code></a></p>
-<p>Semaphore(int value: int = 1, name=None, loop=None, <a href="#id23"><span class="problematic" id="id24">**</span></a>kwargs) -&gt; None</p>
+<p>Semaphore(int value: int = 1, unicode name=u’’, loop=None) -&gt; None</p>
 <p>A semaphore with additional debugging capabilities inherited from <code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code>.</p>
 <p>This semaphore includes debug logging capabilities that are activated when the semaphore has waiters.
 It allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.</p>
 <p class="rubric">Example</p>
 <p>You can write this pattern:</p>
-<p><a href="#id25"><span class="problematic" id="id26">``</span></a>`
+<p><a href="#id21"><span class="problematic" id="id22">``</span></a>`
 semaphore = Semaphore(5)</p>
 <dl class="simple">
 <dt>async def limited():</dt><dd><dl class="simple">
@@ -4299,16 +4299,16 @@ semaphore = Semaphore(5)</p>
 </dl>
 </dd>
 </dl>
-<p><a href="#id27"><span class="problematic" id="id28">``</span></a><a href="#id29"><span class="problematic" id="id30">`</span></a></p>
+<p><a href="#id23"><span class="problematic" id="id24">``</span></a><a href="#id25"><span class="problematic" id="id26">`</span></a></p>
 <p>like this:</p>
-<p><a href="#id31"><span class="problematic" id="id32">``</span></a>`
+<p><a href="#id27"><span class="problematic" id="id28">``</span></a>`
 semaphore = Semaphore(5)</p>
 <p>&#64;semaphore
 async def limited():</p>
 <blockquote>
 <div><p>return 1</p>
 </div></blockquote>
-<p><a href="#id33"><span class="problematic" id="id34">``</span></a><a href="#id35"><span class="problematic" id="id36">`</span></a></p>
+<p><a href="#id29"><span class="problematic" id="id30">``</span></a><a href="#id31"><span class="problematic" id="id32">`</span></a></p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code> for more details on debugging capabilities.</p>
@@ -4536,7 +4536,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.Semaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.Semaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>
@@ -4872,7 +4872,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.ThreadsafeSemaphore._waiters">
 <span class="sig-name descname"><span class="pre">_waiters</span></span><a class="headerlink" href="#a_sync.primitives.locks.ThreadsafeSemaphore._waiters" title="Link to this definition"></a></dt>
-<dd><p>int</p>
+<dd><p>List[asyncio.Future]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Semaphore._waiters</p>

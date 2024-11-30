@@ -196,18 +196,14 @@
                     <span class="n">attr_name</span><span class="p">,</span>
                     <span class="n">fn_modifiers</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
-                    <span class="n">attr_value</span><span class="p">,</span> <span class="p">(</span><span class="n">ASyncPropertyDescriptor</span><span class="p">,</span> <span class="n">ASyncCachedPropertyDescriptor</span><span class="p">)</span>
-                <span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr_value</span><span class="p">,</span> <span class="p">(</span><span class="n">ASyncPropertyDescriptor</span><span class="p">,</span> <span class="n">ASyncCachedPropertyDescriptor</span><span class="p">)):</span>
                     <span class="c1"># Wrap property</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;`</span><span class="si">%s</span><span class="s2"> is a property, now let&#39;s wrap it&quot;</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                         <span class="s2">&quot;since `</span><span class="si">%s</span><span class="s2">` is a property, we will add a hidden dundermethod so you can still access it both sync and async&quot;</span><span class="p">,</span>
                         <span class="n">attr_name</span><span class="p">,</span>
                     <span class="p">)</span>
-                    <span class="n">attrs</span><span class="p">[</span><span class="n">attr_value</span><span class="o">.</span><span class="n">hidden_method_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="n">attr_value</span><span class="o">.</span><span class="n">hidden_method_descriptor</span>
-                    <span class="p">)</span>
+                    <span class="n">attrs</span><span class="p">[</span><span class="n">attr_value</span><span class="o">.</span><span class="n">hidden_method_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">attr_value</span><span class="o">.</span><span class="n">hidden_method_descriptor</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                         <span class="s2">&quot;`</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">` is now </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="n">new_class_name</span><span class="p">,</span>
@@ -256,9 +252,7 @@
 
 <div class="viewcode-block" id="ASyncSingletonMeta.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._meta.ASyncSingletonMeta.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bases</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">type</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bases</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">type</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">namespace</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">__instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Dictionary to store singleton instances.&quot;&quot;&quot;</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">__lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
@@ -286,10 +280,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">        new_class_name: The name of the new class being created.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">(</span>
-        <span class="n">ENVIRONMENT_VARIABLES</span><span class="o">.</span><span class="n">DEBUG_MODE</span>
-        <span class="ow">or</span> <span class="n">ENVIRONMENT_VARIABLES</span><span class="o">.</span><span class="n">DEBUG_CLASS_NAME</span> <span class="o">==</span> <span class="n">new_class_name</span>
-    <span class="p">):</span>
+    <span class="k">if</span> <span class="n">ENVIRONMENT_VARIABLES</span><span class="o">.</span><span class="n">DEBUG_MODE</span> <span class="ow">or</span> <span class="n">ENVIRONMENT_VARIABLES</span><span class="o">.</span><span class="n">DEBUG_CLASS_NAME</span> <span class="o">==</span> <span class="n">new_class_name</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">_debug_handler</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;debug mode activated&quot;</span><span class="p">)</span>

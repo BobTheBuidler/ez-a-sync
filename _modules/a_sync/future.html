@@ -208,9 +208,7 @@
         <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
 
-<span class="n">MetaNumeric</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
-    <span class="n">Numeric</span><span class="p">,</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span>
-<span class="p">]</span>
+<span class="n">MetaNumeric</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Numeric</span><span class="p">,</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="ASyncFuture">
@@ -421,9 +419,7 @@
 <span class="sd">            True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_materialize</span><span class="p">(</span>
-            <span class="n">ASyncFuture</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">__contains</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-            <span class="p">)</span>
+            <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__contains</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__await__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
@@ -534,9 +530,7 @@
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
@@ -545,24 +539,16 @@
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span>
@@ -570,14 +556,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Decimal</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Decimal</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">MetaNumeric</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -596,9 +578,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            15</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__add</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__add</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
@@ -613,9 +593,7 @@
     <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
@@ -624,24 +602,16 @@
     <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span>
@@ -649,14 +619,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Decimal</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Decimal</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">MetaNumeric</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -675,9 +641,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            5</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__sub</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sub</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -696,9 +660,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            50</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__mul</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__mul</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -717,9 +679,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            8</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__pow</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pow</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -738,9 +698,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            5.0</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__truediv</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__truediv</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__floordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -759,9 +717,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            3</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__floordiv</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__floordiv</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -780,9 +736,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            8</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__pow</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__pow</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
@@ -797,39 +751,25 @@
     <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
@@ -837,14 +777,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Decimal</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Decimal</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -862,9 +798,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            15</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__radd</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__radd</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
@@ -879,39 +813,25 @@
     <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
@@ -919,14 +839,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Decimal</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">Decimal</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -944,9 +860,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            10</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__rsub</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__rsub</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -964,9 +878,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            20</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__rmul</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__rmul</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__rtruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -984,9 +896,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            5.0</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__rtruediv</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__rtruediv</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__rfloordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1004,9 +914,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            3</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__rfloordiv</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__rfloordiv</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__rpow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1024,9 +932,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            8</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__rpow</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__rpow</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1045,9 +951,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span>
-            <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__eq</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__eq</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
     <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1066,9 +970,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__gt</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__gt</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1087,9 +989,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__ge</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__ge</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1108,9 +1008,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__lt</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__lt</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1129,9 +1027,7 @@
 <span class="sd">            &gt;&gt;&gt; await result</span>
 <span class="sd">            True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__le</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ASyncFuture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__le</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="n">dependencies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__list_dependencies</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
 
     <span class="c1"># Maths</span>
 
@@ -1139,9 +1035,7 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
@@ -1150,24 +1044,16 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span>
@@ -1175,14 +1061,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__add</span><span class="p">(</span>
@@ -1207,9 +1089,7 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
@@ -1218,24 +1098,16 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span>
@@ -1243,14 +1115,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__sub</span><span class="p">(</span>
@@ -1292,39 +1160,25 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
@@ -1332,14 +1186,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__radd</span><span class="p">(</span>
@@ -1364,39 +1214,25 @@
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[Decimal]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
@@ -1404,14 +1240,10 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="s2">&quot;ASyncFuture[int]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Awaitable</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFuture[float]&quot;</span><span class="p">:</span> <span class="o">...</span>
 
     <span class="nd">@overload</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__rsub</span><span class="p">(</span>
@@ -1561,9 +1393,7 @@
 
     <span class="k">def</span> <span class="nf">__sizeof__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__awaitable__</span><span class="p">,</span> <span class="n">Coroutine</span><span class="p">):</span>
-            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__awaitable__</span><span class="o">.</span><span class="n">cr_frame</span><span class="o">.</span><span class="n">f_locals</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-            <span class="p">)</span>
+            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__awaitable__</span><span class="o">.</span><span class="n">cr_frame</span><span class="o">.</span><span class="n">f_locals</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__awaitable__</span><span class="p">,</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
@@ -1708,7 +1538,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">__wrapper</span> <span class="o">=</span> <span class="n">wrapper</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapper</span><span class="o">.</span><span class="n">callable</span><span class="si">}</span><span class="s2"> bound to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__instance</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapper</span><span class="o">.</span><span class="n">callable</span><span class="si">}</span><span class="s2"> bound to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__instance</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">fn_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">fn_kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__instance</span><span class="p">,</span> <span class="o">*</span><span class="n">fn_args</span><span class="p">,</span> <span class="o">**</span><span class="n">fn_kwargs</span><span class="p">)</span>
