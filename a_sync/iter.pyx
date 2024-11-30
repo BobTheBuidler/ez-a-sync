@@ -213,15 +213,15 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
             redefined_function_obj = None
             if hasattr(_AwaitableAsyncIterableMixin, function_name):
                 base_definition = getattr(_AwaitableAsyncIterableMixin, function_name)
-                if match_placeholders(base_definition.__doc__, function_obj.__doc__):
+                if base_definition.__code__ == function_obj.__code__ and match_placeholders(base_definition.__doc__, function_obj.__doc__):
                     redefined_function_obj = deepcopy(base_definition)
             elif cls.__name__ != "ASyncIterable" and hasattr(ASyncIterable, function_name):
                 base_definition = getattr(ASyncIterable, function_name)
-                if match_placeholders(base_definition.__doc__, function_obj.__doc__):
+                if base_definition.__code__ == function_obj.__code__ and match_placeholders(base_definition.__doc__, function_obj.__doc__):
                     redefined_function_obj = deepcopy(base_definition)
             elif cls.__name__ not in ("ASyncIterable", "ASyncIterator") and hasattr(ASyncIterator, function_name):
                 base_definition = getattr(ASyncIterator, function_name)
-                if match_placeholders(base_definition.__doc__, function_obj.__doc__):
+                if base_definition.__code__ == function_obj.__code__ and match_placeholders(base_definition.__doc__, function_obj.__doc__):
                     redefined_function_obj = deepcopy(base_definition)
 
             redefined_function_obj.__doc__ = function_obj.__doc__.format(
