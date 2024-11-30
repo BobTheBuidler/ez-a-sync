@@ -197,7 +197,22 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
             #    argdefs=function_obj.__defaults__,
             #    closure=function_obj.__closure__,
             #)
-            redefined_function_obj = deepcopy(function_obj)
+            redefined_function_obj = None
+            if hasattr(_AwaitableAsyncIterableMixin, function_name):
+                base_definition = getattr(_AwaitableAsyncIterableMixin, function_name)
+                if function_obj.__doc__ == base_definition.__doc__:
+                    redefined_function_obj = deepcopy(base_definition)
+            elif cls.__name__ != "ASyncIterable" and hasattr(ASyncIterable, function_name):
+                base_definition = getattr(ASyncIterable, function_name)
+                if function_obj.__doc__ == base_definition.__doc__:
+                    redefined_function_obj = deepcopy(base_definition)
+            elif cls.__name__ not in ("ASyncIterable", "ASyncIterator") and hasattr(ASyncIterator, function_name):
+                base_definition = getattr(ASyncIterator, function_name)
+                if function_obj.__doc__ == base_definition.__doc__:
+                    redefined_function_obj = deepcopy(base_definition)
+            
+            if redefined_function_obj is None:
+                redefined_function_obj = deepcopy(function_obj)
 
             redefined_function_obj.__doc__ = function_obj.__doc__.format(
                 cls=cls.__name__,
