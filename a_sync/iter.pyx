@@ -4,6 +4,7 @@ import inspect
 import logging
 import sys
 import weakref
+from copy import deepcopy
 from types import FunctionType
 from typing import _GenericAlias, get_args
 
@@ -174,11 +175,18 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         # Update method docstrings by redefining methods
         # This is necessary because, by default, subclasses inherit methods from their bases
         # which means if we just update the docstring we might edit docs for unrelated objects
+        def is_function(name: str, obj: Any) -> bool:
+            return (
+                isinstance(obj, FunctionType) 
+                or "cython_function_or_method" in type(obj).__name__ 
+                or print(f"{name} {type(obj)}")
+            )
+
         cdef dict functions_to_redefine = {
             attr_name: attr_value
             for attr_name in dir(cls)
             if (attr_value := getattr(cls, attr_name, None))
-            and isinstance(attr_value, FunctionType)
+            and is_function(attr_name, attr_value)
             and attr_value.__doc__
             and any(pattern in attr_value.__doc__ for pattern in _FORMAT_PATTERNS)
         }
@@ -187,18 +195,22 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         cdef object function_obj
         for function_name, function_obj in functions_to_redefine.items():
             # Create a new function object with the docstring formatted appropriately for this class
-            redefined_function_obj = FunctionType(
-                function_obj.__code__,
-                function_obj.__globals__,
-                name=function_obj.__name__,
-                argdefs=function_obj.__defaults__,
-                closure=function_obj.__closure__,
-            )
+            #redefined_function_obj = FunctionType(
+            #    function_obj.__code__,
+            #    function_obj.__globals__,
+            #    name=function_obj.__name__,
+            #    argdefs=function_obj.__defaults__,
+            #    closure=function_obj.__closure__,
+            #)
+            redefined_function_obj = deepcopy(function_obj)
 
             redefined_function_obj.__doc__ = function_obj.__doc__.format(
                 cls=cls.__name__,
                 obj=type_string,
             )
+
+            if "{cls}" in redefined_function_obj.__doc__:
+                raise ValueError(redefined_function_obj.__doc__)
 
             setattr(cls, function_name, redefined_function_obj)
 
