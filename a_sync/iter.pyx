@@ -177,9 +177,8 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         # which means if we just update the docstring we might edit docs for unrelated objects
         def is_function(name: str, obj: Any) -> bool:
             return (
-                isinstance(obj, FunctionType) 
-                or "cython_function_or_method" in type(obj).__name__ 
-                or print(f"{name} {type(obj)}")
+                isinstance(obj, (FunctionType, property)) 
+                or "cython_function_or_method" in type(obj).__name__
             )
 
         cdef dict functions_to_redefine = {
