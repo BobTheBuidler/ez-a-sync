@@ -16,6 +16,7 @@ Modules and components included:
     - Iterators: :class:`~ASyncIterable`, :class:`~ASyncIterator`, :class:`~filter`, :class:`~sorted` for async iteration.
     - Utilities: :func:`~all`, :func:`~any`, :func:`~as_yielded` for async utilities.
     - :func:`~a_sync.a_sync.modifiers.semaphores.apply_semaphore`: Function to apply semaphores to coroutines.
+    - :class:`~TaskMapping`: A class for managing and asynchronously generating tasks based on input iterables.
 
 Alias for backward compatibility:
 - :class:`~ASyncBase` is an alias for :class:`~ASyncGenericBase`, which will be removed eventually, probably in version 0.1.0.
@@ -37,6 +38,14 @@ Examples:
     >>> obj = MyClass()
     >>> result = await obj.my_method()
     >>> print(result)
+
+    Using `TaskMapping` for asynchronous task management:
+    >>> from a_sync import TaskMapping
+    >>> async def fetch_data(url):
+    ...     return f"Data from {url}"
+    >>> tasks = TaskMapping(fetch_data, ['http://example.com', 'https://www.python.org'])
+    >>> async for key, result in tasks:
+    ...     print(f"Data for {key}: {result}")
 
 See Also:
     - :mod:`a_sync.a_sync`: Contains the core classes and decorators.

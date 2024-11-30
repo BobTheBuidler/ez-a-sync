@@ -438,17 +438,11 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                 if worker.done():  # its only done if its broken
                     exc = worker.exception()
                     # re-raise with clean traceback
-                    try:
-                        raise type(exc)(*exc.args).with_traceback(exc.__traceback__)  # type: ignore [union-attr]
-                    except TypeError as e:
-                        raise exc.with_traceback(exc.__traceback__) from e
+                    raise exc.with_traceback(exc.__traceback__) from exc.__cause__
             # this should never be reached, but just in case
             exc = self._workers.exception()
-            try:
-                # re-raise with clean traceback
-                raise type(exc)(*exc.args).with_traceback(exc.__traceback__)  # type: ignore [union-attr]
-            except TypeError as e:
-                raise exc.with_traceback(exc.__traceback__) from e
+            # re-raise with clean traceback
+            raise exc.with_traceback(exc.__traceback__) from exc.__cause__
 
     @functools.cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
