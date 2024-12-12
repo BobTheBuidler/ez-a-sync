@@ -152,7 +152,7 @@ cdef inline bint _is_not_done(fut: asyncio.Future):
     """
     return <str>fut._state == "PENDING"
 
-cdef inline bint cancelled(fut: asyncio.Future):
+cdef inline bint _is_cancelled(fut: asyncio.Future):
     """Return True if the future was cancelled."""
     return <str>fut._state == "CANCELLED"
 
@@ -173,7 +173,7 @@ cdef object _get_result(fut: asyncio.Future):
         raise fut._make_cancelled_error()
     raise asyncio.exceptions.InvalidStateError('Result is not ready.')
 
-def _get_exception(fut: asyncio.Future):
+cdef object _get_exception(fut: asyncio.Future):
     """Return the exception that was set on this future.
 
     The exception (or None if no exception was set) is returned only if
@@ -594,13 +594,13 @@ def shield(
         waiters.add(outer)
 
     def _inner_done_callback(inner):
-        if cancelled(outer):
-            if not cancelled(inner):
+        if _is_cancelled(outer):
+            if not _is_cancelled(inner):
                 # Mark inner's result as retrieved.
                 _get_exception(inner)
             return
 
-        if cancelled(inner):
+        if _is_cancelled(inner):
             outer.cancel()
         else:
             exc = _get_exception(inner)
