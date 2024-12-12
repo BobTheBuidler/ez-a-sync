@@ -607,7 +607,7 @@ def shield(
             if exc is not None:
                 outer.set_exception(exc)
             else:
-                _set_result(outer, inner)
+                outer.set_result(_get_result(inner))
 
     def _outer_done_callback(outer):
         if _is_not_done(inner):
@@ -616,18 +616,6 @@ def shield(
     inner.add_done_callback(_inner_done_callback)
     outer.add_done_callback(_outer_done_callback)
     return outer
-
-cdef void _set_result(outer: asyncio.Future, inner: asyncio.Future):
-    """Mark the future done and set its result.
-
-    If the future is already done when this method is called, raises
-    InvalidStateError.
-    """
-    if <str>outer._state != "PENDING":
-        raise asyncio.exceptions.InvalidStateError(f'{outer._state}: {outer!r}')
-    outer._result = _get_result(inner)
-    outer._state = "FINISHED"
-    outer._Future__schedule_callbacks()
 
 
 __all__ = [
