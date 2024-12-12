@@ -1,3 +1,4 @@
+# cython: boundscheck=False
 """
 This module provides a mixin class to add debug logging capabilities to other classes.
 """

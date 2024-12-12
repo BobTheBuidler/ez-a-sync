@@ -1,3 +1,4 @@
+# cython: boundscheck=False
 import asyncio
 import functools
 import inspect
@@ -115,16 +116,15 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         cdef object type_argument = T  # Default value
         cdef str type_string = ":obj:`T` objects"
 
-        cdef object base, args
+        cdef object base
+        cdef tuple args
         cdef str module, qualname, name
         for base in getattr(cls, "__orig_bases__", []):
             if not hasattr(base, "__args__"):
                 continue
 
             args = get_args(base)
-            if args and not isinstance(args[0], TypeVar):
-                type_argument = args[0]
-
+            if args and not isinstance(type_argument := args[0], TypeVar):
                 module = getattr(type_argument, "__module__", "")
                 qualname = getattr(type_argument, "__qualname__", "")
                 name = getattr(type_argument, "__name__", "")
