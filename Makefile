@@ -8,7 +8,7 @@ docs:
 	sphinx-apidoc --private -o ./docs/source ./a_sync
 
 cython:
-	python csetup.py build_ext --inplace
+	python setup.py build_ext --inplace
 
 stubs:
 	stubgen ./a_sync -o . --include-docstrings
