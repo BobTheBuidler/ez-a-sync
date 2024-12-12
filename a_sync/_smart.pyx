@@ -165,8 +165,9 @@ cdef object _get_result(fut: asyncio.Future):
     cdef str state = fut._state
     if state == "FINISHED":
         fut._Future__log_traceback = False
-        if fut._exception is not None:
-            raise fut._exception.with_traceback(fut._exception_tb)
+        exc = fut._exception
+        if exc is not None:
+            raise exc.with_traceback(exc.__traceback__)
         return fut._result
     if state == "CANCELLED":
         raise fut._make_cancelled_error()
