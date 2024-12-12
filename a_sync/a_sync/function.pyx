@@ -2,6 +2,7 @@ import functools
 import inspect
 import logging
 import sys
+from libc.stdint cimport uintptr_t
 
 from async_lru import _LRUCacheWrapper
 from async_property.base import AsyncPropertyDescriptor  # type: ignore [import]
@@ -120,10 +121,10 @@ cpdef void _validate_wrapped_fn(fn: Callable):
 
 cdef object _function_type = type(logging.getLogger)
 
-cdef set[Py_ssize_t] _argspec_validated = set()
+cdef set[uintptr_t] _argspec_validated = set()
 
 cdef void _validate_argspec_cached(fn: Callable):
-    cdef Py_ssize_t fid = id(fn)
+    cdef uintptr_t fid = id(fn)
     if fid not in _argspec_validated:
         _validate_argspec(fn)
         _argspec_validated.add(fid)
@@ -971,10 +972,10 @@ class ASyncDecorator(_ModifiedMixin):
             return ASyncFunctionSyncDefault(func, **self.modifiers)
 
 
-cdef set[Py_ssize_t] _is_genfunc_cache = set()
+cdef set[uintptr_t] _is_genfunc_cache = set()
 
 cdef void _check_not_genfunc_cached(func: Callable):
-    cdef Py_ssize_t fid = id(func)
+    cdef uintptr_t fid = id(func)
     if fid not in _is_genfunc_cache:
         _check_not_genfunc(func)
         _is_genfunc_cache.add(fid)

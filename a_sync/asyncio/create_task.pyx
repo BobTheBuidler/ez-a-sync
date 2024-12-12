@@ -134,26 +134,44 @@ cdef void __prune_persisted_tasks():
     cdef object task
     cdef dict context
     for task in tuple(__persisted_tasks):
-        if _is_done(task) and (e := task.exception()):
-            # force exceptions related to this lib to bubble up
-            if not isinstance(e, exceptions.PersistedTaskException):
-                c_logger.exception(e)
-                raise e
-            # we have to manually log the traceback that asyncio would usually log
-            # since we already got the exception from the task and the usual handler will now not run
-            context = {
-                "message": f"{task.__class__.__name__} exception was never retrieved",
-                "exception": e,
-                "future": task,
-            }
-            if task._source_traceback:
-                context["source_traceback"] = task._source_traceback
-            task._loop.call_exception_handler(context)
-            __persisted_tasks.discard(task)
+        if _is_done(task):
+            if e := _get_exception(task):
+                # force exceptions related to this lib to bubble up
+                if not isinstance(e, exceptions.PersistedTaskException):
+                    c_logger.exception(e)
+                    raise e
+                # we have to manually log the traceback that asyncio would usually log
+                # since we already got the exception from the task and the usual handler will now not run
+                context = {
+                    "message": f"{task.__class__.__name__} exception was never retrieved",
+                    "exception": e,
+                    "future": task,
+                }
+                if task._source_traceback:
+                    context["source_traceback"] = task._source_traceback
+                task._loop.call_exception_handler(context)
+                __persisted_tasks.discard(task)
 
 
 cdef inline bint _is_done(fut: asyncio.Future):
     return <str>fut._state != "PENDING"
+
+
+cdef object _get_exception(fut: asyncio.Future):
+    """Return the exception that was set on this future.
+
+    The exception (or None if no exception was set) is returned only if
+    the future is done.  If the future has been cancelled, raises
+    CancelledError.  If the future isn't done yet, raises
+    InvalidStateError.
+    """
+    cdef str state = fut._state
+    if state == "FINISHED":
+        fut._Future__log_traceback = False
+        return fut._exception
+    if state == "CANCELLED":
+        raise fut._make_cancelled_error()
+    raise asyncio.exceptions.InvalidStateError('Exception is not set.')
 
 
 async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
