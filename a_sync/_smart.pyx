@@ -158,17 +158,13 @@ cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
     return count
 
 
-cdef str _PENDING = "PENDING"
-cdef str _CANCELLED = "CANCELLED"
-cdef str _FINISHED = "FINISHED"
-
 cdef inline bint _is_done(fut: asyncio.Future):
     """Return True if the future is done.
 
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return <str>fut._state != _PENDING
+    return <str>fut._state != "PENDING"
 
 cdef inline bint _is_not_done(fut: asyncio.Future):
     """Return False if the future is done.
@@ -176,11 +172,11 @@ cdef inline bint _is_not_done(fut: asyncio.Future):
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return <str>fut._state == _PENDING
+    return <str>fut._state == "PENDING"
 
 cdef inline bint cancelled(fut: asyncio.Future):
     """Return True if the future was cancelled."""
-    return <str>fut._state == _CANCELLED
+    return <str>fut._state == "CANCELLED"
 
 cdef object _get_result(fut: asyncio.Future):
     """Return the result this future represents.
@@ -190,12 +186,12 @@ cdef object _get_result(fut: asyncio.Future):
     the future is done and has an exception set, this exception is raised.
     """
     cdef str state = fut._state
-    if state == _FINISHED:
+    if state == "FINISHED":
         fut._Future__log_traceback = False
         if fut._exception is not None:
             raise fut._exception.with_traceback(fut._exception_tb)
         return fut._result
-    if state == _CANCELLED:
+    if state == "CANCELLED":
         raise fut._make_cancelled_error()
     raise asyncio.exceptions.InvalidStateError('Result is not ready.')
 
@@ -208,10 +204,10 @@ def exception(fut: asyncio.Future):
     InvalidStateError.
     """
     cdef str state = fut._state
-    if state == _FINISHED:
+    if state == "FINISHED":
         fut._Future__log_traceback = False
         return fut._exception
-    if state == _CANCELLED:
+    if state == "CANCELLED":
         raise fut._make_cancelled_error()
     raise asyncio.exceptions.InvalidStateError('Exception is not set.')
 
