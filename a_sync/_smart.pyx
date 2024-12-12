@@ -195,7 +195,7 @@ cdef object _get_result(fut: asyncio.Future):
         raise fut._make_cancelled_error()
     raise asyncio.exceptions.InvalidStateError('Result is not ready.')
 
-def exception(fut: asyncio.Future):
+def _get_exception(fut: asyncio.Future):
     """Return the exception that was set on this future.
 
     The exception (or None if no exception was set) is returned only if
@@ -484,13 +484,13 @@ def shield(
         if cancelled(outer):
             if not cancelled(inner):
                 # Mark inner's result as retrieved.
-                exception(inner)
+                _get_exception(inner)
             return
 
         if cancelled(inner):
             outer.cancel()
         else:
-            exc = exception(inner)
+            exc = _get_exception(inner)
             if exc is not None:
                 outer.set_exception(exc)
             else:
