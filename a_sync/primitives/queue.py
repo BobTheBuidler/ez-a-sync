@@ -796,6 +796,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Example:
             >>> queue = SmartProcessingQueue(func=my_task_func, num_workers=3, name='smart_queue')
         """
+        name = name or f"{func.__module__}.{func.__qualname__}"
         super().__init__(func, num_workers, return_data=True, name=name, loop=loop)
         self._futs = weakref.WeakValueDictionary()
 
