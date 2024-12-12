@@ -1,3 +1,4 @@
+# cython: boundscheck=False
 import functools
 import inspect
 from contextlib import suppress
@@ -192,7 +193,7 @@ cdef str _parse_flag_name_from_list(object cls, object items):
     cdef str flag
     cdef list[str] present_flags = [flag for flag in VIABLE_FLAGS if flag in items]
     if not present_flags:
-        c_logger.debug("There are too many flags defined on %s", cls)
+        c_logger.debug("There are no flags defined on %s", cls)
         raise exceptions.NoFlagsFound(cls, items.keys())
     if len(present_flags) > 1:
         c_logger.debug("There are too many flags defined on %s", cls)

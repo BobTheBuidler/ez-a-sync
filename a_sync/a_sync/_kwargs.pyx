@@ -1,3 +1,4 @@
+# cython: boundscheck=False
 """
 This module provides utility functions for handling keyword arguments related to synchronous and asynchronous flags.
 """

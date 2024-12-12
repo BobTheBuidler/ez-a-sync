@@ -1,3 +1,4 @@
+# cython: boundscheck=False
 """
 This module provides an enhanced version of asyncio.Event with additional debug logging to help detect deadlocks.
 """

@@ -1,3 +1,4 @@
+# cython: boundscheck=False
 """
 This module provides an enhanced version of :func:`asyncio.gather`.
 """
@@ -126,31 +127,25 @@ async def gather(
     See Also:
         :func:`asyncio.gather`
     """
-    is_mapping = _is_mapping(awaitables)
-    results = await (
-        gather_mapping(
+    if is_mapping := _is_mapping(awaitables):
+        results = await gather_mapping(
             awaitables[0],
             return_exceptions=return_exceptions,
             exclude_if=exclude_if,
             tqdm=tqdm,
             **tqdm_kwargs,
         )
-        if is_mapping
-        else (
-            tqdm_asyncio.gather(
-                *(
-                    (_exc_wrap(a) for a in awaitables)
-                    if return_exceptions
-                    else awaitables
-                ),
-                **tqdm_kwargs,
-            )
-            if tqdm
-            else asyncio.gather(*awaitables, return_exceptions=return_exceptions)
-        )  # type: ignore [arg-type]
-    )
+    elif tqdm:
+        results = await tqdm_asyncio.gather(
+            *((_exc_wrap(a) for a in awaitables) if return_exceptions else awaitables),
+            **tqdm_kwargs,
+        )
+    else:
+        results = await asyncio.gather(*awaitables, return_exceptions=return_exceptions)
+
     if exclude_if and not is_mapping:
-        results = [r for r in results if not exclude_if(r)]
+        return [r for r in results if not exclude_if(r)]
+
     return results
 
 
@@ -199,7 +194,8 @@ async def gather_mapping(
     # return data in same order as input mapping
     return {k: results[k] for k in mapping}
 
-cdef inline bint _is_mapping(object awaitables):
+
+cdef inline bint _is_mapping(tuple awaitables):
     return len(awaitables) == 1 and isinstance(awaitables[0], Mapping)
 
 

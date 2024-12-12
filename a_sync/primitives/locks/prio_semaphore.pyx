@@ -1,3 +1,4 @@
+# cython: boundscheck=False
 """
 This module provides priority-based semaphore implementations. These semaphores allow 
 waiters to be assigned priorities, ensuring that higher priority waiters are 
