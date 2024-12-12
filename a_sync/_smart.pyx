@@ -79,14 +79,13 @@ class _SmartFutureMixin(Generic[T]):
 
 
 cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
-    cdef WeakSet waiters
     if _is_done(fut):
         return ZERO
     try:
         waiters = fut._waiters
     except AttributeError:
         return ONE
-    cdef Py_ssize_t count = 0
+    cdef Py_ssize_t count = ZERO
     for waiter in waiters:
         count += count_waiters(waiter)
     return count
