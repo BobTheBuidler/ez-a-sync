@@ -80,7 +80,7 @@ class _SmartFutureMixin(Generic[T]):
             result = await task
             ```
         """
-        if self.done():
+        if self._state != "PENDING":
             return self.result()  # May raise too.
 
         self._asyncio_future_blocking = True
@@ -92,7 +92,7 @@ class _SmartFutureMixin(Generic[T]):
 
         logger.debug("awaiting %s", self)
         yield self  # This tells Task to wait for completion.
-        if not self.done():
+        if self._state == "PENDING":
             raise RuntimeError("await wasn't used with future")
         return self.result()  # May raise too.
 
@@ -113,9 +113,9 @@ class _SmartFutureMixin(Generic[T]):
         See Also:
             - :meth:`_waiter_done_cleanup_callback`
         """
-        if self.done():
+        if self._state != "PENDING":
             return 0
-        return sum(getattr(waiter, "num_waiters", 1) or 1 for waiter in self._waiters)
+        return sum(getattr(waiter, "num_waiters", 1) for waiter in self._waiters)
 
     def _waiter_done_cleanup_callback(
         self: Union["SmartFuture", "SmartTask"], waiter: "SmartTask"
@@ -131,7 +131,7 @@ class _SmartFutureMixin(Generic[T]):
         Example:
             Automatically called when a waiter task completes.
         """
-        if not self.done():
+        if self._state == "PENDING":
             self._waiters.remove(waiter)
 
     def _self_done_cleanup_callback(self: Union["SmartFuture", "SmartTask"]) -> None:
@@ -405,7 +405,7 @@ def shield(
             stacklevel=2,
         )
     inner = asyncio.ensure_future(arg, loop=loop)
-    if inner.done():
+    if inner._state != "PENDING":
         # Shortcut.
         return inner
     loop = asyncio.futures._get_loop(inner)
@@ -431,7 +431,7 @@ def shield(
                 outer.set_result(inner.result())
 
     def _outer_done_callback(outer):
-        if not inner.done():
+        if inner._state == "PENDING":
             inner.remove_done_callback(_inner_done_callback)
 
     inner.add_done_callback(_inner_done_callback)
