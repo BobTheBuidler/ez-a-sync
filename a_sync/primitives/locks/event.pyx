@@ -114,7 +114,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
             self._value = True
 
             for fut in self._waiters:
-                if not fut.done():
+                if _is_not_done(fut):
                     fut.set_result(True)
 
     cpdef void clear(self):
@@ -181,3 +181,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
             del self  # no need to hold a reference here
             await asyncio.sleep(interval)
             loops += 1                
+
+
+cdef inline bint _is_not_done(fut: asyncio.Future):
+    return <str>fut._state == "PENDING"

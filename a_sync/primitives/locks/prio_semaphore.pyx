@@ -169,7 +169,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         if not cms:
             return False
         return any(
-            cm._Semaphore__waiters and any(not w.cancelled() for w in cm._Semaphore__waiters)
+            cm._Semaphore__waiters and any(_is_not_cancelled(w) for w in cm._Semaphore__waiters)
             for cm in cms.values()
         )
 
@@ -233,7 +233,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             while manager._Semaphore__waiters:
                 waiter = manager._Semaphore__waiters.popleft()
                 self._potential_lost_waiters.remove(waiter)
-                if not waiter.done():
+                if _is_not_done(waiter):
                     waiter.set_result(None)
                     woke_up = True
                     if debug_logs:
@@ -260,7 +260,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         if not debug_logs:
             while self._potential_lost_waiters:
                 waiter = self._potential_lost_waiters.pop(0)
-                if not waiter.done():
+                if _is_not_done(waiter):
                     waiter.set_result(None)
                     return
             return
@@ -268,7 +268,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         while self._potential_lost_waiters:
             waiter = self._potential_lost_waiters.pop(0)
             c_logger._log(DEBUG, "we found a lost waiter %s", (waiter, ))
-            if not waiter.done():
+            if _is_not_done(waiter):
                 waiter.set_result(None)
                 c_logger._log(DEBUG, "woke up lost waiter %s", (waiter, ))
                 return
@@ -380,7 +380,7 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
             except:
                 # See the similar code in Queue.get.
                 fut.cancel()
-                if self._parent._Semaphore__value > 0 and not fut.cancelled():
+                if self._parent._Semaphore__value > 0 and _is_not_cancelled(fut):
                     self._parent._wake_up_next()
                 raise
         self._parent._Semaphore__value -= 1
@@ -407,6 +407,13 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
             >>> context_manager.release()
         """
         self._parent.c_release()
+
+
+cdef inline bint _is_not_done(fut: asyncio.Future):
+    return <str>fut._state == "PENDING"
+
+cdef inline bint _is_not_cancelled(fut: asyncio.Future):
+    return <str>fut._state != "CANCELLED"
 
 
 cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager):

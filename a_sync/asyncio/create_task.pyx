@@ -134,7 +134,7 @@ cdef void __prune_persisted_tasks():
     cdef object task
     cdef dict context
     for task in tuple(__persisted_tasks):
-        if task.done() and (e := task.exception()):
+        if _is_done(task) and (e := task.exception()):
             # force exceptions related to this lib to bubble up
             if not isinstance(e, exceptions.PersistedTaskException):
                 c_logger.exception(e)
@@ -150,6 +150,10 @@ cdef void __prune_persisted_tasks():
                 context["source_traceback"] = task._source_traceback
             task._loop.call_exception_handler(context)
             __persisted_tasks.discard(task)
+
+
+cdef inline bint _is_done(fut: asyncio.Future):
+    return <str>fut._state != "PENDING"
 
 
 async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
