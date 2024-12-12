@@ -140,7 +140,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         if self._Semaphore__value == 0:
             return True
         cdef object waiters = self._Semaphore__waiters 
-        if any(not w.cancelled() for w in (waiters or ())):
+        if any(_is_not_cancelled(w) for w in (waiters or ())):
             return True
 
     def __len__(self) -> int:
@@ -218,7 +218,7 @@ cdef class Semaphore(_DebugDaemonMixin):
             finally:
                 self._Semaphore__waiters.remove(fut)
         except asyncio.exceptions.CancelledError:
-            if not fut.cancelled():
+            if _is_not_cancelled(fut):
                 self._Semaphore__value += 1
                 self._c_wake_up_next()
             raise
@@ -274,7 +274,7 @@ cdef class Semaphore(_DebugDaemonMixin):
             return
 
         for fut in self._Semaphore__waiters:
-            if not fut.done():
+            if _is_not_done(fut):
                 self._Semaphore__value -= 1
                 fut.set_result(True)
                 return
@@ -285,7 +285,7 @@ cdef class Semaphore(_DebugDaemonMixin):
             return
 
         for fut in self._Semaphore__waiters:
-            if not fut.done():
+            if _is_not_done(fut):
                 self._Semaphore__value -= 1
                 fut.set_result(True)
                 return
@@ -311,6 +311,13 @@ cdef class Semaphore(_DebugDaemonMixin):
                 len(self),
                 self._decorated,
             )
+
+
+cdef inline bint _is_not_done(fut: asyncio.Future):
+    return <str>fut._state == "PENDING"
+
+cdef inline bint _is_not_cancelled(fut: asyncio.Future):
+    return <str>fut._state != "CANCELLED"
 
 
 cdef class DummySemaphore(Semaphore):
