@@ -87,7 +87,7 @@ cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
     except AttributeError:
         return ONE
     cdef Py_ssize_t count = 0
-    for waiter in waiters.iter():
+    for waiter in waiters:
         count += count_waiters(waiter)
     return count
 
