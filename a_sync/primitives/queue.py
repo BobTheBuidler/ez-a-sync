@@ -14,19 +14,20 @@ See Also:
 """
 
 import asyncio
-import functools
-import heapq
-import logging
 import sys
 import weakref
 from asyncio import InvalidStateError, QueueEmpty, gather
+from asyncio.events import _get_running_loop
+from functools import cached_property, wraps
+from heapq import heappop, heappush, heappushpop
+from logging import getLogger
 
 import a_sync.asyncio
 from a_sync._smart import SmartFuture, create_future
 from a_sync._smart import _Key as _SmartKey
 from a_sync._typing import *
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 if sys.version_info < (3, 9):
 
@@ -314,7 +315,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         self._no_futs = not return_data
         """Indicates whether tasks will return data via futures."""
 
-        @functools.wraps(func)
+        @wraps(func)
         async def _worker_coro() -> NoReturn:
             """Worker coroutine for processing tasks."""
             return await self.__worker_coro()
@@ -373,7 +374,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             context = {
                 "message": f"{self} was destroyed but has work pending!",
             }
-            if loop := asyncio.events._get_running_loop():
+            if loop := _get_running_loop():
                 loop.call_exception_handler(context)
 
     @property
@@ -441,7 +442,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
 
     def _create_future(self) -> "asyncio.Future[V]":
         """Creates a future for the task."""
-        return asyncio.events._get_running_loop().create_future()
+        return _get_running_loop().create_future()
 
     def _ensure_workers(self) -> None:
         """Ensures that the worker tasks are running."""
@@ -459,7 +460,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             # re-raise with clean traceback
             raise exc.with_traceback(exc.__traceback__) from exc.__cause__
 
-    @functools.cached_property
+    @cached_property
     def _workers(self) -> "asyncio.Task[NoReturn]":
         """Creates and manages the worker tasks for the queue."""
         logger.debug("starting worker task for %s", self)
@@ -609,7 +610,7 @@ class _PriorityQueueMixin(Generic[T]):
         """
         self._queue: List[T] = []
 
-    def _put(self, item, heappush=heapq.heappush):
+    def _put(self, item, heappush=heappush):
         """
         Adds an item to the priority queue based on its priority.
 
@@ -618,7 +619,7 @@ class _PriorityQueueMixin(Generic[T]):
         """
         heappush(self._queue, item)
 
-    def _get(self, heappop=heapq.heappop):
+    def _get(self, heappop=heappop):
         """
         Retrieves the highest priority item from the queue.
 
@@ -690,7 +691,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         super().put_nowait(self, (priority, args, kwargs, fut))
         return fut
 
-    def _get(self, heappop=heapq.heappop):
+    def _get(self, heappop=heappop):
         """
         Retrieves the highest priority task from the queue.
 
@@ -713,7 +714,7 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
         :class:`~_PriorityQueueMixin`
     """
 
-    def _get(self, heappop=heapq.heappop):
+    def _get(self, heappop=heappop):
         """
         Resorts the priority queue to consider any changes in priorities and retrieves the task with the highest updated priority.
 
