@@ -203,12 +203,16 @@ class Queue(_Queue[T]):
             >>> print(tasks)
         """
         _validate_args(i, can_return_less)
+        get_next = self.get
+        get_multi = self.get_multi_nowait
+        
         items = []
+        extend = items.extend
         while len(items) < i and not can_return_less:
             try:
-                items.extend(self.get_multi_nowait(i - len(items), can_return_less=True))
+                extend(get_multi(i - len(items), can_return_less=True))
             except QueueEmpty:
-                items = [await self.get()]
+                items = [await get_next()]
         return items
 
     def get_multi_nowait(self, i: int, can_return_less: bool = False) -> List[T]:
@@ -227,16 +231,21 @@ class Queue(_Queue[T]):
             >>> print(tasks)
         """
         _validate_args(i, can_return_less)
+        
+        get_nowait = self.get_nowait
+        
         items = []
+        append = items.append
         for _ in range(i):
             try:
-                items.append(self.get_nowait())
+                append(get_nowait())
             except QueueEmpty:
                 if items and can_return_less:
                     return items
                 # put these back in the queue since we didn't return them
+                put_nowait = self.put_nowait
                 for value in items:
-                    self.put_nowait(value)
+                    put_nowait(value)
                 raise QueueEmpty from None
         return items
 
