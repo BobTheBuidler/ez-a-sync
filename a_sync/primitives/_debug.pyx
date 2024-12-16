@@ -74,7 +74,6 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
     See Also:
         :class:`_LoggerMixin` for logging capabilities.
     """
-    cdef bint _has_daemon
     
     def __cinit__(self):
         self._has_daemon = False
