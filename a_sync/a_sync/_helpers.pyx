@@ -113,7 +113,7 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
 
     return _asyncify_wrap
 
-cpdef void _copy_future_state(cf_fut: concurrent.futures.Future, fut: asyncio.Future):
+def _copy_future_state(cf_fut: concurrent.futures.Future, fut: asyncio.Future) -> None:
     """Internal helper to copy state from another Future.
 
     The other Future may be a concurrent.futures.Future.
