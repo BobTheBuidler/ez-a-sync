@@ -91,6 +91,8 @@
 <span class="kn">import</span> <span class="nn">queue</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">asyncio.futures</span> <span class="kn">import</span> <span class="n">wrap_future</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">_base</span><span class="p">,</span> <span class="n">thread</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">cached_property</span>
 
@@ -118,6 +120,15 @@
 
 <span class="sd">    See Also:</span>
 <span class="sd">        - :meth:`submit` for submitting functions to the executor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sync_mode</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Indicates if the executor is in synchronous mode (max_workers == 0).</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; if executor.sync_mode:</span>
+<span class="sd">        &gt;&gt;&gt;     print(&quot;Executor is in synchronous mode.&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_max_workers</span><span class="p">:</span> <span class="nb">int</span>
@@ -168,13 +179,13 @@
 <span class="sd">            - :meth:`run` for running functions with the executor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
-            <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
+            <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">fut</span><span class="o">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">fut</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">wrap_future</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>  <span class="c1"># type: ignore [assignment]</span>
+            <span class="n">fut</span> <span class="o">=</span> <span class="n">wrap_future</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_super_submit</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>  <span class="c1"># type: ignore [assignment]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_start_debug_daemon</span><span class="p">(</span><span class="n">fut</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fut</span>
 
@@ -185,17 +196,6 @@
         <span class="c1"># NOTE: should this be queue length instead? probably</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">worker_count_current</span>
 
-    <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">sync_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Indicates if the executor is in synchronous mode (max_workers == 0).</span>
-
-<span class="sd">        Examples:</span>
-<span class="sd">            &gt;&gt;&gt; if executor.sync_mode:</span>
-<span class="sd">            &gt;&gt;&gt;     print(&quot;Executor is in synchronous mode.&quot;)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">==</span> <span class="mi">0</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">worker_count_current</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -205,6 +205,11 @@
 <span class="sd">            &gt;&gt;&gt; print(f&quot;Current worker count: {executor.worker_count_current}&quot;)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__init_mixin__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_super_submit</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">submit</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -233,10 +238,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
 
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">fut</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">fut</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">fnid</span><span class="p">)</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="n">fut</span><span class="o">.</span><span class="n">done</span>
+        <span class="n">log_debug</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">():</span>
+            <span class="k">await</span> <span class="n">sleep</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">done</span><span class="p">():</span>
+                <span class="n">log_debug</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">fnid</span><span class="p">)</span>
 
 
 <span class="c1"># Process</span>
@@ -298,7 +306,8 @@
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mp_context</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_workers</span><span class="p">,</span> <span class="n">mp_context</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span></div>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_workers</span><span class="p">,</span> <span class="n">mp_context</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_mixin__</span><span class="p">()</span></div>
 </div>
 
 
@@ -357,7 +366,8 @@
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_workers</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span></div>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_workers</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__init_mixin__</span><span class="p">()</span></div>
 </div>
 
 
