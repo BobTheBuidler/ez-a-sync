@@ -692,12 +692,11 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
         :class:`~_PriorityQueueMixin`
     """
 
-    def _get(self, heapify=heapq.heapify, heappop=heapq.heappop):
+    def _get(self, heappop=heapq.heappop):
         """
         Resorts the priority queue to consider any changes in priorities and retrieves the task with the highest updated priority.
 
         Args:
-            heapify: Function to resort the heap.
             heappop: Function to pop the highest priority task.
 
         Returns:
