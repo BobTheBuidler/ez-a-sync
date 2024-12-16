@@ -41,7 +41,8 @@ cdef object _logger_log = logger._log
 cdef int DEBUG = logging.DEBUG
 
 cdef void _logger_debug(str msg, tuple *args):
-    if _logger_is_enabled_for(DEBUG
+    if _logger_is_enabled_for(DEBUG):
+        _logger_log(DEBUG, msg, args)
 
 
 cdef object get_event_loop = asyncio.get_event_loop
