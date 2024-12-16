@@ -93,7 +93,7 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
     if iscoroutinefunction(func) or isinstance(func, ASyncFunction):
         raise exceptions.FunctionNotSync(func)
     
-    cdef object sumbit = executor.submit
+    cdef object submit = executor.submit
     
     @wraps(func)
     async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
@@ -113,7 +113,7 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
 
     return _asyncify_wrap
 
-def _copy_future_state(cf_fut: concurrent.futures.Future, fut: asyncio.Future) -> None:
+cdef void _copy_future_state(cf_fut: concurrent.futures.Future, fut: Future) -> None:
     """Internal helper to copy state from another Future.
 
     The other Future may be a concurrent.futures.Future.
