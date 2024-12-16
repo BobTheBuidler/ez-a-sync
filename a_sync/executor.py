@@ -115,7 +115,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
                 fut.set_exception(e)
         else:
             fut = wrap_future(self._super_submit(fn, *args, **kwargs))  # type: ignore [assignment]
-            self._start_debug_daemon(fut, fn, *args, **kwargs)
+            self._ensure_debug_daemon(fut, fn, *args, **kwargs)
         return fut
 
     def __repr__(self) -> str:
