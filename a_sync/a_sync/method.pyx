@@ -40,7 +40,7 @@ cdef object _logger_is_enabled_for = logger.isEnabledFor
 cdef object _logger_log = logger._log
 cdef int DEBUG = logging.DEBUG
 
-cdef void _logger_debug(str msg, object *args):
+cdef void _logger_debug(str msg, tuple args):
     if _logger_is_enabled_for(DEBUG):
         _logger_log(DEBUG, msg, args)
 
@@ -104,10 +104,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         # NOTE: This is only used by TaskMapping atm  # TODO: use it elsewhere
         _logger_debug(
             "awaiting %s for instance: %s args: %s kwargs: %s",
-            self,
-            instance,
-            args,
-            kwargs,
+            (self, instance, args, kwargs),
         )
         return await self.__get__(instance, None)(*args, **kwargs)
 
@@ -172,7 +169,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                     instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
                 )
             instance.__dict__[self.field_name] = bound
-            _logger_debug("new bound method: %s", bound)
+            _logger_debug("new bound method: %s", (bound,))
         _update_cache_timer(self.field_name, instance, bound)
         return bound
 
@@ -328,7 +325,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
                 instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
             )
             instance.__dict__[self.field_name] = bound
-            _logger_debug("new bound method: %s", bound)
+            _logger_debug("new bound method: %s", (bound,))
         _update_cache_timer(self.field_name, instance, bound)
         return bound
 
@@ -413,7 +410,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
                 instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
             )
             instance.__dict__[self.field_name] = bound
-            _logger_debug("new bound method: %s", bound)
+            _logger_debug("new bound method: %s", (bound,))
         _update_cache_timer(self.field_name, instance, bound)
         return bound
 
