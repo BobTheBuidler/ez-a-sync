@@ -108,7 +108,7 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
                 cf_fut,
                 fut,
             )
-        cf_fut.add_done_callback(_call_copy_future_state)
+        _add_done_callback(cf_fut, _call_copy_future_state)
         return await fut
 
     return _asyncify_wrap
@@ -132,3 +132,4 @@ cdef object _get_result = concurrent.futures.Future.result
 cdef object _get_exception = concurrent.futures.Future.exception
 cdef object _set_fut_result = Future.set_result
 cdef object _set_fut_exception = Future.set_exception
+cdef object _add_done_callback = concurrent.futures.Future.add_done_callback
