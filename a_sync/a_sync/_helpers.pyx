@@ -109,7 +109,7 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
                 fut,
             )
         cf_fut.add_done_callback(_call_copy_future_state)
-        return fut
+        return await fut
 
     return _asyncify_wrap
 
