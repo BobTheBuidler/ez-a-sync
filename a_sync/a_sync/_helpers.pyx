@@ -5,7 +5,7 @@ and converting synchronous functions to asynchronous ones.
 
 from asyncio import iscoroutinefunction, new_event_loop, set_event_loop
 from asyncio import get_event_loop as _get_event_loop
-from asyncio.futures import wrap_future
+from asyncio.futures import _chain_future
 from functools import wraps
 
 from a_sync import exceptions
@@ -97,9 +97,10 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
 
     @wraps(func)
     async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
-        return await wrap_future(
-            submit(func, *args, **kwargs),
-            loop=get_event_loop(),
-        )
+        loop = get_event_loop()
+        fut = loop.create_future()
+        cf_fut = submit(func, *args, **kwargs)
+        _chain_future(cf_fut, fut)
+        return await fut
 
     return _asyncify_wrap
