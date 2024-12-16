@@ -851,12 +851,11 @@
 
 <div class="viewcode-block" id="_VariablePriorityQueueMixin._get">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._VariablePriorityQueueMixin._get">[docs]</a>
-    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heapify</span><span class="o">=</span><span class="n">heapq</span><span class="o">.</span><span class="n">heapify</span><span class="p">,</span> <span class="n">heappop</span><span class="o">=</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">heappop</span><span class="o">=</span><span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resorts the priority queue to consider any changes in priorities and retrieves the task with the highest updated priority.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            heapify: Function to resort the heap.</span>
 <span class="sd">            heappop: Function to pop the highest priority task.</span>
 
 <span class="sd">        Returns:</span>
@@ -866,8 +865,9 @@
 <span class="sd">            &gt;&gt;&gt; task = queue._get()</span>
 <span class="sd">            &gt;&gt;&gt; print(task)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">heapify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span>
-        <span class="c1"># take the job with the most waiters</span>
+        <span class="c1"># NOTE: Since waiter priorities can change, this might not return the job with the</span>
+        <span class="c1">#       most waiters if `self._queue` is not currently in order, but after calling `heappop`,</span>
+        <span class="c1">#       `self._queue` will always be in proper order for next call to `self._get`.</span>
         <span class="k">return</span> <span class="n">heappop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span></div>
 
 

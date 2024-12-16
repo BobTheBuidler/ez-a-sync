@@ -2290,14 +2290,11 @@ based on the most current priority.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.VariablePriorityQueue._get">
-<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heapify=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heapify&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heappop=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappop&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._get" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heappop=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappop&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.VariablePriorityQueue._get" title="Link to this definition"></a></dt>
 <dd><p>Resorts the priority queue to consider any changes in priorities and retrieves the task with the highest updated priority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>heapify</strong> – Function to resort the heap.</p></li>
-<li><p><strong>heappop</strong> – Function to pop the highest priority task.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>heappop</strong> – Function to pop the highest priority task.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The highest priority task in the queue.</p>
@@ -2681,14 +2678,11 @@ the queue.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._VariablePriorityQueueMixin._get">
-<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heapify=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heapify&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heappop=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappop&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#_VariablePriorityQueueMixin._get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin._get" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">heappop=&lt;built-in</span> <span class="pre">function</span> <span class="pre">heappop&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#_VariablePriorityQueueMixin._get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue._VariablePriorityQueueMixin._get" title="Link to this definition"></a></dt>
 <dd><p>Resorts the priority queue to consider any changes in priorities and retrieves the task with the highest updated priority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>heapify</strong> – Function to resort the heap.</p></li>
-<li><p><strong>heappop</strong> – Function to pop the highest priority task.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>heappop</strong> – Function to pop the highest priority task.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The highest priority task in the queue.</p>
