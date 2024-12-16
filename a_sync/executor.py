@@ -21,7 +21,7 @@ import queue
 import threading
 import weakref
 from asyncio import sleep
-from asyncio.futures import wrap_future
+from asyncio.futures import wrap_future, _convert_future_exc
 from concurrent.futures import _base, thread
 from functools import cached_property
 
@@ -32,6 +32,21 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 TEN_MINUTES = 60 * 10
 
 Initializer = Callable[..., object]
+
+
+def _copy_future_state(cf_fut: concurrent.futures.Future, fut: asyncio.Future):
+    """Internal helper to copy state from another Future.
+
+    The other Future may be a concurrent.futures.Future.
+    """
+    # check this again in case it was cancelled since the last check
+    if fut.cancelled():
+        return
+    exception = cf_fut.exception()
+    if exception is None:
+        fut.set_result(cf_fut.result())
+    else:
+        fut.set_exception(_convert_future_exc(exception))
 
 
 class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
@@ -107,15 +122,35 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         See Also:
             - :meth:`run` for running functions with the executor.
         """
+        fut = self._create_future()
         if self.sync_mode:
-            fut = self._create_future()
             try:
                 fut.set_result(fn(*args, **kwargs))
             except Exception as e:
                 fut.set_exception(e)
         else:
-            fut = wrap_future(self._super_submit(fn, *args, **kwargs))  # type: ignore [assignment]
             self._ensure_debug_daemon(fut, fn, *args, **kwargs)
+
+            cf_fut = self._super_submit(fn, *args, **kwargs)
+
+            # TODO: implement logic to actually cancel the job, not just the future which is useless for our use case
+            # def _call_check_cancel(destination: asyncio.Future):
+            #     if destination.cancelled():
+            #         cf_fut.cancel()
+            #
+            # fut.add_done_callback(_call_check_cancel)
+
+            def _call_copy_future_state(cf_fut: "concurrent.futures.Future"):
+                if fut.cancelled():
+                    return
+                self._call_soon_threadsafe(
+                    _copy_future_state,
+                    cf_fut,
+                    fut,
+                )
+
+            cf_fut.add_done_callback(_call_copy_future_state)
+
         return fut
 
     def __repr__(self) -> str:
@@ -137,8 +172,10 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
 
     def __init_mixin__(self):
         self.sync_mode = self._max_workers == 0
-        self._create_future = self._get_loop().create_future
+        loop = self._get_loop()
+        self._create_future = loop.create_future
         self._super_submit = super().submit
+        self._call_soon_threadsafe = loop.call_soon_threadsafe
 
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """
