@@ -727,10 +727,11 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
             >>> task = queue._get()
             >>> print(task)
         """
-        # NOTE: Since waiter priorities can change, this might not return the job with the
-        #       most waiters if `self._queue` is not currently in order, but after calling `heappop`,
-        #       `self._queue` will always be in proper order for next call to `self._get`.
-        return heappop(self._queue)
+        # NOTE: Since waiter priorities can change, heappop might not return the job with the
+        #       most waiters if `self._queue` is not currently in order, but we can use `heappushpop`,
+        #       to ensure we get the job with the most waiters.
+        queue = self._queue
+        return heappushpop(queue, heappop(queue))
 
     def _get_key(self, *args, **kwargs) -> _SmartKey:
         """
