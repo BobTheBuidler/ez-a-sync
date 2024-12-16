@@ -40,7 +40,7 @@ cdef object _logger_is_enabled_for = logger.isEnabledFor
 cdef object _logger_log = logger._log
 cdef int DEBUG = logging.DEBUG
 
-cdef void _logger_debug(str msg, tuple args):
+cdef inline void _logger_debug(str msg, tuple args):
     if _logger_is_enabled_for(DEBUG):
         _logger_log(DEBUG, msg, args)
 
