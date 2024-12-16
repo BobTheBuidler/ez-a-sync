@@ -105,21 +105,6 @@
 <span class="n">Initializer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_copy_future_state</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">:</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal helper to copy state from another Future.</span>
-
-<span class="sd">    The other Future may be a concurrent.futures.Future.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># check this again in case it was cancelled since the last check</span>
-    <span class="k">if</span> <span class="n">fut</span><span class="o">.</span><span class="n">cancelled</span><span class="p">():</span>
-        <span class="k">return</span>
-    <span class="n">exception</span> <span class="o">=</span> <span class="n">cf_fut</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">cf_fut</span><span class="o">.</span><span class="n">result</span><span class="p">())</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">fut</span><span class="o">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">_convert_future_exc</span><span class="p">(</span><span class="n">exception</span><span class="p">))</span>
-
-
 <span class="k">class</span> <span class="nc">_AsyncExecutorMixin</span><span class="p">(</span><span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Executor</span><span class="p">,</span> <span class="n">_DebugDaemonMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A mixin for Executors to provide asynchronous run and submit methods.</span>
@@ -196,9 +181,9 @@
         <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="n">_set_fut_result</span><span class="p">(</span><span class="n">fut</span><span class="p">,</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">fut</span><span class="o">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">_set_fut_exception</span><span class="p">(</span><span class="n">fut</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_debug_daemon</span><span class="p">(</span><span class="n">fut</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -206,13 +191,13 @@
 
             <span class="c1"># TODO: implement logic to actually cancel the job, not just the future which is useless for our use case</span>
             <span class="c1"># def _call_check_cancel(destination: asyncio.Future):</span>
-            <span class="c1">#     if destination.cancelled():</span>
+            <span class="c1">#     if _fut_is_cancelled(destination):</span>
             <span class="c1">#         cf_fut.cancel()</span>
             <span class="c1">#</span>
             <span class="c1"># fut.add_done_callback(_call_check_cancel)</span>
 
             <span class="k">def</span> <span class="nf">_call_copy_future_state</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">:</span> <span class="s2">&quot;concurrent.futures.Future&quot;</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">fut</span><span class="o">.</span><span class="n">cancelled</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">_fut_is_cancelled</span><span class="p">(</span><span class="n">fut</span><span class="p">):</span>
                     <span class="k">return</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_call_soon_threadsafe</span><span class="p">(</span>
                     <span class="n">_copy_future_state</span><span class="p">,</span>
@@ -220,7 +205,7 @@
                     <span class="n">fut</span><span class="p">,</span>
                 <span class="p">)</span>
 
-            <span class="n">cf_fut</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="n">_call_copy_future_state</span><span class="p">)</span>
+            <span class="n">_add_done_callback</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">,</span> <span class="n">_call_copy_future_state</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">fut</span>
 
@@ -586,6 +571,29 @@
                 <span class="n">thread</span><span class="o">.</span><span class="n">_threads_queues</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_work_queue</span></div>
 </div>
 
+
+
+<span class="k">def</span> <span class="nf">_copy_future_state</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">:</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal helper to copy state from another Future.</span>
+
+<span class="sd">    The other Future may be a concurrent.futures.Future.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># check this again in case it was cancelled since the last check</span>
+    <span class="k">if</span> <span class="n">_fut_is_cancelled</span><span class="p">(</span><span class="n">fut</span><span class="p">):</span>
+        <span class="k">return</span>
+    <span class="n">exception</span> <span class="o">=</span> <span class="n">_get_cf_fut_exception</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_set_fut_result</span><span class="p">(</span><span class="n">fut</span><span class="p">,</span> <span class="n">_get_cf_fut_result</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_set_fut_exception</span><span class="p">(</span><span class="n">fut</span><span class="p">,</span> <span class="n">_convert_future_exc</span><span class="p">(</span><span class="n">exception</span><span class="p">))</span>
+
+
+<span class="n">_fut_is_cancelled</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="o">.</span><span class="n">cancelled</span>
+<span class="n">_get_cf_fut_result</span> <span class="o">=</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="o">.</span><span class="n">result</span>
+<span class="n">_get_cf_fut_exception</span> <span class="o">=</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="o">.</span><span class="n">exception</span>
+<span class="n">_set_fut_result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="o">.</span><span class="n">set_result</span>
+<span class="n">_set_fut_exception</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="o">.</span><span class="n">set_exception</span>
+<span class="n">_add_done_callback</span> <span class="o">=</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="o">.</span><span class="n">add_done_callback</span>
 
 
 <span class="n">executor</span> <span class="o">=</span> <span class="n">PruningThreadPoolExecutor</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span>
