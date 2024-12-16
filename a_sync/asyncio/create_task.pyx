@@ -139,7 +139,7 @@ cdef void __prune_persisted_tasks():
             if e := _get_exception(task):
                 # force exceptions related to this lib to bubble up
                 if not isinstance(e, exceptions.PersistedTaskException):
-                    _log_exception(e)
+                    __log_exception(e)
                     raise e
                 # we have to manually log the traceback that asyncio would usually log
                 # since we already got the exception from the task and the usual handler will now not run
