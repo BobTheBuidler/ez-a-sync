@@ -177,7 +177,7 @@ class Queue(_Queue[T]):
         get_nowait = self.get_nowait
         values: List[T] = []
         append = values.append
-        
+
         while True:
             try:
                 append(get_nowait())
@@ -476,7 +476,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         get_next_job = self.get
         func = self.func
         task_done = self.task_done
-        
+
         args: P.args
         kwargs: P.kwargs
         if self._no_futs:
@@ -893,7 +893,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         func = self.func
         task_done = self.task_done
         log_debug = logger.debug
-        
+
         args: P.args
         kwargs: P.kwargs
         fut: _smart.SmartFuture[V]
