@@ -20,6 +20,8 @@ import multiprocessing.context
 import queue
 import threading
 import weakref
+from asyncio import sleep
+from asyncio.futures import wrap_future
 from concurrent.futures import _base, thread
 from functools import cached_property
 
@@ -49,6 +51,15 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         - :meth:`submit` for submitting functions to the executor.
     """
 
+    sync_mode: bool
+    """
+    Indicates if the executor is in synchronous mode (max_workers == 0).
+
+    Examples:
+        >>> if executor.sync_mode:
+        >>>     print("Executor is in synchronous mode.")
+    """
+    
     _max_workers: int
 
     _workers: str
@@ -97,13 +108,15 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
             - :meth:`run` for running functions with the executor.
         """
         if self.sync_mode:
-            fut = self._get_loop().create_future()
+            fut = self._create_future()
             try:
                 fut.set_result(fn(*args, **kwargs))
             except Exception as e:
                 fut.set_exception(e)
         else:
-            fut = asyncio.futures.wrap_future(super().submit(fn, *args, **kwargs))  # type: ignore [assignment]
+            fut = wrap_future(  # type: ignore [assignment]
+                self._super_submit(fn, *args, **kwargs)
+            )
             self._start_debug_daemon(fut, fn, *args, **kwargs)
         return fut
 
@@ -113,17 +126,6 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
     def __len__(self) -> int:
         # NOTE: should this be queue length instead? probably
         return self.worker_count_current
-
-    @cached_property
-    def sync_mode(self) -> bool:
-        """
-        Indicates if the executor is in synchronous mode (max_workers == 0).
-
-        Examples:
-            >>> if executor.sync_mode:
-            >>>     print("Executor is in synchronous mode.")
-        """
-        return self._max_workers == 0
 
     @property
     def worker_count_current(self) -> int:
@@ -135,6 +137,11 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         """
         return len(getattr(self, f"_{self._workers}"))
 
+    def __init_mixin__(self):
+        self.sync_mode = self._max_workers == 0
+        self._create_future = self._get_loop().create_future
+        self._super_submit = super().submit
+        
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """
         Runs until manually cancelled by the finished work item.
@@ -162,10 +169,13 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         else:
             msg = f"{msg[:-2]})"
 
-        while not fut.done():
-            await asyncio.sleep(15)
-            if not fut.done():
-                self.logger.debug(msg, self, fnid)
+        done = fut.done
+        log_debug = self.logger.debug
+
+        while not done():
+            await sleep(15)
+            if not done():
+                log_debug(msg, self, fnid)
 
 
 # Process
@@ -224,6 +234,7 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPo
             self._max_workers = 0
         else:
             super().__init__(max_workers, mp_context, initializer, initargs)
+        self.__init_mixin__()
 
 
 # Thread
@@ -277,6 +288,7 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPool
             self._max_workers = 0
         else:
             super().__init__(max_workers, thread_name_prefix, initializer, initargs)
+        self.__init_mixin__()
 
 
 # For backward-compatibility
