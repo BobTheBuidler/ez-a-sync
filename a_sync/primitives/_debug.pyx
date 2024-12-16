@@ -77,7 +77,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
     
     def __cinit__(self):
         self._has_daemon = False
-        _LoopBoundMixin.__cinit__(self)
+        self._LoopBoundMixin__loop = None
 
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """
