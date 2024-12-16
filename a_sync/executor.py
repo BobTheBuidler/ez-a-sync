@@ -47,7 +47,8 @@ def _copy_future_state(cf_fut: concurrent.futures.Future, fut: asyncio.Future):
         fut.set_result(cf_fut.result())
     else:
         fut.set_exception(_convert_future_exc(exception))
-        
+
+
 class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
     """
     A mixin for Executors to provide asynchronous run and submit methods.
@@ -129,27 +130,27 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
                 fut.set_exception(e)
         else:
             self._ensure_debug_daemon(fut, fn, *args, **kwargs)
-            
+
             cf_fut = self._super_submit(fn, *args, **kwargs)
 
             # TODO: implement logic to actually cancel the job, not just the future which is useless for our use case
             # def _call_check_cancel(destination: asyncio.Future):
             #     if destination.cancelled():
             #         cf_fut.cancel()
-            # 
+            #
             # fut.add_done_callback(_call_check_cancel)
-            
+
             def _call_copy_future_state(cf_fut: "concurrent.futures.Future"):
-                if fut.cancelled():       
+                if fut.cancelled():
                     return
                 self._call_soon_threadsafe(
-                    _copy_future_state, 
+                    _copy_future_state,
                     cf_fut,
-                    fut, 
+                    fut,
                 )
-        
+
             cf_fut.add_done_callback(_call_copy_future_state)
-            
+
         return fut
 
     def __repr__(self) -> str:
