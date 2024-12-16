@@ -568,7 +568,9 @@ class _SmartFutureRef(weakref.ref, Generic[T]):
         if strong_self is None:
             return True
         strong_other = other()
-        return False if strong_other is None else strong_self < strong_other
+        if strong_other is None:
+            return False
+        return strong_self < strong_other
 
 
 class _PriorityQueueMixin(Generic[T]):
