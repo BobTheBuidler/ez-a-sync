@@ -74,6 +74,10 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
     See Also:
         :class:`_LoggerMixin` for logging capabilities.
     """
+    
+    def __cinit__(self):
+        self._has_daemon = False
+        self._LoopBoundMixin__loop = None
 
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """
@@ -132,7 +136,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
             return ccreate_task_simple(self._debug_daemon(*args, **kwargs))
         return loop.create_future()
 
-    def _ensure_debug_daemon(self, *args, **kwargs) -> "asyncio.Future[None]":
+    def _ensure_debug_daemon(self, *args, **kwargs) -> None:
         """
         Ensures that the debug daemon task is running.
 
@@ -156,17 +160,20 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         See Also:
             :meth:`_start_debug_daemon` for starting the daemon.
         """
-        return self._c_ensure_debug_daemon(args, kwargs)
+        self._c_ensure_debug_daemon(args, kwargs)
     
-    cdef object _c_ensure_debug_daemon(self, tuple[object] args, dict[str, object] kwargs):
-        cdef object daemon = self._daemon
-        if daemon is None:
-            if self.check_debug_logs_enabled():
-                self._daemon = self._c_start_debug_daemon(args, kwargs)
-                self._daemon.add_done_callback(self._stop_debug_daemon)
-            else:
-                self._daemon = self._c_get_loop().create_future()
-        return self._daemon
+    cdef void _c_ensure_debug_daemon(self, tuple[object] args, dict[str, object] kwargs):
+        if self._has_daemon:
+            return
+        
+        if self.check_debug_logs_enabled():
+            daemon = self._c_start_debug_daemon(args, kwargs)
+            daemon.add_done_callback(self._stop_debug_daemon)
+            self._daemon = daemon
+        else:
+            self._daemon = self._c_get_loop().create_future()
+            
+        self._has_daemon = True
 
     def _stop_debug_daemon(self, t: Optional[asyncio.Task] = None) -> None:
         """
@@ -193,5 +200,6 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         """
         if t and t != self._daemon:
             raise ValueError(f"{t} is not {self._daemon}")
-        self._daemon.cancel()
+        t.cancel()
         self._daemon = None
+        self._has_daemon = False
