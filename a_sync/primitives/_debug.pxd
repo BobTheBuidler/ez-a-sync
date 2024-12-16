@@ -7,5 +7,5 @@ cdef class _LoopBoundMixin(_LoggerMixin):
 
 cdef class _DebugDaemonMixin(_LoopBoundMixin):
     cdef object _daemon
-    cdef object _c_ensure_debug_daemon(self, tuple[object] args, dict[str, object] kwargs)
+    cdef void _c_ensure_debug_daemon(self, tuple[object] args, dict[str, object] kwargs)
     cdef object _c_start_debug_daemon(self, tuple[object] args, dict[str, object] kwargs)
