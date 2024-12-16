@@ -154,7 +154,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.counter.CounterLock._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.counter.CounterLock._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.counter.CounterLock._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -168,7 +168,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -514,7 +514,7 @@ diagnosing and debugging potential deadlocks.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.event.CythonEvent._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.event.CythonEvent._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.event.CythonEvent._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -528,7 +528,7 @@ diagnosing and debugging potential deadlocks.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -846,7 +846,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -860,7 +860,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1223,7 +1223,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -1237,7 +1237,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1588,7 +1588,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -1602,7 +1602,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1936,7 +1936,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._PrioritySemaphoreContextManager._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -1950,7 +1950,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2280,7 +2280,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.DummySemaphore._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -2294,7 +2294,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2631,7 +2631,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.Semaphore._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.Semaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -2645,7 +2645,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2967,7 +2967,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -2981,7 +2981,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3304,7 +3304,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.CounterLock._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.CounterLock._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.CounterLock._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -3318,7 +3318,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3627,7 +3627,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.DummySemaphore._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.DummySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.DummySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -3641,7 +3641,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3989,7 +3989,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.PrioritySemaphore._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.PrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.PrioritySemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -4003,7 +4003,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -4362,7 +4362,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.Semaphore._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.Semaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.Semaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -4376,7 +4376,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -4698,7 +4698,7 @@ about the semaphore’s state when it is being waited on.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.ThreadsafeSemaphore._ensure_debug_daemon">
-<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'asyncio.Future[None]'</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.ThreadsafeSemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_ensure_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.locks.ThreadsafeSemaphore._ensure_debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the debug daemon task is running.</p>
 <p>This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.</p>
 <dl class="field-list simple">
@@ -4712,7 +4712,7 @@ about the semaphore’s state when it is being waited on.</p>
 <dd class="field-even"><p>Either the debug daemon task or a dummy future if debug logging is not enabled.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[None]</p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
