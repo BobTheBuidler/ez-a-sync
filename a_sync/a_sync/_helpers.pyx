@@ -4,7 +4,9 @@ and converting synchronous functions to asynchronous ones.
 """
 
 import asyncio
-import functools
+from asyncio import iscoroutinefunction
+from asyncio.futures import wrap_future
+from functools import wraps
 
 from a_sync import exceptions
 from a_sync._typing import *
@@ -88,16 +90,14 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
     """
     from a_sync.a_sync.function import ASyncFunction
 
-    if asyncio.iscoroutinefunction(func) or isinstance(func, ASyncFunction):
+    if iscoroutinefunction(func) or isinstance(func, ASyncFunction):
         raise exceptions.FunctionNotSync(func)
     
-    cdef object sumbit
-    
-    submit = executor.submit
+    cdef object sumbit = executor.submit
 
-    @functools.wraps(func)
+    @wraps(func)
     async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
-        return await asyncio.futures.wrap_future(
+        return await wrap_future(
             submit(func, *args, **kwargs),
             loop=get_event_loop(),
         )
