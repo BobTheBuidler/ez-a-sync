@@ -21,7 +21,7 @@ import queue
 import threading
 import weakref
 from asyncio import sleep
-from asyncio.futures import wrap_future, _convert_future_exc
+from asyncio.futures import _convert_future_exc
 from concurrent.futures import _base, thread
 from functools import cached_property
 
