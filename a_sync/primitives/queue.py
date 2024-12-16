@@ -19,10 +19,11 @@ import heapq
 import logging
 import sys
 import weakref
-from asyncio import InvalidStateError, QueueEmpty
+from asyncio import InvalidStateError, QueueEmpty, gather
 
 import a_sync.asyncio
-from a_sync import _smart
+from a_sync._smart import SmartFuture, create_future
+from a_sync._smart import _Key as _SmartKey
 from a_sync._typing import *
 
 logger = logging.getLogger(__name__)
@@ -462,7 +463,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             for i in range(self.num_workers)
         )
         task = a_sync.asyncio.create_task(
-            asyncio.gather(*workers),
+            gather(*workers),
             name=f"{self.name} worker main Task",
             log_destroy_pending=False,
         )
@@ -549,10 +550,10 @@ def _validate_args(i: int, can_return_less: bool) -> None:
 
 class _SmartFutureRef(weakref.ref, Generic[T]):
     """
-    Weak reference for :class:`~_smart.SmartFuture` objects used in priority queues.
+    Weak reference for :class:`~SmartFuture` objects used in priority queues.
 
     See Also:
-        :class:`~_smart.SmartFuture`
+        :class:`~SmartFuture`
     """
 
     def __lt__(self, other: "_SmartFutureRef[T]") -> bool:
@@ -722,7 +723,7 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
         #       `self._queue` will always be in proper order for next call to `self._get`.
         return heappop(self._queue)
 
-    def _get_key(self, *args, **kwargs) -> _smart._Key:
+    def _get_key(self, *args, **kwargs) -> _SmartKey:
         """
         Generates a unique key for task identification based on arguments.
 
@@ -782,7 +783,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
     _no_futs = False
     """Whether smart futures are used."""
 
-    _futs: "weakref.WeakValueDictionary[_smart._Key[T], _smart.SmartFuture[T]]"
+    _futs: "weakref.WeakValueDictionary[_SmartKey[T], SmartFuture[T]]"
     """
     Weak reference dictionary for managing smart futures.
     """
@@ -811,7 +812,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         super().__init__(func, num_workers, return_data=True, name=name, loop=loop)
         self._futs = weakref.WeakValueDictionary()
 
-    async def put(self, *args: P.args, **kwargs: P.kwargs) -> _smart.SmartFuture[V]:
+    async def put(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
         """
         Asynchronously adds a task with smart future handling to the queue.
 
@@ -835,7 +836,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         await Queue.put(self, (_SmartFutureRef(fut), args, kwargs))
         return fut
 
-    def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> _smart.SmartFuture[V]:
+    def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
         """
         Immediately adds a task with smart future handling to the queue without waiting.
 
@@ -859,9 +860,9 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
         return fut
 
-    def _create_future(self, key: _smart._Key) -> "asyncio.Future[V]":
+    def _create_future(self, key: _SmartKey) -> "asyncio.Future[V]":
         """Creates a smart future for the task."""
-        return _smart.create_future(queue=self, key=key, loop=self._loop)
+        return create_future(queue=self, key=key, loop=self._loop)
 
     def _get(self):
         """
@@ -896,7 +897,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
 
         args: P.args
         kwargs: P.kwargs
-        fut: _smart.SmartFuture[V]
+        fut: SmartFuture[V]
         while True:
             try:
                 try:
