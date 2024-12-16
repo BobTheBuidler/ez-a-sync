@@ -205,7 +205,7 @@ class Queue(_Queue[T]):
         _validate_args(i, can_return_less)
         get_next = self.get
         get_multi = self.get_multi_nowait
-        
+
         items = []
         extend = items.extend
         while len(items) < i and not can_return_less:
@@ -231,9 +231,9 @@ class Queue(_Queue[T]):
             >>> print(tasks)
         """
         _validate_args(i, can_return_less)
-        
+
         get_nowait = self.get_nowait
-        
+
         items = []
         append = items.append
         for _ in range(i):
