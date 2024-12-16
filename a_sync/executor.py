@@ -34,21 +34,6 @@ TEN_MINUTES = 60 * 10
 Initializer = Callable[..., object]
 
 
-def _copy_future_state(cf_fut: concurrent.futures.Future, fut: asyncio.Future):
-    """Internal helper to copy state from another Future.
-
-    The other Future may be a concurrent.futures.Future.
-    """
-    # check this again in case it was cancelled since the last check
-    if fut.cancelled():
-        return
-    exception = cf_fut.exception()
-    if exception is None:
-        fut.set_result(cf_fut.result())
-    else:
-        fut.set_exception(_convert_future_exc(exception))
-
-
 class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
     """
     A mixin for Executors to provide asynchronous run and submit methods.
@@ -125,9 +110,9 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         fut = self._create_future()
         if self.sync_mode:
             try:
-                fut.set_result(fn(*args, **kwargs))
+                _set_fut_result(fut, fn(*args, **kwargs))
             except Exception as e:
-                fut.set_exception(e)
+                _set_fut_exception(fut, e)
         else:
             self._ensure_debug_daemon(fut, fn, *args, **kwargs)
 
@@ -135,13 +120,13 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
 
             # TODO: implement logic to actually cancel the job, not just the future which is useless for our use case
             # def _call_check_cancel(destination: asyncio.Future):
-            #     if destination.cancelled():
+            #     if _fut_is_cancelled(destination):
             #         cf_fut.cancel()
             #
             # fut.add_done_callback(_call_check_cancel)
 
             def _call_copy_future_state(cf_fut: "concurrent.futures.Future"):
-                if fut.cancelled():
+                if _fut_is_cancelled(fut):
                     return
                 self._call_soon_threadsafe(
                     _copy_future_state,
@@ -149,7 +134,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
                     fut,
                 )
 
-            cf_fut.add_done_callback(_call_copy_future_state)
+            _add_done_callback(cf_fut, _call_copy_future_state)
 
         return fut
 
@@ -494,6 +479,29 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
                 t.start()
                 self._threads.add(t)
                 thread._threads_queues[t] = self._work_queue
+
+
+def _copy_future_state(cf_fut: concurrent.futures.Future, fut: asyncio.Future):
+    """Internal helper to copy state from another Future.
+
+    The other Future may be a concurrent.futures.Future.
+    """
+    # check this again in case it was cancelled since the last check
+    if _fut_is_cancelled(fut):
+        return
+    exception = _get_cf_fut_exception(cf_fut)
+    if exception is None:
+        _set_fut_result(fut, _get_cf_fut_result(cf_fut))
+    else:
+        _set_fut_exception(fut, _convert_future_exc(exception))
+
+
+_fut_is_cancelled = asyncio.Future.cancelled
+_get_cf_fut_result = concurrent.futures.Future.result
+_get_cf_fut_exception = concurrent.futures.Future.exception
+_set_fut_result = asyncio.Future.set_result
+_set_fut_exception = asyncio.Future.set_exception
+_add_done_callback = concurrent.futures.Future.add_done_callback
 
 
 executor = PruningThreadPoolExecutor(128)
