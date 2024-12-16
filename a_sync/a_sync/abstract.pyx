@@ -10,7 +10,7 @@ is intended for more custom implementations if necessary.
 """
 
 import abc
-from logging import DEBUG, getLogger
+import logging
 from typing import Dict, Any, Tuple
 
 from a_sync._typing import *
@@ -19,15 +19,21 @@ from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync._meta import ASyncMeta
 
 
-logger = getLogger(__name__)
-
-cdef object c_logger = logger
-
-
 cdef struct ShouldAwaitCache:
     bint is_cached
     bint value
 
+
+logger = logging.getLogger(__name__)
+
+cdef object _logger_is_enabled_for = logger.isEnabledFor
+cdef object _logger_log = logger._log
+cdef int DEBUG = logging.DEBUG
+
+cdef inline void _log_debug(str msg, tuple args):
+    _logger_log(DEBUG, msg, args)
+
+    
 class ASyncABC(metaclass=ASyncMeta):
     """Abstract Base Class for defining asynchronous and synchronous behavior.
 
@@ -143,7 +149,7 @@ class ASyncABC(metaclass=ASyncMeta):
         return cache.value
 
     @classmethod
-    def __a_sync_instance_will_be_sync__(cls, Tuple[Any, ...] args, Dict[str, Any] kwargs) -> bool:
+    def __a_sync_instance_will_be_sync__(cls, Tuple[Any, ...] args, Dict[str, Any] kwargs) -> bint:
         """Determines if a new instance will be synchronous.
 
         This method checks the constructor's signature against provided
@@ -157,10 +163,10 @@ class ASyncABC(metaclass=ASyncMeta):
             >>> MyASyncClass.__a_sync_instance_will_be_sync__((), {'sync': True})
             True
         """
-        cdef bint debug_logs 
-        if debug_logs := c_logger.isEnabledFor(DEBUG):
-            c_logger._log(
-                DEBUG,
+        cdef bint debug_logs = _logger_is_enabled_for(DEBUG)
+        
+        if debug_logs:
+            _log_debug(
                 "checking `%s.%s.__init__` signature against provided kwargs to determine a_sync mode for the new instance",
                 (cls.__module__, cls.__name__),
             )
@@ -170,15 +176,13 @@ class ASyncABC(metaclass=ASyncMeta):
             return is_sync(flag, kwargs, pop_flag=False) if flag else cls.__a_sync_default_mode__()  # type: ignore [arg-type]
         
         if not flag:
-            c_logger._log(
-                DEBUG,
-                "No valid flags found in kwargs, checking class definition for defined default"
+            _log_debug(
+                "No valid flags found in kwargs, checking class definition for defined default", ()
             )
             return cls.__a_sync_default_mode__()  # type: ignore [arg-type]
 
         cdef bint sync = is_sync(flag, kwargs, pop_flag=False)  # type: ignore [arg-type]
-        c_logger._log(
-            DEBUG,
+        _log_debug(
             "kwargs indicate the new instance created with args %s %s is %ssynchronous",
             (args, kwargs, "" if sync else "a"),
         )
@@ -214,3 +218,4 @@ class ASyncABC(metaclass=ASyncMeta):
         Subclasses must implement this method to return the default execution
         mode (synchronous or asynchronous) for instances of the class.
         """
+    
