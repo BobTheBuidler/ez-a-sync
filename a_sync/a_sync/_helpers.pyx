@@ -3,9 +3,9 @@ This module provides utility functions for handling asynchronous operations
 and converting synchronous functions to asynchronous ones.
 """
 
-from asyncio import iscoroutinefunction, new_event_loop, set_event_loop
+from asyncio import Future, iscoroutinefunction, new_event_loop, set_event_loop
 from asyncio import get_event_loop as _get_event_loop
-from asyncio.futures import _chain_future
+from asyncio.futures import _convert_future_exc
 from functools import wraps
 
 from a_sync import exceptions
@@ -49,7 +49,7 @@ cdef object _await(object awaitable):
         return get_event_loop().run_until_complete(awaitable)
     except RuntimeError as e:
         if str(e) == "This event loop is already running":
-            raise exceptions.SyncModeInAsyncContextError from None
+            raise exceptions.SyncModeInAsyncContextError from e.__cause__
         raise
 
 
@@ -94,13 +94,42 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
         raise exceptions.FunctionNotSync(func)
     
     cdef object submit = executor.submit
-
+    
     @wraps(func)
     async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
         loop = get_event_loop()
         fut = loop.create_future()
         cf_fut = submit(func, *args, **kwargs)
-        _chain_future(cf_fut, fut)
+        def _call_copy_future_state(cf_fut: "concurrent.futures.Future"):
+            if _fut_is_cancelled(fut):
+                return
+            loop.call_soon_threadsafe(
+                _copy_future_state,
+                cf_fut,
+                fut,
+            )
+        _add_done_callback(cf_fut, _call_copy_future_state)
         return await fut
 
     return _asyncify_wrap
+
+cdef void _copy_future_state(cf_fut: concurrent.futures.Future, fut: Future):
+    """Internal helper to copy state from another Future.
+
+    The other Future may be a concurrent.futures.Future.
+    """
+    # check this again in case it was cancelled since the last check
+    if _fut_is_cancelled(fut):
+        return
+    exception = _get_exception(cf_fut)
+    if exception is None:
+        _set_fut_result(fut, _get_result(cf_fut))
+    else:
+        _set_fut_exception(fut, _convert_future_exc(exception))
+
+cdef object _fut_is_cancelled = Future.cancelled
+cdef object _get_result = concurrent.futures.Future.result
+cdef object _get_exception = concurrent.futures.Future.exception
+cdef object _set_fut_result = Future.set_result
+cdef object _set_fut_exception = Future.set_exception
+cdef object _add_done_callback = concurrent.futures.Future.add_done_callback
