@@ -74,6 +74,11 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
     See Also:
         :class:`_LoggerMixin` for logging capabilities.
     """
+    cdef bint _has_daemon
+    
+    def __cinit__(self):
+        self._has_daemon = False
+        _LoopBoundMixin.__cinit__(self)
 
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """
@@ -132,7 +137,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
             return ccreate_task_simple(self._debug_daemon(*args, **kwargs))
         return loop.create_future()
 
-    def _ensure_debug_daemon(self, *args, **kwargs) -> "asyncio.Future[None]":
+    def _ensure_debug_daemon(self, *args, **kwargs) -> None:
         """
         Ensures that the debug daemon task is running.
 
@@ -156,9 +161,12 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         See Also:
             :meth:`_start_debug_daemon` for starting the daemon.
         """
-        return self._c_ensure_debug_daemon(args, kwargs)
+        self._c_ensure_debug_daemon(args, kwargs)
     
-    cdef object _c_ensure_debug_daemon(self, tuple[object] args, dict[str, object] kwargs):
+    cdef void _c_ensure_debug_daemon(self, tuple[object] args, dict[str, object] kwargs):
+        if self._has_daemon:
+            return
+        
         cdef object daemon = self._daemon
         if daemon is None:
             if self.check_debug_logs_enabled():
@@ -167,6 +175,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
             else:
                 daemon = self._c_get_loop().create_future()
             self._daemon = daemon
+            self._has_daemon = True
         return daemon
 
     def _stop_debug_daemon(self, t: Optional[asyncio.Task] = None) -> None:
