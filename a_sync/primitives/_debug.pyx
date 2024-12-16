@@ -167,16 +167,14 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         if self._has_daemon:
             return
         
-        cdef object daemon = self._daemon
-        if daemon is None:
-            if self.check_debug_logs_enabled():
-                daemon = self._c_start_debug_daemon(args, kwargs)
-                daemon.add_done_callback(self._stop_debug_daemon)
-            else:
-                daemon = self._c_get_loop().create_future()
+        if self.check_debug_logs_enabled():
+            daemon = self._c_start_debug_daemon(args, kwargs)
+            daemon.add_done_callback(self._stop_debug_daemon)
             self._daemon = daemon
-            self._has_daemon = True
-        return daemon
+        else:
+            self._daemon = self._c_get_loop().create_future()
+            
+        self._has_daemon = True
 
     def _stop_debug_daemon(self, t: Optional[asyncio.Task] = None) -> None:
         """
@@ -203,5 +201,6 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         """
         if t and t != self._daemon:
             raise ValueError(f"{t} is not {self._daemon}")
-        self._daemon.cancel()
+        t.cancel()
         self._daemon = None
+        self._has_daemon = False
