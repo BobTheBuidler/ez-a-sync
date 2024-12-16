@@ -3,8 +3,8 @@ This module provides utility functions for handling asynchronous operations
 and converting synchronous functions to asynchronous ones.
 """
 
-import asyncio
-from asyncio import iscoroutinefunction
+from asyncio import iscoroutinefunction, new_event_loop, set_event_loop
+from asyncio import get_event_loop as _get_event_loop
 from asyncio.futures import wrap_future
 from functools import wraps
 
@@ -15,12 +15,12 @@ from a_sync._typing import *
 cpdef object get_event_loop():
     cdef object loop
     try:
-        return asyncio.get_event_loop()
+        return _get_event_loop()
     except RuntimeError as e:  # Necessary for use with multi-threaded applications.
         if not str(e).startswith("There is no current event loop in thread"):
             raise
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
+        loop = new_event_loop()
+        set_event_loop(loop)
     return loop
 
 
