@@ -12,8 +12,6 @@ from a_sync._typing import *
 
 logger = logging.getLogger(__name__)
 
-cdef object c_logger = logger
-
 
 def create_task(
     coro: Awaitable[T],
@@ -120,6 +118,9 @@ async def __await(awaitable: Awaitable[T]) -> T:
             args.append(awaitable._children)
         raise RuntimeError(*args) from None
 
+   
+cdef object __log_exception = logger.exception
+
 
 cdef void __prune_persisted_tasks():
     """Remove completed tasks from the set of persisted tasks.
@@ -138,7 +139,7 @@ cdef void __prune_persisted_tasks():
             if e := _get_exception(task):
                 # force exceptions related to this lib to bubble up
                 if not isinstance(e, exceptions.PersistedTaskException):
-                    c_logger.exception(e)
+                    _log_exception(e)
                     raise e
                 # we have to manually log the traceback that asyncio would usually log
                 # since we already got the exception from the task and the usual handler will now not run
