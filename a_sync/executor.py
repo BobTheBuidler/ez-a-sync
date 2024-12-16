@@ -59,7 +59,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         >>> if executor.sync_mode:
         >>>     print("Executor is in synchronous mode.")
     """
-    
+
     _max_workers: int
 
     _workers: str
@@ -114,9 +114,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
             except Exception as e:
                 fut.set_exception(e)
         else:
-            fut = wrap_future(  # type: ignore [assignment]
-                self._super_submit(fn, *args, **kwargs)
-            )
+            fut = wrap_future(self._super_submit(fn, *args, **kwargs))  # type: ignore [assignment]
             self._start_debug_daemon(fut, fn, *args, **kwargs)
         return fut
 
@@ -141,7 +139,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         self.sync_mode = self._max_workers == 0
         self._create_future = self._get_loop().create_future
         self._super_submit = super().submit
-        
+
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """
         Runs until manually cancelled by the finished work item.
