@@ -220,8 +220,8 @@ cdef dict[uintptr_t, object] _init_signature_cache = {}
 
 cdef _get_init_signature(object cls):
     cdef uintptr_t cls_init_id = id(cls.__init__)
-    signature = _init_signature_cache.get(cls_init_id)
-    if signature is None:
-        signature = signature(cls.__init__)
-        _init_signature_cache[cls_init_id] = signature
-    return signature
+    init_sig = _init_signature_cache.get(cls_init_id)
+    if init_sig is None:
+        init_sig = signature(cls.__init__)
+        _init_signature_cache[cls_init_id] = init_sig
+    return init_sig
