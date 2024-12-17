@@ -53,7 +53,7 @@ cdef object _await(object awaitable):
         raise
 
 
-cdef object _asyncify(object func, object executor):  # type: ignore [misc]
+cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
     """
     Convert a synchronous function to a coroutine function using an executor.
 
@@ -93,6 +93,16 @@ cdef object _asyncify(object func, object executor):  # type: ignore [misc]
     if iscoroutinefunction(func) or isinstance(func, ASyncFunction):
         raise exceptions.FunctionNotSync(func)
     
+    if hasattr(executor, "run"):
+        # ASyncExecutor classes are better optimized.
+        # TODO: implement the same optimizations in the else block below
+
+        run = executor.run
+
+        return wraps(func)(
+            lambda *args, **kwargs: run(func, *args, **kwargs)
+        )
+
     cdef object submit = executor.submit
 
     @wraps(func)
