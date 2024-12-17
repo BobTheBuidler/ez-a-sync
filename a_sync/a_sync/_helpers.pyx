@@ -99,18 +99,22 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
 
         run = executor.run
 
-        return wraps(func)(
-            lambda *args, **kwargs: run(func, *args, **kwargs)
-        )
+        @wraps(func)
+        async def _asyncify_wrap_fast(*args: P.args, **kwargs: P.kwargs) -> T:
+            return await run(func, *args, **kwargs)
+        
+        return _asyncify_wrap_fast
 
-    cdef object submit = executor.submit
+    else:
 
-    @wraps(func)
-    async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
-        loop = get_event_loop()
-        fut = loop.create_future()
-        cf_fut = submit(func, *args, **kwargs)
-        _chain_future(cf_fut, fut)
-        return await fut
+        submit = executor.submit
 
-    return _asyncify_wrap
+        @wraps(func)
+        async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
+            loop = get_event_loop()
+            fut = loop.create_future()
+            cf_fut = submit(func, *args, **kwargs)
+            _chain_future(cf_fut, fut)
+            return await fut
+
+        return _asyncify_wrap
