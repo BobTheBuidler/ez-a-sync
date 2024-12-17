@@ -274,10 +274,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__init_loader_coro</span> <span class="o">=</span> <span class="n">exhaust_iterator</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_start_tasks_for_iterables</span><span class="p">(</span><span class="o">*</span><span class="n">iterables</span><span class="p">),</span> <span class="n">queue</span><span class="o">=</span><span class="n">init_loader_queue</span>
             <span class="p">)</span>
-            <span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">suppress</span><span class="p">(</span><span class="n">_NoRunningLoop</span><span class="p">):</span>
-                <span class="c1"># its okay if we get this exception, we can start the task as soon as the loop starts</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader_next</span> <span class="o">=</span> <span class="n">init_loader_queue</span><span class="o">.</span><span class="n">get_all</span>
+
+            <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init_loader_next</span> <span class="o">=</span> <span class="n">init_loader_queue</span><span class="o">.</span><span class="n">get_all</span></div>
+            <span class="k">except</span> <span class="n">_NoRunningLoop</span><span class="p">:</span>
+                <span class="c1"># its okay if we get this exception, we can start the task as soon as the loop starts</span>
+                <span class="k">pass</span></div>
 
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
