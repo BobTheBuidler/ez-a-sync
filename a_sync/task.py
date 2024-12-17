@@ -199,10 +199,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self.__init_loader_coro = exhaust_iterator(
                 self._start_tasks_for_iterables(*iterables), queue=init_loader_queue
             )
-            with contextlib.suppress(_NoRunningLoop):
-                # its okay if we get this exception, we can start the task as soon as the loop starts
-                self._init_loader
             self._init_loader_next = init_loader_queue.get_all
+
+            try:
+                self._init_loader
+            except _NoRunningLoop:
+                # its okay if we get this exception, we can start the task as soon as the loop starts
+                pass
 
     def __repr__(self) -> str:
         return f"<{type(self).__name__} for {self._wrapped_func} kwargs={self._wrapped_func_kwargs} tasks={len(self)} at {hex(id(self))}>"
