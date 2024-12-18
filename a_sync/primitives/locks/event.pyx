@@ -85,14 +85,8 @@ cdef class CythonEvent(_DebugDaemonMixin):
         
         cdef str status = "set" if self._value else "unset"
         
-        try:
-            waiters = self._waiters
-        except AttributeError:
-            # TODO: debug how this error is possible since _waiters is set in __init__
-            pass
-        else:
-            if len_waiters := len(waiters):
-                status += ", waiters:{}".format(len_waiters)
+        if len_waiters := len(self._waiters):
+            status += ", waiters:{}".format(len_waiters)
                 
         return "<{}.{} {} at {} [{}]>".format(
             self.__class__.__module__, 
