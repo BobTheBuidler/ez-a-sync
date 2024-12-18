@@ -84,7 +84,11 @@ cdef class CounterLock(_DebugDaemonMixin):
         """
         cdef dict[long long, Event] events = self._events
         cdef dict[long long, Py_ssize_t] waiters = {v: len((<Event>events[v])._waiters) for v in self._heap}
-        return "<CounterLock name={} value={} waiters={}>".format(self.__name.decode("utf-8"), self._value, waiters)
+        cdef str name = self.__name.decode("utf-8")
+        if name:
+            return "<CounterLock name={} value={} waiters={}>".format(self.__name.decode("utf-8"), self._value, waiters)
+        else:
+            return "<CounterLock value={} waiters={}>".format(self._value, waiters)
 
     cpdef bint is_ready(self, long long v):
         """A function that indicates whether the current counter value is greater than or equal to a given value."""
