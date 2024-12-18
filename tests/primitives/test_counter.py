@@ -6,6 +6,7 @@ from a_sync.primitives import CounterLock
 @pytest.mark.asyncio_cooperative
 async def test_counter_lock():
     counter = CounterLock(name="test")
+    assert repr(counter) == "<CounterLock name=test value=0 waiters={}>"
     assert await counter.wait_for(0)
     assert counter._name == "test"
 
