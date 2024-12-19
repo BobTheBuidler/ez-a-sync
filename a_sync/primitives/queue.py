@@ -255,7 +255,7 @@ def log_broken(func: Callable[[Any], NoReturn]) -> Callable[[Any], NoReturn]:
     @wraps(func)
     async def __worker_exc_wrap(self):
         try:
-            return func(self)
+            return await func(self)
         except Exception as e:
             logger.error("%s for %s is broken!!!", type(self).__name__, func)
             logger.exception(e)
