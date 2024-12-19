@@ -352,6 +352,22 @@
 
 
 
+<div class="viewcode-block" id="log_broken">
+<a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.log_broken">[docs]</a>
+<span class="k">def</span> <span class="nf">log_broken</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NoReturn</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">NoReturn</span><span class="p">]:</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">__worker_exc_wrap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> for </span><span class="si">%s</span><span class="s2"> is broken!!!&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+    <span class="k">return</span> <span class="n">__worker_exc_wrap</span></div>
+
+
+
 <div class="viewcode-block" id="ProcessingQueue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue">[docs]</a>
 <span class="k">class</span> <span class="nc">ProcessingQueue</span><span class="p">(</span><span class="n">_Queue</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">]],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
@@ -604,6 +620,7 @@
         <span class="n">task</span><span class="o">.</span><span class="n">_workers</span> <span class="o">=</span> <span class="n">workers</span>
         <span class="k">return</span> <span class="n">task</span>
 
+    <span class="nd">@log_broken</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__worker_coro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The coroutine executed by worker tasks to process the queue.</span>
@@ -626,37 +643,32 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">[</span><span class="n">V</span><span class="p">]</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_next_job</span><span class="p">()</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_next_job</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">fut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="c1"># the weakref was already cleaned up, we don&#39;t need to process this item</span>
+                        <span class="n">task_done</span><span class="p">()</span>
+                        <span class="k">continue</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="s2">&quot;cannot set result for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="n">fut</span><span class="p">,</span>
+                        <span class="n">result</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">fut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                            <span class="c1"># the weakref was already cleaned up, we don&#39;t need to process this item</span>
-                            <span class="n">task_done</span><span class="p">()</span>
-                            <span class="k">continue</span>
-                        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-                        <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                        <span class="n">fut</span><span class="o">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                     <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                            <span class="s2">&quot;cannot set result for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;cannot set exception for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                             <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                             <span class="n">fut</span><span class="p">,</span>
-                            <span class="n">result</span><span class="p">,</span>
+                            <span class="n">e</span><span class="p">,</span>
                         <span class="p">)</span>
-                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                        <span class="k">try</span><span class="p">:</span>
-                            <span class="n">fut</span><span class="o">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                        <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
-                            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                                <span class="s2">&quot;cannot set exception for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                                <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                                <span class="n">fut</span><span class="p">,</span>
-                                <span class="n">e</span><span class="p">,</span>
-                            <span class="p">)</span>
-                    <span class="n">task_done</span><span class="p">()</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> for </span><span class="si">%s</span><span class="s2"> is broken!!!&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                    <span class="k">raise</span></div>
+                <span class="n">task_done</span><span class="p">()</span></div>
 
 
 
@@ -1073,6 +1085,7 @@
         <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span><span class="p">()</span></div>
 
 
+    <span class="nd">@log_broken</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">__worker_coro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Worker coroutine responsible for processing tasks in the queue.</span>
@@ -1095,38 +1108,33 @@
         <span class="n">fut</span><span class="p">:</span> <span class="n">SmartFuture</span><span class="p">[</span><span class="n">V</span><span class="p">]</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
+                <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_next_job</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">fut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># the weakref was already cleaned up, we don&#39;t need to process this item</span>
+                    <span class="n">task_done</span><span class="p">()</span>
+                    <span class="k">continue</span>
+                <span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;processing </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fut</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s2">&quot;cannot set result for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">fut</span><span class="p">,</span>
+                    <span class="n">result</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_next_job</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="n">fut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="c1"># the weakref was already cleaned up, we don&#39;t need to process this item</span>
-                        <span class="n">task_done</span><span class="p">()</span>
-                        <span class="k">continue</span>
-                    <span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;processing </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fut</span><span class="p">)</span>
-                    <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-                    <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    <span class="n">fut</span><span class="o">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                        <span class="s2">&quot;cannot set result for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;cannot set exception for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
                         <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                         <span class="n">fut</span><span class="p">,</span>
-                        <span class="n">result</span><span class="p">,</span>
+                        <span class="n">e</span><span class="p">,</span>
                     <span class="p">)</span>
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">fut</span><span class="o">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                            <span class="s2">&quot;cannot set exception for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                            <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                            <span class="n">fut</span><span class="p">,</span>
-                            <span class="n">e</span><span class="p">,</span>
-                        <span class="p">)</span>
-                <span class="n">task_done</span><span class="p">()</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> for </span><span class="si">%s</span><span class="s2"> is broken!!!&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-                <span class="k">raise</span></div>
+            <span class="n">task_done</span><span class="p">()</span></div>
 
 </pre></div>
 
