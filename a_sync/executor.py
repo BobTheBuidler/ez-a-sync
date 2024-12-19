@@ -139,7 +139,9 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         return fut
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} object at {hex(id(self))} [{self.worker_count_current}/{self._max_workers} {self._workers}]>"
+        worker_info = f"[{self.worker_count_current}/{self._max_workers} {self._workers}]"
+        identifier = getattr(self, "_thread_name_prefix", None) or hex(id(self))
+        return f"<{self.__class__.__name__} {identifier} {worker_info}>"
 
     def __len__(self) -> int:
         # NOTE: should this be queue length instead? probably
