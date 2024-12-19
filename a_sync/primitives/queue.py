@@ -251,6 +251,19 @@ class Queue(_Queue[T]):
         return items
 
 
+def log_broken(func: Callable[[Any], NoReturn]) -> Callable[[Any], NoReturn]:
+    @wraps(func)
+    async def __worker_exc_wrap(self):
+        try:
+            return await func(self)
+        except Exception as e:
+            logger.error("%s for %s is broken!!!", type(self).__name__, func)
+            logger.exception(e)
+            raise
+
+    return __worker_exc_wrap
+
+
 class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     """
     A queue designed for processing tasks asynchronously with multiple workers.
@@ -480,6 +493,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         task._workers = workers
         return task
 
+    @log_broken
     async def __worker_coro(self) -> NoReturn:
         """
         The coroutine executed by worker tasks to process the queue.
@@ -502,37 +516,32 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         else:
             fut: asyncio.Future[V]
             while True:
+                args, kwargs, fut = await get_next_job()
                 try:
-                    args, kwargs, fut = await get_next_job()
+                    if fut is None:
+                        # the weakref was already cleaned up, we don't need to process this item
+                        task_done()
+                        continue
+                    result = await func(*args, **kwargs)
+                    fut.set_result(result)
+                except InvalidStateError:
+                    logger.error(
+                        "cannot set result for %s %s: %s",
+                        func.__name__,
+                        fut,
+                        result,
+                    )
+                except Exception as e:
                     try:
-                        if fut is None:
-                            # the weakref was already cleaned up, we don't need to process this item
-                            task_done()
-                            continue
-                        result = await func(*args, **kwargs)
-                        fut.set_result(result)
+                        fut.set_exception(e)
                     except InvalidStateError:
                         logger.error(
-                            "cannot set result for %s %s: %s",
+                            "cannot set exception for %s %s: %s",
                             func.__name__,
                             fut,
-                            result,
+                            e,
                         )
-                    except Exception as e:
-                        try:
-                            fut.set_exception(e)
-                        except InvalidStateError:
-                            logger.error(
-                                "cannot set exception for %s %s: %s",
-                                func.__name__,
-                                fut,
-                                e,
-                            )
-                    task_done()
-                except Exception as e:
-                    logger.error("%s for %s is broken!!!", type(self).__name__, func)
-                    logger.exception(e)
-                    raise
+                task_done()
 
 
 def _validate_args(i: int, can_return_less: bool) -> None:
@@ -889,6 +898,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         fut, args, kwargs = super()._get()
         return args, kwargs, fut()
 
+    @log_broken
     async def __worker_coro(self) -> NoReturn:
         """
         Worker coroutine responsible for processing tasks in the queue.
@@ -911,35 +921,30 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         fut: SmartFuture[V]
         while True:
             try:
+                args, kwargs, fut = await get_next_job()
+                if fut is None:
+                    # the weakref was already cleaned up, we don't need to process this item
+                    task_done()
+                    continue
+                log_debug("processing %s", fut)
+                result = await func(*args, **kwargs)
+                fut.set_result(result)
+            except InvalidStateError:
+                logger.error(
+                    "cannot set result for %s %s: %s",
+                    func.__name__,
+                    fut,
+                    result,
+                )
+            except Exception as e:
+                log_debug("%s: %s", type(e).__name__, e)
                 try:
-                    args, kwargs, fut = await get_next_job()
-                    if fut is None:
-                        # the weakref was already cleaned up, we don't need to process this item
-                        task_done()
-                        continue
-                    log_debug("processing %s", fut)
-                    result = await func(*args, **kwargs)
-                    fut.set_result(result)
+                    fut.set_exception(e)
                 except InvalidStateError:
                     logger.error(
-                        "cannot set result for %s %s: %s",
+                        "cannot set exception for %s %s: %s",
                         func.__name__,
                         fut,
-                        result,
+                        e,
                     )
-                except Exception as e:
-                    log_debug("%s: %s", type(e).__name__, e)
-                    try:
-                        fut.set_exception(e)
-                    except InvalidStateError:
-                        logger.error(
-                            "cannot set exception for %s %s: %s",
-                            func.__name__,
-                            fut,
-                            e,
-                        )
-                task_done()
-            except Exception as e:
-                logger.error("%s for %s is broken!!!", type(self).__name__, func)
-                logger.exception(e)
-                raise
+            task_done()
