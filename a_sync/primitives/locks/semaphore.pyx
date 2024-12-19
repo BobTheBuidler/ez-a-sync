@@ -118,7 +118,8 @@ cdef class Semaphore(_DebugDaemonMixin):
     def __repr__(self) -> str:
         representation = f"<{self.__class__.__name__} name={self.decode_name()} value={self._Semaphore__value} waiters={len(self)}>"
         if self._decorated:
-            representation = f"{representation[:-1]} decorates={self._decorated}"
+            detail = next(iter(decorated)) if len(decorated := self._decorated) == 1 else decorated
+            representation = f"{representation[:-1]} decorates={detail}"
         return representation
 
     async def __aenter__(self):
