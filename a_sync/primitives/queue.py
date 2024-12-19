@@ -260,8 +260,10 @@ def log_broken(func: Callable[[Any], NoReturn]) -> Callable[[Any], NoReturn]:
             logger.error("%s for %s is broken!!!", type(self).__name__, func)
             logger.exception(e)
             raise
+
     return __worker_exc_wrap
-    
+
+
 class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     """
     A queue designed for processing tasks asynchronously with multiple workers.
