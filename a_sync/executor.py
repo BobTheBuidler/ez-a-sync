@@ -313,9 +313,11 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPool
         self.__init_mixin__()
 
 
+AsyncExecutor = Union[AsyncThreadPoolExecutor, AsyncProcessPoolExecutor]
+
 # For backward-compatibility
-ProcessPoolExecutor = AsyncProcessPoolExecutor
 ThreadPoolExecutor = AsyncThreadPoolExecutor
+ProcessPoolExecutor = AsyncProcessPoolExecutor
 
 # Pruning thread pool
 
