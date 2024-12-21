@@ -372,11 +372,6 @@ cdef class DummySemaphore(Semaphore):
         # Copy the bytes data into the char*
         strcpy(self._name, encoded_name)
 
-    def __dealloc__(self):
-        # Free the memory allocated for _name
-        if self._name is not NULL:
-            free(self._name)
-
     def __repr__(self) -> str:
         return "<{} name={}>".format(self.__class__.__name__, self.decode_name())
 
