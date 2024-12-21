@@ -396,9 +396,11 @@
 
 
 
+<span class="n">AsyncExecutor</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">AsyncThreadPoolExecutor</span><span class="p">,</span> <span class="n">AsyncProcessPoolExecutor</span><span class="p">]</span>
+
 <span class="c1"># For backward-compatibility</span>
-<span class="n">ProcessPoolExecutor</span> <span class="o">=</span> <span class="n">AsyncProcessPoolExecutor</span>
 <span class="n">ThreadPoolExecutor</span> <span class="o">=</span> <span class="n">AsyncThreadPoolExecutor</span>
+<span class="n">ProcessPoolExecutor</span> <span class="o">=</span> <span class="n">AsyncProcessPoolExecutor</span>
 
 <span class="c1"># Pruning thread pool</span>
 
