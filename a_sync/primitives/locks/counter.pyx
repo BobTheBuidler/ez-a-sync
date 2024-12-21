@@ -210,7 +210,7 @@ cdef class CounterLock(_DebugDaemonMixin):
         while self._events:
             now = time(NULL)
             self.get_logger().debug(
-                "%s is still locked after %.2fm", self, (now - start) / 60)
+                "%s is still locked after %.2fm", self, (now - start) / 60
             )
             await sleep(300)
 
