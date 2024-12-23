@@ -304,24 +304,29 @@ cdef class Semaphore(_DebugDaemonMixin):
             async def monitor():
                 await semaphore._debug_daemon()
         """
+        cdef object waiters = self._Semaphore__waiters
         cdef set decorated = self._decorated
         cdef object log = self.get_logger().debug
-        while self._Semaphore__waiters:
+        while waiters:
             await sleep(60)
-            if len(decorated) == 1:
-                log(
-                    "%s has %s waiters for %s",
-                    self,
-                    len(self),
-                    next(iter(decorated)),
-                )
-            else:
-                log(
-                    "%s has %s waiters for any of: %s",
-                    self,
-                    len(self),
-                    decorated,
-                )
+            if waiters:
+                len_decorated = len(decorated)
+                if len_decorated == 0:
+                    log("%s has %s waiters", self, len(self))
+                elif len_decorated == 1:
+                    log(
+                        "%s has %s waiters for %s",
+                        self,
+                        len(self),
+                        next(iter(decorated)),
+                    )
+                else:
+                    log(
+                        "%s has %s waiters for any of: %s",
+                        self,
+                        len(self),
+                        decorated,
+                    )
 
 
 cdef inline bint _is_not_done(fut: Future):
