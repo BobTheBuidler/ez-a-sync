@@ -207,6 +207,7 @@ cdef class CounterLock(_DebugDaemonMixin):
         """
         cdef time_t start, now 
         start = time(NULL)
+        await sleep(300)
         while self._events:
             now = time(NULL)
             self.get_logger().debug(
