@@ -389,7 +389,7 @@
     <span class="n">_closed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Indicates whether the queue is closed.&quot;&quot;&quot;</span>
 
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="s2">&quot;num_workers&quot;</span><span class="p">,</span> <span class="s2">&quot;_worker_coro&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;func&quot;</span><span class="p">,</span> <span class="s2">&quot;num_workers&quot;</span>
 
 <div class="viewcode-block" id="ProcessingQueue.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue.__init__">[docs]</a>
@@ -434,14 +434,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Optional name for the queue.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_no_futs</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">return_data</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates whether tasks will return data via futures.&quot;&quot;&quot;</span>
-
-        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_worker_coro</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Worker coroutine for processing tasks.&quot;&quot;&quot;</span>
-            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">__worker_coro</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_worker_coro</span> <span class="o">=</span> <span class="n">_worker_coro</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indicates whether tasks will return data via futures.&quot;&quot;&quot;</span></div>
 
 
     <span class="c1"># NOTE: asyncio defines both this and __str__</span>
@@ -620,8 +613,10 @@
         <span class="n">task</span><span class="o">.</span><span class="n">_workers</span> <span class="o">=</span> <span class="n">workers</span>
         <span class="k">return</span> <span class="n">task</span>
 
+<div class="viewcode-block" id="ProcessingQueue._worker_coro">
+<a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue._worker_coro">[docs]</a>
     <span class="nd">@log_broken</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">__worker_coro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_worker_coro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        The coroutine executed by worker tasks to process the queue.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -669,6 +664,7 @@
                             <span class="n">e</span><span class="p">,</span>
                         <span class="p">)</span>
                 <span class="n">task_done</span><span class="p">()</span></div>
+</div>
 
 
 
@@ -1085,8 +1081,10 @@
         <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="SmartProcessingQueue._worker_coro">
+<a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue._worker_coro">[docs]</a>
     <span class="nd">@log_broken</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">__worker_coro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_worker_coro</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Worker coroutine responsible for processing tasks in the queue.</span>
 
@@ -1096,7 +1094,7 @@
 <span class="sd">            Any: Exceptions raised during task processing are logged.</span>
 
 <span class="sd">        Example:</span>
-<span class="sd">            &gt;&gt;&gt; await queue.__worker_coro()</span>
+<span class="sd">            &gt;&gt;&gt; await queue._worker_coro()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">get_next_job</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span>
         <span class="n">func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span>
@@ -1135,6 +1133,7 @@
                         <span class="n">e</span><span class="p">,</span>
                     <span class="p">)</span>
             <span class="n">task_done</span><span class="p">()</span></div>
+</div>
 
 </pre></div>
 

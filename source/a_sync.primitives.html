@@ -1003,6 +1003,17 @@ for scenarios where task prioritization is crucial.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
+<dd><p>The coroutine executed by worker tasks to process the queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue.close">
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue.close" title="Link to this definition"></a></dt>
 <dd><p>Closes the queue, preventing further task submissions.</p>
@@ -1180,11 +1191,6 @@ the queue.</p>
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._worker_coro">
-<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 <dl class="py property">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._workers">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._workers" title="Link to this definition"></a></dt>
@@ -1334,6 +1340,17 @@ to be processed concurrently with a fixed number of workers.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._wakeup_next">
 <span class="sig-name descname"><span class="pre">_wakeup_next</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">waiters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._wakeup_next" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue._worker_coro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
+<dd><p>The coroutine executed by worker tasks to process the queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue.close">
@@ -1509,11 +1526,6 @@ the queue.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._unfinished_tasks">
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._worker_coro">
-<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -2036,6 +2048,25 @@ task execution order is influenced by the number of waiters.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#SmartProcessingQueue._worker_coro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
+<dd><p>Worker coroutine responsible for processing tasks in the queue.</p>
+<p>Retrieves tasks, executes them, and sets the results or exceptions for the futures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Any</strong> – Exceptions raised during task processing are logged.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">_worker_coro</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue.close">
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue.close" title="Link to this definition"></a></dt>
 <dd><p>Closes the queue, preventing further task submissions.</p>
@@ -2215,11 +2246,6 @@ the queue.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._unfinished_tasks">
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._worker_coro">
-<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -3631,6 +3657,17 @@ to be processed concurrently with a fixed number of workers.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue._worker_coro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
+<dd><p>The coroutine executed by worker tasks to process the queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue.close">
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.ProcessingQueue.close" title="Link to this definition"></a></dt>
 <dd><p>Closes the queue, preventing further task submissions.</p>
@@ -3804,11 +3841,6 @@ the queue.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._unfinished_tasks">
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._worker_coro">
-<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -4678,6 +4710,25 @@ task execution order is influenced by the number of waiters.</p>
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._worker_coro">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_worker_coro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#SmartProcessingQueue._worker_coro"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
+<dd><p>Worker coroutine responsible for processing tasks in the queue.</p>
+<p>Retrieves tasks, executes them, and sets the results or exceptions for the futures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Any</strong> – Exceptions raised during task processing are logged.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">_worker_coro</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue.close">
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue.close" title="Link to this definition"></a></dt>
 <dd><p>Closes the queue, preventing further task submissions.</p>
@@ -4857,11 +4908,6 @@ the queue.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._unfinished_tasks">
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._worker_coro">
-<span class="sig-name descname"><span class="pre">_worker_coro</span></span><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._worker_coro" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
