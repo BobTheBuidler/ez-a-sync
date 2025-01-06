@@ -283,7 +283,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     _closed: bool = False
     """Indicates whether the queue is closed."""
 
-    __slots__ = "func", "num_workers", "_worker_coro"
+    __slots__ = "func", "num_workers"
 
     def __init__(
         self,
@@ -328,12 +328,12 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         self._no_futs = not return_data
         """Indicates whether tasks will return data via futures."""
 
-        @wraps(func)
-        async def _worker_coro() -> NoReturn:
-            """Worker coroutine for processing tasks."""
-            return await self.__worker_coro()
+        # @wraps(func)
+        # async def _worker_coro() -> NoReturn:
+        #    """Worker coroutine for processing tasks."""
+        #    return await self._worker_coro()
 
-        self._worker_coro = _worker_coro
+        # self._worker_coro = wraps(func)(self._worker_coro)
 
     # NOTE: asyncio defines both this and __str__
     def __repr__(self) -> str:
@@ -494,7 +494,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         return task
 
     @log_broken
-    async def __worker_coro(self) -> NoReturn:
+    async def _worker_coro(self) -> NoReturn:
         """
         The coroutine executed by worker tasks to process the queue.
         """
@@ -899,7 +899,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         return args, kwargs, fut()
 
     @log_broken
-    async def __worker_coro(self) -> NoReturn:
+    async def _worker_coro(self) -> NoReturn:
         """
         Worker coroutine responsible for processing tasks in the queue.
 
@@ -909,7 +909,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             Any: Exceptions raised during task processing are logged.
 
         Example:
-            >>> await queue.__worker_coro()
+            >>> await queue._worker_coro()
         """
         get_next_job = self.get
         func = self.func
