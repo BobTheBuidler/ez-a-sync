@@ -257,7 +257,7 @@ def log_broken(func: Callable[[Any], NoReturn]) -> Callable[[Any], NoReturn]:
         try:
             return await func(self)
         except Exception as e:
-            logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
+            logger.error("%s is broken!!!", self)
             logger.exception(e)
             raise
 
