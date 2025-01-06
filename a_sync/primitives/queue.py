@@ -328,13 +328,6 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         self._no_futs = not return_data
         """Indicates whether tasks will return data via futures."""
 
-        # @wraps(func)
-        # async def _worker_coro() -> NoReturn:
-        #    """Worker coroutine for processing tasks."""
-        #    return await self._worker_coro()
-
-        # self._worker_coro = wraps(func)(self._worker_coro)
-
     # NOTE: asyncio defines both this and __str__
     def __repr__(self) -> str:
         """
