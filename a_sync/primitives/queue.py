@@ -891,7 +891,6 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         fut, args, kwargs = super()._get()
         return args, kwargs, fut()
 
-    @log_broken
     async def _worker_coro(self) -> NoReturn:
         """
         Worker coroutine responsible for processing tasks in the queue.
@@ -912,32 +911,38 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         args: P.args
         kwargs: P.kwargs
         fut: SmartFuture[V]
-        while True:
-            try:
-                args, kwargs, fut = await get_next_job()
-                if fut is None:
-                    # the weakref was already cleaned up, we don't need to process this item
-                    task_done()
-                    continue
-                log_debug("processing %s", fut)
-                result = await func(*args, **kwargs)
-                fut.set_result(result)
-            except InvalidStateError:
-                logger.error(
-                    "cannot set result for %s %s: %s",
-                    func.__name__,
-                    fut,
-                    result,
-                )
-            except Exception as e:
-                log_debug("%s: %s", type(e).__name__, e)
+        try:
+            while True:
                 try:
-                    fut.set_exception(e)
+                    args, kwargs, fut = await get_next_job()
+                    if fut is None:
+                        # the weakref was already cleaned up, we don't need to process this item
+                        task_done()
+                        continue
+                    log_debug("processing %s", fut)
+                    result = await func(*args, **kwargs)
+                    fut.set_result(result)
                 except InvalidStateError:
                     logger.error(
-                        "cannot set exception for %s %s: %s",
+                        "cannot set result for %s %s: %s",
                         func.__name__,
                         fut,
-                        e,
+                        result,
                     )
-            task_done()
+                except Exception as e:
+                    log_debug("%s: %s", type(e).__name__, e)
+                    try:
+                        fut.set_exception(e)
+                    except InvalidStateError:
+                        logger.error(
+                            "cannot set exception for %s %s: %s",
+                            func.__name__,
+                            fut,
+                            e,
+                        )
+                task_done()
+
+        except Exception as e:
+            logger.error("%s is broken!!!", self)
+            logger.exception(e)
+            raise
