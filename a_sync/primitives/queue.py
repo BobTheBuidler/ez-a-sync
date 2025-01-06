@@ -920,6 +920,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         kwargs: P.kwargs
         fut: SmartFuture[V]
         while True:
+            raise ValueError
             try:
                 args, kwargs, fut = await get_next_job()
                 if fut is None:
