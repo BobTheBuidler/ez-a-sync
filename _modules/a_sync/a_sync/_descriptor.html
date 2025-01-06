@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.a_sync._descriptor &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -84,11 +84,11 @@
 <span class="sd">    - :class:`~a_sync.a_sync.property.ASyncPropertyDescriptor`</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
 
-<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">decorator</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">decorator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync.function</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ASyncFunction</span><span class="p">,</span>
     <span class="n">ModifierManager</span><span class="p">,</span>
     <span class="n">_ModifiedMixin</span><span class="p">,</span>
@@ -96,12 +96,12 @@
 <span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskMapping</span>
 
 
 <div class="viewcode-block" id="ASyncDescriptor">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor">[docs]</a>
-<span class="k">class</span> <span class="nc">ASyncDescriptor</span><span class="p">(</span><span class="n">_ModifiedMixin</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ASyncDescriptor</span><span class="p">(</span><span class="n">_ModifiedMixin</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A descriptor base class for dual-function ASync methods and properties.</span>
 
@@ -137,7 +137,7 @@
 
 <div class="viewcode-block" id="ASyncDescriptor.__init__">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">_fget</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">],</span>
         <span class="n">field_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -175,10 +175,10 @@
         <span class="n">functools</span><span class="o">.</span><span class="n">update_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__set_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the field name when the :class:`ASyncDescriptor` is assigned to a class.</span>
 
@@ -190,7 +190,7 @@
 
 <div class="viewcode-block" id="ASyncDescriptor.map">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor.map">[docs]</a>
-    <span class="k">def</span> <span class="nf">map</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">map</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="o">**</span><span class="n">bound_method_kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskMapping[I, T]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -212,13 +212,13 @@
 <span class="sd">            instance = MyClass()</span>
 <span class="sd">            result = instance.my_method.map([1, 2, 3])</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">a_sync.task</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskMapping</span>
 
         <span class="k">return</span> <span class="n">TaskMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">instances</span><span class="p">,</span> <span class="o">**</span><span class="n">bound_method_kwargs</span><span class="p">)</span></div>
 
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
-    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that checks if all results are truthy.</span>
 
@@ -237,7 +237,7 @@
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_all</span><span class="p">)</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
-    <span class="k">def</span> <span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that checks if any result is truthy.</span>
 
@@ -256,7 +256,7 @@
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_any</span><span class="p">)</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
-    <span class="k">def</span> <span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that returns the minimum result.</span>
 
@@ -277,7 +277,7 @@
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="p">)</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
-    <span class="k">def</span> <span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that returns the maximum result.</span>
 
@@ -296,7 +296,7 @@
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">)</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">cached_property</span>
-    <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that returns the sum of results.</span>
 
@@ -318,7 +318,7 @@
 
 <div class="viewcode-block" id="ASyncDescriptor._all">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._all">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_all</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_all</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
         <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -352,7 +352,7 @@
 
 <div class="viewcode-block" id="ASyncDescriptor._any">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._any">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_any</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_any</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
         <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -386,7 +386,7 @@
 
 <div class="viewcode-block" id="ASyncDescriptor._min">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._min">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_min</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_min</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
         <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -420,7 +420,7 @@
 
 <div class="viewcode-block" id="ASyncDescriptor._max">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._max">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_max</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_max</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
         <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -454,7 +454,7 @@
 
 <div class="viewcode-block" id="ASyncDescriptor._sum">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync._descriptor.ASyncDescriptor._sum">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_sum</span><span class="p">(</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_sum</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="n">instances</span><span class="p">:</span> <span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
         <span class="n">concurrency</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -486,7 +486,7 @@
         <span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span> <span class="ow">and</span> <span class="s2">&quot;</span><span class="si">{cls}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">:</span>
                 <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="vm">__doc__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{cls}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;:class:`</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span>

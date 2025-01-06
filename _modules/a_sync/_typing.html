@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync._typing &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -135,10 +135,10 @@
 <span class="sd">    - :mod:`asyncio`</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">from</span> <span class="nn">concurrent.futures._base</span> <span class="kn">import</span> <span class="n">Executor</span>
-<span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Executor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">TYPE_CHECKING</span><span class="p">,</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">AsyncGenerator</span><span class="p">,</span>
@@ -174,10 +174,10 @@
     <span class="n">runtime_checkable</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Concatenate</span><span class="p">,</span> <span class="n">ParamSpec</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Unpack</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Concatenate</span><span class="p">,</span> <span class="n">ParamSpec</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Unpack</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">ASyncGenericBase</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">ASyncGenericBase</span>
 
     <span class="n">B</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">ASyncGenericBase</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
@@ -216,7 +216,7 @@
 
 <div class="viewcode-block" id="CoroBoundMethod">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.CoroBoundMethod">[docs]</a>
-<span class="k">class</span> <span class="nc">CoroBoundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CoroBoundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for coroutine bound methods.</span>
 
@@ -236,7 +236,7 @@
 
 <div class="viewcode-block" id="SyncBoundMethod">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.SyncBoundMethod">[docs]</a>
-<span class="k">class</span> <span class="nc">SyncBoundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SyncBoundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for synchronous bound methods.</span>
 
@@ -261,7 +261,7 @@
 <div class="viewcode-block" id="AsyncUnboundMethod">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.AsyncUnboundMethod">[docs]</a>
 <span class="nd">@runtime_checkable</span>
-<span class="k">class</span> <span class="nc">AsyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AsyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for unbound asynchronous methods.</span>
 
@@ -276,7 +276,7 @@
 <div class="viewcode-block" id="SyncUnboundMethod">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.SyncUnboundMethod">[docs]</a>
 <span class="nd">@runtime_checkable</span>
-<span class="k">class</span> <span class="nc">SyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SyncUnboundMethod</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">I</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Protocol for unbound synchronous methods.</span>
 
@@ -318,7 +318,7 @@
 
 <div class="viewcode-block" id="ModifierKwargs">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._typing.ModifierKwargs">[docs]</a>
-<span class="k">class</span> <span class="nc">ModifierKwargs</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModifierKwargs</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TypedDict for keyword arguments that modify the behavior of asynchronous operations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

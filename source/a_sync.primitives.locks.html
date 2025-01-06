@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.primitives.locks package &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -331,7 +331,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -359,7 +359,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -368,7 +368,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -671,7 +671,7 @@ set() to set the flag to true, then return True.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -699,7 +699,7 @@ set() to set the flag to true, then return True.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -708,7 +708,7 @@ set() to set the flag to true, then return True.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -1060,7 +1060,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -1088,7 +1088,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -1097,7 +1097,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -1437,7 +1437,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -1465,7 +1465,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -1474,7 +1474,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -1788,7 +1788,7 @@ async def limited():</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -1816,7 +1816,7 @@ async def limited():</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -1825,7 +1825,7 @@ async def limited():</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -2136,7 +2136,7 @@ async def limited():</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -2164,7 +2164,7 @@ async def limited():</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -2173,7 +2173,7 @@ async def limited():</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -2472,7 +2472,7 @@ async def limited():</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -2500,7 +2500,7 @@ async def limited():</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -2509,7 +2509,7 @@ async def limited():</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -2819,7 +2819,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -2847,7 +2847,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -2856,7 +2856,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -3155,7 +3155,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3183,7 +3183,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3192,7 +3192,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -3481,7 +3481,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3509,7 +3509,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3518,7 +3518,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -3819,7 +3819,7 @@ async def limited():</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3847,7 +3847,7 @@ async def limited():</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3856,7 +3856,7 @@ async def limited():</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -4203,7 +4203,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -4231,7 +4231,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -4240,7 +4240,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -4550,7 +4550,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -4578,7 +4578,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -4587,7 +4587,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -4886,7 +4886,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -4914,7 +4914,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -4923,7 +4923,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>

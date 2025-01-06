@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to ez-a-sync’s documentation! &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
@@ -118,7 +118,7 @@ config.default_sync_executor.</p></li>
 <ol class="arabic">
 <li><dl>
 <dt>As a simple decorator:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_async_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">some_async_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">some_async_fn</span><span class="p">()</span>
 <span class="go">True</span>
@@ -127,7 +127,7 @@ config.default_sync_executor.</p></li>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">some_sync_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">some_sync_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_sync_fn</span><span class="p">()</span>
 <span class="go">True</span>
@@ -140,7 +140,7 @@ config.default_sync_executor.</p></li>
 </li>
 <li><dl>
 <dt>As a decorator with default mode specified:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;sync&#39;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">some_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">()</span>
@@ -150,7 +150,7 @@ config.default_sync_executor.</p></li>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="s1">&#39;async&#39;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">some_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">()</span>
@@ -164,7 +164,7 @@ config.default_sync_executor.</p></li>
 </li>
 <li><dl>
 <dt>As a decorator with modifiers:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">some_fn</span><span class="p">():</span>
 <span class="gp">... </span>   <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -270,7 +270,7 @@ seamless usage in different contexts without changing the underlying implementat
 iterate over items, applying the filter function to each item to determine if it should be
 included in the result. The filter function can be either synchronous or asynchronous.</p>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">is_even</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">is_even</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">filtered_iterable</span> <span class="o">=</span> <span class="n">ASyncFilter</span><span class="p">(</span><span class="n">is_even</span><span class="p">,</span> <span class="n">some_async_iterable</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">filtered_iterable</span><span class="p">:</span>
@@ -458,7 +458,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <p>The ASyncGeneratorFunction class supports dynamic binding to instances, enabling it to be used as a method on class instances. When accessed as a descriptor, it automatically handles the binding to the instance, thereby allowing the wrapped async generator function to be invoked with instance context (‘self’) automatically provided. This feature is invaluable for designing classes that need to expose asynchronous generators as part of their interface while maintaining the ease of use and calling semantics similar to regular methods.</p>
 <p>By providing a unified interface to asynchronous generator functions, this class facilitates the creation of APIs that are flexible and easy to use in a wide range of asynchronous programming scenarios. It abstracts away the complexities involved in managing asynchronous generator lifecycles and invocation semantics, making it easier for developers to integrate asynchronous iteration patterns into their applications.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_async_gen</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_async_gen</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">yield</span> <span class="mi">1</span>
 <span class="gp">... </span>    <span class="k">yield</span> <span class="mi">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">async_gen_func</span> <span class="o">=</span> <span class="n">ASyncGeneratorFunction</span><span class="p">(</span><span class="n">my_async_gen</span><span class="p">)</span>

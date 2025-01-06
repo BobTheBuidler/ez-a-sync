@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.a_sync.modifiers package &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -193,20 +193,20 @@ with either an integer specifying the number of runs per minute or an
 <p class="rubric">Examples</p>
 <p>Applying a rate limit of 60 executions per minute:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@apply_rate_limit</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 </pre></div>
 </div>
 <p>Using an <code class="xref py py-class docutils literal notranslate"><span class="pre">aiolimiter.AsyncLimiter</span></code> instance:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">async_limiter</span> <span class="o">=</span> <span class="n">AsyncLimiter</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nd">@apply_rate_limit</span><span class="p">(</span><span class="n">async_limiter</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 </pre></div>
 </div>
 <p>Specifying the rate limit directly in the decorator:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@apply_rate_limit</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 </pre></div>
 </div>
@@ -235,13 +235,13 @@ implemented.</p>
 </pre></div>
 </div>
 <p>Applying modifiers to an asynchronous function:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_coro</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_coro</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">modified_coro</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">apply_async_modifiers</span><span class="p">(</span><span class="n">my_coro</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Applying modifiers to a synchronous function (no sync modifiers applied):</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">modified_function</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">apply_sync_modifiers</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
 </pre></div>
@@ -327,7 +327,7 @@ implemented.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_coro</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_coro</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">modified_coro</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">apply_async_modifiers</span><span class="p">(</span><span class="n">my_coro</span><span class="p">)</span>
@@ -355,7 +355,7 @@ implemented.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">my_function</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">ModifierKwargs</span><span class="p">())</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">modified_function</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">apply_sync_modifiers</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
@@ -693,7 +693,7 @@ a type, or an object.</p>
 </dl>
 <p class="rubric">Examples</p>
 <p>Extracting modifiers from a class:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Example</span><span class="p">:</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Example</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">cache_type</span> <span class="o">=</span> <span class="s1">&#39;memory&#39;</span>
 <span class="gp">... </span>    <span class="n">runs_per_minute</span> <span class="o">=</span> <span class="mi">60</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">get_modifiers_from</span><span class="p">(</span><span class="n">Example</span><span class="p">)</span>

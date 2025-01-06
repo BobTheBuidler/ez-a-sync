@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.a_sync.modifiers.limiter &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -72,19 +72,19 @@
   <h1>Source code for a_sync.a_sync.modifiers.limiter</h1><div class="highlight"><pre>
 <span></span><span class="c1"># mypy: disable-error-code=valid-type</span>
 <span class="c1"># mypy: disable-error-code=misc</span>
-<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 
-<span class="kn">from</span> <span class="nn">aiolimiter</span> <span class="kn">import</span> <span class="n">AsyncLimiter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiolimiter</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncLimiter</span>
 
-<span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">aliases</span><span class="p">,</span> <span class="n">exceptions</span>
-<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">aliases</span><span class="p">,</span> <span class="n">exceptions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 
 <span class="n">LimiterSpec</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">AsyncLimiter</span><span class="p">]</span>
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">apply_rate_limit</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_rate_limit</span><span class="p">(</span>
     <span class="n">runs_per_minute</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecorator</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator to apply a rate limit to an asynchronous function.</span>
@@ -107,7 +107,7 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">apply_rate_limit</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_rate_limit</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">runs_per_minute</span><span class="p">:</span> <span class="n">LimiterSpec</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
@@ -135,7 +135,7 @@
 
 <div class="viewcode-block" id="apply_rate_limit">
 <a class="viewcode-back" href="../../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.limiter.apply_rate_limit">[docs]</a>
-<span class="k">def</span> <span class="nf">apply_rate_limit</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_rate_limit</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">runs_per_minute</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LimiterSpec</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncDecoratorOrCoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
@@ -190,14 +190,14 @@
     <span class="k">elif</span> <span class="ow">not</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FunctionNotAsync</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">rate_limit_decorator</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rate_limit_decorator</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
         <span class="n">limiter</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">runs_per_minute</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">runs_per_minute</span><span class="p">,</span> <span class="n">AsyncLimiter</span><span class="p">)</span>
             <span class="k">else</span> <span class="n">AsyncLimiter</span><span class="p">(</span><span class="n">runs_per_minute</span><span class="p">)</span> <span class="k">if</span> <span class="n">runs_per_minute</span> <span class="k">else</span> <span class="n">aliases</span><span class="o">.</span><span class="n">dummy</span>
         <span class="p">)</span>
 
-        <span class="k">async</span> <span class="k">def</span> <span class="nf">rate_limit_wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">rate_limit_wrap</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
             <span class="k">async</span> <span class="k">with</span> <span class="n">limiter</span><span class="p">:</span>  <span class="c1"># type: ignore [attr-defined]</span>
                 <span class="k">return</span> <span class="k">await</span> <span class="n">coro_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 

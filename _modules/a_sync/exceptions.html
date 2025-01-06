@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.exceptions &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -73,18 +73,18 @@
 <span class="sd">This module defines custom exceptions for the a_sync library.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 
-<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync.flags</span> <span class="kn">import</span> <span class="n">VIABLE_FLAGS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync.flags</span><span class="w"> </span><span class="kn">import</span> <span class="n">VIABLE_FLAGS</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">a_sync</span> <span class="kn">import</span> <span class="n">TaskMapping</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">TaskMapping</span>
 
 
 <div class="viewcode-block" id="ASyncFlagException">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncFlagException">[docs]</a>
-<span class="k">class</span> <span class="nc">ASyncFlagException</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ASyncFlagException</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base exception class for flag-related errors in the a_sync library.</span>
 
@@ -107,7 +107,7 @@
 
 <div class="viewcode-block" id="ASyncFlagException.desc">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncFlagException.desc">[docs]</a>
-    <span class="k">def</span> <span class="nf">desc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">desc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a description of the target for the flag error message.</span>
 
@@ -132,7 +132,7 @@
 
 <div class="viewcode-block" id="NoFlagsFound">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.NoFlagsFound">[docs]</a>
-<span class="k">class</span> <span class="nc">NoFlagsFound</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NoFlagsFound</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when no viable flags are found in the target.</span>
 
@@ -148,7 +148,7 @@
 
 <div class="viewcode-block" id="NoFlagsFound.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.NoFlagsFound.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">kwargs_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">kwargs_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the NoFlagsFound exception.</span>
 
@@ -168,7 +168,7 @@
 
 <div class="viewcode-block" id="TooManyFlags">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.TooManyFlags">[docs]</a>
-<span class="k">class</span> <span class="nc">TooManyFlags</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TooManyFlags</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when multiple flags are found, but only one was expected.</span>
 
@@ -184,7 +184,7 @@
 
 <div class="viewcode-block" id="TooManyFlags.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.TooManyFlags.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">present_flags</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">present_flags</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the TooManyFlags exception.</span>
 
@@ -205,7 +205,7 @@
 
 <div class="viewcode-block" id="InvalidFlag">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlag">[docs]</a>
-<span class="k">class</span> <span class="nc">InvalidFlag</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidFlag</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when an invalid flag is encountered.</span>
 
@@ -223,7 +223,7 @@
 
 <div class="viewcode-block" id="InvalidFlag.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlag.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the InvalidFlag exception.</span>
 
@@ -242,7 +242,7 @@
 
 <div class="viewcode-block" id="InvalidFlagValue">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlagValue">[docs]</a>
-<span class="k">class</span> <span class="nc">InvalidFlagValue</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidFlagValue</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a flag has an invalid value.</span>
 
@@ -256,7 +256,7 @@
 
 <div class="viewcode-block" id="InvalidFlagValue.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.InvalidFlagValue.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">flag_value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the InvalidFlagValue exception.</span>
 
@@ -274,7 +274,7 @@
 
 <div class="viewcode-block" id="FlagNotDefined">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FlagNotDefined">[docs]</a>
-<span class="k">class</span> <span class="nc">FlagNotDefined</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FlagNotDefined</span><span class="p">(</span><span class="n">ASyncFlagException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a flag is not defined on an object.</span>
 
@@ -291,7 +291,7 @@
 
 <div class="viewcode-block" id="FlagNotDefined.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FlagNotDefined.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Type</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Type</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the FlagNotDefined exception.</span>
 
@@ -309,7 +309,7 @@
 
 <div class="viewcode-block" id="ImproperFunctionType">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ImproperFunctionType">[docs]</a>
-<span class="k">class</span> <span class="nc">ImproperFunctionType</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ImproperFunctionType</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a function that should be sync is async or vice-versa.</span>
 
@@ -322,7 +322,7 @@
 
 <div class="viewcode-block" id="FunctionNotAsync">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotAsync">[docs]</a>
-<span class="k">class</span> <span class="nc">FunctionNotAsync</span><span class="p">(</span><span class="n">ImproperFunctionType</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FunctionNotAsync</span><span class="p">(</span><span class="n">ImproperFunctionType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a function expected to be async is not.</span>
 
@@ -339,7 +339,7 @@
 
 <div class="viewcode-block" id="FunctionNotAsync.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotAsync.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the FunctionNotAsync exception.</span>
 
@@ -358,7 +358,7 @@
 
 <div class="viewcode-block" id="FunctionNotSync">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotSync">[docs]</a>
-<span class="k">class</span> <span class="nc">FunctionNotSync</span><span class="p">(</span><span class="n">ImproperFunctionType</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FunctionNotSync</span><span class="p">(</span><span class="n">ImproperFunctionType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a function expected to be sync is actually async.</span>
 
@@ -375,7 +375,7 @@
 
 <div class="viewcode-block" id="FunctionNotSync.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.FunctionNotSync.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the FunctionNotSync exception.</span>
 
@@ -394,7 +394,7 @@
 
 <div class="viewcode-block" id="ASyncRuntimeError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncRuntimeError">[docs]</a>
-<span class="k">class</span> <span class="nc">ASyncRuntimeError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ASyncRuntimeError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised for runtime errors in asynchronous operations.</span>
 
@@ -408,7 +408,7 @@
 
 <div class="viewcode-block" id="ASyncRuntimeError.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.ASyncRuntimeError.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="ne">RuntimeError</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the ASyncRuntimeError exception.</span>
 
@@ -425,7 +425,7 @@
 
 <div class="viewcode-block" id="SyncModeInAsyncContextError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.SyncModeInAsyncContextError">[docs]</a>
-<span class="k">class</span> <span class="nc">SyncModeInAsyncContextError</span><span class="p">(</span><span class="n">ASyncRuntimeError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SyncModeInAsyncContextError</span><span class="p">(</span><span class="n">ASyncRuntimeError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when synchronous code is used within an asynchronous context.</span>
 
@@ -441,7 +441,7 @@
 
 <div class="viewcode-block" id="SyncModeInAsyncContextError.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.SyncModeInAsyncContextError.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the SyncModeInAsyncContextError exception.</span>
 
@@ -459,7 +459,7 @@
 
 <div class="viewcode-block" id="MappingError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingError">[docs]</a>
-<span class="k">class</span> <span class="nc">MappingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MappingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for errors related to :class:`~TaskMapping`.</span>
 
@@ -478,7 +478,7 @@
 
 <div class="viewcode-block" id="MappingError.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingError.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="s2">&quot;TaskMapping&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="s2">&quot;TaskMapping&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the MappingError exception.</span>
 
@@ -500,7 +500,7 @@
 
 <div class="viewcode-block" id="MappingIsEmptyError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingIsEmptyError">[docs]</a>
-<span class="k">class</span> <span class="nc">MappingIsEmptyError</span><span class="p">(</span><span class="n">MappingError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MappingIsEmptyError</span><span class="p">(</span><span class="n">MappingError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a TaskMapping is empty and an operation requires it to have items.</span>
 
@@ -521,7 +521,7 @@
 
 <div class="viewcode-block" id="MappingNotEmptyError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.MappingNotEmptyError">[docs]</a>
-<span class="k">class</span> <span class="nc">MappingNotEmptyError</span><span class="p">(</span><span class="n">MappingError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MappingNotEmptyError</span><span class="p">(</span><span class="n">MappingError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when a TaskMapping is not empty and an operation requires it to be empty.</span>
 
@@ -544,7 +544,7 @@
 
 <div class="viewcode-block" id="PersistedTaskException">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.PersistedTaskException">[docs]</a>
-<span class="k">class</span> <span class="nc">PersistedTaskException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PersistedTaskException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when an exception persists in an asyncio Task.</span>
 
@@ -563,7 +563,7 @@
 
 <div class="viewcode-block" id="PersistedTaskException.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.PersistedTaskException.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the PersistedTaskException exception.</span>
 
@@ -583,7 +583,7 @@
 
 <div class="viewcode-block" id="EmptySequenceError">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.exceptions.EmptySequenceError">[docs]</a>
-<span class="k">class</span> <span class="nc">EmptySequenceError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EmptySequenceError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raised when an operation is attempted on an empty sequence but items are required.</span>
 

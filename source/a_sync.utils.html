@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.utils package &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -131,7 +131,7 @@ It handles edge cases such as early termination and exception management, ensuri
 The <code class="xref py py-class docutils literal notranslate"><span class="pre">_Done</span></code> sentinel class is used internally to signal the completion of processing.</p>
 </div>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">as_yielded</span><span class="p">(</span><span class="n">iterator1</span><span class="p">,</span> <span class="n">iterator2</span><span class="p">):</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 </pre></div>
@@ -165,7 +165,7 @@ The queue should support the <cite>put_nowait</cite> method. If None, items are 
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">await</span> <span class="n">exhaust_iterator</span><span class="p">(</span><span class="n">some_async_iterator</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="n">my_queue</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -200,7 +200,7 @@ from multiple async sources need to be processed or collected together, supporti
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">await</span> <span class="n">exhaust_iterators</span><span class="p">([</span><span class="n">iterator1</span><span class="p">,</span> <span class="n">iterator2</span><span class="p">],</span> <span class="n">queue</span><span class="o">=</span><span class="n">my_queue</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -243,7 +243,7 @@ It handles edge cases such as early termination and exception management, ensuri
 The <code class="xref py py-class docutils literal notranslate"><span class="pre">_Done</span></code> sentinel class is used internally to signal the completion of processing.</p>
 </div>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">as_yielded</span><span class="p">(</span><span class="n">iterator1</span><span class="p">,</span> <span class="n">iterator2</span><span class="p">):</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 </pre></div>
@@ -277,7 +277,7 @@ The queue should support the <cite>put_nowait</cite> method. If None, items are 
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">await</span> <span class="n">exhaust_iterator</span><span class="p">(</span><span class="n">some_async_iterator</span><span class="p">,</span> <span class="n">queue</span><span class="o">=</span><span class="n">my_queue</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -312,7 +312,7 @@ from multiple async sources need to be processed or collected together, supporti
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">():</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="k">await</span> <span class="n">exhaust_iterators</span><span class="p">([</span><span class="n">iterator1</span><span class="p">,</span> <span class="n">iterator2</span><span class="p">],</span> <span class="n">queue</span><span class="o">=</span><span class="n">my_queue</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>

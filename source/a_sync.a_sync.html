@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.a_sync package &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -671,8 +671,8 @@ which are used when functions are decorated with a_sync decorators to apply spec
 are explicitly skipped and not wrapped.</p>
 <p class="rubric">Example</p>
 <p>To create a class with asynchronous capabilities, define your class with <cite>ASyncMeta</cite> as its metaclass:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ASyncMeta</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ASyncMeta</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="s2">&quot;Hello, World!&quot;</span>
 </pre></div>
 </div>
@@ -739,8 +739,8 @@ are explicitly skipped and not wrapped.</p>
 is created for each synchronous or asynchronous context.</p>
 <p class="rubric">Example</p>
 <p>To create a singleton class with asynchronous capabilities, define your class with <cite>ASyncSingletonMeta</cite> as its metaclass:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MySingleton</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ASyncSingletonMeta</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MySingleton</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ASyncSingletonMeta</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Instance created&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -997,7 +997,7 @@ or <a class="reference external" href="https://docs.python.org/3/library/concurr
 <p>:raises strings that start with ‘p’ for <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ProcessPoolExecutor" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessPoolExecutor</span></code></a>:
 :raises or ‘t’ for <a class="reference external" href="https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code></a>.:</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;A_SYNC_EXECUTOR_TYPE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;threads&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">executor</span> <span class="o">=</span> <span class="n">get_default_executor</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">executor</span><span class="p">,</span> <span class="n">ThreadPoolExecutor</span><span class="p">)</span>
@@ -1119,7 +1119,7 @@ config.default_sync_executor.</p></li>
 <ol class="arabic">
 <li><dl>
 <dt>As a simple decorator:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_async_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">some_async_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">some_async_fn</span><span class="p">()</span>
 <span class="go">True</span>
@@ -1128,7 +1128,7 @@ config.default_sync_executor.</p></li>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">some_sync_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">some_sync_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_sync_fn</span><span class="p">()</span>
 <span class="go">True</span>
@@ -1141,7 +1141,7 @@ config.default_sync_executor.</p></li>
 </li>
 <li><dl>
 <dt>As a decorator with default mode specified:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;sync&#39;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">some_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">()</span>
@@ -1151,7 +1151,7 @@ config.default_sync_executor.</p></li>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="s1">&#39;async&#39;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">some_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">()</span>
@@ -1165,7 +1165,7 @@ config.default_sync_executor.</p></li>
 </li>
 <li><dl>
 <dt>As a decorator with modifiers:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">some_fn</span><span class="p">():</span>
 <span class="gp">... </span>   <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -3170,12 +3170,12 @@ either synchronously or asynchronously based on various conditions. It handles
 caching of bound methods and includes logic for determining whether to await
 the method call based on flags or default settings.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="nd">@ASyncMethodDescriptor</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -3235,12 +3235,12 @@ the provided flags and the method’s configuration.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="nd">@ASyncMethodDescriptor</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -3616,12 +3616,12 @@ definition (sync vs async def).</p>
 <p>This class is a specialized version of <a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethod" title="a_sync.a_sync.method.ASyncBoundMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncBoundMethod</span></code></a> that defaults to asynchronous execution.
 It overrides the <cite>__call__</cite> method to enforce asynchronous default behavior.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="nd">@ASyncMethodDescriptorAsyncDefault</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -3681,12 +3681,12 @@ the provided flags and the method’s configuration.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="nd">@ASyncMethodDescriptor</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -4062,12 +4062,12 @@ definition (sync vs async def).</p>
 <p>This class is a specialized version of <a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethod" title="a_sync.a_sync.method.ASyncBoundMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncBoundMethod</span></code></a> that defaults to synchronous execution.
 It overrides the <cite>__call__</cite> method to enforce synchronous default behavior.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="nd">@ASyncMethodDescriptorSyncDefault</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -4127,12 +4127,12 @@ the provided flags and the method’s configuration.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="nd">@ASyncMethodDescriptor</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -4518,9 +4518,9 @@ or <cite>ASyncBoundMethodAsyncDefault</cite> respectively. If neither is set, it
 attribute to decide the type of bound method to create.</p>
 <p>It also manages cache handles for bound methods and prevents setting or deleting the descriptor.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nd">@ASyncMethodDescriptor</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="s2">&quot;Hello, World!&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -4970,9 +4970,9 @@ result = await instance.my_method.sum([1, 2, 3])
 behavior for method calls. It specifically creates <cite>ASyncBoundMethodAsyncDefault</cite>
 instances, which are specialized versions of <cite>ASyncBoundMethod</cite> with asynchronous default behavior.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nd">@ASyncMethodDescriptorAsyncDefault</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="s2">&quot;Hello, World!&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -5412,9 +5412,9 @@ result = await instance.my_method.sum([1, 2, 3])
 default behavior for method calls. It specifically creates <cite>ASyncBoundMethodSyncDefault</cite>
 instances, which are specialized versions of <cite>ASyncBoundMethod</cite> with synchronous default behavior.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nd">@ASyncMethodDescriptorSyncDefault</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="s2">&quot;Hello, World!&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">obj</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -11117,21 +11117,21 @@ in <code class="xref py py-class docutils literal notranslate"><span class="pre"
 </div>
 <p class="rubric">Example</p>
 <p>Create a subclass of <cite>ASyncGenericSingleton</cite> to define specific behavior:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyAsyncSingleton</span><span class="p">(</span><span class="n">ASyncGenericSingleton</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyAsyncSingleton</span><span class="p">(</span><span class="n">ASyncGenericSingleton</span><span class="p">):</span>
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">__a_sync_flag_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__a_sync_flag_name__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;asynchronous&quot;</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">__a_sync_flag_value__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__a_sync_flag_value__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">asynchronous</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">__a_sync_default_mode__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__a_sync_default_mode__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="nd">@a_sync</span>
-    <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Method implementation</span>
 
 <span class="c1"># These will return the same synchronous instance</span>
@@ -14529,7 +14529,7 @@ config.default_sync_executor.</p></li>
 <ol class="arabic">
 <li><dl>
 <dt>As a simple decorator:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_async_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">some_async_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">some_async_fn</span><span class="p">()</span>
 <span class="go">True</span>
@@ -14538,7 +14538,7 @@ config.default_sync_executor.</p></li>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">some_sync_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">some_sync_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_sync_fn</span><span class="p">()</span>
 <span class="go">True</span>
@@ -14551,7 +14551,7 @@ config.default_sync_executor.</p></li>
 </li>
 <li><dl>
 <dt>As a decorator with default mode specified:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s1">&#39;sync&#39;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">some_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">()</span>
@@ -14561,7 +14561,7 @@ config.default_sync_executor.</p></li>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="s1">&#39;async&#39;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">some_fn</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">()</span>
@@ -14575,7 +14575,7 @@ config.default_sync_executor.</p></li>
 </li>
 <li><dl>
 <dt>As a decorator with modifiers:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@a_sync</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">async</span> <span class="k">def</span> <span class="nf">some_fn</span><span class="p">():</span>
+<span class="gp">... </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">some_fn</span><span class="p">():</span>
 <span class="gp">... </span>   <span class="k">return</span> <span class="kc">True</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_fn</span><span class="p">(</span><span class="n">sync</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

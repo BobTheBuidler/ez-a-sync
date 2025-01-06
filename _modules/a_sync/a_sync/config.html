@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.a_sync.config &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -114,12 +114,12 @@
 <span class="sd">    - :mod:`functools`: For caching mechanisms.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ProcessPoolExecutor</span><span class="p">,</span> <span class="n">ThreadPoolExecutor</span>
-<span class="kn">from</span> <span class="nn">concurrent.futures._base</span> <span class="kn">import</span> <span class="n">Executor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessPoolExecutor</span><span class="p">,</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Executor</span>
 
-<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">EXECUTOR_TYPE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;A_SYNC_EXECUTOR_TYPE&quot;</span><span class="p">,</span> <span class="s2">&quot;threads&quot;</span><span class="p">)</span>
 <span class="sd">&quot;&quot;&quot;Specifies the type of executor to use.</span>
@@ -136,7 +136,7 @@
 <div class="viewcode-block" id="get_default_executor">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync.config.get_default_executor">[docs]</a>
 <span class="nd">@functools</span><span class="o">.</span><span class="n">lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">get_default_executor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Executor</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_default_executor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Executor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the default executor based on the EXECUTOR_TYPE environment variable.</span>
 
 <span class="sd">    Returns:</span>

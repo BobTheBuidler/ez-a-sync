@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.utils.iterators &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -76,22 +76,22 @@
 <span class="sd">flow of items in an asynchronous context.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">asyncio.futures</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
-<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">DEBUG</span><span class="p">,</span> <span class="n">getLogger</span>
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">TracebackType</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio.futures</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">DEBUG</span><span class="p">,</span> <span class="n">getLogger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">TracebackType</span>
 
-<span class="kn">import</span> <span class="nn">a_sync.asyncio</span>
-<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">a_sync.primitives.queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">a_sync.asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.primitives.queue</span><span class="w"> </span><span class="kn">import</span> <span class="n">Queue</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="exhaust_iterator">
 <a class="viewcode-back" href="../../../source/a_sync.utils.html#a_sync.exhaust_iterator">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">exhaust_iterator</span><span class="p">(</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">exhaust_iterator</span><span class="p">(</span>
     <span class="n">iterator</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -129,7 +129,7 @@
 
 <div class="viewcode-block" id="exhaust_iterators">
 <a class="viewcode-back" href="../../../source/a_sync.utils.html#a_sync.exhaust_iterators">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">exhaust_iterators</span><span class="p">(</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">exhaust_iterators</span><span class="p">(</span>
     <span class="n">iterators</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">queue</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">join</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -185,9 +185,9 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span><span class="o">*</span><span class="n">iterators</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span><span class="o">*</span><span class="n">iterators</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span>
     <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
     <span class="n">iterator2</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
@@ -200,7 +200,7 @@
     <span class="n">iterator9</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T9</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T3</span><span class="p">,</span> <span class="n">T4</span><span class="p">,</span> <span class="n">T5</span><span class="p">,</span> <span class="n">T6</span><span class="p">,</span> <span class="n">T7</span><span class="p">,</span> <span class="n">T8</span><span class="p">,</span> <span class="n">T9</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span>
     <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
     <span class="n">iterator2</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
@@ -212,7 +212,7 @@
     <span class="n">iterator8</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T8</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T3</span><span class="p">,</span> <span class="n">T4</span><span class="p">,</span> <span class="n">T5</span><span class="p">,</span> <span class="n">T6</span><span class="p">,</span> <span class="n">T7</span><span class="p">,</span> <span class="n">T8</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span>
     <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
     <span class="n">iterator2</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
@@ -223,7 +223,7 @@
     <span class="n">iterator7</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T7</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T3</span><span class="p">,</span> <span class="n">T4</span><span class="p">,</span> <span class="n">T5</span><span class="p">,</span> <span class="n">T6</span><span class="p">,</span> <span class="n">T7</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span>
     <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
     <span class="n">iterator2</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
@@ -233,7 +233,7 @@
     <span class="n">iterator6</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T6</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T3</span><span class="p">,</span> <span class="n">T4</span><span class="p">,</span> <span class="n">T5</span><span class="p">,</span> <span class="n">T6</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span>
     <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
     <span class="n">iterator2</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
@@ -242,7 +242,7 @@
     <span class="n">iterator5</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T5</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T3</span><span class="p">,</span> <span class="n">T4</span><span class="p">,</span> <span class="n">T5</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span>
     <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
     <span class="n">iterator2</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
@@ -250,24 +250,24 @@
     <span class="n">iterator4</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T4</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T3</span><span class="p">,</span> <span class="n">T4</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span>
     <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
     <span class="n">iterator2</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
     <span class="n">iterator3</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T3</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T3</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span>
     <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
     <span class="n">iterator2</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span> <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">]]:</span> <span class="o">...</span>
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span>
     <span class="n">iterator0</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T0</span><span class="p">],</span>
     <span class="n">iterator1</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T1</span><span class="p">],</span>
     <span class="n">iterator2</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T2</span><span class="p">],</span>
@@ -275,7 +275,7 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T0</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T</span><span class="p">]]:</span> <span class="o">...</span>
 <div class="viewcode-block" id="as_yielded">
 <a class="viewcode-back" href="../../../source/a_sync.utils.html#a_sync.as_yielded">[docs]</a>
-<span class="k">async</span> <span class="k">def</span> <span class="nf">as_yielded</span><span class="p">(</span><span class="o">*</span><span class="n">iterators</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>  <span class="c1"># type: ignore [misc]</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">as_yielded</span><span class="p">(</span><span class="o">*</span><span class="n">iterators</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>  <span class="c1"># type: ignore [misc]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.</span>
 
@@ -308,7 +308,7 @@
     <span class="c1"># hypothesis idea: _Done should never be exposed to user, works for all desired input types</span>
     <span class="n">queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">_Done</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_as_yielded_done_callback</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_as_yielded_done_callback</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">cancelled</span><span class="p">():</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">e</span> <span class="o">:=</span> <span class="n">t</span><span class="o">.</span><span class="n">exception</span><span class="p">():</span>
@@ -338,7 +338,7 @@
                 <span class="k">del</span> <span class="n">task</span>
                 <span class="k">del</span> <span class="n">queue</span>
                 <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">_exc</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">item</span><span class="o">.</span><span class="n">_exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">_tb</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">item._exc.__cause__</span>
+                    <span class="k">raise</span> <span class="n">item</span><span class="o">.</span><span class="n">_exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">_tb</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">item._exc.__cause__</span>
                 <span class="k">return</span>
             <span class="k">yield</span> <span class="n">item</span>
 
@@ -347,7 +347,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">_Done</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_Done</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A sentinel class used to signal the completion of processing in the :func:`as_yielded` function.</span>
 
@@ -358,11 +358,11 @@
 <span class="sd">        exc (Optional[Exception]): An optional exception to be associated with the completion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_exc</span> <span class="o">=</span> <span class="n">exc</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">_tb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TracebackType</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_tb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TracebackType</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the traceback associated with the exception, if any.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exc</span><span class="o">.</span><span class="n">__traceback__</span>  <span class="c1"># type: ignore [union-attr]</span>
 

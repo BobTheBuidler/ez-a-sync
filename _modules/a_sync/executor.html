@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.executor &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -85,19 +85,19 @@
 <span class="sd">    - :mod:`concurrent.futures` for the original synchronous executor implementations.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="kn">import</span> <span class="nn">concurrent.futures</span>
-<span class="kn">import</span> <span class="nn">multiprocessing.context</span>
-<span class="kn">import</span> <span class="nn">queue</span>
-<span class="kn">import</span> <span class="nn">threading</span>
-<span class="kn">import</span> <span class="nn">weakref</span>
-<span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">sleep</span>
-<span class="kn">from</span> <span class="nn">asyncio.futures</span> <span class="kn">import</span> <span class="n">_convert_future_exc</span>
-<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">_base</span><span class="p">,</span> <span class="n">thread</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">concurrent.futures</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing.context</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">queue</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">weakref</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asyncio.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">_convert_future_exc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">_base</span><span class="p">,</span> <span class="n">thread</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span>
 
-<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">a_sync.primitives._debug</span> <span class="kn">import</span> <span class="n">_DebugDaemonMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.primitives._debug</span><span class="w"> </span><span class="kn">import</span> <span class="n">_DebugDaemonMixin</span>
 
 
 <span class="n">TEN_MINUTES</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">10</span>
@@ -105,7 +105,7 @@
 <span class="n">Initializer</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="nb">object</span><span class="p">]</span>
 
 
-<span class="k">class</span> <span class="nc">_AsyncExecutorMixin</span><span class="p">(</span><span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Executor</span><span class="p">,</span> <span class="n">_DebugDaemonMixin</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_AsyncExecutorMixin</span><span class="p">(</span><span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Executor</span><span class="p">,</span> <span class="n">_DebugDaemonMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A mixin for Executors to provide asynchronous run and submit methods.</span>
 
@@ -138,7 +138,7 @@
 
     <span class="vm">__slots__</span> <span class="o">=</span> <span class="s2">&quot;_max_workers&quot;</span><span class="p">,</span> <span class="s2">&quot;_initializer&quot;</span><span class="p">,</span> <span class="s2">&quot;_initargs&quot;</span><span class="p">,</span> <span class="s2">&quot;_broken&quot;</span><span class="p">,</span> <span class="s2">&quot;_shutdown_lock&quot;</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A shorthand way to call `await asyncio.get_event_loop().run_in_executor(this_executor, fn, *args)`.</span>
 <span class="sd">        Doesn&#39;t `await this_executor.run(fn, *args)` look so much better?</span>
@@ -161,7 +161,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span> <span class="k">else</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[T]&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore [override]</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[T]&quot;</span><span class="p">:</span>  <span class="c1"># type: ignore [override]</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.</span>
 
@@ -196,7 +196,7 @@
             <span class="c1">#</span>
             <span class="c1"># fut.add_done_callback(_call_check_cancel)</span>
 
-            <span class="k">def</span> <span class="nf">_call_copy_future_state</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">:</span> <span class="s2">&quot;concurrent.futures.Future&quot;</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_call_copy_future_state</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">:</span> <span class="s2">&quot;concurrent.futures.Future&quot;</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">_fut_is_cancelled</span><span class="p">(</span><span class="n">fut</span><span class="p">):</span>
                     <span class="k">return</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_call_soon_threadsafe</span><span class="p">(</span>
@@ -209,17 +209,17 @@
 
         <span class="k">return</span> <span class="n">fut</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">worker_info</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">worker_count_current</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="si">}</span><span class="s2">]&quot;</span>
         <span class="n">identifier</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_thread_name_prefix&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hex</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">identifier</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">worker_info</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="c1"># NOTE: should this be queue length instead? probably</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">worker_count_current</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">worker_count_current</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">worker_count_current</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the current number of workers.</span>
 
@@ -228,14 +228,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">__init_mixin__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__init_mixin__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">==</span> <span class="mi">0</span>
         <span class="n">loop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_loop</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_future</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_super_submit</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">submit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_call_soon_threadsafe</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">call_soon_threadsafe</span>
 
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs until manually cancelled by the finished work item.</span>
 
@@ -276,7 +276,7 @@
 
 <div class="viewcode-block" id="AsyncProcessPoolExecutor">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncProcessPoolExecutor">[docs]</a>
-<span class="k">class</span> <span class="nc">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ProcessPoolExecutor</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AsyncProcessPoolExecutor</span><span class="p">(</span><span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ProcessPoolExecutor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A :class:`concurrent.futures.ProcessPoolExecutor&#39; subclass providing asynchronous</span>
 <span class="sd">    run and submit methods that support kwargs, with support for synchronous mode</span>
@@ -305,7 +305,7 @@
 
 <div class="viewcode-block" id="AsyncProcessPoolExecutor.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncProcessPoolExecutor.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_workers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">mp_context</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">multiprocessing</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">BaseContext</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -341,7 +341,7 @@
 
 <div class="viewcode-block" id="AsyncThreadPoolExecutor">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncThreadPoolExecutor">[docs]</a>
-<span class="k">class</span> <span class="nc">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AsyncThreadPoolExecutor</span><span class="p">(</span><span class="n">_AsyncExecutorMixin</span><span class="p">,</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A :class:`concurrent.futures.ThreadPoolExecutor&#39; subclass providing asynchronous</span>
 <span class="sd">    run and submit methods that support kwargs, with support for synchronous mode</span>
@@ -365,7 +365,7 @@
 
 <div class="viewcode-block" id="AsyncThreadPoolExecutor.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.AsyncThreadPoolExecutor.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_workers</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">thread_name_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -405,7 +405,7 @@
 <span class="c1"># Pruning thread pool</span>
 
 
-<span class="k">def</span> <span class="nf">_worker</span><span class="p">(</span><span class="n">executor_reference</span><span class="p">,</span> <span class="n">work_queue</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>  <span class="c1"># NOTE: NEW &#39;timeout&#39;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_worker</span><span class="p">(</span><span class="n">executor_reference</span><span class="p">,</span> <span class="n">work_queue</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>  <span class="c1"># NOTE: NEW &#39;timeout&#39;</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Worker function for the PruningThreadPoolExecutor.</span>
 
@@ -480,7 +480,7 @@
 
 <div class="viewcode-block" id="PruningThreadPoolExecutor">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.PruningThreadPoolExecutor">[docs]</a>
-<span class="k">class</span> <span class="nc">PruningThreadPoolExecutor</span><span class="p">(</span><span class="n">AsyncThreadPoolExecutor</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PruningThreadPoolExecutor</span><span class="p">(</span><span class="n">AsyncThreadPoolExecutor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This :class:`~AsyncThreadPoolExecutor` implementation prunes inactive threads after &#39;timeout&#39; seconds without a work item.</span>
 <span class="sd">    Pruned threads will be automatically recreated as needed for future workloads. Up to &#39;max_threads&#39; can be active at any one time.</span>
@@ -500,7 +500,7 @@
 
 <div class="viewcode-block" id="PruningThreadPoolExecutor.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.PruningThreadPoolExecutor.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">thread_name_prefix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -533,12 +533,12 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_workers</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PruningThreadPoolExecutor._adjust_thread_count">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.executor.PruningThreadPoolExecutor._adjust_thread_count">[docs]</a>
-    <span class="k">def</span> <span class="nf">_adjust_thread_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_adjust_thread_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adjusts the number of threads based on workload and idle threads.</span>
 
@@ -552,7 +552,7 @@
 
             <span class="c1"># When the executor gets lost, the weakref callback will wake up</span>
             <span class="c1"># the worker threads.</span>
-            <span class="k">def</span> <span class="nf">weakref_cb</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_work_queue</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">weakref_cb</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_work_queue</span><span class="p">):</span>
                 <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
             <span class="n">num_threads</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_threads</span><span class="p">)</span>
@@ -577,7 +577,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_copy_future_state</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">:</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_copy_future_state</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">:</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal helper to copy state from another Future.</span>
 
 <span class="sd">    The other Future may be a concurrent.futures.Future.</span>

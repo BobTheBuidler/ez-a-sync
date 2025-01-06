@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.primitives package &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -472,8 +472,8 @@
 </dl>
 <p class="rubric">Examples</p>
 <p>Implementing a simple debug daemon in a subclass:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyDebugClass</span><span class="p">(</span><span class="n">_DebugDaemonMixin</span><span class="p">):</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fut</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyDebugClass</span><span class="p">(</span><span class="n">_DebugDaemonMixin</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fut</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="n">fut</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Debugging...&quot;</span><span class="p">)</span>
             <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -593,7 +593,7 @@
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -621,7 +621,7 @@
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -630,7 +630,7 @@
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -691,7 +691,7 @@
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -719,7 +719,7 @@
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -728,7 +728,7 @@
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -780,7 +780,7 @@
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -808,7 +808,7 @@
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -817,7 +817,7 @@
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -872,7 +872,7 @@ SmartProcessingQueue: A processing queue that executes jobs with the most waiter
 higher priority tasks are processed before lower priority ones. It is ideal
 for scenarios where task prioritization is crucial.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">PriorityProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">process_task</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">item</span><span class="o">=</span><span class="s1">&#39;task&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">fut</span><span class="p">)</span>
@@ -1230,7 +1230,7 @@ the queue.</p>
 via asynchronous futures. This queue is ideal for scenarios where tasks need
 to be processed concurrently with a fixed number of workers.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">ProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">process_task</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s1">&#39;task&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">fut</span><span class="p">)</span>
@@ -1878,7 +1878,7 @@ the queue.</p>
 tasks with the most waiters are prioritized. It is ideal for scenarios where
 task execution order is influenced by the number of waiters.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">SmartProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">process_task</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s1">&#39;task&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">fut</span><span class="p">)</span>
@@ -2800,7 +2800,7 @@ the queue.</p>
 </div></blockquote>
 <p class="rubric">Examples</p>
 <p>Using a Semaphore to limit concurrent access:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">a_sync.primitives.locks</span> <span class="kn">import</span> <span class="n">Semaphore</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.primitives.locks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Semaphore</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">semaphore</span> <span class="o">=</span> <span class="n">Semaphore</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="c1"># perform some operation</span>
@@ -2808,7 +2808,7 @@ the queue.</p>
 </pre></div>
 </div>
 <p>Using a Queue to manage tasks:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">a_sync.primitives.queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.primitives.queue</span><span class="w"> </span><span class="kn">import</span> <span class="n">Queue</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s1">&#39;task1&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">task</span> <span class="o">=</span> <span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
@@ -3048,7 +3048,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3076,7 +3076,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3085,7 +3085,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -3439,7 +3439,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3467,7 +3467,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -3476,7 +3476,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -3525,7 +3525,7 @@ become larger than zero again, wake up that coroutine.</p>
 via asynchronous futures. This queue is ideal for scenarios where tasks need
 to be processed concurrently with a fixed number of workers.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">ProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">process_task</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s1">&#39;task&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">fut</span><span class="p">)</span>
@@ -4434,7 +4434,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -4462,7 +4462,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -4471,7 +4471,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>
@@ -4520,7 +4520,7 @@ become larger than zero again, wake up that coroutine.</p>
 tasks with the most waiters are prioritized. It is ideal for scenarios where
 task execution order is influenced by the number of waiters.</p>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">process_task</span><span class="p">(</span><span class="n">data</span><span class="p">):</span> <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">SmartProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">process_task</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">item</span><span class="o">=</span><span class="s1">&#39;task&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="k">await</span> <span class="n">fut</span><span class="p">)</span>
@@ -5159,7 +5159,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dd><p>bool</p>
 <p>Checks if debug logging is enabled for the logger.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -5187,7 +5187,7 @@ become larger than zero again, wake up that coroutine.</p>
 <p>Provides a logger instance specific to the class using this mixin.</p>
 <p>The logger ID is constructed from the module and class name, and optionally includes an instance name if available.</p>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;example&quot;</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">instance</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
@@ -5196,7 +5196,7 @@ become larger than zero again, wake up that coroutine.</p>
 <span class="go">&#39;module_name.MyClass.example&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">AnotherClass</span><span class="p">(</span><span class="n">_LoggerMixin</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">pass</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">another_instance</span> <span class="o">=</span> <span class="n">AnotherClass</span><span class="p">()</span>

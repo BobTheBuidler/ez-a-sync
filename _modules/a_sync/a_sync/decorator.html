@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.a_sync.decorator &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -71,9 +71,9 @@
   <h1>Source code for a_sync.a_sync.decorator</h1><div class="highlight"><pre>
 <span></span><span class="c1"># mypy: disable-error-code=valid-type</span>
 <span class="c1"># mypy: disable-error-code=misc</span>
-<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync</span> <span class="kn">import</span> <span class="n">config</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync.function</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync.function</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ASyncDecorator</span><span class="p">,</span>
     <span class="n">ASyncFunction</span><span class="p">,</span>
     <span class="n">ASyncDecoratorAsyncDefault</span><span class="p">,</span>
@@ -96,7 +96,7 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorAsyncDefault</span><span class="p">:</span>
@@ -124,7 +124,7 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorSyncDefault</span><span class="p">:</span>
@@ -152,7 +152,7 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecorator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -178,7 +178,7 @@
 
 
 <span class="nd">@overload</span>  <span class="c1"># async def, None default</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -208,7 +208,7 @@
 
 
 <span class="nd">@overload</span>  <span class="c1"># sync def none default</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -238,7 +238,7 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -268,7 +268,7 @@
 
 
 <span class="nd">@overload</span>  <span class="c1"># if you try to use default as the only arg</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -298,7 +298,7 @@
 
 
 <span class="nd">@overload</span>  <span class="c1"># async def, async default</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -328,7 +328,7 @@
 
 
 <span class="nd">@overload</span>  <span class="c1"># sync def async default</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -358,7 +358,7 @@
 
 
 <span class="nd">@overload</span>  <span class="c1"># async def, sync default</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -388,7 +388,7 @@
 
 
 <span class="nd">@overload</span>  <span class="c1"># sync def sync default</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">SyncFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -418,7 +418,7 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -448,7 +448,7 @@
 
 
 <span class="nd">@overload</span>  <span class="c1"># if you try to use default as the only arg</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -478,7 +478,7 @@
 
 
 <span class="nd">@overload</span>  <span class="c1"># if you try to use default as the only arg</span>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
@@ -510,7 +510,7 @@
 <span class="c1"># catchall</span>
 <div class="viewcode-block" id="a_sync">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.html#a_sync.a_sync">[docs]</a>
-<span class="k">def</span> <span class="nf">a_sync</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AnyFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_MODE</span><span class="p">,</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span>

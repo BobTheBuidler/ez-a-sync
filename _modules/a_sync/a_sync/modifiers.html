@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.a_sync.modifiers &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -96,16 +96,16 @@
 <span class="sd">    - :mod:`a_sync.a_sync.modifiers.semaphores`</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">aiolimiter</span> <span class="kn">import</span> <span class="n">AsyncLimiter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">aiolimiter</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncLimiter</span>
 
-<span class="kn">from</span> <span class="nn">a_sync._typing</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">a_sync.primitives.locks</span> <span class="kn">import</span> <span class="n">ThreadsafeSemaphore</span>
-<span class="kn">from</span> <span class="nn">a_sync.a_sync.modifiers.manager</span> <span class="kn">import</span> <span class="n">valid_modifiers</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.primitives.locks</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadsafeSemaphore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync.modifiers.manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">valid_modifiers</span>
 
 
 <div class="viewcode-block" id="get_modifiers_from">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.get_modifiers_from">[docs]</a>
-<span class="k">def</span> <span class="nf">get_modifiers_from</span><span class="p">(</span><span class="n">thing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ModifierKwargs</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_modifiers_from</span><span class="p">(</span><span class="n">thing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="nb">object</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ModifierKwargs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts valid modifiers from a given object, type, or dictionary.</span>
 
 <span class="sd">    Args:</span>
@@ -142,7 +142,7 @@
 
 <div class="viewcode-block" id="apply_class_defined_modifiers">
 <a class="viewcode-back" href="../../../source/a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.apply_class_defined_modifiers">[docs]</a>
-<span class="k">def</span> <span class="nf">apply_class_defined_modifiers</span><span class="p">(</span><span class="n">attrs_from_metaclass</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_class_defined_modifiers</span><span class="p">(</span><span class="n">attrs_from_metaclass</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Applies class-defined modifiers to a dictionary of attributes.</span>
 
 <span class="sd">    This function modifies the input dictionary in place. If the &#39;semaphore&#39; key</span>

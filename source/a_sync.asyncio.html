@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>a_sync.asyncio package &mdash; ez-a-sync  documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -223,13 +223,13 @@ Exceptions are wrapped in <code class="xref py py-class docutils literal notrans
 </dl>
 <p class="rubric">Examples</p>
 <p>Create a simple task with a coroutine:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_coroutine</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_coroutine</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="s2">&quot;Hello, World!&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">task</span> <span class="o">=</span> <span class="n">create_task</span><span class="p">(</span><span class="n">my_coroutine</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>Create a task with a non-coroutine Awaitable:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">Future</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Future</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">Future</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">task</span> <span class="o">=</span> <span class="n">create_task</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
 </pre></div>
@@ -455,13 +455,13 @@ Exceptions are wrapped in <code class="xref py py-class docutils literal notrans
 </dl>
 <p class="rubric">Examples</p>
 <p>Create a simple task with a coroutine:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">my_coroutine</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_coroutine</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="s2">&quot;Hello, World!&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">task</span> <span class="o">=</span> <span class="n">create_task</span><span class="p">(</span><span class="n">my_coroutine</span><span class="p">())</span>
 </pre></div>
 </div>
 <p>Create a task with a non-coroutine Awaitable:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">Future</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Future</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">future</span> <span class="o">=</span> <span class="n">Future</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">task</span> <span class="o">=</span> <span class="n">create_task</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
 </pre></div>
