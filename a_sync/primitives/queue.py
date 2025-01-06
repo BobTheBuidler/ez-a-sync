@@ -941,7 +941,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                             e,
                         )
                 task_done()
-        
+
         except Exception as e:
             logger.error("%s is broken!!!", self)
             logger.exception(e)
