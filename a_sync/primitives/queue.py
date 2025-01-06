@@ -253,11 +253,11 @@ class Queue(_Queue[T]):
 
 def log_broken(func: Callable[[Any], NoReturn]) -> Callable[[Any], NoReturn]:
     @wraps(func)
-    async def __worker_exc_wrap(self):
+    async def __worker_exc_wrap(self: "ProcessingQueue"):
         try:
             return await func(self)
         except Exception as e:
-            logger.error("%s for %s is broken!!!", type(self).__name__, func)
+            logger.error("%s for %s is broken!!!", type(self).__name__, self.func)
             logger.exception(e)
             raise
 
