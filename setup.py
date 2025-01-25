@@ -6,7 +6,7 @@ with open("requirements.txt", "r") as f:
 
 setup(
     name="ez-a-sync",
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests", "tests.*"]),
     use_scm_version={
         "root": ".",
         "relative_to": __file__,
