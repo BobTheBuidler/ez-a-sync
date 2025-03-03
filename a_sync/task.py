@@ -295,6 +295,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         pop: bool = True,
         yields: Literal["keys", "both"] = "both",
     ) -> AsyncIterator[Tuple[K, V]]:
+        # sourcery skip: hoist-similar-statement-from-if
         """
         Asynchronously map iterables to tasks and yield their results.
 
@@ -387,6 +388,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @ASyncMethodDescriptorSyncDefault
     async def max(self, pop: bool = True) -> V:
+        # sourcery skip: avoid-builtin-shadow
         max = None
         try:
             async for key, result in self.__aiter__(pop=pop):
@@ -400,6 +402,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @ASyncMethodDescriptorSyncDefault
     async def min(self, pop: bool = True) -> V:
+        # sourcery skip: avoid-builtin-shadow
         """Return the minimum result from the tasks in the mapping."""
         min = None
         try:
@@ -519,6 +522,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
     @functools.cached_property
     def _init_loader(self) -> Optional["asyncio.Task[None]"]:
+        # sourcery skip: raise-from-previous-error
         if self.__init_loader_coro:
             logger.debug("starting %s init loader", self)
             try:
@@ -798,15 +802,16 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         mapping = self.__mapping__
         mapping._if_pop_check_destroyed(self._pop)
         yielded = set()
+        add_yielded = yielded.add
         for key in self.__load_existing():
-            yielded.add(key)
+            add_yielded(key)
             # there is no chance of duplicate keys here
             yield key
         if mapping._init_loader is None:
             await mapping._if_pop_clear(self._pop)
             return
         async for key in self.__load_init_loader(yielded):
-            yielded.add(key)
+            add_yielded(key)
             yield key
         if self._pop:
             # don't need to check yielded since we've been popping them as we go
@@ -831,6 +836,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
                 yield key
 
     async def __load_init_loader(self, yielded: Set[K]) -> AsyncIterator[K]:
+        # sourcery skip: hoist-loop-from-if
         # strongref
         mapping = self.__mapping__
         if self._pop:
