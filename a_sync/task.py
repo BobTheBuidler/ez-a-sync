@@ -242,7 +242,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 while not self._init_loader.done():
                     await self._wait_for_next_key()
                     while unyielded := tuple(key for key in self if key not in yielded):
-                        if ready := {key: task for key in unyielded if (task := self[key]).done()}:
+                        if ready := tuple(key for key in unyielded if self[key].done()):
                             if pop:
                                 for key in ready:
                                     yield key, self.pop(key).result()
@@ -612,9 +612,10 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             ],
             return_when=asyncio.FIRST_COMPLETED,
         )
+        task: asyncio.Task
         for task in done:
             # check for exceptions
-            await task
+            task.result()
 
     def __start_task(self, item: K) -> "asyncio.Future[V]":
         if self.concurrency:
