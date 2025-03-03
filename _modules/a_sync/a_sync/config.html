@@ -76,8 +76,8 @@
 
 <span class="sd">Environment Variables:</span>
 <span class="sd">    :obj:`~A_SYNC_EXECUTOR_TYPE`: Specifies the type of executor to use. Valid values are</span>
-<span class="sd">        strings that start with &#39;p&#39; for :class:`~concurrent.futures.ProcessPoolExecutor` </span>
-<span class="sd">        (e.g., &#39;processes&#39;) or &#39;t&#39; for :class:`~concurrent.futures.ThreadPoolExecutor` </span>
+<span class="sd">        strings that start with &#39;p&#39; for :class:`~concurrent.futures.ProcessPoolExecutor`</span>
+<span class="sd">        (e.g., &#39;processes&#39;) or &#39;t&#39; for :class:`~concurrent.futures.ThreadPoolExecutor`</span>
 <span class="sd">        (e.g., &#39;threads&#39;). Defaults to &#39;threads&#39;.</span>
 <span class="sd">    :obj:`~A_SYNC_EXECUTOR_VALUE`: Specifies the number of workers for the executor.</span>
 <span class="sd">        Defaults to 8.</span>
@@ -86,14 +86,14 @@
 <span class="sd">    :obj:`~A_SYNC_CACHE_TYPED`: Boolean flag to determine if cache keys should consider types.</span>
 <span class="sd">    :obj:`~A_SYNC_RAM_CACHE_MAXSIZE`: Sets the maximum size for the RAM cache. Defaults to -1.</span>
 <span class="sd">    :obj:`~A_SYNC_RAM_CACHE_TTL`: Sets the time-to-live for cache entries. If not specified,</span>
-<span class="sd">        defaults to 0, which is then checked against `null_modifiers[&quot;ram_cache_ttl&quot;]` </span>
+<span class="sd">        defaults to 0, which is then checked against `null_modifiers[&quot;ram_cache_ttl&quot;]`</span>
 <span class="sd">        to potentially set it to `None`, meaning cache entries do not expire by default.</span>
 <span class="sd">    :obj:`~A_SYNC_RUNS_PER_MINUTE`: Sets the rate limit for function execution.</span>
 <span class="sd">    :obj:`~A_SYNC_SEMAPHORE`: Sets the semaphore limit for function execution.</span>
 
 <span class="sd">Examples:</span>
 <span class="sd">    To set the executor type to use threads with 4 workers, set the environment variables:</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. code-block:: bash</span>
 
 <span class="sd">        export A_SYNC_EXECUTOR_TYPE=threads</span>

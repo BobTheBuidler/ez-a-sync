@@ -72,18 +72,18 @@
 <span></span><span class="c1"># type: ignore [var-annotated]</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">The `future.py` module provides functionality for handling asynchronous futures, </span>
-<span class="sd">including a decorator for converting callables into `ASyncFuture` objects and </span>
+<span class="sd">The `future.py` module provides functionality for handling asynchronous futures,</span>
+<span class="sd">including a decorator for converting callables into `ASyncFuture` objects and</span>
 <span class="sd">utilities for managing asynchronous computations.</span>
 
 <span class="sd">Functions:</span>
-<span class="sd">    future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]) -&gt; Callable[P, Union[T, &quot;ASyncFuture[T]&quot;]]: </span>
+<span class="sd">    future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]) -&gt; Callable[P, Union[T, &quot;ASyncFuture[T]&quot;]]:</span>
 <span class="sd">        A decorator to convert a callable into an `ASyncFuture`, with optional modifiers.</span>
-<span class="sd">    _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -&gt; List[T]: </span>
+<span class="sd">    _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -&gt; List[T]:</span>
 <span class="sd">        Gathers and materializes a list of awaitable or non-awaitable items.</span>
-<span class="sd">    _check_and_materialize(thing: T) -&gt; T: </span>
+<span class="sd">    _check_and_materialize(thing: T) -&gt; T:</span>
 <span class="sd">        Checks if an item is awaitable and materializes it.</span>
-<span class="sd">    _materialize(meta: &quot;ASyncFuture[T]&quot;) -&gt; T: </span>
+<span class="sd">    _materialize(meta: &quot;ASyncFuture[T]&quot;) -&gt; T:</span>
 <span class="sd">        Materializes the result of an `ASyncFuture`.</span>
 
 <span class="sd">Classes:</span>
