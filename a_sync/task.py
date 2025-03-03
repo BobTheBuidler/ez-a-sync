@@ -9,14 +9,12 @@ The main components include:
 """
 
 import asyncio
-import contextlib
 import functools
 import inspect
 import logging
 import weakref
 from itertools import filterfalse
 
-import a_sync.asyncio
 from a_sync import exceptions
 from a_sync._typing import *
 from a_sync.a_sync import _kwargs
