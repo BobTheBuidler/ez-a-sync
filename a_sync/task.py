@@ -248,8 +248,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                                     yield key, self.pop(key).result()
                                     yielded.add(key)
                             else:
-                                for key, task in ready.items():
-                                    yield key, await task
+                                for key in ready:
+                                    yield key, self[key].result()
                                     yielded.add(key)
                         else:
                             await self._next.wait()
