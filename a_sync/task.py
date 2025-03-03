@@ -228,7 +228,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
     async def __aiter__(self, pop: bool = False) -> AsyncIterator[Tuple[K, V]]:
         # sourcery skip: hoist-loop-from-if, hoist-similar-statement-from-if, hoist-statement-from-if
         """Asynchronously iterate through all key-task pairs, yielding the key-result pair as each task completes."""
-        
+
         self._if_pop_check_destroyed(pop)
 
         # if you inited the TaskMapping with some iterators, we will load those
@@ -689,7 +689,7 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
     """
     if not iterable:
         raise _EmptySequenceError(iterable)
-    
+
     elif isinstance(iterable, AsyncIterable):
         async for key in iterable:
             yield key
@@ -721,7 +721,7 @@ __unwrapped = weakref.WeakKeyDictionary()
 def _unwrap(
     wrapped_func: Union[
         AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[I, T]
-    ]
+    ],
 ) -> Callable[P, Awaitable[T]]:
     if unwrapped := __unwrapped.get(wrapped_func):
         return unwrapped

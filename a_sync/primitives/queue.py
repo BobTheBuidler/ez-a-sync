@@ -1,5 +1,5 @@
 """
-This module provides various queue implementations for managing asynchronous tasks. 
+This module provides various queue implementations for managing asynchronous tasks.
 It includes standard FIFO queues, priority queues, and processing queues with enhanced functionality.
 
 Classes:

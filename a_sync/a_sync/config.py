@@ -5,8 +5,8 @@ and handling environment variable configurations.
 
 Environment Variables:
     :obj:`~A_SYNC_EXECUTOR_TYPE`: Specifies the type of executor to use. Valid values are
-        strings that start with 'p' for :class:`~concurrent.futures.ProcessPoolExecutor` 
-        (e.g., 'processes') or 't' for :class:`~concurrent.futures.ThreadPoolExecutor` 
+        strings that start with 'p' for :class:`~concurrent.futures.ProcessPoolExecutor`
+        (e.g., 'processes') or 't' for :class:`~concurrent.futures.ThreadPoolExecutor`
         (e.g., 'threads'). Defaults to 'threads'.
     :obj:`~A_SYNC_EXECUTOR_VALUE`: Specifies the number of workers for the executor.
         Defaults to 8.
@@ -15,14 +15,14 @@ Environment Variables:
     :obj:`~A_SYNC_CACHE_TYPED`: Boolean flag to determine if cache keys should consider types.
     :obj:`~A_SYNC_RAM_CACHE_MAXSIZE`: Sets the maximum size for the RAM cache. Defaults to -1.
     :obj:`~A_SYNC_RAM_CACHE_TTL`: Sets the time-to-live for cache entries. If not specified,
-        defaults to 0, which is then checked against `null_modifiers["ram_cache_ttl"]` 
+        defaults to 0, which is then checked against `null_modifiers["ram_cache_ttl"]`
         to potentially set it to `None`, meaning cache entries do not expire by default.
     :obj:`~A_SYNC_RUNS_PER_MINUTE`: Sets the rate limit for function execution.
     :obj:`~A_SYNC_SEMAPHORE`: Sets the semaphore limit for function execution.
 
 Examples:
     To set the executor type to use threads with 4 workers, set the environment variables:
-    
+
     .. code-block:: bash
 
         export A_SYNC_EXECUTOR_TYPE=threads

@@ -1,6 +1,6 @@
 """
-This module provides utility functions for handling and merging asynchronous iterators. It includes functions to 
-exhaust async iterators, merge multiple async iterators into a single async iterator, and manage the processing 
+This module provides utility functions for handling and merging asynchronous iterators. It includes functions to
+exhaust async iterators, merge multiple async iterators into a single async iterator, and manage the processing
 flow of items in an asynchronous context.
 """
 
