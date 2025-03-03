@@ -2,7 +2,7 @@
 """
 This module provides an enhanced version of :func:`asyncio.gather`.
 """
-
+from itertools import filterfalse
 from typing import Any, Awaitable, Dict, List, Mapping, Union, overload
 
 from a_sync._typing import *
@@ -137,14 +137,14 @@ async def gather(
         )
     elif tqdm:
         results = await tqdm_asyncio.gather(
-            *((_exc_wrap(a) for a in awaitables) if return_exceptions else awaitables),
+            *(map(_exc_wrap, awaitables) if return_exceptions else awaitables),
             **tqdm_kwargs,
         )
     else:
         results = await asyncio.gather(*awaitables, return_exceptions=return_exceptions)
 
     if exclude_if and not is_mapping:
-        return [r for r in results if not exclude_if(r)]
+        return list(filterfalse(exclude_if, results))
 
     return results
 
