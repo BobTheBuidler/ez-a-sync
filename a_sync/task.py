@@ -438,13 +438,13 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 print(f"Completed {key}: {result}")
         """
         if pop:
-            for k, task in dict(self).items():
-                if task.done():
-                    yield k, await self.pop(k)
+            for k in tuple(k for k in self if self[k].done()):
+                yield k, self.pop(k).result()
         else:
-            for k, task in dict(self).items():
+            task: asyncio.Task
+            for k, task in dict.items(self):
                 if task.done():
-                    yield k, await task
+                    yield k, task.result()
 
     @ASyncMethodDescriptorSyncDefault
     async def gather(
@@ -698,7 +698,7 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
     elif inspect.isawaitable(iterable):
         async for key in _yield_keys(await iterable):
             yield key
-            
+
     else:
         raise TypeError(iterable)
 
