@@ -84,6 +84,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">weakref</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">sleep</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">filterfalse</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">exceptions</span>
@@ -751,7 +752,7 @@
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="n">cancel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="c1"># we need to let the loop run once so the tasks can fully cancel</span>
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+            <span class="k">await</span> <span class="n">sleep</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TaskMapping._wait_for_next_key">
@@ -847,7 +848,7 @@
             <span class="k">nonlocal</span> <span class="n">yielded</span>
             <span class="n">yielded</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">yielded</span> <span class="o">%</span> <span class="mi">1000</span><span class="p">:</span>  <span class="c1"># arbitrary number, should be adjusted later</span>
-                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">sleep</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">key</span>
