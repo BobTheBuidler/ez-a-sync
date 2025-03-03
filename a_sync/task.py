@@ -677,15 +677,28 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
     """
     if not iterable:
         raise _EmptySequenceError(iterable)
+    
     elif isinstance(iterable, AsyncIterable):
         async for key in iterable:
             yield key
+
     elif isinstance(iterable, Iterable):
+        yielded = 0
+
+        async def unblock_loop() -> None:
+            nonlocal yielded
+            yielded += 1
+            if not yielded % 1000:  # arbitrary number, should be adjusted later
+                await asyncio.sleep(0)
+
         for key in iterable:
             yield key
+            await unblock_loop()
+
     elif inspect.isawaitable(iterable):
         async for key in _yield_keys(await iterable):
             yield key
+            
     else:
         raise TypeError(iterable)
 
