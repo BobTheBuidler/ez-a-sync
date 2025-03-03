@@ -234,23 +234,26 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
         # if you inited the TaskMapping with some iterators, we will load those
         yielded = set()
+        add_yielded = yielded.add
         try:
             if self._init_loader is None:
                 # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
                 self._raise_if_empty()
             else:
+                if pop:
+                    self_pop = self.pop
                 while not self._init_loader.done():
                     await self._wait_for_next_key()
                     while unyielded := tuple(key for key in self if key not in yielded):
                         if ready := tuple(key for key in unyielded if self[key].done()):
                             if pop:
                                 for key in ready:
-                                    yield key, self.pop(key).result()
-                                    yielded.add(key)
+                                    yield key, self_pop(key).result()
+                                    add_yielded(key)
                             else:
                                 for key in ready:
                                     yield key, self[key].result()
-                                    yielded.add(key)
+                                    add_yielded(key)
                         else:
                             await self._next.wait()
                 # loader is already done by this point, but we need to check for exceptions
@@ -259,7 +262,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             if unyielded := {key: self[key] for key in self if key not in yielded}:
                 if pop:
                     async for key, value in as_completed(unyielded, aiter=True):
-                        self.pop(key)
+                        self_pop(key)
                         yield key, value
                 else:
                     async for key, value in as_completed(unyielded, aiter=True):
@@ -348,8 +351,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
             if self:
                 if pop:
+                    self_pop = self.pop
                     async for key, value in as_completed(self, aiter=True):
-                        self.pop(key)
+                        self_pop(key)
                         yield _yield(key, value, yields)
                 else:
                     async for key, value in as_completed(self, aiter=True):
@@ -440,8 +444,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 print(f"Completed {key}: {result}")
         """
         if pop:
+            self_pop = self.pop
             for k in tuple(k for k in self if self[k].done()):
-                yield k, self.pop(k).result()
+                yield k, self_pop(k).result()
         else:
             task: asyncio.Task
             for k, task in dict.items(self):
@@ -508,8 +513,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             self._init_loader.cancel()
         if keys := tuple(self.keys()):
             logger.debug("popping remaining %s tasks", self)
+            pop = self.pop
             for k in keys:
-                self.pop(k, cancel=cancel)
+                pop(k, cancel=cancel)
 
     @functools.cached_property
     def _init_loader(self) -> Optional["asyncio.Task[None]"]:
@@ -816,8 +822,9 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         # strongref
         mapping = self.__mapping__
         if self._pop:
+            pop = mapping.pop
             for key in tuple(mapping):
-                mapping.pop(key)
+                pop(key)
                 yield key
         else:
             for key in tuple(mapping):
@@ -853,8 +860,9 @@ class TaskMappingItems(_TaskMappingView[Tuple[K, V], K, V], Generic[K, V]):
         mapping = self.__mapping__
         mapping._if_pop_check_destroyed(self._pop)
         if self._pop:
+            pop = mapping.pop
             async for key in mapping.keys():
-                yield key, await mapping.pop(key)
+                yield key, await pop(key)
         else:
             async for key in mapping.keys():
                 yield key, await mapping[key]
@@ -872,8 +880,9 @@ class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
         mapping = self.__mapping__
         mapping._if_pop_check_destroyed(self._pop)
         if self._pop:
+            pop = mapping.pop
             async for key in mapping.keys():
-                yield await mapping.pop(key)
+                yield await pop(key)
         else:
             async for key in mapping.keys():
                 yield await mapping[key]
