@@ -227,7 +227,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         return self.gather(sync=False).__await__()
 
     async def __aiter__(self, pop: bool = False) -> AsyncIterator[Tuple[K, V]]:
+        # sourcery skip: hoist-loop-from-if, hoist-similar-statement-from-if, hoist-statement-from-if
         """Asynchronously iterate through all key-task pairs, yielding the key-result pair as each task completes."""
+        
         self._if_pop_check_destroyed(pop)
 
         # if you inited the TaskMapping with some iterators, we will load those
@@ -239,11 +241,11 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             else:
                 while not self._init_loader.done():
                     await self._wait_for_next_key()
-                    while unyielded := [key for key in self if key not in yielded]:
+                    while unyielded := tuple(key for key in self if key not in yielded):
                         if ready := {key: task for key in unyielded if (task := self[key]).done()}:
                             if pop:
-                                for key, task in ready.items():
-                                    yield key, await self.pop(key)
+                                for key in ready:
+                                    yield key, self.pop(key).result()
                                     yielded.add(key)
                             else:
                                 for key, task in ready.items():
