@@ -13,6 +13,7 @@ import functools
 import inspect
 import logging
 import weakref
+from asyncio import sleep
 from itertools import filterfalse
 
 from a_sync import exceptions
@@ -610,7 +611,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 del self._queue
             self.clear(cancel=True)
             # we need to let the loop run once so the tasks can fully cancel
-            await asyncio.sleep(0)
+            await sleep(0)
 
     async def _wait_for_next_key(self) -> None:
         # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
@@ -701,7 +702,7 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
             nonlocal yielded
             yielded += 1
             if not yielded % 1000:  # arbitrary number, should be adjusted later
-                await asyncio.sleep(0)
+                await sleep(0)
 
         for key in iterable:
             yield key
