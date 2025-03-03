@@ -10,7 +10,7 @@ The primitives provided in this module are:
 - :class:`~a_sync.primitives.queue.Queue`
 - :class:`~a_sync.primitives.queue.ProcessingQueue`
 - :class:`~a_sync.primitives.queue.SmartProcessingQueue`
- 
+
  These primitives extend or modify the functionality of standard asyncio primitives to provide additional features or improved performance for specific use cases.
 
 Examples:

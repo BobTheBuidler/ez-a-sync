@@ -1,5 +1,5 @@
 """
-This module enables developers to write both synchronous and asynchronous code without having to write redundant code. 
+This module enables developers to write both synchronous and asynchronous code without having to write redundant code.
 
 The two main objects you should use are
     - a decorator `@a_sync()`
