@@ -240,13 +240,12 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                 # if you didn't init the TaskMapping with iterators and you didn't start any tasks manually, we should fail
                 self._raise_if_empty()
             else:
-                if pop:
-                    self_pop = self.pop
                 while not self._init_loader.done():
                     await self._wait_for_next_key()
                     while unyielded := tuple(key for key in self if key not in yielded):
                         if ready := tuple(key for key in unyielded if self[key].done()):
                             if pop:
+                                self_pop = self.pop
                                 for key in ready:
                                     yield key, self_pop(key).result()
                                     add_yielded(key)
@@ -261,6 +260,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             # if there are any tasks that still need to complete, we need to await them and yield them
             if unyielded := {key: self[key] for key in self if key not in yielded}:
                 if pop:
+                    self_pop = self.pop
                     async for key, value in as_completed(unyielded, aiter=True):
                         self_pop(key)
                         yield key, value
@@ -841,7 +841,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         mapping = self.__mapping__
         done = mapping._init_loader.done
         wait_for_next_key = mapping._wait_for_next_key
-        
+
         if self._pop:
             pop = mapping.pop
             while not done():
@@ -852,7 +852,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         else:
             while not done():
                 await wait_for_next_key()
-                for key in filterfalse(yielded.__contains__, mapping):
+                for key in tuple(filterfalse(yielded.__contains__, mapping)):
                     yield key
         # check for any exceptions
         await mapping._init_loader
