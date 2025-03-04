@@ -29,9 +29,9 @@ if TYPE_CHECKING:
     from a_sync.a_sync.abstract import ASyncABC
 
 
-METHOD_CACHE_TTL = 300
+METHOD_CACHE_TTL = 3000
 
-cdef int _METHOD_CACHE_TTL = 300
+cdef int _METHOD_CACHE_TTL = 3000
 
 
 logger = logging.getLogger(__name__)
