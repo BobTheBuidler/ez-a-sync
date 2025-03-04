@@ -181,7 +181,7 @@ async def test_rapid_acquire_release():
             await semaphore.acquire()
             semaphore.release()
 
-    await asyncio.gather(*[task() for _ in range(10)])
+    await asyncio.gather(*(task() for _ in range(10)))
 
 
 @pytest.mark.asyncio_cooperative
@@ -277,7 +277,7 @@ async def test_high_frequency_operations():
             await semaphore.acquire()
             semaphore.release()
 
-    await asyncio.gather(*[task() for _ in range(10)])
+    await asyncio.gather(*(task() for _ in range(10)))
 
 
 @pytest.mark.asyncio_cooperative

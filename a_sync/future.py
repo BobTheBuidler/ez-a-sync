@@ -83,7 +83,7 @@ async def _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> L
         >>> await _gather_check_and_materialize(async_fn(1), 2, async_fn(3))
         [1, 2, 3]
     """
-    return await asyncio.gather(*[_check_and_materialize(thing) for thing in things])
+    return await asyncio.gather(*(_check_and_materialize(thing) for thing in things))
 
 
 async def _check_and_materialize(thing: T) -> T:
