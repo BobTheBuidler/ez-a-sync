@@ -446,12 +446,12 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key, result in task_map.yield_completed():
                 print(f"Completed {key}: {result}")
         """
+        task: asyncio.Task
         if pop:
             self_pop = self.pop
-            for k in tuple(k for k in self if self[k].done()):
+            for k in tuple(k for k, task in dict.items(self) if task.done()):
                 yield k, self_pop(k).result()
         else:
-            task: asyncio.Task
             for k, task in dict.items(self):
                 if task.done():
                     yield k, task.result()
@@ -563,9 +563,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key in _yield_keys(iterable):
                 yield key, self[key]
 
-        if remaining := [iterable for iterable in iterables if iterable not in containers]:
+        if remaining := tuple(iterable for iterable in iterables if iterable not in containers):
             try:
-                async for key in as_yielded(*[_yield_keys(iterable) for iterable in remaining]):  # type: ignore [attr-defined]
+                async for key in as_yielded(*(_yield_keys(iterable) for iterable in remaining)):  # type: ignore [attr-defined]
                     yield key, self[key]  # ensure task is running
             except _EmptySequenceError:
                 if len(iterables) == 1:
@@ -587,7 +587,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             async for key in _yield_keys(iterable):
                 yield key, self.__start_task(key)
 
-        if remaining := [iterable for iterable in iterables if iterable not in containers]:
+        if remaining := tuple(iterable for iterable in iterables if iterable not in containers):
             try:
                 async for key in as_yielded(*(_yield_keys(iterable) for iterable in remaining)):  # type: ignore [attr-defined]
                     yield key, self.__start_task(key)
@@ -841,11 +841,12 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         mapping = self.__mapping__
         done = mapping._init_loader.done
         wait_for_next_key = mapping._wait_for_next_key
+        
         if self._pop:
             pop = mapping.pop
             while not done():
                 await wait_for_next_key()
-                for key in tuple(k for k in mapping if k not in yielded):
+                for key in tuple(filterfalse(yielded.__contains__, mapping)):
                     pop(key)
                     yield key
         else:
