@@ -256,6 +256,6 @@ class CounterLockCluster:
             >>> await cluster.wait_for(5)  # This will block until all locks have value >= 5
         """
         await gather(
-            *[counter_lock.wait_for(value) for counter_lock in self.locks]
+            *(counter_lock.wait_for(value) for counter_lock in self.locks)
         )
         return True
