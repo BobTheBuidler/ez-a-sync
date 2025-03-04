@@ -81,7 +81,7 @@ async def exhaust_iterators(
         raise ValueError("You must provide a `queue` to use kwarg `join`")
 
     for x in await asyncio.gather(
-        *[exhaust_iterator(iterator, queue=queue) for iterator in iterators],
+        *(exhaust_iterator(iterator, queue=queue) for iterator in iterators),
         return_exceptions=True,
     ):
         if isinstance(x, Exception):
