@@ -841,7 +841,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         mapping = self.__mapping__
         done = mapping._init_loader.done
         wait_for_next_key = mapping._wait_for_next_key
-        
+
         if self._pop:
             pop = mapping.pop
             while not done():
