@@ -20,7 +20,7 @@ from a_sync.a_sync.function import (
 )
 from typing import Any
 
-METHOD_CACHE_TTL: int
+METHOD_CACHE_TTL: Literal[3600]
 logger: Incomplete
 
 class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
