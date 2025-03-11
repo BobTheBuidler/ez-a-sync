@@ -151,8 +151,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         if name:
             self._name = name
 
+        self._next = Event(name=f"{self} `_next`")
+
         if iterables:
-            self._next = Event(name=f"{self} `_next`")
 
             @functools.wraps(wrapped_func)
             async def _wrapped_set_next(
@@ -329,10 +330,17 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
         try:
             if iterables:
                 self._raise_if_not_empty()
+
+                def callback(t: asyncio.Task):
+                    self._next.set()
+
                 try:
-                    async for _ in self._tasks_for_iterables(*iterables):
-                        async for key, value in self.yield_completed(pop=pop):
-                            yield _yield(key, value, yields)
+                    async for k, t in self._tasks_for_iterables(*iterables):
+                        t.add_done_callback(callback)
+                        if self._next.is_set():
+                            async for key, value in self.yield_completed(pop=pop):
+                                yield _yield(key, value, yields)
+                            self._next.clear()
                 except _EmptySequenceError:
                     if len(iterables) > 1:
                         # TODO gotta handle this situation
@@ -340,6 +348,8 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
                             "bob needs to code something so you can do this, go tell him"
                         ) from None
                     # just pass thru
+                finally:
+                    self._next.clear()
 
             elif init_loader:
                 # check for exceptions if you passed an iterable(s) into the class init
