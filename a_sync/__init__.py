@@ -130,3 +130,14 @@ __all__ = [
     "ThreadPoolExecutor",
     "ProcessPoolExecutor",
 ]
+
+def _patch_async_property() -> None:
+    import async_property.base as base
+    import async_property.cached as cached
+    from a_sync._property import AwaitableOnly, AwaitableProxy
+    
+    base.AwaitableOnly = AwaitableOnly
+    cached.AwaitableOnly = AwaitableOnly
+    cached.AwaitableProxy = AwaitableProxy
+
+_patch_async_property()
