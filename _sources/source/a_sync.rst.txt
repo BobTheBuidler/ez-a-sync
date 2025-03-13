@@ -25,6 +25,15 @@ a\_sync.ENVIRONMENT\_VARIABLES module
    :show-inheritance:
    :private-members:
 
+a\_sync.\_property module
+-------------------------
+
+.. automodule:: a_sync._property
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 a\_sync.\_smart module
 ----------------------
 

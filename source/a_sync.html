@@ -60,6 +60,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.ENVIRONMENT_VARIABLES.DEBUG_MODE"><code class="docutils literal notranslate"><span class="pre">DEBUG_MODE</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#module-a_sync._property">a_sync._property module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync._property.AwaitableOnly"><code class="docutils literal notranslate"><span class="pre">AwaitableOnly</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync._property._ObjectProxyMetaType"><code class="docutils literal notranslate"><span class="pre">_ObjectProxyMetaType</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-a_sync._smart">a_sync._smart module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync._smart.SmartFuture"><code class="docutils literal notranslate"><span class="pre">SmartFuture</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync._smart.SmartTask"><code class="docutils literal notranslate"><span class="pre">SmartTask</span></code></a></li>
@@ -2330,6 +2335,45 @@ automatically be <cite>True</cite> unless <cite>DEBUG_CLASS_NAME</cite> is an em
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+</section>
+<section id="module-a_sync._property">
+<span id="a-sync-property-module"></span><h2>a_sync._property module<a class="headerlink" href="#module-a_sync._property" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync._property.AwaitableOnly">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._property.</span></span><span class="sig-name descname"><span class="pre">AwaitableOnly</span></span><a class="headerlink" href="#a_sync._property.AwaitableOnly" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>AwaitableOnly(coro)
+This wraps a coroutine will call it on await.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync._property.AwaitableOnly.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property.AwaitableOnly.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync._property._ObjectProxyMetaType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._property.</span></span><span class="sig-name descname"><span class="pre">_ObjectProxyMetaType</span></span><a class="headerlink" href="#a_sync._property._ObjectProxyMetaType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync._property._ObjectProxyMetaType.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property._ObjectProxyMetaType.__call__" title="Link to this definition"></a></dt>
+<dd><p>Call self as a function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync._property._ObjectProxyMetaType.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property._ObjectProxyMetaType.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync._property._ObjectProxyMetaType.mro">
+<span class="sig-name descname"><span class="pre">mro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property._ObjectProxyMetaType.mro" title="Link to this definition"></a></dt>
+<dd><p>Return a type’s method resolution order.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
