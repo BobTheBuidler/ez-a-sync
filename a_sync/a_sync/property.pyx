@@ -64,6 +64,8 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
 
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
 
+    _TaskMapping: Type[TaskMapping] = None
+
     def __init__(
         self,
         _fget: AsyncGetterFunction[I, T],
@@ -161,12 +163,6 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         c_logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, owner)
 
-    @functools.cached_property
-    def _TaskMapping(self) -> Type[TaskMapping]:
-        """This silly helper just fixes a circular import"""
-        from a_sync.task import TaskMapping
-        return TaskMapping
-
     def map(
         self,
         instances: AnyIterable[I],
@@ -186,7 +182,13 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             A TaskMapping object.
         """
         c_logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
-        return self._TaskMapping(
+        
+        """NOTE: This silly helper just fixes a circular import"""
+        if _ASyncPropertyDescriptorBase._TaskMapping is None:
+            from a_sync.task import TaskMapping
+            _ASyncPropertyDescriptorBase._TaskMapping = TaskMapping
+
+        return _ASyncPropertyDescriptorBase._TaskMapping(
             self,
             instances,
             owner=owner,
