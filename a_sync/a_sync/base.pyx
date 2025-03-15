@@ -9,6 +9,7 @@ from a_sync.a_sync._flags cimport validate_and_negate_if_necessary, validate_fla
 from a_sync.a_sync.abstract import ASyncABC
 from a_sync.a_sync.flags import VIABLE_FLAGS
 from a_sync.exceptions import ASyncFlagException, FlagNotDefined, InvalidFlag, NoFlagsFound, TooManyFlags
+from a_sync.functools cimport cached_property_unsafe
 
 
 logger = getLogger(__name__)
@@ -100,7 +101,7 @@ class ASyncGenericBase(ASyncABC):
             )
         ASyncABC.__init__(self)
 
-    @cached_property
+    @cached_property_unsafe
     def __a_sync_flag_name__(self) -> str:
         # TODO: cythonize this cache
         cdef bint debug_logs 
@@ -128,7 +129,7 @@ class ASyncGenericBase(ASyncABC):
             raise InvalidFlag(flag)
         return flag
 
-    @cached_property
+    @cached_property_unsafe
     def __a_sync_flag_value__(self) -> bint:
         # TODO: cythonize this cache
         """If you wish to be able to hotswap default modes, just duplicate this def as a non-cached property."""
