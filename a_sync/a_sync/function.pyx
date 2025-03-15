@@ -13,6 +13,7 @@ from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync.flags import VIABLE_FLAGS
 from a_sync.a_sync.modifiers.manager import ModifierManager
+from a_sync.functools cimport cached_property_unsafe, update_wrapper, wraps
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
@@ -74,7 +75,7 @@ class _ModifiedMixin:
         """
         return self.modifiers.apply_sync_modifiers(_await)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def default(self) -> DefaultMode:
         """
         Gets the default execution mode (sync, async, or None) for the function.
@@ -255,7 +256,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         self.__wrapped__ = fn
         """The original function that was wrapped."""
 
-        functools.update_wrapper(self, self.__wrapped__)
+        update_wrapper(self, self.__wrapped__)
         if self.__doc__ is None:
             self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
         else:
@@ -746,7 +747,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
                 **function_kwargs,
             ).sum(pop=True, sync=False)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def _sync_default(self) -> bint:
         """
         Determines the default execution mode (sync or async) for the function.
@@ -766,7 +767,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             else False if self.default == "async" else not self._async_def
         )
 
-    @functools.cached_property
+    @cached_property_unsafe
     def _async_def(self) -> bint:
         """
         Checks if the wrapped function is an asynchronous function.
@@ -779,7 +780,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         """
         return asyncio.iscoroutinefunction(self.__wrapped__)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def _asyncified(self) -> CoroFn[P, T]:
         """
         Converts the wrapped function to an asynchronous function and applies both sync and async modifiers.
@@ -836,7 +837,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         modified_fn = self._modified_fn
         await_helper = self._await
 
-        @functools.wraps(modified_fn)
+        @wraps(modified_fn)
         def async_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
             # sourcery skip: assign-if-exp
             # we dont want this so profiler outputs are more useful
@@ -869,7 +870,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         modified_fn = self._modified_fn
         asyncified = self._asyncified
 
-        @functools.wraps(modified_fn)
+        @wraps(modified_fn)
         def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
             if _run_sync(self, kwargs):
                 return modified_fn(*args, **kwargs)

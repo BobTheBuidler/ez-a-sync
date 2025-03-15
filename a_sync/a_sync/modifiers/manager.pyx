@@ -1,17 +1,20 @@
 # mypy: disable-error-code=valid-type
-import functools
 from libc.stdint cimport uint8_t
 
 from a_sync._typing import *
 from a_sync.a_sync.config import user_set_default_modifiers, null_modifiers
 from a_sync.a_sync.modifiers import cache, limiter, semaphores
+from a_sync.functools cimport wraps
+
 
 # TODO give me a docstring
-valid_modifiers: Tuple[str, ...] = tuple(
+valid_modifiers = tuple(
     key
     for key in ModifierKwargs.__annotations__
     if not key.startswith("_") and not key.endswith("_")
 )
+
+cdef tuple[str, ...] _valid_modifiers = valid_modifiers
 
 class ModifierManager(Dict[str, Any]):
     """Manages modifiers for asynchronous and synchronous functions.
@@ -75,7 +78,7 @@ class ModifierManager(Dict[str, Any]):
         """
         cdef str key
         for key in modifiers.keys():
-            if key not in valid_modifiers:
+            if key not in _valid_modifiers:
                 raise ValueError(f"'{key}' is not a supported modifier.")
         self._modifiers = modifiers
 
@@ -97,7 +100,7 @@ class ModifierManager(Dict[str, Any]):
             >>> manager.cache_type
             'memory'
         """
-        if modifier_key not in valid_modifiers:
+        if modifier_key not in _valid_modifiers:
             return object.__getattribute__(self, modifier_key)
         return (
             self._modifiers[modifier_key]
@@ -194,7 +197,7 @@ class ModifierManager(Dict[str, Any]):
             >>> modified_function = manager.apply_sync_modifiers(my_function)
         """
 
-        @functools.wraps(function)
+        @wraps(function)
         def sync_modifier_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
             return function(*args, **kwargs)
 

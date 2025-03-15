@@ -1,5 +1,4 @@
 # cython: boundscheck=False
-from functools import cached_property
 from inspect import signature, _empty
 from logging import DEBUG, getLogger
 from libc.stdint cimport uintptr_t
