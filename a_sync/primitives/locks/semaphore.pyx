@@ -12,7 +12,7 @@ from threading import Thread, current_thread
 from typing import Container
 
 from a_sync._typing import *
-from a_sync.primitives._debug cimport _DebugDaemonMixin
+from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
 
 
 async def __acquire() -> Literal[True]:
@@ -68,7 +68,7 @@ cdef class Semaphore(_DebugDaemonMixin):
             value: The initial value for the semaphore.
             name (optional): An optional name used only to provide useful context in debug logs.
         """
-        super().__init__(loop=loop)
+        _LoopBoundMixin.__init__(self, loop=loop)
         if value < 0:
             raise ValueError("Semaphore initial value must be >= 0")
 
@@ -429,7 +429,7 @@ cdef class ThreadsafeSemaphore(Semaphore):
             name (optional): An optional name for the semaphore.
         """
         assert isinstance(value, int), f"{value} should be an integer."
-        super().__init__(value, name=name)
+        Semaphore.__init__(self, value, name=name)
         
         self.use_dummy = value is -1
         if self.use_dummy:

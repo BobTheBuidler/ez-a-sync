@@ -690,7 +690,7 @@ class ASyncSorter(_ASyncView[T]):
             key (optional): A function of one argument that is used to extract a comparison key from each list element. If none is provided, elements themselves will be sorted. Defaults to None.
             reverse (optional): If True, the list elements will be sorted in reverse order. Defaults to False.
         """
-        super().__init__(key or _key_if_no_key, iterable)
+        _ASyncView.__init__(self, key or _key_if_no_key, iterable)
         self.__internal = self.__sort(reverse=reverse).__aiter__()
         if reverse:
             self.reversed = True

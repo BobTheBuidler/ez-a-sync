@@ -98,7 +98,7 @@ class ModifierManager(Dict[str, Any]):
             'memory'
         """
         if modifier_key not in valid_modifiers:
-            return super().__getattribute__(modifier_key)
+            return object.__getattribute__(self, modifier_key)
         return (
             self._modifiers[modifier_key]
             if modifier_key in self._modifiers
