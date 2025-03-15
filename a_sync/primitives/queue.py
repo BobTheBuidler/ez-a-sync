@@ -320,7 +320,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                 f"You cannot pass a value for `loop` in python {sys.version_info}"
             )
         else:
-            _init()
+            _init(self)
 
         self.func = func
         """The function that each worker will process."""
