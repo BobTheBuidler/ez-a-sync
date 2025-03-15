@@ -142,7 +142,7 @@ class InvalidFlag(ASyncFlagException):
         """
         err = f"'flag' must be one of: {self.viable_flags}. You passed {flag}."
         err += "\nThis code should not be reached and likely indicates an issue with a custom subclass definition."
-        ASyncFlagException.__init__(err)
+        BaseException.__init__(self, err)
 
 
 class InvalidFlagValue(ASyncFlagException):
