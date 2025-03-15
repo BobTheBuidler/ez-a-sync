@@ -136,6 +136,9 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
 
 MetaNumeric = Union[Numeric, "ASyncFuture[int]", "ASyncFuture[float]", "ASyncFuture[Decimal]"]
 
+_cf_init = concurrent.futures.Future.__init__
+_cf_result = concurrent.futures.Future.result
+
 
 @final
 class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
@@ -218,7 +221,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         self.__task = None
         """The task associated with the awaitable."""
 
-        super().__init__()
+        _cf_init(self)
 
     def __hash__(self) -> int:
         return hash(self.__awaitable__)
@@ -231,7 +234,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             string += (
                 f" exception={self.exception()}"
                 if self.exception()
-                else f" result={super().result()}"
+                else f" result={_cf_result(self)}"
             )
         return f"{string}>"
 
@@ -261,11 +264,11 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             42
         """
         if self.done():
-            if hasattr(r := super().result(), "result"):
+            if hasattr(r := _cf_result(self), "result"):
                 # can be property, method, whatever. should work.
                 return r.result
             # the result should be callable like an asyncio.Future
-            return super().result
+            return lambda: _cf_result(self)
         return lambda: _materialize(self)
 
     def __getattr__(self, attr: str) -> Any:

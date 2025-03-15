@@ -264,6 +264,12 @@ def log_broken(func: Callable[[Any], NoReturn]) -> Callable[[Any], NoReturn]:
     return __worker_exc_wrap
 
 
+_init = asyncio.Queue.__init__
+_put = asyncio.Queue.put
+_put_nowait = asyncio.Queue.put_nowait
+_loop_kwarg_deprecated = sys.version_info >= (3, 10)
+
+
 class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     """
     A queue designed for processing tasks asynchronously with multiple workers.
@@ -307,14 +313,14 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         Example:
             >>> queue = ProcessingQueue(func=my_task_func, num_workers=3, name='myqueue')
         """
-        if sys.version_info < (3, 10):
-            super().__init__(loop=loop)
+        if not _loop_kwarg_deprecated:
+            _init(self, loop=loop)
         elif loop:
             raise NotImplementedError(
                 f"You cannot pass a value for `loop` in python {sys.version_info}"
             )
         else:
-            super().__init__()
+            _init()
 
         self.func = func
         """The function that each worker will process."""
@@ -419,9 +425,9 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         """
         self._ensure_workers()
         if self._no_futs:
-            return await super().put((args, kwargs))
+            return await _put((args, kwargs))
         fut = self._create_future()
-        await super().put((args, kwargs, fut))
+        await _put((args, kwargs, fut))
         return fut
 
     def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
@@ -441,9 +447,9 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         """
         self._ensure_workers()
         if self._no_futs:
-            return super().put_nowait((args, kwargs))
+            return _put_nowait((args, kwargs))
         fut = self._create_future()
-        super().put_nowait((args, kwargs, weakref.proxy(fut)))
+        _put_nowait((args, kwargs, weakref.proxy(fut)))
         return fut
 
     def _create_future(self) -> "asyncio.Future[V]":
@@ -670,7 +676,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         """
         self._ensure_workers()
         fut = asyncio.get_event_loop().create_future()
-        await super().put(self, (priority, args, kwargs, fut))
+        await ProcessingQueue.put(self, (priority, args, kwargs, fut))
         return fut
 
     def put_nowait(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
@@ -691,7 +697,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         """
         self._ensure_workers()
         fut = self._create_future()
-        super().put_nowait(self, (priority, args, kwargs, fut))
+        ProcessingQueue.put_nowait(self, (priority, args, kwargs, fut))
         return fut
 
     def _get(self, heappop=heappop):
@@ -823,7 +829,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             >>> queue = SmartProcessingQueue(func=my_task_func, num_workers=3, name='smart_queue')
         """
         name = name or f"{func.__module__}.{func.__qualname__}"
-        super().__init__(func, num_workers, return_data=True, name=name, loop=loop)
+        ProcessingQueue.__init__(self, func, num_workers, return_data=True, name=name, loop=loop)
         self._futs = weakref.WeakValueDictionary()
 
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
@@ -889,7 +895,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             >>> task = queue._get()
             >>> print(task)
         """
-        fut, args, kwargs = super()._get()
+        fut, args, kwargs = _VariablePriorityQueueMixin._get(self)
         return args, kwargs, fut()
 
     async def _worker_coro(self) -> NoReturn:
