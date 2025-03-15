@@ -6,10 +6,10 @@ and converting synchronous functions to asynchronous ones.
 from asyncio import iscoroutinefunction, new_event_loop, set_event_loop
 from asyncio import get_event_loop as _get_event_loop
 from asyncio.futures import _chain_future
-from functools import wraps
 
 from a_sync import exceptions
 from a_sync._typing import *
+from a_sync.functools cimport wraps
 
 
 cpdef object get_event_loop():

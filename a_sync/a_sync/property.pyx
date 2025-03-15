@@ -1,4 +1,4 @@
-import functools
+from functools import partial
 from logging import DEBUG, getLogger
 
 import async_property as ap  # type: ignore [import]
@@ -15,11 +15,13 @@ from a_sync.a_sync.function import (
     ASyncFunctionSyncDefault,
 )
 from a_sync.a_sync.method import (
+    ASyncBoundMethod,
     ASyncBoundMethodAsyncDefault,
     ASyncMethodDescriptorAsyncDefault,
 )
 from a_sync.a_sync.method cimport _is_a_sync_instance, _update_cache_timer
 from a_sync.asyncio.create_task cimport ccreate_task_simple
+from a_sync.functools cimport wraps
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -65,6 +67,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
 
     _TaskMapping: Type[TaskMapping] = None
+    """This silly helper just fixes a circular import"""
 
     def __init__(
         self,
@@ -80,7 +83,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             **modifiers: Additional modifier arguments.
         """
         cdef dict hidden_modifiers
-        super().__init__(_fget, field_name, **modifiers)
+        ASyncDescriptor.__init__(self, _fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
         hidden_modifiers = dict(self.modifiers)
         hidden_modifiers["default"] = "async"
@@ -383,7 +386,7 @@ def a_sync_property(  # type: ignore [misc]
         descriptor_class = ASyncPropertyDescriptorAsyncDefault
     else:
         descriptor_class = property
-    decorator = functools.partial(descriptor_class, **modifiers)
+    decorator = partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
 
@@ -416,7 +419,7 @@ class ASyncCachedPropertyDescriptor(
             field_name: Optional name for the field. If not provided, the function's name will be used.
             **modifiers: Additional modifier arguments.
         """
-        super().__init__(_fget, field_name, **modifiers)
+        _ASyncPropertyDescriptorBase.__init__(self, _fget, field_name, **modifiers)
         self._check_method_sync(_fset, "setter")
         self._fset = _fset
         """Optional setter function for the property."""
@@ -460,7 +463,7 @@ class ASyncCachedPropertyDescriptor(
             A callable that loads the property value.
         """
 
-        @functools.wraps(self._fget)
+        @wraps(self._fget)
         async def load_value():
             inner_task = self.get_lock(instance)
             try:
@@ -640,7 +643,7 @@ def a_sync_cached_property(  # type: ignore [misc]
         descriptor_class = ASyncCachedPropertyDescriptorAsyncDefault
     else:
         descriptor_class = ASyncCachedPropertyDescriptor
-    decorator = functools.partial(descriptor_class, **modifiers)
+    decorator = partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
 
@@ -671,7 +674,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
             field_name: The name of the field associated with the method.
             **modifiers: Additional modifier arguments.
         """
-        super().__init__(instance, unbound, async_def, **modifiers)
+        ASyncBoundMethod.__init__(self, instance, unbound, async_def, **modifiers)
         self.__name__ = field_name
         """The name of the hidden method."""
 
@@ -720,7 +723,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
         Raises:
             ValueError: If _fget is not callable.
         """
-        super().__init__(_fget, field_name, **modifiers)
+        ASyncDescriptor.__init__(self, _fget, field_name, **modifiers)
         if self.__doc__ is None:
             self.__doc__ = f"A :class:`HiddenMethodDescriptor` for :meth:`{self.__wrapped__.__qualname__}`."
         elif not self.__doc__:

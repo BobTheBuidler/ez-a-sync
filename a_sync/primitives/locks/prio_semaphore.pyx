@@ -70,7 +70,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore = _AbstractPrioritySemaphore(5, name="test_semaphore")
         """
         # context manager class is some temporary hacky shit, just ignore this
-        super().__init__(value, name=name)
+        Semaphore.__init__(self, value, name=name)
 
         self._capacity = value
         """The initial capacity of the semaphore."""
@@ -303,7 +303,7 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
             >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent_semaphore, priority=1)
         """
 
-        super().__init__(0, name=name)
+        Semaphore.__init__(self, 0, name=name)
 
         self._parent = parent
         """The parent semaphore."""
@@ -491,7 +491,7 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):  # type: ignore [type-
         name: Optional[str] = None, 
     ) -> None:
         # context manager class is some temporary hacky shit, just ignore this
-        super().__init__(_PrioritySemaphoreContextManager, -1, value, name=name)
+        _AbstractPrioritySemaphore.__init__(self, _PrioritySemaphoreContextManager, -1, value, name=name)
 
     def __getitem__(
         self, priority: Optional[PT]

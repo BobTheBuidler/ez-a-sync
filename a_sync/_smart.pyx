@@ -189,6 +189,8 @@ cdef object _get_exception(fut: asyncio.Future):
         raise fut._make_cancelled_error()
     raise asyncio.exceptions.InvalidStateError('Exception is not set.')
 
+_init = asyncio.Future.__init__
+
 class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
@@ -235,7 +237,7 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         See Also:
             - :class:`SmartProcessingQueue`
         """
-        super().__init__(loop=loop)
+        _init(self, loop=loop)
         if queue:
             self._queue = weakref.proxy(queue)
             self.add_done_callback(SmartFuture._self_done_cleanup_callback)

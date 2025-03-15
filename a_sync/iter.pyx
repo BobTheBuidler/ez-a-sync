@@ -15,6 +15,7 @@ from a_sync._typing import *
 from a_sync.a_sync._helpers cimport _await
 from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.exceptions import SyncModeInAsyncContextError
+from a_sync.functools cimport update_wrapper
 
 
 logger = logging.getLogger(__name__)
@@ -492,7 +493,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
         if instance is not None:
             self._cache_handle = self.__get_cache_handle(instance)
             self.__weakself__ = weakref.ref(instance, self.__cancel_cache_handle)
-        functools.update_wrapper(self, self.__wrapped__)
+        update_wrapper(self, self.__wrapped__)
 
     def __repr__(self) -> str:
         return "<{} for {} at {}>".format(
@@ -690,7 +691,7 @@ class ASyncSorter(_ASyncView[T]):
             key (optional): A function of one argument that is used to extract a comparison key from each list element. If none is provided, elements themselves will be sorted. Defaults to None.
             reverse (optional): If True, the list elements will be sorted in reverse order. Defaults to False.
         """
-        super().__init__(key or _key_if_no_key, iterable)
+        _ASyncView.__init__(self, key or _key_if_no_key, iterable)
         self.__internal = self.__sort(reverse=reverse).__aiter__()
         if reverse:
             self.reversed = True

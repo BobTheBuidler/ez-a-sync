@@ -9,11 +9,11 @@ The main components include:
 """
 
 import asyncio
-import functools
 import inspect
 import logging
 import weakref
 from asyncio import sleep
+from functools import wraps
 from itertools import filterfalse
 
 from a_sync import exceptions
@@ -29,6 +29,7 @@ from a_sync.a_sync.method import (
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.asyncio.gather import Excluder
+from a_sync.functools import cached_property_unsafe
 from a_sync.iter import ASyncIterator, ASyncGeneratorFunction, ASyncSorter
 from a_sync.primitives.locks import Event
 from a_sync.primitives.queue import Queue, ProcessingQueue
@@ -155,7 +156,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
 
         if iterables:
 
-            @functools.wraps(wrapped_func)
+            @wraps(wrapped_func)
             async def _wrapped_set_next(
                 *args: P.args, __a_sync_recursion: int = 0, **kwargs: P.kwargs
             ) -> V:
@@ -530,7 +531,7 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             for k in keys:
                 pop(k, cancel=cancel)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def _init_loader(self) -> Optional["asyncio.Task[None]"]:
         # sourcery skip: raise-from-previous-error
         if self.__init_loader_coro:
@@ -545,9 +546,9 @@ class TaskMapping(DefaultDict[K, "asyncio.Task[V]"], AsyncIterable[Tuple[K, V]])
             task.add_done_callback(self.__cleanup)
             return task
 
-    @functools.cached_property
+    @cached_property_unsafe
     def _queue(self) -> ProcessingQueue:
-        fn = functools.partial(self._wrapped_func, **self._wrapped_func_kwargs)
+        fn = lambda arg: self._wrapped_func(arg, **self._wrapped_func_kwargs)
         return ProcessingQueue(fn, self.concurrency, name=self._name)
 
     def _raise_if_empty(self, msg: str = "") -> None:
