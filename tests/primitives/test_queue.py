@@ -327,7 +327,8 @@ async def test_unusual_data_types():
 
 async def test(x: str) -> int:
     return int(x)
-    
+
+
 @pytest.mark.asyncio_cooperative
 async def test_processing_queue_initialization():
     queue = ProcessingQueue(test, 10)
