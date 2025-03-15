@@ -1,1 +1,1 @@
-from a_sync.primitives import *
+from a_sync.primitives cimport *
