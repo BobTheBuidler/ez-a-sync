@@ -34,6 +34,15 @@ a\_sync.\_property module
    :show-inheritance:
    :private-members:
 
+a\_sync.\_property\_cached module
+---------------------------------
+
+.. automodule:: a_sync._property_cached
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 a\_sync.\_smart module
 ----------------------
 
