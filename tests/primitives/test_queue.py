@@ -334,7 +334,7 @@ async def test_processing_queue_initialization():
 
 
 @pytest.mark.asyncio_cooperative
-async def test_put_and_get():
+async def test_processing_put_and_get():
     queue = ProcessingQueue(int, 10)
     await queue.put("1")
     fut = await queue.get()
@@ -344,7 +344,7 @@ async def test_put_and_get():
 
 
 @pytest.mark.asyncio_cooperative
-async def test_put_nowait_and_get_nowait():
+async def test_processing_put_nowait_and_get_nowait():
     queue = ProcessingQueue(int, 10)
     queue.put_nowait("2")
     fut = queue.get_nowait()
