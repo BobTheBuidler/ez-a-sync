@@ -6,6 +6,7 @@ T = TypeVar("T")
 
 class cached_property_unsafe(Generic[I, T]):
     """A non-threadsafe implementation of functools.cached_property, intended for use in asyncio applications"""
+
     func: Callable[[I], T]
     attrname: Incomplete
     __doc__: Incomplete
@@ -31,41 +32,41 @@ def update_wrapper(wrapper, wrapped):
     `functools` builtin module if you need to use their functionality.
     """
     try:
-        value = getattr(wrapped, '__module__')
+        value = getattr(wrapped, "__module__")
     except AttributeError:
         pass
     else:
-        setattr(wrapper, '__module__', value)
-    
-    try:
-        value = getattr(wrapped, '__name__')
-    except AttributeError:
-        pass
-    else:
-        setattr(wrapper, '__name__', value)
+        setattr(wrapper, "__module__", value)
 
     try:
-        value = getattr(wrapped, '__qualname__')
+        value = getattr(wrapped, "__name__")
     except AttributeError:
         pass
     else:
-        setattr(wrapper, '__qualname__', value)
+        setattr(wrapper, "__name__", value)
 
     try:
-        value = getattr(wrapped, '__doc__')
+        value = getattr(wrapped, "__qualname__")
     except AttributeError:
         pass
     else:
-        setattr(wrapper, '__doc__', value)
+        setattr(wrapper, "__qualname__", value)
 
     try:
-        value = getattr(wrapped, '__annotations__')
+        value = getattr(wrapped, "__doc__")
     except AttributeError:
         pass
     else:
-        setattr(wrapper, '__annotations__', value)
-        
-    getattr(wrapper, '__dict__').update(getattr(wrapped, '__dict__', {}))
+        setattr(wrapper, "__doc__", value)
+
+    try:
+        value = getattr(wrapped, "__annotations__")
+    except AttributeError:
+        pass
+    else:
+        setattr(wrapper, "__annotations__", value)
+
+    getattr(wrapper, "__dict__").update(getattr(wrapped, "__dict__", {}))
     # Issue #17482: set __wrapped__ last so we don't inadvertently copy it
     # from the wrapped function when updating __dict__
     wrapper.__wrapped__ = wrapped
