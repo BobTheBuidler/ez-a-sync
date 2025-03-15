@@ -1,6 +1,6 @@
 import pytest
 import asyncio
-from a_sync.primitives.queue import Queue
+from a_sync.primitives.queue import ProcessingQueue, Queue
 
 
 @pytest.mark.asyncio_cooperative
@@ -323,3 +323,32 @@ async def test_unusual_data_types():
     assert await queue.get() == {"key": "value"}
     assert await queue.get() == ["list", "of", "items"]
     assert await queue.get() == ("tuple", "of", "items")
+
+
+@pytest.mark.asyncio_cooperative
+async def test_processing_queue_initialization():
+    queue = ProcessingQueue(int, 10)
+    assert isinstance(queue, ProcessingQueue)
+    assert queue.func = int
+    assert queue.num_workers = 10
+
+
+@pytest.mark.asyncio_cooperative
+async def test_put_and_get():
+    queue = ProcessingQueue(int, 10)
+    await queue.put("1")
+    fut = await queue.get()
+    assert isinstance(fut, asyncio.Future)
+    assert await fut == 1
+    assert queue.empty()
+
+
+@pytest.mark.asyncio_cooperative
+async def test_put_nowait_and_get_nowait():
+    queue = ProcessingQueue(int, 10)
+    queue.put_nowait("2")
+    fut = queue.get_nowait()
+    assert isinstance(fut, asyncio.Future)
+    assert await fut == 2
+    with pytest.raises(asyncio.QueueEmpty):
+        queue.get_nowait()
