@@ -332,7 +332,7 @@ async def test(x: str) -> int:
 async def test_processing_queue_initialization():
     queue = ProcessingQueue(test, 10)
     assert isinstance(queue, ProcessingQueue)
-    assert queue.func = test
+    assert queue.func == test
     assert queue.num_workers = 10
 
 
