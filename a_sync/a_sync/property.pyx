@@ -4,7 +4,7 @@ from logging import DEBUG, getLogger
 import async_property as ap  # type: ignore [import]
 from typing_extensions import Unpack
 
-from a_sync import _smart
+from a_sync import _property_cached, _smart
 from a_sync._typing import *
 from a_sync.a_sync import config
 from a_sync.a_sync._helpers cimport _asyncify, _await
@@ -388,7 +388,7 @@ def a_sync_property(  # type: ignore [misc]
 
 
 class ASyncCachedPropertyDescriptor(
-    _ASyncPropertyDescriptorBase[I, T], ap.cached.AsyncCachedPropertyDescriptor
+    _ASyncPropertyDescriptorBase[I, T], _property_cached.AsyncCachedPropertyDescriptor
 ):
     """
     A descriptor class for dual-function sync/async cached properties.
