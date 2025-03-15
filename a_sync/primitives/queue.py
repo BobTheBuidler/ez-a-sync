@@ -18,11 +18,12 @@ import sys
 import weakref
 from asyncio import InvalidStateError, QueueEmpty, gather
 from asyncio.events import _get_running_loop
-from functools import cached_property, wraps
+from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
 
 import a_sync.asyncio
+from a_sync.functools import cached_property_unsafe
 from a_sync._smart import SmartFuture, create_future
 from a_sync._smart import _Key as _SmartKey
 from a_sync._typing import *
@@ -466,7 +467,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             # re-raise with clean traceback
             raise exc.with_traceback(exc.__traceback__) from exc.__cause__
 
-    @cached_property
+    @cached_property_unsafe
     def _workers(self) -> "asyncio.Task[NoReturn]":
         """Creates and manages the worker tasks for the queue."""
         logger.debug("starting worker task for %s", self)

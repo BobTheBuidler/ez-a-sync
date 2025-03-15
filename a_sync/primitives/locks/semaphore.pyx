@@ -5,13 +5,13 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 
 from asyncio import CancelledError, Future, iscoroutinefunction, sleep
 from collections import defaultdict, deque
-from functools import wraps
 from libc.string cimport strcpy
 from libc.stdlib cimport malloc, free
 from threading import Thread, current_thread
 from typing import Container
 
 from a_sync._typing import *
+from a_sync.functools cimport wraps
 from a_sync.primitives._debug cimport _DebugDaemonMixin
 
 
