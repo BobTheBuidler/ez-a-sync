@@ -1,4 +1,4 @@
-import functools
+from functools import partial
 from logging import DEBUG, getLogger
 
 import async_property as ap  # type: ignore [import]
@@ -20,6 +20,7 @@ from a_sync.a_sync.method import (
 )
 from a_sync.a_sync.method cimport _is_a_sync_instance, _update_cache_timer
 from a_sync.asyncio.create_task cimport ccreate_task_simple
+from a_sync.functools cimport cached_property_unsafe, wraps
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -161,7 +162,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         c_logger.debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, owner)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def _TaskMapping(self) -> Type[TaskMapping]:
         """This silly helper just fixes a circular import"""
         from a_sync.task import TaskMapping
@@ -381,7 +382,7 @@ def a_sync_property(  # type: ignore [misc]
         descriptor_class = ASyncPropertyDescriptorAsyncDefault
     else:
         descriptor_class = property
-    decorator = functools.partial(descriptor_class, **modifiers)
+    decorator = partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
 
@@ -638,7 +639,7 @@ def a_sync_cached_property(  # type: ignore [misc]
         descriptor_class = ASyncCachedPropertyDescriptorAsyncDefault
     else:
         descriptor_class = ASyncCachedPropertyDescriptor
-    decorator = functools.partial(descriptor_class, **modifiers)
+    decorator = partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
 

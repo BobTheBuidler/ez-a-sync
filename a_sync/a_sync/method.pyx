@@ -8,7 +8,6 @@ asynchronously based on various conditions and configurations.
 
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
-import functools
 import logging
 import weakref
 from inspect import isawaitable
@@ -23,6 +22,7 @@ from a_sync.a_sync.function import (
     ASyncFunctionAsyncDefault,
     ASyncFunctionSyncDefault,
 )
+from a_sync.functools cimport cached_property_unsafe, update_wrapper
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
@@ -212,7 +212,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry."
         )
 
-    @functools.cached_property
+    @cached_property_unsafe
     def __is_async_def__(self) -> bool:
         """
         Check if the wrapped function is a coroutine function.
@@ -537,7 +537,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         ASyncFunction.__init__(self, unbound, _skip_validate=True, **modifiers)
         self._is_async_def = async_def
         """True if `self.__wrapped__` is a coroutine function, False otherwise."""
-        functools.update_wrapper(self, unbound)
+        update_wrapper(self, unbound)
 
     def __repr__(self) -> str:
         """
