@@ -4,9 +4,9 @@ __T = TypeVar("__T")
 
 class AwaitableOnly(Generic[__T]):
     """This wraps a coroutine will call it on await."""
+
     def __init__(self, coro: Awaitable[__T]) -> None: ...
     def __await__(self) -> __T: ...
-
 
 class _ObjectProxyMethods:
     @property

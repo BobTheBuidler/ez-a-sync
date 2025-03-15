@@ -470,17 +470,18 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     def _workers(self) -> "asyncio.Task[NoReturn]":
         """Creates and manages the worker tasks for the queue."""
         logger.debug("starting worker task for %s", self)
+        name = self.name
         workers = tuple(
             a_sync.asyncio.create_task(
                 coro=self._worker_coro(),
-                name=f"{self.name} [Task-{i}]",
+                name=f"{name} [Task-{i}]",
                 log_destroy_pending=False,
             )
             for i in range(self.num_workers)
         )
         task = a_sync.asyncio.create_task(
             gather(*workers),
-            name=f"{self.name} worker main Task",
+            name=f"{name} worker main Task",
             log_destroy_pending=False,
         )
         task._workers = workers
