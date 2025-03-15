@@ -6,22 +6,23 @@ from typing import Any, DefaultDict, Dict
 from a_sync._property import AwaitableOnly, AwaitableProxy
 
 
-ASYNC_PROPERTY_ATTR = '__async_property__'
+ASYNC_PROPERTY_ATTR = "__async_property__"
 
 
 def async_cached_property(func, *args, **kwargs) -> "AsyncCachedPropertyDescriptor":
-    assert iscoroutinefunction(func), 'Can only use with async def'
+    assert iscoroutinefunction(func), "Can only use with async def"
     return AsyncCachedPropertyDescriptor(func, *args, **kwargs)
 
 
 FieldName = str
+
 
 class AsyncCachedPropertyInstanceState:
     def __init__(self) -> None:
         self.cache: Dict[FieldName, Any] = {}
         self.lock: DefaultDict[FieldName, Lock] = defaultdict(Lock)
 
-    __slots__ = 'cache', 'lock'
+    __slots__ = "cache", "lock"
 
 
 class AsyncCachedPropertyDescriptor:
@@ -32,8 +33,8 @@ class AsyncCachedPropertyDescriptor:
         self.field_name = field_name or _fget.__name__
 
         update_wrapper(self, _fget)
-        self._check_method_sync(_fset, 'setter')
-        self._check_method_sync(_fdel, 'deleter')
+        self._check_method_sync(_fset, "setter")
+        self._check_method_sync(_fdel, "deleter")
 
     def __set_name__(self, owner, name):
         self.field_name = name
@@ -57,24 +58,20 @@ class AsyncCachedPropertyDescriptor:
         self.del_cache_value(instance)
 
     def setter(self, method):
-        self._check_method_name(method, 'setter')
+        self._check_method_name(method, "setter")
         return type(self)(self._fget, method, self._fdel, self.field_name)
 
     def deleter(self, method):
-        self._check_method_name(method, 'deleter')
+        self._check_method_name(method, "deleter")
         return type(self)(self._fget, self._fset, method, self.field_name)
 
     def _check_method_name(self, method, method_type):
         if method.__name__ != self.field_name:
-            raise AssertionError(
-                f'@{self.field_name}.{method_type} name must match property name'
-            )
+            raise AssertionError(f"@{self.field_name}.{method_type} name must match property name")
 
     def _check_method_sync(self, method, method_type):
         if method and iscoroutinefunction(method):
-            raise AssertionError(
-                f'@{self.field_name}.{method_type} must be synchronous'
-            )
+            raise AssertionError(f"@{self.field_name}.{method_type} must be synchronous")
 
     def get_instance_state(self, instance):
         try:
@@ -112,4 +109,5 @@ class AsyncCachedPropertyDescriptor:
                 value = await self._fget(instance)
                 self.__set__(instance, value)
                 return value
+
         return load_value
