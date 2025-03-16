@@ -88,6 +88,8 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     __wrapped__: AnyFn[P, T]
     """The unbound function which will be bound to an instance when :meth:`__get__` is called."""
 
+    __ASyncABC__: Type["ASyncABC"] = None
+
     async def __call__(self, instance: I, *args: P.args, **kwargs: P.kwargs) -> T:
         """
         Asynchronously call the method.
@@ -131,7 +133,10 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         try:
             bound = instance.__dict__[self.field_name]
         except KeyError:
-            from a_sync.a_sync.abstract import ASyncABC
+            ASyncABC = ASyncMethodDescriptor.__ASyncABC__
+            if ASyncABC is None:
+                from a_sync.a_sync.abstract import ASyncABC
+                ASyncMethodDescriptor.__ASyncABC__ = ASyncABC
 
             if self.default == "sync":
                 bound = ASyncBoundMethodSyncDefault(
