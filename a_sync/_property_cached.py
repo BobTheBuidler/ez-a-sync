@@ -121,7 +121,7 @@ class AsyncCachedPropertyDescriptor:
                     value = await _fget(instance)
                     set_cache_value(instance, value)
                     return value
-            
+
             self._load_value = loader
 
         return lambda: loader(instance)
