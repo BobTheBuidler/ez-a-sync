@@ -12,7 +12,7 @@ from libc.string cimport strcpy
 from libc.time cimport time
 
 from a_sync._typing import *
-from a_sync.primitives._debug cimport _DebugDaemonMixin
+from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
 
 cdef extern from "time.h":
     ctypedef long time_t
@@ -21,6 +21,8 @@ cdef extern from "time.h":
 async def _return_true():
     return True
 
+
+cdef bint _loop_kwarg_deprecated = sys.version_info >= (3, 10)
 
 cdef class CythonEvent(_DebugDaemonMixin):
     """
@@ -47,10 +49,10 @@ cdef class CythonEvent(_DebugDaemonMixin):
         """
         self._waiters = []
         #self._value = False
-        if sys.version_info >= (3, 10):
-            super().__init__()
+        if _loop_kwarg_deprecated:
+            _LoopBoundMixin.__init__(self)
         else:
-            super().__init__(loop=loop)
+            _LoopBoundMixin.__init__(self, loop=loop)
 
         # backwards compatability
         if hasattr(self, "_loop"):

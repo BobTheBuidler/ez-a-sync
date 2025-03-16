@@ -179,7 +179,6 @@ class ASyncSingletonMeta(ASyncMeta):
         """Dictionary to store singleton instances."""
         cls.__lock = threading.Lock()
         """Lock to ensure thread-safe instance creation."""
-        super().__init__(name, bases, namespace)
 
     def __call__(cls, *args: Any, **kwargs: Any):
         is_sync = cls.__a_sync_instance_will_be_sync__(args, kwargs)  # type: ignore [attr-defined]
@@ -187,7 +186,7 @@ class ASyncSingletonMeta(ASyncMeta):
             with cls.__lock:
                 # Check again in case `__instance` was set while we were waiting for the lock.
                 if is_sync not in cls.__instances:
-                    cls.__instances[is_sync] = super().__call__(*args, **kwargs)
+                    cls.__instances[is_sync] = ASyncMeta.__call__(cls, *args, **kwargs)
         return cls.__instances[is_sync]
 
 

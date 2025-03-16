@@ -80,7 +80,7 @@ class NoFlagsFound(ASyncFlagException):
         if kwargs_keys:
             err += f"\nkwargs keys: {kwargs_keys}"
         err += "\nThis is likely an issue with a custom subclass definition."
-        super().__init__(err)
+        BaseException.__init__(self, err)
 
 
 class TooManyFlags(ASyncFlagException):
@@ -111,7 +111,7 @@ class TooManyFlags(ASyncFlagException):
         err = f"There are multiple a_sync {self.desc(target)} and there should only be one.\n"
         err += f"Present flags: {present_flags}\n"
         err += "This is likely an issue with a custom subclass definition."
-        super().__init__(err)
+        BaseException.__init__(self, err)
 
 
 class InvalidFlag(ASyncFlagException):
@@ -142,7 +142,7 @@ class InvalidFlag(ASyncFlagException):
         """
         err = f"'flag' must be one of: {self.viable_flags}. You passed {flag}."
         err += "\nThis code should not be reached and likely indicates an issue with a custom subclass definition."
-        super().__init__(err)
+        BaseException.__init__(self, err)
 
 
 class InvalidFlagValue(ASyncFlagException):
@@ -168,7 +168,7 @@ class InvalidFlagValue(ASyncFlagException):
         See Also:
             - :class:`ASyncFlagException`
         """
-        super().__init__(f"'{flag}' should be boolean. You passed {flag_value}.")
+        BaseException.__init__(self, f"'{flag}' should be boolean. You passed {flag_value}.")
 
 
 class FlagNotDefined(ASyncFlagException):
@@ -197,7 +197,7 @@ class FlagNotDefined(ASyncFlagException):
         See Also:
             - :class:`ASyncFlagException`
         """
-        super().__init__(f"{obj} flag {flag} is not defined.")
+        BaseException.__init__(self, f"{obj} flag {flag} is not defined.")
 
 
 class ImproperFunctionType(ValueError):
@@ -235,8 +235,9 @@ class FunctionNotAsync(ImproperFunctionType):
         See Also:
             - :class:`ImproperFunctionType`
         """
-        super().__init__(
-            f"`coro_fn` must be a coroutine function defined with `async def`. You passed {fn}."
+        BaseException.__init__(
+            self,
+            f"`coro_fn` must be a coroutine function defined with `async def`. You passed {fn}.",
         )
 
 
@@ -265,8 +266,8 @@ class FunctionNotSync(ImproperFunctionType):
         See Also:
             - :class:`ImproperFunctionType`
         """
-        super().__init__(
-            f"`func` must be a coroutine function defined with `def`. You passed {fn}."
+        BaseException.__init__(
+            self, f"`func` must be a coroutine function defined with `def`. You passed {fn}."
         )
 
 
@@ -292,7 +293,7 @@ class ASyncRuntimeError(RuntimeError):
         See Also:
             - :class:`RuntimeError`
         """
-        super().__init__(str(e))
+        BaseException.__init__(self, str(e))
 
 
 class SyncModeInAsyncContextError(ASyncRuntimeError):
@@ -320,7 +321,7 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
             err = "The event loop is already running, which means you're trying to use an `ASyncFunction` synchronously from within an async context.\n"
             err += f"Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:\n"
             err += f"{VIABLE_FLAGS}"
-        super().__init__(err)
+        BaseException.__init__(self, err)
 
 
 class MappingError(Exception):
@@ -354,7 +355,7 @@ class MappingError(Exception):
         msg = (msg or self._msg) + f":\n{mapping}"
         if mapping:
             msg += f"\n{dict(mapping)}"
-        super().__init__(msg)
+        BaseException.__init__(self, msg)
         self.mapping = mapping
 
 
@@ -424,7 +425,7 @@ class PersistedTaskException(Exception):
         See Also:
             - :class:`asyncio.Task`
         """
-        super().__init__(f"{exc.__class__.__name__}: {exc}", task)
+        BaseException.__init__(self, f"{exc.__class__.__name__}: {exc}", task)
         self.exception = exc
         self.task = task
 

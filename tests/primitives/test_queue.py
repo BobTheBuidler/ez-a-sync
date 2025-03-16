@@ -1,6 +1,6 @@
 import pytest
 import asyncio
-from a_sync.primitives.queue import Queue
+from a_sync.primitives.queue import ProcessingQueue, Queue
 
 
 @pytest.mark.asyncio_cooperative
@@ -323,3 +323,46 @@ async def test_unusual_data_types():
     assert await queue.get() == {"key": "value"}
     assert await queue.get() == ["list", "of", "items"]
     assert await queue.get() == ("tuple", "of", "items")
+
+
+async def coro_fn(x: str) -> int:
+    return int(x)
+
+
+@pytest.mark.asyncio_cooperative
+async def test_processing_queue_initialization():
+    queue = ProcessingQueue(coro_fn, 2)
+    assert isinstance(queue, ProcessingQueue)
+    assert queue.func == coro_fn
+    assert queue.num_workers == 2
+    assert queue.empty()
+
+
+@pytest.mark.asyncio_cooperative
+async def test_processing_put_and_await():
+    queue = ProcessingQueue(coro_fn, 2)
+    fut = await queue.put("1")
+    assert isinstance(fut, asyncio.Future)
+    assert not queue.empty()
+    assert await fut == 1
+    assert queue.empty()
+
+
+@pytest.mark.asyncio_cooperative
+async def test_processing_put_nowait_and_await():
+    queue = ProcessingQueue(coro_fn, 2)
+    fut = queue.put_nowait("2")
+    assert isinstance(fut, asyncio.Future)
+    assert not queue.empty()
+    assert await fut == 2
+    with pytest.raises(asyncio.QueueEmpty):
+        queue.get_nowait()
+
+
+@pytest.mark.asyncio_cooperative
+async def test_processing_call():
+    queue = ProcessingQueue(coro_fn, 10)
+    big_work = map(queue, map(str, range(100)))
+    results = await asyncio.gather(*big_work)
+    assert results == list(range(100))
+    assert queue.empty()

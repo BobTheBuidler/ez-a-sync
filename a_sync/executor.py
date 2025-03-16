@@ -252,10 +252,14 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPo
             >>> result = await future
         """
         if max_workers == 0:
-            super().__init__(1, mp_context, initializer, initargs)
+            concurrent.futures.ProcessPoolExecutor.__init__(
+                self, 1, mp_context, initializer, initargs
+            )
             self._max_workers = 0
         else:
-            super().__init__(max_workers, mp_context, initializer, initargs)
+            concurrent.futures.ProcessPoolExecutor.__init__(
+                self, max_workers, mp_context, initializer, initargs
+            )
         self.__init_mixin__()
 
 
@@ -306,10 +310,14 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPool
             >>> result = await future
         """
         if max_workers == 0:
-            super().__init__(1, thread_name_prefix, initializer, initargs)
+            concurrent.futures.ThreadPoolExecutor.__init__(
+                self, 1, thread_name_prefix, initializer, initargs
+            )
             self._max_workers = 0
         else:
-            super().__init__(max_workers, thread_name_prefix, initializer, initargs)
+            concurrent.futures.ThreadPoolExecutor.__init__(
+                self, max_workers, thread_name_prefix, initializer, initargs
+            )
         self.__init_mixin__()
 
 
@@ -443,7 +451,9 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
         self._adjusting_lock = threading.Lock()
         """Lock used to adjust the number of threads."""
 
-        super().__init__(max_workers, thread_name_prefix, initializer, initargs)
+        AsyncThreadPoolExecutor.__init__(
+            self, max_workers, thread_name_prefix, initializer, initargs
+        )
 
     def __len__(self) -> int:
         return len(self._threads)
