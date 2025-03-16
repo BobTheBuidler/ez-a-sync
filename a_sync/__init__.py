@@ -53,7 +53,7 @@ See Also:
     - :mod:`a_sync.primitives`: Includes modified versions of standard asyncio primitives.
 """
 
-from a_sync import aliases, exceptions, iter, task
+from a_sync import aliases, exceptions, functools, iter, task
 from a_sync.a_sync import ASyncGenericBase, ASyncGenericSingleton, a_sync
 from a_sync.a_sync.modifiers.semaphores import apply_semaphore
 from a_sync.a_sync.property import (
