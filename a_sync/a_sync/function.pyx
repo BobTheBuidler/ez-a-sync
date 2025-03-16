@@ -1,7 +1,7 @@
 import functools
-import inspect
-import logging
 import sys
+from inspect import getfullargspec, isasyncgenfunction, isgeneratorfunction
+from logging import getLogger
 from libc.stdint cimport uintptr_t
 
 from async_lru import _LRUCacheWrapper
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
         ASyncBoundMethodSyncDefault,
     )
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 cdef object c_logger = logger
 
@@ -120,7 +120,7 @@ cpdef void _validate_wrapped_fn(fn: Callable):
     _check_not_genfunc(fn)
     _validate_argspec(fn)
 
-cdef object _function_type = type(logging.getLogger)
+cdef object _function_type = type(getLogger)
 
 cdef set[uintptr_t] _argspec_validated = set()
 
@@ -131,7 +131,7 @@ cdef void _validate_argspec_cached(fn: Callable):
         _argspec_validated.add(fid)
 
 cdef void _validate_argspec(fn: Callable):
-    fn_args = inspect.getfullargspec(fn)[0]
+    fn_args = getfullargspec(fn)[0]
     for flag in VIABLE_FLAGS:
         if flag in fn_args:
             raise RuntimeError(
@@ -994,7 +994,7 @@ cdef void _check_not_genfunc(func: Callable):
         - :func:`inspect.isasyncgenfunction`
         - :func:`inspect.isgeneratorfunction`
     """
-    if inspect.isasyncgenfunction(func) or inspect.isgeneratorfunction(func):
+    if isasyncgenfunction(func) or isgeneratorfunction(func):
         raise ValueError("unable to decorate generator functions with this decorator")
 
 

@@ -3,9 +3,9 @@
 This module provides an enhanced version of asyncio.Event with additional debug logging to help detect deadlocks.
 """
 
-import asyncio
 import sys
 import weakref
+from asyncio import AbstractEventLoop, Future, get_event_loop, sleep
 from libc.stdint cimport uint16_t
 from libc.stdlib cimport malloc, free
 from libc.string cimport strcpy
@@ -37,7 +37,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
         name: str = "",
         debug_daemon_interval: int = 300,
         *,
-        loop: Optional[asyncio.AbstractEventLoop] = None,
+        loop: Optional[AbstractEventLoop] = None,
     ):
         """
         Initializes the Event.
@@ -45,7 +45,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
         Args:
             name (str): An optional name for the event, used in debug logs.
             debug_daemon_interval (int): The interval in seconds for the debug daemon to log information.
-            loop (Optional[asyncio.AbstractEventLoop]): The event loop to use.
+            loop (Optional[AbstractEventLoop]): The event loop to use.
         """
         self._waiters = []
         #self._value = False
@@ -56,7 +56,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
 
         # backwards compatability
         if hasattr(self, "_loop"):
-            self._loop = self._loop or asyncio.get_event_loop()
+            self._loop = self._loop or get_event_loop()
         if debug_daemon_interval > 65535:
             raise ValueError(f"'debug_daemon_interval' is stored as a uint16 and must be less than 65535")
         self._debug_daemon_interval = debug_daemon_interval
@@ -161,7 +161,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
     def _name(self) -> str:
         return self.__name.decode("utf-8")
     
-    async def __wait(self, fut: asyncio.Future) -> Literal[True]:
+    async def __wait(self, fut: Future) -> Literal[True]:
         try:
             await fut
             return True
@@ -185,9 +185,9 @@ cdef class CythonEvent(_DebugDaemonMixin):
                     "Waiting for %s for %sm", self, round((now - start) / 60, 2)
                 )
             del self  # no need to hold a reference here
-            await asyncio.sleep(interval)
+            await sleep(interval)
             loops += 1                
 
 
-cdef inline bint _is_not_done(fut: asyncio.Future):
+cdef inline bint _is_not_done(fut: Future):
     return <str>fut._state == "PENDING"

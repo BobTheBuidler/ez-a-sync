@@ -1,6 +1,6 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
-import asyncio
+from asyncio import iscoroutinefunction
 
 from aiolimiter import AsyncLimiter
 
@@ -113,7 +113,7 @@ def apply_rate_limit(
         if runs_per_minute is not None and not isinstance(runs_per_minute, (int, AsyncLimiter)):
             raise TypeError("'runs_per_minute' must be an integer.", runs_per_minute)
 
-    elif not asyncio.iscoroutinefunction(coro_fn):
+    elif not iscoroutinefunction(coro_fn):
         raise exceptions.FunctionNotAsync(coro_fn)
 
     def rate_limit_decorator(coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:

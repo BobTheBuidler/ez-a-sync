@@ -5,7 +5,7 @@ waiters to be assigned priorities, ensuring that higher priority waiters are
 processed before lower priority ones.
 """
 
-import asyncio
+from asyncio import Future
 from collections import deque
 from heapq import heappop, heappush
 from logging import DEBUG, getLogger
@@ -49,7 +49,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         """A heap queue of context managers, sorted by priority."""
 
         # NOTE: This should (hopefully) be temporary
-        self._potential_lost_waiters: List["asyncio.Future[None]"] = []
+        self._potential_lost_waiters: List["Future[None]"] = []
         """A list of futures representing waiters that might have been lost."""
     
     def __init__(
@@ -410,10 +410,10 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         self._parent.c_release()
 
 
-cdef inline bint _is_not_done(fut: asyncio.Future):
+cdef inline bint _is_not_done(fut: Future):
     return <str>fut._state == "PENDING"
 
-cdef inline bint _is_not_cancelled(fut: asyncio.Future):
+cdef inline bint _is_not_cancelled(fut: Future):
     return <str>fut._state != "CANCELLED"
 
 
@@ -481,7 +481,7 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):  # type: ignore [type-
         """A heap queue of context managers, sorted by priority."""
 
         # NOTE: This should (hopefully) be temporary
-        self._potential_lost_waiters: List["asyncio.Future[None]"] = []
+        self._potential_lost_waiters: List["Future[None]"] = []
         """A list of futures representing waiters that might have been lost."""
     
     def __init__(

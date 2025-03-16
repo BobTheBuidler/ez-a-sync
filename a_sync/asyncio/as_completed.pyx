@@ -2,7 +2,7 @@
 This module extends Python's :func:`asyncio.as_completed` with additional functionality.
 """
 
-import asyncio
+from asyncio import as_completed as _as_completed
 
 try:
     from tqdm.asyncio import tqdm_asyncio
@@ -133,7 +133,7 @@ def as_completed(
         else (
             tqdm_asyncio.as_completed(fs, timeout=timeout, **tqdm_kwargs)
             if tqdm
-            else asyncio.as_completed(fs, timeout=timeout)
+            else _as_completed(fs, timeout=timeout)
         )
     )
 

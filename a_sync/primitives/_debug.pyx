@@ -4,8 +4,8 @@ This module provides a mixin class used to facilitate the creation of debugging 
 The mixin provides a framework for managing a debug daemon task, which can be used to emit rich debug logs from subclass instances whenever debug logging is enabled. Subclasses must implement the specific logging behavior.
 """
 
-import asyncio
 import os
+from asyncio import AbstractEventLoop, Future, Task
 from asyncio.events import _running_loop
 from threading import Lock
 from typing import Optional
@@ -41,10 +41,10 @@ cdef class _LoopBoundMixin(_LoggerMixin):
                 '{}() since it is no longer necessary.'.format(type(self).__name__)
             )
     @property
-    def _loop(self) -> asyncio.AbstractEventLoop:
+    def _loop(self) -> AbstractEventLoop:
         return self._LoopBoundMixin__loop
     @_loop.setter
-    def _loop(self, loop: asyncio.AbstractEventLoop):
+    def _loop(self, loop: AbstractEventLoop):
         self._LoopBoundMixin__loop = loop
     cpdef object _get_loop(self):
         return self._c_get_loop()
@@ -79,7 +79,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         self._has_daemon = False
         self._LoopBoundMixin__loop = None
 
-    async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
+    async def _debug_daemon(self, fut: Future, fn, *args, **kwargs) -> None:
         """
         Abstract method to define the debug daemon's behavior.
 
@@ -104,7 +104,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         """
         raise NotImplementedError
 
-    def _start_debug_daemon(self, *args, **kwargs) -> "asyncio.Future[None]":
+    def _start_debug_daemon(self, *args, **kwargs) -> "Future[None]":
         """
         Starts the debug daemon task if debug logging is enabled and the event loop is running.
 
@@ -175,7 +175,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
             
         self._has_daemon = True
 
-    def _stop_debug_daemon(self, t: Optional[asyncio.Task] = None) -> None:
+    def _stop_debug_daemon(self, t: Optional[Task] = None) -> None:
         """
         Stops the debug daemon task.
 
