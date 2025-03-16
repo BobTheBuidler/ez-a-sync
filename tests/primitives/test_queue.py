@@ -348,7 +348,6 @@ async def test_processing_put_and_await():
     assert queue.empty()
 
 
-
 @pytest.mark.asyncio_cooperative
 async def test_processing_put_nowait_and_await():
     queue = ProcessingQueue(coro_fn, 2)
@@ -358,6 +357,7 @@ async def test_processing_put_nowait_and_await():
     assert await fut == 2
     with pytest.raises(asyncio.QueueEmpty):
         queue.get_nowait()
+
 
 @pytest.mark.asyncio_cooperative
 async def test_processing_call():
