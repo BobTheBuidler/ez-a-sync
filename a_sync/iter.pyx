@@ -5,6 +5,7 @@ import sys
 import weakref
 from asyncio import TimerHandle, gather, get_event_loop, iscoroutinefunction
 from copy import deepcopy
+from inspect import isasyncgenfunction, isawaitable
 from types import FunctionType
 from typing import _GenericAlias, get_args
 
@@ -392,7 +393,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         
         # We're going to assume that a dev writing cython knows what they're doing.
         # Plus, we need it for this lib's internals to work properly.
-        elif inspect.isasyncgenfunction(wrapped) or type(wrapped).__name__ == "cython_function_or_method":
+        elif isasyncgenfunction(wrapped) or type(wrapped).__name__ == "cython_function_or_method":
             return ASyncGeneratorFunction(wrapped)
         
         raise TypeError(
@@ -636,7 +637,7 @@ class ASyncFilter(_ASyncView[T]):
             True if the object passes the filter, False otherwise.
         """
         cdef object checked = self._function(obj)
-        return bool(await checked) if inspect.isawaitable(checked) else bool(checked)
+        return bool(await checked) if isawaitable(checked) else bool(checked)
 
 
 cdef object _key_if_no_key(object obj):
