@@ -1,13 +1,12 @@
 # cython: boundscheck=False
-import inspect
-import logging
 import sys
-import weakref
 from asyncio import TimerHandle, gather, get_event_loop, iscoroutinefunction
 from copy import deepcopy
 from inspect import isasyncgenfunction, isawaitable
+from logging import getLogger
 from types import FunctionType
 from typing import _GenericAlias, get_args
+from weakref import ref as weak_ref
 
 from async_property import async_cached_property
 
@@ -18,7 +17,7 @@ from a_sync.exceptions import SyncModeInAsyncContextError
 from a_sync.functools cimport update_wrapper
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 if sys.version_info < (3, 10):
     SortKey = SyncFn[T, bool]
@@ -467,7 +466,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
     _cache_handle: TimerHandle
     "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
 
-    __weakself__: "weakref.ref[object]" = None
+    __weakself__: "weak_ref[object]" = None
     "A weak reference to the instance the function is bound to, if any."
 
     def __init__(
@@ -489,7 +488,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
 
         if instance is not None:
             self._cache_handle = self.__get_cache_handle(instance)
-            self.__weakself__ = weakref.ref(instance, self.__cancel_cache_handle)
+            self.__weakself__ = weak_ref(instance, self.__cancel_cache_handle)
         update_wrapper(self, self.__wrapped__)
 
     def __repr__(self) -> str:
