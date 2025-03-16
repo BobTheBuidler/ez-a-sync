@@ -3,7 +3,7 @@ This module initializes the utility functions for the a_sync library, including 
 iterators and implementing asynchronous versions of the built-in any and all functions.
 """
 
-import asyncio
+from asyncio import as_completed, ensure_future
 
 from a_sync.utils.iterators import as_yielded, exhaust_iterator, exhaust_iterators
 
@@ -47,8 +47,8 @@ async def any(*awaitables) -> bool:
     Note:
         This function will stop iterating as soon as it encounters a truthy value.
     """
-    futs = [asyncio.ensure_future(a) for a in awaitables]
-    for fut in asyncio.as_completed(futs):
+    futs = list(map(ensure_future, awaitables))
+    for fut in as_completed(futs):
         try:
             result = bool(await fut)
         except RuntimeError as e:
@@ -56,7 +56,7 @@ async def any(*awaitables) -> bool:
                 raise RuntimeError(str(e), fut) from e
             else:
                 raise
-        if bool(result):
+        if result:
             for fut in futs:
                 fut.cancel()
             return True
@@ -89,8 +89,8 @@ async def all(*awaitables) -> bool:
         >>> result
         False
     """
-    futs = [asyncio.ensure_future(a) for a in awaitables]
-    for fut in asyncio.as_completed(futs):
+    futs = list(map(ensure_future, awaitables))
+    for fut in as_completed(futs):
         try:
             result = bool(await fut)
         except RuntimeError as e:

@@ -3,8 +3,9 @@ This module extends :func:`asyncio.create_task` to support any :class:`Awaitable
 manage task lifecycle, and enhance error handling.
 """
 
-import asyncio
+import asyncio.tasks as aiotasks
 import logging
+from asyncio import Future, InvalidStateError, Task, get_running_loop, iscoroutine
 
 from a_sync import exceptions
 from a_sync._typing import *
@@ -19,7 +20,7 @@ def create_task(
     name: str = "",
     skip_gc_until_done: bint = False,
     log_destroy_pending: bint = True,
-) -> "asyncio.Task[T]":
+) -> "Task[T]":
     """
     Extends :func:`asyncio.create_task` to support any :class:`Awaitable`, manage task lifecycle, and enhance error handling.
 
@@ -52,7 +53,7 @@ def create_task(
 
     See Also:
         - :func:`asyncio.create_task`
-        - :class:`asyncio.Task`
+        - :class:`Task`
     """
     return ccreate_task(coro, name, skip_gc_until_done, log_destroy_pending)
 
@@ -60,10 +61,10 @@ cdef object ccreate_task_simple(object coro):
     return ccreate_task(coro, "", False, True)
     
 cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint log_destroy_pending):
-    if not asyncio.iscoroutine(coro):
+    if not iscoroutine(coro):
         coro = __await(coro)
 
-    create_task = asyncio.get_running_loop().create_task
+    create_task = get_running_loop().create_task
     task = create_task(coro)
     
     if name:
@@ -88,7 +89,7 @@ cdef void __set_task_name(object task, str name):
          set_name(name)
 
 
-__persisted_tasks: Set["asyncio.Task[Any]"] = set()
+__persisted_tasks: Set["Task[Any]"] = set()
 
 
 async def __await(awaitable: Awaitable[T]) -> T:
@@ -114,7 +115,7 @@ async def __await(awaitable: Awaitable[T]) -> T:
         return await awaitable
     except RuntimeError as e:
         args = [e, awaitable]
-        if isinstance(awaitable, asyncio.tasks._GatheringFuture):
+        if isinstance(awaitable, aiotasks._GatheringFuture):
             args.append(awaitable._children)
         raise RuntimeError(*args) from None
 
@@ -154,11 +155,11 @@ cdef void __prune_persisted_tasks():
                 __persisted_tasks.discard(task)
 
 
-cdef inline bint _is_done(fut: asyncio.Future):
+cdef inline bint _is_done(fut: Future):
     return <str>fut._state != "PENDING"
 
 
-cdef object _get_exception(fut: asyncio.Future):
+cdef object _get_exception(fut: Future):
     """Return the exception that was set on this future.
 
     The exception (or None if no exception was set) is returned only if
@@ -172,15 +173,15 @@ cdef object _get_exception(fut: asyncio.Future):
         return fut._exception
     if state == "CANCELLED":
         raise fut._make_cancelled_error()
-    raise asyncio.exceptions.InvalidStateError('Exception is not set.')
+    raise InvalidStateError('Exception is not set.')
 
 
-async def __persisted_task_exc_wrap(task: "asyncio.Task[T]") -> T:
+async def __persisted_task_exc_wrap(task: "Task[T]") -> T:
     """
     Wrap a task to handle its exception in a specialized manner.
 
     Args:
-        task: The :class:`asyncio.Task` to wrap.
+        task: The :class:`Task` to wrap.
 
     Raises:
         PersistedTaskException: Wraps any exception raised by the task for special handling.

@@ -25,8 +25,8 @@ TODO describe why a user would want to use these (to write cleaner code that doe
 TODO include comparisons between the 'new way' with this future class and the 'old way' with gathers
 """
 
-import asyncio
 import concurrent.futures
+from asyncio import Future, Task, gather, get_event_loop
 from functools import partial, wraps
 from inspect import isawaitable
 
@@ -83,7 +83,7 @@ async def _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> L
         >>> await _gather_check_and_materialize(async_fn(1), 2, async_fn(3))
         [1, 2, 3]
     """
-    return await asyncio.gather(*(_check_and_materialize(thing) for thing in things))
+    return await gather(*map(_check_and_materialize, things))
 
 
 async def _check_and_materialize(thing: T) -> T:
@@ -127,7 +127,7 @@ def _materialize(meta: "ASyncFuture[T]") -> T:
         :class:`ASyncFuture`
     """
     try:
-        return asyncio.get_event_loop().run_until_complete(meta)
+        return get_event_loop().run_until_complete(meta)
     except RuntimeError as e:
         raise RuntimeError(
             f"{meta} result is not set and the event loop is running, you will need to await it first"
@@ -360,7 +360,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         return self._result
 
     @property
-    def __task__(self) -> "asyncio.Task[T]":
+    def __task__(self) -> "Task[T]":
         """
         Returns the asyncio task associated with the awaitable, creating it if necessary.
 
@@ -1309,7 +1309,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     def __sizeof__(self) -> int:
         if isinstance(self.__awaitable__, Coroutine):
             return sum(sys.getsizeof(v) for v in self.__awaitable__.cr_frame.f_locals.values())
-        elif isinstance(self.__awaitable__, asyncio.Future):
+        elif isinstance(self.__awaitable__, Future):
             raise NotImplementedError
         raise NotImplementedError
 

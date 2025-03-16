@@ -1,11 +1,10 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
-import asyncio
 
 from async_lru import alru_cache
 
-from a_sync import exceptions
 from a_sync._typing import *
+from a_sync.exceptions import FunctionNotAsync
 
 
 class CacheKwargs(TypedDict):
@@ -156,8 +155,8 @@ def apply_async_memory_cache(
         if maxsize not in [None, -1] and (not isinstance(maxsize, int) or maxsize <= 0):
             raise TypeError("'lru_cache_maxsize' must be a positive integer or None.", maxsize)
 
-    elif not asyncio.iscoroutinefunction(coro_fn):
-        raise exceptions.FunctionNotAsync(coro_fn)
+    elif not iscoroutinefunction(coro_fn):
+        raise FunctionNotAsync(coro_fn)
 
     if maxsize == -1:
         maxsize = None

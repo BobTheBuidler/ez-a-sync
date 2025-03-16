@@ -2,7 +2,7 @@
 This module defines custom exceptions for the a_sync library.
 """
 
-import asyncio
+from asyncio import Task
 
 from a_sync._typing import *
 from a_sync.a_sync.flags import VIABLE_FLAGS
@@ -414,7 +414,7 @@ class PersistedTaskException(Exception):
         ValueError: Some error
     """
 
-    def __init__(self, exc: E, task: asyncio.Task) -> None:
+    def __init__(self, exc: E, task: Task) -> None:
         """
         Initializes the PersistedTaskException exception.
 

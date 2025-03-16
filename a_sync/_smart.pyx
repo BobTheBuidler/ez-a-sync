@@ -5,11 +5,14 @@ including a custom task factory for creating :class:`~SmartTask` instances and a
 to protect tasks from cancellation.
 """
 
-import asyncio
+import asyncio.futures as aiofutures
 import logging
 import warnings
 import weakref
+from asyncio import (AbstractEventLoop, Future, InvalidStateError, Task, 
+                     current_task, ensure_future, get_event_loop)
 from libc.stdint cimport uintptr_t
+from weakref import proxy, ref
 
 import a_sync.asyncio
 from a_sync._typing import *
@@ -98,16 +101,15 @@ cdef class WeakSet:
     def __cinit__(self):
         self._refs = {}
 
-    def _gc_callback(self, fut: asyncio.Future) -> None:
+    def _gc_callback(self, fut: Future) -> None:
         # Callback when a weakly-referenced object is garbage collected
         self._refs.pop(<uintptr_t>id(fut), None)  # Safely remove the item if it exists
 
-    cdef void add(self, fut: asyncio.Future):
+    cdef void add(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
-        ref = weakref.ref(fut, self._gc_callback)
-        self._refs[<uintptr_t>id(fut)] = ref
+        self._refs[<uintptr_t>id(fut)] = ref(fut, self._gc_callback)
 
-    cdef void remove(self, fut: asyncio.Future):
+    cdef void remove(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
         try:
             self._refs.pop(<uintptr_t>id(fut))
@@ -120,7 +122,7 @@ cdef class WeakSet:
     def __bool__(self) -> bool:
         return bool(self._refs)
 
-    def __contains__(self, item: asyncio.Future) -> bool:
+    def __contains__(self, item: Future) -> bool:
         ref = self._refs.get(<uintptr_t>id(item))
         return ref is not None and ref() is item
 
@@ -135,7 +137,7 @@ cdef class WeakSet:
         return f"WeakSet({', '.join(repr(item) for item in self)})"
 
 
-cdef inline bint _is_done(fut: asyncio.Future):
+cdef inline bint _is_done(fut: Future):
     """Return True if the future is done.
 
     Done means either that a result / exception are available, or that the
@@ -143,7 +145,7 @@ cdef inline bint _is_done(fut: asyncio.Future):
     """
     return <str>fut._state != "PENDING"
 
-cdef inline bint _is_not_done(fut: asyncio.Future):
+cdef inline bint _is_not_done(fut: Future):
     """Return False if the future is done.
 
     Done means either that a result / exception are available, or that the
@@ -151,11 +153,11 @@ cdef inline bint _is_not_done(fut: asyncio.Future):
     """
     return <str>fut._state == "PENDING"
 
-cdef inline bint _is_cancelled(fut: asyncio.Future):
+cdef inline bint _is_cancelled(fut: Future):
     """Return True if the future was cancelled."""
     return <str>fut._state == "CANCELLED"
 
-cdef object _get_result(fut: asyncio.Future):
+cdef object _get_result(fut: Future):
     """Return the result this future represents.
 
     If the future has been cancelled, raises CancelledError.  If the
@@ -171,9 +173,9 @@ cdef object _get_result(fut: asyncio.Future):
         return fut._result
     if state == "CANCELLED":
         raise fut._make_cancelled_error()
-    raise asyncio.exceptions.InvalidStateError('Result is not ready.')
+    raise InvalidStateError('Result is not ready.')
 
-cdef object _get_exception(fut: asyncio.Future):
+cdef object _get_exception(fut: Future):
     """Return the exception that was set on this future.
 
     The exception (or None if no exception was set) is returned only if
@@ -187,11 +189,11 @@ cdef object _get_exception(fut: asyncio.Future):
         return fut._exception
     if state == "CANCELLED":
         raise fut._make_cancelled_error()
-    raise asyncio.exceptions.InvalidStateError('Exception is not set.')
+    raise InvalidStateError('Exception is not set.')
 
-_init = asyncio.Future.__init__
+_init = Future.__init__
 
-class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
+class SmartFuture(_SmartFutureMixin[T], Future):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
 
@@ -219,7 +221,7 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         *,
         queue: Optional["SmartProcessingQueue[Any, Any, T]"],
         key: Optional[_Key] = None,
-        loop: Optional[asyncio.AbstractEventLoop] = None,
+        loop: Optional[AbstractEventLoop] = None,
     ) -> None:
         """
         Initialize the SmartFuture with an optional queue and key.
@@ -239,7 +241,7 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
         """
         _init(self, loop=loop)
         if queue:
-            self._queue = weakref.proxy(queue)
+            self._queue = proxy(queue)
             self.add_done_callback(SmartFuture._self_done_cleanup_callback)
         if key:
             self._key = key
@@ -297,9 +299,9 @@ class SmartFuture(_SmartFutureMixin[T], asyncio.Future):
             return _get_result(self)  # May raise too.
 
         self._asyncio_future_blocking = True
-        if current_task := asyncio.current_task(self._loop):
-            (<WeakSet>self._waiters).add(current_task)
-            current_task.add_done_callback(
+        if task := current_task(self._loop):
+            (<WeakSet>self._waiters).add(task)
+            task.add_done_callback(
                 self._waiter_done_cleanup_callback  # type: ignore [union-attr]
             )
 
@@ -340,7 +342,7 @@ def create_future(
     *,
     queue: Optional["SmartProcessingQueue"] = None,
     key: Optional[_Key] = None,
-    loop: Optional[asyncio.AbstractEventLoop] = None,
+    loop: Optional[AbstractEventLoop] = None,
 ) -> SmartFuture[V]:
     """
     Create a :class:`~SmartFuture` instance.
@@ -363,10 +365,10 @@ def create_future(
     See Also:
         - :class:`SmartFuture`
     """
-    return SmartFuture(queue=queue, key=key, loop=loop or asyncio.get_event_loop())
+    return SmartFuture(queue=queue, key=key, loop=loop or get_event_loop())
 
 
-class SmartTask(_SmartFutureMixin[T], asyncio.Task):
+class SmartTask(_SmartFutureMixin[T], Task):
     """
     A smart task that tracks waiters and integrates with a smart processing queue.
 
@@ -390,7 +392,7 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
         self,
         coro: Awaitable[T],
         *,
-        loop: Optional[asyncio.AbstractEventLoop] = None,
+        loop: Optional[AbstractEventLoop] = None,
         name: Optional[str] = None,
     ) -> None:
         """
@@ -409,8 +411,8 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
         See Also:
             - :func:`asyncio.create_task`
         """
-        asyncio.Task.__init__(self, coro, loop=loop, name=name)
-        self._waiters: Set["asyncio.Task[T]"] = <set>set()
+        Task.__init__(self, coro, loop=loop, name=name)
+        self._waiters: Set["Task[T]"] = <set>set()
         self.add_done_callback(SmartTask._self_done_cleanup_callback)
 
     def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
@@ -442,9 +444,9 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
             return _get_result(self)  # May raise too.
 
         self._asyncio_future_blocking = True
-        if current_task := asyncio.current_task(self._loop):
-            (<set>self._waiters).add(current_task)
-            current_task.add_done_callback(
+        if task := current_task(self._loop):
+            (<set>self._waiters).add(task)
+            task.add_done_callback(
                 self._waiter_done_cleanup_callback  # type: ignore [union-attr]
             )
 
@@ -482,7 +484,7 @@ class SmartTask(_SmartFutureMixin[T], asyncio.Task):
             queue._futs.pop(self._key)
 
 
-def smart_task_factory(loop: asyncio.AbstractEventLoop, coro: Awaitable[T]) -> SmartTask[T]:
+def smart_task_factory(loop: AbstractEventLoop, coro: Awaitable[T]) -> SmartTask[T]:
     """
     Task factory function that an event loop calls to create new tasks.
 
@@ -510,7 +512,7 @@ def smart_task_factory(loop: asyncio.AbstractEventLoop, coro: Awaitable[T]) -> S
     return SmartTask(coro, loop=loop)
 
 
-def set_smart_task_factory(loop: asyncio.AbstractEventLoop = None) -> None:
+def set_smart_task_factory(loop: AbstractEventLoop = None) -> None:
     """
     Set the event loop's task factory to :func:`~smart_task_factory` so all tasks will be SmartTask instances.
 
@@ -533,8 +535,8 @@ def set_smart_task_factory(loop: asyncio.AbstractEventLoop = None) -> None:
 
 
 def shield(
-    arg: Awaitable[T], *, loop: Optional[asyncio.AbstractEventLoop] = None
-) -> Union[SmartFuture[T], asyncio.Future]:
+    arg: Awaitable[T], *, loop: Optional[AbstractEventLoop] = None
+) -> Union[SmartFuture[T], Future]:
     """
     Wait for a future, shielding it from cancellation.
 
@@ -585,11 +587,11 @@ def shield(
             DeprecationWarning,
             stacklevel=2,
         )
-    inner = asyncio.ensure_future(arg, loop=loop)
+    inner = ensure_future(arg, loop=loop)
     if _is_done(inner):
         # Shortcut.
         return inner
-    loop = asyncio.futures._get_loop(inner)
+    loop = aiofutures._get_loop(inner)
     outer = create_future(loop=loop)
     # special handling to connect SmartFutures to SmartTasks if enabled
     if (waiters := getattr(inner, "_waiters", None)) is not None:

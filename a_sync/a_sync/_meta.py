@@ -1,7 +1,7 @@
-import inspect
 import logging
 import threading
 from abc import ABCMeta
+from inspect import isasyncgenfunction
 from typing import Any, Dict, Tuple
 
 from a_sync import ENVIRONMENT_VARIABLES
@@ -141,7 +141,7 @@ class ASyncMeta(ABCMeta):
                     attrs[attr_name] = ASyncMethodDescriptor(attr_value, **fn_modifiers)
                 else:
                     raise NotImplementedError(attr_name, attr_value)
-            elif inspect.isasyncgenfunction(attr_value):
+            elif isasyncgenfunction(attr_value):
                 attrs[attr_name] = ASyncGeneratorFunction(attr_value)
             elif callable(attr_value):
                 # NOTE We will need to improve this logic if somebody needs to use it with classmethods or staticmethods.
