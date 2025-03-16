@@ -40,6 +40,7 @@ logger = getLogger(__name__)
 
 MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
 
+
 class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     """
     A mapping of keys to asynchronous tasks with additional functionality.
@@ -495,9 +496,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
         """
 
     @overload
-    def pop(
-        self, item: K, default: K, *, cancel: bool = False
-    ) -> "Union[Task[V], Future[V]]":
+    def pop(self, item: K, default: K, *, cancel: bool = False) -> "Union[Task[V], Future[V]]":
         """Pop a task from the TaskMapping.
 
         Args:
