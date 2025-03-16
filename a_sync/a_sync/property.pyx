@@ -436,12 +436,12 @@ class ASyncCachedPropertyDescriptor(
         Returns:
             An asyncio Task representing the lock.
         """
-        instance_state = self.get_instance_state(instance)
-        task = instance_state.lock[self.field_name]
+        locks = self.get_instance_state(instance).lock
+        task = locks[self.field_name]
         if isinstance(task, asyncio.Lock):
             # default behavior uses lock but we want to use a Task so all waiters wake up together
             task = ccreate_task_simple(self._fget(instance))
-            instance_state.lock[self.field_name] = task
+            locks[self.field_name] = task
         return task
 
     def pop_lock(self, instance: I) -> None:
@@ -461,20 +461,30 @@ class ASyncCachedPropertyDescriptor(
         Returns:
             A callable that loads the property value.
         """
+        loader = self._load_value
+        if loader is None:
 
-        @functools.wraps(self._fget)
-        async def load_value():
-            inner_task = self.get_lock(instance)
-            try:
-                value = await _smart.shield(inner_task)
-            except Exception as e:
-                e.args = *e.args, {"property": self, "instance": instance}
-                raise
-            self.__set__(instance, value)
-            self.pop_lock(instance)
-            return value
+            get_lock = self.get_lock
+            set_cache_value = self.__set__
+            pop_lock = self.pop_lock
 
-        return load_value
+            @functools.wraps(self._fget)
+            async def loader(instance):
+                inner_task = get_lock(instance)
+                try:
+                    value = await _smart.shield(inner_task)
+                except Exception as e:
+                    instance_context = {"property": self, "instance": instance}
+                    if e.args and e.args[-1] != instance_context:
+                        e.args = *e.args, instance_context
+                    raise
+                set_cache_value(instance, value)
+                pop_lock(instance)
+                return value
+
+            self._load_value = loader
+
+        return lambda: loader(instance)
 
 
 class cached_property(ASyncCachedPropertyDescriptor[I, T]):
