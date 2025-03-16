@@ -890,7 +890,7 @@ else:
 class ASyncDecorator(_ModifiedMixin):
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         """
-        Initializes an ASyncDecorator instance.
+        Initializes an ASyncDecorator instance by validating the inputs.
 
         Args:
             **modifiers: Keyword arguments for function modifiers.
@@ -901,24 +901,13 @@ class ASyncDecorator(_ModifiedMixin):
         See Also:
             - :class:`ModifierManager`
         """
-        assert "default" in modifiers, modifiers
-        self.modifiers = ModifierManager(modifiers)
-        self.validate_inputs()
-
-    def validate_inputs(self) -> None:
-        """
-        Validates the input modifiers.
-
-        Raises:
-            ValueError: If 'default' is not 'sync', 'async', or None.
-
-        See Also:
-            - :attr:`ModifierManager.default`
-        """
-        if self.modifiers.default not in ["sync", "async", None]:
+        if modifiers.get("default", object) not in ("sync", "async", None):
+            if "default" not in modifiers:
+                raise ValueError("you must pass a value for `default`")
             raise ValueError(
-                f"'default' must be either 'sync', 'async', or None. You passed {self.modifiers.default}."
+                f"'default' must be either 'sync', 'async', or None. You passed {modifiers['default']}."
             )
+        self.modifiers = ModifierManager(modifiers)
 
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethod[B, P, T]":  # type: ignore [override]
