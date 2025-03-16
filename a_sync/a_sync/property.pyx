@@ -1,4 +1,4 @@
-import functools
+from functools import partial
 from logging import DEBUG, getLogger
 
 import async_property as ap  # type: ignore [import]
@@ -21,6 +21,7 @@ from a_sync.a_sync.method import (
 )
 from a_sync.a_sync.method cimport _is_a_sync_instance, _update_cache_timer
 from a_sync.asyncio.create_task cimport ccreate_task_simple
+from a_sync.functools cimport wraps
 
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
@@ -385,7 +386,7 @@ def a_sync_property(  # type: ignore [misc]
         descriptor_class = ASyncPropertyDescriptorAsyncDefault
     else:
         descriptor_class = property
-    decorator = functools.partial(descriptor_class, **modifiers)
+    decorator = partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
 
@@ -468,7 +469,7 @@ class ASyncCachedPropertyDescriptor(
             set_cache_value = self.__set__
             pop_lock = self.pop_lock
 
-            @functools.wraps(self._fget)
+            @wraps(self._fget)
             async def loader(instance):
                 inner_task = get_lock(instance)
                 try:
@@ -652,7 +653,7 @@ def a_sync_cached_property(  # type: ignore [misc]
         descriptor_class = ASyncCachedPropertyDescriptorAsyncDefault
     else:
         descriptor_class = ASyncCachedPropertyDescriptor
-    decorator = functools.partial(descriptor_class, **modifiers)
+    decorator = partial(descriptor_class, **modifiers)
     return decorator if func is None else decorator(func)
 
 

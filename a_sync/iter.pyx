@@ -1,13 +1,12 @@
 # cython: boundscheck=False
-import asyncio
-import functools
-import inspect
-import logging
 import sys
-import weakref
+from asyncio import TimerHandle, gather, get_event_loop, iscoroutinefunction
 from copy import deepcopy
+from inspect import isasyncgenfunction, isawaitable
+from logging import getLogger
 from types import FunctionType
 from typing import _GenericAlias, get_args
+from weakref import ref as weak_ref
 
 from async_property import async_cached_property
 
@@ -15,9 +14,10 @@ from a_sync._typing import *
 from a_sync.a_sync._helpers cimport _await
 from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.exceptions import SyncModeInAsyncContextError
+from a_sync.functools cimport update_wrapper
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 if sys.version_info < (3, 10):
     SortKey = SyncFn[T, bool]
@@ -28,9 +28,6 @@ else:
 
 
 cdef tuple[str] _FORMAT_PATTERNS = ("{cls}", "{obj}")
-
-
-cdef object get_event_loop = asyncio.get_event_loop
 
 
 class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
@@ -395,7 +392,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         
         # We're going to assume that a dev writing cython knows what they're doing.
         # Plus, we need it for this lib's internals to work properly.
-        elif inspect.isasyncgenfunction(wrapped) or type(wrapped).__name__ == "cython_function_or_method":
+        elif isasyncgenfunction(wrapped) or type(wrapped).__name__ == "cython_function_or_method":
             return ASyncGeneratorFunction(wrapped)
         
         raise TypeError(
@@ -466,10 +463,10 @@ class ASyncGeneratorFunction(Generic[P, T]):
         - :class:`ASyncIterable`
     """
 
-    _cache_handle: asyncio.TimerHandle
+    _cache_handle: TimerHandle
     "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
 
-    __weakself__: "weakref.ref[object]" = None
+    __weakself__: "weak_ref[object]" = None
     "A weak reference to the instance the function is bound to, if any."
 
     def __init__(
@@ -491,8 +488,8 @@ class ASyncGeneratorFunction(Generic[P, T]):
 
         if instance is not None:
             self._cache_handle = self.__get_cache_handle(instance)
-            self.__weakself__ = weakref.ref(instance, self.__cancel_cache_handle)
-        functools.update_wrapper(self, self.__wrapped__)
+            self.__weakself__ = weak_ref(instance, self.__cancel_cache_handle)
+        update_wrapper(self, self.__wrapped__)
 
     def __repr__(self) -> str:
         return "<{} for {} at {}>".format(
@@ -539,7 +536,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
             raise ReferenceError(self)
         return instance
 
-    def __get_cache_handle(self, instance: object) -> asyncio.TimerHandle:
+    def __get_cache_handle(self, instance: object) -> TimerHandle:
         # NOTE: we create a strong reference to instance here. I'm not sure if this is good or not but its necessary for now.
         return get_event_loop().call_later(
             300, delattr, instance, self.field_name
@@ -639,7 +636,7 @@ class ASyncFilter(_ASyncView[T]):
             True if the object passes the filter, False otherwise.
         """
         cdef object checked = self._function(obj)
-        return bool(await checked) if inspect.isawaitable(checked) else bool(checked)
+        return bool(await checked) if isawaitable(checked) else bool(checked)
 
 
 cdef object _key_if_no_key(object obj):
@@ -736,7 +733,7 @@ class ASyncSorter(_ASyncView[T]):
         cdef list items, sort_tasks
         cdef object obj
 
-        if asyncio.iscoroutinefunction(self._function):
+        if iscoroutinefunction(self._function):
             items = []
             sort_tasks = []
             if self.__aiterator__:
@@ -752,7 +749,7 @@ class ASyncSorter(_ASyncView[T]):
                         ccreate_task_simple(self._function(obj))
                     )
                 for sort_value, obj in sorted(
-                    zip(await asyncio.gather(*sort_tasks), items),
+                    zip(await gather(*sort_tasks), items),
                     reverse=reverse,
                 ):
                     yield obj
