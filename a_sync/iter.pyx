@@ -1,10 +1,9 @@
 # cython: boundscheck=False
-import asyncio
-import functools
 import inspect
 import logging
 import sys
 import weakref
+from asyncio import TimerHandle, gather, get_event_loop, iscoroutinefunction
 from copy import deepcopy
 from types import FunctionType
 from typing import _GenericAlias, get_args
@@ -29,9 +28,6 @@ else:
 
 
 cdef tuple[str] _FORMAT_PATTERNS = ("{cls}", "{obj}")
-
-
-cdef object get_event_loop = asyncio.get_event_loop
 
 
 class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
@@ -467,7 +463,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
         - :class:`ASyncIterable`
     """
 
-    _cache_handle: asyncio.TimerHandle
+    _cache_handle: TimerHandle
     "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
 
     __weakself__: "weakref.ref[object]" = None
@@ -540,7 +536,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
             raise ReferenceError(self)
         return instance
 
-    def __get_cache_handle(self, instance: object) -> asyncio.TimerHandle:
+    def __get_cache_handle(self, instance: object) -> TimerHandle:
         # NOTE: we create a strong reference to instance here. I'm not sure if this is good or not but its necessary for now.
         return get_event_loop().call_later(
             300, delattr, instance, self.field_name
@@ -737,7 +733,7 @@ class ASyncSorter(_ASyncView[T]):
         cdef list items, sort_tasks
         cdef object obj
 
-        if asyncio.iscoroutinefunction(self._function):
+        if iscoroutinefunction(self._function):
             items = []
             sort_tasks = []
             if self.__aiterator__:
@@ -753,7 +749,7 @@ class ASyncSorter(_ASyncView[T]):
                         ccreate_task_simple(self._function(obj))
                     )
                 for sort_value, obj in sorted(
-                    zip(await asyncio.gather(*sort_tasks), items),
+                    zip(await gather(*sort_tasks), items),
                     reverse=reverse,
                 ):
                     yield obj
