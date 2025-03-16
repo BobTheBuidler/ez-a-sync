@@ -325,21 +325,21 @@ async def test_unusual_data_types():
     assert await queue.get() == ("tuple", "of", "items")
 
 
-async def test(x: str) -> int:
+async def coro_fn(x: str) -> int:
     return int(x)
 
 
 @pytest.mark.asyncio_cooperative
 async def test_processing_queue_initialization():
-    queue = ProcessingQueue(test, 10)
+    queue = ProcessingQueue(coro_fn, 10)
     assert isinstance(queue, ProcessingQueue)
-    assert queue.func == test
+    assert queue.func == coro_fn
     assert queue.num_workers == 10
 
 
 @pytest.mark.asyncio_cooperative
 async def test_processing_put_and_get():
-    queue = ProcessingQueue(test, 10)
+    queue = ProcessingQueue(coro_fn, 10)
     await queue.put("1")
     fut = await queue.get()
     assert isinstance(fut, asyncio.Future)
@@ -349,7 +349,7 @@ async def test_processing_put_and_get():
 
 @pytest.mark.asyncio_cooperative
 async def test_processing_put_nowait_and_get_nowait():
-    queue = ProcessingQueue(test, 10)
+    queue = ProcessingQueue(coro_fn, 10)
     queue.put_nowait("2")
     fut = queue.get_nowait()
     assert isinstance(fut, asyncio.Future)
