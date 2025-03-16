@@ -108,6 +108,8 @@
 <div class="viewcode-block" id="AsyncCachedPropertyDescriptor">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._property_cached.AsyncCachedPropertyDescriptor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AsyncCachedPropertyDescriptor</span><span class="p">:</span>
+    <span class="n">_load_value</span> <span class="o">=</span> <span class="kc">None</span>
+
 <div class="viewcode-block" id="AsyncCachedPropertyDescriptor.__init__">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._property_cached.AsyncCachedPropertyDescriptor.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_fget</span><span class="p">,</span> <span class="n">_fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -220,17 +222,29 @@
 <div class="viewcode-block" id="AsyncCachedPropertyDescriptor.get_loader">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync._property_cached.AsyncCachedPropertyDescriptor.get_loader">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_loader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
-        <span class="nd">@wraps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fget</span><span class="p">)</span>
-        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">load_value</span><span class="p">():</span>
-            <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lock</span><span class="p">(</span><span class="n">instance</span><span class="p">):</span>
-                <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_state</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">cache</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">field_name</span><span class="p">]</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fget</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="fm">__set__</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">value</span>
 
-        <span class="k">return</span> <span class="n">load_value</span></div>
+        <span class="n">loader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_value</span>
+        <span class="k">if</span> <span class="n">loader</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">field_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_name</span>
+            <span class="n">_fget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fget</span>
+            <span class="n">get_lock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lock</span>
+            <span class="n">get_instance_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instance_state</span>
+            <span class="n">set_cache_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__set__</span>
+
+            <span class="nd">@wraps</span><span class="p">(</span><span class="n">_fget</span><span class="p">)</span>
+            <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">loader</span><span class="p">(</span><span class="n">instance</span><span class="p">):</span>
+                <span class="k">async</span> <span class="k">with</span> <span class="n">get_lock</span><span class="p">(</span><span class="n">instance</span><span class="p">):</span>
+                    <span class="n">cache</span> <span class="o">=</span> <span class="n">get_instance_state</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">cache</span>
+                    <span class="k">if</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="k">await</span> <span class="n">_fget</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+                    <span class="n">set_cache_value</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">value</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_load_value</span> <span class="o">=</span> <span class="n">loader</span>
+
+        <span class="k">return</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">loader</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
