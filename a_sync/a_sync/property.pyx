@@ -399,7 +399,7 @@ class ASyncCachedPropertyDescriptor(
     caching functionality, storing the computed value after the first access.
     """
 
-    __slots__ = "_fset", "_fdel", "_load_value", "__async_property__"
+    __slots__ = "_fset", "_fdel", "__async_property__"
 
     def __init__(
         self,
