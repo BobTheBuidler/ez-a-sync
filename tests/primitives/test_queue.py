@@ -334,7 +334,7 @@ async def test_processing_queue_initialization():
     queue = ProcessingQueue(coro_fn, 2)
     assert isinstance(queue, ProcessingQueue)
     assert queue.func == coro_fn
-    assert queue.num_workers == 10
+    assert queue.num_workers == 2
     assert queue.empty()
 
 
