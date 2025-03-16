@@ -26,6 +26,8 @@ class AsyncCachedPropertyInstanceState:
 
 
 class AsyncCachedPropertyDescriptor:
+    _load_value = None
+
     def __init__(self, _fget, _fset=None, _fdel=None, field_name=None) -> None:
         self._fget = _fget
         self._fset = _fset
@@ -100,14 +102,26 @@ class AsyncCachedPropertyDescriptor:
         del self.get_instance_state(instance).cache[self.field_name]
 
     def get_loader(self, instance):
-        @wraps(self._fget)
-        async def load_value():
-            async with self.get_lock(instance):
-                cache = self.get_instance_state(instance).cache
-                if self.field_name in cache:
-                    return cache[self.field_name]
-                value = await self._fget(instance)
-                self.__set__(instance, value)
-                return value
 
-        return load_value
+        loader = self._load_value
+        if loader is None:
+
+            field_name = self.field_name
+            _fget = self._fget
+            get_lock = self.get_lock
+            get_instance_state = self.get_instance_state
+            set_cache_value = self.__set__
+
+            @wraps(_fget)
+            async def loader(instance):
+                async with get_lock(instance):
+                    cache = get_instance_state(instance).cache
+                    if field_name in cache:
+                        return cache[field_name]
+                    value = await _fget(instance)
+                    set_cache_value(instance, value)
+                    return value
+            
+            self._load_value = loader
+
+        return lambda: loader(instance)
