@@ -12,9 +12,9 @@ import asyncio
 import functools
 import inspect
 import logging
-import weakref
 from asyncio import sleep
 from itertools import filterfalse
+from weakref import WeakKeyDictionary, proxy
 
 from a_sync import exceptions
 from a_sync._typing import *
@@ -726,7 +726,7 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
         raise TypeError(iterable)
 
 
-__unwrapped = weakref.WeakKeyDictionary()
+__unwrapped = WeakKeyDictionary()
 
 
 def _unwrap(
@@ -770,7 +770,7 @@ class _TaskMappingView(ASyncGenericBase, Iterable[T], Generic[T, K, V]):
         self, view: Iterable[T], task_mapping: TaskMapping[K, V], pop: bool = False
     ) -> None:
         self.__view__ = view
-        self.__mapping__: TaskMapping = weakref.proxy(task_mapping)
+        self.__mapping__: TaskMapping = proxy(task_mapping)
         "actually a weakref.ProxyType[TaskMapping] but then type hints weren't working"
         if pop:
             self._pop = True
@@ -842,8 +842,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
                 pop(key)
                 yield key
         else:
-            for key in tuple(mapping):
-                yield key
+            yield from tuple(mapping)
 
     async def __load_init_loader(self, yielded: Set[K]) -> AsyncIterator[K]:
         # sourcery skip: hoist-loop-from-if

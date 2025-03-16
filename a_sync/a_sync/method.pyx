@@ -10,9 +10,9 @@ asynchronously based on various conditions and configurations.
 # mypy: disable-error-code=misc
 import functools
 import logging
-import weakref
 from inspect import isawaitable
 from libc.stdint cimport uintptr_t
+from weakref import ref as weak_ref
 
 from a_sync._typing import *
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
@@ -492,7 +492,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     _cache_handle: asyncio.TimerHandle = None
     """An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."""
 
-    __weakself__: "weakref.ref[I]"
+    __weakself__: "weak_ref[I]"
     """A weak reference to the instance the function is bound to."""
 
     __wrapped__: AnyFn[Concatenate[I, P], T]
@@ -528,7 +528,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> obj = MyClass(42)
             >>> bound_method = ASyncBoundMethod(obj, MyClass.my_method, True)
         """
-        self.__weakself__ = weakref.ref(instance, self.__cancel_cache_handle)
+        self.__weakself__ = weak_ref(instance, self.__cancel_cache_handle)
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             modifiers.update(unbound.modifiers)
