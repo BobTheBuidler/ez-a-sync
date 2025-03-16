@@ -1,9 +1,10 @@
 from asyncio import Lock, iscoroutinefunction
 from collections import defaultdict
-from functools import update_wrapper, wraps
+from functools import wraps
 from typing import Any, DefaultDict, Dict
 
 from a_sync._property import AwaitableOnly, AwaitableProxy
+from a_sync.functools import update_wrapper
 
 
 ASYNC_PROPERTY_ATTR = "__async_property__"

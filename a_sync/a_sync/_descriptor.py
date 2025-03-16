@@ -13,8 +13,6 @@ See Also:
     - :class:`~a_sync.a_sync.property.ASyncPropertyDescriptor`
 """
 
-import functools
-
 from a_sync._typing import *
 from a_sync.a_sync import decorator
 from a_sync.a_sync.function import (
@@ -23,6 +21,7 @@ from a_sync.a_sync.function import (
     _ModifiedMixin,
     _validate_wrapped_fn,
 )
+from a_sync.functools import cached_property_unsafe, update_wrapper
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
@@ -97,7 +96,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         self.field_name = field_name or _fget.__name__
         """The name of the field the :class:`ASyncDescriptor` is bound to."""
 
-        functools.update_wrapper(self, self.__wrapped__)
+        update_wrapper(self, self.__wrapped__)
 
     def __repr__(self) -> str:
         return f"<{self.__class__.__name__} for {self.__wrapped__}>"
@@ -138,7 +137,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
         return TaskMapping(self, *instances, **bound_method_kwargs)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def all(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], bool]:
         """
         Create an :class:`~ASyncFunction` that checks if all results are truthy.
@@ -157,7 +156,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         """
         return decorator.a_sync(default=self.default)(self._all)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def any(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], bool]:
         """
         Create an :class:`~ASyncFunction` that checks if any result is truthy.
@@ -176,7 +175,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         """
         return decorator.a_sync(default=self.default)(self._any)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def min(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], T]:
         """
         Create an :class:`~ASyncFunction` that returns the minimum result.
@@ -197,7 +196,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         """
         return decorator.a_sync(default=self.default)(self._min)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def max(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], T]:
         """
         Create an :class:`~ASyncFunction` that returns the maximum result.
@@ -216,7 +215,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         """
         return decorator.a_sync(default=self.default)(self._max)
 
-    @functools.cached_property
+    @cached_property_unsafe
     def sum(self) -> ASyncFunction[Concatenate[AnyIterable[I], P], T]:
         """
         Create an :class:`~ASyncFunction` that returns the sum of results.
