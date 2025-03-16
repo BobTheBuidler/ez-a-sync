@@ -134,6 +134,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.executor.PruningThreadPoolExecutor"><code class="docutils literal notranslate"><span class="pre">PruningThreadPoolExecutor</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#module-a_sync.functools">a_sync.functools module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync.functools.cached_property_unsafe"><code class="docutils literal notranslate"><span class="pre">cached_property_unsafe</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync.functools.update_wrapper"><code class="docutils literal notranslate"><span class="pre">update_wrapper()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#module-a_sync.future">a_sync.future module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.future.ASyncFuture"><code class="docutils literal notranslate"><span class="pre">ASyncFuture</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.future.future"><code class="docutils literal notranslate"><span class="pre">future()</span></code></a></li>
@@ -5826,6 +5831,61 @@ cancelled.</p></li>
 </dd></dl>
 
 </section>
+<section id="module-a_sync.functools">
+<span id="a-sync-functools-module"></span><h2>a_sync.functools module<a class="headerlink" href="#module-a_sync.functools" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="a_sync.functools.cached_property_unsafe">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.functools.</span></span><span class="sig-name descname"><span class="pre">cached_property_unsafe</span></span><a class="headerlink" href="#a_sync.functools.cached_property_unsafe" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>cached_property_unsafe(func)
+A non-threadsafe implementation of functools.cached_property, intended for use in asyncio applications</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.functools.cached_property_unsafe.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.functools.cached_property_unsafe.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.functools.cached_property_unsafe.attrname">
+<span class="sig-name descname"><span class="pre">attrname</span></span><a class="headerlink" href="#a_sync.functools.cached_property_unsafe.attrname" title="Link to this definition"></a></dt>
+<dd><p>Optional[str]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>cached_property_unsafe.attrname</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync.functools.cached_property_unsafe.func">
+<span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#a_sync.functools.cached_property_unsafe.func" title="Link to this definition"></a></dt>
+<dd><p>Callable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>cached_property_unsafe.func</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.functools.update_wrapper">
+<span class="sig-prename descclassname"><span class="pre">a_sync.functools.</span></span><span class="sig-name descname"><span class="pre">update_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wrapper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrapped</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.functools.update_wrapper" title="Link to this definition"></a></dt>
+<dd><p>Update a wrapper function to look like the wrapped function</p>
+<p>wrapper is the function to be updated
+wrapped is the original function
+assigned is a tuple naming the attributes assigned directly
+from the wrapped function to the wrapper function (defaults to
+functools.WRAPPER_ASSIGNMENTS)
+updated is a tuple naming the attributes of the wrapper that
+are updated with the corresponding attribute from the wrapped
+function (defaults to functools.WRAPPER_UPDATES)</p>
+<p><cite>assigned</cite> and <cite>updated</cite> args from the functools implementation have
+been disabled for faster tight loops. Use the implementation in the
+<cite>functools</cite> builtin module if you need to use their functionality.</p>
+</dd></dl>
+
+</section>
 <section id="module-a_sync.future">
 <span id="a-sync-future-module"></span><h2>a_sync.future module<a class="headerlink" href="#module-a_sync.future" title="Link to this heading"></a></h2>
 <p>The <cite>future.py</cite> module provides functionality for handling asynchronous futures,
@@ -7283,9 +7343,9 @@ async for key, result in task_map.yield_completed():</p>
 <dd><p>Boolean indicating whether his mapping has been consumed and is no longer usable for aggregations.</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping._init_loader">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_init_loader</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><a class="headerlink" href="#a_sync.task.TaskMapping._init_loader" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_init_loader</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><a class="headerlink" href="#a_sync.task.TaskMapping._init_loader" title="Link to this definition"></a></dt>
 <dd><p>An asyncio Task used to preload values from the iterables.</p>
 </dd></dl>
 
@@ -7307,9 +7367,9 @@ async for key, result in task_map.yield_completed():</p>
 <dd><p>An asyncio Event that indicates the next result is ready</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.task.TaskMapping._queue">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_queue</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><span class="pre">ProcessingQueue</span></a></em><a class="headerlink" href="#a_sync.task.TaskMapping._queue" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_queue</span></span><a class="headerlink" href="#a_sync.task.TaskMapping._queue" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -8127,9 +8187,9 @@ result = await instance.my_method._sum([1, 2, 3])
 <span class="sig-name descname"><span class="pre">_load_value</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor._load_value" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.all">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.all" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">all</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.all" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if all results are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -8149,9 +8209,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.all([1, 2, 3])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.any">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.any" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">any</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.any" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if any result is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -8171,9 +8231,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.any([-1, 0, 1])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sync'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'async'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.default" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.default" title="Link to this definition"></a></dt>
 <dd><p>Gets the default execution mode (sync, async, or None) for the function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -8204,9 +8264,9 @@ result = await instance.my_method.any([-1, 0, 1])</p>
 <span class="sig-name descname"><span class="pre">hidden_method_name</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.hidden_method_name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.max">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.max" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.max" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the maximum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -8226,9 +8286,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.max([3, 1, 2])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.min">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.min" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.min" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the minimum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -8255,9 +8315,9 @@ result = await instance.my_method.min([3, 1, 2])
 <span class="sig-name descname"><span class="pre">modifiers</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.modifiers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.sum">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sum</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.sum" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sum</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.sum" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the sum of results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -8955,9 +9015,9 @@ result = await instance.my_method._sum([1, 2, 3])
 </div>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.all">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.all" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">all</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.all" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if all results are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -8977,9 +9037,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.all([1, 2, 3])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.any">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.any" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">any</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.any" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if any result is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -8999,9 +9059,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.any([-1, 0, 1])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sync'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'async'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.default" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.default" title="Link to this definition"></a></dt>
 <dd><p>Gets the default execution mode (sync, async, or None) for the function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -9032,9 +9092,9 @@ result = await instance.my_method.any([-1, 0, 1])</p>
 <span class="sig-name descname"><span class="pre">hidden_method_name</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.hidden_method_name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.max">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.max" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.max" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the maximum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -9054,9 +9114,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.max([3, 1, 2])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.min">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.min" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.min" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the minimum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -9083,9 +9143,9 @@ result = await instance.my_method.min([3, 1, 2])
 <span class="sig-name descname"><span class="pre">modifiers</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.modifiers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.sum">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sum</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.sum" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sum</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.sum" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the sum of results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -11034,9 +11094,9 @@ the queue.</p>
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.ProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ProcessingQueue._workers">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.ProcessingQueue._workers" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_workers</span></span><a class="headerlink" href="#a_sync.ProcessingQueue._workers" title="Link to this definition"></a></dt>
 <dd><p>Creates and manages the worker tasks for the queue.</p>
 </dd></dl>
 
@@ -12570,9 +12630,9 @@ the queue.</p>
 <span class="sig-name descname"><span class="pre">_unfinished_tasks</span></span><a class="headerlink" href="#a_sync.SmartProcessingQueue._unfinished_tasks" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.SmartProcessingQueue._workers">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_workers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><span class="pre">NoReturn</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.SmartProcessingQueue._workers" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_workers</span></span><a class="headerlink" href="#a_sync.SmartProcessingQueue._workers" title="Link to this definition"></a></dt>
 <dd><p>Creates and manages the worker tasks for the queue.</p>
 </dd></dl>
 
@@ -12975,9 +13035,9 @@ async for key, result in task_map.yield_completed():</p>
 <dd><p>Boolean indicating whether his mapping has been consumed and is no longer usable for aggregations.</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.TaskMapping._init_loader">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_init_loader</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><a class="headerlink" href="#a_sync.TaskMapping._init_loader" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_init_loader</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><a class="headerlink" href="#a_sync.TaskMapping._init_loader" title="Link to this definition"></a></dt>
 <dd><p>An asyncio Task used to preload values from the iterables.</p>
 </dd></dl>
 
@@ -12999,9 +13059,9 @@ async for key, result in task_map.yield_completed():</p>
 <dd><p>An asyncio Event that indicates the next result is ready</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.TaskMapping._queue">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_queue</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.primitives.html#a_sync.primitives.queue.ProcessingQueue" title="a_sync.primitives.queue.ProcessingQueue"><span class="pre">ProcessingQueue</span></a></em><a class="headerlink" href="#a_sync.TaskMapping._queue" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_queue</span></span><a class="headerlink" href="#a_sync.TaskMapping._queue" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -13855,9 +13915,9 @@ result = await instance.my_method._sum([1, 2, 3])
 <span class="sig-name descname"><span class="pre">_load_value</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync.cached_property._load_value" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.cached_property.all">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.cached_property.all" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">all</span></span><a class="headerlink" href="#a_sync.cached_property.all" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if all results are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -13877,9 +13937,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.all([1, 2, 3])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.cached_property.any">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.cached_property.any" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">any</span></span><a class="headerlink" href="#a_sync.cached_property.any" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if any result is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -13899,9 +13959,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.any([-1, 0, 1])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.cached_property.default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sync'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'async'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.cached_property.default" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#a_sync.cached_property.default" title="Link to this definition"></a></dt>
 <dd><p>Gets the default execution mode (sync, async, or None) for the function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -13932,9 +13992,9 @@ result = await instance.my_method.any([-1, 0, 1])</p>
 <span class="sig-name descname"><span class="pre">hidden_method_name</span></span><a class="headerlink" href="#a_sync.cached_property.hidden_method_name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.cached_property.max">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.cached_property.max" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max</span></span><a class="headerlink" href="#a_sync.cached_property.max" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the maximum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -13954,9 +14014,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.max([3, 1, 2])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.cached_property.min">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.cached_property.min" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min</span></span><a class="headerlink" href="#a_sync.cached_property.min" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the minimum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -13983,9 +14043,9 @@ result = await instance.my_method.min([3, 1, 2])
 <span class="sig-name descname"><span class="pre">modifiers</span></span><a class="headerlink" href="#a_sync.cached_property.modifiers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.cached_property.sum">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sum</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.cached_property.sum" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sum</span></span><a class="headerlink" href="#a_sync.cached_property.sum" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the sum of results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -14306,9 +14366,9 @@ result = await instance.my_method._sum([1, 2, 3])
 </div>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.property.all">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.property.all" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">all</span></span><a class="headerlink" href="#a_sync.property.all" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if all results are truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -14328,9 +14388,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.all([1, 2, 3])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.property.any">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">any</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.property.any" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">any</span></span><a class="headerlink" href="#a_sync.property.any" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that checks if any result is truthy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -14350,9 +14410,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.any([-1, 0, 1])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.property.default">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sync'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'async'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.property.default" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#a_sync.property.default" title="Link to this definition"></a></dt>
 <dd><p>Gets the default execution mode (sync, async, or None) for the function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -14383,9 +14443,9 @@ result = await instance.my_method.any([-1, 0, 1])</p>
 <span class="sig-name descname"><span class="pre">hidden_method_name</span></span><a class="headerlink" href="#a_sync.property.hidden_method_name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.property.max">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.property.max" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">max</span></span><a class="headerlink" href="#a_sync.property.max" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the maximum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -14405,9 +14465,9 @@ def my_method(self, x):</p>
 result = await instance.my_method.max([3, 1, 2])</p>
 </dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.property.min">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.property.min" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">min</span></span><a class="headerlink" href="#a_sync.property.min" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the minimum result.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -14434,9 +14494,9 @@ result = await instance.my_method.min([3, 1, 2])
 <span class="sig-name descname"><span class="pre">modifiers</span></span><a class="headerlink" href="#a_sync.property.modifiers" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
+<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.property.sum">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sum</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncFunction" title="a_sync.a_sync.function.ASyncFunction"><span class="pre">ASyncFunction</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.13)"><span class="pre">Concatenate</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><span class="pre">AsyncIterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><span class="pre">I</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">P</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync.property.sum" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">sum</span></span><a class="headerlink" href="#a_sync.property.sum" title="Link to this definition"></a></dt>
 <dd><p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFunction</span></code> that returns the sum of results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>

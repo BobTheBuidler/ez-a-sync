@@ -88,6 +88,15 @@ a\_sync.executor module
    :show-inheritance:
    :private-members:
 
+a\_sync.functools module
+------------------------
+
+.. automodule:: a_sync.functools
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 a\_sync.future module
 ---------------------
 

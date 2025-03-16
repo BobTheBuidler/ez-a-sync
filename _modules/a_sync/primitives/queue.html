@@ -89,11 +89,12 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">weakref</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidStateError</span><span class="p">,</span> <span class="n">QueueEmpty</span><span class="p">,</span> <span class="n">gather</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">asyncio.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_running_loop</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">wraps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">heapq</span><span class="w"> </span><span class="kn">import</span> <span class="n">heappop</span><span class="p">,</span> <span class="n">heappush</span><span class="p">,</span> <span class="n">heappushpop</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">a_sync.asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property_unsafe</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._smart</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartFuture</span><span class="p">,</span> <span class="n">create_future</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._smart</span><span class="w"> </span><span class="kn">import</span> <span class="n">_Key</span> <span class="k">as</span> <span class="n">_SmartKey</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
@@ -369,7 +370,6 @@
 
 
 <span class="n">_init</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="o">.</span><span class="fm">__init__</span>
-<span class="n">_put</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="o">.</span><span class="n">put</span>
 <span class="n">_put_nowait</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="o">.</span><span class="n">put_nowait</span>
 <span class="n">_loop_kwarg_deprecated</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 
@@ -614,7 +614,7 @@
             <span class="k">raise</span> <span class="n">exc</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc.__cause__</span></div>
 
 
-    <span class="nd">@cached_property</span>
+    <span class="nd">@cached_property_unsafe</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Task[NoReturn]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates and manages the worker tasks for the queue.&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;starting worker task for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
