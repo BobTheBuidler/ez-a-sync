@@ -327,10 +327,14 @@
 <span class="sd">            &gt;&gt;&gt; result = await future</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_workers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">mp_context</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
+            <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ProcessPoolExecutor</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mp_context</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_workers</span><span class="p">,</span> <span class="n">mp_context</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
+            <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ProcessPoolExecutor</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span> <span class="n">mp_context</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__init_mixin__</span><span class="p">()</span></div>
 </div>
 
@@ -387,10 +391,14 @@
 <span class="sd">            &gt;&gt;&gt; result = await future</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_workers</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
+            <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_workers</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span>
+            <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__init_mixin__</span><span class="p">()</span></div>
 </div>
 
@@ -530,7 +538,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_adjusting_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Lock used to adjust the number of threads.&quot;&quot;&quot;</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">max_workers</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span><span class="p">)</span></div>
+        <span class="n">AsyncThreadPoolExecutor</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">max_workers</span><span class="p">,</span> <span class="n">thread_name_prefix</span><span class="p">,</span> <span class="n">initializer</span><span class="p">,</span> <span class="n">initargs</span>
+        <span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
