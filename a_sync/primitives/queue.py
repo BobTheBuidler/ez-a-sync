@@ -266,7 +266,6 @@ def log_broken(func: Callable[[Any], NoReturn]) -> Callable[[Any], NoReturn]:
 
 
 _init = asyncio.Queue.__init__
-_put = asyncio.Queue.put
 _put_nowait = asyncio.Queue.put_nowait
 _loop_kwarg_deprecated = sys.version_info >= (3, 10)
 
