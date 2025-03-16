@@ -83,9 +83,9 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">weakref</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">sleep</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">filterfalse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">weakref</span><span class="w"> </span><span class="kn">import</span> <span class="n">WeakKeyDictionary</span><span class="p">,</span> <span class="n">proxy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">exceptions</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
@@ -872,7 +872,7 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">iterable</span><span class="p">)</span>
 
 
-<span class="n">__unwrapped</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">WeakKeyDictionary</span><span class="p">()</span>
+<span class="n">__unwrapped</span> <span class="o">=</span> <span class="n">WeakKeyDictionary</span><span class="p">()</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_unwrap</span><span class="p">(</span>
@@ -916,7 +916,7 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">view</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">T</span><span class="p">],</span> <span class="n">task_mapping</span><span class="p">:</span> <span class="n">TaskMapping</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">],</span> <span class="n">pop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__view__</span> <span class="o">=</span> <span class="n">view</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="p">:</span> <span class="n">TaskMapping</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">task_mapping</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__mapping__</span><span class="p">:</span> <span class="n">TaskMapping</span> <span class="o">=</span> <span class="n">proxy</span><span class="p">(</span><span class="n">task_mapping</span><span class="p">)</span>
         <span class="s2">&quot;actually a weakref.ProxyType[TaskMapping] but then type hints weren&#39;t working&quot;</span>
         <span class="k">if</span> <span class="n">pop</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_pop</span> <span class="o">=</span> <span class="kc">True</span>
@@ -993,8 +993,7 @@
                 <span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
                 <span class="k">yield</span> <span class="n">key</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mapping</span><span class="p">):</span>
-                <span class="k">yield</span> <span class="n">key</span>
+            <span class="k">yield from</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">__load_init_loader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yielded</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">K</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">K</span><span class="p">]:</span>
         <span class="c1"># sourcery skip: hoist-loop-from-if</span>
