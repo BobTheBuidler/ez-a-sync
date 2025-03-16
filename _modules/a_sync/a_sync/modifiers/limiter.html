@@ -72,7 +72,7 @@
   <h1>Source code for a_sync.a_sync.modifiers.limiter</h1><div class="highlight"><pre>
 <span></span><span class="c1"># mypy: disable-error-code=valid-type</span>
 <span class="c1"># mypy: disable-error-code=misc</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">iscoroutinefunction</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">aiolimiter</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncLimiter</span>
 
@@ -187,7 +187,7 @@
         <span class="k">if</span> <span class="n">runs_per_minute</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">runs_per_minute</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">AsyncLimiter</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;runs_per_minute&#39; must be an integer.&quot;</span><span class="p">,</span> <span class="n">runs_per_minute</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="ow">not</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">iscoroutinefunction</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">FunctionNotAsync</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">rate_limit_decorator</span><span class="p">(</span><span class="n">coro_fn</span><span class="p">:</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CoroFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]:</span>
