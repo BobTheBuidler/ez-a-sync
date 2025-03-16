@@ -409,6 +409,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         self._closed = True
 
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+        # sourcery skip: use-contextlib-suppress
         """
         Asynchronously submits a task to the queue.
 
@@ -423,12 +424,26 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             >>> fut = await queue.put(item='task')
             >>> print(await fut)
         """
-        self._ensure_workers()
-        if self._no_futs:
-            return await _put(self, (args, kwargs))
-        fut = self._create_future()
-        await _put(self, (args, kwargs, fut))
-        return fut
+        while self.full():
+            putter = self._get_loop().create_future()
+            self._putters.append(putter)
+            try:
+                await putter
+            except:
+                putter.cancel()  # Just in case putter is not done yet.
+                try:
+                    # Clean self._putters from canceled putters.
+                    self._putters.remove(putter)
+                except ValueError:
+                    # The putter could be removed from self._putters by a
+                    # previous get_nowait call.
+                    pass
+                if not self.full() and not putter.cancelled():
+                    # We were woken up by get_nowait(), but can't take
+                    # the call.  Wake up the next in line.
+                    self._wakeup_next(self._putters)
+                raise
+        return self.put_nowait(*args, **kwargs)
 
     def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         """
