@@ -217,7 +217,7 @@
 
 
     <span class="nd">@cached_property_unsafe</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFunction[Concatenate[AnyIterable[I], P], bool]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that checks if all results are truthy.</span>
 
@@ -236,7 +236,7 @@
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_all</span><span class="p">)</span>
 
     <span class="nd">@cached_property_unsafe</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">any</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFunction[Concatenate[AnyIterable[I], P], bool]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that checks if any result is truthy.</span>
 
@@ -255,7 +255,7 @@
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_any</span><span class="p">)</span>
 
     <span class="nd">@cached_property_unsafe</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFunction[Concatenate[AnyIterable[I], P], T]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that returns the minimum result.</span>
 
@@ -276,7 +276,7 @@
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_min</span><span class="p">)</span>
 
     <span class="nd">@cached_property_unsafe</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFunction[Concatenate[AnyIterable[I], P], T]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that returns the maximum result.</span>
 
@@ -295,7 +295,7 @@
         <span class="k">return</span> <span class="n">decorator</span><span class="o">.</span><span class="n">a_sync</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">)</span>
 
     <span class="nd">@cached_property_unsafe</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncFunction</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">AnyIterable</span><span class="p">[</span><span class="n">I</span><span class="p">],</span> <span class="n">P</span><span class="p">],</span> <span class="n">T</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ASyncFunction[Concatenate[AnyIterable[I], P], T]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an :class:`~ASyncFunction` that returns the sum of results.</span>
 
