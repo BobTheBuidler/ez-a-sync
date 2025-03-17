@@ -1,11 +1,11 @@
 from asyncio import Lock, Task, get_event_loop, iscoroutinefunction
 from functools import partial
 from logging import DEBUG, getLogger
-from typing import (TYPE_CHECKING, Any, Awaitable, Callable, Concatenate, Generator, 
+from typing import (TYPE_CHECKING, Any, Awaitable, Callable, Generator, 
                     Literal, Optional, Tuple, Type, Union, final, overload)
 
 import async_property as ap  # type: ignore [import]
-from typing_extensions import Self, Unpack
+from typing_extensions import Concatenate, Self, Unpack
 
 from a_sync import _property_cached, _smart
 from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction, 
