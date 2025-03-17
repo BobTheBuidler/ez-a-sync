@@ -195,6 +195,8 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         - :class:`ModifierManager`
     """
 
+    __fn = None
+
     # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
 
     @overload
@@ -373,12 +375,12 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             self.__class__.__name__, self.__module__, self.__name__, hex(id(self))
         )
 
-    @functools.cached_property
+    @property
     def fn(self):
         # NOTE type hint doesnt work in py3.8 or py3.9, debug later
         #  -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
         """
-        Returns the final wrapped version of :attr:`ASyncFunction._fn` decorated with all of the a_sync goodness.
+        Returns the final wrapped version of :attr:`ASyncFunction.__wrapped__` decorated with all of the a_sync goodness.
 
         Returns:
             The final wrapped function.
@@ -387,7 +389,11 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             - :meth:`_async_wrap`
             - :meth:`_sync_wrap`
         """
-        return self._async_wrap if self._async_def else self._sync_wrap
+        fn = self.__fn
+        if fn is None:
+            fn = self._async_wrap if self._async_def else self._sync_wrap
+            self.__fn = fn
+        return fn
 
     if sys.version_info >= (3, 11) or TYPE_CHECKING:
         # we can specify P.args in python>=3.11 but in lower versions it causes a crash. Everything should still type check correctly on all versions.
