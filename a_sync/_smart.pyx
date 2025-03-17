@@ -95,13 +95,13 @@ cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
 
 
 cdef class WeakSet:
-    _refs: dict[uintptr_t, object]
+    cdef readonly dict[uintptr_t, object] _refs
     """Mapping from object ID to weak reference."""
     
     def __cinit__(self):
         self._refs = {}
 
-    def _gc_callback(self, fut: Future) -> None:
+    cdef void _gc_callback(self, fut: Future):
         # Callback when a weakly-referenced object is garbage collected
         self._refs.pop(<uintptr_t>id(fut), None)  # Safely remove the item if it exists
 
