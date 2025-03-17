@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from a_sync import TaskMapping
 
 
-class ASyncDescriptor(_ModifiedMixin):
+class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     """
     A descriptor base class for dual-function ASync methods and properties.
 
