@@ -1,5 +1,5 @@
 from asyncio import AbstractEventLoop, Future, Task
-from typing import TYPE_CHECKING, Any, Generic, Optional, Tuple, TypeVar
+from typing import TYPE_CHECKING, Any, Awaitable, Generic, Optional, Tuple, TypeVar, Union
 from weakref import WeakSet
 
 if TYPE_CHECKING:
@@ -10,6 +10,53 @@ _T = TypeVar("_T")
 _Args = Tuple[Any]
 _Kwargs = Tuple[Tuple[str, Any]]
 _Key = Tuple[_Args, _Kwargs]
+
+
+def shield(arg: Awaitable[_T]) -> Union[SmartFuture[_T], "Future[_T]"]:
+    """
+    Wait for a future, shielding it from cancellation.
+
+    The statement
+
+        res = await shield(something())
+
+    is exactly equivalent to the statement
+
+        res = await something()
+
+    *except* that if the coroutine containing it is cancelled, the
+    task running in something() is not cancelled.  From the POV of
+    something(), the cancellation did not happen.  But its caller is
+    still cancelled, so the yield-from expression still raises
+    CancelledError.  Note: If something() is cancelled by other means
+    this will still cancel shield().
+
+    If you want to completely ignore cancellation (not recommended)
+    you can combine shield() with a try/except clause, as follows:
+
+        try:
+            res = await shield(something())
+        except CancelledError:
+            res = None
+
+    Args:
+        arg: The awaitable to shield from cancellation.
+        loop: Optional; the event loop. Deprecated since Python 3.8.
+
+    Returns:
+        A :class:`SmartFuture` or :class:`asyncio.Future` instance.
+
+    Example:
+        Using shield to protect a coroutine from cancellation:
+
+        ```python
+        result = await shield(my_coroutine())
+        ```
+
+    See Also:
+        - :func:`asyncio.shield`
+    """
+
 
 class _SmartFutureMixin(Generic[_T]):
     """
