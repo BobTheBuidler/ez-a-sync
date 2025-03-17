@@ -255,7 +255,9 @@ class ASyncCachedPropertyDescriptorAsyncDefault(ASyncCachedPropertyDescriptor[I,
 
     default: Literal["async"]
 
-ASyncCachedPropertyDecorator = Callable[[AnyGetterFunction[I, T]], ASyncCachedPropertyDescriptor[I, T]]
+ASyncCachedPropertyDecorator = Callable[
+    [AnyGetterFunction[I, T]], ASyncCachedPropertyDescriptor[I, T]
+]
 ASyncCachedPropertyDecoratorSyncDefault = Callable[
     [AnyGetterFunction[I, T]], ASyncCachedPropertyDescriptorSyncDefault[I, T]
 ]
