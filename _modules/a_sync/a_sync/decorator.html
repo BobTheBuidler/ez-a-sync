@@ -620,7 +620,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync(&#39;sync&#39;)...</span>
-    <span class="k">if</span> <span class="n">coro_fn</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">,</span> <span class="s2">&quot;sync&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">coro_fn</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;async&quot;</span><span class="p">,</span> <span class="s2">&quot;sync&quot;</span><span class="p">):</span>
         <span class="n">default</span> <span class="o">=</span> <span class="n">coro_fn</span>  <span class="c1"># type: ignore [assignment]</span>
         <span class="n">coro_fn</span> <span class="o">=</span> <span class="kc">None</span>
 
