@@ -1,11 +1,15 @@
+from asyncio import Lock, Task, get_event_loop, iscoroutinefunction
 from functools import partial
 from logging import DEBUG, getLogger
+from typing import (TYPE_CHECKING, Any, Awaitable, Callable, Concatenate, Generator, 
+                    Literal, Optional, Tuple, Type, Union, final, overload)
 
 import async_property as ap  # type: ignore [import]
-from typing_extensions import Unpack
+from typing_extensions import Self, Unpack
 
 from a_sync import _property_cached, _smart
-from a_sync._typing import *
+from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction, 
+                            DefaultMode, I, ModifierKwargs, P, T)
 from a_sync.a_sync import config
 from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync._descriptor import ASyncDescriptor
@@ -30,9 +34,6 @@ if TYPE_CHECKING:
 logger = getLogger(__name__)
 
 cdef object c_logger = logger
-
-
-cdef object get_event_loop = asyncio.get_event_loop
 
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
@@ -90,7 +91,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         self.hidden_method_descriptor = HiddenMethodDescriptor(
             self.get, self.hidden_method_name, **hidden_modifiers
         )
-        if asyncio.iscoroutinefunction(_fget):
+        if iscoroutinefunction(_fget):
             self._fget = self.__wrapped__
         else:
             self._fget = _asyncify(self.__wrapped__, self.modifiers.executor)
@@ -428,7 +429,7 @@ class ASyncCachedPropertyDescriptor(
         self._fdel = _fdel
         """Optional deleter function for the property."""
 
-    def get_lock(self, instance: I) -> "asyncio.Task[T]":
+    def get_lock(self, instance: I) -> "Task[T]":
         """Retrieves the lock for the property.
 
         Args:
@@ -439,7 +440,7 @@ class ASyncCachedPropertyDescriptor(
         """
         locks = self.get_instance_state(instance).lock
         task = locks[self.field_name]
-        if isinstance(task, asyncio.Lock):
+        if isinstance(task, Lock):
             # default behavior uses lock but we want to use a Task so all waiters wake up together
             task = ccreate_task_simple(self._fget(instance))
             locks[self.field_name] = task
