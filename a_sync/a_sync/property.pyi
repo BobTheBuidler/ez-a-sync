@@ -87,9 +87,6 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
     """Descriptor class for asynchronous properties."""
 
-class property(ASyncPropertyDescriptor[I, T]):
-    """Descriptor for defining properties that can be accessed both synchronously and asynchronously."""
-
 class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to synchronous behavior.
@@ -232,9 +229,6 @@ class ASyncCachedPropertyDescriptor(
         Returns:
             A callable that loads the property value.
         """
-
-class cached_property(ASyncCachedPropertyDescriptor[I, T]):
-    """Descriptor for defining cached properties that can be accessed both synchronously and asynchronously."""
 
 class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
     """
