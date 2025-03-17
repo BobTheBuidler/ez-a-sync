@@ -43,11 +43,6 @@ cdef class _ModifiedMixin:
         - :class:`~ModifierManager`
     """
 
-    cdef public object modifiers
-    cdef public object wrapped
-    cdef str __default
-    cdef object __await
-
     @property
     def default(self) -> DefaultMode:
         """

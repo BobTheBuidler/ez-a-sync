@@ -23,6 +23,7 @@ from a_sync.a_sync.function import (
     ASyncFunctionAsyncDefault,
     ASyncFunctionSyncDefault,
 )
+from a_sync.a_sync.function cimport _ModifiedMixin
 from a_sync.functools cimport cached_property_unsafe, update_wrapper
 
 if TYPE_CHECKING:
@@ -134,11 +135,11 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                 from a_sync.a_sync.abstract import ASyncABC
                 ASyncMethodDescriptor.__ASyncABC__ = ASyncABC
 
-            if self.default == "sync":
+            if _ModifiedMixin.get_default(self) == "sync":
                 bound = ASyncBoundMethodSyncDefault(
                     instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
                 )
-            elif self.default == "async":
+            elif _ModifiedMixin.get_default(self) == "async":
                 bound = ASyncBoundMethodAsyncDefault(
                     instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
                 )
@@ -451,8 +452,8 @@ cdef bint _should_await(object self, dict kwargs):
     cdef str flag = get_flag_name(kwargs)
     if flag:
         return is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
-    elif self.default:
-        return self.default == "sync"
+    elif _ModifiedMixin.get_default(self):
+        return _ModifiedMixin.get_default(self) == "sync"
     elif _is_a_sync_instance(self.__self__):
         self.__self__: "ASyncABC"
         return self.__self__.__a_sync_should_await__(kwargs)
