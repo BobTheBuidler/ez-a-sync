@@ -7,3 +7,5 @@ cdef class _ModifiedMixin:
     cdef object __await
     cdef str get_default(self)
     cdef object get_await(self)
+
+cdef void _validate_wrapped_fn(object fn)
