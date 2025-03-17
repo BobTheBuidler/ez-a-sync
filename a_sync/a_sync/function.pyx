@@ -96,7 +96,7 @@ cdef class _ModifiedMixin:
 
 
 
-cpdef void _validate_wrapped_fn(fn: Callable):
+cdef void _validate_wrapped_fn(fn: Callable):
     """Ensures 'fn' is an appropriate function for wrapping with a_sync.
 
     Args:
