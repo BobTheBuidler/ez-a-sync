@@ -11,7 +11,6 @@ _Args = Tuple[Any]
 _Kwargs = Tuple[Tuple[str, Any]]
 _Key = Tuple[_Args, _Kwargs]
 
-
 def shield(arg: Awaitable[_T]) -> Union[SmartFuture[_T], "Future[_T]"]:
     """
     Wait for a future, shielding it from cancellation.
@@ -56,7 +55,6 @@ def shield(arg: Awaitable[_T]) -> Union[SmartFuture[_T], "Future[_T]"]:
     See Also:
         - :func:`asyncio.shield`
     """
-
 
 class _SmartFutureMixin(Generic[_T]):
     """
