@@ -1,5 +1,5 @@
 from _typeshed import Incomplete
-from typing import Any, Callable, Generic, TypeVar
+from typing import Any, Callable, Generic, Optional, Type, TypeVar
 
 I = TypeVar("I")
 T = TypeVar("T")
@@ -8,11 +8,11 @@ class cached_property_unsafe(Generic[I, T]):
     """A non-threadsafe implementation of functools.cached_property, intended for use in asyncio applications"""
 
     func: Callable[[I], T]
-    attrname: Incomplete
-    __doc__: Incomplete
+    attrname: str
+    __doc__: Optional[str]
     def __init__(self, func: Callable[[I], T]) -> None: ...
-    def __set_name__(self, owner, name: str) -> None: ...
-    def __get__(self, instance: I, owner: Incomplete | None = None) -> T: ...
+    def __set_name__(self, owner: Type[cached_property_unsafe], name: str) -> None: ...
+    def __get__(self, instance: I, owner: Type[cached_property_unsafe] | None = None) -> T: ...
     __class_getitem__: Incomplete
 
 def update_wrapper(wrapper, wrapped):
