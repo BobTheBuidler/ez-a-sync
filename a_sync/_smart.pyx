@@ -338,12 +338,11 @@ class SmartFuture(_SmartFutureMixin[T], Future):
             queue._futs.pop(self._key)
 
 
-def create_future(
-    *,
+cpdef object create_future(
     queue: Optional["SmartProcessingQueue"] = None,
     key: Optional[_Key] = None,
     loop: Optional[AbstractEventLoop] = None,
-) -> SmartFuture[V]:
+):
     """
     Create a :class:`~SmartFuture` instance.
 
