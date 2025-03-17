@@ -42,7 +42,6 @@ class _SmartFutureMixin(Generic[_T]):
     _key: _Key
     _waiters: "WeakSet[SmartTask[_T]]"
 
-
 class SmartFuture(_SmartFutureMixin[_T], Future):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
@@ -62,7 +61,6 @@ class SmartFuture(_SmartFutureMixin[_T], Future):
         - :class:`_SmartFutureMixin`
         - :class:`asyncio.Future`
     """
-
 
 def create_future(
     *,
@@ -91,7 +89,6 @@ def create_future(
     See Also:
         - :class:`SmartFuture`
     """
-
 
 class SmartTask(_SmartFutureMixin[_T], Task):
     """
