@@ -135,11 +135,12 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                 from a_sync.a_sync.abstract import ASyncABC
                 ASyncMethodDescriptor.__ASyncABC__ = ASyncABC
 
-            if _ModifiedMixin.get_default(self) == "sync":
+            default = _ModifiedMixin.get_default(self)
+            if default == "sync":
                 bound = ASyncBoundMethodSyncDefault(
                     instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
                 )
-            elif _ModifiedMixin.get_default(self) == "async":
+            elif default == "async":
                 bound = ASyncBoundMethodAsyncDefault(
                     instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
                 )

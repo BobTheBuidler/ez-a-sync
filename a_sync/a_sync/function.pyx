@@ -56,7 +56,7 @@ cdef class _ModifiedMixin:
         """
         return self.get_default()
 
-    cpdef object _asyncify(self, func: SyncFn[P, T]):
+    cdef object _asyncify(self, func: SyncFn[P, T]):
         """
         Converts a synchronous function to an asynchronous one and applies async modifiers.
 
@@ -812,7 +812,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             raise TypeError(
                 f"Can only be applied to sync functions, not {self.__wrapped__}"
             )
-        return self._asyncify(self._modified_fn)  # type: ignore [arg-type]
+        return _ModifiedMixin._asyncify(self, self._modified_fn)  # type: ignore [arg-type]
 
     @functools.cached_property
     def _modified_fn(self) -> AnyFn[P, T]:
