@@ -56,12 +56,9 @@ See Also:
 from a_sync import aliases, exceptions, functools, iter, task
 from a_sync.a_sync import ASyncGenericBase, ASyncGenericSingleton, a_sync
 from a_sync.a_sync.modifiers.semaphores import apply_semaphore
-from a_sync.a_sync.property import (
-    ASyncCachedPropertyDescriptor,
-    ASyncPropertyDescriptor,
-    cached_property,
-    property,
-)
+from a_sync.a_sync.property import ASyncCachedPropertyDescriptor, ASyncPropertyDescriptor
+from a_sync.a_sync.property import ASyncCachedPropertyDescriptor as cached_property
+from a_sync.a_sync.property import ASyncPropertyDescriptor as property
 from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.executor import *
 from a_sync.executor import AsyncThreadPoolExecutor as ThreadPoolExecutor
