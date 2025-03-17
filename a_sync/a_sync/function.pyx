@@ -75,9 +75,8 @@ cdef class _ModifiedMixin:
             - :meth:`ModifierManager.apply_async_modifiers`
         """
         return self.modifiers.apply_async_modifiers(_asyncify(func, self.modifiers.executor))
-
-    @property
-    def _await(self) -> Callable[[Awaitable[T]], T]:
+    
+    cdef object get_await(self):
         """
         Applies sync modifiers to the _helpers._await function and caches it.
 
@@ -87,9 +86,6 @@ cdef class _ModifiedMixin:
         See Also:
             - :meth:`ModifierManager.apply_sync_modifiers`
         """
-        return self.get_await()
-    
-    cdef object get_await(self):
         awaiter = self.__await
         if awaiter is None:
             awaiter = self.modifiers.apply_sync_modifiers(_await)
@@ -211,7 +207,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         - :class:`ModifierManager`
     """
 
-    __fn = None
+    _fn = None
 
     # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
 
@@ -405,10 +401,10 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             - :meth:`_async_wrap`
             - :meth:`_sync_wrap`
         """
-        fn = self.__fn
+        fn = self._fn
         if fn is None:
             fn = self._async_wrap if self._async_def else self._sync_wrap
-            self.__fn = fn
+            self._fn = fn
         return fn
 
     if sys.version_info >= (3, 11) or TYPE_CHECKING:
