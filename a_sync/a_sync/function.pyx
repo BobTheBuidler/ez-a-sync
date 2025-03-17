@@ -1,5 +1,6 @@
 import functools
 import sys
+from asyncio import iscoroutinefunction
 from inspect import getfullargspec, isasyncgenfunction, isgeneratorfunction
 from logging import getLogger
 from libc.stdint cimport uintptr_t
@@ -800,7 +801,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         See Also:
             - :func:`asyncio.iscoroutinefunction`
         """
-        return asyncio.iscoroutinefunction(self.__wrapped__)
+        return iscoroutinefunction(self.__wrapped__)
 
     @cached_property_unsafe
     def _asyncified(self) -> CoroFn[P, T]:
@@ -909,7 +910,7 @@ else:
     _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
 
 
-class ASyncDecorator(_ModifiedMixin):
+cdef class ASyncDecorator(_ModifiedMixin):
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         """
         Initializes an ASyncDecorator instance by validating the inputs.
@@ -974,12 +975,12 @@ class ASyncDecorator(_ModifiedMixin):
         See Also:
             - :class:`ASyncFunction`
         """
-        default = self.get_default()
+        cdef str default = self.get_default()
         if default == "async":
             return ASyncFunctionAsyncDefault(func, **self.modifiers)
         elif default == "sync":
             return ASyncFunctionSyncDefault(func, **self.modifiers)
-        elif asyncio.iscoroutinefunction(func):
+        elif iscoroutinefunction(func):
             return ASyncFunctionAsyncDefault(func, **self.modifiers)
         else:
             return ASyncFunctionSyncDefault(func, **self.modifiers)
@@ -1165,7 +1166,7 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
     __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
 
 
-class ASyncDecoratorSyncDefault(ASyncDecorator):
+cdef class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodSyncDefault[P, T]":  # type: ignore [override]
         """
@@ -1216,7 +1217,7 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
         return ASyncFunctionSyncDefault(func, **self.modifiers)
 
 
-class ASyncDecoratorAsyncDefault(ASyncDecorator):
+cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodAsyncDefault[P, T]":  # type: ignore [override]
         """
