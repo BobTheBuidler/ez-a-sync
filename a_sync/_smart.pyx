@@ -534,9 +534,7 @@ def set_smart_task_factory(loop: AbstractEventLoop = None) -> None:
     loop.set_task_factory(smart_task_factory)
 
 
-def shield(
-    arg: Awaitable[T], *, loop: Optional[AbstractEventLoop] = None
-) -> Union[SmartFuture[T], Future]:
+def shield(arg: Awaitable[T]) -> Union[SmartFuture[T], Future]:
     """
     Wait for a future, shielding it from cancellation.
 
@@ -580,22 +578,26 @@ def shield(
     See Also:
         - :func:`asyncio.shield`
     """
-    if loop is not None:
-        warnings.warn(
-            "The loop argument is deprecated since Python 3.8, "
-            "and scheduled for removal in Python 3.10.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-    inner = ensure_future(arg, loop=loop)
+    inner = ensure_future(arg)
     if _is_done(inner):
         # Shortcut.
         return inner
+
     loop = aiofutures._get_loop(inner)
     outer = create_future(loop=loop)
+
     # special handling to connect SmartFutures to SmartTasks if enabled
     if (waiters := getattr(inner, "_waiters", None)) is not None:
         waiters.add(outer)
+
+    _inner_done_callback, _outer_done_callback = _get_done_callbacks(inner, outer)
+
+    inner.add_done_callback(_inner_done_callback)
+    outer.add_done_callback(_outer_done_callback)
+    return outer
+
+
+cdef tuple _get_done_callbacks(inner: Task, outer: Future):
 
     def _inner_done_callback(inner):
         if _is_cancelled(outer):
@@ -616,11 +618,8 @@ def shield(
     def _outer_done_callback(outer):
         if _is_not_done(inner):
             inner.remove_done_callback(_inner_done_callback)
-
-    inner.add_done_callback(_inner_done_callback)
-    outer.add_done_callback(_outer_done_callback)
-    return outer
-
+    
+    return _inner_done_callback, _outer_done_callback
 
 __all__ = [
     "create_future",
