@@ -533,7 +533,7 @@ def set_smart_task_factory(loop: AbstractEventLoop = None) -> None:
     loop.set_task_factory(smart_task_factory)
 
 
-def shield(arg: Awaitable[T]) -> Union[SmartFuture[T], Future]:
+cpdef object shield(arg: Awaitable[T]):
     """
     Wait for a future, shielding it from cancellation.
 

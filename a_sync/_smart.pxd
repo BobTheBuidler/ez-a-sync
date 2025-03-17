@@ -1,0 +1,1 @@
+cpdef object shield(object)

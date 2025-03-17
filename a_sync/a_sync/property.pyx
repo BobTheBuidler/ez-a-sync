@@ -7,7 +7,8 @@ from typing import (TYPE_CHECKING, Any, Awaitable, Callable, Generator,
 import async_property as ap  # type: ignore [import]
 from typing_extensions import Concatenate, Self, Unpack
 
-from a_sync import _property_cached, _smart
+from a_sync import _property_cached
+from a_sync._smart cimport shield
 from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction, 
                             DefaultMode, I, ModifierKwargs, P, T)
 from a_sync.a_sync import config
@@ -470,7 +471,7 @@ class ASyncCachedPropertyDescriptor(
             async def loader(instance):
                 inner_task = get_lock(instance)
                 try:
-                    value = await _smart.shield(inner_task)
+                    value = await shield(inner_task)
                 except Exception as e:
                     instance_context = {"property": self, "instance": instance}
                     if e.args and e.args[-1] != instance_context:
