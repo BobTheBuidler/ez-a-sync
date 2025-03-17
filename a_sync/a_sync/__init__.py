@@ -30,9 +30,9 @@ from a_sync.a_sync.property import (
     ASyncPropertyDescriptorSyncDefault,
     HiddenMethod,
     HiddenMethodDescriptor,
-    cached_property,
-    property,
 )
+from a_sync.a_sync.property import ASyncCachedPropertyDescriptor as cached_property
+from a_sync.a_sync.property import ASyncPropertyDescriptor as property
 from a_sync.a_sync.singleton import ASyncGenericSingleton
 
 

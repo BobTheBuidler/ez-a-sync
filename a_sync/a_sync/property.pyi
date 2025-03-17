@@ -87,10 +87,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
     """Descriptor class for asynchronous properties."""
 
-class property(ASyncPropertyDescriptor[I, T]):
-    """Descriptor for defining properties that can be accessed both synchronously and asynchronously."""
-
-class ASyncPropertyDescriptorSyncDefault(property[I, T]):
+class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to synchronous behavior.
 
@@ -110,7 +107,7 @@ class ASyncPropertyDescriptorSyncDefault(property[I, T]):
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
     __get__: Incomplete
 
-class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
+class ASyncPropertyDescriptorAsyncDefault(ASyncPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to asynchronous behavior.
 
@@ -125,7 +122,7 @@ class ASyncPropertyDescriptorAsyncDefault(property[I, T]):
     max: ASyncFunctionAsyncDefault[AnyIterable[I], T]
     sum: ASyncFunctionAsyncDefault[AnyIterable[I], T]
 
-ASyncPropertyDecorator = Callable[[AnyGetterFunction[I, T]], property[I, T]]
+ASyncPropertyDecorator = Callable[[AnyGetterFunction[I, T]], ASyncPropertyDescriptor[I, T]]
 ASyncPropertyDecoratorSyncDefault = Callable[
     [AnyGetterFunction[I, T]], ASyncPropertyDescriptorSyncDefault[I, T]
 ]
@@ -233,10 +230,7 @@ class ASyncCachedPropertyDescriptor(
             A callable that loads the property value.
         """
 
-class cached_property(ASyncCachedPropertyDescriptor[I, T]):
-    """Descriptor for defining cached properties that can be accessed both synchronously and asynchronously."""
-
-class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
+class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to synchronous behavior.
 
@@ -251,7 +245,7 @@ class ASyncCachedPropertyDescriptorSyncDefault(cached_property[I, T]):
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
     __get__: Incomplete
 
-class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[I, T]):
+class ASyncCachedPropertyDescriptorAsyncDefault(ASyncCachedPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to asynchronous behavior.
 
@@ -261,7 +255,9 @@ class ASyncCachedPropertyDescriptorAsyncDefault(cached_property[I, T]):
 
     default: Literal["async"]
 
-ASyncCachedPropertyDecorator = Callable[[AnyGetterFunction[I, T]], cached_property[I, T]]
+ASyncCachedPropertyDecorator = Callable[
+    [AnyGetterFunction[I, T]], ASyncCachedPropertyDescriptor[I, T]
+]
 ASyncCachedPropertyDecoratorSyncDefault = Callable[
     [AnyGetterFunction[I, T]], ASyncCachedPropertyDescriptorSyncDefault[I, T]
 ]
