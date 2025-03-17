@@ -28,7 +28,7 @@ logger = getLogger(__name__)
 cdef object c_logger = logger
 
 
-class _ModifiedMixin:
+cdef class _ModifiedMixin:
     """
     A mixin class for internal use that provides functionality for applying modifiers to functions.
 
@@ -42,12 +42,12 @@ class _ModifiedMixin:
         - :class:`~ModifierManager`
     """
 
-    # TODO: give me a docstring
-    modifiers: ModifierManager
+    cdef public object modifiers
+    cdef public object wrapped
+    cdef str __default
+    cdef object __await
 
-    __slots__ = "modifiers", "wrapped"
-
-    def _asyncify(self, func: SyncFn[P, T]) -> CoroFn[P, T]:
+    cpdef object _asyncify(self, func: SyncFn[P, T]):
         """
         Converts a synchronous function to an asynchronous one and applies async modifiers.
 
@@ -62,7 +62,7 @@ class _ModifiedMixin:
         """
         return self.modifiers.apply_async_modifiers(_asyncify(func, self.modifiers.executor))
 
-    @functools.cached_property
+    @property
     def _await(self) -> Callable[[Awaitable[T]], T]:
         """
         Applies sync modifiers to the _helpers._await function and caches it.
@@ -73,9 +73,13 @@ class _ModifiedMixin:
         See Also:
             - :meth:`ModifierManager.apply_sync_modifiers`
         """
-        return self.modifiers.apply_sync_modifiers(_await)
+        awaiter = self.__await
+        if awaiter is None:
+            awaiter = self.modifiers.apply_sync_modifiers(_await)
+            self.__await = awaiter
+        return awaiter
 
-    @cached_property_unsafe
+    @property
     def default(self) -> DefaultMode:
         """
         Gets the default execution mode (sync, async, or None) for the function.
@@ -86,7 +90,11 @@ class _ModifiedMixin:
         See Also:
             - :attr:`ModifierManager.default`
         """
-        return self.modifiers.default
+        default = self.__default
+        if default is None:
+            default = self.modifiers.default
+            self.__default = default
+        return default
 
 
 cpdef void _validate_wrapped_fn(fn: Callable):
