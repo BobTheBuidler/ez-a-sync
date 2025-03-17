@@ -44,7 +44,7 @@ cdef class cached_property_unsafe:
             raise TypeError(msg) from None
         val = cache.get(attrname, _NOT_FOUND)
         if val is _NOT_FOUND:
-            val = self._func(instance)
+            val = self.func(instance)
             try:
                 cache[attrname] = val
             except TypeError:
