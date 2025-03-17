@@ -205,7 +205,7 @@ class ASyncPropertyDescriptor(
 
 
 @final
-class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor):
+class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to synchronous behavior.
 
