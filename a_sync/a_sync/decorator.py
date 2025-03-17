@@ -111,7 +111,7 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionAsyncDefault[P, T]:
+) -> "ASyncFunctionAsyncDefault[P, T]":
     """
     Decorates an asynchronous function with no default execution mode specified.
 
@@ -141,7 +141,7 @@ def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal[None] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionSyncDefault[P, T]:
+) -> "ASyncFunctionSyncDefault[P, T]":
     """
     Decorates a synchronous function with no default execution mode specified.
 
@@ -231,7 +231,7 @@ def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionAsyncDefault[P, T]:
+) -> "ASyncFunctionAsyncDefault[P, T]":
     """
     Decorates an asynchronous function with an asynchronous default execution mode.
 
@@ -261,7 +261,7 @@ def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal["async"],
     **modifiers: Unpack[ModifierKwargs],
-) -> ASyncFunctionAsyncDefault[P, T]:
+) -> "ASyncFunctionAsyncDefault[P, T]":
     """
     Decorates a synchronous function with an asynchronous default execution mode.
 
@@ -443,7 +443,7 @@ def a_sync(
     **modifiers: Unpack[
         ModifierKwargs
     ],  # default values are set by passing these kwargs into a ModifierManager object.
-) -> Union[ASyncDecorator, ASyncFunction[P, T]]:
+) -> Union[ASyncDecorator, "ASyncFunction[P, T]"]:
     """
     A versatile decorator that enables both synchronous and asynchronous execution of functions.
 
