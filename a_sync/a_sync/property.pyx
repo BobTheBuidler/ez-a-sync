@@ -18,6 +18,7 @@ from a_sync.a_sync.function import (
     ASyncFunctionAsyncDefault,
     ASyncFunctionSyncDefault,
 )
+from a_sync.a_sync.function cimport _ModifiedMixin
 from a_sync.a_sync.method import (
     ASyncBoundMethod,
     ASyncBoundMethodAsyncDefault,
@@ -119,18 +120,13 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
 
         # if the user didn't specify a default behavior, we will defer to the instance
         cdef bint should_await
-        if _is_a_sync_instance(instance):
-            should_await = (
-                self.default == "sync"
-                if self.default
-                else instance.__a_sync_instance_should_await__
-            )
+        cdef str default = _ModifiedMixin.get_default(self)
+        if default:
+            should_await = default == "sync"
+        elif _is_a_sync_instance(instance):
+            should_await = instance.__a_sync_instance_should_await__
         else:
-            should_await = (
-                self.default == "sync"
-                if self.default
-                else not get_event_loop().is_running()
-            )
+            should_await = not get_event_loop().is_running()
         
         cdef object retval
         cdef bint debug_logs = c_logger.isEnabledFor(DEBUG)

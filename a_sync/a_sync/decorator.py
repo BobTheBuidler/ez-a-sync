@@ -547,7 +547,7 @@ def a_sync(
     """
 
     # If the dev tried passing a default as an arg instead of a kwarg, ie: @a_sync('sync')...
-    if coro_fn in ["async", "sync"]:
+    if coro_fn in ("async", "sync"):
         default = coro_fn  # type: ignore [assignment]
         coro_fn = None
 

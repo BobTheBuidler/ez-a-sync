@@ -1,5 +1,6 @@
 import functools
 import sys
+from asyncio import iscoroutinefunction
 from inspect import getfullargspec, isasyncgenfunction, isgeneratorfunction
 from logging import getLogger
 from libc.stdint cimport uintptr_t
@@ -28,7 +29,7 @@ logger = getLogger(__name__)
 cdef object c_logger = logger
 
 
-class _ModifiedMixin:
+cdef class _ModifiedMixin:
     """
     A mixin class for internal use that provides functionality for applying modifiers to functions.
 
@@ -42,12 +43,20 @@ class _ModifiedMixin:
         - :class:`~ModifierManager`
     """
 
-    # TODO: give me a docstring
-    modifiers: ModifierManager
+    @property
+    def default(self) -> DefaultMode:
+        """
+        Gets the default execution mode (sync, async, or None) for the function.
 
-    __slots__ = "modifiers", "wrapped"
+        Returns:
+            The default execution mode.
 
-    def _asyncify(self, func: SyncFn[P, T]) -> CoroFn[P, T]:
+        See Also:
+            - :attr:`ModifierManager.default`
+        """
+        return self.get_default()
+
+    cdef object _asyncify(self, func: SyncFn[P, T]):
         """
         Converts a synchronous function to an asynchronous one and applies async modifiers.
 
@@ -61,9 +70,8 @@ class _ModifiedMixin:
             - :meth:`ModifierManager.apply_async_modifiers`
         """
         return self.modifiers.apply_async_modifiers(_asyncify(func, self.modifiers.executor))
-
-    @functools.cached_property
-    def _await(self) -> Callable[[Awaitable[T]], T]:
+    
+    cdef object get_await(self):
         """
         Applies sync modifiers to the _helpers._await function and caches it.
 
@@ -73,20 +81,19 @@ class _ModifiedMixin:
         See Also:
             - :meth:`ModifierManager.apply_sync_modifiers`
         """
-        return self.modifiers.apply_sync_modifiers(_await)
+        awaiter = self.__await
+        if awaiter is None:
+            awaiter = self.modifiers.apply_sync_modifiers(_await)
+            self.__await = awaiter
+        return awaiter
+    
+    cdef str get_default(self):
+        default = self.__default
+        if default is None:
+            default = self.modifiers.default
+            self.__default = default
+        return default
 
-    @cached_property_unsafe
-    def default(self) -> DefaultMode:
-        """
-        Gets the default execution mode (sync, async, or None) for the function.
-
-        Returns:
-            The default execution mode.
-
-        See Also:
-            - :attr:`ModifierManager.default`
-        """
-        return self.modifiers.default
 
 
 cpdef void _validate_wrapped_fn(fn: Callable):
@@ -195,7 +202,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         - :class:`ModifierManager`
     """
 
-    __fn = None
+    _fn = None
 
     # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
 
@@ -389,10 +396,10 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             - :meth:`_async_wrap`
             - :meth:`_sync_wrap`
         """
-        fn = self.__fn
+        fn = self._fn
         if fn is None:
             fn = self._async_wrap if self._async_def else self._sync_wrap
-            self.__fn = fn
+            self._fn = fn
         return fn
 
     if sys.version_info >= (3, 11) or TYPE_CHECKING:
@@ -767,10 +774,11 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         See Also:
             - :attr:`default`
         """
+        cdef str default = _ModifiedMixin.get_default(self)
         return (
             True
-            if self.default == "sync"
-            else False if self.default == "async" else not self._async_def
+            if default == "sync"
+            else False if default == "async" else not self._async_def
         )
 
     @cached_property_unsafe
@@ -784,7 +792,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         See Also:
             - :func:`asyncio.iscoroutinefunction`
         """
-        return asyncio.iscoroutinefunction(self.__wrapped__)
+        return iscoroutinefunction(self.__wrapped__)
 
     @cached_property_unsafe
     def _asyncified(self) -> CoroFn[P, T]:
@@ -804,7 +812,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             raise TypeError(
                 f"Can only be applied to sync functions, not {self.__wrapped__}"
             )
-        return self._asyncify(self._modified_fn)  # type: ignore [arg-type]
+        return _ModifiedMixin._asyncify(self, self._modified_fn)  # type: ignore [arg-type]
 
     @functools.cached_property
     def _modified_fn(self) -> AnyFn[P, T]:
@@ -841,7 +849,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         """
 
         modified_fn = self._modified_fn
-        await_helper = self._await
+        await_helper = _ModifiedMixin.get_await(self)
 
         @wraps(modified_fn)
         def async_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
@@ -893,7 +901,7 @@ else:
     _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
 
 
-class ASyncDecorator(_ModifiedMixin):
+cdef class ASyncDecorator(_ModifiedMixin):
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         """
         Initializes an ASyncDecorator instance by validating the inputs.
@@ -958,11 +966,12 @@ class ASyncDecorator(_ModifiedMixin):
         See Also:
             - :class:`ASyncFunction`
         """
-        if self.default == "async":
+        cdef str default = self.get_default()
+        if default == "async":
             return ASyncFunctionAsyncDefault(func, **self.modifiers)
-        elif self.default == "sync":
+        elif default == "sync":
             return ASyncFunctionSyncDefault(func, **self.modifiers)
-        elif asyncio.iscoroutinefunction(func):
+        elif iscoroutinefunction(func):
             return ASyncFunctionAsyncDefault(func, **self.modifiers)
         else:
             return ASyncFunctionSyncDefault(func, **self.modifiers)
@@ -1148,7 +1157,7 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
     __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
 
 
-class ASyncDecoratorSyncDefault(ASyncDecorator):
+cdef class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodSyncDefault[P, T]":  # type: ignore [override]
         """
@@ -1199,7 +1208,7 @@ class ASyncDecoratorSyncDefault(ASyncDecorator):
         return ASyncFunctionSyncDefault(func, **self.modifiers)
 
 
-class ASyncDecoratorAsyncDefault(ASyncDecorator):
+cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodAsyncDefault[P, T]":  # type: ignore [override]
         """
