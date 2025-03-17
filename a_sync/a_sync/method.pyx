@@ -9,6 +9,7 @@ asynchronously based on various conditions and configurations.
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 import logging
+from asyncio import TimerHandle, get_event_loop, iscoroutinefunction
 from inspect import isawaitable
 from libc.stdint cimport uintptr_t
 from weakref import ref as weak_ref
@@ -41,9 +42,6 @@ cdef int DEBUG = logging.DEBUG
 cdef inline void _logger_debug(str msg, tuple args):
     if _logger_is_enabled_for(DEBUG):
         _logger_log(DEBUG, msg, args)
-
-
-cdef object get_event_loop = asyncio.get_event_loop
 
 
 class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
@@ -225,7 +223,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             >>> descriptor.__is_async_def__
             True
         """
-        return asyncio.iscoroutinefunction(self.__wrapped__)
+        return iscoroutinefunction(self.__wrapped__)
 
 
 cdef void _update_cache_timer(field_name: str, instance: I, bound: "ASyncBoundMethod"):
@@ -492,7 +490,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
 
     # NOTE: this is created by the Descriptor
 
-    _cache_handle: asyncio.TimerHandle = None
+    _cache_handle: TimerHandle = None
     """An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."""
 
     __weakself__: "weak_ref[I]"
