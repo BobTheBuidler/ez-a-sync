@@ -47,6 +47,19 @@ cdef class _ModifiedMixin:
     cdef str __default
     cdef object __await
 
+    @property
+    def default(self) -> DefaultMode:
+        """
+        Gets the default execution mode (sync, async, or None) for the function.
+
+        Returns:
+            The default execution mode.
+
+        See Also:
+            - :attr:`ModifierManager.default`
+        """
+        return self.get_default()
+
     cpdef object _asyncify(self, func: SyncFn[P, T]):
         """
         Converts a synchronous function to an asynchronous one and applies async modifiers.
@@ -73,28 +86,22 @@ cdef class _ModifiedMixin:
         See Also:
             - :meth:`ModifierManager.apply_sync_modifiers`
         """
+        return self.get_await()
+    
+    cdef object get_await(self):
         awaiter = self.__await
         if awaiter is None:
             awaiter = self.modifiers.apply_sync_modifiers(_await)
             self.__await = awaiter
         return awaiter
-
-    @property
-    def default(self) -> DefaultMode:
-        """
-        Gets the default execution mode (sync, async, or None) for the function.
-
-        Returns:
-            The default execution mode.
-
-        See Also:
-            - :attr:`ModifierManager.default`
-        """
+    
+    cdef str get_default(self):
         default = self.__default
         if default is None:
             default = self.modifiers.default
             self.__default = default
         return default
+
 
 
 cpdef void _validate_wrapped_fn(fn: Callable):
@@ -775,10 +782,11 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         See Also:
             - :attr:`default`
         """
+        cdef str default = _ModifiedMixin.get_default(self)
         return (
             True
-            if self.default == "sync"
-            else False if self.default == "async" else not self._async_def
+            if default == "sync"
+            else False if default == "async" else not self._async_def
         )
 
     @cached_property_unsafe
@@ -849,7 +857,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         """
 
         modified_fn = self._modified_fn
-        await_helper = self._await
+        await_helper = _ModifiedMixin.get_await(self)
 
         @wraps(modified_fn)
         def async_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
@@ -966,9 +974,10 @@ class ASyncDecorator(_ModifiedMixin):
         See Also:
             - :class:`ASyncFunction`
         """
-        if self.default == "async":
+        default = self.get_default()
+        if default == "async":
             return ASyncFunctionAsyncDefault(func, **self.modifiers)
-        elif self.default == "sync":
+        elif default == "sync":
             return ASyncFunctionSyncDefault(func, **self.modifiers)
         elif asyncio.iscoroutinefunction(func):
             return ASyncFunctionAsyncDefault(func, **self.modifiers)
