@@ -18,9 +18,9 @@ cdef class cached_property_unsafe:
         return self._doc
 
     def __set_name__(self, owner, str name):
-        cdef str existing_name = self._attrname
+        cdef str existing_name = self.attrname
         if existing_name is None:
-            self._attrname = name
+            self.attrname = name
         elif name != existing_name:
             raise TypeError(
                 "Cannot assign the same cached_property to two different names "
@@ -30,7 +30,7 @@ cdef class cached_property_unsafe:
     def __get__(self, instance, owner):
         if instance is None:
             return self
-        cdef str attrname = self._attrname
+        cdef str attrname = self.attrname
         if attrname is None:
             raise TypeError(
                 "Cannot use cached_property instance without calling __set_name__ on it.")
