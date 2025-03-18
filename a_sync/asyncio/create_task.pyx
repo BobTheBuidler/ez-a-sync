@@ -4,14 +4,14 @@ manage task lifecycle, and enhance error handling.
 """
 
 import asyncio.tasks as aiotasks
-import logging
 from asyncio import Future, InvalidStateError, Task, get_running_loop, iscoroutine
+from logging import getLogger
 
 from a_sync import exceptions
 from a_sync._typing import *
 
 
-logger = logging.getLogger(__name__)
+cdef readonly object logger = getLogger(__name__)
 
 
 def create_task(
@@ -65,25 +65,25 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
         coro = __await(coro)
 
     loop = get_running_loop()
-    
-    if loop._task_factory is None:
-        task = tasks.Task(coro, loop=loop, name=name)
+    task_factory = loop._task_factory
+    if task_factory is None:
+        task = Task(coro, loop=loop, name=name)
         if task._source_traceback:
             del task._source_traceback[-1]
     else:
-        task = self._task_factory(loop, coro)
+        task = task_factory(loop, coro)
         if name:
             __set_task_name(task, name)
 
     if skip_gc_until_done:
         persisted = __persisted_task_exc_wrap(task)
             
-        if loop._task_factory is None:
-            persisted = tasks.Task(persisted, loop=loop, name=name)
+        if task_factory is None:
+            persisted = Task(persisted, loop=loop, name=name)
             if persisted._source_traceback:
                 del persisted._source_traceback[-1]
         else:
-            persisted = self._task_factory(loop, persisted)
+            persisted = task_factory(loop, persisted)
             if name:
                 __set_task_name(persisted, name)
             
