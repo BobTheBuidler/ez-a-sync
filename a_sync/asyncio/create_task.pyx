@@ -91,7 +91,7 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
             if persisted._source_traceback:
                 del persisted._source_traceback[-1]
         elif task_factory is smart_task_factory:
-            persisted = Task(persisted, loop=loop, name=name)
+            persisted = SmartTask(persisted, loop=loop, name=name)
             if persisted._source_traceback:
                 del persisted._source_traceback[-1]
         else:
