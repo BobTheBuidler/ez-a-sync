@@ -154,3 +154,21 @@ class SmartTask(_SmartFutureMixin[_T], Task):
         - :class:`_SmartFutureMixin`
         - :class:`asyncio.Task`
     """
+
+def set_smart_task_factory(loop: AbstractEventLoop = None) -> None:
+    """
+    Set the event loop's task factory to :func:`~smart_task_factory` so all tasks will be SmartTask instances.
+
+    Args:
+        loop: Optional; the event loop. If None, the current event loop is used.
+
+    Example:
+        Setting the smart task factory for the current event loop:
+
+        ```python
+        set_smart_task_factory()
+        ```
+
+    See Also:
+        - :func:`smart_task_factory`
+    """
