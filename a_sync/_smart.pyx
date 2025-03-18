@@ -10,7 +10,8 @@ import logging
 import warnings
 import weakref
 from asyncio import (AbstractEventLoop, Future, InvalidStateError, Task, 
-                     current_task, ensure_future, get_event_loop)
+                     ensure_future, get_event_loop)
+from asyncio.tasks import _current_tasks as __current_tasks
 from libc.stdint cimport uintptr_t
 from weakref import proxy, ref
 
@@ -29,6 +30,8 @@ logger = logging.getLogger(__name__)
 
 cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
+
+cdef dict[object, object] _current_tasks = __current_tasks
 
 class _SmartFutureMixin(Generic[T]):
     """
@@ -219,7 +222,7 @@ class SmartFuture(_SmartFutureMixin[T], Future):
     def __init__(
         self,
         *,
-        queue: Optional["SmartProcessingQueue[Any, Any, T]"],
+        queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None,
         key: Optional[_Key] = None,
         loop: Optional[AbstractEventLoop] = None,
     ) -> None:
@@ -338,7 +341,11 @@ class SmartFuture(_SmartFutureMixin[T], Future):
             queue._futs.pop(self._key)
 
 
-cpdef object create_future(
+cdef inline object current_task(object loop):
+    return _current_tasks.get(loop)
+
+  
+cpdef inline object create_future(
     queue: Optional["SmartProcessingQueue"] = None,
     key: Optional[_Key] = None,
     loop: Optional[AbstractEventLoop] = None,
@@ -583,7 +590,7 @@ cpdef object shield(arg: Awaitable[T]):
         return inner
 
     loop = aiofutures._get_loop(inner)
-    outer = create_future(loop=loop)
+    outer = SmartFuture(loop=loop)
 
     # special handling to connect SmartFutures to SmartTasks if enabled
     if (waiters := getattr(inner, "_waiters", None)) is not None:
