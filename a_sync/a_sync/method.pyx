@@ -453,8 +453,8 @@ cdef bint _should_await(object self, dict kwargs):
     cdef str flag = get_flag_name(kwargs)
     if flag:
         return is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
-    elif _ModifiedMixin.get_default(self):
-        return _ModifiedMixin.get_default(self) == "sync"
+    elif default := _ModifiedMixin.get_default(self):
+        return default == "sync"
     elif _is_a_sync_instance(self.__self__):
         self.__self__: "ASyncABC"
         return self.__self__.__a_sync_should_await__(kwargs)
