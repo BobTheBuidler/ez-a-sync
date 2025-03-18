@@ -61,6 +61,10 @@ cdef object ccreate_task_simple(object coro):
     return ccreate_task(coro, "", False, True)
     
 cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint log_destroy_pending):
+    cdef object loop = get_running_loop()
+    cdef object task_factory = loop._task_factory
+    cdef object task, persisted
+    
     if not iscoroutine(coro):
         coro = __await(coro)
 
