@@ -8,6 +8,7 @@ from asyncio import Future, InvalidStateError, Task, get_running_loop, iscorouti
 from logging import getLogger
 
 from a_sync import exceptions
+from a_sync._smart cimport smart_task_factory
 from a_sync._typing import *
 
 
@@ -72,6 +73,10 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
         task = Task(coro, loop=loop, name=name)
         if task._source_traceback:
             del task._source_traceback[-1]
+    elif task_factory is smart_task_factory:
+        task = SmartTask(coro, loop=loop, name=name)
+        if task._source_traceback:
+            del task._source_traceback[-1]
     else:
         task = task_factory(loop, coro)
         if name:
@@ -81,6 +86,10 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
         persisted = __persisted_task_exc_wrap(task)
             
         if task_factory is None:
+            persisted = Task(persisted, loop=loop, name=name)
+            if persisted._source_traceback:
+                del persisted._source_traceback[-1]
+        elif task_factory is smart_task_factory:
             persisted = Task(persisted, loop=loop, name=name)
             if persisted._source_traceback:
                 del persisted._source_traceback[-1]
