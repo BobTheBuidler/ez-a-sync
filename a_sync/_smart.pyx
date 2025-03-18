@@ -222,7 +222,7 @@ class SmartFuture(_SmartFutureMixin[T], Future):
     def __init__(
         self,
         *,
-        queue: Optional["SmartProcessingQueue[Any, Any, T]"],
+        queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None,
         key: Optional[_Key] = None,
         loop: Optional[AbstractEventLoop] = None,
     ) -> None:
@@ -590,7 +590,7 @@ cpdef object shield(arg: Awaitable[T]):
         return inner
 
     loop = aiofutures._get_loop(inner)
-    outer = create_future(loop=loop)
+    outer = SmartFuture(loop=loop)
 
     # special handling to connect SmartFutures to SmartTasks if enabled
     if (waiters := getattr(inner, "_waiters", None)) is not None:
