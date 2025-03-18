@@ -4,14 +4,16 @@ manage task lifecycle, and enhance error handling.
 """
 
 import asyncio.tasks as aiotasks
-import logging
 from asyncio import Future, InvalidStateError, Task, get_running_loop, iscoroutine
+from logging import getLogger
 
 from a_sync import exceptions
+from a_sync._smart import SmartTask
+from a_sync._smart cimport smart_task_factory
 from a_sync._typing import *
 
 
-logger = logging.getLogger(__name__)
+cdef public object logger = getLogger(__name__)
 
 
 def create_task(
@@ -61,20 +63,43 @@ cdef object ccreate_task_simple(object coro):
     return ccreate_task(coro, "", False, True)
     
 cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint log_destroy_pending):
+    cdef object loop = get_running_loop()
+    cdef object task_factory = loop._task_factory
+    cdef object task, persisted
+    
     if not iscoroutine(coro):
         coro = __await(coro)
-
-    create_task = get_running_loop().create_task
-    task = create_task(coro)
     
-    if name:
-        __set_task_name(task, name)
+    if task_factory is None:
+        task = Task(coro, loop=loop, name=name)
+        if task._source_traceback:
+            del task._source_traceback[-1]
+    elif task_factory is smart_task_factory:
+        task = SmartTask(coro, loop=loop, name=name)
+        if task._source_traceback:
+            del task._source_traceback[-1]
+    else:
+        task = task_factory(loop, coro)
+        if name:
+            __set_task_name(task, name)
 
     if skip_gc_until_done:
         persisted = __persisted_task_exc_wrap(task)
-        if name:
-            __set_task_name(persisted, name)
-        __persisted_tasks.add(create_task(persisted))
+            
+        if task_factory is None:
+            persisted = Task(persisted, loop=loop, name=name)
+            if persisted._source_traceback:
+                del persisted._source_traceback[-1]
+        elif task_factory is smart_task_factory:
+            persisted = SmartTask(persisted, loop=loop, name=name)
+            if persisted._source_traceback:
+                del persisted._source_traceback[-1]
+        else:
+            persisted = task_factory(loop, persisted)
+            if name:
+                __set_task_name(persisted, name)
+            
+        __persisted_tasks.add(persisted)
 
     if log_destroy_pending is False:
         task._log_destroy_pending = False
@@ -84,7 +109,7 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
     return task
 
 
-cdef void __set_task_name(object task, str name):
+cdef inline void __set_task_name(object task, str name):
     if set_name := getattr(task, "set_name", None):
          set_name(name)
 
