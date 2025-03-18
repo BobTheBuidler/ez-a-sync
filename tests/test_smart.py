@@ -14,18 +14,24 @@ async def test_smart_task_name():
     t = SmartTask(sleep(0.1), loop=None, name="test")
     assert t.get_name() == "test"
 
+
 def test_set_smart_task_factory():
     set_smart_task_factory()
     loop = get_event_loop()
+
     async def do_stuff():
         task = create_task(sleep(0))
         assert isinstance(task, SmartTask)
+
     loop.run_until_complete(do_stuff())
+
 
 def test_set_smart_task_factory_with_loop():
     loop = get_event_loop()
     set_smart_task_factory(loop)
+
     async def do_stuff():
         task = create_task(sleep(0))
         assert isinstance(task, SmartTask)
+
     loop.run_until_complete(do_stuff())
