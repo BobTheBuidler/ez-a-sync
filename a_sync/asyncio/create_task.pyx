@@ -13,7 +13,7 @@ from a_sync._smart cimport smart_task_factory
 from a_sync._typing import *
 
 
-cdef readonly object logger = getLogger(__name__)
+cdef public object logger = getLogger(__name__)
 
 
 def create_task(
