@@ -67,9 +67,7 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
     
     if not iscoroutine(coro):
         coro = __await(coro)
-
-    loop = get_running_loop()
-    task_factory = loop._task_factory
+    
     if task_factory is None:
         task = Task(coro, loop=loop, name=name)
         if task._source_traceback:
