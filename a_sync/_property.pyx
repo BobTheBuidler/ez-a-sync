@@ -1,7 +1,5 @@
 cdef class AwaitableOnly:
     """This wraps a coroutine will call it on await."""
-    
-    cdef object _coro
 
     def __init__(self, coro):
         self._coro = coro
