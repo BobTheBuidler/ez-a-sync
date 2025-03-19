@@ -8,10 +8,10 @@ from types import FunctionType
 from typing import _GenericAlias, get_args
 from weakref import ref as weak_ref
 
-from a_sync._property_cached import async_cached_property
-from a_sync._property_cached cimport AsyncCachedPropertyInstanceState
 from a_sync._typing import *
 from a_sync.a_sync._helpers cimport _await
+from a_sync.async_property import async_cached_property
+from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
 from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.exceptions import SyncModeInAsyncContextError
 from a_sync.functools cimport update_wrapper
