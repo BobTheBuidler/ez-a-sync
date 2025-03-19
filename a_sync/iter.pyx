@@ -8,8 +8,8 @@ from types import FunctionType
 from typing import _GenericAlias, get_args
 from weakref import ref as weak_ref
 
-from async_property import async_cached_property
-
+from a_sync._property_cached import async_cached_property
+from a_sync._property_cached cimport AsyncCachedPropertyInstanceState
 from a_sync._typing import *
 from a_sync.a_sync._helpers cimport _await
 from a_sync.asyncio.create_task cimport ccreate_task_simple
@@ -30,7 +30,7 @@ else:
 cdef tuple[str] _FORMAT_PATTERNS = ("{cls}", "{obj}")
 
 
-class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
+cdef class _AwaitableAsyncIterableMixin:
     """
     A mixin class defining logic for making an AsyncIterable awaitable.
 
@@ -49,8 +49,15 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         [0, 1, 2, 3]
     """
 
-    __wrapped__: AsyncIterable[T]
+    cdef public object __wrapped__
+    cdef readonly AsyncCachedPropertyInstanceState __async_property__
 
+    def __cinit__(self) -> None:
+        self.__async_property__ = AsyncCachedPropertyInstanceState()
+        
+    def __aiter__(self) -> AsyncIterator[T]:
+        raise NotImplementedError
+        
     def __await__(self) -> Generator[Any, Any, List[T]]:
         """
         Asynchronously iterate through the {cls} and return all {obj}.
@@ -70,9 +77,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         """
         return _await(self._materialized)
 
-    def sort(
-        self, *, key: SortKey[T] = None, reverse: bool = False
-    ) -> "ASyncSorter[T]":
+    cpdef object sort(self, key: SortKey[T] = None, reverse: bool = False):
         """
         Sort the {obj} yielded by the {cls}.
 
@@ -85,7 +90,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         """
         return ASyncSorter(self, key=key, reverse=reverse)
 
-    def filter(self, function: ViewFn[T]) -> "ASyncFilter[T]":
+    cpdef object filter(self, function: ViewFn[T]):
         """
         Filters the {obj} yielded by the {cls} based on a function.
 
@@ -107,126 +112,8 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         """
         return [obj async for obj in self]
 
-    def __init_subclass__(cls, **kwargs) -> None:
 
-        # Determine the type used for T in the subclass
-        cdef object type_argument = T  # Default value
-        cdef str type_string = ":obj:`T` objects"
-
-        cdef object base
-        cdef tuple args
-        cdef str module, qualname, name
-        for base in getattr(cls, "__orig_bases__", []):
-            if not hasattr(base, "__args__"):
-                continue
-
-            args = get_args(base)
-            if args and not isinstance(type_argument := args[0], TypeVar):
-                module = getattr(type_argument, "__module__", "")
-                qualname = getattr(type_argument, "__qualname__", "")
-                name = getattr(type_argument, "__name__", "")
-                
-                if module and qualname:
-                    type_string = ":class:`~{}.{}`".format(module, qualname)
-                elif module and name:
-                    type_string = (":class:`~{}.{}`".format(module, name))
-                elif qualname:
-                    type_string = ":class:`{}`".format(qualname)
-                elif name:
-                    type_string = ":class:`{}`".format(name)
-                else:
-                    type_string = str(type_argument)
-
-        # modify the class docstring
-        cdef str new_chunk = (
-            "When awaited, a list of all {} will be returned.\n".format(type_string) +
-            "\n"
-            "Example:\n"
-            "    >>> my_object = {}(...)\n".format(cls.__name__) +
-            "    >>> all_contents = await my_object\n"
-            "    >>> isinstance(all_contents, list)\n"
-            "    True\n"
-        )
-
-        cdef str example_text = (
-            type_argument._name 
-            if isinstance(type_argument, _GenericAlias) 
-            else getattr(type_argument, "__name__", "")
-        )
-        
-        if example_text:
-            new_chunk += (
-                "    >>> isinstance(all_contents[0], {})\n".format(example_text) +
-                "    True\n"
-            )
-
-        if cls.__doc__ is None:
-            cls.__doc__ = new_chunk
-        elif not cls.__doc__ or cls.__doc__.endswith("\n\n"):
-            cls.__doc__ += new_chunk
-        elif cls.__doc__.endswith("\n"):
-            cls.__doc__ += "\n{}".format(new_chunk)
-        else:
-            cls.__doc__ += "\n\n{}".format(new_chunk)
-
-        # Update method docstrings by redefining methods
-        # This is necessary because, by default, subclasses inherit methods from their bases
-        # which means if we just update the docstring we might edit docs for unrelated objects
-        is_function = lambda obj: isinstance(obj, (FunctionType, property)) or "cython_function_or_method" in type(obj).__name__
-
-        cdef dict functions_to_redefine = {
-            attr_name: attr_value
-            for attr_name in dir(cls)
-            if (attr_value := getattr(cls, attr_name, None))
-            and is_function(attr_value)
-            and attr_value.__doc__
-            and any(pattern in attr_value.__doc__ for pattern in _FORMAT_PATTERNS)
-        }
-
-        cdef str function_name
-        cdef object function_obj
-        for function_name, function_obj in functions_to_redefine.items():
-            # Create a new function object with the docstring formatted appropriately for this class
-            #redefined_function_obj = FunctionType(
-            #    function_obj.__code__,
-            #    function_obj.__globals__,
-            #    name=function_obj.__name__,
-            #    argdefs=function_obj.__defaults__,
-            #    closure=function_obj.__closure__,
-            #)
-            redefined_function_obj = None
-            if hasattr(_AwaitableAsyncIterableMixin, function_name):
-                base_definition = getattr(_AwaitableAsyncIterableMixin, function_name)
-                if function_obj.__doc__ == base_definition.__doc__:
-                    redefined_function_obj = deepcopy(base_definition)
-            elif cls.__name__ != "ASyncIterable" and hasattr(ASyncIterable, function_name):
-                base_definition = getattr(ASyncIterable, function_name)
-                if function_obj.__doc__ == base_definition.__doc__:
-                    redefined_function_obj = deepcopy(base_definition)
-            elif cls.__name__ not in ("ASyncIterable", "ASyncIterator") and hasattr(ASyncIterator, function_name):
-                base_definition = getattr(ASyncIterator, function_name)
-                if function_obj.__doc__ == base_definition.__doc__:
-                    redefined_function_obj = deepcopy(base_definition)
-            
-            if redefined_function_obj is None:
-                redefined_function_obj = deepcopy(function_obj)
-
-            redefined_function_obj.__doc__ = function_obj.__doc__.format(
-                cls=cls.__name__,
-                obj=type_string,
-            )
-
-            if "{cls}" in redefined_function_obj.__doc__:
-                raise ValueError(redefined_function_obj.__doc__)
-
-            setattr(cls, function_name, redefined_function_obj)
-
-        return super().__init_subclass__(**kwargs)
-
-    __slots__ = ("__async_property__",)
-
-
-class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
+class ASyncIterable(_AwaitableAsyncIterableMixin, AsyncIterable[T], Iterable[T]):
     """
     A hybrid Iterable/AsyncIterable implementation designed to offer
     dual compatibility with both synchronous and asynchronous
@@ -284,7 +171,7 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     def __repr__(self) -> str:
         start = "<{}".format(type(self).__name__)
         if wrapped := getattr(self, "__wrapped__", None):
-            start += " for {}".format(self.__wrapped__)
+            start += " for {}".format(wrapped)
         return "{} at {}>".format(start, hex(id(self)))
 
     def __aiter__(self) -> AsyncIterator[T]:
@@ -306,13 +193,15 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
         """
         yield from ASyncIterator(self.__aiter__())
 
-    __slots__ = ("__wrapped__",)
+    def __init_subclass__(cls, **kwargs) -> None:
+        _init_subclass(cls, kwargs)
+        return super().__init_subclass__(**kwargs)
 
 
 AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
 
 
-class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
+class ASyncIterator(_AwaitableAsyncIterableMixin, Iterator[T]):
     """
     A hybrid Iterator/AsyncIterator implementation that bridges the gap between synchronous and asynchronous iteration. This class provides a unified interface for iteration that can seamlessly operate in both synchronous (`for` loop) and asynchronous (`async for` loop) contexts. It allows the wrapping of asynchronous iterable objects or async generator functions, making them usable in synchronous code without explicitly managing event loops or asynchronous context switches.
 
@@ -440,6 +329,10 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
     def __aiter__(self) -> Self:
         "Return the {cls} for aiteration."
         return self
+
+    def __init_subclass__(cls, **kwargs) -> None:
+        _init_subclass(cls, kwargs)
+        return super().__init_subclass__(**kwargs)
 
 
 class ASyncGeneratorFunction(Generic[P, T]):
@@ -762,6 +655,120 @@ class ASyncSorter(_ASyncView[T]):
             for obj in items:
                 yield obj
         self._consumed = True
+
+
+cdef void _init_subclass(cls, dict kwargs):
+    # Determine the type used for T in the subclass
+    cdef object type_argument = T  # Default value
+    cdef str type_string = ":obj:`T` objects"
+
+    cdef object base
+    cdef tuple args
+    cdef str module, qualname, name
+    for base in getattr(cls, "__orig_bases__", []):
+        if not hasattr(base, "__args__"):
+            continue
+
+        args = get_args(base)
+        if args and not isinstance(type_argument := args[0], TypeVar):
+            module = getattr(type_argument, "__module__", "")
+            qualname = getattr(type_argument, "__qualname__", "")
+            name = getattr(type_argument, "__name__", "")
+            
+            if module and qualname:
+                type_string = ":class:`~{}.{}`".format(module, qualname)
+            elif module and name:
+                type_string = (":class:`~{}.{}`".format(module, name))
+            elif qualname:
+                type_string = ":class:`{}`".format(qualname)
+            elif name:
+                type_string = ":class:`{}`".format(name)
+            else:
+                type_string = str(type_argument)
+
+    # modify the class docstring
+    cdef str new_chunk = (
+        "When awaited, a list of all {} will be returned.\n".format(type_string) +
+        "\n"
+        "Example:\n"
+        "    >>> my_object = {}(...)\n".format(cls.__name__) +
+        "    >>> all_contents = await my_object\n"
+        "    >>> isinstance(all_contents, list)\n"
+        "    True\n"
+    )
+
+    cdef str example_text = (
+        type_argument._name 
+        if isinstance(type_argument, _GenericAlias) 
+        else getattr(type_argument, "__name__", "")
+    )
+    
+    if example_text:
+        new_chunk += (
+            "    >>> isinstance(all_contents[0], {})\n".format(example_text) +
+            "    True\n"
+        )
+
+    if cls.__doc__ is None:
+        cls.__doc__ = new_chunk
+    elif not cls.__doc__ or cls.__doc__.endswith("\n\n"):
+        cls.__doc__ += new_chunk
+    elif cls.__doc__.endswith("\n"):
+        cls.__doc__ += "\n{}".format(new_chunk)
+    else:
+        cls.__doc__ += "\n\n{}".format(new_chunk)
+
+    # Update method docstrings by redefining methods
+    # This is necessary because, by default, subclasses inherit methods from their bases
+    # which means if we just update the docstring we might edit docs for unrelated objects
+    is_function = lambda obj: isinstance(obj, (FunctionType, property)) or "cython_function_or_method" in type(obj).__name__
+
+    cdef dict functions_to_redefine = {
+        attr_name: attr_value
+        for attr_name in dir(cls)
+        if (attr_value := getattr(cls, attr_name, None))
+        and is_function(attr_value)
+        and attr_value.__doc__
+        and any(pattern in attr_value.__doc__ for pattern in _FORMAT_PATTERNS)
+    }
+
+    cdef str function_name
+    cdef object function_obj
+    for function_name, function_obj in functions_to_redefine.items():
+        # Create a new function object with the docstring formatted appropriately for this class
+        #redefined_function_obj = FunctionType(
+        #    function_obj.__code__,
+        #    function_obj.__globals__,
+        #    name=function_obj.__name__,
+        #    argdefs=function_obj.__defaults__,
+        #    closure=function_obj.__closure__,
+        #)
+        redefined_function_obj = None
+        if hasattr(_AwaitableAsyncIterableMixin, function_name):
+            base_definition = getattr(_AwaitableAsyncIterableMixin, function_name)
+            if function_obj.__doc__ == base_definition.__doc__:
+                redefined_function_obj = deepcopy(base_definition)
+        elif cls.__name__ != "ASyncIterable" and hasattr(ASyncIterable, function_name):
+            base_definition = getattr(ASyncIterable, function_name)
+            if function_obj.__doc__ == base_definition.__doc__:
+                redefined_function_obj = deepcopy(base_definition)
+        elif cls.__name__ not in ("ASyncIterable", "ASyncIterator") and hasattr(ASyncIterator, function_name):
+            base_definition = getattr(ASyncIterator, function_name)
+            if function_obj.__doc__ == base_definition.__doc__:
+                redefined_function_obj = deepcopy(base_definition)
+        
+        if redefined_function_obj is None:
+            redefined_function_obj = deepcopy(function_obj)
+
+        redefined_function_obj.__doc__ = function_obj.__doc__.format(
+            cls=cls.__name__,
+            obj=type_string,
+        )
+
+        if "{cls}" in redefined_function_obj.__doc__:
+            raise ValueError(redefined_function_obj.__doc__)
+
+        setattr(cls, function_name, redefined_function_obj)
 
 
 __all__ = [
