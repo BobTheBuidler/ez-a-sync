@@ -122,7 +122,7 @@ cpdef update_wrapper(wrapper, wrapped):
     return wrapper
 
 
-cdef wraps(wrapped):
+cdef object wraps(wrapped):
     """Decorator factory to apply update_wrapper() to a wrapper function
 
     Returns a decorator that invokes update_wrapper() with the decorated

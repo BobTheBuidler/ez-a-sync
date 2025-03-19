@@ -1,12 +1,11 @@
 from asyncio import Lock, iscoroutinefunction
 from collections import defaultdict
-from functools import wraps
 from typing import Any, DefaultDict, Dict
 
 from a_sync._smart cimport shield
 from a_sync.async_property.proxy import AwaitableProxy
 from a_sync.async_property.proxy cimport AwaitableOnly
-from a_sync.functools cimport update_wrapper
+from a_sync.functools cimport update_wrapper, wraps
 
 
 def async_cached_property(func, *args, **kwargs) -> "AsyncCachedPropertyDescriptor":
