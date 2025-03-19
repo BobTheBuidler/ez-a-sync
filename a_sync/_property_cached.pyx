@@ -44,7 +44,7 @@ class AsyncCachedPropertyDescriptor:
     def __get__(self, instance, owner):
         if instance is None:
             return self
-        cache = self.get_instance_state(instance).cache
+        cache = (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
         if self.field_name in cache:
             return AwaitableProxy(cache[self.field_name])
         return AwaitableOnly(self.get_loader(instance))
