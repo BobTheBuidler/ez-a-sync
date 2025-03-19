@@ -113,7 +113,7 @@ cdef class _AwaitableAsyncIterableMixin:
         return [obj async for obj in self]
 
 
-class ASyncIterable(_AwaitableAsyncIterableMixin): #[T], Iterable[T]):
+class ASyncIterable(_AwaitableAsyncIterableMixin, AsyncIterable[T], Iterable[T]):
     """
     A hybrid Iterable/AsyncIterable implementation designed to offer
     dual compatibility with both synchronous and asynchronous
