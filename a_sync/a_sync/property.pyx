@@ -8,6 +8,7 @@ import async_property as ap  # type: ignore [import]
 from typing_extensions import Concatenate, Self, Unpack
 
 from a_sync import _property_cached
+from a_sync._property_cached cimport AsyncCachedPropertyInstanceState
 from a_sync._smart cimport shield
 from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction, 
                             DefaultMode, I, ModifierKwargs, P, T)
@@ -431,12 +432,13 @@ class ASyncCachedPropertyDescriptor(
         Returns:
             An asyncio Task representing the lock.
         """
-        locks = self.get_instance_state(instance).locks
-        task = locks[self.field_name]
+        cdef AsyncCachedPropertyInstanceState cache_state
+        cache_state = self.get_instance_state(instance)
+        task = cache_state.locks[self.field_name]
         if isinstance(task, Lock):
             # default behavior uses lock but we want to use a Task so all waiters wake up together
             task = ccreate_task_simple(self._fget(instance))
-            locks[self.field_name] = task
+            cache_state.locks[self.field_name] = task
         return task
 
     def pop_lock(self, instance: I) -> None:
