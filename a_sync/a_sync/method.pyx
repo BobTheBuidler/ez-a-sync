@@ -217,7 +217,8 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry."
         )
 
-    def __is_async_def__(self) -> bool:
+    @property
+    def __is_async_def__(self) -> bint:
         """
         Check if the wrapped function is a coroutine function.
 

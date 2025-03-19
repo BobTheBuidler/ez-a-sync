@@ -27,6 +27,9 @@ class TestClass(ASyncBase):
             raise WrongThreadError("This should be running on an event loop in the main thread.")
         elif self.sync == True and main_thread() != current_thread():
             raise WrongThreadError("This should be awaited in the main thread")
+        assert (
+            TestClass.test_fn.__is_async_def__ is True
+        ), f"{TestClass.test_fn.__is_async_def__} is not True"
         return self.v
 
     @a_sync.aka.property
@@ -61,6 +64,9 @@ class TestSync(ASyncBase):
             raise WrongThreadError("This should be running in an executor, not the main thread.")
         elif self.sync == True and main_thread() != current_thread():
             raise WrongThreadError("This should be running synchronously in the main thread")
+        assert (
+            TestSync.test_fn.__is_async_def__ is False
+        ), f"{TestSync.test_fn.__is_async_def__} is not False"
         return self.v
 
     @a_sync.aka.property
