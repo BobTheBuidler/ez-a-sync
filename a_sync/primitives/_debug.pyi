@@ -8,7 +8,6 @@ from asyncio import Future
 
 from a_sync.primitives._loggable import _LoggerMixin
 
-
 class _DebugDaemonMixin(_LoggerMixin):
     """
     A mixin class that provides a framework for debugging capabilities using a daemon task.

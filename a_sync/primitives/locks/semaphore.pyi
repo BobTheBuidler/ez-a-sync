@@ -85,7 +85,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         Returns:
             True when the semaphore is successfully acquired.
         """
-            
+
     async def _debug_daemon(self) -> None:
         """
         Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.

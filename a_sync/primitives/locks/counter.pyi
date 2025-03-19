@@ -102,7 +102,7 @@ class CounterLock(_DebugDaemonMixin):
             ...
             ValueError: You cannot decrease the value.
         """
-        
+
     async def _debug_daemon(self) -> None:
         """
         Periodically logs debug information about the counter state and waiters.
