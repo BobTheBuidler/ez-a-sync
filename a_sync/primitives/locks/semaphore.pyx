@@ -443,7 +443,7 @@ cdef class ThreadsafeSemaphore(Semaphore):
 
     def __len__(self) -> int:
         cdef dict[object, Semaphore] semaphores = self.semaphores
-        return sum(len(sem) for sem in semaphores.values())
+        return sum(map(len, semaphores.values()))
 
     @property
     def semaphore(self) -> Semaphore:

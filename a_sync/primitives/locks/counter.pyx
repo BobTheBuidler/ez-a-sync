@@ -33,7 +33,7 @@ cdef class CounterLock(_DebugDaemonMixin):
 
     def __cinit__(self):
         self._events = {}
-        """A defaultdict that maps each awaited value to an :class:`Event` that manages the waiters for that value."""
+        """A dictionary that maps each awaited value to an :class:`Event` that manages the waiters for that value."""
 
         self._heap = []
 
