@@ -204,6 +204,8 @@ cdef class CounterLock(_DebugDaemonMixin):
         Periodically logs debug information about the counter state and waiters.
 
         This method is used internally to provide debugging information when debug logging is enabled.
+
+        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
         """
         cdef time_t start, now 
         start = time(NULL)

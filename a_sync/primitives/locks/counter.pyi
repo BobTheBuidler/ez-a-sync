@@ -103,6 +103,15 @@ class CounterLock(_DebugDaemonMixin):
             ValueError: You cannot decrease the value.
         """
 
+    async def _debug_daemon(self) -> None:
+        """
+        Periodically logs debug information about the counter state and waiters.
+
+        This method is used internally to provide debugging information when debug logging is enabled.
+
+        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
+        """
+
 class CounterLockCluster:
     """
     An asyncio primitive that represents a collection of :class:`CounterLock` objects.

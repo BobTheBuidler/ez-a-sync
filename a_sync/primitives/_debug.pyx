@@ -85,6 +85,8 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
 
         Subclasses must implement this method to specify what the debug daemon should do, including any logging or monitoring tasks.
 
+        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
+
         Args:
             fut: The future associated with the daemon.
             fn: The function to be debugged.

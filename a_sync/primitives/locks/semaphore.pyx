@@ -298,6 +298,8 @@ cdef class Semaphore(_DebugDaemonMixin):
         This method is part of the :class:`_DebugDaemonMixin` and is used to provide detailed logging information
         about the semaphore's state when it is being waited on.
 
+        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
+
         Example:
             semaphore = Semaphore(5)
 
