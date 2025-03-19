@@ -8,21 +8,12 @@ from a_sync._property cimport AwaitableOnly
 from a_sync.functools import update_wrapper
 
 
-ctypedef str FieldName
-ctypedef object CacheValue
-
-cdef public str ASYNC_PROPERTY_ATTR = "__async_property__"
-
-
 def async_cached_property(func, *args, **kwargs) -> "AsyncCachedPropertyDescriptor":
     assert iscoroutinefunction(func), "Can only use with async def"
     return AsyncCachedPropertyDescriptor(func, *args, **kwargs)
 
 
 cdef class AsyncCachedPropertyInstanceState:
-    cdef readonly dict[FieldName, CacheValue] cache
-    cdef readonly object locks
-
     def __cinit__(self) -> None:
         self.cache: Dict[FieldName, Any] = {}
         self.locks: DefaultDict[FieldName, Lock] = defaultdict(Lock)
