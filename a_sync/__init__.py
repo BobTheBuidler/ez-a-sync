@@ -132,7 +132,7 @@ __all__ = [
 def _patch_async_property() -> None:
     import async_property.base as base
     import async_property.cached as cached
-    from a_sync._property import AwaitableOnly, AwaitableProxy
+    from a_sync.async_property.proxy import AwaitableOnly, AwaitableProxy
 
     base.AwaitableOnly = AwaitableOnly
     cached.AwaitableOnly = AwaitableOnly

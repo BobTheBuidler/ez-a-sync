@@ -1,7 +1,7 @@
 from asyncio import Lock
 from typing import Any, Callable, Dict, Generic, Optional, TypeVar, Union
 
-from a_sync._property import AwaitableOnly, AwaitableProxy
+from a_sync.async_property.proxy import AwaitableOnly, AwaitableProxy
 
 
 ProxyType = Union[AwaitableOnly[__T], AwaitableProxy[__T]]

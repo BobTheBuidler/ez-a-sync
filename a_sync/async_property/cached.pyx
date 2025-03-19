@@ -3,9 +3,9 @@ from collections import defaultdict
 from functools import wraps
 from typing import Any, DefaultDict, Dict
 
-from a_sync._property import AwaitableProxy
-from a_sync._property cimport AwaitableOnly
 from a_sync._smart cimport shield
+from a_sync.async_property.proxy import AwaitableProxy
+from a_sync.async_property.proxy cimport AwaitableOnly
 from a_sync.functools import update_wrapper
 
 
