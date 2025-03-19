@@ -14,10 +14,12 @@ async def test_smart_task_name():
     t = SmartTask(sleep(0.1), loop=None, name="test")
     assert t.get_name() == "test"
 
+
 async def smart_task_coro():
     task = create_task(sleep(0.1))
     assert isinstance(task, SmartTask)
     assert await task is None
+
 
 def test_set_smart_task_factory():
     set_smart_task_factory()
