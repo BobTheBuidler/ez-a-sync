@@ -126,7 +126,7 @@ class AsyncCachedPropertyDescriptor:
                             return cache[field_name]
                         value = await _fget(instance)
                         cache[field_name] = value
-                        locks.pop(field_name)
+                        dict.pop(locks, field_name)
                         return value
             else:
                 _fset = self._fset
@@ -145,7 +145,7 @@ class AsyncCachedPropertyDescriptor:
                         value = await _fget(instance)
                         _fset(instance, value)
                         cache[field_name] = value
-                        locks.pop(field_name)
+                        dict.pop(locks, field_name)
                         return value
 
             self._load_value = loader
