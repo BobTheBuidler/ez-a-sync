@@ -238,6 +238,8 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs until manually cancelled by the finished work item.</span>
 
+<span class="sd">        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            fut: The future being debugged.</span>
 <span class="sd">            fn: The function being executed.</span>

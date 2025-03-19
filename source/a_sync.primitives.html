@@ -461,6 +461,7 @@
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fut</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Future</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives._debug._DebugDaemonMixin._debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Abstract method to define the debug daemon’s behavior.</p>
 <p>Subclasses must implement this method to specify what the debug daemon should do, including any logging or monitoring tasks.</p>
+<p>This code will only run if <cite>self.logger.isEnabledFor(logging.DEBUG)</cite> is True. You do not need to include any level checks in your custom implementations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2892,6 +2893,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_debug_daemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.primitives.CounterLock._debug_daemon" title="Link to this definition"></a></dt>
 <dd><p>Periodically logs debug information about the counter state and waiters.</p>
 <p>This method is used internally to provide debugging information when debug logging is enabled.</p>
+<p>This code will only run if <cite>self.logger.isEnabledFor(logging.DEBUG)</cite> is True. You do not need to include any level checks in your custom implementations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -3240,6 +3242,7 @@ async def limited():</p>
 <dd><p>Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</p>
 <p>This method is part of the <code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code> and is used to provide detailed logging information
 about the semaphore’s state when it is being waited on.</p>
+<p>This code will only run if <cite>self.logger.isEnabledFor(logging.DEBUG)</cite> is True. You do not need to include any level checks in your custom implementations.</p>
 <p class="rubric">Example</p>
 <p>semaphore = Semaphore(5)</p>
 <dl class="simple">
@@ -4267,6 +4270,7 @@ async def limited():</p>
 <dd><p>Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</p>
 <p>This method is part of the <code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code> and is used to provide detailed logging information
 about the semaphore’s state when it is being waited on.</p>
+<p>This code will only run if <cite>self.logger.isEnabledFor(logging.DEBUG)</cite> is True. You do not need to include any level checks in your custom implementations.</p>
 <p class="rubric">Example</p>
 <p>semaphore = Semaphore(5)</p>
 <dl class="simple">
@@ -5006,6 +5010,7 @@ async def limited():</p>
 <dd><p>Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.</p>
 <p>This method is part of the <code class="xref py py-class docutils literal notranslate"><span class="pre">_DebugDaemonMixin</span></code> and is used to provide detailed logging information
 about the semaphore’s state when it is being waited on.</p>
+<p>This code will only run if <cite>self.logger.isEnabledFor(logging.DEBUG)</cite> is True. You do not need to include any level checks in your custom implementations.</p>
 <p class="rubric">Example</p>
 <p>semaphore = Semaphore(5)</p>
 <dl class="simple">
