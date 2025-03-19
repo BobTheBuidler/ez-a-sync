@@ -48,7 +48,7 @@ class AsyncCachedPropertyDescriptor:
         cache = (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
         if self.field_name in cache:
             return AwaitableProxy(cache[self.field_name])
-        return AwaitableOnly(shield(self.get_loader(instance)))
+        return AwaitableOnly(self.get_loader(instance))
 
     def __set__(self, instance, value):
         if self._fset is not None:
@@ -125,4 +125,4 @@ class AsyncCachedPropertyDescriptor:
 
             self._load_value = loader
 
-        return lambda: loader(instance)
+        return lambda: shield(loader(instance))
