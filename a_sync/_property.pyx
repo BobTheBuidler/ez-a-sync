@@ -109,10 +109,14 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
         # allow it to be overridden using a property and it must instead
         # be an actual string object instead.
 
+        # We are skipping the below code block that was in the original implementation due to
+        # results of my profiling and the fact that it isn't really relevant for most users.
+        """
         try:
             object.__setattr__(self, '__qualname__', wrapped.__qualname__)
         except AttributeError:
             pass
+        """
 
     @property
     def __name__(self):
