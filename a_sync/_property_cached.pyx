@@ -3,11 +3,15 @@ from collections import defaultdict
 from functools import wraps
 from typing import Any, DefaultDict, Dict
 
-from a_sync._property import AwaitableOnly, AwaitableProxy
+from a_sync._property import AwaitableProxy
+from a_sync._property cimport AwaitableOnly
 from a_sync.functools import update_wrapper
 
 
-ASYNC_PROPERTY_ATTR = "__async_property__"
+ctypedef str FieldName
+ctypedef object CacheValue
+
+cdef public str ASYNC_PROPERTY_ATTR = "__async_property__"
 
 
 def async_cached_property(func, *args, **kwargs) -> "AsyncCachedPropertyDescriptor":
@@ -15,15 +19,19 @@ def async_cached_property(func, *args, **kwargs) -> "AsyncCachedPropertyDescript
     return AsyncCachedPropertyDescriptor(func, *args, **kwargs)
 
 
-FieldName = str
+cdef class AsyncCachedPropertyInstanceState:
+    cdef readonly dict[FieldName, CacheValue] cache
+    cdef readonly object locks
 
-
-class AsyncCachedPropertyInstanceState:
-    def __init__(self) -> None:
+    def __cinit__(self) -> None:
         self.cache: Dict[FieldName, Any] = {}
-        self.lock: DefaultDict[FieldName, Lock] = defaultdict(Lock)
-
-    __slots__ = "cache", "lock"
+        self.locks: DefaultDict[FieldName, Lock] = defaultdict(Lock)
+    
+    cdef object get_lock(self, str field_name):
+        return self.locks[field_name]
+    
+    cdef object get_cache_value(self, str field_name):
+        return self.cache[field_name]
 
 
 class AsyncCachedPropertyDescriptor:
@@ -85,22 +93,22 @@ class AsyncCachedPropertyDescriptor:
             return state
 
     def get_lock(self, instance):
-        return self.get_instance_state(instance).lock[self.field_name]
+        return (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).locks[self.field_name]
 
     def get_cache(self, instance):
-        return self.get_instance_state(instance).cache
+        return (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
 
     def has_cache_value(self, instance):
-        return self.field_name in self.get_instance_state(instance).cache
+        return self.field_name in (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
 
     def get_cache_value(self, instance):
-        return self.get_instance_state(instance).cache[self.field_name]
+        return (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).get_cache_value(self.field_name)
 
     def set_cache_value(self, instance, value):
-        self.get_instance_state(instance).cache[self.field_name] = value
+        (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache[self.field_name] = value
 
     def del_cache_value(self, instance):
-        del self.get_instance_state(instance).cache[self.field_name]
+        del (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache[self.field_name]
 
     def get_loader(self, instance):
 

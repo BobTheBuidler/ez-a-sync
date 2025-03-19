@@ -431,7 +431,7 @@ class ASyncCachedPropertyDescriptor(
         Returns:
             An asyncio Task representing the lock.
         """
-        locks = self.get_instance_state(instance).lock
+        locks = self.get_instance_state(instance).locks
         task = locks[self.field_name]
         if isinstance(task, Lock):
             # default behavior uses lock but we want to use a Task so all waiters wake up together
@@ -445,7 +445,7 @@ class ASyncCachedPropertyDescriptor(
         Args:
             instance: The instance from which the property is accessed.
         """
-        self.get_instance_state(instance).lock.pop(self.field_name, None)
+        self.get_instance_state(instance).locks.pop(self.field_name, None)
 
     def get_loader(self, instance: I) -> Callable[[], T]:
         """Retrieves the loader function for the property.
