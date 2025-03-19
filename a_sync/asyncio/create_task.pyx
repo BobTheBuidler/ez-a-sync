@@ -8,8 +8,7 @@ from asyncio import Future, InvalidStateError, Task, get_running_loop, iscorouti
 from logging import getLogger
 
 from a_sync import exceptions
-from a_sync._smart import SmartTask
-from a_sync._smart cimport smart_task_factory
+from a_sync._smart import SmartTask, smart_task_factory
 from a_sync._typing import *
 
 

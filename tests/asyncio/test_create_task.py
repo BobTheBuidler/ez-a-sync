@@ -1,6 +1,7 @@
-import logging
 import pytest
-import asyncio
+from asyncio import get_event_loop, sleep
+
+from a_sync._smart import SmartTask, set_smart_task_factory
 from a_sync.asyncio.create_task import create_task
 
 
@@ -16,7 +17,7 @@ async def test_create_task_with_coroutine():
 
 @pytest.mark.asyncio_cooperative
 async def test_create_task_with_future():
-    loop = asyncio.get_event_loop()
+    loop = get_event_loop()
     future = loop.create_future()
     future.set_result("Future Result")
 
@@ -62,3 +63,15 @@ async def test_create_task_handles_non_coroutine_awaitable():
 
     result = await create_task(CustomAwaitable())
     assert result == "Custom Awaitable Result"
+
+
+def test_create_task_with_smart_task_factory():
+    loop = get_event_loop()
+    set_smart_task_factory(loop)
+
+    async def work():
+        t = create_task(sleep(1))
+        assert isinstance(t, SmartTask)
+        return await t
+
+    assert loop.run_until_complete(work()) is None
