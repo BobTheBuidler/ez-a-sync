@@ -67,7 +67,7 @@ class ModifierManager(Dict[str, Any]):
 
     __slots__ = ("_modifiers",)
 
-    def __init__(self, modifiers: ModifierKwargs) -> None:
+    def __init__(self, dict[str, object] modifiers) -> None:
         """Initializes the ModifierManager with the given modifiers.
 
         Args:
@@ -103,9 +103,9 @@ class ModifierManager(Dict[str, Any]):
         if modifier_key not in _valid_modifiers:
             return object.__getattribute__(self, modifier_key)
         return (
-            self._modifiers[modifier_key]
-            if modifier_key in self._modifiers
-            else USER_DEFAULTS[modifier_key]
+            (<dict>self._modifiers)[modifier_key]
+            if modifier_key in <dict>self._modifiers
+            else (<dict>USER_DEFAULTS._modifiers)[modifier_key]
         )
 
     @property
@@ -212,7 +212,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(manager.keys())
             ['cache_type']
         """
-        return self._modifiers.keys()
+        return (<dict>self._modifiers).keys()
 
     def values(self) -> ValuesView[Any]:  # type: ignore [override]
         """Returns the values of the modifiers.
@@ -222,7 +222,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(manager.values())
             ['memory']
         """
-        return self._modifiers.values()
+        return (<dict>self._modifiers).values()
 
     def items(self) -> ItemsView[str, Any]:  # type: ignore [override]
         """Returns the items of the modifiers.
@@ -232,7 +232,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(manager.items())
             [('cache_type', 'memory')]
         """
-        return self._modifiers.items()
+        return (<dict>self._modifiers).items()
 
     def __contains__(self, str key) -> bint:  # type: ignore [override]
         """Checks if a key is in the modifiers.
@@ -245,7 +245,7 @@ class ModifierManager(Dict[str, Any]):
             >>> 'cache_type' in manager
             True
         """
-        return key in self._modifiers
+        return key in (<dict>self._modifiers)
 
     def __iter__(self) -> Iterator[str]:
         """Returns an iterator over the modifier keys.
@@ -255,7 +255,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(iter(manager))
             ['cache_type']
         """
-        return self._modifiers.__iter__()
+        return (<dict>self._modifiers).__iter__()
 
     def __len__(self) -> uint8_t:
         """Returns the number of modifiers.
@@ -265,7 +265,7 @@ class ModifierManager(Dict[str, Any]):
             >>> len(manager)
             1
         """
-        return len(self._modifiers)
+        return len(<dict>self._modifiers)
 
     def __getitem__(self, str modifier_key) -> Any:
         """Gets the value of a modifier by key.
@@ -281,7 +281,7 @@ class ModifierManager(Dict[str, Any]):
             >>> manager['cache_type']
             'memory'
         """
-        return self._modifiers[modifier_key]  # type: ignore [literal-required]
+        return (<dict>self._modifiers)[modifier_key]  # type: ignore [literal-required]
 
 
 # TODO give us docstrings
