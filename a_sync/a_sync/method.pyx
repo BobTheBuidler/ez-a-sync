@@ -88,7 +88,6 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     __ASyncABC__: Type["ASyncABC"] = None
 
     _initialized = False
-    _is_async_def = None
 
     async def __call__(self, instance: I, *args: P.args, **kwargs: P.kwargs) -> T:
         """
