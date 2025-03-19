@@ -84,7 +84,7 @@ class AsyncCachedPropertyDescriptor:
             return state
 
     def get_lock(self, instance):
-        return (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).locks[self.field_name]
+        return (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).get_lock(self.field_name)
 
     def get_cache(self, instance):
         return (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
