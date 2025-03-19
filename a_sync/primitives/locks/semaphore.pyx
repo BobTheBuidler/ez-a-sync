@@ -15,7 +15,7 @@ from a_sync.functools cimport wraps
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
 
 
-async def __acquire() -> Literal[True]:
+async def _noop() -> Literal[True]:
     return True
 
 
@@ -202,7 +202,7 @@ cdef class Semaphore(_DebugDaemonMixin):
 
         if not self.c_locked():
             self._Semaphore__value -= 1
-            return __acquire()
+            return _noop()
 
         return self.__acquire()
 
