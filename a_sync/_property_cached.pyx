@@ -5,6 +5,7 @@ from typing import Any, DefaultDict, Dict
 
 from a_sync._property import AwaitableProxy
 from a_sync._property cimport AwaitableOnly
+from a_sync._smart cimport shield
 from a_sync.functools import update_wrapper
 
 
@@ -47,7 +48,7 @@ class AsyncCachedPropertyDescriptor:
         cache = (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
         if self.field_name in cache:
             return AwaitableProxy(cache[self.field_name])
-        return AwaitableOnly(self.get_loader(instance))
+        return AwaitableOnly(shield(self.get_loader(instance)))
 
     def __set__(self, instance, value):
         if self._fset is not None:
