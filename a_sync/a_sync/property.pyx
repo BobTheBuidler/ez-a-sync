@@ -440,14 +440,6 @@ class ASyncCachedPropertyDescriptor(
             locks[self.field_name] = task
         return task
 
-    def pop_lock(self, instance: I) -> None:
-        """Removes the lock for the property.
-
-        Args:
-            instance: The instance from which the property is accessed.
-        """
-        self.get_instance_state(instance).locks.pop(self.field_name, None)
-
     def get_loader(self, instance: I) -> Callable[[], T]:
         """Retrieves the loader function for the property.
 
@@ -457,16 +449,23 @@ class ASyncCachedPropertyDescriptor(
         Returns:
             A callable that loads the property value.
         """
+        cdef str field_name
+
         loader = self._load_value
         if loader is None:
-
-            get_lock = self.get_lock
-            set_cache_value = self.__set__
-            pop_lock = self.pop_lock
+            field_name = self.field_name
 
             @wraps(self._fget)
             async def loader(instance):
-                inner_task = get_lock(instance)
+                cdef AsyncCachedPropertyInstanceState cache_state
+                cache_state = self.get_instance_state(instance)
+
+                inner_task = cache_state.locks[field_name]
+                if isinstance(inner_task, Lock):
+                    # default behavior uses lock but we want to use a Task so all waiters wake up together
+                    inner_task = ccreate_task_simple(self._fget(instance))
+                    cache_state.locks[field_name] = inner_task
+
                 try:
                     value = await shield(inner_task)
                 except Exception as e:
@@ -474,8 +473,14 @@ class ASyncCachedPropertyDescriptor(
                     if e.args and e.args[-1] != instance_context:
                         e.args = *e.args, instance_context
                     raise
-                set_cache_value(instance, value)
-                pop_lock(instance)
+                
+                if self._fset is not None:
+                    self._fset(instance, value)
+                
+                if field_name not in cache_state.cache:
+                    cache_state.cache[field_name] = value
+                    cache_state.locks.pop(field_name)
+                
                 return value
 
             self._load_value = loader
