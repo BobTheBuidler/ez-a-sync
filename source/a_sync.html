@@ -48,6 +48,7 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">a_sync package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.html">a_sync.a_sync package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html">a_sync.async_property package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.asyncio.html">a_sync.asyncio package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.primitives.html">a_sync.primitives package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.sphinx.html">a_sync.sphinx package</a></li>
@@ -58,17 +59,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-a_sync.ENVIRONMENT_VARIABLES">a_sync.ENVIRONMENT_VARIABLES module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.ENVIRONMENT_VARIABLES.DEBUG_CLASS_NAME"><code class="docutils literal notranslate"><span class="pre">DEBUG_CLASS_NAME</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.ENVIRONMENT_VARIABLES.DEBUG_MODE"><code class="docutils literal notranslate"><span class="pre">DEBUG_MODE</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-a_sync._property">a_sync._property module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#a_sync._property.AwaitableOnly"><code class="docutils literal notranslate"><span class="pre">AwaitableOnly</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#a_sync._property._ObjectProxyMetaType"><code class="docutils literal notranslate"><span class="pre">_ObjectProxyMetaType</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-a_sync._property_cached">a_sync._property_cached module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#a_sync._property_cached.AsyncCachedPropertyInstanceState"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyInstanceState</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#a_sync._property_cached.async_cached_property"><code class="docutils literal notranslate"><span class="pre">async_cached_property()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-a_sync._smart">a_sync._smart module</a><ul>
@@ -974,6 +964,50 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.a_sync"><code class="docutils literal notranslate"><span class="pre">a_sync()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="a_sync.async_property.html">a_sync.async_property package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="a_sync.async_property.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="a_sync.async_property.html#module-a_sync.async_property.cached">a_sync.async_property.cached module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.__init__"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor._check_method_name"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor._check_method_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor._check_method_sync"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor._check_method_sync()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.del_cache_value"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.del_cache_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.deleter"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.deleter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.get_cache"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.get_cache()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.get_cache_value"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.get_cache_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.get_instance_state"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.get_instance_state()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.get_loader"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.get_loader()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.get_lock"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.get_lock()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.has_cache_value"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.has_cache_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.set_cache_value"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.set_cache_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor.setter"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor.setter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor._load_value"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor._load_value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyInstanceState"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyInstanceState</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyInstanceState.cache"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyInstanceState.cache</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyInstanceState.locks"><code class="docutils literal notranslate"><span class="pre">AsyncCachedPropertyInstanceState.locks</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.async_cached_property"><code class="docutils literal notranslate"><span class="pre">async_cached_property()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="a_sync.async_property.html#module-a_sync.async_property.proxy">a_sync.async_property.proxy module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.proxy.AwaitableOnly"><code class="docutils literal notranslate"><span class="pre">AwaitableOnly</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.proxy.AwaitableOnly.__init__"><code class="docutils literal notranslate"><span class="pre">AwaitableOnly.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.proxy._ObjectProxyMetaType"><code class="docutils literal notranslate"><span class="pre">_ObjectProxyMetaType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.proxy._ObjectProxyMetaType.__call__"><code class="docutils literal notranslate"><span class="pre">_ObjectProxyMetaType.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.proxy._ObjectProxyMetaType.__init__"><code class="docutils literal notranslate"><span class="pre">_ObjectProxyMetaType.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.proxy._ObjectProxyMetaType.mro"><code class="docutils literal notranslate"><span class="pre">_ObjectProxyMetaType.mro()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="a_sync.async_property.html#module-a_sync.async_property">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="a_sync.asyncio.html">a_sync.asyncio package</a><ul>
@@ -2158,155 +2192,6 @@ automatically be <cite>True</cite> unless <cite>DEBUG_CLASS_NAME</cite> is an em
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="module-a_sync._property">
-<span id="a-sync-property-module"></span><h2>a_sync._property module<a class="headerlink" href="#module-a_sync._property" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="a_sync._property.AwaitableOnly">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._property.</span></span><span class="sig-name descname"><span class="pre">AwaitableOnly</span></span><a class="headerlink" href="#a_sync._property.AwaitableOnly" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>AwaitableOnly(coro)
-This wraps a coroutine will call it on await.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property.AwaitableOnly.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property.AwaitableOnly.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="a_sync._property._ObjectProxyMetaType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._property.</span></span><span class="sig-name descname"><span class="pre">_ObjectProxyMetaType</span></span><a class="headerlink" href="#a_sync._property._ObjectProxyMetaType" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property._ObjectProxyMetaType.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property._ObjectProxyMetaType.__call__" title="Link to this definition"></a></dt>
-<dd><p>Call self as a function.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property._ObjectProxyMetaType.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property._ObjectProxyMetaType.__init__" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property._ObjectProxyMetaType.mro">
-<span class="sig-name descname"><span class="pre">mro</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property._ObjectProxyMetaType.mro" title="Link to this definition"></a></dt>
-<dd><p>Return a type’s method resolution order.</p>
-</dd></dl>
-
-</dd></dl>
-
-</section>
-<section id="module-a_sync._property_cached">
-<span id="a-sync-property-cached-module"></span><h2>a_sync._property_cached module<a class="headerlink" href="#module-a_sync._property_cached" title="Link to this heading"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._property_cached.</span></span><span class="sig-name descname"><span class="pre">AsyncCachedPropertyDescriptor</span></span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_fget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_fset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_fdel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.__init__" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor._check_method_name">
-<span class="sig-name descname"><span class="pre">_check_method_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor._check_method_name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor._check_method_sync">
-<span class="sig-name descname"><span class="pre">_check_method_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor._check_method_sync" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.del_cache_value">
-<span class="sig-name descname"><span class="pre">del_cache_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.del_cache_value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.deleter">
-<span class="sig-name descname"><span class="pre">deleter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.deleter" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.get_cache">
-<span class="sig-name descname"><span class="pre">get_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.get_cache" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.get_cache_value">
-<span class="sig-name descname"><span class="pre">get_cache_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.get_cache_value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.get_instance_state">
-<span class="sig-name descname"><span class="pre">get_instance_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.get_instance_state" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.get_loader">
-<span class="sig-name descname"><span class="pre">get_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.get_loader" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.get_lock">
-<span class="sig-name descname"><span class="pre">get_lock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.get_lock" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.has_cache_value">
-<span class="sig-name descname"><span class="pre">has_cache_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.has_cache_value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.set_cache_value">
-<span class="sig-name descname"><span class="pre">set_cache_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.set_cache_value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor.setter">
-<span class="sig-name descname"><span class="pre">setter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor.setter" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyDescriptor._load_value">
-<span class="sig-name descname"><span class="pre">_load_value</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor._load_value" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyInstanceState">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._property_cached.</span></span><span class="sig-name descname"><span class="pre">AsyncCachedPropertyInstanceState</span></span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyInstanceState" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyInstanceState.cache">
-<span class="sig-name descname"><span class="pre">cache</span></span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyInstanceState.cache" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync._property_cached.AsyncCachedPropertyInstanceState.locks">
-<span class="sig-name descname"><span class="pre">locks</span></span><a class="headerlink" href="#a_sync._property_cached.AsyncCachedPropertyInstanceState.locks" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="a_sync._property_cached.async_cached_property">
-<span class="sig-prename descclassname"><span class="pre">a_sync._property_cached.</span></span><span class="sig-name descname"><span class="pre">async_cached_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'AsyncCachedPropertyDescriptor'</span></span></span></span><a class="headerlink" href="#a_sync._property_cached.async_cached_property" title="Link to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor" title="a_sync._property_cached.AsyncCachedPropertyDescriptor"><em>AsyncCachedPropertyDescriptor</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -7575,7 +7460,7 @@ such as queues and locks, with extra functionality.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">ASyncCachedPropertyDescriptor</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.property._ASyncPropertyDescriptorBase" title="a_sync.a_sync.property._ASyncPropertyDescriptorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncPropertyDescriptorBase</span></code></a>[<a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference internal" href="#a_sync._property_cached.AsyncCachedPropertyDescriptor" title="a_sync._property_cached.AsyncCachedPropertyDescriptor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.property._ASyncPropertyDescriptorBase" title="a_sync.a_sync.property._ASyncPropertyDescriptorBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncPropertyDescriptorBase</span></code></a>[<a class="reference internal" href="#a_sync._typing.I" title="a_sync._typing.I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <a class="reference internal" href="a_sync.async_property.html#a_sync.async_property.cached.AsyncCachedPropertyDescriptor" title="a_sync.async_property.cached.AsyncCachedPropertyDescriptor"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncCachedPropertyDescriptor</span></code></a></p>
 <p>A descriptor class for dual-function sync/async cached properties.</p>
 <p>This class extends the API of ASyncPropertyDescriptor to provide
 caching functionality, storing the computed value after the first access.</p>

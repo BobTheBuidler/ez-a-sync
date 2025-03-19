@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    a_sync.a_sync
+   a_sync.async_property
    a_sync.asyncio
    a_sync.primitives
    a_sync.sphinx
@@ -20,24 +21,6 @@ a\_sync.ENVIRONMENT\_VARIABLES module
 -------------------------------------
 
 .. automodule:: a_sync.ENVIRONMENT_VARIABLES
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.\_property module
--------------------------
-
-.. automodule:: a_sync._property
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :private-members:
-
-a\_sync.\_property\_cached module
----------------------------------
-
-.. automodule:: a_sync._property_cached
    :members:
    :undoc-members:
    :show-inheritance:
