@@ -3,7 +3,6 @@ from typing import Any, Callable, Dict, Generic, Optional, TypeVar, Union
 
 from a_sync.async_property.proxy import AwaitableOnly, AwaitableProxy
 
-
 ProxyType = Union[AwaitableOnly[__T], AwaitableProxy[__T]]
 
 FieldName = str
@@ -21,7 +20,9 @@ class AsyncCachedPropertyDescriptor(Generic[__I, __T]):
     _fget: Callable[[__I], __T]
     _fset: Optional[Callable]
     _fdel: Optional[Callable]
-    def __init__(self, _fget: Callable[[__I], __T], _fset=None, _fdel=None, field_name=None) -> None: ...
+    def __init__(
+        self, _fget: Callable[[__I], __T], _fset=None, _fdel=None, field_name=None
+    ) -> None: ...
     def __set_name__(self, owner, name) -> None: ...
     def __get__(self, instance: __I, owner) -> ProxyType[__T]: ...
     def __set__(self, instance: __I, value): ...
