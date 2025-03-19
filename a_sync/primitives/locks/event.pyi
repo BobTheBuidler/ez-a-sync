@@ -34,3 +34,10 @@ class Event(asyncio.Event, _DebugDaemonMixin):
         Returns:
             True when the event is set.
         """
+
+    async def _debug_daemon(self) -> None:
+        """
+        Periodically logs debug information about the event state and waiters.
+
+        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
+        """

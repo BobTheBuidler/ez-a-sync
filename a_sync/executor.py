@@ -167,6 +167,8 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         """
         Runs until manually cancelled by the finished work item.
 
+        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
+
         Args:
             fut: The future being debugged.
             fn: The function being executed.

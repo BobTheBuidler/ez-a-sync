@@ -85,6 +85,22 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         Returns:
             True when the semaphore is successfully acquired.
         """
+            
+    async def _debug_daemon(self) -> None:
+        """
+        Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.
+
+        This method is part of the :class:`_DebugDaemonMixin` and is used to provide detailed logging information
+        about the semaphore's state when it is being waited on.
+
+        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
+
+        Example:
+            semaphore = Semaphore(5)
+
+            async def monitor():
+                await semaphore._debug_daemon()
+        """
 
 class DummySemaphore(asyncio.Semaphore):
     """
