@@ -103,25 +103,50 @@ class AsyncCachedPropertyDescriptor:
         del (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache[self.field_name]
 
     def get_loader(self, instance):
+        cdef str field_name
 
         loader = self._load_value
         if loader is None:
 
             field_name = self.field_name
             _fget = self._fget
-            get_lock = self.get_lock
             get_instance_state = self.get_instance_state
-            set_cache_value = self.__set__
 
-            @wraps(_fget)
-            async def loader(instance):
-                async with get_lock(instance):
-                    cache = get_instance_state(instance).cache
-                    if field_name in cache:
-                        return cache[field_name]
-                    value = await _fget(instance)
-                    set_cache_value(instance, value)
-                    return value
+            if self._fset is None:
+                @wraps(_fget)
+                async def loader(instance):
+                    cdef AsyncCachedPropertyInstanceState instance_state
+                    cdef dict[str, object] cache
+
+                    instance_state = get_instance_state(instance)
+                    locks: defaultdict = instance_state.locks
+                    async with locks[field_name]:
+                        cache = instance_state.cache
+                        if field_name in cache:
+                            return cache[field_name]
+                        value = await _fget(instance)
+                        cache[field_name] = value
+                        locks.pop(field_name)
+                        return value
+            else:
+                _fset = self._fset
+
+                @wraps(_fget)
+                async def loader(instance):
+                    cdef AsyncCachedPropertyInstanceState instance_state
+                    cdef dict[str, object] cache
+
+                    instance_state = get_instance_state(instance)
+                    cache = instance_state.cache
+                    locks: defaultdict = instance_state.locks
+                    async with locks[field_name]:
+                        if field_name in cache:
+                            return cache[field_name]
+                        value = await _fget(instance)
+                        _fset(instance, value)
+                        cache[field_name] = value
+                        locks.pop(field_name)
+                        return value
 
             self._load_value = loader
 
