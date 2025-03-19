@@ -24,7 +24,7 @@ from a_sync.a_sync.function import (
     ASyncFunctionSyncDefault,
 )
 from a_sync.a_sync.function cimport _ModifiedMixin
-from a_sync.functools cimport cached_property_unsafe, update_wrapper
+from a_sync.functools cimport update_wrapper
 
 if TYPE_CHECKING:
     from a_sync import TaskMapping
@@ -215,7 +215,6 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             f"cannot delete {self.field_name}, you're stuck with {self} forever. sorry."
         )
 
-    @cached_property_unsafe
     def __is_async_def__(self) -> bool:
         """
         Check if the wrapped function is a coroutine function.
@@ -225,7 +224,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             >>> descriptor.__is_async_def__
             True
         """
-        return iscoroutinefunction(self.__wrapped__)
+        if not self._initialized:
+            self._is_async_def = iscoroutinefunction(self.__wrapped__)
+        return self._is_async_def
 
 
 cdef void _update_cache_timer(field_name: str, instance: I, bound: "ASyncBoundMethod"):
