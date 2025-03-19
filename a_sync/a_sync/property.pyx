@@ -432,13 +432,12 @@ class ASyncCachedPropertyDescriptor(
         Returns:
             An asyncio Task representing the lock.
         """
-        cdef AsyncCachedPropertyInstanceState cache_state
-        cache_state = self.get_instance_state(instance)
-        task = cache_state.locks[self.field_name]
+        locks = (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).locks 
+        task = locks[self.field_name]
         if isinstance(task, Lock):
             # default behavior uses lock but we want to use a Task so all waiters wake up together
             task = ccreate_task_simple(self._fget(instance))
-            cache_state.locks[self.field_name] = task
+            locks[self.field_name] = task
         return task
 
     def pop_lock(self, instance: I) -> None:
