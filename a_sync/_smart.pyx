@@ -490,7 +490,7 @@ class SmartTask(_SmartFutureMixin[T], Task):
             queue._futs.pop(self._key)
 
 
-cdef object smart_task_factory(loop: AbstractEventLoop, coro: Awaitable[T]):
+cpdef object smart_task_factory(loop: AbstractEventLoop, coro: Awaitable[T]):
     """
     Task factory function that an event loop calls to create new tasks.
 
