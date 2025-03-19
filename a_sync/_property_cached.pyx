@@ -5,6 +5,7 @@ from typing import Any, DefaultDict, Dict
 
 from a_sync._property import AwaitableProxy
 from a_sync._property cimport AwaitableOnly
+from a_sync._smart cimport shield
 from a_sync.functools import update_wrapper
 
 
@@ -124,4 +125,4 @@ class AsyncCachedPropertyDescriptor:
 
             self._load_value = loader
 
-        return lambda: loader(instance)
+        return lambda: shield(loader(instance))
