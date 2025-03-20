@@ -3,7 +3,7 @@ import asyncio
 import pytest
 
 from a_sync import gather
-from a_sync.asyncio.igather import igather
+from a_sync.asyncio import igather
 from tests.fixtures import sample_exc
 
 

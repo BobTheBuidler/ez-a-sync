@@ -59,7 +59,7 @@ from a_sync.a_sync.modifiers.semaphores import apply_semaphore
 from a_sync.a_sync.property import ASyncCachedPropertyDescriptor, ASyncPropertyDescriptor
 from a_sync.a_sync.property import ASyncCachedPropertyDescriptor as cached_property
 from a_sync.a_sync.property import ASyncPropertyDescriptor as property
-from a_sync.asyncio import as_completed, create_task, gather
+from a_sync.asyncio import as_completed, create_task, gather, igather
 from a_sync.executor import *
 from a_sync.executor import AsyncThreadPoolExecutor as ThreadPoolExecutor
 from a_sync.executor import AsyncProcessPoolExecutor as ProcessPoolExecutor
