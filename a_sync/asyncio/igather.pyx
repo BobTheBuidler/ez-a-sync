@@ -10,11 +10,9 @@ T = TypeVar("T")
 def igather(coros_or_futures: Iterable[Awaitable[T]], return_exceptions: bool = False) -> Awaitable[List[T]]:
     """A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple."""
     # NOTE: closures inside cpdef functions not yet supported, so we have this cdef helper
-    #cdef long long nfuts, nfinished
-    #cdef dict arg_to_fut = {}
-    arg_to_fut = {}
-    #cdef list children = []
-    children = []
+    cdef long long nfuts, nfinished
+    cdef dict arg_to_fut = {}
+    cdef list children = []
     loop = None
     for arg in coros_or_futures:
         if arg not in arg_to_fut:
