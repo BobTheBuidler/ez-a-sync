@@ -356,6 +356,41 @@ awaitable objects or a single mapping of awaitables.</p>
 </dd></dl>
 
 </section>
+<section id="module-a_sync.asyncio.igather">
+<span id="a-sync-asyncio-igather-module"></span><h2>a_sync.asyncio.igather module<a class="headerlink" href="#module-a_sync.asyncio.igather" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.igather._get_empty_result_set_fut">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.igather.</span></span><span class="sig-name descname"><span class="pre">_get_empty_result_set_fut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.asyncio.igather._get_empty_result_set_fut" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.igather._get_result_or_exc">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.igather.</span></span><span class="sig-name descname"><span class="pre">_get_result_or_exc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fut</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Future</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.asyncio.igather._get_result_or_exc" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fut</strong> (<em>Future</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.igather.igather">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.igather.</span></span><span class="sig-name descname"><span class="pre">igather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coros_or_futures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.asyncio.igather.igather" title="Link to this definition"></a></dt>
+<dd><p>A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coros_or_futures</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-a_sync.asyncio">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-a_sync.asyncio" title="Link to this heading"></a></h2>
 <p>This package provides custom utilities and extensions to the built-in <cite>asyncio</cite> package.</p>
@@ -526,6 +561,23 @@ awaitable objects or a single mapping of awaitables.</p>
 <dt class="sig sig-object py" id="a_sync.asyncio.get_event_loop">
 <span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.</span></span><span class="sig-name descname"><span class="pre">get_event_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.asyncio.get_event_loop" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.igather">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.</span></span><span class="sig-name descname"><span class="pre">igather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coros_or_futures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_exceptions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.asyncio.igather" title="Link to this definition"></a></dt>
+<dd><p>A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coros_or_futures</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>return_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 </section>

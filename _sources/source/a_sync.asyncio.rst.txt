@@ -31,6 +31,15 @@ a\_sync.asyncio.gather module
    :show-inheritance:
    :private-members:
 
+a\_sync.asyncio.igather module
+------------------------------
+
+.. automodule:: a_sync.asyncio.igather
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 Module contents
 ---------------
 
