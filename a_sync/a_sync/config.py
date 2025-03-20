@@ -40,13 +40,12 @@ TODO: explain how and where these values are used
 
 See Also:
     - :mod:`concurrent.futures`: For more details on executors.
-    - :mod:`functools`: For caching mechanisms.
 """
 
-import functools
 import os
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from concurrent.futures._base import Executor
+from functools import lru_cache
 
 from a_sync._typing import *
 
@@ -62,7 +61,7 @@ EXECUTOR_VALUE = int(os.environ.get("A_SYNC_EXECUTOR_VALUE", 8))
 """Specifies the number of workers for the executor. Defaults to 8."""
 
 
-@functools.lru_cache(maxsize=1)
+@lru_cache(maxsize=1)
 def get_default_executor() -> Executor:
     """Get the default executor based on the EXECUTOR_TYPE environment variable.
 

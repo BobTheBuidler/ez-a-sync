@@ -1,10 +1,10 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 import asyncio
-import functools
 
 from a_sync import exceptions, primitives
 from a_sync._typing import *
+from a_sync.functools import wraps
 
 
 @overload
@@ -158,7 +158,7 @@ def apply_semaphore(
     else:
 
         def semaphore_decorator(coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:
-            @functools.wraps(coro_fn)
+            @wraps(coro_fn)
             async def semaphore_wrap(*args, **kwargs) -> T:
                 async with semaphore:  # type: ignore [union-attr]
                     return await coro_fn(*args, **kwargs)
