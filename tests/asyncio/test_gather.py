@@ -2,8 +2,7 @@ import asyncio
 
 import pytest
 
-from a_sync import gather
-from a_sync.asyncio import igather
+from a_sync import gather, cgather, igather
 from tests.fixtures import sample_exc
 
 
@@ -18,6 +17,12 @@ get_coros = lambda: map(sample_task, range(1, 4))
 @pytest.mark.asyncio_cooperative
 async def test_gather_with_awaitables():
     results = await gather(*get_coros())
+    assert results == [2, 4, 6]
+
+
+@pytest.mark.asyncio_cooperative
+async def test_cgather_with_awaitables():
+    results = await cgather(*get_coros())
     assert results == [2, 4, 6]
 
 
@@ -47,6 +52,12 @@ async def test_gather_with_exceptions():
 
 
 @pytest.mark.asyncio_cooperative
+async def test_cgather_with_exceptions():
+    with pytest.raises(ValueError):
+        await gather(sample_exc(None))
+
+
+@pytest.mark.asyncio_cooperative
 async def test_igather_with_exceptions():
     with pytest.raises(ValueError):
         await igather((sample_exc(None),))
@@ -54,6 +65,12 @@ async def test_igather_with_exceptions():
 
 @pytest.mark.asyncio_cooperative
 async def test_gather_with_return_exceptions():
+    results = await gather(sample_exc(None), return_exceptions=True)
+    assert isinstance(results[0], ValueError)
+
+
+@pytest.mark.asyncio_cooperative
+async def test_cgather_with_return_exceptions():
     results = await gather(sample_exc(None), return_exceptions=True)
     assert isinstance(results[0], ValueError)
 

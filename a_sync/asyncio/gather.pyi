@@ -102,3 +102,6 @@ async def gather_mapping(
     See Also:
         :func:`asyncio.gather`
     """
+
+def cgather(*coros_or_futures: Awaitable[T], return_exceptions: bool = False) -> Awaitable[List[T]]:
+    """`asyncio.gather` implemented in c"""
