@@ -9,8 +9,13 @@ T = TypeVar("T")
 
 
 def igather(
-    coros_or_futures: Iterable[Awaitable[T]], return_exceptions: bool = False
+    coros_or_futures: Iterable[Awaitable[T]], bint return_exceptions = False
 ) -> Awaitable[List[T]]:
+    """A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple."""
+    return cigather(coros_or_futures, return_exceptions=return_exceptions)
+
+
+cdef object cigather(object coros_or_futures, bint return_exceptions = False):
     """A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple."""
     # NOTE: closures inside cpdef functions not yet supported, so we have this cdef helper
     cdef long long nfuts, nfinished

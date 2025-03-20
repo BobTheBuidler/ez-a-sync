@@ -7,7 +7,7 @@ from typing import Any, Awaitable, Dict, List, Mapping, Union, overload
 
 from a_sync._typing import *
 from a_sync.asyncio.as_completed cimport as_completed_mapping
-from a_sync.asyncio.igather import igather
+from a_sync.asyncio.igather cimport cigather
 
 try:
     from tqdm.asyncio import tqdm_asyncio
@@ -27,7 +27,7 @@ Excluder = Callable[[T], bool]
 @overload
 async def gather(
     awaitables: Mapping[K, Awaitable[V]],
-    return_exceptions: bool = False,
+    bint return_exceptions = False,
     exclude_if: Optional[Excluder[V]] = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any,
@@ -58,7 +58,7 @@ async def gather(
 @overload
 async def gather(
     *awaitables: Awaitable[T],
-    return_exceptions: bool = False,
+    bint return_exceptions = False,
     exclude_if: Optional[Excluder[T]] = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any,
@@ -87,7 +87,7 @@ async def gather(
 
 async def gather(
     *awaitables: Union[Awaitable[T], Mapping[K, Awaitable[V]]],
-    return_exceptions: bool = False,
+    bint return_exceptions = False,
     exclude_if: Optional[Excluder[T]] = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any,
@@ -137,12 +137,11 @@ async def gather(
             **tqdm_kwargs,
         )
     elif tqdm:
-        results = await tqdm_asyncio.gather(
-            *(map(_exc_wrap, awaitables) if return_exceptions else awaitables),
-            **tqdm_kwargs,
-        )
+        if return_exceptions:
+            awaitables = map(_exc_wrap, awaitables)
+        results = await tqdm_asyncio.gather(*awaitables, **tqdm_kwargs)
     else:
-        results = await igather(awaitables, return_exceptions=return_exceptions)
+        results = await cigather(awaitables, return_exceptions=return_exceptions)
 
     if exclude_if and not is_mapping:
         return list(filterfalse(exclude_if, results))
@@ -152,7 +151,7 @@ async def gather(
 
 async def gather_mapping(
     mapping: Mapping[K, Awaitable[V]],
-    return_exceptions: bool = False,
+    bint return_exceptions = False,
     exclude_if: Optional[Excluder[V]] = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any,

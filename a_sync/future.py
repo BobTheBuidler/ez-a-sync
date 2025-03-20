@@ -30,8 +30,8 @@ from asyncio import Future, Task, gather, get_event_loop
 from functools import partial, wraps
 from inspect import isawaitable
 
-import a_sync.asyncio
 from a_sync._typing import *
+from a_sync.asyncio import create_task
 
 
 def future(
@@ -371,7 +371,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             True
         """
         if self.__task is None:
-            self.__task = a_sync.asyncio.create_task(self.__awaitable__)
+            self.__task = create_task(self.__awaitable__)
         return self.__task
 
     def __iter__(self):
