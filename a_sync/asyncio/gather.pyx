@@ -6,8 +6,7 @@ from itertools import filterfalse
 from typing import Any, Awaitable, Dict, List, Mapping, Union, overload
 
 from a_sync._typing import *
-from a_sync.asyncio.as_completed cimport as_completed_mapping
-from a_sync.asyncio.igather cimport cigather
+from a_sync.asyncio cimport as_completed_mapping, cigather
 
 try:
     from tqdm.asyncio import tqdm_asyncio
@@ -193,6 +192,11 @@ async def gather_mapping(
     }
     # return data in same order as input mapping
     return {k: results[k] for k in mapping}
+
+
+def cgather(*coros_or_futures: Awaitable[T], bint return_exceptions = False) -> Awaitable[List[T]]:
+    """`asyncio.gather` implemented in c"""
+    return cigather(coros_or_futures, return_exceptions=return_exceptions)
 
 
 cdef inline bint _is_mapping(tuple awaitables):
