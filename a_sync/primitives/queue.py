@@ -16,13 +16,13 @@ See Also:
 import asyncio
 import sys
 import weakref
-from asyncio import InvalidStateError, QueueEmpty, gather
+from asyncio import InvalidStateError, QueueEmpty
 from asyncio.events import _get_running_loop
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
 
-import a_sync.asyncio
+from a_sync.asyncio import igather
 from a_sync.functools import cached_property_unsafe
 from a_sync._smart import SmartFuture, create_future
 from a_sync._smart import _Key as _SmartKey
@@ -501,7 +501,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             for i in range(self.num_workers)
         )
         task = a_sync.asyncio.create_task(
-            gather(*workers),
+            igather(workers),
             name=f"{name} worker main Task",
             log_destroy_pending=False,
         )

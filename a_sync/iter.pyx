@@ -13,6 +13,7 @@ from a_sync.a_sync._helpers cimport _await
 from a_sync.async_property import async_cached_property
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
 from a_sync.asyncio.create_task cimport ccreate_task_simple
+from a_sync.asyncio.gather cimport igather
 from a_sync.exceptions import SyncModeInAsyncContextError
 from a_sync.functools cimport update_wrapper
 
@@ -642,7 +643,7 @@ class ASyncSorter(_ASyncView[T]):
                         ccreate_task_simple(self._function(obj))
                     )
                 for sort_value, obj in sorted(
-                    zip(await gather(*sort_tasks), items),
+                    zip(await igather(sort_tasks), items),
                     reverse=reverse,
                 ):
                     yield obj

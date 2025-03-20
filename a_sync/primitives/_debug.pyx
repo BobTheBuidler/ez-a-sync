@@ -12,7 +12,7 @@ from typing import Optional
 
 from a_sync.a_sync._helpers cimport get_event_loop
 from a_sync.asyncio.create_task cimport ccreate_task_simple
-from a_sync.primitives._loggable import _LoggerMixin
+from a_sync.primitives._loggable cimport _LoggerMixin
 
 
 _global_lock = Lock()

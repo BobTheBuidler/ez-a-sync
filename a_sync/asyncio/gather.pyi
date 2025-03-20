@@ -102,3 +102,16 @@ async def gather_mapping(
     See Also:
         :func:`asyncio.gather`
     """
+
+def cgather(*coros_or_futures: Awaitable[T], return_exceptions: bool =False) -> Awaitable[List[T]]:
+    """asyncio.gather, implemented in c"""
+
+
+def igather(coros_or_futures: Iterator[Awaitable[T]], return_exceptions: bool =False) -> Awaitable[List[T]]:
+    """
+    A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple.
+    
+    This allows Python code to skip the step of unpacking/repacking args which then lets us use igather with any iterable, not just container types.
+    
+    It also lets us use cpdef, giving us an entrypoint to gather for Cython code.
+    """

@@ -1,0 +1,1 @@
+cpdef object igather(coros_or_futures, bint return_exceptions=*)
