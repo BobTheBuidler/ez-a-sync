@@ -7,9 +7,9 @@ import asyncio.tasks as aiotasks
 from asyncio import Future, InvalidStateError, Task, get_running_loop, iscoroutine
 from logging import getLogger
 
-from a_sync import exceptions
 from a_sync._smart import SmartTask, smart_task_factory
 from a_sync._typing import *
+from a_sync.exceptions import PersistedTaskException
 
 
 cdef public object logger = getLogger(__name__)
@@ -163,7 +163,7 @@ cdef void __prune_persisted_tasks():
         if _is_done(task):
             if e := _get_exception(task):
                 # force exceptions related to this lib to bubble up
-                if not isinstance(e, exceptions.PersistedTaskException):
+                if not isinstance(e, PersistedTaskException):
                     __log_exception(e)
                     raise e
                 # we have to manually log the traceback that asyncio would usually log
@@ -216,7 +216,7 @@ async def __persisted_task_exc_wrap(task: "Task[T]") -> T:
     try:
         return await task
     except Exception as e:
-        raise exceptions.PersistedTaskException(e, task) from e
+        raise PersistedTaskException(e, task) from e
 
 
 __all__ = ["create_task"]
