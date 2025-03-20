@@ -7,13 +7,16 @@ from a_sync.a_sync._helpers import get_event_loop
 
 T = TypeVar("T")
 
-def igather(coros_or_futures: Iterable[Awaitable[T]], return_exceptions: bool = False) -> Awaitable[List[T]]:
+
+def igather(
+    coros_or_futures: Iterable[Awaitable[T]], return_exceptions: bool = False
+) -> Awaitable[List[T]]:
     """A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple."""
     # NOTE: closures inside cpdef functions not yet supported, so we have this cdef helper
-    #cdef long long nfuts, nfinished
-    #cdef dict arg_to_fut = {}
+    # cdef long long nfuts, nfinished
+    # cdef dict arg_to_fut = {}
     arg_to_fut = {}
-    #cdef list children = []
+    # cdef list children = []
     children = []
     loop = None
     for arg in coros_or_futures:
@@ -38,11 +41,11 @@ def igather(coros_or_futures: Iterable[Awaitable[T]], return_exceptions: bool = 
 
     if not children:
         return _get_empty_result_set_fut(get_event_loop())
-    
+
     nfuts = len(arg_to_fut)
     nfinished = 0
     outer = None  # bpo-46672
-    
+
     def _done_callback(fut):
         nonlocal nfinished
         nfinished += 1
@@ -82,11 +85,13 @@ def igather(coros_or_futures: Iterable[Awaitable[T]], return_exceptions: bool = 
 
     for fut in arg_to_fut.values():
         fut.add_done_callback(_done_callback)
-    
+
     outer = _GatheringFuture(children, loop=loop)
     return outer
 
+
 _no_results_futs = {}
+
 
 def _get_empty_result_set_fut(loop):
     fut = _no_results_futs.get(loop)
@@ -94,6 +99,7 @@ def _get_empty_result_set_fut(loop):
         fut = _no_results_futs[loop] = loop.create_future()
         fut.set_result([])
     return fut
+
 
 def _get_result_or_exc(fut: Future):
     if fut.cancelled():
@@ -103,9 +109,7 @@ def _get_result_or_exc(fut: Future):
         # to 'results' instead of raising it, don't bother
         # setting __context__.  This also lets us preserve
         # calling '_make_cancelled_error()' at most once.
-        return CancelledError(
-            '' if fut._cancel_message is None else fut._cancel_message
-        )
+        return CancelledError("" if fut._cancel_message is None else fut._cancel_message)
     res = fut.exception()
     if res is None:
         return fut.result()
