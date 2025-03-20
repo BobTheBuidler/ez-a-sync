@@ -179,8 +179,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.any"><code class="docutils literal notranslate"><span class="pre">any()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.as_completed"><code class="docutils literal notranslate"><span class="pre">as_completed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.as_yielded"><code class="docutils literal notranslate"><span class="pre">as_yielded()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync.cgather"><code class="docutils literal notranslate"><span class="pre">cgather()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.create_task"><code class="docutils literal notranslate"><span class="pre">create_task()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#a_sync.gather"><code class="docutils literal notranslate"><span class="pre">gather()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a_sync.igather"><code class="docutils literal notranslate"><span class="pre">igather()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1031,6 +1033,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.gather._exc_wrap"><code class="docutils literal notranslate"><span class="pre">_exc_wrap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.gather.cgather"><code class="docutils literal notranslate"><span class="pre">cgather()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.gather.gather"><code class="docutils literal notranslate"><span class="pre">gather()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.gather.gather_mapping"><code class="docutils literal notranslate"><span class="pre">gather_mapping()</span></code></a></li>
 </ul>
@@ -1041,6 +1044,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="a_sync.asyncio.html#module-a_sync.asyncio">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.as_completed"><code class="docutils literal notranslate"><span class="pre">as_completed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.cgather"><code class="docutils literal notranslate"><span class="pre">cgather()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.create_task"><code class="docutils literal notranslate"><span class="pre">create_task()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.gather"><code class="docutils literal notranslate"><span class="pre">gather()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.get_event_loop"><code class="docutils literal notranslate"><span class="pre">get_event_loop()</span></code></a></li>
@@ -13448,6 +13452,20 @@ The <code class="xref py py-class docutils literal notranslate"><span class="pre
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="a_sync.cgather">
+<span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">cgather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*coros_or_futures:</span> <span class="pre">Awaitable[T],</span> <span class="pre">bool</span> <span class="pre">return_exceptions=False</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.cgather" title="Link to this definition"></a></dt>
+<dd><p><cite>asyncio.gather</cite> implemented in c</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>coros_or_futures</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="a_sync.create_task">
 <span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">create_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">coro:</span> <span class="pre">Awaitable[T],</span> <span class="pre">*,</span> <span class="pre">unicode</span> <span class="pre">name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">skip_gc_until_done:</span> <span class="pre">bint</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">log_destroy_pending:</span> <span class="pre">bint</span> <span class="pre">=</span> <span class="pre">True</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'Task[T]'</span></span></span></span><a class="headerlink" href="#a_sync.create_task" title="Link to this definition"></a></dt>
 <dd><p>Extends <a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.create_task" title="a_sync.asyncio.create_task"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.create_task()</span></code></a> to support any <code class="xref py py-class docutils literal notranslate"><span class="pre">Awaitable</span></code>, manage task lifecycle, and enhance error handling.</p>
@@ -13537,6 +13555,20 @@ awaitable objects or a single mapping of awaitables.</p>
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.gather" title="a_sync.asyncio.gather"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.gather()</span></code></a></p>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.igather">
+<span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">igather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">coros_or_futures:</span> <span class="pre">Iterable[Awaitable[T]],</span> <span class="pre">bool</span> <span class="pre">return_exceptions=False</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.igather" title="Link to this definition"></a></dt>
+<dd><p>A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>coros_or_futures</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

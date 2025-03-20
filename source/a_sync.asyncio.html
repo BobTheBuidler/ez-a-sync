@@ -278,6 +278,20 @@ Exceptions are wrapped in <code class="xref py py-class docutils literal notrans
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.gather.cgather">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.gather.</span></span><span class="sig-name descname"><span class="pre">cgather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*coros_or_futures:</span> <span class="pre">Awaitable[T],</span> <span class="pre">bool</span> <span class="pre">return_exceptions=False</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.asyncio.gather.cgather" title="Link to this definition"></a></dt>
+<dd><p><cite>asyncio.gather</cite> implemented in c</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>coros_or_futures</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="a_sync.asyncio.gather.gather">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.gather.</span></span><span class="sig-name descname"><span class="pre">gather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*awaitables:</span> <span class="pre">Union[Awaitable[T],</span> <span class="pre">Mapping[K,</span> <span class="pre">Awaitable[V]]],</span> <span class="pre">bool</span> <span class="pre">return_exceptions=False,</span> <span class="pre">exclude_if:</span> <span class="pre">Optional[Excluder[T]]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">tqdm:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False,</span> <span class="pre">**tqdm_kwargs:</span> <span class="pre">Any</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">K</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">V</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.asyncio.gather.gather" title="Link to this definition"></a></dt>
 <dd><p>Concurrently awaits a list of awaitable objects or a k:v mapping of awaitables, and returns the results.</p>
@@ -445,6 +459,20 @@ features and improved functionality for asynchronous programming.</p>
 <li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></p></li>
 </ul>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.asyncio.cgather">
+<span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.</span></span><span class="sig-name descname"><span class="pre">cgather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">*coros_or_futures:</span> <span class="pre">Awaitable[T],</span> <span class="pre">bool</span> <span class="pre">return_exceptions=False</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Awaitable</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.asyncio.cgather" title="Link to this definition"></a></dt>
+<dd><p><cite>asyncio.gather</cite> implemented in c</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>coros_or_futures</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a>[<em>T</em>]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
