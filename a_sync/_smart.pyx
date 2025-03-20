@@ -15,7 +15,7 @@ from asyncio.tasks import _current_tasks as __current_tasks
 from libc.stdint cimport uintptr_t
 from weakref import proxy, ref
 
-import a_sync.asyncio
+cimport a_sync.asyncio
 from a_sync._typing import *
 
 if TYPE_CHECKING:
