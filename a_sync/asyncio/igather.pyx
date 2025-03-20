@@ -44,7 +44,8 @@ def igather(
     nfinished = 0
     outer = None  # bpo-46672
 
-    def _done_callback(fut):
+    def _done_callback(fut, return_exceptions=return_exceptions):
+        # for some reason this wouldn't work until I added `return_exceptions=return_exceptions` to the func def
         nonlocal nfinished
         nfinished += 1
 
@@ -88,10 +89,10 @@ def igather(
     return outer
 
 
-_no_results_futs = {}
+cdef dict[object, object] _no_results_futs = {}
 
 
-def _get_empty_result_set_fut(loop):
+cdef object _get_empty_result_set_fut(loop):
     fut = _no_results_futs.get(loop)
     if fut is None:
         fut = _no_results_futs[loop] = loop.create_future()
@@ -99,7 +100,7 @@ def _get_empty_result_set_fut(loop):
     return fut
 
 
-def _get_result_or_exc(fut: Future):
+cdef object _get_result_or_exc(fut: Future):
     if fut.cancelled():
         # Check if 'fut' is cancelled first, as 'fut.exception()'
         # will *raise* a CancelledError instead of returning it.
