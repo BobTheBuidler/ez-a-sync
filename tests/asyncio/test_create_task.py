@@ -2,7 +2,7 @@ import pytest
 from asyncio import get_event_loop, sleep
 
 from a_sync._smart import SmartTask, set_smart_task_factory
-from a_sync.asyncio.create_task import create_task
+from a_sync.asyncio.create_task import create_task, _get_persisted_tasks
 
 
 @pytest.mark.asyncio_cooperative
@@ -39,9 +39,17 @@ async def test_create_task_with_name():
 async def test_create_task_skip_gc_until_done():
     async def sample_coroutine():
         return "GC Test"
+    
+    persisted_tasks = _get_persisted_tasks()
 
+    assert len(persisted_tasks) == 0
     task = create_task(sample_coroutine(), skip_gc_until_done=True)
+    assert len(persisted_tasks) == 1
     result = await task
+    assert next(iter(persisted_tasks)).done()
+    # create some junk task to trigger the pruning of the persisted task set
+    create_task(sleep(0))
+    assert len(persisted_tasks) == 0
     assert result == "GC Test"
 
 
@@ -75,3 +83,4 @@ def test_create_task_with_smart_task_factory():
         return await t
 
     assert loop.run_until_complete(work()) is None
+
