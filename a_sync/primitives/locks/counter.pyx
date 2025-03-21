@@ -4,13 +4,14 @@ This module provides two specialized async flow management classes, :class:`Coun
 These primitives manage synchronization of tasks that must wait for an internal counter to reach a specific value.
 """
 
-from asyncio import gather, sleep
+from asyncio import sleep
 from heapq import heappop, heappush
 from libc.string cimport strcpy
 from libc.stdlib cimport malloc, free
 from libc.time cimport time
 from typing import Iterable
 
+from a_sync.asyncio cimport cigather
 from a_sync.primitives._debug cimport _DebugDaemonMixin
 from a_sync.primitives.locks.event cimport CythonEvent as Event
 
@@ -257,7 +258,5 @@ class CounterLockCluster:
             >>> cluster = CounterLockCluster([lock1, lock2])
             >>> await cluster.wait_for(5)  # This will block until all locks have value >= 5
         """
-        await gather(
-            *(counter_lock.wait_for(value) for counter_lock in self.locks)
-        )
+        await cigather(counter_lock.wait_for(value) for counter_lock in self.locks)
         return True

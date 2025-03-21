@@ -10,7 +10,7 @@ import traceback
 from logging import DEBUG, getLogger
 from types import TracebackType
 
-import a_sync.asyncio
+from a_sync.asyncio import create_task, igather
 from a_sync._typing import *
 from a_sync.primitives.queue import Queue
 
@@ -80,8 +80,8 @@ async def exhaust_iterators(
     if queue is None and join:
         raise ValueError("You must provide a `queue` to use kwarg `join`")
 
-    for x in await asyncio.gather(
-        *(exhaust_iterator(iterator, queue=queue) for iterator in iterators),
+    for x in await igather(
+        (exhaust_iterator(iterator, queue=queue) for iterator in iterators),
         return_exceptions=True,
     ):
         if isinstance(x, Exception):
@@ -235,8 +235,8 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
             traceback.extract_stack
             traceback.clear_frames(e.__traceback__)
             queue.put_nowait(_Done(e))
-
-    task = a_sync.asyncio.create_task(
+    
+    task = create_task(
         coro=exhaust_iterators(iterators, queue=queue, join=True),
         name=f"a_sync.as_yielded queue populating task for {iterators}",
     )
