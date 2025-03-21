@@ -235,7 +235,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
             traceback.extract_stack
             traceback.clear_frames(e.__traceback__)
             queue.put_nowait(_Done(e))
-    
+
     task = create_task(
         coro=exhaust_iterators(iterators, queue=queue, join=True),
         name=f"a_sync.as_yielded queue populating task for {iterators}",
