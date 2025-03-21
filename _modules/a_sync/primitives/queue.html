@@ -86,18 +86,18 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">weakref</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidStateError</span><span class="p">,</span> <span class="n">QueueEmpty</span><span class="p">,</span> <span class="n">gather</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidStateError</span><span class="p">,</span> <span class="n">QueueEmpty</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">asyncio.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_running_loop</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">heapq</span><span class="w"> </span><span class="kn">import</span> <span class="n">heappop</span><span class="p">,</span> <span class="n">heappush</span><span class="p">,</span> <span class="n">heappushpop</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">weakref</span><span class="w"> </span><span class="kn">import</span> <span class="n">WeakValueDictionary</span><span class="p">,</span> <span class="n">proxy</span><span class="p">,</span> <span class="n">ref</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">a_sync.asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property_unsafe</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._smart</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartFuture</span><span class="p">,</span> <span class="n">create_future</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._smart</span><span class="w"> </span><span class="kn">import</span> <span class="n">_Key</span> <span class="k">as</span> <span class="n">_SmartKey</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_task</span><span class="p">,</span> <span class="n">igather</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property_unsafe</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -584,7 +584,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_futs</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
         <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">()</span>
-        <span class="n">_put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">weakref</span><span class="o">.</span><span class="n">proxy</span><span class="p">(</span><span class="n">fut</span><span class="p">)))</span>
+        <span class="n">_put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">proxy</span><span class="p">(</span><span class="n">fut</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">fut</span></div>
 
 
@@ -620,15 +620,15 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;starting worker task for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="n">workers</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
-            <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+            <span class="n">create_task</span><span class="p">(</span>
                 <span class="n">coro</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_worker_coro</span><span class="p">(),</span>
                 <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> [Task-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
                 <span class="n">log_destroy_pending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_workers</span><span class="p">)</span>
         <span class="p">)</span>
-        <span class="n">task</span> <span class="o">=</span> <span class="n">a_sync</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
-            <span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">workers</span><span class="p">),</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">create_task</span><span class="p">(</span>
+            <span class="n">igather</span><span class="p">(</span><span class="n">workers</span><span class="p">),</span>
             <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> worker main Task&quot;</span><span class="p">,</span>
             <span class="n">log_destroy_pending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="p">)</span>
@@ -718,7 +718,7 @@
 
 <div class="viewcode-block" id="_SmartFutureRef">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._SmartFutureRef">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">_SmartFutureRef</span><span class="p">(</span><span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_SmartFutureRef</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Weak reference for :class:`~SmartFuture` objects used in priority queues.</span>
 
@@ -993,7 +993,7 @@
     <span class="n">_no_futs</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Whether smart futures are used.&quot;&quot;&quot;</span>
 
-    <span class="n">_futs</span><span class="p">:</span> <span class="s2">&quot;weakref.WeakValueDictionary[_SmartKey[T], SmartFuture[T]]&quot;</span>
+    <span class="n">_futs</span><span class="p">:</span> <span class="s2">&quot;WeakValueDictionary[_SmartKey[T], SmartFuture[T]]&quot;</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Weak reference dictionary for managing smart futures.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1022,7 +1022,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__module__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">ProcessingQueue</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">num_workers</span><span class="p">,</span> <span class="n">return_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">WeakValueDictionary</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span> <span class="o">=</span> <span class="n">WeakValueDictionary</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="SmartProcessingQueue.put">
