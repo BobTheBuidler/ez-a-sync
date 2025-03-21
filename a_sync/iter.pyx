@@ -1,6 +1,6 @@
 # cython: boundscheck=False
 import sys
-from asyncio import TimerHandle, gather, get_event_loop, iscoroutinefunction
+from asyncio import TimerHandle, get_event_loop, iscoroutinefunction
 from copy import deepcopy
 from inspect import isasyncgenfunction, isawaitable
 from logging import getLogger
@@ -12,7 +12,7 @@ from a_sync._typing import *
 from a_sync.a_sync._helpers cimport _await
 from a_sync.async_property import async_cached_property
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
-from a_sync.asyncio.create_task cimport ccreate_task_simple
+from a_sync.asyncio cimport cigather, ccreate_task_simple
 from a_sync.exceptions import SyncModeInAsyncContextError
 from a_sync.functools cimport update_wrapper
 
@@ -642,7 +642,7 @@ class ASyncSorter(_ASyncView[T]):
                         ccreate_task_simple(self._function(obj))
                     )
                 for sort_value, obj in sorted(
-                    zip(await gather(*sort_tasks), items),
+                    zip(await cigather(sort_tasks), items),
                     reverse=reverse,
                 ):
                     yield obj

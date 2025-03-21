@@ -15,18 +15,18 @@ See Also:
 
 import asyncio
 import sys
-import weakref
-from asyncio import InvalidStateError, QueueEmpty, gather
+from asyncio import InvalidStateError, QueueEmpty
 from asyncio.events import _get_running_loop
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
+from weakref import WeakValueDictionary, proxy, ref
 
-import a_sync.asyncio
-from a_sync.functools import cached_property_unsafe
 from a_sync._smart import SmartFuture, create_future
 from a_sync._smart import _Key as _SmartKey
 from a_sync._typing import *
+from a_sync.asyncio import create_task, igather
+from a_sync.functools import cached_property_unsafe
 
 logger = getLogger(__name__)
 
@@ -464,7 +464,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         if self._no_futs:
             return _put_nowait(self, (args, kwargs))
         fut = self._create_future()
-        _put_nowait(self, (args, kwargs, weakref.proxy(fut)))
+        _put_nowait(self, (args, kwargs, proxy(fut)))
         return fut
 
     def _create_future(self) -> "asyncio.Future[V]":
@@ -493,15 +493,15 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         logger.debug("starting worker task for %s", self)
         name = self.name
         workers = tuple(
-            a_sync.asyncio.create_task(
+            create_task(
                 coro=self._worker_coro(),
                 name=f"{name} [Task-{i}]",
                 log_destroy_pending=False,
             )
             for i in range(self.num_workers)
         )
-        task = a_sync.asyncio.create_task(
-            gather(*workers),
+        task = create_task(
+            igather(workers),
             name=f"{name} worker main Task",
             log_destroy_pending=False,
         )
@@ -582,7 +582,7 @@ def _validate_args(i: int, can_return_less: bool) -> None:
         raise ValueError(f"`i` must be an integer greater than 1. You passed {i}")
 
 
-class _SmartFutureRef(weakref.ref, Generic[T]):
+class _SmartFutureRef(ref, Generic[T]):
     """
     Weak reference for :class:`~SmartFuture` objects used in priority queues.
 
@@ -818,7 +818,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
     _no_futs = False
     """Whether smart futures are used."""
 
-    _futs: "weakref.WeakValueDictionary[_SmartKey[T], SmartFuture[T]]"
+    _futs: "WeakValueDictionary[_SmartKey[T], SmartFuture[T]]"
     """
     Weak reference dictionary for managing smart futures.
     """
@@ -845,7 +845,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         """
         name = name or f"{func.__module__}.{func.__qualname__}"
         ProcessingQueue.__init__(self, func, num_workers, return_data=True, name=name, loop=loop)
-        self._futs = weakref.WeakValueDictionary()
+        self._futs = WeakValueDictionary()
 
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
         """

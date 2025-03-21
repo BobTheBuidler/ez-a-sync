@@ -26,12 +26,12 @@ TODO include comparisons between the 'new way' with this future class and the 'o
 """
 
 import concurrent.futures
-from asyncio import Future, Task, gather, get_event_loop
+from asyncio import Future, Task, get_event_loop
 from functools import partial, wraps
 from inspect import isawaitable
 
 from a_sync._typing import *
-from a_sync.asyncio import create_task
+from a_sync.asyncio import create_task, igather
 
 
 def future(
@@ -83,7 +83,7 @@ async def _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> L
         >>> await _gather_check_and_materialize(async_fn(1), 2, async_fn(3))
         [1, 2, 3]
     """
-    return await gather(*map(_check_and_materialize, things))
+    return await igather(map(_check_and_materialize, things))
 
 
 async def _check_and_materialize(thing: T) -> T:
