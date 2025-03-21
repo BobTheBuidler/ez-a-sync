@@ -31,7 +31,7 @@ from functools import partial, wraps
 from inspect import isawaitable
 
 from a_sync._typing import *
-from a_sync.asyncio import create_task
+from a_sync.asyncio import create_task, igather
 
 
 def future(
