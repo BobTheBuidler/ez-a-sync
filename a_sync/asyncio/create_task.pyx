@@ -98,12 +98,13 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
             if name:
                 __set_task_name(persisted, name)
             
-        __persisted_tasks.add(persisted)
+        _persisted_tasks.add(persisted)
 
     if log_destroy_pending is False:
         task._log_destroy_pending = False
 
-    __prune_persisted_tasks()
+    if _persisted_tasks:
+        __prune_persisted_tasks()
 
     return task
 
@@ -113,7 +114,7 @@ cdef inline void __set_task_name(object task, str name):
          set_name(name)
 
 
-__persisted_tasks: Set["Task[Any]"] = set()
+cdef public set[object] _persisted_tasks = set()
 
 
 async def __await(awaitable: Awaitable[T]) -> T:
@@ -159,24 +160,27 @@ cdef void __prune_persisted_tasks():
     """
     cdef object task
     cdef dict context
-    for task in tuple(__persisted_tasks):
-        if _is_done(task):
-            if e := _get_exception(task):
-                # force exceptions related to this lib to bubble up
-                if not isinstance(e, PersistedTaskException):
-                    __log_exception(e)
-                    raise e
-                # we have to manually log the traceback that asyncio would usually log
-                # since we already got the exception from the task and the usual handler will now not run
-                context = {
-                    "message": f"{task.__class__.__name__} exception was never retrieved",
-                    "exception": e,
-                    "future": task,
-                }
-                if task._source_traceback:
-                    context["source_traceback"] = task._source_traceback
-                task._loop.call_exception_handler(context)
-                __persisted_tasks.discard(task)
+    cdef list done = list(filter(_is_done, _persisted_tasks))
+    if not done:
+        return
+    _persisted_tasks.difference_update(done)
+    for task, exc in zip(done, map(_get_exception, done)):
+        if exc is None:
+            continue
+        # force exceptions related to this lib to bubble up
+        if not isinstance(exc, PersistedTaskException):
+            __log_exception(exc)
+            raise exc
+        # we have to manually log the traceback that asyncio would usually log
+        # since we already got the exception from the task and the usual handler will now not run
+        context = {
+            "message": f"{task.__class__.__name__} exception was never retrieved",
+            "exception": exc,
+            "future": task,
+        }
+        if task._source_traceback:
+            context["source_traceback"] = task._source_traceback
+        task._loop.call_exception_handler(context)
 
 
 cdef inline bint _is_done(fut: Future):
@@ -200,6 +204,10 @@ cdef object _get_exception(fut: Future):
     raise InvalidStateError('Exception is not set.')
 
 
+cdef inline bint _exc_exists(tup: Tuple[Future, Optional[Exception]]):
+    return tup[1] is not None
+
+
 async def __persisted_task_exc_wrap(task: "Task[T]") -> T:
     """
     Wrap a task to handle its exception in a specialized manner.
@@ -220,3 +228,10 @@ async def __persisted_task_exc_wrap(task: "Task[T]") -> T:
 
 
 __all__ = ["create_task"]
+
+
+# For testing purposes only
+
+def _get_persisted_tasks() -> Set[Task]:
+    # we can't import this directly to the .py test file
+    return _persisted_tasks
