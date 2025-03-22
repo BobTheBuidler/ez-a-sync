@@ -11,6 +11,9 @@ async def sample_task(number):
     return number * 2
 
 
+get_coros = lambda: map(sample_task, range(1, 3))
+
+
 get_coros = lambda: map(sample_task, range(1, 4))
 
 
@@ -54,7 +57,7 @@ async def test_gather_with_exceptions():
 @pytest.mark.asyncio_cooperative
 async def test_cgather_with_exceptions():
     with pytest.raises(ValueError):
-        await gather(sample_exc(None))
+        await cgather(sample_exc(None))
 
 
 @pytest.mark.asyncio_cooperative
@@ -71,7 +74,7 @@ async def test_gather_with_return_exceptions():
 
 @pytest.mark.asyncio_cooperative
 async def test_cgather_with_return_exceptions():
-    results = await gather(sample_exc(None), return_exceptions=True)
+    results = await cgather(sample_exc(None), return_exceptions=True)
     assert isinstance(results[0], ValueError)
 
 
