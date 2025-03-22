@@ -10,6 +10,7 @@ async def sample_task(number):
     await asyncio.sleep(0.1)
     return number * 2
 
+
 get_coros = lambda: map(sample_task, range(1, 3))
 
 
