@@ -1,17 +1,8 @@
+from a_sync.primitives.queue import SmartProcessingQueue as SmartProcessingQueue
 from asyncio import AbstractEventLoop, Future, Task
-from typing import TYPE_CHECKING, Any, Awaitable, Generic, Optional, Tuple, TypeVar, Union
-from weakref import WeakSet
+from typing import Awaitable, Generic, Optional, Union
 
-if TYPE_CHECKING:
-    from a_sync.primitives.queue import SmartProcessingQueue
-
-_T = TypeVar("_T")
-
-_Args = Tuple[Any]
-_Kwargs = Tuple[Tuple[str, Any]]
-_Key = Tuple[_Args, _Kwargs]
-
-def shield(arg: Awaitable[_T]) -> Union[SmartFuture[_T], "Future[_T]"]:
+def shield(arg: Awaitable[_T]) -> Union[SmartFuture[_T], 'Future[_T]']:
     """
     Wait for a future, shielding it from cancellation.
 
@@ -82,11 +73,6 @@ class _SmartFutureMixin(Generic[_T]):
         - :class:`SmartFuture`
         - :class:`SmartTask`
     """
-
-    _queue: Optional["SmartProcessingQueue[Any, Any, _T]"] = None
-    _key: _Key
-    _waiters: "WeakSet[SmartTask[_T]]"
-
 class SmartFuture(_SmartFutureMixin[_T], Future):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
@@ -107,12 +93,7 @@ class SmartFuture(_SmartFutureMixin[_T], Future):
         - :class:`asyncio.Future`
     """
 
-def create_future(
-    *,
-    queue: Optional["SmartProcessingQueue"] = None,
-    key: Optional[_Key] = None,
-    loop: Optional[AbstractEventLoop] = None,
-) -> SmartFuture[_T]:
+def create_future(*, queue: Optional['SmartProcessingQueue'] = None, key: Optional[_Key] = None, loop: Optional[AbstractEventLoop] = None) -> SmartFuture[_T]:
     """
     Create a :class:`~SmartFuture` instance.
 
