@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     from a_sync.a_sync.abstract import ASyncABC
 
 
-cdef public int METHOD_CACHE_TTL = 3600
+cdef public double METHOD_CACHE_TTL = 3600
 
 
 logger = logging.getLogger(__name__)
@@ -245,12 +245,12 @@ cdef void _update_cache_timer(field_name: str, instance: I, bound: "ASyncBoundMe
     cdef object handle, loop
     if handle := bound._cache_handle:
         # update the timer handle
-        handle._when = handle._loop.time() + METHOD_CACHE_TTL
+        handle._when = <double>handle._loop.time() + METHOD_CACHE_TTL
     else:
         # create and assign the timer handle
         loop = get_event_loop()
         # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
-        bound._cache_handle = loop.call_at(loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, field_name)
+        bound._cache_handle = loop.call_at(<double>loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, field_name)
 
 
 @final
