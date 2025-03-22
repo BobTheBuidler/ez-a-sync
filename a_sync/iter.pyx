@@ -49,7 +49,7 @@ cdef class _AwaitableAsyncIterableMixin:
         [0, 1, 2, 3]
     """
 
-    cdef public object __wrapped__
+    cdef readonly object __wrapped__
     cdef readonly AsyncCachedPropertyInstanceState __async_property__
 
     def __cinit__(self) -> None:
@@ -154,7 +154,10 @@ class ASyncIterable(_AwaitableAsyncIterableMixin, AsyncIterable[T], Iterable[T])
         )
         return cls(wrapped)
 
-    def __init__(self, async_iterable: AsyncIterable[T]):
+    def __init__(
+        _AwaitableAsyncIterableMixin self, 
+        async_iterable: AsyncIterable[T],
+    ):
         """
         Initializes the ASyncIterable with an async iterable.
 
@@ -289,7 +292,10 @@ class ASyncIterator(_AwaitableAsyncIterableMixin, Iterator[T]):
             "You passed {} of type {}".format(wrapped, type(wrapped))
         )
 
-    def __init__(self, async_iterator: AsyncIterator[T]):
+    def __init__(
+        _AwaitableAsyncIterableMixin self, 
+        async_iterator: AsyncIterator[T],
+    ) -> None:
         """
         Initializes the ASyncIterator with an async iterator.
 
@@ -451,7 +457,7 @@ class _ASyncView(ASyncIterator[T]):
     """An optional iterator. If None, :attr:`~_ASyncView.__aiterator__` will have a value."""
 
     def __init__(
-        self,
+        _AwaitableAsyncIterableMixin self,
         function: ViewFn[T],
         iterable: AnyIterable[T],
     ) -> None:
