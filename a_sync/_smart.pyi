@@ -2,7 +2,7 @@ from a_sync.primitives.queue import SmartProcessingQueue as SmartProcessingQueue
 from asyncio import AbstractEventLoop, Future, Task
 from typing import Awaitable, Generic, Optional, Union
 
-def shield(arg: Awaitable[_T]) -> Union[SmartFuture[_T], 'Future[_T]']:
+def shield(arg: Awaitable[_T]) -> Union[SmartFuture[_T], "Future[_T]"]:
     """
     Wait for a future, shielding it from cancellation.
 
@@ -73,6 +73,7 @@ class _SmartFutureMixin(Generic[_T]):
         - :class:`SmartFuture`
         - :class:`SmartTask`
     """
+
 class SmartFuture(_SmartFutureMixin[_T], Future):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
@@ -93,7 +94,12 @@ class SmartFuture(_SmartFutureMixin[_T], Future):
         - :class:`asyncio.Future`
     """
 
-def create_future(*, queue: Optional['SmartProcessingQueue'] = None, key: Optional[_Key] = None, loop: Optional[AbstractEventLoop] = None) -> SmartFuture[_T]:
+def create_future(
+    *,
+    queue: Optional["SmartProcessingQueue"] = None,
+    key: Optional[_Key] = None,
+    loop: Optional[AbstractEventLoop] = None
+) -> SmartFuture[_T]:
     """
     Create a :class:`~SmartFuture` instance.
 
