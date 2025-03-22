@@ -13,8 +13,8 @@ You can use any of the provided flags, whichever makes the most sense for your u
 :obj:`VIABLE_FLAGS`: Set of all valid flags, combining both synchronous and asynchronous indicators.
 """
 
-from a_sync import exceptions
 from a_sync.a_sync.flags import AFFIRMATIVE_FLAGS, NEGATIVE_FLAGS
+from a_sync.exceptions import InvalidFlag, InvalidFlagValue
 
 
 cdef inline bint negate_if_necessary(str flag, bint flag_value):
@@ -44,17 +44,17 @@ cdef inline bint negate_if_necessary(str flag, bint flag_value):
     See Also:
         - :func:`validate_flag_value`: Validates that the flag value is a boolean.
     """
-    if flag in AFFIRMATIVE_FLAGS:
+    if flag in <set>AFFIRMATIVE_FLAGS:
         return flag_value
-    elif flag in NEGATIVE_FLAGS:
+    elif flag in <set>NEGATIVE_FLAGS:
         return not flag_value
-    raise exceptions.InvalidFlag(flag)
+    raise InvalidFlag(flag)
 
 cdef inline bint validate_and_negate_if_necessary(str flag, object flag_value):
     try:
         return negate_if_necessary(flag, flag_value)
     except TypeError as e:
-        raise exceptions.InvalidFlagValue(flag, flag_value) from e.__cause__
+        raise InvalidFlagValue(flag, flag_value) from e.__cause__
 
 cdef inline bint validate_flag_value(str flag, object flag_value):
     """
@@ -80,5 +80,5 @@ cdef inline bint validate_flag_value(str flag, object flag_value):
         - :func:`negate_if_necessary`: Negates the flag value if necessary based on the flag type.
     """
     if not isinstance(flag_value, bool):
-        raise exceptions.InvalidFlagValue(flag, flag_value)
+        raise InvalidFlagValue(flag, flag_value)
     return flag_value
