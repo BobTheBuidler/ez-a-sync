@@ -6,13 +6,12 @@ to protect tasks from cancellation.
 """
 
 import asyncio.futures as aiofutures
-import logging
-import warnings
 import weakref
 from asyncio import (AbstractEventLoop, Future, InvalidStateError, Task, 
                      ensure_future, get_event_loop)
 from asyncio.tasks import _current_tasks as __current_tasks
 from libc.stdint cimport uintptr_t
+from logging import getLogger
 from weakref import proxy, ref
 
 cimport a_sync.asyncio
@@ -26,7 +25,7 @@ _Args = Tuple[Any]
 _Kwargs = Tuple[Tuple[str, Any]]
 _Key = Tuple[_Args, _Kwargs]
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1

@@ -265,7 +265,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         self.__wrapped__ = fn
         """The original function that was wrapped."""
 
-        update_wrapper(self, self.__wrapped__)
+        update_wrapper(self, fn)
         if self.__doc__ is None:
             self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
         else:
