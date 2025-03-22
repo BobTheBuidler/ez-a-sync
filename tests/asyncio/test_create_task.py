@@ -39,7 +39,7 @@ async def test_create_task_with_name():
 async def test_create_task_skip_gc_until_done():
     async def sample_coroutine():
         return "GC Test"
-    
+
     persisted_tasks = _get_persisted_tasks()
 
     assert len(persisted_tasks) == 0
@@ -83,4 +83,3 @@ def test_create_task_with_smart_task_factory():
         return await t
 
     assert loop.run_until_complete(work()) is None
-
