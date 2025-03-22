@@ -816,7 +816,6 @@
 <li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.property._ASyncPropertyDescriptorBase.wrapped"><code class="docutils literal notranslate"><span class="pre">_ASyncPropertyDescriptorBase.wrapped</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.property._parse_args"><code class="docutils literal notranslate"><span class="pre">_parse_args()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.property.a_sync_cached_property"><code class="docutils literal notranslate"><span class="pre">a_sync_cached_property()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.property.a_sync_property"><code class="docutils literal notranslate"><span class="pre">a_sync_property()</span></code></a></li>
 </ul>
@@ -7923,13 +7922,7 @@ result = await instance.my_method.min([3, 1, 2])
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.modifiers">
 <span class="sig-name descname"><span class="pre">modifiers</span></span><a class="headerlink" href="#a_sync.ASyncCachedPropertyDescriptor.modifiers" title="Link to this definition"></a></dt>
-<dd><p>object</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>modifiers</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncCachedPropertyDescriptor.sum">
@@ -8341,7 +8334,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <p>Descriptor class for asynchronous properties.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">_fget:</span> <span class="pre">AsyncGetterFunction[I,</span> <span class="pre">T],</span> <span class="pre">unicode</span> <span class="pre">field_name:</span> <span class="pre">Optional[str]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">**modifiers:</span> <span class="pre">Unpack[ModifierKwargs]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">_ModifiedMixin</span> <span class="pre">self,</span> <span class="pre">_fget:</span> <span class="pre">AsyncGetterFunction[I,</span> <span class="pre">T],</span> <span class="pre">unicode</span> <span class="pre">field_name:</span> <span class="pre">Optional[str]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">**modifiers:</span> <span class="pre">Unpack[ModifierKwargs]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the _ASyncPropertyDescriptorBase.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -8705,13 +8698,7 @@ result = await instance.my_method.min([3, 1, 2])
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.modifiers">
 <span class="sig-name descname"><span class="pre">modifiers</span></span><a class="headerlink" href="#a_sync.ASyncPropertyDescriptor.modifiers" title="Link to this definition"></a></dt>
-<dd><p>object</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>modifiers</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.ASyncPropertyDescriptor.sum">

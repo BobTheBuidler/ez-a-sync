@@ -513,9 +513,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">coro_fn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AnyFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">DefaultMode</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">DEFAULT_MODE</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span>
-        <span class="n">ModifierKwargs</span>
-    <span class="p">],</span>  <span class="c1"># default values are set by passing these kwargs into a ModifierManager object.</span>
+    <span class="c1"># default values are set by passing these kwargs into a ModifierManager object.</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">ASyncDecorator</span><span class="p">,</span> <span class="s2">&quot;ASyncFunction[P, T]&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A versatile decorator that enables both synchronous and asynchronous execution of functions.</span>
