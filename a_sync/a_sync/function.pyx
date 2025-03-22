@@ -13,7 +13,7 @@ from a_sync._typing import *
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync.flags import VIABLE_FLAGS
-from a_sync.a_sync.modifiers.manager import ModifierManager
+from a_sync.a_sync.modifiers cimport ModifierManager
 from a_sync.functools cimport cached_property_unsafe, update_wrapper, wraps
 
 if TYPE_CHECKING:
@@ -239,7 +239,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         """
 
     def __init__(
-        self,
+        _ModifiedMixin self,
         fn: AnyFn[P, T],
         _skip_validate: bint = False,
         **modifiers: Unpack[ModifierKwargs],
@@ -968,13 +968,13 @@ cdef class ASyncDecorator(_ModifiedMixin):
         """
         cdef str default = self.get_default()
         if default == "async":
-            return ASyncFunctionAsyncDefault(func, **self.modifiers)
+            return ASyncFunctionAsyncDefault(func, **self.modifiers._modifiers)
         elif default == "sync":
-            return ASyncFunctionSyncDefault(func, **self.modifiers)
+            return ASyncFunctionSyncDefault(func, **self.modifiers._modifiers)
         elif iscoroutinefunction(func):
-            return ASyncFunctionAsyncDefault(func, **self.modifiers)
+            return ASyncFunctionAsyncDefault(func, **self.modifiers._modifiers)
         else:
-            return ASyncFunctionSyncDefault(func, **self.modifiers)
+            return ASyncFunctionSyncDefault(func, **self.modifiers._modifiers)
 
 
 cdef set[uintptr_t] _is_genfunc_cache = set()
@@ -1205,7 +1205,7 @@ cdef class ASyncDecoratorSyncDefault(ASyncDecorator):
 
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:
         # TODO write specific docs for this implementation
-        return ASyncFunctionSyncDefault(func, **self.modifiers)
+        return ASyncFunctionSyncDefault(func, **self.modifiers._modifiers)
 
 
 cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
@@ -1256,4 +1256,4 @@ cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
 
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
         # TODO write specific docs for this implementation
-        return ASyncFunctionAsyncDefault(func, **self.modifiers)
+        return ASyncFunctionAsyncDefault(func, **self.modifiers._modifiers)

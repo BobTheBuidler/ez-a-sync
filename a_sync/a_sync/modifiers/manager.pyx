@@ -16,7 +16,7 @@ valid_modifiers = tuple(
 
 cdef tuple[str, ...] _valid_modifiers = valid_modifiers
 
-class ModifierManager(Dict[str, Any]):
+cdef class ModifierManager:
     """Manages modifiers for asynchronous and synchronous functions.
 
     This class is responsible for applying modifiers to functions, such as
@@ -47,27 +47,7 @@ class ModifierManager(Dict[str, Any]):
         - :class:`a_sync.a_sync.modifiers.limiter`
         - :class:`a_sync.a_sync.modifiers.semaphores`
     """
-
-    # Typed attributes
-    # TODO give us docstrings
-    default: DefaultMode
-    cache_type: CacheType
-    cache_typed: bool
-    ram_cache_maxsize: Optional[int]
-    ram_cache_ttl: Optional[int]
-    runs_per_minute: Optional[int]
-    semaphore: SemaphoreSpec
-
-    # sync modifiers
-    executor: Executor
-    """
-    This is not applied like a typical modifier but is still passed through the library with them for convenience. 
-    The executor is used to run the sync function in an asynchronous context.
-    """
-
-    __slots__ = ("_modifiers",)
-
-    def __init__(self, dict[str, object] modifiers) -> None:
+    def __init__(self, dict[str, object] modifiers, bint _skip_check = False) -> None:
         """Initializes the ModifierManager with the given modifiers.
 
         Args:
@@ -77,9 +57,10 @@ class ModifierManager(Dict[str, Any]):
             ValueError: If an unsupported modifier is provided.
         """
         cdef str key
-        for key in modifiers.keys():
-            if key not in _valid_modifiers:
-                raise ValueError(f"'{key}' is not a supported modifier.")
+        if not _skip_check:
+            for key in modifiers.keys():
+                if key not in _valid_modifiers:
+                    raise ValueError(f"'{key}' is not a supported modifier.")
         self._modifiers = modifiers
 
     def __repr__(self) -> str:
@@ -103,9 +84,9 @@ class ModifierManager(Dict[str, Any]):
         if modifier_key not in _valid_modifiers:
             return object.__getattribute__(self, modifier_key)
         return (
-            (<dict>self._modifiers)[modifier_key]
-            if modifier_key in <dict>self._modifiers
-            else (<dict>USER_DEFAULTS._modifiers)[modifier_key]
+            self._modifiers[modifier_key]
+            if modifier_key in self._modifiers
+            else USER_DEFAULTS._modifiers[modifier_key]
         )
 
     @property
@@ -148,7 +129,7 @@ class ModifierManager(Dict[str, Any]):
             ]
         )
 
-    def apply_async_modifiers(self, coro_fn: CoroFn[P, T]) -> CoroFn[P, T]:
+    cpdef object apply_async_modifiers(self, coro_fn: CoroFn[P, T]):
         """Applies asynchronous modifiers to a coroutine function.
 
         Args:
@@ -212,7 +193,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(manager.keys())
             ['cache_type']
         """
-        return (<dict>self._modifiers).keys()
+        return self._modifiers.keys()
 
     def values(self) -> ValuesView[Any]:  # type: ignore [override]
         """Returns the values of the modifiers.
@@ -222,7 +203,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(manager.values())
             ['memory']
         """
-        return (<dict>self._modifiers).values()
+        return self._modifiers.values()
 
     def items(self) -> ItemsView[str, Any]:  # type: ignore [override]
         """Returns the items of the modifiers.
@@ -232,7 +213,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(manager.items())
             [('cache_type', 'memory')]
         """
-        return (<dict>self._modifiers).items()
+        return self._modifiers.items()
 
     def __contains__(self, str key) -> bint:  # type: ignore [override]
         """Checks if a key is in the modifiers.
@@ -245,7 +226,7 @@ class ModifierManager(Dict[str, Any]):
             >>> 'cache_type' in manager
             True
         """
-        return key in (<dict>self._modifiers)
+        return key in self._modifiers
 
     def __iter__(self) -> Iterator[str]:
         """Returns an iterator over the modifier keys.
@@ -255,7 +236,7 @@ class ModifierManager(Dict[str, Any]):
             >>> list(iter(manager))
             ['cache_type']
         """
-        return (<dict>self._modifiers).__iter__()
+        return self._modifiers.__iter__()
 
     def __len__(self) -> uint8_t:
         """Returns the number of modifiers.
@@ -281,9 +262,10 @@ class ModifierManager(Dict[str, Any]):
             >>> manager['cache_type']
             'memory'
         """
-        return (<dict>self._modifiers)[modifier_key]  # type: ignore [literal-required]
+        return self._modifiers[modifier_key]  # type: ignore [literal-required]
 
 
 # TODO give us docstrings
+cdef public ModifierManager NULLS, USER_DEFAULTS
 NULLS = ModifierManager(null_modifiers)
 USER_DEFAULTS = ModifierManager(user_set_default_modifiers)

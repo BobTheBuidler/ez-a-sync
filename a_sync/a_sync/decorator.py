@@ -440,9 +440,8 @@ def a_sync(
 def a_sync(
     coro_fn: Optional[AnyFn[P, T]] = None,
     default: DefaultMode = config.DEFAULT_MODE,
-    **modifiers: Unpack[
-        ModifierKwargs
-    ],  # default values are set by passing these kwargs into a ModifierManager object.
+    # default values are set by passing these kwargs into a ModifierManager object.
+    **modifiers: Unpack[ModifierKwargs],
 ) -> Union[ASyncDecorator, "ASyncFunction[P, T]"]:
     """
     A versatile decorator that enables both synchronous and asynchronous execution of functions.

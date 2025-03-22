@@ -17,8 +17,9 @@ from asyncio import iscoroutinefunction
 
 from a_sync._typing import *
 from a_sync.a_sync import decorator
-from a_sync.a_sync.function import ASyncFunction, ModifierManager
+from a_sync.a_sync.function import ASyncFunction
 from a_sync.a_sync.function cimport _ModifiedMixin, _validate_wrapped_fn
+from a_sync.a_sync.modifiers.manager cimport ModifierManager
 from a_sync.functools cimport cached_property_unsafe, update_wrapper
 
 if TYPE_CHECKING:
@@ -57,7 +58,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     __slots__ = "field_name", "_fget"
 
     def __init__(
-        self,
+        _ModifiedMixin self,
         _fget: AnyFn[Concatenate[I, P], T],
         field_name: Optional[str] = None,
         **modifiers: ModifierKwargs,
@@ -77,7 +78,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             raise ValueError(f"Unable to decorate {_fget}")
         self.modifiers = ModifierManager(modifiers)
         if isinstance(_fget, ASyncFunction):
-            self.modifiers.update(_fget.modifiers)
+            self.modifiers._modifiers.update((<_ModifiedMixin>_fget).modifiers._modifiers)
             self.__wrapped__ = _fget
         elif iscoroutinefunction(_fget):
             _validate_wrapped_fn(_fget)
@@ -93,7 +94,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
 
         update_wrapper(self, self.__wrapped__)
 
-    def __repr__(self) -> str:
+    def __repr__(_ModifiedMixin self) -> str:
         return f"<{self.__class__.__name__} for {self.__wrapped__}>"
 
     def __set_name__(self, owner, name):

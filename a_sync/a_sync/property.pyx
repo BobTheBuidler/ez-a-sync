@@ -74,7 +74,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     """This silly helper just fixes a circular import"""
 
     def __init__(
-        self,
+        _ModifiedMixin self,
         _fget: AsyncGetterFunction[I, T],
         field_name: Optional[str] = None,
         **modifiers: Unpack[ModifierKwargs],
@@ -89,7 +89,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         cdef dict hidden_modifiers
         ASyncDescriptor.__init__(self, _fget, field_name, **modifiers)
         self.hidden_method_name = f"__{self.field_name}__"
-        hidden_modifiers = dict(self.modifiers)
+        hidden_modifiers = self.modifiers._modifiers.copy()
         hidden_modifiers["default"] = "async"
         self.hidden_method_descriptor = HiddenMethodDescriptor(
             self.get, self.hidden_method_name, **hidden_modifiers
@@ -373,11 +373,11 @@ def a_sync_property(  # type: ignore [misc]
     Returns:
         A property descriptor that supports both sync and async access.
     """
-    func, modifiers = _parse_args(func, modifiers)
+    func, modifiers = _parse_args(func, <dict>modifiers)
     cdef object descriptor_class
-    if modifiers.get("default") == "sync":
+    if (<dict>modifiers).get("default") == "sync":
         descriptor_class = ASyncPropertyDescriptorSyncDefault
-    elif modifiers.get("default") == "async":
+    elif (<dict>modifiers).get("default") == "async":
         descriptor_class = ASyncPropertyDescriptorAsyncDefault
     else:
         descriptor_class = ASyncPropertyDescriptor
@@ -641,11 +641,11 @@ def a_sync_cached_property(  # type: ignore [misc]
     Returns:
         A cached property descriptor that supports both sync and async access.
     """
-    func, modifiers = _parse_args(func, modifiers)
+    func, modifiers = _parse_args(func, <dict>modifiers)
     cdef object descriptor_class
-    if modifiers.get("default") == "sync":
+    if (<dict>modifiers).get("default") == "sync":
         descriptor_class = ASyncCachedPropertyDescriptorSyncDefault
-    elif modifiers.get("default") == "async":
+    elif (<dict>modifiers).get("default") == "async":
         descriptor_class = ASyncCachedPropertyDescriptorAsyncDefault
     else:
         descriptor_class = ASyncCachedPropertyDescriptor
@@ -737,7 +737,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
         if self.__wrapped__.__doc__:
             self.__doc__ += f"\n\nThe original docstring for :meth:`~{self.__wrapped__.__qualname__}` is shown below:\n\n{self.__wrapped__.__doc__}"
 
-    def __get__(self, instance: I, owner: Type[I]) -> HiddenMethod[I, T]:
+    def __get__(_ModifiedMixin self, instance: I, owner: Type[I]) -> HiddenMethod[I, T]:
         """Retrieves the hidden method for the property.
 
         Args:
@@ -751,25 +751,27 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
             return self
     
         cdef object bound
+        cdef str field_name = self.field_name
         try:
-            bound = instance.__dict__[self.field_name]
+            bound = instance.__dict__[field_name]
         except KeyError:
             bound = HiddenMethod(
                 instance,
                 self.__wrapped__,
                 self.__is_async_def__,
-                self.field_name,
-                **self.modifiers,
+                field_name,
+                **self.modifiers._modifiers,
             )
-            instance.__dict__[self.field_name] = bound
+            instance.__dict__[field_name] = bound
             c_logger.debug("new hidden method: %s", bound)
-        _update_cache_timer(self.field_name, instance, bound)
+        _update_cache_timer(field_name, instance, bound)
         return bound
 
 
-def _parse_args(
-    func: Union[None, DefaultMode, AsyncGetterFunction[I, T]], modifiers: ModifierKwargs
-) -> Tuple[Optional[AsyncGetterFunction[I, T]], ModifierKwargs]:
+cdef object _parse_args(
+    func: Union[None, DefaultMode, AsyncGetterFunction[I, T]], 
+    dict modifiers,
+):
     """Parses the arguments for the property decorators.
 
     Args:
@@ -777,9 +779,9 @@ def _parse_args(
         modifiers: Additional modifier arguments.
 
     Returns:
-        A tuple containing the parsed function and modifiers.
+        Tuple[Optional[AsyncGetterFunction[I, T]], ModifierKwargs] A tuple containing the parsed function and modifiers.
     """
-    if func in ["sync", "async"]:
+    if func in ("sync", "async"):
         modifiers["default"] = func
-        func = None
+        return None, modifiers
     return func, modifiers
