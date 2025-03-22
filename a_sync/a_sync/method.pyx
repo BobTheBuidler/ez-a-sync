@@ -114,7 +114,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     @overload
     def __get__(self, instance: I, owner: Type[I]) -> "ASyncBoundMethod[I, P, T]": ...
     def __get__(
-        self, instance: Optional[I], owner: Type[I]
+        _ModifiedMixin self, instance: Optional[I], owner: Type[I]
     ) -> Union[Self, "ASyncBoundMethod[I, P, T]"]:
         """
         Get the bound method or the descriptor itself.
@@ -129,8 +129,9 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         """
         if instance is None:
             return self
+        cdef str field_name = self.field_name
         try:
-            bound = instance.__dict__[self.field_name]
+            bound = instance.__dict__[field_name]
         except KeyError:
             ASyncABC = ASyncMethodDescriptor.__ASyncABC__
             if ASyncABC is None:
@@ -140,11 +141,11 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             default = _ModifiedMixin.get_default(self)
             if default == "sync":
                 bound = ASyncBoundMethodSyncDefault(
-                    instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+                    instance, self.__wrapped__, self.__is_async_def__, **self.modifiers._modifiers
                 )
             elif default == "async":
                 bound = ASyncBoundMethodAsyncDefault(
-                    instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+                    instance, self.__wrapped__, self.__is_async_def__, **self.modifiers._modifiers
                 )
             elif isinstance(instance, ASyncABC):
                 try:
@@ -153,29 +154,29 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                             instance,
                             self.__wrapped__,
                             self.__is_async_def__,
-                            **self.modifiers,
+                            **self.modifiers._modifiers,
                         )
                     else:
                         bound = ASyncBoundMethodAsyncDefault(
                             instance,
                             self.__wrapped__,
                             self.__is_async_def__,
-                            **self.modifiers,
+                            **self.modifiers._modifiers,
                         )
                 except AttributeError:
                     bound = ASyncBoundMethod(
                         instance,
                         self.__wrapped__,
                         self.__is_async_def__,
-                        **self.modifiers,
+                        **self.modifiers._modifiers,
                     )
             else:
                 bound = ASyncBoundMethod(
-                    instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+                    instance, self.__wrapped__, self.__is_async_def__, **self.modifiers._modifiers
                 )
-            instance.__dict__[self.field_name] = bound
+            instance.__dict__[field_name] = bound
             _logger_debug("new bound method: %s", (bound,))
-        _update_cache_timer(self.field_name, instance, bound)
+        _update_cache_timer(field_name, instance, bound)
         return bound
 
     def __set__(self, instance, value):
@@ -233,7 +234,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         return self._is_async_def
 
 
-cdef void _update_cache_timer(field_name: str, instance: I, bound: "ASyncBoundMethod"):
+cdef void _update_cache_timer(str field_name, instance: I, bound: "ASyncBoundMethod"):
     """
     Update the TTL for the cache handle for the instance.
 
@@ -309,7 +310,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
         self, instance: I, owner: Type[I] = None
     ) -> "ASyncBoundMethodSyncDefault[I, P, T]": ...
     def __get__(
-        self, instance: Optional[I], owner: Type[I] = None
+        _ModifiedMixin self, instance: Optional[I], owner: Type[I] = None
     ) -> (
         "Union[ASyncMethodDescriptorSyncDefault, ASyncBoundMethodSyncDefault[I, P, T]]"
     ):
@@ -326,15 +327,16 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
         """
         if instance is None:
             return self
+        cdef str field_name = self.field_name
         try:
-            bound = instance.__dict__[self.field_name]
+            bound = instance.__dict__[field_name]
         except KeyError:
             bound = ASyncBoundMethodSyncDefault(
-                instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+                instance, self.__wrapped__, self.__is_async_def__, **self.modifiers._modifiers
             )
-            instance.__dict__[self.field_name] = bound
+            instance.__dict__[field_name] = bound
             _logger_debug("new bound method: %s", (bound,))
-        _update_cache_timer(self.field_name, instance, bound)
+        _update_cache_timer(field_name, instance, bound)
         return bound
 
 
@@ -393,7 +395,7 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         self, instance: I, owner: Type[I]
     ) -> "ASyncBoundMethodAsyncDefault[I, P, T]": ...
     def __get__(
-        self, instance: Optional[I], owner: Type[I]
+        _ModifiedMixin self, instance: Optional[I], owner: Type[I]
     ) -> "Union[ASyncMethodDescriptorAsyncDefault, ASyncBoundMethodAsyncDefault[I, P, T]]":
         """
         Get the bound method or the descriptor itself.
@@ -410,16 +412,17 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
             return self
         
         cdef object bound
+        cdef str field_name = self.field_name
 
         try:
-            bound = instance.__dict__[self.field_name]
+            bound = instance.__dict__[field_name]
         except KeyError:
             bound = ASyncBoundMethodAsyncDefault(
-                instance, self.__wrapped__, self.__is_async_def__, **self.modifiers
+                instance, self.__wrapped__, self.__is_async_def__, **self.modifiers._modifiers
             )
-            instance.__dict__[self.field_name] = bound
+            instance.__dict__[field_name] = bound
             _logger_debug("new bound method: %s", (bound,))
-        _update_cache_timer(self.field_name, instance, bound)
+        _update_cache_timer(field_name, instance, bound)
         return bound
 
 
@@ -509,7 +512,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     __slots__ = "_is_async_def", "__weakself__"
 
     def __init__(
-        self,
+        _ModifiedMixin self,
         instance: I,
         unbound: AnyFn[Concatenate[I, P], T],
         async_def: bool,
@@ -539,10 +542,10 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         self.__weakself__ = weak_ref(instance, self.__cancel_cache_handle)
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
-            modifiers.update(unbound.modifiers)
+            (<dict>modifiers).update((<_ModifiedMixin>unbound).modifiers._modifiers)
             unbound = unbound.__wrapped__
         # NOTE: the wrapped function was validated when the descriptor was initialized
-        ASyncFunction.__init__(self, unbound, _skip_validate=True, **modifiers)
+        ASyncFunction.__init__(self, unbound, _skip_validate=True, **<dict>modifiers)
         self._is_async_def = async_def
         """True if `self.__wrapped__` is a coroutine function, False otherwise."""
         update_wrapper(self, unbound)

@@ -1,5 +1,7 @@
+from a_sync.a_sync.modifiers.manager cimport ModifierManager
+
 cdef class _ModifiedMixin:
-    cdef public object modifiers
+    cdef readonly ModifierManager modifiers
     cdef public object wrapped
     cdef object _asyncify(self, object func)
 
