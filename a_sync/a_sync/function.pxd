@@ -2,7 +2,7 @@ from a_sync.a_sync.modifiers.manager cimport ModifierManager
 
 cdef class _ModifiedMixin:
     cdef readonly ModifierManager modifiers
-    cdef public object wrapped
+    cdef public object __wrapped__
     cdef object _asyncify(self, object func)
 
     cdef str __default
