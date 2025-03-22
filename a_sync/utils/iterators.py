@@ -10,8 +10,8 @@ import traceback
 from logging import DEBUG, getLogger
 from types import TracebackType
 
-from a_sync.asyncio import create_task, igather
 from a_sync._typing import *
+from a_sync.asyncio import create_task, igather
 from a_sync.primitives.queue import Queue
 
 logger = getLogger(__name__)
