@@ -43,9 +43,9 @@ async def exhaust_iterator(
     if queue is None:
         async for thing in iterator:
             pass
-    elif logger.isEnabledFor(DEBUG):
+    elif __logger_is_enabled_for(DEBUG):
         async for thing in iterator:
-            logger._log(DEBUG, "putting %s from %s to queue %s", (thing, iterator, queue))
+            log_debug("putting %s from %s to queue %s", thing, iterator, queue)
             queue.put_nowait(thing)
     else:
         async for thing in iterator:
@@ -287,3 +287,11 @@ class _Done:
 
 
 __all__ = ["as_yielded", "exhaust_iterator", "exhaust_iterators"]
+
+
+__logger_log = logger._log
+__logger_is_enabled_for = logger.isEnabledFor
+
+
+def log_debug(msg: str, *args) -> None:
+    __logger_log(DEBUG, msg, args)

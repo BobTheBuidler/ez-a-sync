@@ -29,6 +29,7 @@ from a_sync.asyncio import create_task, igather
 from a_sync.functools import cached_property_unsafe
 
 logger = getLogger(__name__)
+log_debug = logger.debug
 
 if sys.version_info < (3, 9):
 
@@ -490,7 +491,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     @cached_property_unsafe
     def _workers(self) -> "asyncio.Task[NoReturn]":
         """Creates and manages the worker tasks for the queue."""
-        logger.debug("starting worker task for %s", self)
+        log_debug("starting worker task for %s", self)
         name = self.name
         workers = tuple(
             create_task(
@@ -928,7 +929,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         get_next_job = self.get
         func = self.func
         task_done = self.task_done
-        log_debug = logger.debug
+        log_debug = log_debug
 
         args: P.args
         kwargs: P.kwargs

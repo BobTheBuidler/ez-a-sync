@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 logger = getLogger(__name__)
 
-cdef object c_logger = logger
+cdef object _logger_debug = logger.debug
 
 
 cdef class _ModifiedMixin:
@@ -372,7 +372,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             - :attr:`default`
             - :meth:`_run_sync`
         """
-        c_logger.debug(
+        _logger_debug(
             "calling %s fn: %s with args: %s kwargs: %s", self, self.fn, args, kwargs
         )
         return self.fn(*args, **kwargs)
