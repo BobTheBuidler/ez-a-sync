@@ -28,9 +28,11 @@ cdef class cached_property_unsafe:
             )
 
     def __get__(self, instance, owner):
+        cdef str attrname
+        cdef dict cache
         if instance is None:
             return self
-        cdef str attrname = self.attrname
+        attrname = self.attrname
         if attrname is None:
             raise TypeError(
                 "Cannot use cached_property instance without calling __set_name__ on it.")
