@@ -36,7 +36,9 @@ if TYPE_CHECKING:
 
 logger = getLogger(__name__)
 
-cdef object c_logger = logger
+cdef object _logger_is_enabled_for = logger.isEnabledFor
+cdef object _logger_debug = logger.debug
+cdef object _logger_log = logger._log
 
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
@@ -131,10 +133,10 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             should_await = not get_event_loop().is_running()
         
         cdef object retval
-        cdef bint debug_logs = c_logger.isEnabledFor(DEBUG)
+        cdef bint debug_logs = _logger_is_enabled_for(DEBUG)
         if should_await:
             if debug_logs:
-                c_logger._log(
+                _logger_log(
                     DEBUG,
                     "awaiting awaitable for %s for instance: %s owner: %s",
                     (awaitable, self, instance, owner),
@@ -144,7 +146,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             retval = awaitable
 
         if debug_logs:
-            c_logger._log(
+            _logger_log(
                 DEBUG,
                 "returning %s for %s for instance: %s owner: %s",
                 (retval, self, instance, owner), 
@@ -162,7 +164,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         Returns:
             The property value.
         """
-        c_logger.debug("awaiting %s for instance %s", self, instance)
+        _logger_debug("awaiting %s for instance %s", self, instance)
         return await super().__get__(instance, owner)
 
     def map(
@@ -183,7 +185,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         Returns:
             A TaskMapping object.
         """
-        c_logger.debug("mapping %s to instances: %s owner: %s", self, instances, owner)
+        _logger_debug("mapping %s to instances: %s owner: %s", self, instances, owner)
         
         """NOTE: This silly helper just fixes a circular import"""
         if _ASyncPropertyDescriptorBase._TaskMapping is None:
@@ -698,7 +700,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     def __await__(self) -> Generator[Any, None, T]:
         """Returns an awaitable for the method."""
         # NOTE: self(sync=False).__await__() would be cleaner but requires way more compute for no real gain
-        c_logger.debug("awaiting %s", self)
+        _logger_debug("awaiting %s", self)
         return self.fn(self.__self__, sync=False).__await__()
 
 
@@ -763,7 +765,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
                 **self.modifiers._modifiers,
             )
             instance.__dict__[field_name] = bound
-            c_logger.debug("new hidden method: %s", bound)
+            _logger_debug("new hidden method: %s", bound)
         _update_cache_timer(field_name, instance, bound)
         return bound
 
