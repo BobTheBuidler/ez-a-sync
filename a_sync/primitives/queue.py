@@ -723,7 +723,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
                     # the call.  Wake up the next in line.
                     self._wakeup_next(self._putters)
                 raise
-        
+
         return self.put_nowait(priority, *args, **kwargs)
 
     def put_nowait(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
