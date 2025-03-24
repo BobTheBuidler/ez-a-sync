@@ -1042,6 +1042,7 @@
 <div class="viewcode-block" id="SmartProcessingQueue.put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue.put">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SmartFuture</span><span class="p">[</span><span class="n">V</span><span class="p">]:</span>
+        <span class="c1"># sourcery skip: use-contextlib-suppress</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Asynchronously adds a task with smart future handling to the queue.</span>
 
@@ -1056,14 +1057,26 @@
 <span class="sd">            &gt;&gt;&gt; fut = await queue.put(item=&#39;task&#39;)</span>
 <span class="sd">            &gt;&gt;&gt; print(await fut)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_key</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">fut</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">fut</span>
-        <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fut</span>
-        <span class="k">await</span> <span class="n">Queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">_SmartFutureRef</span><span class="p">(</span><span class="n">fut</span><span class="p">),</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">fut</span></div>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">full</span><span class="p">():</span>
+            <span class="n">putter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loop</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_putters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">putter</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">putter</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">putter</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>  <span class="c1"># Just in case putter is not done yet.</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Clean self._putters from canceled putters.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_putters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">putter</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="c1"># The putter could be removed from self._putters by a</span>
+                    <span class="c1"># previous get_nowait call.</span>
+                    <span class="k">pass</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">full</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">putter</span><span class="o">.</span><span class="n">cancelled</span><span class="p">():</span>
+                    <span class="c1"># We were woken up by get_nowait(), but can&#39;t take</span>
+                    <span class="c1"># the call.  Wake up the next in line.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_wakeup_next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_putters</span><span class="p">)</span>
+                <span class="k">raise</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SmartProcessingQueue.put_nowait">
