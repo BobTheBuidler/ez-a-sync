@@ -1234,7 +1234,7 @@ the queue.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Future[V]</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
 <p>A queue designed for processing tasks asynchronously with multiple workers.</p>
 <p>Each item in the queue is processed by a worker, and tasks can return results
 via asynchronous futures. This queue is ideal for scenarios where tasks need
@@ -2773,6 +2773,40 @@ the queue.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._check_loop_is_closed">
+<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_check_loop_is_closed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#_check_loop_is_closed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue._check_loop_is_closed" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>queue</strong> (<a class="reference internal" href="#a_sync.primitives.queue.Queue" title="a_sync.primitives.queue.Queue"><em>Queue</em></a>)</p></li>
+<li><p><strong>e</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><em>Exception</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="a_sync.primitives.queue._log_invalid_state_err">
+<span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_log_invalid_state_err</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">typ</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fut</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#_log_invalid_state_err"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue._log_invalid_state_err" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>typ</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a><em>[</em><em>'result'</em><em>, </em><em>'exception'</em><em>]</em>)</p></li>
+<li><p><strong>func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a>)</p></li>
+<li><p><strong>fut</strong> (<em>Future</em>)</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="a_sync.primitives.queue._validate_args">
 <span class="sig-prename descclassname"><span class="pre">a_sync.primitives.queue.</span></span><span class="sig-name descname"><span class="pre">_validate_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">can_return_less</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#_validate_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue._validate_args" title="Link to this definition"></a></dt>
 <dd><p>Validates the arguments for methods that retrieve multiple items from the queue.</p>
@@ -3551,7 +3585,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.</span></span><span class="sig-name descname"><span class="pre">ProcessingQueue</span></span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.ProcessingQueue" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future[V]</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
+<dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.queue._Queue" title="a_sync.primitives.queue._Queue"><code class="xref py py-class docutils literal notranslate"><span class="pre">_Queue</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Future[V]</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="a_sync.html#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">V</span></code>]</p>
 <p>A queue designed for processing tasks asynchronously with multiple workers.</p>
 <p>Each item in the queue is processed by a worker, and tasks can return results
 via asynchronous futures. This queue is ideal for scenarios where tasks need

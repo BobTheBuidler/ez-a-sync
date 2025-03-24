@@ -86,7 +86,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidStateError</span><span class="p">,</span> <span class="n">QueueEmpty</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractEventLoop</span><span class="p">,</span> <span class="n">Future</span><span class="p">,</span> <span class="n">InvalidStateError</span><span class="p">,</span> <span class="n">QueueEmpty</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="n">get_event_loop</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">asyncio.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_running_loop</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">heapq</span><span class="w"> </span><span class="kn">import</span> <span class="n">heappop</span><span class="p">,</span> <span class="n">heappush</span><span class="p">,</span> <span class="n">heappushpop</span>
@@ -377,7 +377,7 @@
 
 <div class="viewcode-block" id="ProcessingQueue">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProcessingQueue</span><span class="p">(</span><span class="n">_Queue</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">]],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessingQueue</span><span class="p">(</span><span class="n">_Queue</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">]],</span> <span class="n">Generic</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">V</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A queue designed for processing tasks asynchronously with multiple workers.</span>
 
@@ -407,7 +407,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">return_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a processing queue with the given worker function and worker count.</span>
@@ -478,7 +478,7 @@
 
 <div class="viewcode-block" id="ProcessingQueue.__call__">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue.__call__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Submits a task to the queue.</span>
 
@@ -526,7 +526,7 @@
 
 <div class="viewcode-block" id="ProcessingQueue.put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue.put">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">:</span>
         <span class="c1"># sourcery skip: use-contextlib-suppress</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Asynchronously submits a task to the queue.</span>
@@ -566,7 +566,7 @@
 
 <div class="viewcode-block" id="ProcessingQueue.put_nowait">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue.put_nowait">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Immediately submits a task to the queue without waiting.</span>
 
@@ -591,7 +591,7 @@
 
 <div class="viewcode-block" id="ProcessingQueue._create_future">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue._create_future">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_future</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_future</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a future for the task.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_get_running_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span></div>
 
@@ -603,7 +603,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_closed</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is closed: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
-            <span class="n">worker_subtasks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;asyncio.Task[NoReturn]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="o">.</span><span class="n">_workers</span>
+            <span class="n">worker_subtasks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;Task[NoReturn]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="o">.</span><span class="n">_workers</span>
             <span class="k">for</span> <span class="n">worker</span> <span class="ow">in</span> <span class="n">worker_subtasks</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">worker</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>  <span class="c1"># its only done if its broken</span>
                     <span class="n">exc</span> <span class="o">=</span> <span class="n">worker</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
@@ -616,7 +616,7 @@
 
 
     <span class="nd">@cached_property_unsafe</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Task[NoReturn]&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Task[NoReturn]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates and manages the worker tasks for the queue.&quot;&quot;&quot;</span>
         <span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;starting worker task for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
         <span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -659,18 +659,12 @@
                     <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                 <span class="n">task_done</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">[</span><span class="n">V</span><span class="p">]</span>
+            <span class="n">fut</span><span class="p">:</span> <span class="n">Future</span><span class="p">[</span><span class="n">V</span><span class="p">]</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_next_job</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="s2">&quot;Event loop is closed&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">:</span>
-                            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                                <span class="s2">&quot;Event loop is closed. Closing </span><span class="si">%s</span><span class="s2"> with </span><span class="si">%s</span><span class="s2"> unfinished tasks&quot;</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">,</span>
-                            <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">_check_loop_is_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
                         <span class="k">return</span>
                     <span class="k">raise</span>
 
@@ -681,24 +675,16 @@
 
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-                    <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-                <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                        <span class="s2">&quot;cannot set result for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                        <span class="n">fut</span><span class="p">,</span>
-                        <span class="n">result</span><span class="p">,</span>
-                    <span class="p">)</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">fut</span><span class="o">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                     <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                            <span class="s2">&quot;cannot set exception for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                            <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                            <span class="n">fut</span><span class="p">,</span>
-                            <span class="n">e</span><span class="p">,</span>
-                        <span class="p">)</span>
+                        <span class="n">_log_invalid_state_err</span><span class="p">(</span><span class="s2">&quot;exception&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">fut</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
+                        <span class="n">_log_invalid_state_err</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">fut</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
                 <span class="n">task_done</span><span class="p">()</span></div>
 </div>
 
@@ -840,7 +826,7 @@
 
 <div class="viewcode-block" id="PriorityProcessingQueue.put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.PriorityProcessingQueue.put">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">:</span>
         <span class="c1"># sourcery skip: use-contextlib-suppress</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Asynchronously adds a task with priority to the queue.</span>
@@ -882,7 +868,7 @@
 
 <div class="viewcode-block" id="PriorityProcessingQueue.put_nowait">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.PriorityProcessingQueue.put_nowait">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Immediately adds a task with priority to the queue without waiting.</span>
 
@@ -1039,7 +1025,7 @@
         <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">asyncio</span><span class="o">.</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">loop</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AbstractEventLoop</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a smart processing queue with the given worker function.</span>
@@ -1127,7 +1113,7 @@
 
 <div class="viewcode-block" id="SmartProcessingQueue._create_future">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue._create_future">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_future</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">_SmartKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_future</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">_SmartKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a smart future for the task.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">create_future</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_loop</span><span class="p">)</span></div>
 
@@ -1176,13 +1162,7 @@
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_next_job</span><span class="p">()</span>
                 <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="s2">&quot;Event loop is closed&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">:</span>
-                            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                                <span class="s2">&quot;Event loop is closed. Closing </span><span class="si">%s</span><span class="s2"> with </span><span class="si">%s</span><span class="s2"> unfinished tasks&quot;</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="p">,</span>
-                                <span class="bp">self</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">,</span>
-                            <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">_check_loop_is_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
                         <span class="k">return</span>
                     <span class="k">raise</span>
 
@@ -1191,28 +1171,21 @@
                     <span class="n">task_done</span><span class="p">()</span>
                     <span class="k">continue</span>
 
+                <span class="n">log</span><span class="p">(</span><span class="s2">&quot;processing </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fut</span><span class="p">)</span>
+
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;processing </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fut</span><span class="p">)</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-                    <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-                <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                        <span class="s2">&quot;cannot set result for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                        <span class="n">fut</span><span class="p">,</span>
-                        <span class="n">result</span><span class="p">,</span>
-                    <span class="p">)</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">fut</span><span class="o">.</span><span class="n">set_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
                     <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                            <span class="s2">&quot;cannot set exception for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-                            <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-                            <span class="n">fut</span><span class="p">,</span>
-                            <span class="n">e</span><span class="p">,</span>
-                        <span class="p">)</span>
+                        <span class="n">_log_invalid_state_err</span><span class="p">(</span><span class="s2">&quot;exception&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">fut</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
+                        <span class="n">_log_invalid_state_err</span><span class="p">(</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">fut</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
                 <span class="n">task_done</span><span class="p">()</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1220,6 +1193,36 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">raise</span></div>
 </div>
+
+
+
+<div class="viewcode-block" id="_log_invalid_state_err">
+<a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._log_invalid_state_err">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_log_invalid_state_err</span><span class="p">(</span>
+    <span class="n">typ</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="s2">&quot;exception&quot;</span><span class="p">],</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">Future</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+        <span class="s2">&quot;cannot set </span><span class="si">%s</span><span class="s2"> for </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">typ</span><span class="p">,</span>
+        <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="n">fut</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_check_loop_is_closed">
+<a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync._check_loop_is_closed">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_check_loop_is_closed</span><span class="p">(</span><span class="n">queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;Event loop is closed&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">queue</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;Event loop is closed. Closing </span><span class="si">%s</span><span class="s2"> with </span><span class="si">%s</span><span class="s2"> unfinished tasks&quot;</span><span class="p">,</span>
+            <span class="n">queue</span><span class="p">,</span>
+            <span class="n">queue</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
 
 </pre></div>
 
