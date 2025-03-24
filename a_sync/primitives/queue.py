@@ -535,13 +535,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                 try:
                     args, kwargs, fut = await get_next_job()
                 except RuntimeError as e:
-                    if "Event loop is closed" in str(e):
-                        if self._unfinished_tasks:
-                            logger.error(
-                                "Event loop is closed. Closing %s with %s unfinished tasks",
-                                self,
-                                self._unfinished_tasks,
-                            )
+                    if _check_loop_is_closed(self, e):
                         return
                     raise
 
@@ -552,24 +546,16 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
 
                 try:
                     result = await func(*args, **kwargs)
-                    fut.set_result(result)
-                except InvalidStateError:
-                    logger.error(
-                        "cannot set result for %s %s: %s",
-                        func.__name__,
-                        fut,
-                        result,
-                    )
                 except Exception as e:
                     try:
                         fut.set_exception(e)
                     except InvalidStateError:
-                        logger.error(
-                            "cannot set exception for %s %s: %s",
-                            func.__name__,
-                            fut,
-                            e,
-                        )
+                        _log_invalid_state_err("exception", func, fut, e)
+                else:
+                    try:
+                        fut.set_result(result)
+                    except InvalidStateError:
+                        _log_invalid_state_err("result", func, fut, result)
                 task_done()
 
 
@@ -984,13 +970,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                 try:
                     args, kwargs, fut = await get_next_job()
                 except RuntimeError as e:
-                    if "Event loop is closed" in str(e):
-                        if self._unfinished_tasks:
-                            logger.error(
-                                "Event loop is closed. Closing %s with %s unfinished tasks",
-                                self,
-                                self._unfinished_tasks,
-                            )
+                    if _check_loop_is_closed(self, e):
                         return
                     raise
 
@@ -998,32 +978,46 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                     # the weakref was already cleaned up, we don't need to process this item
                     task_done()
                     continue
+                
+                log("processing %s", fut)
 
                 try:
-                    log("processing %s", fut)
                     result = await func(*args, **kwargs)
-                    fut.set_result(result)
-                except InvalidStateError:
-                    logger.error(
-                        "cannot set result for %s %s: %s",
-                        func.__name__,
-                        fut,
-                        result,
-                    )
                 except Exception as e:
                     log("%s: %s", type(e).__name__, e)
                     try:
                         fut.set_exception(e)
                     except InvalidStateError:
-                        logger.error(
-                            "cannot set exception for %s %s: %s",
-                            func.__name__,
-                            fut,
-                            e,
-                        )
+                        _log_invalid_state_err("exception", func, fut, e)
+                else:
+                    try:
+                        fut.set_result(result)
+                    except InvalidStateError:
+                        _log_invalid_state_err("result", func, fut, result)
                 task_done()
 
         except Exception as e:
             logger.error("%s is broken!!!", self)
             logger.exception(e)
             raise
+
+
+def _log_invalid_state_err(typ: Literal["result", "exception"], func: Callable, fut: Future, value: Any) -> None:
+    logger.error(
+        "cannot set %s for %s %s: %s",
+        typ,
+        func.__name__,
+        fut,
+        value,
+    )
+
+def _check_loop_is_closed(queue: Queue, e: Exception) -> bool:
+    if "Event loop is closed" not in str(e):
+        return False
+    if queue._unfinished_tasks:    
+        logger.error(
+            "Event loop is closed. Closing %s with %s unfinished tasks",
+            queue,
+            queue._unfinished_tasks,
+        )
+    return True
