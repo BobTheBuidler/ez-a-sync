@@ -368,7 +368,6 @@ async def test_processing_call():
     assert queue.empty()
 
 
-
 @pytest.mark.asyncio_cooperative
 async def test_smart_processing_queue_initialization():
     queue = SmartProcessingQueue(coro_fn, 2)
