@@ -688,6 +688,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
     """
 
     async def put(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+        # sourcery skip: use-contextlib-suppress
         """
         Asynchronously adds a task with priority to the queue.
 
@@ -703,10 +704,27 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
             >>> fut = await queue.put(priority=1, item='task')
             >>> print(await fut)
         """
-        self._ensure_workers()
-        fut = asyncio.get_event_loop().create_future()
-        await ProcessingQueue.put(self, (priority, args, kwargs, fut))
-        return fut
+        while self.full():
+            putter = self._get_loop().create_future()
+            self._putters.append(putter)
+            try:
+                await putter
+            except:
+                putter.cancel()  # Just in case putter is not done yet.
+                try:
+                    # Clean self._putters from canceled putters.
+                    self._putters.remove(putter)
+                except ValueError:
+                    # The putter could be removed from self._putters by a
+                    # previous get_nowait call.
+                    pass
+                if not self.full() and not putter.cancelled():
+                    # We were woken up by get_nowait(), but can't take
+                    # the call.  Wake up the next in line.
+                    self._wakeup_next(self._putters)
+                raise
+
+        return self.put_nowait(priority, *args, **kwargs)
 
     def put_nowait(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
         """
@@ -726,7 +744,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         """
         self._ensure_workers()
         fut = self._create_future()
-        ProcessingQueue.put_nowait(self, (priority, args, kwargs, fut))
+        _Queue.put_nowait(self, (priority, args, kwargs, fut))
         return fut
 
     def _get(self, heappop=heappop):
@@ -740,8 +758,10 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
             >>> task = queue._get()
             >>> print(task)
         """
-        priority, args, kwargs, fut = heappop(self._queue)
-        return args, kwargs, fut
+        # For readability, what we're really doing is this:
+        # priority, args, kwargs, fut = heappop(self._queue)
+        # return args, kwargs, fut
+        return heappop(self._queue)[1:]
 
 
 class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
@@ -769,8 +789,7 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
         # NOTE: Since waiter priorities can change, heappop might not return the job with the
         #       most waiters if `self._queue` is not currently in order, but we can use `heappushpop`,
         #       to ensure we get the job with the most waiters.
-        queue = self._queue
-        return heappushpop(queue, heappop(queue))
+        return heappushpop(queue := self._queue, heappop(queue))
 
     def _get_key(self, *args, **kwargs) -> _SmartKey:
         """
@@ -787,7 +806,7 @@ class _VariablePriorityQueueMixin(_PriorityQueueMixin[T]):
             >>> key = queue._get_key(*args, **kwargs)
             >>> print(key)
         """
-        return (args, tuple((kwarg, kwargs[kwarg]) for kwarg in sorted(kwargs)))
+        return args, tuple(sorted(kwargs.items()))
 
 
 class VariablePriorityQueue(_VariablePriorityQueueMixin[T], asyncio.PriorityQueue):
