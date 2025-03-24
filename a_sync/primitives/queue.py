@@ -978,7 +978,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                     # the weakref was already cleaned up, we don't need to process this item
                     task_done()
                     continue
-                
+
                 log("processing %s", fut)
 
                 try:
@@ -1002,7 +1002,9 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             raise
 
 
-def _log_invalid_state_err(typ: Literal["result", "exception"], func: Callable, fut: Future, value: Any) -> None:
+def _log_invalid_state_err(
+    typ: Literal["result", "exception"], func: Callable, fut: Future, value: Any
+) -> None:
     logger.error(
         "cannot set %s for %s %s: %s",
         typ,
@@ -1011,10 +1013,11 @@ def _log_invalid_state_err(typ: Literal["result", "exception"], func: Callable, 
         value,
     )
 
+
 def _check_loop_is_closed(queue: Queue, e: Exception) -> bool:
     if "Event loop is closed" not in str(e):
         return False
-    if queue._unfinished_tasks:    
+    if queue._unfinished_tasks:
         logger.error(
             "Event loop is closed. Closing %s with %s unfinished tasks",
             queue,
