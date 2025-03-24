@@ -225,6 +225,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin, Iterator[T]):
         - :class:`ASyncFilter`
         - :class:`ASyncSorter`
     """
+    __anext: Callable[[], T]
 
     def __next__(self) -> T:
         """
@@ -308,6 +309,8 @@ class ASyncIterator(_AwaitableAsyncIterableMixin, Iterator[T]):
             )
         self.__wrapped__ = async_iterator
         "The wrapped :class:`AsyncIterator`."
+    
+        self.__anext = async_iterator.__anext__
 
     def __anext__(self) -> Coroutine[Any, Any, T]:
         """
@@ -316,7 +319,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin, Iterator[T]):
         Raises:
             :class:`StopAsyncIteration`: Once all {obj} have been fetched from the {cls}.
         """
-        return self.__wrapped__.__anext__()
+        return self.__anext()
 
     def __iter__(self) -> Self:
         """
@@ -339,6 +342,8 @@ class ASyncIterator(_AwaitableAsyncIterableMixin, Iterator[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
         return super().__init_subclass__(**kwargs)
+
+    __slots__ = ("__anext")
 
 
 class ASyncGeneratorFunction(Generic[P, T]):
