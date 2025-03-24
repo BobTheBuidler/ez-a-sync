@@ -15,7 +15,7 @@ See Also:
 
 import asyncio
 import sys
-from asyncio import InvalidStateError, QueueEmpty
+from asyncio import AbstractEventLoop, Future, InvalidStateError, QueueEmpty, Task, get_event_loop
 from asyncio.events import _get_running_loop
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
@@ -271,7 +271,7 @@ _put_nowait = asyncio.Queue.put_nowait
 _loop_kwarg_deprecated = sys.version_info >= (3, 10)
 
 
-class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
+class ProcessingQueue(_Queue[Tuple[P, "Future[V]"]], Generic[P, V]):
     """
     A queue designed for processing tasks asynchronously with multiple workers.
 
@@ -299,7 +299,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         *,
         return_data: bool = True,
         name: str = "",
-        loop: Optional[asyncio.AbstractEventLoop] = None,
+        loop: Optional[AbstractEventLoop] = None,
     ) -> None:
         """
         Initializes a processing queue with the given worker function and worker count.
@@ -367,7 +367,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             repr_string += f" pending={self._unfinished_tasks}"
         return f"{repr_string}>"
 
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> "Future[V]":
         """
         Submits a task to the queue.
 
@@ -409,7 +409,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         """
         self._closed = True
 
-    async def put(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+    async def put(self, *args: P.args, **kwargs: P.kwargs) -> "Future[V]":
         # sourcery skip: use-contextlib-suppress
         """
         Asynchronously submits a task to the queue.
@@ -446,7 +446,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                 raise
         return self.put_nowait(*args, **kwargs)
 
-    def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+    def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> "Future[V]":
         """
         Immediately submits a task to the queue without waiting.
 
@@ -468,7 +468,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         _put_nowait(self, (args, kwargs, proxy(fut)))
         return fut
 
-    def _create_future(self) -> "asyncio.Future[V]":
+    def _create_future(self) -> "Future[V]":
         """Creates a future for the task."""
         return _get_running_loop().create_future()
 
@@ -477,7 +477,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         if self._closed:
             raise RuntimeError(f"{type(self).__name__} is closed: ", self) from None
         if self._workers.done():
-            worker_subtasks: List["asyncio.Task[NoReturn]"] = self._workers._workers
+            worker_subtasks: List["Task[NoReturn]"] = self._workers._workers
             for worker in worker_subtasks:
                 if worker.done():  # its only done if its broken
                     exc = worker.exception()
@@ -489,7 +489,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
             raise exc.with_traceback(exc.__traceback__) from exc.__cause__
 
     @cached_property_unsafe
-    def _workers(self) -> "asyncio.Task[NoReturn]":
+    def _workers(self) -> "Task[NoReturn]":
         """Creates and manages the worker tasks for the queue."""
         log_debug("starting worker task for %s", self)
         name = str(self.name)
@@ -530,7 +530,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                     logger.exception(e)
                 task_done()
         else:
-            fut: asyncio.Future[V]
+            fut: Future[V]
             while True:
                 try:
                     args, kwargs, fut = await get_next_job()
@@ -673,7 +673,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         :class:`~ProcessingQueue`
     """
 
-    async def put(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+    async def put(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "Future[V]":
         # sourcery skip: use-contextlib-suppress
         """
         Asynchronously adds a task with priority to the queue.
@@ -712,7 +712,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
 
         return self.put_nowait(priority, *args, **kwargs)
 
-    def put_nowait(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[V]":
+    def put_nowait(self, priority: Any, *args: P.args, **kwargs: P.kwargs) -> "Future[V]":
         """
         Immediately adds a task with priority to the queue without waiting.
 
@@ -848,7 +848,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         num_workers: int,
         *,
         name: str = "",
-        loop: Optional[asyncio.AbstractEventLoop] = None,
+        loop: Optional[AbstractEventLoop] = None,
     ) -> None:
         """
         Initializes a smart processing queue with the given worker function.
@@ -927,7 +927,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
         return fut
 
-    def _create_future(self, key: _SmartKey) -> "asyncio.Future[V]":
+    def _create_future(self, key: _SmartKey) -> "Future[V]":
         """Creates a smart future for the task."""
         return create_future(queue=self, key=key, loop=self._loop)
 
