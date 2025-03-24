@@ -862,6 +862,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         self._futs = WeakValueDictionary()
 
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
+        # sourcery skip: use-contextlib-suppress
         """
         Asynchronously adds a task with smart future handling to the queue.
 
@@ -876,14 +877,26 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             >>> fut = await queue.put(item='task')
             >>> print(await fut)
         """
-        self._ensure_workers()
-        key = self._get_key(*args, **kwargs)
-        if fut := self._futs.get(key, None):
-            return fut
-        fut = self._create_future(key)
-        self._futs[key] = fut
-        await Queue.put(self, (_SmartFutureRef(fut), args, kwargs))
-        return fut
+        while self.full():
+            putter = self._loop.create_future()
+            self._putters.append(putter)
+            try:
+                await putter
+            except:
+                putter.cancel()  # Just in case putter is not done yet.
+                try:
+                    # Clean self._putters from canceled putters.
+                    self._putters.remove(putter)
+                except ValueError:
+                    # The putter could be removed from self._putters by a
+                    # previous get_nowait call.
+                    pass
+                if not self.full() and not putter.cancelled():
+                    # We were woken up by get_nowait(), but can't take
+                    # the call.  Wake up the next in line.
+                    self._wakeup_next(self._putters)
+                raise
+        return self.put_nowait(*args, **kwargs)
 
     def put_nowait(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
         """
