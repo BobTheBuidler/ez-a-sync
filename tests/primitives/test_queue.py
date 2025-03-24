@@ -1,6 +1,6 @@
 import pytest
 import asyncio
-from a_sync.primitives.queue import ProcessingQueue, Queue
+from a_sync.primitives.queue import ProcessingQueue, Queue, SmartProcessingQueue
 
 
 @pytest.mark.asyncio_cooperative
@@ -362,6 +362,46 @@ async def test_processing_put_nowait_and_await():
 @pytest.mark.asyncio_cooperative
 async def test_processing_call():
     queue = ProcessingQueue(coro_fn, 10)
+    big_work = map(queue, map(str, range(100)))
+    results = await asyncio.gather(*big_work)
+    assert results == list(range(100))
+    assert queue.empty()
+
+
+
+@pytest.mark.asyncio_cooperative
+async def test_smart_processing_queue_initialization():
+    queue = SmartProcessingQueue(coro_fn, 2)
+    assert isinstance(queue, ProcessingQueue)
+    assert queue.func == coro_fn
+    assert queue.num_workers == 2
+    assert queue.empty()
+
+
+@pytest.mark.asyncio_cooperative
+async def test_smart_processing_put_and_await():
+    queue = SmartProcessingQueue(coro_fn, 2)
+    fut = await queue.put("1")
+    assert isinstance(fut, asyncio.Future)
+    assert not queue.empty()
+    assert await fut == 1
+    assert queue.empty()
+
+
+@pytest.mark.asyncio_cooperative
+async def test_smart_processing_put_nowait_and_await():
+    queue = SmartProcessingQueue(coro_fn, 2)
+    fut = queue.put_nowait("2")
+    assert isinstance(fut, asyncio.Future)
+    assert not queue.empty()
+    assert await fut == 2
+    with pytest.raises(asyncio.QueueEmpty):
+        queue.get_nowait()
+
+
+@pytest.mark.asyncio_cooperative
+async def test_smart_processing_call():
+    queue = SmartProcessingQueue(coro_fn, 10)
     big_work = map(queue, map(str, range(100)))
     results = await asyncio.gather(*big_work)
     assert results == list(range(100))
