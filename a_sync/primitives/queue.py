@@ -492,7 +492,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
     def _workers(self) -> "asyncio.Task[NoReturn]":
         """Creates and manages the worker tasks for the queue."""
         log_debug("starting worker task for %s", self)
-        name = self.name
+        name = str(self.name)
         workers = tuple(
             create_task(
                 coro=self._worker_coro(),
@@ -942,7 +942,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         get_next_job = self.get
         func = self.func
         task_done = self.task_done
-        log_debug = log_debug
+        log = log_debug
 
         args: P.args
         kwargs: P.kwargs
@@ -968,7 +968,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                     continue
 
                 try:
-                    log_debug("processing %s", fut)
+                    log("processing %s", fut)
                     result = await func(*args, **kwargs)
                     fut.set_result(result)
                 except InvalidStateError:
@@ -979,7 +979,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                         result,
                     )
                 except Exception as e:
-                    log_debug("%s: %s", type(e).__name__, e)
+                    log("%s: %s", type(e).__name__, e)
                     try:
                         fut.set_exception(e)
                     except InvalidStateError:
