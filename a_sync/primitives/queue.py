@@ -537,7 +537,11 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                 except RuntimeError as e:
                     if "Event loop is closed" in str(e):
                         if self._unfinished_tasks:
-                            logger.error("Event loop is closed. Closing %s with %s unfinished tasks", self, self._unfinished_tasks)
+                            logger.error(
+                                "Event loop is closed. Closing %s with %s unfinished tasks",
+                                self,
+                                self._unfinished_tasks,
+                            )
                         return
                     raise
 
@@ -545,7 +549,7 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
                     # the weakref was already cleaned up, we don't need to process this item
                     task_done()
                     continue
-                
+
                 try:
                     result = await func(*args, **kwargs)
                     fut.set_result(result)
@@ -950,7 +954,11 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                 except RuntimeError as e:
                     if "Event loop is closed" in str(e):
                         if self._unfinished_tasks:
-                            logger.error("Event loop is closed. Closing %s with %s unfinished tasks", self, self._unfinished_tasks)
+                            logger.error(
+                                "Event loop is closed. Closing %s with %s unfinished tasks",
+                                self,
+                                self._unfinished_tasks,
+                            )
                         return
                     raise
 
@@ -958,7 +966,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                     # the weakref was already cleaned up, we don't need to process this item
                     task_done()
                     continue
-                
+
                 try:
                     log_debug("processing %s", fut)
                     result = await func(*args, **kwargs)
