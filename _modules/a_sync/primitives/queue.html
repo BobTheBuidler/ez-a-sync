@@ -841,6 +841,7 @@
 <div class="viewcode-block" id="PriorityProcessingQueue.put">
 <a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.PriorityProcessingQueue.put">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">priority</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;asyncio.Future[V]&quot;</span><span class="p">:</span>
+        <span class="c1"># sourcery skip: use-contextlib-suppress</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Asynchronously adds a task with priority to the queue.</span>
 
@@ -856,10 +857,27 @@
 <span class="sd">            &gt;&gt;&gt; fut = await queue.put(priority=1, item=&#39;task&#39;)</span>
 <span class="sd">            &gt;&gt;&gt; print(await fut)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
-        <span class="n">fut</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
-        <span class="k">await</span> <span class="n">ProcessingQueue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">fut</span></div>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">full</span><span class="p">():</span>
+            <span class="n">putter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_putters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">putter</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">putter</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">putter</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>  <span class="c1"># Just in case putter is not done yet.</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># Clean self._putters from canceled putters.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_putters</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">putter</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="c1"># The putter could be removed from self._putters by a</span>
+                    <span class="c1"># previous get_nowait call.</span>
+                    <span class="k">pass</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">full</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">putter</span><span class="o">.</span><span class="n">cancelled</span><span class="p">():</span>
+                    <span class="c1"># We were woken up by get_nowait(), but can&#39;t take</span>
+                    <span class="c1"># the call.  Wake up the next in line.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_wakeup_next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_putters</span><span class="p">)</span>
+                <span class="k">raise</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PriorityProcessingQueue.put_nowait">
@@ -882,7 +900,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
         <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">()</span>
-        <span class="n">ProcessingQueue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span><span class="p">))</span>
+        <span class="n">_Queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">fut</span></div>
 
 
@@ -899,8 +917,10 @@
 <span class="sd">            &gt;&gt;&gt; task = queue._get()</span>
 <span class="sd">            &gt;&gt;&gt; print(task)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">priority</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="n">heappop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span></div>
+        <span class="c1"># For readability, what we&#39;re really doing is this:</span>
+        <span class="c1"># priority, args, kwargs, fut = heappop(self._queue)</span>
+        <span class="c1"># return args, kwargs, fut</span>
+        <span class="k">return</span> <span class="n">heappop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span></div>
 </div>
 
 
@@ -934,8 +954,7 @@
         <span class="c1"># NOTE: Since waiter priorities can change, heappop might not return the job with the</span>
         <span class="c1">#       most waiters if `self._queue` is not currently in order, but we can use `heappushpop`,</span>
         <span class="c1">#       to ensure we get the job with the most waiters.</span>
-        <span class="n">queue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span>
-        <span class="k">return</span> <span class="n">heappushpop</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">heappop</span><span class="p">(</span><span class="n">queue</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">heappushpop</span><span class="p">(</span><span class="n">queue</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span><span class="p">,</span> <span class="n">heappop</span><span class="p">(</span><span class="n">queue</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="_VariablePriorityQueueMixin._get_key">
@@ -955,7 +974,7 @@
 <span class="sd">            &gt;&gt;&gt; key = queue._get_key(*args, **kwargs)</span>
 <span class="sd">            &gt;&gt;&gt; print(key)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">kwarg</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">kwarg</span><span class="p">])</span> <span class="k">for</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)))</span></div>
+        <span class="k">return</span> <span class="n">args</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span></div>
 </div>
 
 
