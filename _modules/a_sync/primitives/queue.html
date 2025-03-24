@@ -661,12 +661,25 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">[</span><span class="n">V</span><span class="p">]</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_next_job</span><span class="p">()</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">fut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="c1"># the weakref was already cleaned up, we don&#39;t need to process this item</span>
-                        <span class="n">task_done</span><span class="p">()</span>
-                        <span class="k">continue</span>
+                    <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_next_job</span><span class="p">()</span>
+                <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;Event loop is closed&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                <span class="s2">&quot;Event loop is closed. Closing </span><span class="si">%s</span><span class="s2"> with </span><span class="si">%s</span><span class="s2"> unfinished tasks&quot;</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="k">return</span>
+                    <span class="k">raise</span>
+
+                <span class="k">if</span> <span class="n">fut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># the weakref was already cleaned up, we don&#39;t need to process this item</span>
+                    <span class="n">task_done</span><span class="p">()</span>
+                    <span class="k">continue</span>
+
+                <span class="k">try</span><span class="p">:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                     <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
                 <span class="k">except</span> <span class="n">InvalidStateError</span><span class="p">:</span>
@@ -1130,10 +1143,23 @@
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_next_job</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="n">fut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="c1"># the weakref was already cleaned up, we don&#39;t need to process this item</span>
-                        <span class="n">task_done</span><span class="p">()</span>
-                        <span class="k">continue</span>
+                <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;Event loop is closed&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                <span class="s2">&quot;Event loop is closed. Closing </span><span class="si">%s</span><span class="s2"> with </span><span class="si">%s</span><span class="s2"> unfinished tasks&quot;</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_unfinished_tasks</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="k">return</span>
+                    <span class="k">raise</span>
+
+                <span class="k">if</span> <span class="n">fut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># the weakref was already cleaned up, we don&#39;t need to process this item</span>
+                    <span class="n">task_done</span><span class="p">()</span>
+                    <span class="k">continue</span>
+
+                <span class="k">try</span><span class="p">:</span>
                     <span class="n">log_debug</span><span class="p">(</span><span class="s2">&quot;processing </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fut</span><span class="p">)</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                     <span class="n">fut</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
