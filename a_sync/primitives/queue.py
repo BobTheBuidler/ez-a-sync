@@ -532,12 +532,25 @@ class ProcessingQueue(_Queue[Tuple[P, "asyncio.Future[V]"]], Generic[P, V]):
         else:
             fut: asyncio.Future[V]
             while True:
-                args, kwargs, fut = await get_next_job()
                 try:
-                    if fut is None:
-                        # the weakref was already cleaned up, we don't need to process this item
-                        task_done()
-                        continue
+                    args, kwargs, fut = await get_next_job()
+                except RuntimeError as e:
+                    if "Event loop is closed" in str(e):
+                        if self._unfinished_tasks:
+                            logger.error(
+                                "Event loop is closed. Closing %s with %s unfinished tasks",
+                                self,
+                                self._unfinished_tasks,
+                            )
+                        return
+                    raise
+
+                if fut is None:
+                    # the weakref was already cleaned up, we don't need to process this item
+                    task_done()
+                    continue
+
+                try:
                     result = await func(*args, **kwargs)
                     fut.set_result(result)
                 except InvalidStateError:
@@ -938,10 +951,23 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             while True:
                 try:
                     args, kwargs, fut = await get_next_job()
-                    if fut is None:
-                        # the weakref was already cleaned up, we don't need to process this item
-                        task_done()
-                        continue
+                except RuntimeError as e:
+                    if "Event loop is closed" in str(e):
+                        if self._unfinished_tasks:
+                            logger.error(
+                                "Event loop is closed. Closing %s with %s unfinished tasks",
+                                self,
+                                self._unfinished_tasks,
+                            )
+                        return
+                    raise
+
+                if fut is None:
+                    # the weakref was already cleaned up, we don't need to process this item
+                    task_done()
+                    continue
+
+                try:
                     log_debug("processing %s", fut)
                     result = await func(*args, **kwargs)
                     fut.set_result(result)
