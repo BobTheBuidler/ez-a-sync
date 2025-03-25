@@ -10,6 +10,7 @@ import weakref
 from asyncio import (AbstractEventLoop, Future, InvalidStateError, Task, 
                      ensure_future, get_event_loop)
 from asyncio.tasks import _current_tasks as __current_tasks
+from contextvars import copy_context
 from libc.stdint cimport uintptr_t
 from logging import getLogger
 from weakref import proxy, ref
@@ -301,10 +302,11 @@ class SmartFuture(_SmartFutureMixin[T], Future):
             return _get_result(self)  # May raise too.
 
         self._asyncio_future_blocking = True
-        if task := current_task(self._loop):
+        task: Optional[Task] = current_task(self._loop)
+        if task is not None:
             (<WeakSet>self._waiters).add(task)
-            task.add_done_callback(
-                self._waiter_done_cleanup_callback  # type: ignore [union-attr]
+            (<list>task._callbacks).append(
+                (self._waiter_done_cleanup_callback, None)
             )
 
         logger.debug("awaiting %s", self)
@@ -313,9 +315,7 @@ class SmartFuture(_SmartFutureMixin[T], Future):
             raise RuntimeError("await wasn't used with future")
         return _get_result(self)  # May raise too.
 
-    def _waiter_done_cleanup_callback(
-        self: Union["SmartFuture", "SmartTask"], waiter: "SmartTask"
-    ) -> None:
+    def _waiter_done_cleanup_callback(self, waiter: "SmartTask") -> None:
         """
         Callback to clean up waiters when a waiter task is done.
 
@@ -418,7 +418,9 @@ class SmartTask(_SmartFutureMixin[T], Task):
         """
         Task.__init__(self, coro, loop=loop, name=name)
         self._waiters: Set["Task[T]"] = <set>set()
-        self.add_done_callback(SmartTask._self_done_cleanup_callback)
+        (<list>self._callbacks).append(
+            (SmartTask._self_done_cleanup_callback, None)
+        )
 
     def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
         """
@@ -449,10 +451,11 @@ class SmartTask(_SmartFutureMixin[T], Task):
             return _get_result(self)  # May raise too.
 
         self._asyncio_future_blocking = True
-        if task := current_task(self._loop):
+        task: Optional[Task] = current_task(self._loop)
+        if task is not None:
             (<set>self._waiters).add(task)
-            task.add_done_callback(
-                self._waiter_done_cleanup_callback  # type: ignore [union-attr]
+            (<list>task._callbacks).append(
+                (self._waiter_done_cleanup_callback, copy_context())
             )
 
         logger.debug("awaiting %s", self)
@@ -461,9 +464,7 @@ class SmartTask(_SmartFutureMixin[T], Task):
             raise RuntimeError("await wasn't used with future")
         return _get_result(self)  # May raise too.
 
-    def _waiter_done_cleanup_callback(
-        self: Union["SmartFuture", "SmartTask"], waiter: "SmartTask"
-    ) -> None:
+    def _waiter_done_cleanup_callback(self, waiter: "SmartTask") -> None:
         """
         Callback to clean up waiters when a waiter task is done.
 
@@ -597,8 +598,9 @@ cpdef object shield(arg: Awaitable[T]):
 
     _inner_done_callback, _outer_done_callback = _get_done_callbacks(inner, outer)
 
-    inner.add_done_callback(_inner_done_callback)
-    outer.add_done_callback(_outer_done_callback)
+    context = copy_context()
+    (<list>inner._callbacks).append((_inner_done_callback, context))
+    (<list>outer._callbacks).append((_outer_done_callback, context))
     return outer
 
 

@@ -335,8 +335,9 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                     self._next.set()
 
                 try:
+                    t: Task
                     async for k, t in self._tasks_for_iterables(*iterables):
-                        t.add_done_callback(callback)
+                        t._callbacks.append((callback, None))
                         if self._next.is_set():
                             async for key, value in self.yield_completed(pop=pop):
                                 yield _yield(key, value, yields)
@@ -540,7 +541,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                 )
             except RuntimeError as e:
                 raise _NoRunningLoop if str(e) == "no running event loop" else e
-            task.add_done_callback(self.__cleanup)
+            task._callbacks.append((self.__cleanup, None))
             return task
 
     @cached_property_unsafe

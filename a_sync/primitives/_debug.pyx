@@ -170,7 +170,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         
         if self.check_debug_logs_enabled():
             daemon = self._c_start_debug_daemon(args, kwargs)
-            daemon.add_done_callback(self._stop_debug_daemon)
+            (<list>daemon._callbacks).append((self._stop_debug_daemon, None))
             self._daemon = daemon
         else:
             self._daemon = self._c_get_loop().create_future()
