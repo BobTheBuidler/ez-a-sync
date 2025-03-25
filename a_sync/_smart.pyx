@@ -193,6 +193,7 @@ cdef object _get_exception(fut: Future):
         raise fut._make_cancelled_error()
     raise InvalidStateError('Exception is not set.')
 
+
 _init = Future.__init__
 
 class SmartFuture(_SmartFutureMixin[T], Future):
@@ -244,7 +245,6 @@ class SmartFuture(_SmartFutureMixin[T], Future):
         _init(self, loop=loop)
         if queue:
             self._queue = proxy(queue)
-            self.add_done_callback(SmartFuture._self_done_cleanup_callback)
         if key:
             self._key = key
         self._waiters = WeakSet()
@@ -311,6 +311,11 @@ class SmartFuture(_SmartFutureMixin[T], Future):
         yield self  # This tells Task to wait for completion.
         if _is_not_done(self):
             raise RuntimeError("await wasn't used with future")
+            
+        # remove the future from the associated queue, if any
+        if queue := self._queue:
+            queue._futs.pop(self._key)
+        
         return _get_result(self)  # May raise too.
 
     def _waiter_done_cleanup_callback(
@@ -329,15 +334,6 @@ class SmartFuture(_SmartFutureMixin[T], Future):
         """
         if _is_not_done(self):
             (<WeakSet>self._waiters).remove(waiter)
-
-    def _self_done_cleanup_callback(self: Union["SmartFuture", "SmartTask"]) -> None:
-        """
-        Callback to clean up waiters and remove the future from the queue when done.
-
-        This method clears all waiters and removes the future from the associated queue.
-        """
-        if queue := self._queue:
-            queue._futs.pop(self._key)
 
 
 cdef inline object current_task(object loop):
