@@ -9,9 +9,11 @@ import asyncio.futures as aiofutures
 import weakref
 from asyncio import (AbstractEventLoop, Future, InvalidStateError, Task, 
                      ensure_future, get_event_loop)
+from asyncio.format_helpers import extract_stack
 from asyncio.tasks import _current_tasks as __current_tasks
 from libc.stdint cimport uintptr_t
 from logging import getLogger
+from sys import _getframe
 from weakref import proxy, ref
 
 cimport a_sync.asyncio
@@ -241,13 +243,23 @@ class SmartFuture(_SmartFutureMixin[T], Future):
         See Also:
             - :class:`SmartProcessingQueue`
         """
-        _init(self, loop=loop)
-        if queue:
-            self._queue = proxy(queue)
-            self.add_done_callback(SmartFuture._self_done_cleanup_callback)
+        if loop is None:
+            loop = get_event_loop()
+        self._loop = loop
+        if loop.get_debug():
+            self._source_traceback = extract_stack(_getframe(1))
+
+        self._waiters = WeakSet()
+
         if key:
             self._key = key
-        self._waiters = WeakSet()
+
+        if queue is None:
+            self._callbacks = []
+        else:
+            self._queue = proxy(queue)
+            self._callbacks = [(SmartFuture._self_done_cleanup_callback, None)]
+
 
     def __repr__(self):
         return f"<{<str>type(self).__name__} key={self._key} waiters={count_waiters(self)} {<str>self._state}>"
