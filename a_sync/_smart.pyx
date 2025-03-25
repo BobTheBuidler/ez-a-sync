@@ -26,6 +26,7 @@ _Kwargs = Tuple[Tuple[str, Any]]
 _Key = Tuple[_Args, _Kwargs]
 
 logger = getLogger(__name__)
+cdef object _logger_debug = logger.debug
 
 cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
@@ -136,7 +137,7 @@ cdef class WeakSet:
 
     def __repr__(self):
         # Use list comprehension syntax within the repr function for clarity
-        return f"WeakSet({', '.join(repr(item) for item in self)})"
+        return f"WeakSet({', '.join(map(repr, self))})"
 
 
 cdef inline bint _is_done(fut: Future):
@@ -307,7 +308,7 @@ class SmartFuture(_SmartFutureMixin[T], Future):
                 self._waiter_done_cleanup_callback  # type: ignore [union-attr]
             )
 
-        logger.debug("awaiting %s", self)
+        _logger_debug("awaiting %s", self)
         yield self  # This tells Task to wait for completion.
         if _is_not_done(self):
             raise RuntimeError("await wasn't used with future")
@@ -450,7 +451,7 @@ class SmartTask(_SmartFutureMixin[T], Task):
                 self._waiter_done_cleanup_callback  # type: ignore [union-attr]
             )
 
-        logger.debug("awaiting %s", self)
+        _logger_debug("awaiting %s", self)
         yield self  # This tells Task to wait for completion.
         if _is_not_done(self):
             raise RuntimeError("await wasn't used with future")

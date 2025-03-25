@@ -33,6 +33,7 @@ from a_sync.iter import ASyncIterator, ASyncGeneratorFunction, ASyncSorter
 from a_sync.primitives.locks import Event
 from a_sync.primitives.queue import Queue, ProcessingQueue
 from a_sync.utils.iterators import as_yielded, exhaust_iterator
+from a_sync.utils.repr import repr_trunc
 
 
 logger = getLogger(__name__)
@@ -531,17 +532,23 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     @cached_property_unsafe
     def _init_loader(self) -> Optional["Task[None]"]:
         # sourcery skip: raise-from-previous-error
-        if self.__init_loader_coro:
-            logger.debug("starting %s init loader", self)
-            try:
-                task = create_task(
-                    coro=self.__init_loader_coro,
-                    name=f"{type(self).__name__} init loader loading {self.__iterables__} for {self}",
-                )
-            except RuntimeError as e:
-                raise _NoRunningLoop if str(e) == "no running event loop" else e
-            task.add_done_callback(self.__cleanup)
-            return task
+        if self.__init_loader_coro is None:
+            return None
+
+        logger.debug("starting %s init loader", self)
+        if len(iterables := self.__iterables__) == 1:
+            iterables_repr = repr_trunc(iterables[0])
+        else:
+            iterables_repr = f"({', '.join(map(repr_trunc, iterables))})"
+        try:
+            task = create_task(
+                coro=self.__init_loader_coro,
+                name=f"{type(self).__name__} init loader loading {iterables_repr} for {self}",
+            )
+        except RuntimeError as e:
+            raise _NoRunningLoop if str(e) == "no running event loop" else e
+        task.add_done_callback(self.__cleanup)
+        return task
 
     @cached_property_unsafe
     def _queue(self) -> ProcessingQueue:
@@ -642,7 +649,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
         else:
             fut = create_task(
                 coro=self._wrapped_func(item, **self._wrapped_func_kwargs),
-                name=f"{self._name}[{item}]" if self._name else f"{item}",
+                name=f"{item}" if self._name is None else f"{self._name}[{item}]",
             )
         dict.__setitem__(self, item, fut)
         return fut
