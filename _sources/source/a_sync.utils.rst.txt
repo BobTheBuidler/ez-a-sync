@@ -13,6 +13,15 @@ a\_sync.utils.iterators module
    :show-inheritance:
    :private-members:
 
+a\_sync.utils.repr module
+-------------------------
+
+.. automodule:: a_sync.utils.repr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 Module contents
 ---------------
 

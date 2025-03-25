@@ -934,17 +934,6 @@ for scenarios where task prioritization is crucial.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._create_future">
-<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._create_future" title="Link to this definition"></a></dt>
-<dd><p>Creates a future for the task.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[<em>V</em>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.queue.PriorityProcessingQueue._ensure_workers">
 <span class="sig-name descname"><span class="pre">_ensure_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.queue.PriorityProcessingQueue._ensure_workers" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the worker tasks are running.</p>
@@ -1291,17 +1280,6 @@ to be processed concurrently with a fixed number of workers.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">ProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">my_task_func</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;myqueue&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.ProcessingQueue._create_future">
-<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue._create_future"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.ProcessingQueue._create_future" title="Link to this definition"></a></dt>
-<dd><p>Creates a future for the task.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[<em>V</em>]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1948,20 +1926,6 @@ task execution order is influenced by the number of waiters.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">SmartProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">my_task_func</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smart_queue&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.queue.SmartProcessingQueue._create_future">
-<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#SmartProcessingQueue._create_future"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.queue.SmartProcessingQueue._create_future" title="Link to this definition"></a></dt>
-<dd><p>Creates a smart future for the task.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -3645,17 +3609,6 @@ to be processed concurrently with a fixed number of workers.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._create_future">
-<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue._create_future"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._create_future" title="Link to this definition"></a></dt>
-<dd><p>Creates a future for the task.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Future</em>[<em>V</em>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.ProcessingQueue._ensure_workers">
 <span class="sig-name descname"><span class="pre">_ensure_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#ProcessingQueue._ensure_workers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.ProcessingQueue._ensure_workers" title="Link to this definition"></a></dt>
 <dd><p>Ensures that the worker tasks are running.</p>
@@ -4647,20 +4600,6 @@ task execution order is influenced by the number of waiters.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">queue</span> <span class="o">=</span> <span class="n">SmartProcessingQueue</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="n">my_task_func</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;smart_queue&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.primitives.SmartProcessingQueue._create_future">
-<span class="sig-name descname"><span class="pre">_create_future</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/primitives/queue.html#SmartProcessingQueue._create_future"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.primitives.SmartProcessingQueue._create_future" title="Link to this definition"></a></dt>
-<dd><p>Creates a smart future for the task.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em><em>]</em><em>]</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Future</em>[<em>V</em>]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">

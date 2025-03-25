@@ -584,16 +584,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_futs</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">_put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
-        <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">()</span>
+        <span class="n">fut</span> <span class="o">=</span> <span class="n">Future</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="o">.</span><span class="n">_loop</span><span class="p">)</span>
         <span class="n">_put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">proxy</span><span class="p">(</span><span class="n">fut</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">fut</span></div>
-
-
-<div class="viewcode-block" id="ProcessingQueue._create_future">
-<a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.ProcessingQueue._create_future">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_future</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a future for the task.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_get_running_loop</span><span class="p">()</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ProcessingQueue._ensure_workers">
@@ -885,7 +878,7 @@
 <span class="sd">            &gt;&gt;&gt; print(await fut)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ensure_workers</span><span class="p">()</span>
-        <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">()</span>
+        <span class="n">fut</span> <span class="o">=</span> <span class="n">Future</span><span class="p">(</span><span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_workers</span><span class="o">.</span><span class="n">_loop</span><span class="p">)</span>
         <span class="n">_Queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">fut</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">fut</span></div>
 
@@ -1105,17 +1098,10 @@
         <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_key</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">fut</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">fut</span>
-        <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">fut</span> <span class="o">=</span> <span class="n">SmartFuture</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_loop</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_futs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fut</span>
         <span class="n">Queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">(</span><span class="n">_SmartFutureRef</span><span class="p">(</span><span class="n">fut</span><span class="p">),</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">fut</span></div>
-
-
-<div class="viewcode-block" id="SmartProcessingQueue._create_future">
-<a class="viewcode-back" href="../../../source/a_sync.primitives.html#a_sync.SmartProcessingQueue._create_future">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_future</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">_SmartKey</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a smart future for the task.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">create_future</span><span class="p">(</span><span class="n">queue</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_loop</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SmartProcessingQueue._get">
