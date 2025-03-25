@@ -464,7 +464,7 @@ class ProcessingQueue(_Queue[Tuple[P, "Future[V]"]], Generic[P, V]):
         self._ensure_workers()
         if self._no_futs:
             return _put_nowait(self, (args, kwargs))
-        fut = _get_running_loop().create_future()
+        fut = Future(loop=self._workers._loop)
         _put_nowait(self, (args, kwargs, proxy(fut)))
         return fut
 
@@ -725,7 +725,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
             >>> print(await fut)
         """
         self._ensure_workers()
-        fut = _get_running_loop().create_future()
+        fut = Future(loop=self._workers._loop)
         _Queue.put_nowait(self, (priority, args, kwargs, fut))
         return fut
 
