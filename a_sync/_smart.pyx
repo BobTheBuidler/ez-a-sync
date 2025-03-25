@@ -312,11 +312,6 @@ class SmartFuture(_SmartFutureMixin[T], Future):
         yield self  # This tells Task to wait for completion.
         if _is_not_done(self):
             raise RuntimeError("await wasn't used with future")
-            
-        # remove the future from the associated queue, if any
-        if queue := self._queue:
-            queue._futs.pop(self._key)
-        
         return _get_result(self)  # May raise too.
 
     def _waiter_done_cleanup_callback(
@@ -459,7 +454,8 @@ class SmartTask(_SmartFutureMixin[T], Task):
         # clear all waiters and remove the future from the associated queue, if any
         (<set>self._waiters).clear()
         if queue := self._queue:
-            queue._futs.pop(self._key)
+            raise NotImplementedError("this shouldnt be reachable and can probably be deleted")
+            queue._futs.pop(self._key, None)
         
         return _get_result(self)  # May raise too.
 
