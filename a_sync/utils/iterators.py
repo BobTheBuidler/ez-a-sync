@@ -241,7 +241,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
         name=f"a_sync.as_yielded queue populating task for {iterators}",
     )
 
-    task.add_done_callback(_as_yielded_done_callback)
+    task._callbacks.append((_as_yielded_done_callback, None))
 
     while not task.done():
         try:
