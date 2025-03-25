@@ -418,7 +418,6 @@ class SmartTask(_SmartFutureMixin[T], Task):
         """
         Task.__init__(self, coro, loop=loop, name=name)
         self._waiters: Set["Task[T]"] = <set>set()
-        self.add_done_callback(SmartTask._self_done_cleanup_callback)
 
     def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
         """
@@ -459,6 +458,12 @@ class SmartTask(_SmartFutureMixin[T], Task):
         yield self  # This tells Task to wait for completion.
         if _is_not_done(self):
             raise RuntimeError("await wasn't used with future")
+
+        # clear all waiters and remove the future from the associated queue, if any
+        (<set>self._waiters).clear()
+        if queue := self._queue:
+            queue._futs.pop(self._key)
+        
         return _get_result(self)  # May raise too.
 
     def _waiter_done_cleanup_callback(
@@ -477,16 +482,6 @@ class SmartTask(_SmartFutureMixin[T], Task):
         """
         if _is_not_done(self):
             (<set>self._waiters).remove(waiter)
-
-    def _self_done_cleanup_callback(self: Union["SmartFuture", "SmartTask"]) -> None:
-        """
-        Callback to clean up waiters and remove the future from the queue when done.
-
-        This method clears all waiters and removes the future from the associated queue.
-        """
-        (<set>self._waiters).clear()
-        if queue := self._queue:
-            queue._futs.pop(self._key)
 
 
 cpdef object smart_task_factory(loop: AbstractEventLoop, coro: Awaitable[T]):
