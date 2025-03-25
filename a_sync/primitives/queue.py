@@ -464,13 +464,9 @@ class ProcessingQueue(_Queue[Tuple[P, "Future[V]"]], Generic[P, V]):
         self._ensure_workers()
         if self._no_futs:
             return _put_nowait(self, (args, kwargs))
-        fut = self._create_future()
+        fut = Future(loop=self._workers._loop)
         _put_nowait(self, (args, kwargs, proxy(fut)))
         return fut
-
-    def _create_future(self) -> "Future[V]":
-        """Creates a future for the task."""
-        return _get_running_loop().create_future()
 
     def _ensure_workers(self) -> None:
         """Ensures that the worker tasks are running."""
@@ -729,7 +725,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
             >>> print(await fut)
         """
         self._ensure_workers()
-        fut = self._create_future()
+        fut = Future(loop=self._workers._loop)
         _Queue.put_nowait(self, (priority, args, kwargs, fut))
         return fut
 
@@ -922,14 +918,10 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         key = self._get_key(*args, **kwargs)
         if fut := self._futs.get(key, None):
             return fut
-        fut = self._create_future(key)
+        fut = SmartFuture(queue=self, key=key, loop=self._loop)
         self._futs[key] = fut
         Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
         return fut
-
-    def _create_future(self, key: _SmartKey) -> "Future[V]":
-        """Creates a smart future for the task."""
-        return create_future(queue=self, key=key, loop=self._loop)
 
     def _get(self):
         """
