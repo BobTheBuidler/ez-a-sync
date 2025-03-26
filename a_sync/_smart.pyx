@@ -33,56 +33,6 @@ cdef Py_ssize_t ONE = 1
 
 cdef dict[object, object] _current_tasks = __current_tasks
 
-class _SmartFutureMixin(Generic[T]):
-    """
-    Mixin class that provides common functionality for smart futures and tasks.
-
-    This mixin provides methods for managing waiters and integrating with a smart processing queue.
-    It uses weak references to manage resources efficiently.
-
-    Example:
-        Creating a SmartFuture and awaiting it:
-
-        ```python
-        future = SmartFuture()
-        result = await future
-        ```
-
-        Creating a SmartTask and awaiting it:
-
-        ```python
-        task = SmartTask(coro=my_coroutine())
-        result = await task
-        ```
-
-    See Also:
-        - :class:`SmartFuture`
-        - :class:`SmartTask`
-    """
-
-    _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
-    _key: _Key
-    _waiters: "weakref.WeakSet[SmartTask[T]]"
-
-    @property
-    def num_waiters(self: Union["SmartFuture", "SmartTask"]) -> Py_ssize_t:
-        """
-        Get the number of waiters currently awaiting the future or task.
-
-        This property checks if the future or task is done to ensure accurate counting
-        of waiters, as the callback may not have run yet.
-
-        Example:
-            ```python
-            future = SmartFuture()
-            print(future.num_waiters)
-            ```
-
-        See Also:
-            - :meth:`_waiter_done_cleanup_callback`
-        """
-        return count_waiters(self)
-
 
 cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
     if _is_done(fut):
@@ -197,12 +147,11 @@ cdef object _get_exception(fut: Future):
 
 _init = Future.__init__
 
-class SmartFuture(_SmartFutureMixin[T], Future):
+class SmartFuture(Future, Generic[T]):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
 
-    Inherits from both :class:`_SmartFutureMixin` and :class:`asyncio.Future`, providing additional functionality
-    for tracking waiters and integrating with a smart processing queue.
+    Inherits from :class:`asyncio.Future`, providing additional functionality for tracking waiters and integrating with a smart processing queue.
 
     Example:
         Creating and awaiting a SmartFuture:
@@ -213,12 +162,12 @@ class SmartFuture(_SmartFutureMixin[T], Future):
         ```
 
     See Also:
-        - :class:`_SmartFutureMixin`
         - :class:`asyncio.Future`
     """
-
-    _queue = None
-    _key = None
+    _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
+    _key: Optional[_Key] = None
+    
+    _waiters: "weakref.WeakSet[SmartTask[T]]"
 
     def __init__(
         self,
@@ -365,12 +314,11 @@ cpdef inline object create_future(
     return SmartFuture(queue=queue, key=key, loop=loop or get_event_loop())
 
 
-class SmartTask(_SmartFutureMixin[T], Task):
+class SmartTask(Task, Generic[T]):
     """
     A smart task that tracks waiters and integrates with a smart processing queue.
 
-    Inherits from both :class:`_SmartFutureMixin` and :class:`asyncio.Task`, providing additional functionality
-    for tracking waiters and integrating with a smart processing queue.
+    Inherits from :class:`asyncio.Task`, providing additional functionality for tracking waiters.
 
     Example:
         Creating and awaiting a SmartTask:
@@ -381,9 +329,9 @@ class SmartTask(_SmartFutureMixin[T], Task):
         ```
 
     See Also:
-        - :class:`_SmartFutureMixin`
         - :class:`asyncio.Task`
     """
+    _waiters: Set["Task[T]"]
 
     def __init__(
         self,
@@ -409,7 +357,7 @@ class SmartTask(_SmartFutureMixin[T], Task):
             - :func:`asyncio.create_task`
         """
         Task.__init__(self, coro, loop=loop, name=name)
-        self._waiters: Set["Task[T]"] = <set>set()
+        self._waiters = <set>set()
 
     def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
         """
@@ -450,13 +398,8 @@ class SmartTask(_SmartFutureMixin[T], Task):
         yield self  # This tells Task to wait for completion.
         if _is_not_done(self):
             raise RuntimeError("await wasn't used with future")
-
-        # clear all waiters and remove the future from the associated queue, if any
-        (<set>self._waiters).clear()
-        if queue := self._queue:
-            raise NotImplementedError("this shouldnt be reachable and can probably be deleted")
-            queue._futs.pop(self._key, None)
-        
+        # clear the waiters
+        self._waiters = set()
         return _get_result(self)  # May raise too.
 
     def _waiter_done_cleanup_callback(
