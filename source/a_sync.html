@@ -2188,10 +2188,9 @@ to protect tasks from cancellation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._smart.</span></span><span class="sig-name descname"><span class="pre">SmartFuture</span></span><a class="headerlink" href="#a_sync._smart.SmartFuture" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <p>A smart future that tracks waiters and integrates with a smart processing queue.</p>
-<p>Inherits from both <code class="xref py py-class docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code> and <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a>, providing additional functionality
-for tracking waiters and integrating with a smart processing queue.</p>
+<p>Inherits from <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a>, providing additional functionality for tracking waiters and integrating with a smart processing queue.</p>
 <p class="rubric">Example</p>
 <p>Creating and awaiting a SmartFuture:</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
@@ -2201,7 +2200,6 @@ for tracking waiters and integrating with a smart processing queue.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code></p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a></p></li>
 </ul>
 </div>
@@ -2374,7 +2372,7 @@ InvalidStateError.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture._key">
-<span class="sig-name descname"><span class="pre">_key</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync._smart.SmartFuture._key" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">_Key</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync._smart.SmartFuture._key" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2389,7 +2387,7 @@ InvalidStateError.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync._smart.SmartFuture._queue">
-<span class="sig-name descname"><span class="pre">_queue</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync._smart.SmartFuture._queue" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_queue</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="s"><span class="pre">'SmartProcessingQueue[Any,</span> <span class="pre">Any,</span> <span class="pre">T]'</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync._smart.SmartFuture._queue" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2407,34 +2405,19 @@ InvalidStateError.</p>
 <span class="sig-name descname"><span class="pre">_state</span></span><a class="headerlink" href="#a_sync._smart.SmartFuture._state" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync._smart.SmartFuture.num_waiters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Py_ssize_t</span></em><a class="headerlink" href="#a_sync._smart.SmartFuture.num_waiters" title="Link to this definition"></a></dt>
-<dd><p>Get the number of waiters currently awaiting the future or task.</p>
-<p>This property checks if the future or task is done to ensure accurate counting
-of waiters, as the callback may not have run yet.</p>
-<p class="rubric">Example</p>
-<p><code class="docutils literal notranslate"><span class="pre">`python</span>
-<span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture()</span>
-<span class="pre">print(future.num_waiters)</span>
-<span class="pre">`</span></code></p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync._smart.SmartFuture._waiter_done_cleanup_callback" title="a_sync._smart.SmartFuture._waiter_done_cleanup_callback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_waiter_done_cleanup_callback()</span></code></a></p></li>
-</ul>
-</div>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync._smart.SmartFuture._waiters">
+<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/weakref.html#weakref.WeakSet" title="(in Python v3.13)"><span class="pre">weakref.WeakSet</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#a_sync._smart.SmartTask" title="a_sync._smart.SmartTask"><span class="pre">SmartTask</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync._smart.SmartFuture._waiters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync._smart.</span></span><span class="sig-name descname"><span class="pre">SmartTask</span></span><a class="headerlink" href="#a_sync._smart.SmartTask" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Task</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Task</span></code>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <p>A smart task that tracks waiters and integrates with a smart processing queue.</p>
-<p>Inherits from both <code class="xref py py-class docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code> and <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task</span></code></a>, providing additional functionality
-for tracking waiters and integrating with a smart processing queue.</p>
+<p>Inherits from <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task</span></code></a>, providing additional functionality for tracking waiters.</p>
 <p class="rubric">Example</p>
 <p>Creating and awaiting a SmartTask:</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
@@ -2444,7 +2427,6 @@ for tracking waiters and integrating with a smart processing queue.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">_SmartFutureMixin</span></code></p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.Task" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Task</span></code></a></p></li>
 </ul>
 </div>
@@ -2703,11 +2685,6 @@ InvalidStateError.</p>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync._smart.SmartTask._queue">
-<span class="sig-name descname"><span class="pre">_queue</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#a_sync._smart.SmartTask._queue" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask._result">
 <span class="sig-name descname"><span class="pre">_result</span></span><a class="headerlink" href="#a_sync._smart.SmartTask._result" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -2722,24 +2699,10 @@ InvalidStateError.</p>
 <span class="sig-name descname"><span class="pre">_state</span></span><a class="headerlink" href="#a_sync._smart.SmartTask._state" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="a_sync._smart.SmartTask.num_waiters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Py_ssize_t</span></em><a class="headerlink" href="#a_sync._smart.SmartTask.num_waiters" title="Link to this definition"></a></dt>
-<dd><p>Get the number of waiters currently awaiting the future or task.</p>
-<p>This property checks if the future or task is done to ensure accurate counting
-of waiters, as the callback may not have run yet.</p>
-<p class="rubric">Example</p>
-<p><code class="docutils literal notranslate"><span class="pre">`python</span>
-<span class="pre">future</span> <span class="pre">=</span> <span class="pre">SmartFuture()</span>
-<span class="pre">print(future.num_waiters)</span>
-<span class="pre">`</span></code></p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync._smart.SmartTask._waiter_done_cleanup_callback" title="a_sync._smart.SmartTask._waiter_done_cleanup_callback"><code class="xref py py-meth docutils literal notranslate"><span class="pre">_waiter_done_cleanup_callback()</span></code></a></p></li>
-</ul>
-</div>
-</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="a_sync._smart.SmartTask._waiters">
+<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.13)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync._smart.SmartTask._waiters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
