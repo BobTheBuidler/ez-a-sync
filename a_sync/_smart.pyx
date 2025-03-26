@@ -164,7 +164,6 @@ class SmartFuture(Future, Generic[T]):
     See Also:
         - :class:`asyncio.Future`
     """
-    _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
     _key: Optional[_Key] = None
     
     _waiters: "weakref.WeakSet[SmartTask[T]]"
@@ -172,35 +171,34 @@ class SmartFuture(Future, Generic[T]):
     def __init__(
         self,
         *,
-        queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None,
         key: Optional[_Key] = None,
         loop: Optional[AbstractEventLoop] = None,
     ) -> None:
         """
-        Initialize the SmartFuture with an optional queue and key.
+        Initialize the SmartFuture with an optional and key.
 
         Args:
-            queue: Optional; a smart processing queue.
             key: Optional; a key identifying the future.
             loop: Optional; the event loop.
 
         Example:
             ```python
-            future = SmartFuture(queue=my_queue, key=my_key)
+            future = SmartFuture(key=my_key)
             ```
 
         See Also:
             - :class:`SmartProcessingQueue`
         """
         _init(self, loop=loop)
-        if queue:
-            self._queue = proxy(queue)
         if key:
             self._key = key
         self._waiters = WeakSet()
 
     def __repr__(self):
-        return f"<{<str>type(self).__name__} key={self._key} waiters={count_waiters(self)} {<str>self._state}>"
+        start = f"<{type(self).__name__}"
+        if self._key is not None:
+            start += f" key={self._key}"
+        return f"{start} waiters={count_waiters(self)} {<str>self._state}"
 
     def __lt__(self, other: "SmartFuture[T]") -> bint:
         """
@@ -269,7 +267,7 @@ class SmartFuture(Future, Generic[T]):
         """
         Callback to clean up waiters when a waiter task is done.
 
-        Removes the waiter from _waiters, and _queue._futs if applicable.
+        Removes the waiter from _waiters.
 
         Args:
             waiter: The waiter task to clean up.
@@ -286,7 +284,6 @@ cdef inline object current_task(object loop):
 
   
 cpdef inline object create_future(
-    queue: Optional["SmartProcessingQueue"] = None,
     key: Optional[_Key] = None,
     loop: Optional[AbstractEventLoop] = None,
 ):
@@ -294,7 +291,6 @@ cpdef inline object create_future(
     Create a :class:`~SmartFuture` instance.
 
     Args:
-        queue: Optional; a smart processing queue.
         key: Optional; a key identifying the future.
         loop: Optional; the event loop.
 
@@ -305,13 +301,13 @@ cpdef inline object create_future(
         Creating a SmartFuture using the factory function:
 
         ```python
-        future = create_future(queue=my_queue, key=my_key)
+        future = create_future(key=my_key)
         ```
 
     See Also:
         - :class:`SmartFuture`
     """
-    return SmartFuture(queue=queue, key=key, loop=loop or get_event_loop())
+    return SmartFuture(key=key, loop=loop or get_event_loop())
 
 
 class SmartTask(Task, Generic[T]):
@@ -408,7 +404,7 @@ class SmartTask(Task, Generic[T]):
         """
         Callback to clean up waiters when a waiter task is done.
 
-        Removes the waiter from _waiters, and _queue._futs if applicable.
+        Removes `waiter` from _waiters.
 
         Args:
             waiter: The waiter task to clean up.
