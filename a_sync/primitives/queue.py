@@ -918,7 +918,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         key = self._get_key(*args, **kwargs)
         if fut := self._futs.get(key, None):
             return fut
-        fut = SmartFuture(key=key, loop=self._loop)
+        fut = SmartFuture(queue=self, key=key, loop=self._loop)
         self._futs[key] = fut
         Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
         return fut
