@@ -11,7 +11,7 @@ from asyncio import (AbstractEventLoop, Future, InvalidStateError, Task,
                      ensure_future, get_event_loop)
 from asyncio.tasks import _current_tasks as __current_tasks
 from libc.stdint cimport uintptr_t
-from logging import getLogger
+from logging import DEBUG, getLogger
 from weakref import proxy, ref
 
 cimport a_sync.asyncio
@@ -26,7 +26,14 @@ _Kwargs = Tuple[Tuple[str, Any]]
 _Key = Tuple[_Args, _Kwargs]
 
 logger = getLogger(__name__)
-cdef object _logger_debug = logger.debug
+
+cdef bint _DEBUG_LOGS_ENABLED = logger.isEnabledFor(DEBUG)
+
+cdef object _logger_log = logger._log
+
+cdef log_await(object arg):
+    _logger_log(DEBUG, "awaiting %s", (arg, ))
+
 
 cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
@@ -255,7 +262,8 @@ class SmartFuture(Future, Generic[T]):
                 self._waiter_done_cleanup_callback  # type: ignore [union-attr]
             )
 
-        _logger_debug("awaiting %s", self)
+        if _DEBUG_LOGS_ENABLED:
+            log_await(self)
         yield self  # This tells Task to wait for completion.
         if _is_not_done(self):
             raise RuntimeError("await wasn't used with future")
@@ -390,7 +398,8 @@ class SmartTask(Task, Generic[T]):
                 self._waiter_done_cleanup_callback  # type: ignore [union-attr]
             )
 
-        _logger_debug("awaiting %s", self)
+        if _DEBUG_LOGS_ENABLED:
+            log_await(self)
         yield self  # This tells Task to wait for completion.
         if _is_not_done(self):
             raise RuntimeError("await wasn't used with future")
