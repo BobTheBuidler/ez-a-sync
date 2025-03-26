@@ -49,24 +49,49 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
     nfinished = 0
     outer = None  # bpo-46672
 
-    def _done_callback(fut, return_exceptions=return_exceptions):
-        # for some reason this wouldn't work until I added `return_exceptions=return_exceptions` to the func def
-        nonlocal nfinished
-        nfinished += 1
+    if return_exceptions:
 
-        if outer is None or outer.done():
-            if not fut.cancelled():
-                # Mark exception retrieved.
-                fut.exception()
-            return
+        def _done_callback(fut: Future) -> None:
+            # for some reason this wouldn't work until I added `return_exceptions=return_exceptions` to the func def
+            nonlocal nfinished
+            nfinished += 1
 
-        if not return_exceptions:
+            if outer is None or outer.done():
+                if not fut.cancelled():
+                    # Mark exception retrieved.
+                    fut.exception()
+                return
+
+            if nfinished == nfuts:
+                # All futures are done; create a list of results
+                # and set it to the 'outer' future.
+
+                if outer._cancel_requested:
+                    # If gather is being cancelled we must propagate the
+                    # cancellation regardless of *return_exceptions* argument.
+                    # See issue 32684.
+                    outer.set_exception(fut._make_cancelled_error())
+                else:
+                    outer.set_result(list(map(_get_result_or_exc, children)))
+    
+    else:
+
+        def _done_callback(fut: Future) -> None:
+            # for some reason this wouldn't work until I added `return_exceptions=return_exceptions` to the func def
+            nonlocal nfinished
+            nfinished += 1
+
+            if outer is None or outer.done():
+                if not fut.cancelled():
+                    # Mark exception retrieved.
+                    fut.exception()
+                return
+
             if fut.cancelled():
                 # Check if 'fut' is cancelled first, as
                 # 'fut.exception()' will *raise* a CancelledError
                 # instead of returning it.
-                exc = fut._make_cancelled_error()
-                outer.set_exception(exc)
+                outer.set_exception(fut._make_cancelled_error())
                 return
             else:
                 exc = fut.exception()
@@ -74,18 +99,18 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                     outer.set_exception(exc)
                     return
 
-        if nfinished == nfuts:
-            # All futures are done; create a list of results
-            # and set it to the 'outer' future.
+            if nfinished == nfuts:
+                # All futures are done; create a list of results
+                # and set it to the 'outer' future.
 
-            if outer._cancel_requested:
-                # If gather is being cancelled we must propagate the
-                # cancellation regardless of *return_exceptions* argument.
-                # See issue 32684.
-                exc = fut._make_cancelled_error()
-                outer.set_exception(exc)
-            else:
-                outer.set_result(list(map(_get_result_or_exc, children)))
+                if outer._cancel_requested:
+                    # If gather is being cancelled we must propagate the
+                    # cancellation regardless of *return_exceptions* argument.
+                    # See issue 32684.
+                    exc = fut._make_cancelled_error()
+                    outer.set_exception(exc)
+                else:
+                    outer.set_result(list(map(_get_result_or_exc, children)))
 
     for fut in arg_to_fut.values():
         fut.add_done_callback(_done_callback)
