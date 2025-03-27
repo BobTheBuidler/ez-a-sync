@@ -15,7 +15,6 @@ You can use any of the provided flags, whichever makes the most sense for your u
 
 from typing import Set
 
-
 AFFIRMATIVE_FLAGS: Set[str]
 """Set of flags indicating synchronous behavior.
 

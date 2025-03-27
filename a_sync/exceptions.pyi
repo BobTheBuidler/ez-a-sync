@@ -22,6 +22,7 @@ class ASyncFlagException(ValueError):
     See Also:
         - :const:`VIABLE_FLAGS`
     """
+
     viable_flags: set[str]
     """The set of viable flags: {'sync', 'asynchronous'}."""
     def desc(self, target) -> str:
@@ -53,6 +54,7 @@ class NoFlagsFound(ASyncFlagException):
         Viable flags: {'sync', 'asynchronous'}
         This is likely an issue with a custom subclass definition.
     """
+
     def __init__(self, target, kwargs_keys=None) -> None:
         """
         Initializes the NoFlagsFound exception.
@@ -75,6 +77,7 @@ class TooManyFlags(ASyncFlagException):
         Present flags: ['flag1', 'flag2']
         This is likely an issue with a custom subclass definition.
     """
+
     def __init__(self, target, present_flags) -> None:
         """
         Initializes the TooManyFlags exception.
@@ -102,6 +105,7 @@ class InvalidFlag(ASyncFlagException):
     See Also:
         - :const:`VIABLE_FLAGS`
     """
+
     def __init__(self, flag: Optional[str]) -> None:
         """
         Initializes the InvalidFlag exception.
@@ -124,6 +128,7 @@ class InvalidFlagValue(ASyncFlagException):
         ...     print(e)
         'some_flag' should be boolean. You passed not_a_boolean.
     """
+
     def __init__(self, flag: str, flag_value: Any) -> None:
         """
         Initializes the InvalidFlagValue exception.
@@ -150,6 +155,7 @@ class FlagNotDefined(ASyncFlagException):
         ...     print(e)
         <class '__main__.SomeClass'> flag some_flag is not defined.
     """
+
     def __init__(self, obj: Type, flag: str) -> None:
         """
         Initializes the FlagNotDefined exception.
@@ -185,6 +191,7 @@ class FunctionNotAsync(ImproperFunctionType):
         ...     print(e)
         `coro_fn` must be a coroutine function defined with `async def`. You passed <function some_function at 0x...>.
     """
+
     def __init__(self, fn) -> None:
         """
         Initializes the FunctionNotAsync exception.
@@ -210,6 +217,7 @@ class FunctionNotSync(ImproperFunctionType):
         ...     print(e)
         `func` must be a coroutine function defined with `def`. You passed <function some_async_function at 0x...>.
     """
+
     def __init__(self, fn) -> None:
         """
         Initializes the FunctionNotSync exception.
@@ -232,6 +240,7 @@ class ASyncRuntimeError(RuntimeError):
         ...     print(e)
         Some runtime error
     """
+
     def __init__(self, e: RuntimeError) -> None:
         """
         Initializes the ASyncRuntimeError exception.
@@ -256,6 +265,7 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
         Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:
         {'sync', 'asynchronous'}
     """
+
     def __init__(self, err: str = "") -> None:
         """
         Initializes the SyncModeInAsyncContextError exception.
@@ -278,6 +288,7 @@ class MappingError(Exception):
         <TaskMapping object at 0x...>
         {}
     """
+
     _msg: str
     def __init__(self, mapping: "TaskMapping", msg: str = "") -> None:
         """
@@ -339,6 +350,7 @@ class PersistedTaskException(Exception):
         ...     print(e)
         ValueError: Some error
     """
+
     def __init__(self, exc: Exception, task: Task) -> None:
         """
         Initializes the PersistedTaskException exception.
