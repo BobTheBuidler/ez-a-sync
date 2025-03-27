@@ -7,7 +7,7 @@ from libc.stdint cimport uint8_t
 
 from a_sync import exceptions
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
-from a_sync.a_sync.flags import VIABLE_FLAGS
+from a_sync.a_sync.flags cimport VIABLE_FLAGS
 
 
 def get_flag_name_legacy(dict kwargs) -> str:

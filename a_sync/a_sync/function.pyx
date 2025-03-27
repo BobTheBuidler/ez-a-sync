@@ -12,7 +12,7 @@ from async_property.cached import AsyncCachedPropertyDescriptor  # type: ignore 
 from a_sync._typing import *
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._helpers cimport _asyncify, _await
-from a_sync.a_sync.flags import VIABLE_FLAGS
+from a_sync.a_sync.flags cimport VIABLE_FLAGS
 from a_sync.a_sync.modifiers cimport ModifierManager
 from a_sync.functools cimport cached_property_unsafe, update_wrapper, wraps
 
