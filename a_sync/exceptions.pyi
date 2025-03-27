@@ -3,13 +3,7 @@ This module defines custom exceptions for the a_sync library.
 """
 
 from asyncio import Task
-
-from a_sync._typing import *
-from a_sync.a_sync.flags import VIABLE_FLAGS
-
-if TYPE_CHECKING:
-    from a_sync import TaskMapping
-
+from typing import Any, Optional, Type
 
 class ASyncFlagException(ValueError):
     """
@@ -29,9 +23,8 @@ class ASyncFlagException(ValueError):
         - :const:`VIABLE_FLAGS`
     """
 
-    viable_flags = VIABLE_FLAGS
+    viable_flags: set[str]
     """The set of viable flags: {'sync', 'asynchronous'}."""
-
     def desc(self, target) -> str:
         """
         Returns a description of the target for the flag error message.
@@ -47,11 +40,6 @@ class ASyncFlagException(ValueError):
             >>> exception.desc("some_target")
             'flag attributes defined on some_target'
         """
-        if target == "kwargs":
-            return "flags present in 'kwargs'"
-        else:
-            return f"flag attributes defined on {target}"
-
 
 class NoFlagsFound(ASyncFlagException):
     """
@@ -67,7 +55,7 @@ class NoFlagsFound(ASyncFlagException):
         This is likely an issue with a custom subclass definition.
     """
 
-    def __init__(self, target, kwargs_keys=None):
+    def __init__(self, target, kwargs_keys=None) -> None:
         """
         Initializes the NoFlagsFound exception.
 
@@ -75,13 +63,6 @@ class NoFlagsFound(ASyncFlagException):
             target: The target object where flags were expected.
             kwargs_keys: Optional; keys in the kwargs if applicable.
         """
-        err = f"There are no viable a_sync {self.desc(target)}:"
-        err += f"\nViable flags: {self.viable_flags}"
-        if kwargs_keys:
-            err += f"\nkwargs keys: {kwargs_keys}"
-        err += "\nThis is likely an issue with a custom subclass definition."
-        BaseException.__init__(self, err)
-
 
 class TooManyFlags(ASyncFlagException):
     """
@@ -97,7 +78,7 @@ class TooManyFlags(ASyncFlagException):
         This is likely an issue with a custom subclass definition.
     """
 
-    def __init__(self, target, present_flags):
+    def __init__(self, target, present_flags) -> None:
         """
         Initializes the TooManyFlags exception.
 
@@ -108,11 +89,6 @@ class TooManyFlags(ASyncFlagException):
         See Also:
             - :class:`ASyncFlagException`
         """
-        err = f"There are multiple a_sync {self.desc(target)} and there should only be one.\n"
-        err += f"Present flags: {present_flags}\n"
-        err += "This is likely an issue with a custom subclass definition."
-        BaseException.__init__(self, err)
-
 
 class InvalidFlag(ASyncFlagException):
     """
@@ -130,7 +106,7 @@ class InvalidFlag(ASyncFlagException):
         - :const:`VIABLE_FLAGS`
     """
 
-    def __init__(self, flag: Optional[str]):
+    def __init__(self, flag: Optional[str]) -> None:
         """
         Initializes the InvalidFlag exception.
 
@@ -140,10 +116,6 @@ class InvalidFlag(ASyncFlagException):
         See Also:
             - :class:`ASyncFlagException`
         """
-        err = f"'flag' must be one of: {self.viable_flags}. You passed {flag}."
-        err += "\nThis code should not be reached and likely indicates an issue with a custom subclass definition."
-        BaseException.__init__(self, err)
-
 
 class InvalidFlagValue(ASyncFlagException):
     """
@@ -157,7 +129,7 @@ class InvalidFlagValue(ASyncFlagException):
         'some_flag' should be boolean. You passed not_a_boolean.
     """
 
-    def __init__(self, flag: str, flag_value: Any):
+    def __init__(self, flag: str, flag_value: Any) -> None:
         """
         Initializes the InvalidFlagValue exception.
 
@@ -168,8 +140,6 @@ class InvalidFlagValue(ASyncFlagException):
         See Also:
             - :class:`ASyncFlagException`
         """
-        BaseException.__init__(self, f"'{flag}' should be boolean. You passed {flag_value}.")
-
 
 class FlagNotDefined(ASyncFlagException):
     """
@@ -186,7 +156,7 @@ class FlagNotDefined(ASyncFlagException):
         <class '__main__.SomeClass'> flag some_flag is not defined.
     """
 
-    def __init__(self, obj: Type, flag: str):
+    def __init__(self, obj: Type, flag: str) -> None:
         """
         Initializes the FlagNotDefined exception.
 
@@ -197,8 +167,6 @@ class FlagNotDefined(ASyncFlagException):
         See Also:
             - :class:`ASyncFlagException`
         """
-        BaseException.__init__(self, f"{obj} flag {flag} is not defined.")
-
 
 class ImproperFunctionType(ValueError):
     """
@@ -208,7 +176,6 @@ class ImproperFunctionType(ValueError):
         - :class:`FunctionNotAsync`
         - :class:`FunctionNotSync`
     """
-
 
 class FunctionNotAsync(ImproperFunctionType):
     """
@@ -225,7 +192,7 @@ class FunctionNotAsync(ImproperFunctionType):
         `coro_fn` must be a coroutine function defined with `async def`. You passed <function some_function at 0x...>.
     """
 
-    def __init__(self, fn):
+    def __init__(self, fn) -> None:
         """
         Initializes the FunctionNotAsync exception.
 
@@ -235,11 +202,6 @@ class FunctionNotAsync(ImproperFunctionType):
         See Also:
             - :class:`ImproperFunctionType`
         """
-        BaseException.__init__(
-            self,
-            f"`coro_fn` must be a coroutine function defined with `async def`. You passed {fn}.",
-        )
-
 
 class FunctionNotSync(ImproperFunctionType):
     """
@@ -256,7 +218,7 @@ class FunctionNotSync(ImproperFunctionType):
         `func` must be a coroutine function defined with `def`. You passed <function some_async_function at 0x...>.
     """
 
-    def __init__(self, fn):
+    def __init__(self, fn) -> None:
         """
         Initializes the FunctionNotSync exception.
 
@@ -266,10 +228,6 @@ class FunctionNotSync(ImproperFunctionType):
         See Also:
             - :class:`ImproperFunctionType`
         """
-        BaseException.__init__(
-            self, f"`func` must be a coroutine function defined with `def`. You passed {fn}."
-        )
-
 
 class ASyncRuntimeError(RuntimeError):
     """
@@ -283,7 +241,7 @@ class ASyncRuntimeError(RuntimeError):
         Some runtime error
     """
 
-    def __init__(self, e: RuntimeError):
+    def __init__(self, e: RuntimeError) -> None:
         """
         Initializes the ASyncRuntimeError exception.
 
@@ -293,8 +251,6 @@ class ASyncRuntimeError(RuntimeError):
         See Also:
             - :class:`RuntimeError`
         """
-        BaseException.__init__(self, str(e))
-
 
 class SyncModeInAsyncContextError(ASyncRuntimeError):
     """
@@ -310,19 +266,13 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
         {'sync', 'asynchronous'}
     """
 
-    def __init__(self, err: str = ""):
+    def __init__(self, err: str = "") -> None:
         """
         Initializes the SyncModeInAsyncContextError exception.
 
         See Also:
             - :class:`ASyncRuntimeError`
         """
-        if not err:
-            err = "The event loop is already running, which means you're trying to use an `ASyncFunction` synchronously from within an async context.\n"
-            err += f"Check your traceback to determine which, then try calling asynchronously instead with one of the following kwargs:\n"
-            err += f"{VIABLE_FLAGS}"
-        BaseException.__init__(self, err)
-
 
 class MappingError(Exception):
     """
@@ -340,8 +290,7 @@ class MappingError(Exception):
     """
 
     _msg: str
-
-    def __init__(self, mapping: "TaskMapping", msg: str = ""):
+    def __init__(self, mapping: "TaskMapping", msg: str = "") -> None:
         """
         Initializes the MappingError exception.
 
@@ -352,12 +301,6 @@ class MappingError(Exception):
         See Also:
             - :class:`TaskMapping`
         """
-        msg = (msg or self._msg) + f":\n{mapping}"
-        if mapping:
-            msg += f"\n{dict(mapping)}"
-        BaseException.__init__(self, msg)
-        self.mapping = mapping
-
 
 class MappingIsEmptyError(MappingError):
     """
@@ -373,9 +316,6 @@ class MappingIsEmptyError(MappingError):
         <TaskMapping object at 0x...>
         {}
     """
-
-    _msg = "TaskMapping does not contain anything to yield"
-
 
 class MappingNotEmptyError(MappingError):
     """
@@ -394,9 +334,6 @@ class MappingNotEmptyError(MappingError):
         {'key': 'value'}
     """
 
-    _msg = "TaskMapping already contains some data. In order to use `map`, you need a fresh one"
-
-
 class PersistedTaskException(Exception):
     """
     Raised when an exception persists in an asyncio Task.
@@ -414,7 +351,7 @@ class PersistedTaskException(Exception):
         ValueError: Some error
     """
 
-    def __init__(self, exc: E, task: Task) -> None:
+    def __init__(self, exc: Exception, task: Task) -> None:
         """
         Initializes the PersistedTaskException exception.
 
@@ -425,10 +362,6 @@ class PersistedTaskException(Exception):
         See Also:
             - :class:`asyncio.Task`
         """
-        BaseException.__init__(self, f"{exc.__class__.__name__}: {exc}", task)
-        self.exception = exc
-        self.task = task
-
 
 class EmptySequenceError(ValueError):
     """

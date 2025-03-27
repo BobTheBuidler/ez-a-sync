@@ -6,7 +6,7 @@ from libc.stdint cimport uintptr_t
 from a_sync._typing import *
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary, validate_flag_value
 from a_sync.a_sync.abstract import ASyncABC
-from a_sync.a_sync.flags import VIABLE_FLAGS
+from a_sync.a_sync.flags cimport VIABLE_FLAGS
 from a_sync.exceptions import ASyncFlagException, FlagNotDefined, InvalidFlag, NoFlagsFound, TooManyFlags
 from a_sync.functools cimport cached_property_unsafe
 
