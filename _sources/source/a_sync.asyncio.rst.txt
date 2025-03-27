@@ -40,6 +40,15 @@ a\_sync.asyncio.igather module
    :show-inheritance:
    :private-members:
 
+a\_sync.asyncio.sleep module
+----------------------------
+
+.. automodule:: a_sync.asyncio.sleep
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 Module contents
 ---------------
 

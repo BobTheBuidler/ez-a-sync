@@ -320,12 +320,7 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.decorator.a_sync"><code class="docutils literal notranslate"><span class="pre">a_sync()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="a_sync.a_sync.html#module-a_sync.a_sync.flags">a_sync.a_sync.flags module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.flags.AFFIRMATIVE_FLAGS"><code class="docutils literal notranslate"><span class="pre">AFFIRMATIVE_FLAGS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.flags.NEGATIVE_FLAGS"><code class="docutils literal notranslate"><span class="pre">NEGATIVE_FLAGS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.flags.VIABLE_FLAGS"><code class="docutils literal notranslate"><span class="pre">VIABLE_FLAGS</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="a_sync.a_sync.html#module-a_sync.a_sync.flags">a_sync.a_sync.flags module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="a_sync.a_sync.html#module-a_sync.a_sync.function">a_sync.a_sync.function module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncDecorator"><code class="docutils literal notranslate"><span class="pre">ASyncDecorator</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.html#a_sync.a_sync.function.ASyncDecorator.__call__"><code class="docutils literal notranslate"><span class="pre">ASyncDecorator.__call__()</span></code></a></li>
@@ -1013,6 +1008,10 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.igather.igather"><code class="docutils literal notranslate"><span class="pre">igather()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="a_sync.asyncio.html#module-a_sync.asyncio.sleep">a_sync.asyncio.sleep module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.sleep.sleep0"><code class="docutils literal notranslate"><span class="pre">sleep0()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="a_sync.asyncio.html#module-a_sync.asyncio">Module contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.as_completed"><code class="docutils literal notranslate"><span class="pre">as_completed()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.cgather"><code class="docutils literal notranslate"><span class="pre">cgather()</span></code></a></li>
@@ -1020,6 +1019,7 @@
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.gather"><code class="docutils literal notranslate"><span class="pre">gather()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.get_event_loop"><code class="docutils literal notranslate"><span class="pre">get_event_loop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.igather"><code class="docutils literal notranslate"><span class="pre">igather()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="a_sync.asyncio.html#a_sync.asyncio.sleep0"><code class="docutils literal notranslate"><span class="pre">sleep0()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -3270,7 +3270,7 @@ or an awaitable that resolves to any iterable, whether synchronous or asynchrono
 <p>This module defines custom exceptions for the a_sync library.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ASyncFlagException</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ASyncFlagException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ASyncFlagException</span></span><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <p>Base exception class for flag-related errors in the a_sync library.</p>
 <p>A-Sync uses ‘flags’ to indicate whether objects or function calls will be sync or async.
@@ -3291,7 +3291,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException.desc">
-<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ASyncFlagException.desc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.desc" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.desc" title="Link to this definition"></a></dt>
 <dd><p>Returns a description of the target for the flag error message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3316,19 +3316,13 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncFlagException.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.ASyncFlagException.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>{‘sync’, ‘asynchronous’}.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The set of viable flags</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncRuntimeError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ASyncRuntimeError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ASyncRuntimeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ASyncRuntimeError" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ASyncRuntimeError</span></span><a class="headerlink" href="#a_sync.exceptions.ASyncRuntimeError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></p>
 <p>Raised for runtime errors in asynchronous operations.</p>
 <p class="rubric">Examples</p>
@@ -3341,7 +3335,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.ASyncRuntimeError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ASyncRuntimeError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ASyncRuntimeError.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><span class="pre">RuntimeError</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.ASyncRuntimeError.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the ASyncRuntimeError exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3360,7 +3354,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.EmptySequenceError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">EmptySequenceError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#EmptySequenceError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.EmptySequenceError" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">EmptySequenceError</span></span><a class="headerlink" href="#a_sync.exceptions.EmptySequenceError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <p>Raised when an operation is attempted on an empty sequence but items are required.</p>
 <p class="rubric">Examples</p>
@@ -3375,7 +3369,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">FlagNotDefined</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FlagNotDefined"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">FlagNotDefined</span></span><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
 <p>Raised when a flag is not defined on an object.</p>
 <p class="rubric">Examples</p>
@@ -3391,7 +3385,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FlagNotDefined.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj:</span> <span class="pre">Type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unicode</span> <span class="pre">flag:</span> <span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the FlagNotDefined exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3411,7 +3405,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined.desc">
-<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.desc" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.desc" title="Link to this definition"></a></dt>
 <dd><p>Returns a description of the target for the flag error message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3436,19 +3430,13 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.FlagNotDefined.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.FlagNotDefined.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>{‘sync’, ‘asynchronous’}.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The set of viable flags</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotAsync">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">FunctionNotAsync</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FunctionNotAsync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FunctionNotAsync" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">FunctionNotAsync</span></span><a class="headerlink" href="#a_sync.exceptions.FunctionNotAsync" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ImproperFunctionType" title="a_sync.exceptions.ImproperFunctionType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImproperFunctionType</span></code></a></p>
 <p>Raised when a function expected to be async is not.</p>
 <p class="rubric">Examples</p>
@@ -3464,7 +3452,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotAsync.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FunctionNotAsync.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FunctionNotAsync.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.FunctionNotAsync.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the FunctionNotAsync exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3483,7 +3471,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotSync">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">FunctionNotSync</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FunctionNotSync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FunctionNotSync" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">FunctionNotSync</span></span><a class="headerlink" href="#a_sync.exceptions.FunctionNotSync" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ImproperFunctionType" title="a_sync.exceptions.ImproperFunctionType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImproperFunctionType</span></code></a></p>
 <p>Raised when a function expected to be sync is actually async.</p>
 <p class="rubric">Examples</p>
@@ -3499,7 +3487,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.FunctionNotSync.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#FunctionNotSync.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.FunctionNotSync.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.FunctionNotSync.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the FunctionNotSync exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3518,7 +3506,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.ImproperFunctionType">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ImproperFunctionType</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#ImproperFunctionType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.ImproperFunctionType" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">ImproperFunctionType</span></span><a class="headerlink" href="#a_sync.exceptions.ImproperFunctionType" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
 <p>Raised when a function that should be sync is async or vice-versa.</p>
 <div class="admonition seealso">
@@ -3532,7 +3520,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidFlag</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#InvalidFlag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.InvalidFlag" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidFlag</span></span><a class="headerlink" href="#a_sync.exceptions.InvalidFlag" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
 <p>Raised when an invalid flag is encountered.</p>
 <p class="rubric">Examples</p>
@@ -3552,7 +3540,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#InvalidFlag.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the InvalidFlag exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3569,7 +3557,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag.desc">
-<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.desc" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.desc" title="Link to this definition"></a></dt>
 <dd><p>Returns a description of the target for the flag error message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3594,19 +3582,13 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlag.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.InvalidFlag.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>{‘sync’, ‘asynchronous’}.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The set of viable flags</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidFlagValue</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#InvalidFlagValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidFlagValue</span></span><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
 <p>Raised when a flag has an invalid value.</p>
 <p class="rubric">Examples</p>
@@ -3619,7 +3601,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#InvalidFlagValue.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unicode</span> <span class="pre">flag:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_value:</span> <span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the InvalidFlagValue exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3639,7 +3621,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue.desc">
-<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.desc" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.desc" title="Link to this definition"></a></dt>
 <dd><p>Returns a description of the target for the flag error message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3664,19 +3646,13 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.InvalidFlagValue.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.InvalidFlagValue.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>{‘sync’, ‘asynchronous’}.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The set of viable flags</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingError" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingError</span></span><a class="headerlink" href="#a_sync.exceptions.MappingError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Base class for errors related to <code class="xref py py-class docutils literal notranslate"><span class="pre">TaskMapping</span></code>.</p>
 <p class="rubric">Examples</p>
@@ -3692,7 +3668,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingError.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping:</span> <span class="pre">'TaskMapping'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unicode</span> <span class="pre">msg:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingError.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the MappingError exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3719,7 +3695,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingIsEmptyError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingIsEmptyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingIsEmptyError</span></span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.MappingError" title="a_sync.exceptions.MappingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingError</span></code></a></p>
 <p>Raised when a TaskMapping is empty and an operation requires it to have items.</p>
 <p class="rubric">Examples</p>
@@ -3735,7 +3711,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingIsEmptyError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping:</span> <span class="pre">'TaskMapping'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unicode</span> <span class="pre">msg:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingIsEmptyError.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the MappingError exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3762,7 +3738,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingNotEmptyError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#MappingNotEmptyError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">MappingNotEmptyError</span></span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.MappingError" title="a_sync.exceptions.MappingError"><code class="xref py py-class docutils literal notranslate"><span class="pre">MappingError</span></code></a></p>
 <p>Raised when a TaskMapping is not empty and an operation requires it to be empty.</p>
 <p class="rubric">Examples</p>
@@ -3780,7 +3756,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.MappingNotEmptyError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping:</span> <span class="pre">'TaskMapping'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unicode</span> <span class="pre">msg:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.MappingNotEmptyError.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the MappingError exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3807,7 +3783,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">NoFlagsFound</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#NoFlagsFound"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">NoFlagsFound</span></span><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
 <p>Raised when no viable flags are found in the target.</p>
 <p class="rubric">Examples</p>
@@ -3822,7 +3798,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#NoFlagsFound.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the NoFlagsFound exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3836,7 +3812,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound.desc">
-<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.desc" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.desc" title="Link to this definition"></a></dt>
 <dd><p>Returns a description of the target for the flag error message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3861,19 +3837,13 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.NoFlagsFound.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.NoFlagsFound.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>{‘sync’, ‘asynchronous’}.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The set of viable flags</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.PersistedTaskException">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">PersistedTaskException</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#PersistedTaskException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.PersistedTaskException" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">PersistedTaskException</span></span><a class="headerlink" href="#a_sync.exceptions.PersistedTaskException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
 <p>Raised when an exception persists in an asyncio Task.</p>
 <p class="rubric">Examples</p>
@@ -3891,7 +3861,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.PersistedTaskException.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#PersistedTaskException.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.PersistedTaskException.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">E</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Task</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.exceptions.PersistedTaskException.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the PersistedTaskException exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3916,7 +3886,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.SyncModeInAsyncContextError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">SyncModeInAsyncContextError</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#SyncModeInAsyncContextError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">SyncModeInAsyncContextError</span></span><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncRuntimeError" title="a_sync.exceptions.ASyncRuntimeError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncRuntimeError</span></code></a></p>
 <p>Raised when synchronous code is used within an asynchronous context.</p>
 <p class="rubric">Examples</p>
@@ -3931,7 +3901,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.SyncModeInAsyncContextError.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#SyncModeInAsyncContextError.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unicode</span> <span class="pre">err:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.SyncModeInAsyncContextError.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the SyncModeInAsyncContextError exception.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -3950,7 +3920,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">TooManyFlags</span></span><a class="reference internal" href="../_modules/a_sync/exceptions.html#TooManyFlags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.TooManyFlags" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.exceptions.</span></span><span class="sig-name descname"><span class="pre">TooManyFlags</span></span><a class="headerlink" href="#a_sync.exceptions.TooManyFlags" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.exceptions.ASyncFlagException" title="a_sync.exceptions.ASyncFlagException"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncFlagException</span></code></a></p>
 <p>Raised when multiple flags are found, but only one was expected.</p>
 <p class="rubric">Examples</p>
@@ -3965,7 +3935,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">present_flags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/exceptions.html#TooManyFlags.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.__init__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">present_flags</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.__init__" title="Link to this definition"></a></dt>
 <dd><p>Initializes the TooManyFlags exception.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -3985,7 +3955,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags.desc">
-<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.desc" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">desc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.desc" title="Link to this definition"></a></dt>
 <dd><p>Returns a description of the target for the flag error message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -4010,13 +3980,7 @@ You can use any of the provided flags, which include ‘sync’ and ‘asynchron
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.exceptions.TooManyFlags.viable_flags">
 <span class="sig-name descname"><span class="pre">viable_flags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'asynchronous',</span> <span class="pre">'sync'}</span></em><a class="headerlink" href="#a_sync.exceptions.TooManyFlags.viable_flags" title="Link to this definition"></a></dt>
-<dd><p>{‘sync’, ‘asynchronous’}.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The set of viable flags</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 </dd></dl>
 

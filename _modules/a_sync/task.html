@@ -99,6 +99,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync.property</span><span class="w"> </span><span class="kn">import</span> <span class="n">_ASyncPropertyDescriptorBase</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">as_completed</span><span class="p">,</span> <span class="n">create_task</span><span class="p">,</span> <span class="n">gather</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.asyncio.gather</span><span class="w"> </span><span class="kn">import</span> <span class="n">Excluder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.asyncio.sleep</span><span class="w"> </span><span class="kn">import</span> <span class="n">sleep0</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property_unsafe</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.iter</span><span class="w"> </span><span class="kn">import</span> <span class="n">ASyncIterator</span><span class="p">,</span> <span class="n">ASyncGeneratorFunction</span><span class="p">,</span> <span class="n">ASyncSorter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.primitives.locks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Event</span>
@@ -767,7 +768,7 @@
                 <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_queue</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="n">cancel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="c1"># we need to let the loop run once so the tasks can fully cancel</span>
-            <span class="k">await</span> <span class="n">sleep</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+            <span class="k">await</span> <span class="n">sleep0</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="TaskMapping._wait_for_next_key">
@@ -863,7 +864,7 @@
             <span class="k">nonlocal</span> <span class="n">yielded</span>
             <span class="n">yielded</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">yielded</span> <span class="o">%</span> <span class="mi">1000</span><span class="p">:</span>  <span class="c1"># arbitrary number, should be adjusted later</span>
-                <span class="k">await</span> <span class="n">sleep</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">await</span> <span class="n">sleep0</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">key</span>
