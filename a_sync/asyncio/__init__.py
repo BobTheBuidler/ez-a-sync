@@ -21,7 +21,15 @@ from a_sync.asyncio.igather import igather
 from a_sync.asyncio.gather import gather, cgather
 from a_sync.asyncio.sleep import sleep0
 
-__all__ = ["create_task", "gather", "cgather", "igather", "as_completed", "get_event_loop", "sleep0"]
+__all__ = [
+    "create_task",
+    "gather",
+    "cgather",
+    "igather",
+    "as_completed",
+    "get_event_loop",
+    "sleep0",
+]
 
 
 # Function: create_task
