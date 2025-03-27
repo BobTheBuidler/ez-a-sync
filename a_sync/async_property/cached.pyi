@@ -10,6 +10,9 @@ FieldName = str
 __I = TypeVar("__I")
 __T = TypeVar("__T")
 
+def async_cached_property(func: Callable[[__I], __T], *args, **kwargs) -> "AsyncCachedPropertyDescriptor[__I, __T]":
+    ...
+
 class AsyncCachedPropertyInstanceState(Generic[__T]):
     cache: Dict[FieldName, __T]
     locks: Dict[FieldName, Lock]
