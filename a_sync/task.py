@@ -151,7 +151,9 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
             self._wrapped_func_kwargs = wrapped_func_kwargs
 
         if name:
-            self._name = name
+            if not isinstance(name, str):
+                logger.info("non-string name %s", name)
+            self._name = str(name)
 
         self._next = Event(name=f"{self} `_next`")
 
