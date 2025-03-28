@@ -3,7 +3,7 @@ import asyncio
 from _typeshed import Incomplete
 from a_sync.primitives.locks.semaphore import Semaphore as Semaphore
 from functools import cached_property as cached_property
-from typing import TypeVar
+from typing import Protocol, TypeVar
 
 logger: Incomplete
 
@@ -12,6 +12,13 @@ class Priority(Protocol):
 
 PT = TypeVar("PT", bound=Priority)
 CM = TypeVar("CM", bound="_AbstractPrioritySemaphoreContextManager[Priority]")
+
+class Comparable(Protocol):
+    """Protocol for annotating comparable types."""
+    def __lt__(self: CT, other: CT) -> bool: ...
+
+CT = TypeVar("CT", bound=Comparable)
+
 
 class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     """
@@ -28,7 +35,15 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     """
 
     name: Optional[str]
-    def __init__(self, value: int = 1, *, name: Optional[str] = None) -> None:
+
+    def __init__(
+        self, 
+        context_manager_class: Type[_AbstractPrioritySemaphoreContextManager],
+        top_priority: Comparable,
+        value: int = 1, 
+        *, 
+        name: Optional[str] = None, 
+    ) -> None:
         """Initializes the priority semaphore.
 
         Args:
