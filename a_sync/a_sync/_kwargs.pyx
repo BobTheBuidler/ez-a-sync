@@ -10,7 +10,7 @@ from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 
 
-def get_flag_name_legacy(dict kwargs) -> str:
+def _get_flag_name(dict kwargs) -> str:
     return get_flag_name(kwargs)
 
 
