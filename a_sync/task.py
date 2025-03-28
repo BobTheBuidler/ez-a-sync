@@ -17,7 +17,7 @@ from weakref import WeakKeyDictionary, proxy
 
 from a_sync import exceptions
 from a_sync._typing import *
-from a_sync.a_sync._kwargs import get_flag_name
+from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
 from a_sync.a_sync.method import (
@@ -143,7 +143,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
         self._wrapped_func = wrapped_func
         "The function used to create tasks for each key."
 
-        if isinstance(wrapped_func, ASyncMethodDescriptor) and not get_flag_name(
+        if isinstance(wrapped_func, ASyncMethodDescriptor) and not _get_flag_name(
             wrapped_func_kwargs
         ):
             wrapped_func_kwargs["sync"] = False
