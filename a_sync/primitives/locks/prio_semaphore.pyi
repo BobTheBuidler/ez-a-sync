@@ -15,10 +15,10 @@ CM = TypeVar("CM", bound="_AbstractPrioritySemaphoreContextManager[Priority]")
 
 class Comparable(Protocol):
     """Protocol for annotating comparable types."""
+
     def __lt__(self: CT, other: CT) -> bool: ...
 
 CT = TypeVar("CT", bound=Comparable)
-
 
 class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     """
@@ -37,12 +37,12 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     name: Optional[str]
 
     def __init__(
-        self, 
+        self,
         context_manager_class: Type[_AbstractPrioritySemaphoreContextManager],
         top_priority: Comparable,
-        value: int = 1, 
-        *, 
-        name: Optional[str] = None, 
+        value: int = 1,
+        *,
+        name: Optional[str] = None,
     ) -> None:
         """Initializes the priority semaphore.
 
