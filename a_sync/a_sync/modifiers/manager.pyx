@@ -16,6 +16,8 @@ valid_modifiers = tuple(
 
 cdef tuple[str, ...] _valid_modifiers = valid_modifiers
 
+cdef object _getattribute = object.__getattribute__
+
 cdef class ModifierManager:
     """Manages modifiers for asynchronous and synchronous functions.
 
@@ -82,7 +84,7 @@ cdef class ModifierManager:
             'memory'
         """
         if modifier_key not in _valid_modifiers:
-            return object.__getattribute__(self, modifier_key)
+            return _getattribute(self, modifier_key)
         return (
             self._modifiers[modifier_key]
             if modifier_key in self._modifiers
