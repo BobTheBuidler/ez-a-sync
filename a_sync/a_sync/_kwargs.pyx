@@ -10,7 +10,7 @@ from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 
 
-def get_flag_name_legacy(dict kwargs) -> str:
+def _get_flag_name(dict kwargs) -> str:
     return get_flag_name(kwargs)
 
 
@@ -38,12 +38,12 @@ cdef inline str get_flag_name(dict kwargs):
         >>> get_flag_name({})
         ''
     """
-    cdef list present_flags = [flag for flag in VIABLE_FLAGS if flag in kwargs]
-    cdef uint8_t flags_count = len(present_flags)
-    if flags_count == 0:
+    cdef object present_flags = iter(flag for flag in VIABLE_FLAGS if flag in kwargs)
+    cdef str flag = next(present_flags, None)
+    if flag is None:
         return ""  # indicates no flag is present
-    elif flags_count == 1:
-        return present_flags[0]
+    if next(present_flags, None) is None:
+        return flag
     raise exceptions.TooManyFlags("kwargs", present_flags)
 
 
