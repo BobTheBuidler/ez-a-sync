@@ -249,7 +249,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                 waiter = PyObject_CallMethodObjArgs(manager_waiters, "popleft", NULL)
                 potential_lost_waiters.remove(waiter)
                 if _is_not_done(waiter):
-                    PyObject_CallMethodObjArgs(waiter, "set_result", NULL, NULL)
+                    PyObject_CallMethodObjArgs(waiter, "set_result", <PyObject*>None, NULL)
                     woke_up = True
                     if debug_logs:
                         log_debug("woke up %s", (waiter, ))
@@ -281,7 +281,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             while potential_lost_waiters:
                 waiter = potential_lost_waiters.pop(0)
                 if _is_not_done(waiter):
-                    PyObject_CallMethodObjArgs(waiter, "set_result", NULL, NULL)
+                    PyObject_CallMethodObjArgs(waiter, "set_result", <PyObject*>None, NULL)
                     return
             return
             
@@ -289,7 +289,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             waiter = potential_lost_waiters.pop(0)
             log_debug("we found a lost waiter %s", (waiter, ))
             if _is_not_done(waiter):
-                PyObject_CallMethodObjArgs(waiter, "set_result", NULL, NULL)
+                PyObject_CallMethodObjArgs(waiter, "set_result", <PyObject*>None, NULL)
                 log_debug("woke up lost waiter %s", (waiter, ))
                 return
 
