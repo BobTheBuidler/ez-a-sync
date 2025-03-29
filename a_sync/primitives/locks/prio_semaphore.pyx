@@ -223,7 +223,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         cdef list potential_lost_waiters = self._potential_lost_waiters
         cdef bint debug_logs = PyObject_CallFunctionObjArgs(_logger_is_enabled_for, _DEBUG, NULL)
         while <list>self._Semaphore__waiters:
-            manager = heappop(<list>self._Semaphore__waiters)
+            manager = PyObject_CallFunctionObjArgs(heappop, <PyObject*>self._Semaphore__waiters, NULL)
             if len(manager) == 0:
                 # There are no more waiters, get rid of the empty manager
                 if debug_logs:
@@ -552,4 +552,4 @@ cdef object _logger_is_enabled_for = c_logger.isEnabledFor
 cdef PyObject* _DEBUG = <PyObject*>DEBUG
 
 cdef void log_debug(str message, tuple args):
-    PyObject_CallFunctionObjArgs(_logger_log, <PyObject*>message, <PyObject*>args)
+    PyObject_CallFunctionObjArgs(_logger_log, _DEBUG, <PyObject*>message, <PyObject*>args)
