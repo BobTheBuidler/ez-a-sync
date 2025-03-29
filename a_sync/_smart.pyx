@@ -14,7 +14,6 @@ from libc.stdint cimport uintptr_t
 from logging import DEBUG, getLogger
 from weakref import proxy, ref
 
-cimport a_sync.asyncio
 from a_sync._typing import *
 
 if TYPE_CHECKING:
@@ -480,6 +479,7 @@ def set_smart_task_factory(loop: AbstractEventLoop = None) -> None:
         - :func:`smart_task_factory`
     """
     if loop is None:
+        import a_sync.asyncio
         loop = a_sync.asyncio.get_event_loop()
     loop.set_task_factory(smart_task_factory)
 
