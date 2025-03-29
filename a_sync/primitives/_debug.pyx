@@ -7,6 +7,7 @@ The mixin provides a framework for managing a debug daemon task, which can be us
 import os
 from asyncio import AbstractEventLoop, Future, Task
 from asyncio.events import _running_loop
+from cpython.object cimport PyObject_CallMethodObjArgs
 from threading import Lock
 from typing import Optional
 
@@ -134,9 +135,9 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
     
     cdef object _c_start_debug_daemon(self, tuple[object] args, dict[str, object] kwargs):
         cdef object loop = self._c_get_loop()
-        if self.check_debug_logs_enabled() and loop.is_running():
+        if self.check_debug_logs_enabled() and PyObject_CallMethodObjArgs(loop, "is_running", NULL) is True:
             return ccreate_task_simple(self._debug_daemon(*args, **kwargs))
-        return loop.create_future()
+        return PyObject_CallMethodObjArgs(loop, "create_future", NULL)
 
     def _ensure_debug_daemon(self, *args, **kwargs) -> None:
         """
@@ -173,7 +174,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
             daemon.add_done_callback(self._stop_debug_daemon)
             self._daemon = daemon
         else:
-            self._daemon = self._c_get_loop().create_future()
+            self._daemon = PyObject_CallMethodObjArgs(self._c_get_loop(), "create_future", NULL)
             
         self._has_daemon = True
 
@@ -202,6 +203,6 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         """
         if t and t != self._daemon:
             raise ValueError(f"{t} is not {self._daemon}")
-        t.cancel()
+        PyObject_CallMethodObjArgs(t, "cancel", NULL)
         self._daemon = None
         self._has_daemon = False

@@ -6,6 +6,7 @@ and converting synchronous functions to asynchronous ones.
 from asyncio import iscoroutinefunction, new_event_loop, set_event_loop
 from asyncio import get_event_loop as _get_event_loop
 from asyncio.futures import _chain_future
+from cpython.object cimport PyObject, PyObject_CallMethodObjArgs
 
 from a_sync import exceptions
 from a_sync._typing import *
@@ -46,7 +47,7 @@ cdef object _await(object awaitable):
         - :func:`asyncio.run`: For running the main entry point of an asyncio program.
     """
     try:
-        return get_event_loop().run_until_complete(awaitable)
+        return PyObject_CallMethodObjArgs(get_event_loop(), "run_until_complete", <PyObject*>awaitable, NULL)
     except RuntimeError as e:
         if str(e) == "This event loop is already running":
             raise exceptions.SyncModeInAsyncContextError from None
@@ -111,8 +112,7 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
 
         @wraps(func)
         async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
-            loop = get_event_loop()
-            fut = loop.create_future()
+            fut = PyObject_CallMethodObjArgs(get_event_loop(), "create_future", NULL)
             cf_fut = submit(func, *args, **kwargs)
             _chain_future(cf_fut, fut)
             return await fut

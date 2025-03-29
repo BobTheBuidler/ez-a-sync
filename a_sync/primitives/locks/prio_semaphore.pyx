@@ -7,7 +7,9 @@ processed before lower priority ones.
 
 from asyncio import Future
 from collections import deque
-from heapq import heappop, heappush
+from cpython.object cimport PyObject, PyObject_CallFunctionObjArgs, PyObject_CallMethodObjArgs
+from heapq import heappop as _heappop
+from heapq import heappush as _heappush
 from logging import DEBUG, getLogger
 
 from a_sync._typing import *
@@ -16,7 +18,9 @@ from a_sync.primitives.locks.semaphore cimport Semaphore
 logger = getLogger(__name__)
 
 cdef object c_logger = logger
-
+cdef object heappush = _heappush
+cdef object heappop = _heappop
+cdef object cdeque = deque
 
 class Priority(Protocol):
     def __lt__(self, other) -> bool: ...
@@ -135,19 +139,26 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         return self.c_getitem(priority)
     
     cdef object c_getitem(self, object priority):
-        if self._Semaphore__value is None:
-            raise ValueError(self._Semaphore__value)
-        
         cdef _AbstractPrioritySemaphoreContextManager context_manager
+        cdef dict[object, _AbstractPrioritySemaphoreContextManager] context_managers
 
+        context_managers = self._context_managers
         priority = self._top_priority if priority is None else priority
-        if priority not in self._context_managers:
-            context_manager = self._context_manager_class(
-                self, priority, name=self.name
-            )
-            heappush(self._Semaphore__waiters, context_manager)  # type: ignore [misc]
-            self._context_managers[priority] = context_manager
-        return self._context_managers[priority]
+        context_manager = context_managers.get(priority)
+        if context_manager is not None:
+            return context_manager
+        
+        context_manager = self._context_manager_class(
+            self, priority, name=self.name
+        )
+        PyObject_CallFunctionObjArgs(
+            heappush,
+            <PyObject*>self._Semaphore__waiters, 
+            <PyObject*>context_manager,
+            NULL
+        )
+        context_managers[priority] = context_manager
+        return context_manager
 
     cpdef bint locked(self):
         """Checks if the semaphore is locked.
@@ -209,14 +220,16 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         cdef Py_ssize_t start_len, end_len
         cdef bint woke_up
 
-        cdef bint debug_logs = c_logger.isEnabledFor(DEBUG)
-        while <list>self._Semaphore__waiters:
-            manager = heappop(<list>self._Semaphore__waiters)
+        cdef list self_waiters = self._Semaphore__waiters
+        cdef PyObject* waiters_pointer = <PyObject*> self_waiters
+        cdef list potential_lost_waiters = self._potential_lost_waiters
+        cdef bint debug_logs = PyObject_CallFunctionObjArgs(_logger_is_enabled_for, _DEBUG, NULL)
+        while self_waiters:
+            manager = PyObject_CallFunctionObjArgs(heappop, waiters_pointer, NULL)
             if len(manager) == 0:
                 # There are no more waiters, get rid of the empty manager
                 if debug_logs:
-                    c_logger._log(
-                        DEBUG,
+                    log_debug(
                         "manager %s has no more waiters, popping from %s",
                         (manager._c_repr_no_parent_(), self),
                     )
@@ -226,19 +239,20 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             woke_up = False
             start_len = len(manager)
 
+            manager_waiters = manager._Semaphore__waiters
             if debug_logs:
-                c_logger._log(DEBUG, "waking up next for %s", (manager._c_repr_no_parent_(), ))
-                if not manager._Semaphore__waiters:
-                    c_logger._log(DEBUG, "not manager._Semaphore__waiters")
+                log_debug("waking up next for %s", (manager._c_repr_no_parent_(), ))
+                if not manager_waiters:
+                    log_debug("not manager._Semaphore__waiters", ())
 
-            while manager._Semaphore__waiters:
-                waiter = manager._Semaphore__waiters.popleft()
-                self._potential_lost_waiters.remove(waiter)
+            while manager_waiters:
+                waiter = PyObject_CallMethodObjArgs(manager_waiters, "popleft", NULL)
+                potential_lost_waiters.remove(waiter)
                 if _is_not_done(waiter):
-                    waiter.set_result(None)
+                    PyObject_CallMethodObjArgs(waiter, "set_result", <PyObject*>None, NULL)
                     woke_up = True
                     if debug_logs:
-                        c_logger._log(DEBUG, "woke up %s", (waiter, ))
+                        log_debug("woke up %s", (waiter, ))
                     break
 
             if not woke_up:
@@ -251,7 +265,12 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
 
             if end_len:
                 # There are still waiters, put the manager back
-                heappush(<list>self._Semaphore__waiters, manager)  # type: ignore [misc]
+                PyObject_CallFunctionObjArgs(
+                    heappush,
+                    <PyObject*>self._Semaphore__waiters, 
+                    <PyObject*>manager,
+                    NULL,
+                )
             else:
                 # There are no more waiters, get rid of the empty manager
                 self._context_managers.pop(manager._priority)
@@ -259,22 +278,22 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
 
         # emergency procedure (hopefully temporary):
         if not debug_logs:
-            while self._potential_lost_waiters:
-                waiter = self._potential_lost_waiters.pop(0)
+            while potential_lost_waiters:
+                waiter = potential_lost_waiters.pop(0)
                 if _is_not_done(waiter):
-                    waiter.set_result(None)
+                    PyObject_CallMethodObjArgs(waiter, "set_result", <PyObject*>None, NULL)
                     return
             return
             
-        while self._potential_lost_waiters:
-            waiter = self._potential_lost_waiters.pop(0)
-            c_logger._log(DEBUG, "we found a lost waiter %s", (waiter, ))
+        while potential_lost_waiters:
+            waiter = potential_lost_waiters.pop(0)
+            log_debug("we found a lost waiter %s", (waiter, ))
             if _is_not_done(waiter):
-                waiter.set_result(None)
-                c_logger._log(DEBUG, "woke up lost waiter %s", (waiter, ))
+                PyObject_CallMethodObjArgs(waiter, "set_result", <PyObject*>None, NULL)
+                log_debug("woke up lost waiter %s", (waiter, ))
                 return
 
-        c_logger._log(DEBUG, "%s has no waiters to wake", (self, ))
+        log_debug("%s has no waiters to wake", (self, ))
 
 
 cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
@@ -361,26 +380,26 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         """
         if self._parent._Semaphore__value <= 0:
             self._c_ensure_debug_daemon((),{})
-        return self.__acquire()
+        return PyObject_CallMethodObjArgs(self, "_AbstractPrioritySemaphoreContextManager__acquire", NULL)
     
     cdef object c_acquire(self):
         if self._parent._Semaphore__value <= 0:
             self._c_ensure_debug_daemon((),{})
-        return self.__acquire()
+        return PyObject_CallMethodObjArgs(self, "_AbstractPrioritySemaphoreContextManager__acquire", NULL)
     
     async def __acquire(self) -> Literal[True]:
-        cdef object loop, fut
+        cdef object fut
         while self._parent._Semaphore__value <= 0:
             if self._Semaphore__waiters is None:
-                self._Semaphore__waiters = deque()
-            fut = self._c_get_loop().create_future()
+                self._Semaphore__waiters = PyObject_CallFunctionObjArgs(cdeque, NULL)
+            fut = PyObject_CallMethodObjArgs(self._c_get_loop(), "create_future", NULL)
             self._Semaphore__waiters.append(fut)
             self._parent._potential_lost_waiters.append(fut)
             try:
                 await fut
             except:
                 # See the similar code in Queue.get.
-                fut.cancel()
+                PyObject_CallMethodObjArgs(fut, "cancel", NULL)
                 if self._parent._Semaphore__value > 0 and _is_not_cancelled(fut):
                     self._parent._wake_up_next()
                 raise
@@ -447,7 +466,7 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
             raise TypeError(f"{other} is not type {self.__class__.__name__}")
         return <int>self._priority < <int>other._priority
 
-cdef class PrioritySemaphore(_AbstractPrioritySemaphore):  # type: ignore [type-var]
+cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
     """Semaphore that uses numeric priorities for waiters.
 
     This class extends :class:`_AbstractPrioritySemaphore` and provides a concrete implementation
@@ -519,10 +538,20 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):  # type: ignore [type-
         cdef dict[int, _PrioritySemaphoreContextManager] context_managers = self._context_managers
         if <int>priority not in context_managers:
             context_manager = _PrioritySemaphoreContextManager(self, <int>priority, name=self.name)
-            heappush(
-                <list[_PrioritySemaphoreContextManager]>self._Semaphore__waiters,
-                context_manager,
-            )  # type: ignore [misc]
+            PyObject_CallFunctionObjArgs(
+                heappush,
+                <PyObject*>self._Semaphore__waiters,
+                <PyObject*>context_manager,
+                NULL
+            )
             context_managers[<int>priority] = context_manager
             return context_manager
         return context_managers[<int>priority]
+    
+
+cdef object _logger_log = c_logger._log
+cdef object _logger_is_enabled_for = c_logger.isEnabledFor
+cdef PyObject* _DEBUG = <PyObject*>DEBUG
+
+cdef void log_debug(str message, tuple args):
+    PyObject_CallFunctionObjArgs(_logger_log, _DEBUG, <PyObject*>message, <PyObject*>args)

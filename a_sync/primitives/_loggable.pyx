@@ -3,8 +3,11 @@
 This module provides a mixin class to add debug logging capabilities to other classes.
 """
 
+from cpython.object cimport PyObject, PyObject_CallMethodObjArgs
 from logging import Logger, getLogger, DEBUG
 
+
+cdef PyObject* _DEBUG = <PyObject*>DEBUG
 
 cdef class _LoggerMixin:
     """
@@ -80,10 +83,10 @@ cdef class _LoggerMixin:
         See Also:
             - :attr:`logging.Logger.isEnabledFor`
         """
-        return self.get_logger().isEnabledFor(DEBUG)
+        return PyObject_CallMethodObjArgs(self.get_logger(), "isEnabledFor", _DEBUG, NULL)
 
     cdef inline bint check_debug_logs_enabled(self):
-        return self.get_logger().isEnabledFor(DEBUG)
+        return PyObject_CallMethodObjArgs(self.get_logger(), "isEnabledFor", _DEBUG, NULL)
 
 
 cdef dict[str, object] _class_loggers = {}

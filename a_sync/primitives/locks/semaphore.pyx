@@ -5,6 +5,7 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 
 from asyncio import CancelledError, Future, iscoroutinefunction, sleep
 from collections import defaultdict, deque
+from cpython.object cimport PyObject, PyObject_CallMethodObjArgs
 from libc.string cimport strcpy
 from libc.stdlib cimport malloc, free
 from threading import Thread, current_thread
@@ -204,20 +205,20 @@ cdef class Semaphore(_DebugDaemonMixin):
             self._Semaphore__value -= 1
             return _noop()
 
-        return self.__acquire()
+        return PyObject_CallMethodObjArgs(self, "_Semaphore__acquire", NULL)
 
     async def __acquire(self) -> Literal[True]:
         # Finally block should be called before the CancelledError
         # handling as we don't want CancelledError to call
         # _wake_up_first() and attempt to wake up itself.
         
-        cdef object fut = self._c_get_loop().create_future()
+        cdef object fut = PyObject_CallMethodObjArgs(self._c_get_loop(), "create_future", NULL)
         self._Semaphore__waiters.append(fut)
         try:
             try:
                 await fut
             finally:
-                self._Semaphore__waiters.remove(fut)
+                PyObject_CallMethodObjArgs(self._Semaphore__waiters, "remove", <PyObject*>fut, NULL)
         except CancelledError:
             if _is_not_cancelled(fut):
                 self._Semaphore__value += 1
