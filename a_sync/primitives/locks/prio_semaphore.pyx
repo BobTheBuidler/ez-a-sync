@@ -220,10 +220,12 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         cdef Py_ssize_t start_len, end_len
         cdef bint woke_up
 
+        cdef list self_waiters = self._Semaphore__waiters
+        cdef PyObject* waiters_pointer = <PyObject*> self_waiters
         cdef list potential_lost_waiters = self._potential_lost_waiters
         cdef bint debug_logs = PyObject_CallFunctionObjArgs(_logger_is_enabled_for, _DEBUG, NULL)
-        while <list>self._Semaphore__waiters:
-            manager = PyObject_CallFunctionObjArgs(heappop, <PyObject*>self._Semaphore__waiters, NULL)
+        while self_waiters:
+            manager = PyObject_CallFunctionObjArgs(heappop, waiters_pointer, NULL)
             if len(manager) == 0:
                 # There are no more waiters, get rid of the empty manager
                 if debug_logs:
