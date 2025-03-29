@@ -1,8 +1,9 @@
-from asyncio import CancelledError, Future, ensure_future
+from asyncio import CancelledError, Future, current_task, ensure_future
 from asyncio.futures import _get_loop
 from asyncio.tasks import _GatheringFuture
 from typing import Awaitable, Iterable, List, TypeVar
 
+from a_sync._smart import smart_task_factory
 from a_sync.a_sync._helpers import get_event_loop
 
 T = TypeVar("T")
@@ -111,11 +112,20 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                     outer.set_exception(exc)
                 else:
                     outer.set_result(list(map(_get_result_or_exc, children)))
-
-    for fut in arg_to_fut.values():
-        fut.add_done_callback(_done_callback)
+    
+    if loop._task_factory is smart_task_factory:
+        current = current_task()
+        for fut in arg_to_fut.values():
+            fut.add_done_callback(_done_callback)
+            waiters = getattr(fut, "_waiters", None)
+            if waiters is not None:
+                waiters.add(current)
+    else:
+        for fut in arg_to_fut.values():
+            fut.add_done_callback(_done_callback)
 
     outer = _GatheringFuture(children, loop=loop)
+    
     return outer
 
 
