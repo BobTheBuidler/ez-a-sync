@@ -6,11 +6,9 @@ cdef object _NOT_FOUND = object()
 cdef class cached_property_unsafe:
     """A non-threadsafe implementation of functools.cached_property, intended for use in asyncio applications"""
 
-    def __cinit__(self):
-        self.attrname = None
-
-    def __init__(self, func):
+    def __cinit__(self, object func):
         self.func = func
+        self.attrname = None
         self._doc = func.__doc__
     
     @property
