@@ -98,12 +98,15 @@ class _ObjectProxyMetaType(type):
         return type.__new__(cls, name, bases, dictionary)
 
 
+cdef object _setattr = object.__setattr__
+cdef object _delattr = object.__delattr__
+
 class ObjectProxy(metaclass=_ObjectProxyMetaType):
 
     __slots__ = '__wrapped__'
 
     def __init__(self, wrapped):
-        object.__setattr__(self, '__wrapped__', wrapped)
+        _setattr(self, '__wrapped__', wrapped)
 
         # Python 3.2+ has the __qualname__ attribute, but it does not
         # allow it to be overridden using a property and it must instead
@@ -113,7 +116,7 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
         # results of my profiling and the fact that it isn't really relevant for most users.
         """
         try:
-            object.__setattr__(self, '__qualname__', wrapped.__qualname__)
+            _setattr(self, '__qualname__', wrapped.__qualname__)
         except AttributeError:
             pass
         """
@@ -189,25 +192,25 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
 
     def __setattr__(self, name, value):
         if name.startswith('_self_'):
-            object.__setattr__(self, name, value)
+            _setattr(self, name, value)
 
         elif name == '__wrapped__':
-            object.__setattr__(self, name, value)
+            _setattr(self, name, value)
             try:
-                object.__delattr__(self, '__qualname__')
+                _delattr(self, '__qualname__')
             except AttributeError:
                 pass
             try:
-                object.__setattr__(self, '__qualname__', value.__qualname__)
+                _setattr(self, '__qualname__', value.__qualname__)
             except AttributeError:
                 pass
 
         elif name == '__qualname__':
             setattr(self.__wrapped__, name, value)
-            object.__setattr__(self, name, value)
+            _setattr(self, name, value)
 
         elif hasattr(type(self), name):
-            object.__setattr__(self, name, value)
+            _setattr(self, name, value)
 
         else:
             setattr(self.__wrapped__, name, value)
@@ -223,17 +226,17 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
 
     def __delattr__(self, name):
         if name.startswith('_self_'):
-            object.__delattr__(self, name)
+            _delattr(self, name)
 
         elif name == '__wrapped__':
             raise TypeError('__wrapped__ must be an object')
 
         elif name == '__qualname__':
-            object.__delattr__(self, name)
+            _delattr(self, name)
             delattr(self.__wrapped__, name)
 
         elif hasattr(type(self), name):
-            object.__delattr__(self, name)
+            _delattr(self, name)
 
         else:
             delattr(self.__wrapped__, name)
