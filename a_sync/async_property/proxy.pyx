@@ -1,14 +1,21 @@
+from cpython.object cimport PyObject, PyObject_CallFunctionObjArgs, PyObject_CallMethodObjArgs
+
+
 cdef class AwaitableOnly:
     """This wraps a coroutine will call it on await."""
 
-    def __init__(self, coro):
+    def __cinit__(self, object coro):
         self._coro = coro
 
     def __repr__(self):
         return f'<AwaitableOnly "{self._coro.__qualname__}">'
 
     def __await__(self):
-        return self._coro().__await__()
+        return PyObject_CallMethodObjArgs(
+            PyObject_CallFunctionObjArgs(self._coro, NULL), 
+            "__await__", 
+            NULL,
+        )
 
 
 # PURE PYTHON
@@ -422,7 +429,7 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
         del self.__wrapped__[i:j]
 
     def __enter__(self):
-        return self.__wrapped__.__enter__()
+        return PyObject_CallMethodObjArgs(self.__wrapped__, "__enter__", NULL)
 
     def __exit__(self, *args, **kwargs):
         return self.__wrapped__.__exit__(*args, **kwargs)
@@ -450,19 +457,23 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
 
 class AwaitableProxy(ObjectProxy):
     def __await__(self):
-        return self.__get_wrapped().__await__()
+        return PyObject_CallMethodObjArgs(
+            PyObject_CallMethodObjArgs(self, "_AwaitableProxy__get_wrapped", NULL),
+            "__await__", 
+            NULL,
+        )
     
     async def __aenter__(self):
-        return await self.__wrapped__.__aenter__()
+        return await PyObject_CallMethodObjArgs(self.__wrapped__, "__aenter__", NULL)
     
     async def __aexit__(self, *args, **kwargs):
         return await self.__wrapped__.__aexit__(*args, **kwargs)
     
     async def __aiter__(self):
-        return await self.__wrapped__.__aiter__()
+        return await PyObject_CallMethodObjArgs(self.__wrapped__, "__aiter__", NULL)
     
     async def __anext__(self):
-        return await self.__wrapped__.__anext__()
+        return await PyObject_CallMethodObjArgs(self.__wrapped__, "__anext__", NULL)
     
     async def __get_wrapped(self):
         return self.__wrapped__

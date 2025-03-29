@@ -238,7 +238,7 @@ cdef class ModifierManager:
             >>> list(iter(manager))
             ['cache_type']
         """
-        return self._modifiers.__iter__()
+        return iter(self._modifiers)
 
     def __len__(self) -> uint8_t:
         """Returns the number of modifiers.

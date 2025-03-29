@@ -5,6 +5,7 @@ manage task lifecycle, and enhance error handling.
 
 import asyncio.tasks as aiotasks
 from asyncio import Future, InvalidStateError, Task, get_running_loop, iscoroutine
+from cpython.object cimport PyObject, PyObject_CallMethodObjArgs
 from logging import getLogger
 
 from a_sync._smart import SmartTask, smart_task_factory
@@ -180,7 +181,12 @@ cdef void __prune_persisted_tasks():
         }
         if task._source_traceback:
             context["source_traceback"] = task._source_traceback
-        task._loop.call_exception_handler(context)
+        PyObject_CallMethodObjArgs(
+            task._loop,
+            "call_exception_handler",
+            <PyObject*>context,
+            NULL,
+        )
 
 
 cdef inline bint _is_done(fut: Future):
@@ -200,7 +206,7 @@ cdef object _get_exception(fut: Future):
         fut._Future__log_traceback = False
         return fut._exception
     if state == "CANCELLED":
-        raise fut._make_cancelled_error()
+        raise PyObject_CallMethodObjArgs(fut, "_make_cancelled_error", NULL)
     raise InvalidStateError('Exception is not set.')
 
 
