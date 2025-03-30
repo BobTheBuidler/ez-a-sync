@@ -2,7 +2,7 @@ from a_sync._typing import *
 import asyncio
 from a_sync.primitives._debug import _DebugDaemonMixin
 
-class Event(asyncio.Event, _DebugDaemonMixin):
+class CythonEvent(asyncio.Event, _DebugDaemonMixin):
     """
     An asyncio.Event with additional debug logging to help detect deadlocks.
 
