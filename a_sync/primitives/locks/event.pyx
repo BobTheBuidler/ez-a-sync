@@ -4,12 +4,12 @@ This module provides an enhanced version of asyncio.Event with additional debug 
 """
 
 import sys
-import weakref
 from asyncio import AbstractEventLoop, Future, get_event_loop, sleep
 from libc.stdint cimport uint16_t
 from libc.stdlib cimport malloc, free
 from libc.string cimport strcpy
 from libc.time cimport time
+from weakref import ref
 
 from a_sync._typing import *
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
@@ -32,6 +32,9 @@ cdef class CythonEvent(_DebugDaemonMixin):
     detailed information about the event state and waiters, which can be useful for
     diagnosing and debugging potential deadlocks.
     """
+    def __cinit__(self):
+        self._waiters = []
+        
     def __init__(
         self,
         name: str = "",
@@ -47,8 +50,6 @@ cdef class CythonEvent(_DebugDaemonMixin):
             debug_daemon_interval (int): The interval in seconds for the debug daemon to log information.
             loop (Optional[AbstractEventLoop]): The event loop to use.
         """
-        self._waiters = []
-        #self._value = False
         if _loop_kwarg_deprecated:
             _LoopBoundMixin.__init__(self)
         else:
@@ -153,7 +154,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
 
         self._c_ensure_debug_daemon((),{})
 
-        cdef object fut = self._c_get_loop().create_future()
+        cdef object fut = Future(loop=self._c_get_loop())
         self._waiters.append(fut)
         return self.__wait(fut)
 
@@ -175,7 +176,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
         This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
         """
         cdef time_t start, now 
-        cdef object weakself = weakref.ref(self)
+        cdef object weakself = ref(self)
         cdef unsigned int loops = 0
         cdef uint16_t interval = self._debug_daemon_interval
 
