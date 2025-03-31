@@ -95,7 +95,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> async with semaphore:
             ...     await do_stuff()
         """
-        await (<_AbstractPrioritySemaphoreContextManager>self.c_getitem(self._top_priority)).c_acquire()
+        await self.c_getitem(self._top_priority).c_acquire()
 
     async def __aexit__(self, *_) -> None:
         """Exits the semaphore context, releasing it with the top priority.
@@ -107,7 +107,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> async with semaphore:
             ...     await do_stuff()
         """
-        (<_AbstractPrioritySemaphoreContextManager>self.c_getitem(self._top_priority)).c_release()
+        self.c_getitem(self._top_priority).c_release()
 
     async def acquire(self) -> Literal[True]:
         """Acquires the semaphore with the top priority.
@@ -118,7 +118,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> await semaphore.acquire()
         """
-        return await (<_AbstractPrioritySemaphoreContextManager>self.c_getitem(self._top_priority)).c_acquire()
+        return await self.c_getitem(self._top_priority).c_acquire()
 
     def __getitem__(
         self, priority: Optional[PT]
@@ -137,7 +137,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         """
         return self.c_getitem(priority)
     
-    cdef object c_getitem(self, object priority):
+    cdef _AbstractPrioritySemaphoreContextManager c_getitem(self, object priority):
         cdef _AbstractPrioritySemaphoreContextManager context_manager
         cdef dict[object, _AbstractPrioritySemaphoreContextManager] context_managers
 
@@ -165,17 +165,18 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         return self.c_locked()
     
     cdef bint c_locked(self):
-        cdef _AbstractPrioritySemaphoreContextManager cm
-        cdef object w
+        cdef dict[object, Semaphore] cms
+        cdef list waiters
         if self._Semaphore__value == 0:
             return True
-        cdef dict[object, _AbstractPrioritySemaphoreContextManager] cms = self._context_managers
-        if not cms:
-            return False
-        return any(
-            cm._Semaphore__waiters and any(_is_not_cancelled(w) for w in cm._Semaphore__waiters)
-            for cm in cms.values()
-        )
+        cms = self._context_managers
+        if cms:
+            for cm in cms.values():
+                waiters = cm.__waiters
+                for waiter in waiters:
+                    if _is_not_cancelled(waiter):
+                        return True
+        return False
 
     cdef dict[object, Py_ssize_t] _count_waiters(self):
         """Counts the number of waiters for each priority.
@@ -188,8 +189,8 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore._count_waiters()
         """
         cdef _AbstractPrioritySemaphoreContextManager manager
-        cdef list[_AbstractPrioritySemaphoreContextManager] waiters = self._Semaphore__waiters
-        return {manager._priority: len(manager._Semaphore__waiters) for manager in sorted(waiters)}
+        cdef list[_AbstractPrioritySemaphoreContextManager] waiters = sorted(self._Semaphore__waiters)
+        return {manager._priority: len(manager._Semaphore__waiters) for manager in waiters}
         
 
     def _wake_up_next(self) -> None:
@@ -516,7 +517,7 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
         """
         return self.c_getitem(priority or -1)
     
-    cdef object c_getitem(self, object priority):
+    cdef _PrioritySemaphoreContextManager c_getitem(self, object priority):
         if self._Semaphore__value is None:
             raise ValueError(self._Semaphore__value)
         
