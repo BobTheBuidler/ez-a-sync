@@ -169,13 +169,11 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         cdef list waiters
         if self._Semaphore__value == 0:
             return True
-        cms = self._context_managers
-        if cms:
-            for cm in cms.values():
-                waiters = cm.__waiters
-                for waiter in waiters:
-                    if _is_not_cancelled(waiter):
-                        return True
+        for cm in self._context_managers.values():
+            waiters = (<Semaphore>cm).__waiters
+            for waiter in waiters:
+                if _is_not_cancelled(waiter):
+                    return True
         return False
 
     cdef dict[object, Py_ssize_t] _count_waiters(self):
@@ -189,8 +187,8 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore._count_waiters()
         """
         cdef _AbstractPrioritySemaphoreContextManager manager
-        cdef list[_AbstractPrioritySemaphoreContextManager] waiters = sorted(self._Semaphore__waiters)
-        return {manager._priority: len(manager._Semaphore__waiters) for manager in waiters}
+        cdef list[_AbstractPrioritySemaphoreContextManager] waiters = self._Semaphore__waiters
+        return {manager._priority: len(manager._Semaphore__waiters) for manager in sorted(waiters)}
         
 
     def _wake_up_next(self) -> None:
