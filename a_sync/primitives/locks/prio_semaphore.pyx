@@ -144,14 +144,12 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         context_managers = self._context_managers
         priority = self._top_priority if priority is None else priority
         context_manager = context_managers.get(priority)
-        if context_manager is not None:
-            return context_manager
-        
-        context_manager = self._context_manager_class(
-            self, priority, name=self.name
-        )
-        heappush(self._Semaphore__waiters, context_manager)
-        context_managers[priority] = context_manager
+        if context_manager is None:
+            context_manager = self._context_manager_class(
+                self, priority, name=self.name
+            )
+            heappush(self._Semaphore__waiters, context_manager)
+            context_managers[priority] = context_manager
         return context_manager
 
     cpdef bint locked(self):
