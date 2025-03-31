@@ -140,7 +140,6 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
     cdef object c_getitem(self, object priority):
         cdef _AbstractPrioritySemaphoreContextManager context_manager
         cdef dict[object, _AbstractPrioritySemaphoreContextManager] context_managers
-        cdef object priority
 
         context_managers = self._context_managers
         priority = self._top_priority if priority is None else priority
