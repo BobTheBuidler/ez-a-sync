@@ -536,8 +536,6 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
     
 
 cdef object _logger_log = c_logger._log
-cdef object _logger_is_enabled_for = c_logger.isEnabledFor
-cdef PyObject* _DEBUG = <PyObject*>DEBUG
 
 cdef void log_debug(str message, tuple args):
-    PyObject_CallFunctionObjArgs(_logger_log, _DEBUG, <PyObject*>message, <PyObject*>args)
+    _logger_log(DEBUG, message, args)
