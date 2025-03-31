@@ -164,7 +164,8 @@ cdef void __prune_persisted_tasks():
     if not done:
         return
     _persisted_tasks.difference_update(done)
-    for task, exc in zip(done, map(_get_exception, done)):
+    for task in done:
+        exc = _get_exception(task)
         if exc is None:
             continue
         # force exceptions related to this lib to bubble up
