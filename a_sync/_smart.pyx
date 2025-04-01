@@ -40,10 +40,10 @@ cdef object proxy = weakref.proxy
 
 # cdef logging
 cdef public object logger = getLogger(__name__)
-del getLogger
 cdef object DEBUG = 10
 cdef bint _DEBUG_LOGS_ENABLED = logger.isEnabledFor(DEBUG)
 cdef object _logger_log = logger._log
+del getLogger
 
 cdef log_await(object arg):
     _logger_log(DEBUG, "awaiting %s", (arg, ))
