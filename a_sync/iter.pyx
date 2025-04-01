@@ -15,7 +15,7 @@ from a_sync.a_sync._helpers cimport _await
 from a_sync.async_property import async_cached_property
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
 from a_sync.asyncio cimport cigather, ccreate_task_simple
-from a_sync.exceptions import SyncModeInAsyncContextError
+from a_sync.exceptions cimport SyncModeInAsyncContextError
 from a_sync.functools cimport update_wrapper
 
 

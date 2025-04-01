@@ -10,6 +10,7 @@ import typing
 
 from a_sync import _smart, exceptions
 from a_sync._typing import T
+from a_sync.exceptions cimport PersistedTaskException
 
 
 # cdef asyncio
@@ -36,10 +37,6 @@ del typing
 cdef object SmartTask = _smart.SmartTask
 cdef object smart_task_factory = _smart.smart_task_factory
 del _smart
-
-# cdef exceptions
-cdef object PersistedTaskException = exceptions.PersistedTaskException
-del exceptions
 
 
 def create_task(

@@ -6,8 +6,8 @@ and converting synchronous functions to asynchronous ones.
 import asyncio
 from asyncio.futures import _chain_future
 
-from a_sync import exceptions
 from a_sync._typing import P, T
+from a_sync.exceptions cimport FunctionNotSync, SyncModeInAsyncContextError
 from a_sync.functools cimport wraps
 
 # cdef asyncio
@@ -16,12 +16,6 @@ cdef object new_event_loop = asyncio.new_event_loop
 cdef object set_event_loop = asyncio.set_event_loop
 cdef object _get_event_loop = asyncio.get_event_loop
 del asyncio
-
-
-# cdef exceptions
-cdef object FunctionNotSync = exceptions.FunctionNotSync
-cdef object SyncModeInAsyncContextError = exceptions.SyncModeInAsyncContextError
-del exceptions
 
 
 cpdef object get_event_loop():
