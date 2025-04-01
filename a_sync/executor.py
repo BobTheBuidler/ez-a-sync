@@ -89,7 +89,25 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         """
         return fn(*args, **kwargs) if self.sync_mode else await self.submit(fn, *args, **kwargs)
 
-    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
+    @overload
+    def submit(self, fn: Callable[P, T], *args: P.args, fire_and_forget: Literal[True], **kwargs: P.kwargs) -> None: ...  # type: ignore [override]
+        """
+        Submits a job to the executor without expecting a result back. The executor will execute the task silently.
+
+        Args:
+            fn: The function to submit.
+            *args: Positional arguments for the function.
+            fire_and_forget: True
+            **kwargs: Keyword arguments for the function.
+
+        Examples:
+            >>> executor.submit(some_function, arg1, arg2, fire_and_forget=True, kwarg1=value1)
+
+        See Also:
+            - :meth:`run` for running functions with the executor.
+        """
+    @overload
+    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]": ...  # type: ignore [override]
         """
         Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.
 
@@ -106,6 +124,34 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         See Also:
             - :meth:`run` for running functions with the executor.
         """
+    def submit(self, fn: Callable[P, T], *args: P.args, fire_and_forget: bool = False, **kwargs: P.kwargs) -> Optional["asyncio.Future[T]]":  # type: ignore [override]
+        """
+        Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.
+
+        If `fire_and_forget` is True, the executor will not return any data and intead of a :class:`~Future` this function will return `None`. 
+
+        Args:
+            fn: The function to submit.
+            *args: Positional arguments for the function.
+            fire_and_forget (optional): Set True to send the job to the executor without expecting a result. If `fire_and_forget` is True, this function will return None instead of a Future. Default False.
+            **kwargs: Keyword arguments for the function.
+
+        Examples:
+            >>> future = executor.submit(some_function, arg1, arg2, kwarg1=value1)
+            >>> result = await future
+            >>> print(result)
+
+        See Also:
+            - :meth:`run` for running functions with the executor.
+        """
+        if fire_and_forget is True:
+            # Send the job to the executor and return without creating a future or setting up callbacks
+            if self.sync_mode:
+                fn(*args, **kwargs)
+            else:
+                self.__super_submit(fn, *args, **kwargs)
+            return None
+
         fut = self._create_future()
         if self.sync_mode:
             try:
@@ -115,7 +161,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         else:
             self._ensure_debug_daemon(fut, fn, *args, **kwargs)
 
-            cf_fut = self._super_submit(fn, *args, **kwargs)
+            cf_fut = self.__super_submit(fn, *args, **kwargs)
 
             # TODO: implement logic to actually cancel the job, not just the future which is useless for our use case
             # def _call_check_cancel(destination: asyncio.Future):
@@ -160,7 +206,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         self.sync_mode = self._max_workers == 0
         loop = self._get_loop()
         self._create_future = loop.create_future
-        self._super_submit = super().submit
+        self.__super_submit = super().submit
         self._call_soon_threadsafe = loop.call_soon_threadsafe
 
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
