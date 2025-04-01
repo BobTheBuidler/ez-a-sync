@@ -1,6 +1,6 @@
 # cython: boundscheck=False
 from inspect import signature, _empty
-from logging import DEBUG, getLogger
+from logging import getLogger
 from libc.stdint cimport uintptr_t
 
 from a_sync._typing import *
@@ -16,6 +16,7 @@ logger = getLogger(__name__)
 cdef object _logger_is_enabled_for = logger.isEnabledFor
 cdef object _logger_debug = logger.debug
 cdef object _logger_log = logger._log
+cdef object DEBUG = 10
 
 
 class ASyncGenericBase(ASyncABC):

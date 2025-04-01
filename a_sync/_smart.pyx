@@ -5,14 +5,11 @@ including a custom task factory for creating :class:`~SmartTask` instances and a
 to protect tasks from cancellation.
 """
 
-import asyncio.futures as aiofutures
+import asyncio
 import weakref
-from asyncio import (AbstractEventLoop, Future, InvalidStateError, Task, 
-                     ensure_future, get_event_loop)
 from asyncio.tasks import _current_tasks as __current_tasks
 from libc.stdint cimport uintptr_t
-from logging import DEBUG, getLogger
-from weakref import proxy, ref
+from logging import getLogger
 
 from a_sync._typing import *
 
@@ -24,7 +21,26 @@ _Args = Tuple[Any]
 _Kwargs = Tuple[Tuple[str, Any]]
 _Key = Tuple[_Args, _Kwargs]
 
-logger = getLogger(__name__)
+# cdef asyncio
+cdef object ensure_future = asyncio.ensure_future
+cdef object get_event_loop = asyncio.get_event_loop
+cdef object AbstractEventLoop = asyncio.AbstractEventLoop
+cdef object Future = asyncio.Future
+cdef object Task = asyncio.Task
+cdef object InvalidStateError = asyncio.InvalidStateError
+cdef dict[object, object] _current_tasks = asyncio.tasks._current_tasks
+cdef object _future_init = asyncio.Future.__init__
+cdef object _get_loop = asyncio.futures._get_loop
+cdef object _task_init = asyncio.Task.__init__
+
+del asyncio
+
+# cdef weakref
+cdef object ref = weakref.ref
+cdef object proxy = weakref.proxy
+
+cdef public object logger = getLogger(__name__)
+cdef object DEBUG = 10
 
 cdef bint _DEBUG_LOGS_ENABLED = logger.isEnabledFor(DEBUG)
 
@@ -36,8 +52,6 @@ cdef log_await(object arg):
 
 cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
-
-cdef dict[object, object] _current_tasks = __current_tasks
 
 
 cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
@@ -151,8 +165,6 @@ cdef object _get_exception(fut: Future):
     raise InvalidStateError('Exception is not set.')
 
 
-_init = Future.__init__
-
 class SmartFuture(Future, Generic[T]):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
@@ -198,7 +210,7 @@ class SmartFuture(Future, Generic[T]):
         See Also:
             - :class:`SmartProcessingQueue`
         """
-        _init(self, loop=loop)
+        _future_init(self, loop=loop)
         if queue:
             self._queue = proxy(queue)
         if key:
@@ -292,6 +304,9 @@ class SmartFuture(Future, Generic[T]):
             (<WeakSet>self._waiters).remove(waiter)
 
 
+cdef object _SmartFuture = SmartFuture
+
+
 cdef inline object current_task(object loop):
     return _current_tasks.get(loop)
 
@@ -322,7 +337,7 @@ cpdef inline object create_future(
     See Also:
         - :class:`SmartFuture`
     """
-    return SmartFuture(queue=queue, key=key, loop=loop or get_event_loop())
+    return _SmartFuture(queue=queue, key=key, loop=loop or get_event_loop())
 
 
 class SmartTask(Task, Generic[T]):
@@ -367,7 +382,7 @@ class SmartTask(Task, Generic[T]):
         See Also:
             - :func:`asyncio.create_task`
         """
-        Task.__init__(self, coro, loop=loop, name=name)
+        _task_init(self, coro, loop=loop, name=name)
         self._waiters = <set>set()
 
     def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
@@ -433,6 +448,7 @@ class SmartTask(Task, Generic[T]):
             (<set>self._waiters).remove(waiter)
 
 
+cdef object _SmartTask = SmartTask
 cpdef object smart_task_factory(loop: AbstractEventLoop, coro: Awaitable[T]):
     """
     Task factory function that an event loop calls to create new tasks.
@@ -458,7 +474,7 @@ cpdef object smart_task_factory(loop: AbstractEventLoop, coro: Awaitable[T]):
         - :func:`set_smart_task_factory`
         - :class:`SmartTask`
     """
-    return SmartTask(coro, loop=loop)
+    return _SmartTask(coro, loop=loop)
 
 
 def set_smart_task_factory(loop: AbstractEventLoop = None) -> None:
@@ -533,8 +549,8 @@ cpdef object shield(arg: Awaitable[T]):
         # Shortcut.
         return inner
 
-    loop = aiofutures._get_loop(inner)
-    outer = SmartFuture(loop=loop)
+    loop = _get_loop(inner)
+    outer = _SmartFuture(loop=loop)
 
     # special handling to connect SmartFutures to SmartTasks if enabled
     if (waiters := getattr(inner, "_waiters", None)) is not None:

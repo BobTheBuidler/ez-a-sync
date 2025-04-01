@@ -8,10 +8,10 @@ asynchronously based on various conditions and configurations.
 
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
-import logging
 from asyncio import TimerHandle, get_event_loop, iscoroutinefunction
 from inspect import isawaitable
 from libc.stdint cimport uintptr_t
+from logging import getLogger
 from weakref import ref as weak_ref
 
 from a_sync._typing import *
@@ -34,11 +34,11 @@ if TYPE_CHECKING:
 cdef public double METHOD_CACHE_TTL = 3600
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 cdef object _logger_is_enabled_for = logger.isEnabledFor
 cdef object _logger_log = logger._log
-cdef int DEBUG = logging.DEBUG
+cdef object DEBUG = 10
 
 cdef inline void _logger_debug(str msg, tuple args):
     if _logger_is_enabled_for(DEBUG):

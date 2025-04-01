@@ -10,7 +10,7 @@ is intended for more custom implementations if necessary.
 """
 
 import abc
-import logging
+from logging import getLogger
 from typing import Dict, Any, Tuple
 
 from a_sync._typing import *
@@ -24,11 +24,11 @@ cdef struct ShouldAwaitCache:
     bint value
 
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 cdef object _logger_is_enabled_for = logger.isEnabledFor
 cdef object _logger_log = logger._log
-cdef int DEBUG = logging.DEBUG
+cdef object DEBUG = 10
 
 cdef inline void _log_debug(str msg, tuple args):
     _logger_log(DEBUG, msg, args)

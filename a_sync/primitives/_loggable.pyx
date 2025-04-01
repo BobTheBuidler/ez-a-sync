@@ -3,8 +3,10 @@
 This module provides a mixin class to add debug logging capabilities to other classes.
 """
 
-from logging import Logger, getLogger, DEBUG
+from logging import Logger, getLogger
 
+
+cdef object DEBUG = 10
 
 cdef class _LoggerMixin:
     """

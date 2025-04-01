@@ -9,7 +9,7 @@ from asyncio import Future
 from collections import deque
 from heapq import heappop as _heappop
 from heapq import heappush as _heappush
-from logging import DEBUG, getLogger
+from logging import getLogger
 
 from a_sync._typing import *
 from a_sync.primitives.locks.semaphore cimport Semaphore
@@ -17,6 +17,7 @@ from a_sync.primitives.locks.semaphore cimport Semaphore
 logger = getLogger(__name__)
 
 cdef object c_logger = logger
+cdef object DEBUG = 10
 cdef object heappush = _heappush
 cdef object heappop = _heappop
 cdef object cdeque = deque
