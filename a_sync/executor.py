@@ -90,7 +90,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         return fn(*args, **kwargs) if self.sync_mode else await self.submit(fn, *args, **kwargs)
 
     @overload
-    def submit(self, fn: Callable[P, T], *args: P.args, fire_and_forget: Literal[True], **kwargs: P.kwargs) -> None: ...  # type: ignore [override]
+    def submit(self, fn: Callable[P, T], *args: P.args, fire_and_forget: Literal[True], **kwargs: P.kwargs) -> None:  # type: ignore [override]
         """
         Submits a job to the executor without expecting a result back. The executor will execute the task silently.
 
@@ -107,7 +107,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
             - :meth:`run` for running functions with the executor.
         """
     @overload
-    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]": ...  # type: ignore [override]
+    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
         """
         Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.
 
