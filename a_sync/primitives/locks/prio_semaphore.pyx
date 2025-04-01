@@ -9,6 +9,7 @@ import collections
 import heapq
 from asyncio import Future
 from logging import getLogger
+from typing import Protocol, TypeVar
 
 from a_sync.primitives.locks.semaphore cimport Semaphore
 
