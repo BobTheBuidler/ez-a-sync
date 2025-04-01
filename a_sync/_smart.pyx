@@ -7,7 +7,6 @@ to protect tasks from cancellation.
 
 import asyncio
 import weakref
-from asyncio.tasks import _current_tasks as __current_tasks
 from libc.stdint cimport uintptr_t
 from logging import getLogger
 
@@ -39,11 +38,11 @@ del asyncio
 cdef object ref = weakref.ref
 cdef object proxy = weakref.proxy
 
+# cdef logging
 cdef public object logger = getLogger(__name__)
+del getLogger
 cdef object DEBUG = 10
-
 cdef bint _DEBUG_LOGS_ENABLED = logger.isEnabledFor(DEBUG)
-
 cdef object _logger_log = logger._log
 
 cdef log_await(object arg):
