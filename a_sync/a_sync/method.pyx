@@ -8,11 +8,11 @@ asynchronously based on various conditions and configurations.
 
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
-from asyncio import TimerHandle, get_event_loop, iscoroutinefunction
-from inspect import isawaitable
+import asyncio
+import inspect
+import weakref
 from libc.stdint cimport uintptr_t
 from logging import getLogger
-from weakref import ref as weak_ref
 
 from a_sync._typing import *
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
@@ -30,6 +30,20 @@ if TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.abstract import ASyncABC
 
+
+# cdef asyncio
+cdef object get_event_loop = asyncio.get_event_loop
+cdef object iscoroutinefunction = asyncio.iscoroutinefunction
+cdef object TimerHandle = asyncio.TimerHandle
+del asyncio
+
+# cdef inspect
+cdef object isawaitable = inspect.isawaitable
+del inspect
+
+# cdef weakref
+cdef object ref = weakref.ref
+del weakref
 
 cdef public double METHOD_CACHE_TTL = 3600
 
@@ -503,7 +517,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     _cache_handle: TimerHandle = None
     """An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."""
 
-    __weakself__: "weak_ref[I]"
+    __weakself__: "ref[I]"
     """A weak reference to the instance the function is bound to."""
 
     __wrapped__: AnyFn[Concatenate[I, P], T]
@@ -539,7 +553,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> obj = MyClass(42)
             >>> bound_method = ASyncBoundMethod(obj, MyClass.my_method, True)
         """
-        self.__weakself__ = weak_ref(instance, self.__cancel_cache_handle)
+        self.__weakself__ = ref(instance, self.__cancel_cache_handle)
         # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             (<dict>modifiers).update((<_ModifiedMixin>unbound).modifiers._modifiers)
