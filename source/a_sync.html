@@ -4264,18 +4264,20 @@ cancelled.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncProcessPoolExecutor.submit">
-<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor.submit" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fire_and_forget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncProcessPoolExecutor.submit" title="Link to this definition"></a></dt>
 <dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
+<p>If <cite>fire_and_forget</cite> is True, the executor will not return any data and intead of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code> this function will return <cite>None</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to submit.</p></li>
 <li><p><strong>*args</strong> (<em>~P</em>) – Positional arguments for the function.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Keyword arguments for the function.</p></li>
+<li><p><strong>fire_and_forget</strong> (<em>optional</em>) – Set True to send the job to the executor without expecting a result. If <cite>fire_and_forget</cite> is True, this function will return None instead of a Future. Default False.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
+<dd class="field-even"><p><em>Future</em>[<em>T</em>] | None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -4731,18 +4733,20 @@ cancelled.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.AsyncThreadPoolExecutor.submit">
-<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fire_and_forget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.AsyncThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
 <dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
+<p>If <cite>fire_and_forget</cite> is True, the executor will not return any data and intead of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code> this function will return <cite>None</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to submit.</p></li>
 <li><p><strong>*args</strong> (<em>~P</em>) – Positional arguments for the function.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Keyword arguments for the function.</p></li>
+<li><p><strong>fire_and_forget</strong> (<em>optional</em>) – Set True to send the job to the executor without expecting a result. If <cite>fire_and_forget</cite> is True, this function will return None instead of a Future. Default False.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
+<dd class="field-even"><p><em>Future</em>[<em>T</em>] | None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -5189,18 +5193,20 @@ cancelled.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.executor.PruningThreadPoolExecutor.submit">
-<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fire_and_forget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.executor.PruningThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
 <dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
+<p>If <cite>fire_and_forget</cite> is True, the executor will not return any data and intead of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code> this function will return <cite>None</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to submit.</p></li>
 <li><p><strong>*args</strong> (<em>~P</em>) – Positional arguments for the function.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Keyword arguments for the function.</p></li>
+<li><p><strong>fire_and_forget</strong> (<em>optional</em>) – Set True to send the job to the executor without expecting a result. If <cite>fire_and_forget</cite> is True, this function will return None instead of a Future. Default False.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
+<dd class="field-even"><p><em>Future</em>[<em>T</em>] | None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -8839,18 +8845,20 @@ cancelled.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncProcessPoolExecutor.submit">
-<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor.submit" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fire_and_forget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncProcessPoolExecutor.submit" title="Link to this definition"></a></dt>
 <dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
+<p>If <cite>fire_and_forget</cite> is True, the executor will not return any data and intead of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code> this function will return <cite>None</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to submit.</p></li>
 <li><p><strong>*args</strong> (<em>~P</em>) – Positional arguments for the function.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Keyword arguments for the function.</p></li>
+<li><p><strong>fire_and_forget</strong> (<em>optional</em>) – Set True to send the job to the executor without expecting a result. If <cite>fire_and_forget</cite> is True, this function will return None instead of a Future. Default False.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
+<dd class="field-even"><p><em>Future</em>[<em>T</em>] | None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -9306,18 +9314,20 @@ cancelled.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.AsyncThreadPoolExecutor.submit">
-<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fire_and_forget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.AsyncThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
 <dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
+<p>If <cite>fire_and_forget</cite> is True, the executor will not return any data and intead of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code> this function will return <cite>None</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to submit.</p></li>
 <li><p><strong>*args</strong> (<em>~P</em>) – Positional arguments for the function.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Keyword arguments for the function.</p></li>
+<li><p><strong>fire_and_forget</strong> (<em>optional</em>) – Set True to send the job to the executor without expecting a result. If <cite>fire_and_forget</cite> is True, this function will return None instead of a Future. Default False.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
+<dd class="field-even"><p><em>Future</em>[<em>T</em>] | None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -10790,18 +10800,20 @@ cancelled.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PruningThreadPoolExecutor.submit">
-<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">submit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fire_and_forget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PruningThreadPoolExecutor.submit" title="Link to this definition"></a></dt>
 <dd><p>Submits a job to the executor and returns an <a class="reference external" href="https://docs.python.org/3/library/asyncio-future.html#asyncio.Future" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Future</span></code></a> that can be awaited for the result without blocking.</p>
+<p>If <cite>fire_and_forget</cite> is True, the executor will not return any data and intead of a <code class="xref py py-class docutils literal notranslate"><span class="pre">Future</span></code> this function will return <cite>None</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The function to submit.</p></li>
 <li><p><strong>*args</strong> (<em>~P</em>) – Positional arguments for the function.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Keyword arguments for the function.</p></li>
+<li><p><strong>fire_and_forget</strong> (<em>optional</em>) – Set True to send the job to the executor without expecting a result. If <cite>fire_and_forget</cite> is True, this function will return None instead of a Future. Default False.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments for the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Future</em>[<em>T</em>]</p>
+<dd class="field-even"><p><em>Future</em>[<em>T</em>] | None</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
