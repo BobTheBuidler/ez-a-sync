@@ -3,7 +3,12 @@
 This module provides a mixin class to add debug logging capabilities to other classes.
 """
 
-from logging import Logger, getLogger, DEBUG
+import logging
+cdef object Logger = logging.Logger
+cdef object getLogger = logging.getLogger
+cdef object isEnabledFor = Logger.isEnabledFor
+cdef object DEBUG = 10
+del logging
 
 
 cdef class _LoggerMixin:
@@ -80,10 +85,10 @@ cdef class _LoggerMixin:
         See Also:
             - :attr:`logging.Logger.isEnabledFor`
         """
-        return self.get_logger().isEnabledFor(DEBUG)
+        return isEnabledFor(self.get_logger(), DEBUG)
 
     cdef inline bint check_debug_logs_enabled(self):
-        return self.get_logger().isEnabledFor(DEBUG)
+        return isEnabledFor(self.get_logger(), DEBUG)
 
 
 cdef dict[str, object] _class_loggers = {}

@@ -1,6 +1,6 @@
-from asyncio import Lock, Task, get_event_loop, iscoroutinefunction
-from functools import partial
-from logging import DEBUG, getLogger
+import asyncio
+import functools
+from logging import getLogger
 from typing import (TYPE_CHECKING, Any, Awaitable, Callable, Generator, 
                     Literal, Optional, Tuple, Type, Union, final, overload)
 
@@ -33,12 +33,24 @@ from a_sync.functools cimport wraps
 if TYPE_CHECKING:
     from a_sync.task import TaskMapping
 
+# cdef asyncio
+cdef object get_event_loop = asyncio.get_event_loop
+cdef object iscoroutinefunction = asyncio.iscoroutinefunction
+cdef object Lock = asyncio.Lock
+cdef object Task = asyncio.Task
+del asyncio
 
-logger = getLogger(__name__)
+# cdef functools
+cdef object partial = functools.partial
+del functools
 
+# cdef logging
+cdef public object logger = getLogger(__name__)
 cdef object _logger_is_enabled_for = logger.isEnabledFor
 cdef object _logger_debug = logger.debug
 cdef object _logger_log = logger._log
+cdef object DEBUG = 10
+del getLogger
 
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
