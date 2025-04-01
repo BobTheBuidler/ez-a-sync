@@ -124,7 +124,8 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         See Also:
             - :meth:`run` for running functions with the executor.
         """
-    def submit(self, fn: Callable[P, T], *args: P.args, fire_and_forget: bool = False, **kwargs: P.kwargs) -> Optional["asyncio.Future[T]]":  # type: ignore [override]
+    def submit(self, fn: Callable[P, T], *args: P.args, fire_and_forget: bool = False, **kwargs: P.kwargs) -> Optional["asyncio.Future[T]"]:  # type: ignore [override]
+        # sourcery skip: simplify-boolean-comparison
         """
         Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.
 
