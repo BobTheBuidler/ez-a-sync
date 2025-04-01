@@ -106,6 +106,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         See Also:
             - :meth:`run` for running functions with the executor.
         """
+
     @overload
     def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
         """
@@ -124,12 +125,13 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         See Also:
             - :meth:`run` for running functions with the executor.
         """
+
     def submit(self, fn: Callable[P, T], *args: P.args, fire_and_forget: bool = False, **kwargs: P.kwargs) -> Optional["asyncio.Future[T]"]:  # type: ignore [override]
         # sourcery skip: simplify-boolean-comparison
         """
         Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.
 
-        If `fire_and_forget` is True, the executor will not return any data and intead of a :class:`~Future` this function will return `None`. 
+        If `fire_and_forget` is True, the executor will not return any data and intead of a :class:`~Future` this function will return `None`.
 
         Args:
             fn: The function to submit.
