@@ -2,8 +2,20 @@
 This module extends Python's :func:`asyncio.as_completed` with additional functionality.
 """
 
-from asyncio import as_completed as _as_completed
+import asyncio
+from typing import (Any, AsyncIterator, Awaitable, Coroutine, Iterable,
+                    Iterator, Literal, Mapping, Optional, Tuple, Union,
+                    overload)
 
+from a_sync import iter
+from a_sync._typing import K, T, V
+
+
+# cdef asyncio
+cdef object _as_completed = asyncio.as_completed
+del asyncio
+
+# cdef tqdm
 try:
     from tqdm.asyncio import tqdm_asyncio
 except ImportError as e:
@@ -13,9 +25,11 @@ except ImportError as e:
         def as_completed(*args, **kwargs):
             raise ImportError("You must have tqdm installed to use this feature")
 
+cdef object _tqdm_as_completed = tqdm_asyncio.as_completed
+del tqdm_asyncio
 
-from a_sync._typing import *
-from a_sync.iter import ASyncIterator
+# cdef iter
+cdef object ASyncIterator = iter.ASyncIterator
 
 
 @overload
@@ -131,7 +145,7 @@ def as_completed(
         )
         if aiter
         else (
-            tqdm_asyncio.as_completed(fs, timeout=timeout, **tqdm_kwargs)
+            _tqdm_as_completed(fs, timeout=timeout, **tqdm_kwargs)
             if tqdm
             else _as_completed(fs, timeout=timeout)
         )
