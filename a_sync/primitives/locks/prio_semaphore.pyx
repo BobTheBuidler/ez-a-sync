@@ -172,7 +172,6 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         return self.c_locked()
     
     cdef bint c_locked(self):
-        cdef dict[object, Semaphore] cms
         cdef list waiters
         if self._Semaphore__value == 0:
             return True
