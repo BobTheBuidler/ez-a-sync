@@ -13,7 +13,7 @@ See Also:
     - :class:`~a_sync.a_sync.property.ASyncPropertyDescriptor`
 """
 
-from asyncio import iscoroutinefunction
+import asyncio
 
 from a_sync._typing import *
 from a_sync.a_sync import decorator
@@ -25,6 +25,10 @@ from a_sync.functools cimport cached_property_unsafe, update_wrapper
 if TYPE_CHECKING:
     from a_sync import TaskMapping
 
+
+# cdef asyncio
+cdef object iscoroutinefunction = asyncio.iscoroutinefunction
+del asyncio
 
 class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     """
