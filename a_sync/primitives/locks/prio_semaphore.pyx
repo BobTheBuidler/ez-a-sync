@@ -5,22 +5,27 @@ waiters to be assigned priorities, ensuring that higher priority waiters are
 processed before lower priority ones.
 """
 
+import collections
+import heapq
 from asyncio import Future
-from collections import deque
-from heapq import heappop as _heappop
-from heapq import heappush as _heappush
 from logging import getLogger
 
-from a_sync._typing import *
 from a_sync.primitives.locks.semaphore cimport Semaphore
 
-logger = getLogger(__name__)
+# cdef collections
+cdef object deque = collections.deque
+del collections
 
+# cdef heapq
+cdef object heappush = heapq.heappush
+cdef object heappop = heapq.heappop
+del heapq
+
+# cdef logging
+cdef public object logger = getLogger(__name__)
 cdef object c_logger = logger
 cdef object DEBUG = 10
-cdef object heappush = _heappush
-cdef object heappop = _heappop
-cdef object cdeque = deque
+del getLogger
 
 class Priority(Protocol):
     def __lt__(self, other) -> bool: ...
@@ -378,7 +383,7 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         cdef _AbstractPrioritySemaphore parent = self._parent
         while parent._Semaphore__value <= 0:
             if self._Semaphore__waiters is None:
-                self._Semaphore__waiters = cdeque()
+                self._Semaphore__waiters = deque()
             fut = self._c_get_loop().create_future()
             self._Semaphore__waiters.append(fut)
             parent._potential_lost_waiters.append(fut)
