@@ -1,5 +1,5 @@
 # cython: boundscheck=False
-from inspect import signature, _empty
+import inspect
 from logging import getLogger
 from libc.stdint cimport uintptr_t
 
@@ -11,12 +11,18 @@ from a_sync.exceptions import ASyncFlagException, FlagNotDefined, InvalidFlag, N
 from a_sync.functools cimport cached_property_unsafe
 
 
-logger = getLogger(__name__)
+# cdef inspect
+cdef object signature = inspect.signature
+cdef object _empty = inspect._empty
+del inspect
 
+# cdef logging
+cdef public object logger = getLogger(__name__)
 cdef object _logger_is_enabled_for = logger.isEnabledFor
 cdef object _logger_debug = logger.debug
 cdef object _logger_log = logger._log
 cdef object DEBUG = 10
+del getLogger
 
 
 class ASyncGenericBase(ASyncABC):
