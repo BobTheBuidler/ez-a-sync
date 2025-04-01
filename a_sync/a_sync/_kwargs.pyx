@@ -3,18 +3,12 @@
 This module provides utility functions for handling keyword arguments related to synchronous and asynchronous flags.
 """
 
-from libc.stdint cimport uint8_t
-
 from a_sync import exceptions
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 
 
-def _get_flag_name(dict kwargs) -> str:
-    return get_flag_name(kwargs)
-
-
-cdef inline str get_flag_name(dict kwargs):
+cpdef inline str get_flag_name(dict kwargs):
     """
     Get the name of the flag present in the kwargs.
 
