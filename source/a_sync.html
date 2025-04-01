@@ -2437,9 +2437,9 @@ InvalidStateError.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – The coroutine to run in the task.</p></li>
-<li><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>) – Optional; the event loop.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> | </em><em>None</em>) – Optional; the name of the task.</p></li>
+<li><p><strong>coro</strong> (<em>Awaitable</em><em>[</em><em>T</em><em>]</em>) – The coroutine to run in the task.</p></li>
+<li><p><strong>loop</strong> (<em>Optional</em><em>[</em><em>AbstractEventLoop</em><em>]</em>) – Optional; the event loop.</p></li>
+<li><p><strong>name</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>]</em>) – Optional; the name of the task.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2701,7 +2701,7 @@ InvalidStateError.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask._waiters">
-<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.13)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Task</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync._smart.SmartTask._waiters" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">_waiters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'Task[T]'</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#a_sync._smart.SmartTask._waiters" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2741,7 +2741,7 @@ InvalidStateError.</p>
 <dd><p>Set the event loop’s task factory to <a class="reference internal" href="#a_sync._smart.smart_task_factory" title="a_sync._smart.smart_task_factory"><code class="xref py py-func docutils literal notranslate"><span class="pre">smart_task_factory()</span></code></a> so all tasks will be SmartTask instances.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>loop</strong> (<em>AbstractEventLoop</em><em> | </em><em>None</em>) – Optional; the event loop. If None, the current event loop is used.</p>
+<dd class="field-odd"><p><strong>loop</strong> (<em>AbstractEventLoop</em>) – Optional; the event loop. If None, the current event loop is used.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -2821,7 +2821,7 @@ you can combine shield() with a try/except clause, as follows:</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>loop</strong> (<em>AbstractEventLoop</em>) – The event loop.</p></li>
-<li><p><strong>coro</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em>) – The coroutine to run in the task.</p></li>
+<li><p><strong>coro</strong> (<em>Awaitable</em><em>[</em><em>T</em><em>]</em>) – The coroutine to run in the task.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -7604,7 +7604,7 @@ result = await instance.my_method._sum([1, 2, 3])
 <dd class="field-even"><p>An asyncio Task representing the lock.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Task</em>[<em>T</em>]</p>
+<dd class="field-odd"><p>Task[T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10031,7 +10031,7 @@ waiting.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
+<dd class="field-odd"><p>Literal[True]</p>
 </dd>
 </dl>
 </dd></dl>
