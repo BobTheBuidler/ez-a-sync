@@ -18,7 +18,7 @@ del inspect
 
 # cdef logging
 cdef public object logger = getLogger(__name__)
-cdef object _logger_is_enabled_for = logger.isEnabledFor
+cdef object _logger_is_enabled = logger.isEnabledFor
 cdef object _logger_debug = logger.debug
 cdef object _logger_log = logger._log
 cdef object DEBUG = 10
@@ -71,7 +71,7 @@ class ASyncGenericBase(ASyncABC):
     def __a_sync_default_mode__(cls) -> bint:  # type: ignore [override]
         cdef object flag
         cdef bint flag_value
-        if not _logger_is_enabled_for(DEBUG):
+        if not _logger_is_enabled(DEBUG):
             # we can optimize this if we dont need to log `flag` and the return value
             try:
                 flag = _get_a_sync_flag_name_from_signature(cls, False)
@@ -111,7 +111,7 @@ class ASyncGenericBase(ASyncABC):
     def __a_sync_flag_name__(self) -> str:
         # TODO: cythonize this cache
         cdef bint debug_logs 
-        if debug_logs := _logger_is_enabled_for(DEBUG):
+        if debug_logs := _logger_is_enabled(DEBUG):
             _logger_log(DEBUG, "checking a_sync flag for %s", (self, ))
         try:
             flag = _get_a_sync_flag_name_from_signature(type(self), debug_logs)
@@ -162,7 +162,7 @@ cdef str _get_a_sync_flag_name_from_class_def(object cls):
 
 cdef bint _a_sync_flag_default_value_from_signature(object cls):
     cdef object signature = _get_init_signature(cls)
-    if not _logger_is_enabled_for(DEBUG):
+    if not _logger_is_enabled(DEBUG):
         # we can optimize this much better
         return signature.parameters[_get_a_sync_flag_name_from_signature(cls, False)].default
     
@@ -207,7 +207,7 @@ cdef str _parse_flag_name_from_list(object cls, object items):
     if len(present_flags) > 1:
         _logger_debug("There are too many flags defined on %s", cls)
         raise TooManyFlags(cls, present_flags)
-    if _logger_is_enabled_for(DEBUG):
+    if _logger_is_enabled(DEBUG):
         flag = present_flags[0]
         _logger_log(DEBUG, "found flag %s", (flag, ))
         return flag

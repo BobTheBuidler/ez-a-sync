@@ -50,12 +50,12 @@ cdef public double METHOD_CACHE_TTL = 3600
 
 logger = getLogger(__name__)
 
-cdef object _logger_is_enabled_for = logger.isEnabledFor
+cdef object _logger_is_enabled = logger.isEnabledFor
 cdef object _logger_log = logger._log
 cdef object DEBUG = 10
 
 cdef inline void _logger_debug(str msg, tuple args):
-    if _logger_is_enabled_for(DEBUG):
+    if _logger_is_enabled(DEBUG):
         _logger_log(DEBUG, msg, args)
 
 
@@ -624,7 +624,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         """
         cdef object retval, coro
         cdef bint debug_logs
-        if debug_logs := _logger_is_enabled_for(DEBUG):
+        if debug_logs := _logger_is_enabled(DEBUG):
             _logger_log(DEBUG, "calling %s with args: %s kwargs: %s", (self, args, kwargs))
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
