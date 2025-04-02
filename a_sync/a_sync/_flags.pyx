@@ -12,7 +12,7 @@ You can use any of the provided flags, whichever makes the most sense for your u
 """
 
 from a_sync.a_sync.flags cimport AFFIRMATIVE_FLAGS, NEGATIVE_FLAGS
-from a_sync.exceptions import InvalidFlag, InvalidFlagValue
+from a_sync.exceptions cimport InvalidFlag, InvalidFlagValue
 
 
 cdef inline bint negate_if_necessary(str flag, bint flag_value):
