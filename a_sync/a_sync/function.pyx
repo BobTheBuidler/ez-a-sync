@@ -1,6 +1,6 @@
+import asyncio
 import functools
 import sys
-from asyncio import iscoroutinefunction
 from inspect import getfullargspec, isasyncgenfunction, isgeneratorfunction
 from logging import getLogger
 from libc.stdint cimport uintptr_t
@@ -23,6 +23,16 @@ if TYPE_CHECKING:
         ASyncBoundMethodAsyncDefault,
         ASyncBoundMethodSyncDefault,
     )
+
+    
+# cdef asyncio
+cdef object iscoroutinefunction = asyncio.iscoroutinefunction
+del asyncio
+
+# cdef functools
+cdef object cached_property = functools.cached_property
+del functools
+
 
 logger = getLogger(__name__)
 
