@@ -116,7 +116,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         """
         self.c_getitem(self._top_priority).c_release()
 
-    async def acquire(self) -> Literal[True]:
+    cpdef object acquire(self):
         """Acquires the semaphore with the top priority.
 
         This method overrides :meth:`Semaphore.acquire` to handle priority-based logic.
@@ -125,7 +125,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> await semaphore.acquire()
         """
-        return await self.c_getitem(self._top_priority).c_acquire()
+        return self.c_getitem(self._top_priority).c_acquire()
 
     def __getitem__(
         self, priority: Optional[PT]
