@@ -18,12 +18,12 @@ from a_sync._typing import *
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._descriptor import ASyncDescriptor
 from a_sync.a_sync._helpers cimport _await
-from a_sync.a_sync.function import (
+from a_sync.a_sync.function cimport (
+    _ModifiedMixin,
     ASyncFunction,
     ASyncFunctionAsyncDefault,
     ASyncFunctionSyncDefault,
 )
-from a_sync.a_sync.function cimport _ModifiedMixin
 from a_sync.functools cimport update_wrapper
 
 if TYPE_CHECKING:
