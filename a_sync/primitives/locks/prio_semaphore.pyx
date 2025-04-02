@@ -5,13 +5,17 @@ waiters to be assigned priorities, ensuring that higher priority waiters are
 processed before lower priority ones.
 """
 
+import asyncio
 import collections
 import heapq
-from asyncio import Future
 from logging import getLogger
-from typing import Protocol, TypeVar
+from typing import List, Literal, Optional, Protocol, Set, Type, TypeVar
 
 from a_sync.primitives.locks.semaphore cimport Semaphore
+
+# cdef asyncio
+cdef object Future = asyncio.Future
+del asyncio
 
 # cdef collections
 cdef object deque = collections.deque
