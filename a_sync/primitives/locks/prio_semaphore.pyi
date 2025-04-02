@@ -76,7 +76,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             ...     await do_stuff()
         """
 
-    async def acquire(self) -> Literal[True]:
+    def acquire(self) -> Coroutine[Any, Any, Literal[True]]:
         """Acquires the semaphore with the top priority.
 
         This method overrides :meth:`Semaphore.acquire` to handle priority-based logic.
