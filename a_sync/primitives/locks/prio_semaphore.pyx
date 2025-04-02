@@ -231,7 +231,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                 if debug_logs:
                     log_debug(
                         "manager %s has no more waiters, popping from %s",
-                        (manager._c_repr_no_parent_(), self),
+                        (manager._repr_no_parent_(), self),
                     )
                 self._context_managers.pop(manager._priority)
                 continue
@@ -241,7 +241,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
 
             manager_waiters = manager._Semaphore__waiters
             if debug_logs:
-                log_debug("waking up next for %s", (manager._c_repr_no_parent_(), ))
+                log_debug("waking up next for %s", (manager._repr_no_parent_(), ))
                 if not manager_waiters:
                     log_debug("not manager._Semaphore__waiters", ())
 
@@ -331,13 +331,9 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
 
     cpdef str _repr_no_parent_(self):
         """Returns a string representation of the context manager without the parent."""
-        return self._c_repr_no_parent_()
-
-    cdef str _c_repr_no_parent_(self):
-        """Returns a string representation of the context manager without the parent."""
         return f"<{self.__class__.__name__} parent_name={self._parent.name} {self._priority_name}={self._priority} waiters={len(self)}>"
 
-    def __lt__(self, other) -> bool:
+    def __lt__(self, _AbstractPrioritySemaphoreContextManager other) -> bool:
         """Compares this context manager with another based on priority.
 
         Args:
@@ -354,8 +350,6 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
             >>> cm2 = _AbstractPrioritySemaphoreContextManager(parent, priority=2)
             >>> cm1 < cm2
         """
-        if type(other) is not type(self):
-            raise TypeError(f"{other} is not type {self.__class__.__name__}")
         return self._priority < other._priority
 
     cpdef object acquire(self):
