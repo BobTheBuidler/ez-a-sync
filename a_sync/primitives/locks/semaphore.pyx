@@ -3,16 +3,34 @@ This module provides various semaphore implementations, including a debug-enable
 a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi-threaded applications.
 """
 
-from asyncio import CancelledError, Future, iscoroutinefunction, sleep
-from collections import defaultdict, deque
+import asyncio
+import collections
+import threading
 from libc.string cimport strcpy
 from libc.stdlib cimport malloc, free
-from threading import Thread, current_thread
-from typing import Container
+from typing import Container, Literal, List, Optional, Set
 
-from a_sync._typing import *
+from a_sync._typing import CoroFn, P, T
 from a_sync.functools cimport wraps
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
+
+
+# cdef asyncio
+cdef object iscoroutinefunction = asyncio.iscoroutinefunction
+cdef object sleep = asyncio.sleep
+cdef object CancelledError = asyncio.CancelledError
+cdef object Future = asyncio.Future
+del asyncio
+
+# cdef collections
+cdef object defaultdict = collections.defaultdict
+cdef object deque = collections.deque
+del collections
+
+# cdef threading
+cdef object current_thread = threading.current_thread
+cdef object Thread = threading.Thread
+del threading
 
 
 async def _noop() -> Literal[True]:
