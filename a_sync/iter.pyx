@@ -8,6 +8,9 @@ import typing
 import weakref
 from logging import getLogger
 
+from typing_extensions import Self
+
+from a_sync._typing import AnyFn, AnyIterable, P, T, SyncFn, V
 from a_sync.a_sync._helpers cimport _await
 from a_sync.async_property import async_cached_property
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
@@ -42,6 +45,23 @@ del types
 # cdef typing
 cdef object get_args = typing.get_args
 cdef object _GenericAlias = typing._GenericAlias
+cdef object Any = typing.Any
+cdef object AsyncIterable = typing.AsyncIterable
+cdef object AsyncIterator = typing.AsyncIterator
+cdef object AsyncGenerator = typing.AsyncGenerator
+cdef object Callable = typing.Callable
+cdef object Coroutine = typing.Coroutine
+cdef object Generator = typing.Generator
+cdef object Generic = typing.Generic
+cdef object Iterable = typing.Iterable
+cdef object Iterator = typing.Iterator
+cdef object List = typing.List
+cdef object Optional = typing.Optional
+cdef object Type = typing.Type
+cdef object TypeVar = typing.TypeVar
+cdef object Union = typing.Union
+cdef object final = typing.final
+cdef object overload = typing.overload
 del typing
 
 # cdef weakref
