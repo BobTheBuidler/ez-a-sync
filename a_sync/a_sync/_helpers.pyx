@@ -8,7 +8,7 @@ from asyncio import get_event_loop as _get_event_loop
 from asyncio.futures import _chain_future
 
 from a_sync import exceptions
-from a_sync._typing import *
+from a_sync._typing import P, T
 from a_sync.functools cimport wraps
 
 
