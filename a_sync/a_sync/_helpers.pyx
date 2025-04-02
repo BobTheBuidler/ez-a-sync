@@ -16,8 +16,7 @@ cdef object new_event_loop = asyncio.new_event_loop
 cdef object set_event_loop = asyncio.set_event_loop
 cdef object _chain_future = aiofutures._chain_future
 cdef object _get_event_loop = asyncio.get_event_loop
-del aiofutures
-del asyncio
+del asyncio, aiofutures
 
 
 # cdef exceptions
