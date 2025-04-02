@@ -3,13 +3,19 @@ This module provides utility functions for handling asynchronous operations
 and converting synchronous functions to asynchronous ones.
 """
 
-from asyncio import iscoroutinefunction, new_event_loop, set_event_loop
-from asyncio import get_event_loop as _get_event_loop
+import asyncio
 from asyncio.futures import _chain_future
 
 from a_sync import exceptions
 from a_sync._typing import P, T
 from a_sync.functools cimport wraps
+
+# cdef asyncio
+cdef object iscoroutinefunction = asyncio.iscoroutinefunction
+cdef object new_event_loop = asyncio.new_event_loop
+cdef object set_event_loop = asyncio.set_event_loop
+cdef object _get_event_loop = asyncio.get_event_loop
+del asyncio
 
 
 # cdef exceptions
