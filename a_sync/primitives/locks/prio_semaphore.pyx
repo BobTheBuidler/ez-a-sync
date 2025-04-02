@@ -108,7 +108,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> async with semaphore:
             ...     await do_stuff()
         """
-        await self.c_getitem(self._top_priority).c_acquire()
+        await self.c_getitem(self._top_priority).acquire()
 
     async def __aexit__(self, *_) -> None:
         """Exits the semaphore context, releasing it with the top priority.
@@ -131,7 +131,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> await semaphore.acquire()
         """
-        return self.c_getitem(self._top_priority).c_acquire()
+        return self.c_getitem(self._top_priority).acquire()
 
     def __getitem__(
         self, priority: Optional[PT]
@@ -362,11 +362,6 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
             >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
             >>> await context_manager.acquire()
         """
-        if self._parent._Semaphore__value <= 0:
-            self._c_ensure_debug_daemon((),{})
-        return self.__acquire()
-    
-    cdef object c_acquire(self):
         if self._parent._Semaphore__value <= 0:
             self._c_ensure_debug_daemon((),{})
         return self.__acquire()
