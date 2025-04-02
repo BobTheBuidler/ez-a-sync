@@ -1,5 +1,9 @@
 from a_sync.a_sync.modifiers.manager cimport ModifierManager
 
+cdef public object ASyncFunction
+cdef public object ASyncFunctionAsyncDefault
+cdef public object ASyncFunctionSyncDefault
+
 cdef class _ModifiedMixin:
     cdef readonly ModifierManager modifiers
     cdef public object __wrapped__
