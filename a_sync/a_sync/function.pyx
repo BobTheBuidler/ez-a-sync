@@ -1,7 +1,7 @@
 import asyncio
 import functools
+import inspect
 import sys
-from inspect import getfullargspec, isasyncgenfunction, isgeneratorfunction
 from logging import getLogger
 from libc.stdint cimport uintptr_t
 
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
         ASyncBoundMethodSyncDefault,
     )
 
-    
+
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 del asyncio
@@ -33,10 +33,16 @@ del asyncio
 cdef object cached_property = functools.cached_property
 del functools
 
+# cdef inspect
+cdef object getfullargspec = inspect.getfullargspec
+cdef object isasyncgenfunction = inspect.isasyncgenfunction
+cdef object isgeneratorfunction = inspect.isgeneratorfunction
+del inspect
 
-logger = getLogger(__name__)
-
+# cdef logging
+cdef public object logger = getLogger(__name__)
 cdef object _logger_debug = logger.debug
+del getLogger
 
 
 cdef class _ModifiedMixin:
