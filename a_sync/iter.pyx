@@ -3,13 +3,13 @@ import asyncio
 import copy
 import inspect
 import sys
+import types
+import typing
 import weakref
 from logging import getLogger
-from types import FunctionType
-from typing import _GenericAlias, get_args
 
 from a_sync.a_sync._helpers cimport _await
-from a_sync.async_property cimport async_cached_property
+from a_sync.async_property import async_cached_property
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
 from a_sync.asyncio cimport cigather, ccreate_task_simple
 from a_sync.exceptions import SyncModeInAsyncContextError
@@ -34,6 +34,15 @@ del inspect
 # cdef logging
 cdef public object logger = getLogger(__name__)
 del getLogger
+
+# cdef types
+cdef object FunctionType = types.FunctionType
+del types
+
+# cdef typing
+cdef object get_args = typing.get_args
+cdef object _GenericAlias = typing._GenericAlias
+del typing
 
 # cdef weakref
 cdef object ref = weakref.ref
