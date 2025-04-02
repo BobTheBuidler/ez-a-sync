@@ -152,15 +152,11 @@ cdef class Semaphore(_DebugDaemonMixin):
 
     cpdef bint locked(self):
         """Returns True if semaphore cannot be acquired immediately."""
-        return self.c_locked()
-    
-    cdef bint c_locked(self):
-        """Returns True if semaphore cannot be acquired immediately."""
         if self._Semaphore__value == 0:
             return True
-        cdef object waiters = self._Semaphore__waiters 
-        if any(_is_not_cancelled(w) for w in (waiters or ())):
-            return True
+        for w in self._Semaphore__waiters:
+            if _is_not_cancelled(w):
+                return True
 
     def __len__(self) -> int:
         return len(self._Semaphore__waiters)
@@ -218,7 +214,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         if self._Semaphore__value <= 0:
             self._c_ensure_debug_daemon((),{})
 
-        if not self.c_locked():
+        if not self.locked():
             self._Semaphore__value -= 1
             return _noop()
 
@@ -239,11 +235,11 @@ cdef class Semaphore(_DebugDaemonMixin):
         except CancelledError:
             if _is_not_cancelled(fut):
                 self._Semaphore__value += 1
-                self._c_wake_up_next()
+                self._wake_up_next()
             raise
 
         if self._Semaphore__value > 0:
-            self._c_wake_up_next()
+            self._wake_up_next()
 
         return True
 
@@ -254,11 +250,11 @@ cdef class Semaphore(_DebugDaemonMixin):
         become larger than zero again, wake up that coroutine.
         """
         self._Semaphore__value += 1
-        self._c_wake_up_next()
+        self._wake_up_next()
     
     cdef void c_release(self):
         self._Semaphore__value += 1
-        self._c_wake_up_next()
+        self._wake_up_next()
 
     @property
     def name(self) -> str:
@@ -288,17 +284,6 @@ cdef class Semaphore(_DebugDaemonMixin):
         self._Semaphore__waiters = value
 
     cpdef void _wake_up_next(self):
-        """Wake up the first waiter that isn't done."""
-        if not self._Semaphore__waiters:
-            return
-
-        for fut in self._Semaphore__waiters:
-            if _is_not_done(fut):
-                self._Semaphore__value -= 1
-                fut.set_result(True)
-                return
-    
-    cdef void _c_wake_up_next(self):
         """Wake up the first waiter that isn't done."""
         if not self._Semaphore__waiters:
             return

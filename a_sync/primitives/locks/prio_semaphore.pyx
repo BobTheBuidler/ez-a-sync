@@ -173,9 +173,6 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> semaphore.locked()
         """
-        return self.c_locked()
-    
-    cdef bint c_locked(self):
         cdef list waiters
         if self._Semaphore__value == 0:
             return True
@@ -200,8 +197,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         cdef list[_AbstractPrioritySemaphoreContextManager] waiters = self._Semaphore__waiters
         return {manager._priority: len(manager._Semaphore__waiters) for manager in sorted(waiters)}
         
-
-    def _wake_up_next(self) -> None:
+    cpdef void _wake_up_next(self):
         """Wakes up the next waiter in line.
 
         This method handles the waking of waiters based on priority. It includes an emergency
@@ -214,9 +210,6 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> semaphore._wake_up_next()
         """
-        self._c_wake_up_next()
-    
-    cdef void _c_wake_up_next(self):
         cdef _AbstractPrioritySemaphoreContextManager manager
         cdef Py_ssize_t start_len, end_len
         cdef bint woke_up
