@@ -5986,7 +5986,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>async_gen_func</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>~P</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.13)"><em>AsyncGenerator</em></a><em>[</em><em>T</em><em>, </em><em>None</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em><em>]</em>) – The async generator function to wrap.</p></li>
+<li><p><strong>async_gen_func</strong> (<em>AsyncGenFunc</em><em>[</em><em>P</em><em>, </em><em>T</em><em>]</em>) – The async generator function to wrap.</p></li>
 <li><p><strong>instance</strong> (<em>optional</em>) – The object to bind to the function, if applicable.</p></li>
 </ul>
 </dd>
@@ -6044,7 +6044,7 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dd><p>Return an async iterator that yields {obj} from the {cls}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
+<dd class="field-odd"><p>AsyncIterator[T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6055,7 +6055,7 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dd><p>Initializes the ASyncIterable with an async iterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>async_iterable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><em>T</em><em>]</em>) – The async iterable to wrap.</p>
+<dd class="field-odd"><p><strong>async_iterable</strong> (<em>AsyncIterable</em><em>[</em><em>T</em><em>]</em>) – The async iterable to wrap.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6073,7 +6073,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.13)"><em>Iterator</em></a>[<em>T</em>]</p>
+<dd class="field-odd"><p>Iterator[T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6115,10 +6115,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dd><p>Class method to wrap an AsyncIterable for backward compatibility.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>wrapped</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><em>T</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>wrapped</strong> (<em>AsyncIterable</em><em>[</em><em>T</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterable" title="a_sync.iter.ASyncIterable"><em>ASyncIterable</em></a>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterable" title="a_sync.iter.ASyncIterable">ASyncIterable</a>[T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6186,7 +6186,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopAsyncIteration" title="(in Python v3.13)"><strong>StopAsyncIteration</strong></a> – Once all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects have been fetched from the _ASyncView.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Coroutine" title="(in Python v3.13)"><em>Coroutine</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>, <em>T</em>]</p>
+<dd class="field-even"><p>Coroutine[Any, Any, T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6197,7 +6197,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dd><p>Initializes the ASyncIterator with an async iterator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>async_iterator</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – The async iterator to wrap.</p>
+<dd class="field-odd"><p><strong>async_iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to wrap.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -6349,7 +6349,7 @@ either synchronous or asynchronous. Note that the ASyncSorter instance can only 
 <dd class="field-even"><p>An async iterator that will yield the sorted <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
+<dd class="field-odd"><p>AsyncIterator[T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -6371,7 +6371,7 @@ either synchronous or asynchronous. Note that the ASyncSorter instance can only 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>iterable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><em>T</em><em>]</em>) – The async iterable to sort.</p></li>
+<li><p><strong>iterable</strong> (<em>AsyncIterable</em><em>[</em><em>T</em><em>]</em>) – The async iterable to sort.</p></li>
 <li><p><strong>key</strong> (<em>optional</em>) – A function of one argument that is used to extract a comparison key from each list element. If none is provided, elements themselves will be sorted. Defaults to None.</p></li>
 <li><p><strong>reverse</strong> (<em>optional</em>) – If True, the list elements will be sorted in reverse order. Defaults to False.</p></li>
 </ul>
@@ -7924,7 +7924,7 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dd><p>Return an async iterator that yields {obj} from the {cls}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
+<dd class="field-odd"><p>AsyncIterator[T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7935,7 +7935,7 @@ is raised from the <cite>RuntimeError</cite>.</p>
 <dd><p>Initializes the ASyncIterable with an async iterable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>async_iterable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><em>T</em><em>]</em>) – The async iterable to wrap.</p>
+<dd class="field-odd"><p><strong>async_iterable</strong> (<em>AsyncIterable</em><em>[</em><em>T</em><em>]</em>) – The async iterable to wrap.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7953,7 +7953,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.13)"><em>Iterator</em></a>[<em>T</em>]</p>
+<dd class="field-odd"><p>Iterator[T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -7995,10 +7995,10 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dd><p>Class method to wrap an AsyncIterable for backward compatibility.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>wrapped</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><em>T</em><em>]</em>)</p>
+<dd class="field-odd"><p><strong>wrapped</strong> (<em>AsyncIterable</em><em>[</em><em>T</em><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterable" title="a_sync.iter.ASyncIterable"><em>ASyncIterable</em></a>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference internal" href="#a_sync.ASyncIterable" title="a_sync.ASyncIterable">ASyncIterable</a>[T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -8066,7 +8066,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#StopAsyncIteration" title="(in Python v3.13)"><strong>StopAsyncIteration</strong></a> – Once all <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code> objects have been fetched from the _ASyncView.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Coroutine" title="(in Python v3.13)"><em>Coroutine</em></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>, <em>T</em>]</p>
+<dd class="field-even"><p>Coroutine[Any, Any, T]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -8077,7 +8077,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dd><p>Initializes the ASyncIterator with an async iterator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>async_iterator</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – The async iterator to wrap.</p>
+<dd class="field-odd"><p><strong>async_iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to wrap.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
