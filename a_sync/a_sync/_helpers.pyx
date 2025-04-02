@@ -4,7 +4,7 @@ and converting synchronous functions to asynchronous ones.
 """
 
 import asyncio
-from asyncio.futures import _chain_future
+import asyncio.futures as aiofutures
 
 from a_sync import exceptions
 from a_sync._typing import P, T
@@ -14,8 +14,9 @@ from a_sync.functools cimport wraps
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 cdef object new_event_loop = asyncio.new_event_loop
 cdef object set_event_loop = asyncio.set_event_loop
+cdef object _chain_future = aiofutures._chain_future
 cdef object _get_event_loop = asyncio.get_event_loop
-del asyncio
+del asyncio, aiofutures
 
 
 # cdef exceptions
