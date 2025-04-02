@@ -3,11 +3,13 @@
 This module provides utility functions for handling keyword arguments related to synchronous and asynchronous flags.
 """
 
-from libc.stdint cimport uint8_t
-
 from a_sync import exceptions
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
+
+# cdef exceptions
+cdef object TooManyFlags = exceptions.TooManyFlags
+del exceptions
 
 
 def _get_flag_name(dict kwargs) -> str:
@@ -44,7 +46,7 @@ cdef inline str get_flag_name(dict kwargs):
         return ""  # indicates no flag is present
     if next(present_flags, None) is None:
         return flag
-    raise exceptions.TooManyFlags("kwargs", present_flags)
+    raise TooManyFlags("kwargs", present_flags)
 
 
 cdef inline bint is_sync(str flag, dict kwargs, bint pop_flag):
