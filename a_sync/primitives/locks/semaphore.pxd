@@ -13,7 +13,6 @@ cdef class Semaphore(_DebugDaemonMixin):
     cpdef void release(self)
     cdef void c_release(self)
     cpdef void _wake_up_next(self)
-    cdef void _c_wake_up_next(self)
             
 cdef class DummySemaphore(Semaphore):
     pass

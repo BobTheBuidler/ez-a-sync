@@ -235,11 +235,11 @@ cdef class Semaphore(_DebugDaemonMixin):
         except CancelledError:
             if _is_not_cancelled(fut):
                 self._Semaphore__value += 1
-                self._c_wake_up_next()
+                self._wake_up_next()
             raise
 
         if self._Semaphore__value > 0:
-            self._c_wake_up_next()
+            self._wake_up_next()
 
         return True
 
@@ -250,11 +250,11 @@ cdef class Semaphore(_DebugDaemonMixin):
         become larger than zero again, wake up that coroutine.
         """
         self._Semaphore__value += 1
-        self._c_wake_up_next()
+        self._wake_up_next()
     
     cdef void c_release(self):
         self._Semaphore__value += 1
-        self._c_wake_up_next()
+        self._wake_up_next()
 
     @property
     def name(self) -> str:
@@ -284,17 +284,6 @@ cdef class Semaphore(_DebugDaemonMixin):
         self._Semaphore__waiters = value
 
     cpdef void _wake_up_next(self):
-        """Wake up the first waiter that isn't done."""
-        if not self._Semaphore__waiters:
-            return
-
-        for fut in self._Semaphore__waiters:
-            if _is_not_done(fut):
-                self._Semaphore__value -= 1
-                fut.set_result(True)
-                return
-    
-    cdef void _c_wake_up_next(self):
         """Wake up the first waiter that isn't done."""
         if not self._Semaphore__waiters:
             return
