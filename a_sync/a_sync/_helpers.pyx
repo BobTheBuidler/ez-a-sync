@@ -12,6 +12,12 @@ from a_sync._typing import P, T
 from a_sync.functools cimport wraps
 
 
+# cdef exceptions
+cdef object FunctionNotSync = exceptions.FunctionNotSync
+cdef object SyncModeInAsyncContextError = exceptions.SyncModeInAsyncContextError
+del exceptions
+
+
 cpdef object get_event_loop():
     cdef object loop
     try:
@@ -49,7 +55,7 @@ cdef object _await(object awaitable):
         return get_event_loop().run_until_complete(awaitable)
     except RuntimeError as e:
         if str(e) == "This event loop is already running":
-            raise exceptions.SyncModeInAsyncContextError from None
+            raise SyncModeInAsyncContextError from None
         raise
 
 
@@ -91,7 +97,7 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
     from a_sync.a_sync.function import ASyncFunction
 
     if iscoroutinefunction(func) or isinstance(func, ASyncFunction):
-        raise exceptions.FunctionNotSync(func)
+        raise FunctionNotSync(func)
     
     if hasattr(executor, "run"):
         # ASyncExecutor classes are better optimized.
