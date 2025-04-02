@@ -4930,7 +4930,7 @@ the queue.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.ThreadsafeSemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.</span></span><span class="sig-name descname"><span class="pre">ThreadsafeSemaphore</span></span><a class="headerlink" href="#a_sync.primitives.ThreadsafeSemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
-<p>ThreadsafeSemaphore(value: Optional[int], name: Optional[str] = None) -&gt; None</p>
+<p>ThreadsafeSemaphore(int value: Optional[int], unicode name: Optional[str] = None) -&gt; None</p>
 <p>A semaphore that works in a multi-threaded environment.</p>
 <p>This semaphore ensures that the program functions correctly even when used with multiple event loops.
 It provides a workaround for edge cases involving multiple threads and event loops by using a separate semaphore

@@ -2230,7 +2230,7 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.DummySemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.semaphore.</span></span><span class="sig-name descname"><span class="pre">DummySemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.DummySemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
-<p>DummySemaphore(name: Optional[str] = None)</p>
+<p>DummySemaphore(unicode name: Optional[str] = None)</p>
 <p>A dummy semaphore that implements the standard <a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a> API but does nothing.</p>
 <p>This class is useful for scenarios where a semaphore interface is required but no actual synchronization is needed.</p>
 <p class="rubric">Example</p>
@@ -2910,7 +2910,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.locks.semaphore.ThreadsafeSemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.semaphore.</span></span><span class="sig-name descname"><span class="pre">ThreadsafeSemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.semaphore.ThreadsafeSemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
-<p>ThreadsafeSemaphore(value: Optional[int], name: Optional[str] = None) -&gt; None</p>
+<p>ThreadsafeSemaphore(int value: Optional[int], unicode name: Optional[str] = None) -&gt; None</p>
 <p>A semaphore that works in a multi-threaded environment.</p>
 <p>This semaphore ensures that the program functions correctly even when used with multiple event loops.
 It provides a workaround for edge cases involving multiple threads and event loops by using a separate semaphore
@@ -3591,7 +3591,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dt class="sig sig-object py" id="a_sync.primitives.locks.DummySemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.</span></span><span class="sig-name descname"><span class="pre">DummySemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.DummySemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
-<p>DummySemaphore(name: Optional[str] = None)</p>
+<p>DummySemaphore(unicode name: Optional[str] = None)</p>
 <p>A dummy semaphore that implements the standard <a class="reference external" href="https://docs.python.org/3/library/asyncio-sync.html#asyncio.Semaphore" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.Semaphore</span></code></a> API but does nothing.</p>
 <p>This class is useful for scenarios where a semaphore interface is required but no actual synchronization is needed.</p>
 <p class="rubric">Example</p>
@@ -4656,7 +4656,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.locks.ThreadsafeSemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.</span></span><span class="sig-name descname"><span class="pre">ThreadsafeSemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.ThreadsafeSemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
-<p>ThreadsafeSemaphore(value: Optional[int], name: Optional[str] = None) -&gt; None</p>
+<p>ThreadsafeSemaphore(int value: Optional[int], unicode name: Optional[str] = None) -&gt; None</p>
 <p>A semaphore that works in a multi-threaded environment.</p>
 <p>This semaphore ensures that the program functions correctly even when used with multiple event loops.
 It provides a workaround for edge cases involving multiple threads and event loops by using a separate semaphore
