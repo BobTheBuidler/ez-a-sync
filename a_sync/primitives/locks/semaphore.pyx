@@ -152,15 +152,11 @@ cdef class Semaphore(_DebugDaemonMixin):
 
     cpdef bint locked(self):
         """Returns True if semaphore cannot be acquired immediately."""
-        return self.c_locked()
-    
-    cdef bint c_locked(self):
-        """Returns True if semaphore cannot be acquired immediately."""
         if self._Semaphore__value == 0:
             return True
-        cdef object waiters = self._Semaphore__waiters 
-        if any(_is_not_cancelled(w) for w in (waiters or ())):
-            return True
+        for w in self._Semaphore__waiters:
+            if _is_not_cancelled(w):
+                return True
 
     def __len__(self) -> int:
         return len(self._Semaphore__waiters)
@@ -218,7 +214,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         if self._Semaphore__value <= 0:
             self._c_ensure_debug_daemon((),{})
 
-        if not self.c_locked():
+        if not self.locked():
             self._Semaphore__value -= 1
             return _noop()
 
