@@ -11,7 +11,6 @@ cdef class Semaphore(_DebugDaemonMixin):
     cpdef object acquire(self)
     cdef object c_acquire(self)
     cpdef void release(self)
-    cdef void c_release(self)
     cpdef void _wake_up_next(self)
             
 cdef class DummySemaphore(Semaphore):

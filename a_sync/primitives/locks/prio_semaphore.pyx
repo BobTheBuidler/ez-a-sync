@@ -120,7 +120,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> async with semaphore:
             ...     await do_stuff()
         """
-        self.c_getitem(self._top_priority).c_release()
+        self.c_getitem(self._top_priority).release()
 
     cpdef object acquire(self):
         """Acquires the semaphore with the top priority.
@@ -400,18 +400,7 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
             >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
             >>> context_manager.release()
         """
-        self._parent.c_release()
-
-    cdef void c_release(self):
-        """Releases the semaphore for this context manager.
-
-        This method overrides :meth:`Semaphore.release` to handle priority-based logic.
-
-        Examples:
-            >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
-            >>> context_manager.release()
-        """
-        self._parent.c_release()
+        self._parent.release()
 
 
 cdef inline bint _is_not_done(fut: Future):

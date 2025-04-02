@@ -148,7 +148,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         return None
 
     async def __aexit__(self, exc_type, exc, tb):
-        self.c_release()
+        self.release()
 
     cpdef bint locked(self):
         """Returns True if semaphore cannot be acquired immediately."""
@@ -249,10 +249,6 @@ cdef class Semaphore(_DebugDaemonMixin):
         When it was zero on entry and another coroutine is waiting for it to
         become larger than zero again, wake up that coroutine.
         """
-        self._Semaphore__value += 1
-        self._wake_up_next()
-    
-    cdef void c_release(self):
         self._Semaphore__value += 1
         self._wake_up_next()
 
@@ -394,9 +390,6 @@ cdef class DummySemaphore(Semaphore):
 
     cpdef void release(self):
         """No-op release method."""
-    
-    cdef void c_release(self):
-        """No-op release method."""
 
     async def __aenter__(self):
         """No-op context manager entry."""
@@ -470,4 +463,4 @@ cdef class ThreadsafeSemaphore(Semaphore):
         await self.c_get_semaphore().c_acquire()
 
     async def __aexit__(self, *args):
-        self.c_get_semaphore().c_release()
+        self.c_get_semaphore().release()
