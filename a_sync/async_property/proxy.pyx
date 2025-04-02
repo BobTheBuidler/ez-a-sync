@@ -1,7 +1,7 @@
 cdef class AwaitableOnly:
     """This wraps a coroutine will call it on await."""
 
-    def __init__(self, coro):
+    def __cinit__(self, object coro):
         self._coro = coro
 
     def __repr__(self):

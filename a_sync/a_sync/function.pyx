@@ -917,7 +917,7 @@ else:
 
 
 cdef class ASyncDecorator(_ModifiedMixin):
-    def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
+    def __cinit__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         """
         Initializes an ASyncDecorator instance by validating the inputs.
 
