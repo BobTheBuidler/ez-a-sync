@@ -3,16 +3,43 @@ This module extends :func:`asyncio.create_task` to support any :class:`Awaitable
 manage task lifecycle, and enhance error handling.
 """
 
+import asyncio
 import asyncio.tasks as aiotasks
-from asyncio import Future, InvalidStateError, Task, get_running_loop, iscoroutine
-from logging import getLogger
+import logging
+import typing
 
-from a_sync._smart import SmartTask, smart_task_factory
-from a_sync._typing import *
-from a_sync.exceptions import PersistedTaskException
+from a_sync import _smart, exceptions
+from a_sync._typing import T
 
 
-cdef public object logger = getLogger(__name__)
+# cdef asyncio
+cdef object get_running_loop = asyncio.get_running_loop
+cdef object iscoroutine = asyncio.iscoroutine
+cdef object Future = asyncio.Future
+cdef object InvalidStateError = asyncio.InvalidStateError
+cdef object Task = asyncio.Task
+cdef object _GatheringFuture = aiotasks._GatheringFuture
+del asyncio, aiotasks
+
+# cdef logging
+cdef public object logger = logging.getLogger(__name__)
+del logging
+
+# cdef typing
+cdef object Awaitable = typing.Awaitable
+cdef object Optional = typing.Optional
+cdef object Tuple = typing.Tuple
+cdef object Set = typing.Set
+del typing
+
+# cdef _smart
+cdef object SmartTask = _smart.SmartTask
+cdef object smart_task_factory = _smart.smart_task_factory
+del _smart
+
+# cdef exceptions
+cdef object PersistedTaskException = exceptions.PersistedTaskException
+del exceptions
 
 
 def create_task(
@@ -140,7 +167,7 @@ async def __await(awaitable: Awaitable[T]) -> T:
         return await awaitable
     except RuntimeError as e:
         args = [e, awaitable]
-        if isinstance(awaitable, aiotasks._GatheringFuture):
+        if isinstance(awaitable, _GatheringFuture):
             args.append(awaitable._children)
         raise RuntimeError(*args) from None
 
