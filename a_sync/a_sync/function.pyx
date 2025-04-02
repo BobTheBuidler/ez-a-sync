@@ -29,10 +29,6 @@ if TYPE_CHECKING:
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 del asyncio
 
-# cdef functools
-cdef object cached_property = functools.cached_property
-del functools
-
 
 logger = getLogger(__name__)
 
