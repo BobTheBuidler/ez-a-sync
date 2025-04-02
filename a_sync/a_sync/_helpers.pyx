@@ -12,6 +12,12 @@ from a_sync._typing import P, T
 from a_sync.functools cimport wraps
 
 
+# cdef exceptions
+cdef object FunctionNotSync = exceptions.FunctionNotSync
+cdef object SyncModeInAsyncContextError = exceptions.SyncModeInAsyncContextError
+del exceptions
+
+
 cpdef object get_event_loop():
     cdef object loop
     try:
