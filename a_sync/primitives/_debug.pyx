@@ -31,15 +31,15 @@ cdef object _get_running_loop():
 
 
 cdef class _LoopBoundMixin(_LoggerMixin):
-    def __cinit__(self):
+    def __cinit__(self, *, loop=None):
         self._LoopBoundMixin__loop = None
-    def __init__(self, *, loop=None):
         if loop is not None:
             raise TypeError(
                 'The loop parameter is not supported. '
                 'As of 3.10, the *loop* parameter was removed'
                 '{}() since it is no longer necessary.'.format(type(self).__name__)
             )
+    
     @property
     def _loop(self) -> AbstractEventLoop:
         return self._LoopBoundMixin__loop
