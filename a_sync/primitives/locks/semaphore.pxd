@@ -8,7 +8,6 @@ cdef class Semaphore(_DebugDaemonMixin):
     cdef set _decorated
     cdef dict __dict__
     cpdef bint locked(self)
-    cdef bint c_locked(self)
     cpdef object acquire(self)
     cdef object c_acquire(self)
     cpdef void release(self)

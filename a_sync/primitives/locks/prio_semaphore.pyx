@@ -175,9 +175,6 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> semaphore.locked()
         """
-        return self.c_locked()
-    
-    cdef bint c_locked(self):
         cdef list waiters
         if self._Semaphore__value == 0:
             return True
