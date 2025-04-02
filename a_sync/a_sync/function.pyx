@@ -830,7 +830,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             )
         return _ModifiedMixin._asyncify(self, self._modified_fn)  # type: ignore [arg-type]
 
-    @functools.cached_property
+    @cached_property
     def _modified_fn(self) -> AnyFn[P, T]:
         """
         Applies modifiers to the wrapped function.
@@ -849,7 +849,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             return self.modifiers.apply_async_modifiers(self.__wrapped__)  # type: ignore [arg-type]
         return self.modifiers.apply_sync_modifiers(self.__wrapped__)  # type: ignore [return-value]
 
-    @functools.cached_property
+    @cached_property
     def _async_wrap(self):  # -> SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]]:
         """
         The final wrapper if the wrapped function is an asynchronous function.
@@ -882,7 +882,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         return async_wrap
 
-    @functools.cached_property
+    @cached_property
     def _sync_wrap(self):  # -> SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]:
         """
         The final wrapper if the wrapped function is a synchronous function.
