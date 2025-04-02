@@ -17,7 +17,6 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
     cdef object _priority
     cdef str _priority_name
     cpdef str _repr_no_parent_(self)
-    cdef str _c_repr_no_parent_(self)
 
 cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager):
     pass
