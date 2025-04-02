@@ -141,8 +141,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         return representation
 
     async def __aenter__(self):
-        coro = self.c_acquire()
-        await coro
+        await self.acquire()
         # We have no use for the "as ..."  clause in the with
         # statement for locks.
         return None
@@ -184,21 +183,6 @@ cdef class Semaphore(_DebugDaemonMixin):
         return semaphore_wrapper
 
     cpdef object acquire(self):
-        """
-        Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.
-
-        If the internal counter is larger than zero on entry, decrement it by one and return
-        True immediately.  If it is zero on entry, block, waiting until some other coroutine 
-        has called release() to make it larger than 0, and then return True.
-
-        If the semaphore value is zero or less, the debug daemon is started to log the state of the semaphore.
-
-        Returns:
-            True when the semaphore is successfully acquired.
-        """
-        return self.c_acquire()
-    
-    cdef object c_acquire(self):
         """
         Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.
 
@@ -388,9 +372,6 @@ cdef class DummySemaphore(Semaphore):
     async def acquire(self) -> Literal[True]:
         """Acquire the dummy semaphore, which is a no-op."""
         return True
-    
-    async def c_acquire(self) -> Literal[True]:
-        return True
 
     cpdef void release(self):
         """No-op release method."""
@@ -467,7 +448,7 @@ cdef class ThreadsafeSemaphore(Semaphore):
         return self.dummy if self.use_dummy else self.semaphores[current_thread()]
 
     async def __aenter__(self):
-        await self.c_get_semaphore().c_acquire()
+        await self.c_get_semaphore().acquire()
 
     async def __aexit__(self, *args):
         self.c_get_semaphore().c_release()
