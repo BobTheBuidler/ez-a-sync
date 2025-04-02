@@ -9828,7 +9828,7 @@ If some other task executes <cite>counter.value = 5</cite> or <cite>counter.set(
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.</span></span><span class="sig-name descname"><span class="pre">PrioritySemaphore</span></span><a class="headerlink" href="#a_sync.PrioritySemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="a_sync.primitives.locks.html#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a></p>
-<p>PrioritySemaphore(int value: int = 1, name: Optional[str] = None, <a href="#id169"><span class="problematic" id="id170">*</span></a>) -&gt; None
+<p>PrioritySemaphore(int value: int = 1, unicode name: Optional[str] = None, <a href="#id169"><span class="problematic" id="id170">*</span></a>) -&gt; None
 Semaphore that uses numeric priorities for waiters.</p>
 <blockquote>
 <div><p>This class extends <code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code> and provides a concrete implementation
@@ -10027,7 +10027,7 @@ waiting.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.PrioritySemaphore.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore with the top priority.</p>
 <p>This method overrides <a class="reference internal" href="#a_sync.Semaphore.acquire" title="a_sync.Semaphore.acquire"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.acquire()</span></code></a> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
@@ -10035,11 +10035,6 @@ waiting.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">semaphore</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Literal[True]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">

@@ -767,7 +767,7 @@ processed before lower priority ones.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">PrioritySemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a></p>
-<p>PrioritySemaphore(int value: int = 1, name: Optional[str] = None, <a href="#id3"><span class="problematic" id="id4">*</span></a>) -&gt; None
+<p>PrioritySemaphore(int value: int = 1, unicode name: Optional[str] = None, <a href="#id3"><span class="problematic" id="id4">*</span></a>) -&gt; None
 Semaphore that uses numeric priorities for waiters.</p>
 <blockquote>
 <div><p>This class extends <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a> and provides a concrete implementation
@@ -966,7 +966,7 @@ waiting.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore with the top priority.</p>
 <p>This method overrides <code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.acquire()</span></code> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
@@ -974,11 +974,6 @@ waiting.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">semaphore</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Literal[True]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1146,7 +1141,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">_AbstractPrioritySemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
-<p>_AbstractPrioritySemaphore(context_manager_class: Type[_AbstractPrioritySemaphoreContextManager], top_priority: object, int value: int = 1, name: Optional[str] = None, <a href="#id5"><span class="problematic" id="id6">*</span></a>) -&gt; None</p>
+<p>_AbstractPrioritySemaphore(context_manager_class: Type[_AbstractPrioritySemaphoreContextManager], top_priority: object, int value: int = 1, unicode name: Optional[str] = None, <a href="#id5"><span class="problematic" id="id6">*</span></a>) -&gt; None</p>
 <p>A semaphore that allows prioritization of waiters.</p>
 <p>This semaphore manages waiters with associated priorities, ensuring that waiters with higher
 priorities are processed before those with lower priorities. Subclasses must define the
@@ -1344,7 +1339,7 @@ waiting.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.acquire" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore with the top priority.</p>
 <p>This method overrides <code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.acquire()</span></code> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
@@ -1352,11 +1347,6 @@ waiting.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">semaphore</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Literal[True]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1524,7 +1514,7 @@ become larger than zero again, wake up that coroutine.</p>
 <dt class="sig sig-object py" id="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.prio_semaphore.</span></span><span class="sig-name descname"><span class="pre">_AbstractPrioritySemaphoreContextManager</span></span><a class="headerlink" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphoreContextManager" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.semaphore.Semaphore" title="a_sync.primitives.locks.semaphore.Semaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">Semaphore</span></code></a></p>
-<p>_AbstractPrioritySemaphoreContextManager(_AbstractPrioritySemaphore parent: _AbstractPrioritySemaphore, priority: PT, name: Optional[str] = None) -&gt; None</p>
+<p>_AbstractPrioritySemaphoreContextManager(_AbstractPrioritySemaphore parent: _AbstractPrioritySemaphore, priority: PT, unicode name: Optional[str] = None) -&gt; None</p>
 <p>A context manager for priority semaphore waiters.</p>
 <p>This context manager is associated with a specific priority and handles
 the acquisition and release of the semaphore for waiters with that priority.</p>
@@ -1534,7 +1524,7 @@ the acquisition and release of the semaphore for waiters with that priority.</p>
 <dd><p>_AbstractPrioritySemaphoreContextManager.__acquire(self) -&gt; Literal[True]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Literal[True]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1883,7 +1873,7 @@ async def limited():</p>
 <dd><p>_AbstractPrioritySemaphoreContextManager.__acquire(self) -&gt; Literal[True]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Literal[True]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.13)"><em>Literal</em></a>[True]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3929,7 +3919,7 @@ async def limited():</p>
 <dt class="sig sig-object py" id="a_sync.primitives.locks.PrioritySemaphore">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.primitives.locks.</span></span><span class="sig-name descname"><span class="pre">PrioritySemaphore</span></span><a class="headerlink" href="#a_sync.primitives.locks.PrioritySemaphore" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore" title="a_sync.primitives.locks.prio_semaphore._AbstractPrioritySemaphore"><code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code></a></p>
-<p>PrioritySemaphore(int value: int = 1, name: Optional[str] = None, <a href="#id19"><span class="problematic" id="id20">*</span></a>) -&gt; None
+<p>PrioritySemaphore(int value: int = 1, unicode name: Optional[str] = None, <a href="#id19"><span class="problematic" id="id20">*</span></a>) -&gt; None
 Semaphore that uses numeric priorities for waiters.</p>
 <blockquote>
 <div><p>This class extends <code class="xref py py-class docutils literal notranslate"><span class="pre">_AbstractPrioritySemaphore</span></code> and provides a concrete implementation
@@ -4128,7 +4118,7 @@ waiting.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.primitives.locks.PrioritySemaphore.acquire">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="k"><span class="pre">True</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.primitives.locks.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.primitives.locks.PrioritySemaphore.acquire" title="Link to this definition"></a></dt>
 <dd><p>Acquires the semaphore with the top priority.</p>
 <p>This method overrides <a class="reference internal" href="#a_sync.primitives.locks.Semaphore.acquire" title="a_sync.primitives.locks.Semaphore.acquire"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Semaphore.acquire()</span></code></a> to handle priority-based logic.</p>
 <p class="rubric">Examples</p>
@@ -4136,11 +4126,6 @@ waiting.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">semaphore</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Literal[True]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
