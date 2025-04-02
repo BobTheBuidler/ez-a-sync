@@ -42,7 +42,6 @@ del inspect
 # cdef logging
 cdef public object logger = getLogger(__name__)
 cdef object _logger_debug = logger.debug
-del getLogger
 
 
 cdef class _ModifiedMixin:
