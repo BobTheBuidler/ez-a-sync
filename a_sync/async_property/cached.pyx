@@ -1,12 +1,34 @@
-from asyncio import Lock, iscoroutinefunction
-from collections import defaultdict
-from functools import wraps
-from typing import Any, DefaultDict, Dict
+import asyncio
+import collections
+import functools
+import typing
 
 from a_sync._smart cimport shield
 from a_sync.async_property.proxy import AwaitableProxy
 from a_sync.async_property.proxy cimport AwaitableOnly
 from a_sync.functools cimport update_wrapper
+
+# cdef asyncio
+cdef object iscoroutinefunction = asyncio.iscoroutinefunction
+cdef object Lock = asyncio.Lock
+del asyncio
+
+# cdef collections
+cdef object defaultdict = collections.defaultdict
+del collections
+
+# cdef functools
+cdef object wraps = functools.wraps
+del functools
+
+# cdef typing
+cdef object Any = typing.Any
+cdef object DefaultDict = typing.DefaultDict
+cdef object Dict = typing.Dict
+del typing
+
+
+cdef object _AwaitableProxy = AwaitableProxy
 
 
 def async_cached_property(func, *args, **kwargs) -> "AsyncCachedPropertyDescriptor":
@@ -47,7 +69,7 @@ class AsyncCachedPropertyDescriptor:
             return self
         cache = (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
         if self.field_name in cache:
-            return AwaitableProxy(cache[self.field_name])
+            return _AwaitableProxy(cache[self.field_name])
         return AwaitableOnly(self.get_loader(instance))
 
     def __set__(self, instance, value):
