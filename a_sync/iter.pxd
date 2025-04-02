@@ -1,5 +1,5 @@
-cdef object ASyncIterator
-cdef object ASyncIterable
-cdef object ASyncFilter
-cdef object ASyncSorter
-cdef object ASyncGeneratorFunction
+cdef public object ASyncIterator
+cdef public object ASyncIterable
+cdef public object ASyncFilter
+cdef public object ASyncSorter
+cdef public object ASyncGeneratorFunction
