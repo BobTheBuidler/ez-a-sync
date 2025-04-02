@@ -49,7 +49,7 @@ cdef class ModifierManager:
         - :class:`a_sync.a_sync.modifiers.limiter`
         - :class:`a_sync.a_sync.modifiers.semaphores`
     """
-    def __init__(self, dict[str, object] modifiers, bint _skip_check = False) -> None:
+    def __cinit__(self, dict[str, object] modifiers, bint _skip_check = False) -> None:
         """Initializes the ModifierManager with the given modifiers.
 
         Args:
