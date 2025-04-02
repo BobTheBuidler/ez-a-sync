@@ -225,15 +225,13 @@ with either an integer specifying the number of runs per minute or an
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.modifiers.manager.</span></span><span class="sig-name descname"><span class="pre">ModifierManager</span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>ModifierManager(dict modifiers, bool _skip_check=False) -&gt; None
-Manages modifiers for asynchronous and synchronous functions.</p>
-<blockquote>
-<div><p>This class is responsible for applying modifiers to functions, such as
+<p>Manages modifiers for asynchronous and synchronous functions.</p>
+<p>This class is responsible for applying modifiers to functions, such as
 caching, rate limiting, and semaphores for asynchronous functions. It also
 handles synchronous functions, although no sync modifiers are currently
 implemented.</p>
-<dl>
-<dt>Examples:</dt><dd><p>Creating a ModifierManager with specific modifiers:</p>
+<p class="rubric">Examples</p>
+<p>Creating a ModifierManager with specific modifiers:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modifiers</span> <span class="o">=</span> <span class="n">ModifierKwargs</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">modifiers</span><span class="p">)</span>
 </pre></div>
@@ -250,15 +248,14 @@ implemented.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">modified_function</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">apply_sync_modifiers</span><span class="p">(</span><span class="n">my_function</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd>
-<dt>See Also:</dt><dd><ul class="simple">
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
 <li><p><a class="reference internal" href="a_sync.a_sync.modifiers.cache.html#module-a_sync.a_sync.modifiers.cache" title="a_sync.a_sync.modifiers.cache"><code class="xref py py-class docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.cache</span></code></a></p></li>
 <li><p><a class="reference internal" href="#module-a_sync.a_sync.modifiers.limiter" title="a_sync.a_sync.modifiers.limiter"><code class="xref py py-class docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.limiter</span></code></a></p></li>
 <li><p><a class="reference internal" href="#module-a_sync.a_sync.modifiers.semaphores" title="a_sync.a_sync.modifiers.semaphores"><code class="xref py py-class docutils literal notranslate"><span class="pre">a_sync.a_sync.modifiers.semaphores</span></code></a></p></li>
 </ul>
-</dd>
-</dl>
-</div></blockquote>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__">
 <span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__" title="Link to this definition"></a></dt>
@@ -277,20 +274,6 @@ implemented.</p>
 <span class="go">&#39;memory&#39;</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the ModifierManager with the given modifiers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>modifiers</strong> – A dictionary of modifiers to be applied.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If an unsupported modifier is provided.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">

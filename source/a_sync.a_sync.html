@@ -123,7 +123,6 @@
 <li class="toctree-l2"><a class="reference internal" href="a_sync.a_sync.modifiers.html#module-a_sync.a_sync.modifiers.manager">a_sync.a_sync.modifiers.manager module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager"><code class="docutils literal notranslate"><span class="pre">ModifierManager</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__getitem__()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.__init__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.__iter__"><code class="docutils literal notranslate"><span class="pre">ModifierManager.__iter__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.apply_async_modifiers"><code class="docutils literal notranslate"><span class="pre">ModifierManager.apply_async_modifiers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="a_sync.a_sync.modifiers.html#a_sync.a_sync.modifiers.manager.ModifierManager.apply_sync_modifiers"><code class="docutils literal notranslate"><span class="pre">ModifierManager.apply_sync_modifiers()</span></code></a></li>
@@ -1173,31 +1172,10 @@ in the ez-a-sync library.</p>
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncDecorator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.function.</span></span><span class="sig-name descname"><span class="pre">ASyncDecorator</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncDecorator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.a_sync.function._ModifiedMixin" title="a_sync.a_sync.function._ModifiedMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">_ModifiedMixin</span></code></a></p>
-<p>ASyncDecorator(<a href="#id84"><span class="problematic" id="id85">**</span></a>modifiers: Unpack[ModifierKwargs]) -&gt; None</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncDecorator.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.function.ASyncDecorator.__call__" title="Link to this definition"></a></dt>
 <dd><p>Helper for &#64;overload to raise when called.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncDecorator.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.function.ASyncDecorator.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes an ASyncDecorator instance by validating the inputs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>**modifiers</strong> – Keyword arguments for function modifiers.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If ‘default’ is not ‘sync’, ‘async’, or None.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ModifierManager</span></code></p></li>
-</ul>
-</div>
 </dd></dl>
 
 <dl class="py attribute">
@@ -1240,26 +1218,6 @@ in the ez-a-sync library.</p>
 <dd><p>Helper for &#64;overload to raise when called.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncDecoratorAsyncDefault.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.function.ASyncDecoratorAsyncDefault.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes an ASyncDecorator instance by validating the inputs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>**modifiers</strong> – Keyword arguments for function modifiers.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If ‘default’ is not ‘sync’, ‘async’, or None.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ModifierManager</span></code></p></li>
-</ul>
-</div>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncDecoratorAsyncDefault.default">
 <span class="sig-name descname"><span class="pre">default</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncDecoratorAsyncDefault.default" title="Link to this definition"></a></dt>
@@ -1298,26 +1256,6 @@ in the ez-a-sync library.</p>
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncDecoratorSyncDefault.__call__">
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.function.ASyncDecoratorSyncDefault.__call__" title="Link to this definition"></a></dt>
 <dd><p>Helper for &#64;overload to raise when called.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncDecoratorSyncDefault.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.function.ASyncDecoratorSyncDefault.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes an ASyncDecorator instance by validating the inputs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>**modifiers</strong> – Keyword arguments for function modifiers.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If ‘default’ is not ‘sync’, ‘async’, or None.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ModifierManager</span></code></p></li>
-</ul>
-</div>
 </dd></dl>
 
 <dl class="py attribute">
@@ -3991,7 +3929,7 @@ attribute to decide the type of bound method to create.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id86"><span class="problematic" id="id87">``</span></a><a href="#id88"><span class="problematic" id="id89">`</span></a>python
+<p><a href="#id84"><span class="problematic" id="id85">``</span></a><a href="#id86"><span class="problematic" id="id87">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4002,7 +3940,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id90"><span class="problematic" id="id91">``</span></a><a href="#id92"><span class="problematic" id="id93">`</span></a></p>
+<a href="#id88"><span class="problematic" id="id89">``</span></a><a href="#id90"><span class="problematic" id="id91">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4023,7 +3961,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id94"><span class="problematic" id="id95">``</span></a><a href="#id96"><span class="problematic" id="id97">`</span></a>python
+<p><a href="#id92"><span class="problematic" id="id93">``</span></a><a href="#id94"><span class="problematic" id="id95">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4034,7 +3972,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id98"><span class="problematic" id="id99">``</span></a><a href="#id100"><span class="problematic" id="id101">`</span></a></p>
+<a href="#id96"><span class="problematic" id="id97">``</span></a><a href="#id98"><span class="problematic" id="id99">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4055,7 +3993,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id102"><span class="problematic" id="id103">``</span></a><a href="#id104"><span class="problematic" id="id105">`</span></a>python
+<p><a href="#id100"><span class="problematic" id="id101">``</span></a><a href="#id102"><span class="problematic" id="id103">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4066,7 +4004,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id106"><span class="problematic" id="id107">``</span></a><a href="#id108"><span class="problematic" id="id109">`</span></a></p>
+<a href="#id104"><span class="problematic" id="id105">``</span></a><a href="#id106"><span class="problematic" id="id107">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4087,7 +4025,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id110"><span class="problematic" id="id111">``</span></a><a href="#id112"><span class="problematic" id="id113">`</span></a>python
+<p><a href="#id108"><span class="problematic" id="id109">``</span></a><a href="#id110"><span class="problematic" id="id111">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4098,7 +4036,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id114"><span class="problematic" id="id115">``</span></a><a href="#id116"><span class="problematic" id="id117">`</span></a></p>
+<a href="#id112"><span class="problematic" id="id113">``</span></a><a href="#id114"><span class="problematic" id="id115">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4119,7 +4057,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id118"><span class="problematic" id="id119">``</span></a><a href="#id120"><span class="problematic" id="id121">`</span></a>python
+<p><a href="#id116"><span class="problematic" id="id117">``</span></a><a href="#id118"><span class="problematic" id="id119">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4130,7 +4068,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id122"><span class="problematic" id="id123">``</span></a><a href="#id124"><span class="problematic" id="id125">`</span></a></p>
+<a href="#id120"><span class="problematic" id="id121">``</span></a><a href="#id122"><span class="problematic" id="id123">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4273,7 +4211,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id126"><span class="problematic" id="id127">``</span></a><a href="#id128"><span class="problematic" id="id129">`</span></a>python
+<p><a href="#id124"><span class="problematic" id="id125">``</span></a><a href="#id126"><span class="problematic" id="id127">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4284,7 +4222,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id130"><span class="problematic" id="id131">``</span></a><a href="#id132"><span class="problematic" id="id133">`</span></a></p>
+<a href="#id128"><span class="problematic" id="id129">``</span></a><a href="#id130"><span class="problematic" id="id131">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -4302,7 +4240,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id134"><span class="problematic" id="id135">``</span></a><a href="#id136"><span class="problematic" id="id137">`</span></a>python
+<p><a href="#id132"><span class="problematic" id="id133">``</span></a><a href="#id134"><span class="problematic" id="id135">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4313,7 +4251,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id138"><span class="problematic" id="id139">``</span></a><a href="#id140"><span class="problematic" id="id141">`</span></a></p>
+<a href="#id136"><span class="problematic" id="id137">``</span></a><a href="#id138"><span class="problematic" id="id139">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -4410,7 +4348,7 @@ instances, which are specialized versions of <cite>ASyncBoundMethod</cite> with 
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id142"><span class="problematic" id="id143">``</span></a><a href="#id144"><span class="problematic" id="id145">`</span></a>python
+<p><a href="#id140"><span class="problematic" id="id141">``</span></a><a href="#id142"><span class="problematic" id="id143">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4421,7 +4359,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id146"><span class="problematic" id="id147">``</span></a><a href="#id148"><span class="problematic" id="id149">`</span></a></p>
+<a href="#id144"><span class="problematic" id="id145">``</span></a><a href="#id146"><span class="problematic" id="id147">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4442,7 +4380,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id150"><span class="problematic" id="id151">``</span></a><a href="#id152"><span class="problematic" id="id153">`</span></a>python
+<p><a href="#id148"><span class="problematic" id="id149">``</span></a><a href="#id150"><span class="problematic" id="id151">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4453,7 +4391,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id154"><span class="problematic" id="id155">``</span></a><a href="#id156"><span class="problematic" id="id157">`</span></a></p>
+<a href="#id152"><span class="problematic" id="id153">``</span></a><a href="#id154"><span class="problematic" id="id155">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4474,7 +4412,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id158"><span class="problematic" id="id159">``</span></a><a href="#id160"><span class="problematic" id="id161">`</span></a>python
+<p><a href="#id156"><span class="problematic" id="id157">``</span></a><a href="#id158"><span class="problematic" id="id159">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4485,7 +4423,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id162"><span class="problematic" id="id163">``</span></a><a href="#id164"><span class="problematic" id="id165">`</span></a></p>
+<a href="#id160"><span class="problematic" id="id161">``</span></a><a href="#id162"><span class="problematic" id="id163">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4506,7 +4444,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id166"><span class="problematic" id="id167">``</span></a><a href="#id168"><span class="problematic" id="id169">`</span></a>python
+<p><a href="#id164"><span class="problematic" id="id165">``</span></a><a href="#id166"><span class="problematic" id="id167">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4517,7 +4455,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id170"><span class="problematic" id="id171">``</span></a><a href="#id172"><span class="problematic" id="id173">`</span></a></p>
+<a href="#id168"><span class="problematic" id="id169">``</span></a><a href="#id170"><span class="problematic" id="id171">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4538,7 +4476,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id174"><span class="problematic" id="id175">``</span></a><a href="#id176"><span class="problematic" id="id177">`</span></a>python
+<p><a href="#id172"><span class="problematic" id="id173">``</span></a><a href="#id174"><span class="problematic" id="id175">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4549,7 +4487,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id178"><span class="problematic" id="id179">``</span></a><a href="#id180"><span class="problematic" id="id181">`</span></a></p>
+<a href="#id176"><span class="problematic" id="id177">``</span></a><a href="#id178"><span class="problematic" id="id179">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4674,7 +4612,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id182"><span class="problematic" id="id183">``</span></a><a href="#id184"><span class="problematic" id="id185">`</span></a>python
+<p><a href="#id180"><span class="problematic" id="id181">``</span></a><a href="#id182"><span class="problematic" id="id183">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4685,7 +4623,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id186"><span class="problematic" id="id187">``</span></a><a href="#id188"><span class="problematic" id="id189">`</span></a></p>
+<a href="#id184"><span class="problematic" id="id185">``</span></a><a href="#id186"><span class="problematic" id="id187">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -4703,7 +4641,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id190"><span class="problematic" id="id191">``</span></a><a href="#id192"><span class="problematic" id="id193">`</span></a>python
+<p><a href="#id188"><span class="problematic" id="id189">``</span></a><a href="#id190"><span class="problematic" id="id191">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4714,7 +4652,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id194"><span class="problematic" id="id195">``</span></a><a href="#id196"><span class="problematic" id="id197">`</span></a></p>
+<a href="#id192"><span class="problematic" id="id193">``</span></a><a href="#id194"><span class="problematic" id="id195">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -4812,7 +4750,7 @@ instances, which are specialized versions of <cite>ASyncBoundMethod</cite> with 
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id198"><span class="problematic" id="id199">``</span></a><a href="#id200"><span class="problematic" id="id201">`</span></a>python
+<p><a href="#id196"><span class="problematic" id="id197">``</span></a><a href="#id198"><span class="problematic" id="id199">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4823,7 +4761,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id202"><span class="problematic" id="id203">``</span></a><a href="#id204"><span class="problematic" id="id205">`</span></a></p>
+<a href="#id200"><span class="problematic" id="id201">``</span></a><a href="#id202"><span class="problematic" id="id203">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4844,7 +4782,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id206"><span class="problematic" id="id207">``</span></a><a href="#id208"><span class="problematic" id="id209">`</span></a>python
+<p><a href="#id204"><span class="problematic" id="id205">``</span></a><a href="#id206"><span class="problematic" id="id207">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4855,7 +4793,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id210"><span class="problematic" id="id211">``</span></a><a href="#id212"><span class="problematic" id="id213">`</span></a></p>
+<a href="#id208"><span class="problematic" id="id209">``</span></a><a href="#id210"><span class="problematic" id="id211">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4876,7 +4814,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id214"><span class="problematic" id="id215">``</span></a><a href="#id216"><span class="problematic" id="id217">`</span></a>python
+<p><a href="#id212"><span class="problematic" id="id213">``</span></a><a href="#id214"><span class="problematic" id="id215">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4887,7 +4825,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id218"><span class="problematic" id="id219">``</span></a><a href="#id220"><span class="problematic" id="id221">`</span></a></p>
+<a href="#id216"><span class="problematic" id="id217">``</span></a><a href="#id218"><span class="problematic" id="id219">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4908,7 +4846,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id222"><span class="problematic" id="id223">``</span></a><a href="#id224"><span class="problematic" id="id225">`</span></a>python
+<p><a href="#id220"><span class="problematic" id="id221">``</span></a><a href="#id222"><span class="problematic" id="id223">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4919,7 +4857,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id226"><span class="problematic" id="id227">``</span></a><a href="#id228"><span class="problematic" id="id229">`</span></a></p>
+<a href="#id224"><span class="problematic" id="id225">``</span></a><a href="#id226"><span class="problematic" id="id227">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -4940,7 +4878,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id230"><span class="problematic" id="id231">``</span></a><a href="#id232"><span class="problematic" id="id233">`</span></a>python
+<p><a href="#id228"><span class="problematic" id="id229">``</span></a><a href="#id230"><span class="problematic" id="id231">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -4951,7 +4889,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id234"><span class="problematic" id="id235">``</span></a><a href="#id236"><span class="problematic" id="id237">`</span></a></p>
+<a href="#id232"><span class="problematic" id="id233">``</span></a><a href="#id234"><span class="problematic" id="id235">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5076,7 +5014,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id238"><span class="problematic" id="id239">``</span></a><a href="#id240"><span class="problematic" id="id241">`</span></a>python
+<p><a href="#id236"><span class="problematic" id="id237">``</span></a><a href="#id238"><span class="problematic" id="id239">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5087,7 +5025,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id242"><span class="problematic" id="id243">``</span></a><a href="#id244"><span class="problematic" id="id245">`</span></a></p>
+<a href="#id240"><span class="problematic" id="id241">``</span></a><a href="#id242"><span class="problematic" id="id243">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -5105,7 +5043,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id246"><span class="problematic" id="id247">``</span></a><a href="#id248"><span class="problematic" id="id249">`</span></a>python
+<p><a href="#id244"><span class="problematic" id="id245">``</span></a><a href="#id246"><span class="problematic" id="id247">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5116,7 +5054,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id250"><span class="problematic" id="id251">``</span></a><a href="#id252"><span class="problematic" id="id253">`</span></a></p>
+<a href="#id248"><span class="problematic" id="id249">``</span></a><a href="#id250"><span class="problematic" id="id251">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -5169,7 +5107,7 @@ caching functionality, storing the computed value after the first access.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id254"><span class="problematic" id="id255">``</span></a><a href="#id256"><span class="problematic" id="id257">`</span></a>python
+<p><a href="#id252"><span class="problematic" id="id253">``</span></a><a href="#id254"><span class="problematic" id="id255">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5180,7 +5118,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id258"><span class="problematic" id="id259">``</span></a><a href="#id260"><span class="problematic" id="id261">`</span></a></p>
+<a href="#id256"><span class="problematic" id="id257">``</span></a><a href="#id258"><span class="problematic" id="id259">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5201,7 +5139,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id262"><span class="problematic" id="id263">``</span></a><a href="#id264"><span class="problematic" id="id265">`</span></a>python
+<p><a href="#id260"><span class="problematic" id="id261">``</span></a><a href="#id262"><span class="problematic" id="id263">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5212,7 +5150,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id266"><span class="problematic" id="id267">``</span></a><a href="#id268"><span class="problematic" id="id269">`</span></a></p>
+<a href="#id264"><span class="problematic" id="id265">``</span></a><a href="#id266"><span class="problematic" id="id267">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5243,7 +5181,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id270"><span class="problematic" id="id271">``</span></a><a href="#id272"><span class="problematic" id="id273">`</span></a>python
+<p><a href="#id268"><span class="problematic" id="id269">``</span></a><a href="#id270"><span class="problematic" id="id271">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5254,7 +5192,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id274"><span class="problematic" id="id275">``</span></a><a href="#id276"><span class="problematic" id="id277">`</span></a></p>
+<a href="#id272"><span class="problematic" id="id273">``</span></a><a href="#id274"><span class="problematic" id="id275">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5275,7 +5213,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id278"><span class="problematic" id="id279">``</span></a><a href="#id280"><span class="problematic" id="id281">`</span></a>python
+<p><a href="#id276"><span class="problematic" id="id277">``</span></a><a href="#id278"><span class="problematic" id="id279">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5286,7 +5224,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id282"><span class="problematic" id="id283">``</span></a><a href="#id284"><span class="problematic" id="id285">`</span></a></p>
+<a href="#id280"><span class="problematic" id="id281">``</span></a><a href="#id282"><span class="problematic" id="id283">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5307,7 +5245,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id286"><span class="problematic" id="id287">``</span></a><a href="#id288"><span class="problematic" id="id289">`</span></a>python
+<p><a href="#id284"><span class="problematic" id="id285">``</span></a><a href="#id286"><span class="problematic" id="id287">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5318,7 +5256,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id290"><span class="problematic" id="id291">``</span></a><a href="#id292"><span class="problematic" id="id293">`</span></a></p>
+<a href="#id288"><span class="problematic" id="id289">``</span></a><a href="#id290"><span class="problematic" id="id291">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5561,7 +5499,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id294"><span class="problematic" id="id295">``</span></a><a href="#id296"><span class="problematic" id="id297">`</span></a>python
+<p><a href="#id292"><span class="problematic" id="id293">``</span></a><a href="#id294"><span class="problematic" id="id295">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5572,7 +5510,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id298"><span class="problematic" id="id299">``</span></a><a href="#id300"><span class="problematic" id="id301">`</span></a></p>
+<a href="#id296"><span class="problematic" id="id297">``</span></a><a href="#id298"><span class="problematic" id="id299">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -5590,7 +5528,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id302"><span class="problematic" id="id303">``</span></a><a href="#id304"><span class="problematic" id="id305">`</span></a>python
+<p><a href="#id300"><span class="problematic" id="id301">``</span></a><a href="#id302"><span class="problematic" id="id303">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5601,7 +5539,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id306"><span class="problematic" id="id307">``</span></a><a href="#id308"><span class="problematic" id="id309">`</span></a></p>
+<a href="#id304"><span class="problematic" id="id305">``</span></a><a href="#id306"><span class="problematic" id="id307">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -5655,7 +5593,7 @@ accessed asynchronously but can also be used synchronously if needed.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id310"><span class="problematic" id="id311">``</span></a><a href="#id312"><span class="problematic" id="id313">`</span></a>python
+<p><a href="#id308"><span class="problematic" id="id309">``</span></a><a href="#id310"><span class="problematic" id="id311">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5666,7 +5604,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id314"><span class="problematic" id="id315">``</span></a><a href="#id316"><span class="problematic" id="id317">`</span></a></p>
+<a href="#id312"><span class="problematic" id="id313">``</span></a><a href="#id314"><span class="problematic" id="id315">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5687,7 +5625,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id318"><span class="problematic" id="id319">``</span></a><a href="#id320"><span class="problematic" id="id321">`</span></a>python
+<p><a href="#id316"><span class="problematic" id="id317">``</span></a><a href="#id318"><span class="problematic" id="id319">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5698,7 +5636,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id322"><span class="problematic" id="id323">``</span></a><a href="#id324"><span class="problematic" id="id325">`</span></a></p>
+<a href="#id320"><span class="problematic" id="id321">``</span></a><a href="#id322"><span class="problematic" id="id323">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5729,7 +5667,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id326"><span class="problematic" id="id327">``</span></a><a href="#id328"><span class="problematic" id="id329">`</span></a>python
+<p><a href="#id324"><span class="problematic" id="id325">``</span></a><a href="#id326"><span class="problematic" id="id327">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5740,7 +5678,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id330"><span class="problematic" id="id331">``</span></a><a href="#id332"><span class="problematic" id="id333">`</span></a></p>
+<a href="#id328"><span class="problematic" id="id329">``</span></a><a href="#id330"><span class="problematic" id="id331">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5761,7 +5699,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id334"><span class="problematic" id="id335">``</span></a><a href="#id336"><span class="problematic" id="id337">`</span></a>python
+<p><a href="#id332"><span class="problematic" id="id333">``</span></a><a href="#id334"><span class="problematic" id="id335">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5772,7 +5710,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id338"><span class="problematic" id="id339">``</span></a><a href="#id340"><span class="problematic" id="id341">`</span></a></p>
+<a href="#id336"><span class="problematic" id="id337">``</span></a><a href="#id338"><span class="problematic" id="id339">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -5793,7 +5731,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id342"><span class="problematic" id="id343">``</span></a><a href="#id344"><span class="problematic" id="id345">`</span></a>python
+<p><a href="#id340"><span class="problematic" id="id341">``</span></a><a href="#id342"><span class="problematic" id="id343">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -5804,7 +5742,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id346"><span class="problematic" id="id347">``</span></a><a href="#id348"><span class="problematic" id="id349">`</span></a></p>
+<a href="#id344"><span class="problematic" id="id345">``</span></a><a href="#id346"><span class="problematic" id="id347">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6047,7 +5985,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id350"><span class="problematic" id="id351">``</span></a><a href="#id352"><span class="problematic" id="id353">`</span></a>python
+<p><a href="#id348"><span class="problematic" id="id349">``</span></a><a href="#id350"><span class="problematic" id="id351">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6058,7 +5996,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id354"><span class="problematic" id="id355">``</span></a><a href="#id356"><span class="problematic" id="id357">`</span></a></p>
+<a href="#id352"><span class="problematic" id="id353">``</span></a><a href="#id354"><span class="problematic" id="id355">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -6076,7 +6014,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id358"><span class="problematic" id="id359">``</span></a><a href="#id360"><span class="problematic" id="id361">`</span></a>python
+<p><a href="#id356"><span class="problematic" id="id357">``</span></a><a href="#id358"><span class="problematic" id="id359">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6087,7 +6025,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id362"><span class="problematic" id="id363">``</span></a><a href="#id364"><span class="problematic" id="id365">`</span></a></p>
+<a href="#id360"><span class="problematic" id="id361">``</span></a><a href="#id362"><span class="problematic" id="id363">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -6141,7 +6079,7 @@ accessed synchronously but can also be used asynchronously if needed.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id366"><span class="problematic" id="id367">``</span></a><a href="#id368"><span class="problematic" id="id369">`</span></a>python
+<p><a href="#id364"><span class="problematic" id="id365">``</span></a><a href="#id366"><span class="problematic" id="id367">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6152,7 +6090,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id370"><span class="problematic" id="id371">``</span></a><a href="#id372"><span class="problematic" id="id373">`</span></a></p>
+<a href="#id368"><span class="problematic" id="id369">``</span></a><a href="#id370"><span class="problematic" id="id371">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6173,7 +6111,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id374"><span class="problematic" id="id375">``</span></a><a href="#id376"><span class="problematic" id="id377">`</span></a>python
+<p><a href="#id372"><span class="problematic" id="id373">``</span></a><a href="#id374"><span class="problematic" id="id375">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6184,7 +6122,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id378"><span class="problematic" id="id379">``</span></a><a href="#id380"><span class="problematic" id="id381">`</span></a></p>
+<a href="#id376"><span class="problematic" id="id377">``</span></a><a href="#id378"><span class="problematic" id="id379">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6215,7 +6153,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id382"><span class="problematic" id="id383">``</span></a><a href="#id384"><span class="problematic" id="id385">`</span></a>python
+<p><a href="#id380"><span class="problematic" id="id381">``</span></a><a href="#id382"><span class="problematic" id="id383">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6226,7 +6164,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id386"><span class="problematic" id="id387">``</span></a><a href="#id388"><span class="problematic" id="id389">`</span></a></p>
+<a href="#id384"><span class="problematic" id="id385">``</span></a><a href="#id386"><span class="problematic" id="id387">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6247,7 +6185,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id390"><span class="problematic" id="id391">``</span></a><a href="#id392"><span class="problematic" id="id393">`</span></a>python
+<p><a href="#id388"><span class="problematic" id="id389">``</span></a><a href="#id390"><span class="problematic" id="id391">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6258,7 +6196,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id394"><span class="problematic" id="id395">``</span></a><a href="#id396"><span class="problematic" id="id397">`</span></a></p>
+<a href="#id392"><span class="problematic" id="id393">``</span></a><a href="#id394"><span class="problematic" id="id395">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6279,7 +6217,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id398"><span class="problematic" id="id399">``</span></a><a href="#id400"><span class="problematic" id="id401">`</span></a>python
+<p><a href="#id396"><span class="problematic" id="id397">``</span></a><a href="#id398"><span class="problematic" id="id399">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6290,7 +6228,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id402"><span class="problematic" id="id403">``</span></a><a href="#id404"><span class="problematic" id="id405">`</span></a></p>
+<a href="#id400"><span class="problematic" id="id401">``</span></a><a href="#id402"><span class="problematic" id="id403">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6533,7 +6471,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id406"><span class="problematic" id="id407">``</span></a><a href="#id408"><span class="problematic" id="id409">`</span></a>python
+<p><a href="#id404"><span class="problematic" id="id405">``</span></a><a href="#id406"><span class="problematic" id="id407">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6544,7 +6482,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id410"><span class="problematic" id="id411">``</span></a><a href="#id412"><span class="problematic" id="id413">`</span></a></p>
+<a href="#id408"><span class="problematic" id="id409">``</span></a><a href="#id410"><span class="problematic" id="id411">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -6562,7 +6500,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id414"><span class="problematic" id="id415">``</span></a><a href="#id416"><span class="problematic" id="id417">`</span></a>python
+<p><a href="#id412"><span class="problematic" id="id413">``</span></a><a href="#id414"><span class="problematic" id="id415">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6573,7 +6511,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id418"><span class="problematic" id="id419">``</span></a><a href="#id420"><span class="problematic" id="id421">`</span></a></p>
+<a href="#id416"><span class="problematic" id="id417">``</span></a><a href="#id418"><span class="problematic" id="id419">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -6619,7 +6557,7 @@ result = await instance.my_method.sum([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id422"><span class="problematic" id="id423">``</span></a><a href="#id424"><span class="problematic" id="id425">`</span></a>python
+<p><a href="#id420"><span class="problematic" id="id421">``</span></a><a href="#id422"><span class="problematic" id="id423">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6630,7 +6568,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id426"><span class="problematic" id="id427">``</span></a><a href="#id428"><span class="problematic" id="id429">`</span></a></p>
+<a href="#id424"><span class="problematic" id="id425">``</span></a><a href="#id426"><span class="problematic" id="id427">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6651,7 +6589,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id430"><span class="problematic" id="id431">``</span></a><a href="#id432"><span class="problematic" id="id433">`</span></a>python
+<p><a href="#id428"><span class="problematic" id="id429">``</span></a><a href="#id430"><span class="problematic" id="id431">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6662,7 +6600,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id434"><span class="problematic" id="id435">``</span></a><a href="#id436"><span class="problematic" id="id437">`</span></a></p>
+<a href="#id432"><span class="problematic" id="id433">``</span></a><a href="#id434"><span class="problematic" id="id435">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6683,7 +6621,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id438"><span class="problematic" id="id439">``</span></a><a href="#id440"><span class="problematic" id="id441">`</span></a>python
+<p><a href="#id436"><span class="problematic" id="id437">``</span></a><a href="#id438"><span class="problematic" id="id439">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6694,7 +6632,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id442"><span class="problematic" id="id443">``</span></a><a href="#id444"><span class="problematic" id="id445">`</span></a></p>
+<a href="#id440"><span class="problematic" id="id441">``</span></a><a href="#id442"><span class="problematic" id="id443">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6715,7 +6653,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id446"><span class="problematic" id="id447">``</span></a><a href="#id448"><span class="problematic" id="id449">`</span></a>python
+<p><a href="#id444"><span class="problematic" id="id445">``</span></a><a href="#id446"><span class="problematic" id="id447">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6726,7 +6664,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id450"><span class="problematic" id="id451">``</span></a><a href="#id452"><span class="problematic" id="id453">`</span></a></p>
+<a href="#id448"><span class="problematic" id="id449">``</span></a><a href="#id450"><span class="problematic" id="id451">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6747,7 +6685,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id454"><span class="problematic" id="id455">``</span></a><a href="#id456"><span class="problematic" id="id457">`</span></a>python
+<p><a href="#id452"><span class="problematic" id="id453">``</span></a><a href="#id454"><span class="problematic" id="id455">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6758,7 +6696,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id458"><span class="problematic" id="id459">``</span></a><a href="#id460"><span class="problematic" id="id461">`</span></a></p>
+<a href="#id456"><span class="problematic" id="id457">``</span></a><a href="#id458"><span class="problematic" id="id459">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -6932,7 +6870,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id462"><span class="problematic" id="id463">``</span></a><a href="#id464"><span class="problematic" id="id465">`</span></a>python
+<p><a href="#id460"><span class="problematic" id="id461">``</span></a><a href="#id462"><span class="problematic" id="id463">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6943,7 +6881,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id466"><span class="problematic" id="id467">``</span></a><a href="#id468"><span class="problematic" id="id469">`</span></a></p>
+<a href="#id464"><span class="problematic" id="id465">``</span></a><a href="#id466"><span class="problematic" id="id467">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -6961,7 +6899,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id470"><span class="problematic" id="id471">``</span></a><a href="#id472"><span class="problematic" id="id473">`</span></a>python
+<p><a href="#id468"><span class="problematic" id="id469">``</span></a><a href="#id470"><span class="problematic" id="id471">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -6972,7 +6910,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id474"><span class="problematic" id="id475">``</span></a><a href="#id476"><span class="problematic" id="id477">`</span></a></p>
+<a href="#id472"><span class="problematic" id="id473">``</span></a><a href="#id474"><span class="problematic" id="id475">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -7020,7 +6958,7 @@ asynchronously but can also be used synchronously if needed.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id478"><span class="problematic" id="id479">``</span></a><a href="#id480"><span class="problematic" id="id481">`</span></a>python
+<p><a href="#id476"><span class="problematic" id="id477">``</span></a><a href="#id478"><span class="problematic" id="id479">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7031,7 +6969,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id482"><span class="problematic" id="id483">``</span></a><a href="#id484"><span class="problematic" id="id485">`</span></a></p>
+<a href="#id480"><span class="problematic" id="id481">``</span></a><a href="#id482"><span class="problematic" id="id483">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7052,7 +6990,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id486"><span class="problematic" id="id487">``</span></a><a href="#id488"><span class="problematic" id="id489">`</span></a>python
+<p><a href="#id484"><span class="problematic" id="id485">``</span></a><a href="#id486"><span class="problematic" id="id487">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7063,7 +7001,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id490"><span class="problematic" id="id491">``</span></a><a href="#id492"><span class="problematic" id="id493">`</span></a></p>
+<a href="#id488"><span class="problematic" id="id489">``</span></a><a href="#id490"><span class="problematic" id="id491">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7084,7 +7022,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id494"><span class="problematic" id="id495">``</span></a><a href="#id496"><span class="problematic" id="id497">`</span></a>python
+<p><a href="#id492"><span class="problematic" id="id493">``</span></a><a href="#id494"><span class="problematic" id="id495">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7095,7 +7033,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id498"><span class="problematic" id="id499">``</span></a><a href="#id500"><span class="problematic" id="id501">`</span></a></p>
+<a href="#id496"><span class="problematic" id="id497">``</span></a><a href="#id498"><span class="problematic" id="id499">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7116,7 +7054,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id502"><span class="problematic" id="id503">``</span></a><a href="#id504"><span class="problematic" id="id505">`</span></a>python
+<p><a href="#id500"><span class="problematic" id="id501">``</span></a><a href="#id502"><span class="problematic" id="id503">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7127,7 +7065,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id506"><span class="problematic" id="id507">``</span></a><a href="#id508"><span class="problematic" id="id509">`</span></a></p>
+<a href="#id504"><span class="problematic" id="id505">``</span></a><a href="#id506"><span class="problematic" id="id507">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7148,7 +7086,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id510"><span class="problematic" id="id511">``</span></a><a href="#id512"><span class="problematic" id="id513">`</span></a>python
+<p><a href="#id508"><span class="problematic" id="id509">``</span></a><a href="#id510"><span class="problematic" id="id511">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7159,7 +7097,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id514"><span class="problematic" id="id515">``</span></a><a href="#id516"><span class="problematic" id="id517">`</span></a></p>
+<a href="#id512"><span class="problematic" id="id513">``</span></a><a href="#id514"><span class="problematic" id="id515">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7315,7 +7253,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id518"><span class="problematic" id="id519">``</span></a><a href="#id520"><span class="problematic" id="id521">`</span></a>python
+<p><a href="#id516"><span class="problematic" id="id517">``</span></a><a href="#id518"><span class="problematic" id="id519">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7326,7 +7264,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id522"><span class="problematic" id="id523">``</span></a><a href="#id524"><span class="problematic" id="id525">`</span></a></p>
+<a href="#id520"><span class="problematic" id="id521">``</span></a><a href="#id522"><span class="problematic" id="id523">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -7344,7 +7282,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id526"><span class="problematic" id="id527">``</span></a><a href="#id528"><span class="problematic" id="id529">`</span></a>python
+<p><a href="#id524"><span class="problematic" id="id525">``</span></a><a href="#id526"><span class="problematic" id="id527">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7355,7 +7293,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id530"><span class="problematic" id="id531">``</span></a><a href="#id532"><span class="problematic" id="id533">`</span></a></p>
+<a href="#id528"><span class="problematic" id="id529">``</span></a><a href="#id530"><span class="problematic" id="id531">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -7403,7 +7341,7 @@ synchronously but can also be used asynchronously if needed.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id534"><span class="problematic" id="id535">``</span></a><a href="#id536"><span class="problematic" id="id537">`</span></a>python
+<p><a href="#id532"><span class="problematic" id="id533">``</span></a><a href="#id534"><span class="problematic" id="id535">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7414,7 +7352,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id538"><span class="problematic" id="id539">``</span></a><a href="#id540"><span class="problematic" id="id541">`</span></a></p>
+<a href="#id536"><span class="problematic" id="id537">``</span></a><a href="#id538"><span class="problematic" id="id539">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7435,7 +7373,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id542"><span class="problematic" id="id543">``</span></a><a href="#id544"><span class="problematic" id="id545">`</span></a>python
+<p><a href="#id540"><span class="problematic" id="id541">``</span></a><a href="#id542"><span class="problematic" id="id543">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7446,7 +7384,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id546"><span class="problematic" id="id547">``</span></a><a href="#id548"><span class="problematic" id="id549">`</span></a></p>
+<a href="#id544"><span class="problematic" id="id545">``</span></a><a href="#id546"><span class="problematic" id="id547">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7467,7 +7405,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id550"><span class="problematic" id="id551">``</span></a><a href="#id552"><span class="problematic" id="id553">`</span></a>python
+<p><a href="#id548"><span class="problematic" id="id549">``</span></a><a href="#id550"><span class="problematic" id="id551">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7478,7 +7416,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id554"><span class="problematic" id="id555">``</span></a><a href="#id556"><span class="problematic" id="id557">`</span></a></p>
+<a href="#id552"><span class="problematic" id="id553">``</span></a><a href="#id554"><span class="problematic" id="id555">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7499,7 +7437,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id558"><span class="problematic" id="id559">``</span></a><a href="#id560"><span class="problematic" id="id561">`</span></a>python
+<p><a href="#id556"><span class="problematic" id="id557">``</span></a><a href="#id558"><span class="problematic" id="id559">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7510,7 +7448,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id562"><span class="problematic" id="id563">``</span></a><a href="#id564"><span class="problematic" id="id565">`</span></a></p>
+<a href="#id560"><span class="problematic" id="id561">``</span></a><a href="#id562"><span class="problematic" id="id563">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7531,7 +7469,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id566"><span class="problematic" id="id567">``</span></a><a href="#id568"><span class="problematic" id="id569">`</span></a>python
+<p><a href="#id564"><span class="problematic" id="id565">``</span></a><a href="#id566"><span class="problematic" id="id567">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7542,7 +7480,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id570"><span class="problematic" id="id571">``</span></a><a href="#id572"><span class="problematic" id="id573">`</span></a></p>
+<a href="#id568"><span class="problematic" id="id569">``</span></a><a href="#id570"><span class="problematic" id="id571">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -7698,7 +7636,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id574"><span class="problematic" id="id575">``</span></a><a href="#id576"><span class="problematic" id="id577">`</span></a>python
+<p><a href="#id572"><span class="problematic" id="id573">``</span></a><a href="#id574"><span class="problematic" id="id575">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7709,7 +7647,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id578"><span class="problematic" id="id579">``</span></a><a href="#id580"><span class="problematic" id="id581">`</span></a></p>
+<a href="#id576"><span class="problematic" id="id577">``</span></a><a href="#id578"><span class="problematic" id="id579">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -7727,7 +7665,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id582"><span class="problematic" id="id583">``</span></a><a href="#id584"><span class="problematic" id="id585">`</span></a>python
+<p><a href="#id580"><span class="problematic" id="id581">``</span></a><a href="#id582"><span class="problematic" id="id583">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -7738,7 +7676,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id586"><span class="problematic" id="id587">``</span></a><a href="#id588"><span class="problematic" id="id589">`</span></a></p>
+<a href="#id584"><span class="problematic" id="id585">``</span></a><a href="#id586"><span class="problematic" id="id587">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -8195,7 +8133,7 @@ definition (sync vs async def).</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id590"><span class="problematic" id="id591">``</span></a><a href="#id592"><span class="problematic" id="id593">`</span></a>python
+<p><a href="#id588"><span class="problematic" id="id589">``</span></a><a href="#id590"><span class="problematic" id="id591">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8206,7 +8144,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id594"><span class="problematic" id="id595">``</span></a><a href="#id596"><span class="problematic" id="id597">`</span></a></p>
+<a href="#id592"><span class="problematic" id="id593">``</span></a><a href="#id594"><span class="problematic" id="id595">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8227,7 +8165,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id598"><span class="problematic" id="id599">``</span></a><a href="#id600"><span class="problematic" id="id601">`</span></a>python
+<p><a href="#id596"><span class="problematic" id="id597">``</span></a><a href="#id598"><span class="problematic" id="id599">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8238,7 +8176,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id602"><span class="problematic" id="id603">``</span></a><a href="#id604"><span class="problematic" id="id605">`</span></a></p>
+<a href="#id600"><span class="problematic" id="id601">``</span></a><a href="#id602"><span class="problematic" id="id603">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8259,7 +8197,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id606"><span class="problematic" id="id607">``</span></a><a href="#id608"><span class="problematic" id="id609">`</span></a>python
+<p><a href="#id604"><span class="problematic" id="id605">``</span></a><a href="#id606"><span class="problematic" id="id607">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8270,7 +8208,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id610"><span class="problematic" id="id611">``</span></a><a href="#id612"><span class="problematic" id="id613">`</span></a></p>
+<a href="#id608"><span class="problematic" id="id609">``</span></a><a href="#id610"><span class="problematic" id="id611">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8291,7 +8229,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id614"><span class="problematic" id="id615">``</span></a><a href="#id616"><span class="problematic" id="id617">`</span></a>python
+<p><a href="#id612"><span class="problematic" id="id613">``</span></a><a href="#id614"><span class="problematic" id="id615">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8302,7 +8240,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id618"><span class="problematic" id="id619">``</span></a><a href="#id620"><span class="problematic" id="id621">`</span></a></p>
+<a href="#id616"><span class="problematic" id="id617">``</span></a><a href="#id618"><span class="problematic" id="id619">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8323,7 +8261,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id622"><span class="problematic" id="id623">``</span></a><a href="#id624"><span class="problematic" id="id625">`</span></a>python
+<p><a href="#id620"><span class="problematic" id="id621">``</span></a><a href="#id622"><span class="problematic" id="id623">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8334,7 +8272,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id626"><span class="problematic" id="id627">``</span></a><a href="#id628"><span class="problematic" id="id629">`</span></a></p>
+<a href="#id624"><span class="problematic" id="id625">``</span></a><a href="#id626"><span class="problematic" id="id627">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8459,7 +8397,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id630"><span class="problematic" id="id631">``</span></a><a href="#id632"><span class="problematic" id="id633">`</span></a>python
+<p><a href="#id628"><span class="problematic" id="id629">``</span></a><a href="#id630"><span class="problematic" id="id631">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8470,7 +8408,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id634"><span class="problematic" id="id635">``</span></a><a href="#id636"><span class="problematic" id="id637">`</span></a></p>
+<a href="#id632"><span class="problematic" id="id633">``</span></a><a href="#id634"><span class="problematic" id="id635">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -8488,7 +8426,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id638"><span class="problematic" id="id639">``</span></a><a href="#id640"><span class="problematic" id="id641">`</span></a>python
+<p><a href="#id636"><span class="problematic" id="id637">``</span></a><a href="#id638"><span class="problematic" id="id639">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8499,7 +8437,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id642"><span class="problematic" id="id643">``</span></a><a href="#id644"><span class="problematic" id="id645">`</span></a></p>
+<a href="#id640"><span class="problematic" id="id641">``</span></a><a href="#id642"><span class="problematic" id="id643">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -8548,7 +8486,7 @@ operations such as <cite>any</cite>, <cite>all</cite>, <cite>min</cite>, <cite>m
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id646"><span class="problematic" id="id647">``</span></a><a href="#id648"><span class="problematic" id="id649">`</span></a>python
+<p><a href="#id644"><span class="problematic" id="id645">``</span></a><a href="#id646"><span class="problematic" id="id647">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8559,7 +8497,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id650"><span class="problematic" id="id651">``</span></a><a href="#id652"><span class="problematic" id="id653">`</span></a></p>
+<a href="#id648"><span class="problematic" id="id649">``</span></a><a href="#id650"><span class="problematic" id="id651">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8580,7 +8518,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id654"><span class="problematic" id="id655">``</span></a><a href="#id656"><span class="problematic" id="id657">`</span></a>python
+<p><a href="#id652"><span class="problematic" id="id653">``</span></a><a href="#id654"><span class="problematic" id="id655">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8591,7 +8529,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id658"><span class="problematic" id="id659">``</span></a><a href="#id660"><span class="problematic" id="id661">`</span></a></p>
+<a href="#id656"><span class="problematic" id="id657">``</span></a><a href="#id658"><span class="problematic" id="id659">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8612,7 +8550,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id662"><span class="problematic" id="id663">``</span></a><a href="#id664"><span class="problematic" id="id665">`</span></a>python
+<p><a href="#id660"><span class="problematic" id="id661">``</span></a><a href="#id662"><span class="problematic" id="id663">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8623,7 +8561,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id666"><span class="problematic" id="id667">``</span></a><a href="#id668"><span class="problematic" id="id669">`</span></a></p>
+<a href="#id664"><span class="problematic" id="id665">``</span></a><a href="#id666"><span class="problematic" id="id667">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8644,7 +8582,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id670"><span class="problematic" id="id671">``</span></a><a href="#id672"><span class="problematic" id="id673">`</span></a>python
+<p><a href="#id668"><span class="problematic" id="id669">``</span></a><a href="#id670"><span class="problematic" id="id671">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8655,7 +8593,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id674"><span class="problematic" id="id675">``</span></a><a href="#id676"><span class="problematic" id="id677">`</span></a></p>
+<a href="#id672"><span class="problematic" id="id673">``</span></a><a href="#id674"><span class="problematic" id="id675">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8676,7 +8614,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id678"><span class="problematic" id="id679">``</span></a><a href="#id680"><span class="problematic" id="id681">`</span></a>python
+<p><a href="#id676"><span class="problematic" id="id677">``</span></a><a href="#id678"><span class="problematic" id="id679">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8687,7 +8625,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id682"><span class="problematic" id="id683">``</span></a><a href="#id684"><span class="problematic" id="id685">`</span></a></p>
+<a href="#id680"><span class="problematic" id="id681">``</span></a><a href="#id682"><span class="problematic" id="id683">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -8851,7 +8789,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id686"><span class="problematic" id="id687">``</span></a><a href="#id688"><span class="problematic" id="id689">`</span></a>python
+<p><a href="#id684"><span class="problematic" id="id685">``</span></a><a href="#id686"><span class="problematic" id="id687">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8862,7 +8800,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id690"><span class="problematic" id="id691">``</span></a><a href="#id692"><span class="problematic" id="id693">`</span></a></p>
+<a href="#id688"><span class="problematic" id="id689">``</span></a><a href="#id690"><span class="problematic" id="id691">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -8880,7 +8818,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id694"><span class="problematic" id="id695">``</span></a><a href="#id696"><span class="problematic" id="id697">`</span></a>python
+<p><a href="#id692"><span class="problematic" id="id693">``</span></a><a href="#id694"><span class="problematic" id="id695">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -8891,7 +8829,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id698"><span class="problematic" id="id699">``</span></a><a href="#id700"><span class="problematic" id="id701">`</span></a></p>
+<a href="#id696"><span class="problematic" id="id697">``</span></a><a href="#id698"><span class="problematic" id="id699">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -9062,7 +9000,7 @@ caching functionality, storing the computed value after the first access.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id702"><span class="problematic" id="id703">``</span></a><a href="#id704"><span class="problematic" id="id705">`</span></a>python
+<p><a href="#id700"><span class="problematic" id="id701">``</span></a><a href="#id702"><span class="problematic" id="id703">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9073,7 +9011,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id706"><span class="problematic" id="id707">``</span></a><a href="#id708"><span class="problematic" id="id709">`</span></a></p>
+<a href="#id704"><span class="problematic" id="id705">``</span></a><a href="#id706"><span class="problematic" id="id707">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -9094,7 +9032,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id710"><span class="problematic" id="id711">``</span></a><a href="#id712"><span class="problematic" id="id713">`</span></a>python
+<p><a href="#id708"><span class="problematic" id="id709">``</span></a><a href="#id710"><span class="problematic" id="id711">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9105,7 +9043,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id714"><span class="problematic" id="id715">``</span></a><a href="#id716"><span class="problematic" id="id717">`</span></a></p>
+<a href="#id712"><span class="problematic" id="id713">``</span></a><a href="#id714"><span class="problematic" id="id715">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -9136,7 +9074,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id718"><span class="problematic" id="id719">``</span></a><a href="#id720"><span class="problematic" id="id721">`</span></a>python
+<p><a href="#id716"><span class="problematic" id="id717">``</span></a><a href="#id718"><span class="problematic" id="id719">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9147,7 +9085,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id722"><span class="problematic" id="id723">``</span></a><a href="#id724"><span class="problematic" id="id725">`</span></a></p>
+<a href="#id720"><span class="problematic" id="id721">``</span></a><a href="#id722"><span class="problematic" id="id723">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -9168,7 +9106,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id726"><span class="problematic" id="id727">``</span></a><a href="#id728"><span class="problematic" id="id729">`</span></a>python
+<p><a href="#id724"><span class="problematic" id="id725">``</span></a><a href="#id726"><span class="problematic" id="id727">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9179,7 +9117,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id730"><span class="problematic" id="id731">``</span></a><a href="#id732"><span class="problematic" id="id733">`</span></a></p>
+<a href="#id728"><span class="problematic" id="id729">``</span></a><a href="#id730"><span class="problematic" id="id731">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -9200,7 +9138,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id734"><span class="problematic" id="id735">``</span></a><a href="#id736"><span class="problematic" id="id737">`</span></a>python
+<p><a href="#id732"><span class="problematic" id="id733">``</span></a><a href="#id734"><span class="problematic" id="id735">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9211,7 +9149,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id738"><span class="problematic" id="id739">``</span></a><a href="#id740"><span class="problematic" id="id741">`</span></a></p>
+<a href="#id736"><span class="problematic" id="id737">``</span></a><a href="#id738"><span class="problematic" id="id739">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -9454,7 +9392,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id742"><span class="problematic" id="id743">``</span></a><a href="#id744"><span class="problematic" id="id745">`</span></a>python
+<p><a href="#id740"><span class="problematic" id="id741">``</span></a><a href="#id742"><span class="problematic" id="id743">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9465,7 +9403,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id746"><span class="problematic" id="id747">``</span></a><a href="#id748"><span class="problematic" id="id749">`</span></a></p>
+<a href="#id744"><span class="problematic" id="id745">``</span></a><a href="#id746"><span class="problematic" id="id747">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -9483,7 +9421,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id750"><span class="problematic" id="id751">``</span></a><a href="#id752"><span class="problematic" id="id753">`</span></a>python
+<p><a href="#id748"><span class="problematic" id="id749">``</span></a><a href="#id750"><span class="problematic" id="id751">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -9494,7 +9432,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id754"><span class="problematic" id="id755">``</span></a><a href="#id756"><span class="problematic" id="id757">`</span></a></p>
+<a href="#id752"><span class="problematic" id="id753">``</span></a><a href="#id754"><span class="problematic" id="id755">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -9933,13 +9871,13 @@ definition (sync vs async def).</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.a_sync.</span></span><span class="sig-name descname"><span class="pre">ASyncGenericBase</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncGenericBase" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#a_sync.a_sync.abstract.ASyncABC" title="a_sync.a_sync.abstract.ASyncABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncABC</span></code></a></p>
 <p>Base class for creating dual-function sync/async-capable classes without writing all your code twice.</p>
-<p>This class, via its inherited metaclass :class:<a href="#id758"><span class="problematic" id="id759">`</span></a>~ASyncMeta’, provides the foundation for creating hybrid sync/async classes. It allows methods
+<p>This class, via its inherited metaclass :class:<a href="#id756"><span class="problematic" id="id757">`</span></a>~ASyncMeta’, provides the foundation for creating hybrid sync/async classes. It allows methods
 and properties to be defined once and used in both synchronous and asynchronous contexts.</p>
 <p>The class uses the <a class="reference internal" href="a_sync.html#module-a_sync" title="a_sync"><code class="xref py py-func docutils literal notranslate"><span class="pre">a_sync()</span></code></a> decorator internally to create dual-mode methods and properties.
 Subclasses should define their methods as coroutines (using <cite>async def</cite>) where possible, and
 use the <cite>&#64;a_sync.property</cite> or <cite>&#64;a_sync.cached_property</cite> decorators for properties that need to support both modes.</p>
 <p class="rubric">Example</p>
-<p><a href="#id760"><span class="problematic" id="id761">``</span></a><a href="#id762"><span class="problematic" id="id763">`</span></a>python
+<p><a href="#id758"><span class="problematic" id="id759">``</span></a><a href="#id760"><span class="problematic" id="id761">`</span></a>python
 class MyClass(ASyncGenericBase):</p>
 <blockquote>
 <div><dl class="simple">
@@ -9965,7 +9903,7 @@ sync_method_result = obj.my_method()</p>
 obj = MyClass(sync=False)
 async_result = await obj.my_property
 async_method_result = await obj.my_method()
-<a href="#id764"><span class="problematic" id="id765">``</span></a><a href="#id766"><span class="problematic" id="id767">`</span></a></p>
+<a href="#id762"><span class="problematic" id="id763">``</span></a><a href="#id764"><span class="problematic" id="id765">`</span></a></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>When subclassing, be aware that all async methods and properties will be
@@ -10020,7 +9958,7 @@ seamless usage in different contexts without changing the underlying implementat
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id768"><span class="problematic" id="id769">``</span></a><a href="#id770"><span class="problematic" id="id771">`</span></a>python
+<p><a href="#id766"><span class="problematic" id="id767">``</span></a><a href="#id768"><span class="problematic" id="id769">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10031,7 +9969,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id772"><span class="problematic" id="id773">``</span></a><a href="#id774"><span class="problematic" id="id775">`</span></a></p>
+<a href="#id770"><span class="problematic" id="id771">``</span></a><a href="#id772"><span class="problematic" id="id773">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -10052,7 +9990,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id776"><span class="problematic" id="id777">``</span></a><a href="#id778"><span class="problematic" id="id779">`</span></a>python
+<p><a href="#id774"><span class="problematic" id="id775">``</span></a><a href="#id776"><span class="problematic" id="id777">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10063,7 +10001,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id780"><span class="problematic" id="id781">``</span></a><a href="#id782"><span class="problematic" id="id783">`</span></a></p>
+<a href="#id778"><span class="problematic" id="id779">``</span></a><a href="#id780"><span class="problematic" id="id781">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -10084,7 +10022,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id784"><span class="problematic" id="id785">``</span></a><a href="#id786"><span class="problematic" id="id787">`</span></a>python
+<p><a href="#id782"><span class="problematic" id="id783">``</span></a><a href="#id784"><span class="problematic" id="id785">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10095,7 +10033,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id788"><span class="problematic" id="id789">``</span></a><a href="#id790"><span class="problematic" id="id791">`</span></a></p>
+<a href="#id786"><span class="problematic" id="id787">``</span></a><a href="#id788"><span class="problematic" id="id789">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -10116,7 +10054,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id792"><span class="problematic" id="id793">``</span></a><a href="#id794"><span class="problematic" id="id795">`</span></a>python
+<p><a href="#id790"><span class="problematic" id="id791">``</span></a><a href="#id792"><span class="problematic" id="id793">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10127,7 +10065,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id796"><span class="problematic" id="id797">``</span></a><a href="#id798"><span class="problematic" id="id799">`</span></a></p>
+<a href="#id794"><span class="problematic" id="id795">``</span></a><a href="#id796"><span class="problematic" id="id797">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -10148,7 +10086,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id800"><span class="problematic" id="id801">``</span></a><a href="#id802"><span class="problematic" id="id803">`</span></a>python
+<p><a href="#id798"><span class="problematic" id="id799">``</span></a><a href="#id800"><span class="problematic" id="id801">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10159,7 +10097,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id804"><span class="problematic" id="id805">``</span></a><a href="#id806"><span class="problematic" id="id807">`</span></a></p>
+<a href="#id802"><span class="problematic" id="id803">``</span></a><a href="#id804"><span class="problematic" id="id805">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -10333,7 +10271,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id808"><span class="problematic" id="id809">``</span></a><a href="#id810"><span class="problematic" id="id811">`</span></a>python
+<p><a href="#id806"><span class="problematic" id="id807">``</span></a><a href="#id808"><span class="problematic" id="id809">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10344,7 +10282,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id812"><span class="problematic" id="id813">``</span></a><a href="#id814"><span class="problematic" id="id815">`</span></a></p>
+<a href="#id810"><span class="problematic" id="id811">``</span></a><a href="#id812"><span class="problematic" id="id813">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -10362,7 +10300,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id816"><span class="problematic" id="id817">``</span></a><a href="#id818"><span class="problematic" id="id819">`</span></a>python
+<p><a href="#id814"><span class="problematic" id="id815">``</span></a><a href="#id816"><span class="problematic" id="id817">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10373,7 +10311,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id820"><span class="problematic" id="id821">``</span></a><a href="#id822"><span class="problematic" id="id823">`</span></a></p>
+<a href="#id818"><span class="problematic" id="id819">``</span></a><a href="#id820"><span class="problematic" id="id821">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
@@ -10830,7 +10768,7 @@ definition (sync vs async def).</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id824"><span class="problematic" id="id825">``</span></a><a href="#id826"><span class="problematic" id="id827">`</span></a>python
+<p><a href="#id822"><span class="problematic" id="id823">``</span></a><a href="#id824"><span class="problematic" id="id825">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10841,7 +10779,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._all([1, 2, 3])
-<a href="#id828"><span class="problematic" id="id829">``</span></a><a href="#id830"><span class="problematic" id="id831">`</span></a></p>
+<a href="#id826"><span class="problematic" id="id827">``</span></a><a href="#id828"><span class="problematic" id="id829">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -10862,7 +10800,7 @@ result = await instance.my_method._all([1, 2, 3])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id832"><span class="problematic" id="id833">``</span></a><a href="#id834"><span class="problematic" id="id835">`</span></a>python
+<p><a href="#id830"><span class="problematic" id="id831">``</span></a><a href="#id832"><span class="problematic" id="id833">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10873,7 +10811,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._any([-1, 0, 1])
-<a href="#id836"><span class="problematic" id="id837">``</span></a><a href="#id838"><span class="problematic" id="id839">`</span></a></p>
+<a href="#id834"><span class="problematic" id="id835">``</span></a><a href="#id836"><span class="problematic" id="id837">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -10894,7 +10832,7 @@ result = await instance.my_method._any([-1, 0, 1])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id840"><span class="problematic" id="id841">``</span></a><a href="#id842"><span class="problematic" id="id843">`</span></a>python
+<p><a href="#id838"><span class="problematic" id="id839">``</span></a><a href="#id840"><span class="problematic" id="id841">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10905,7 +10843,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._max([3, 1, 2])
-<a href="#id844"><span class="problematic" id="id845">``</span></a><a href="#id846"><span class="problematic" id="id847">`</span></a></p>
+<a href="#id842"><span class="problematic" id="id843">``</span></a><a href="#id844"><span class="problematic" id="id845">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -10926,7 +10864,7 @@ result = await instance.my_method._max([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id848"><span class="problematic" id="id849">``</span></a><a href="#id850"><span class="problematic" id="id851">`</span></a>python
+<p><a href="#id846"><span class="problematic" id="id847">``</span></a><a href="#id848"><span class="problematic" id="id849">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10937,7 +10875,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._min([3, 1, 2])
-<a href="#id852"><span class="problematic" id="id853">``</span></a><a href="#id854"><span class="problematic" id="id855">`</span></a></p>
+<a href="#id850"><span class="problematic" id="id851">``</span></a><a href="#id852"><span class="problematic" id="id853">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -10958,7 +10896,7 @@ result = await instance.my_method._min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id856"><span class="problematic" id="id857">``</span></a><a href="#id858"><span class="problematic" id="id859">`</span></a>python
+<p><a href="#id854"><span class="problematic" id="id855">``</span></a><a href="#id856"><span class="problematic" id="id857">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -10969,7 +10907,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method._sum([1, 2, 3])
-<a href="#id860"><span class="problematic" id="id861">``</span></a><a href="#id862"><span class="problematic" id="id863">`</span></a></p>
+<a href="#id858"><span class="problematic" id="id859">``</span></a><a href="#id860"><span class="problematic" id="id861">`</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -11094,7 +11032,7 @@ result = await instance.my_method.max([3, 1, 2])</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id864"><span class="problematic" id="id865">``</span></a><a href="#id866"><span class="problematic" id="id867">`</span></a>python
+<p><a href="#id862"><span class="problematic" id="id863">``</span></a><a href="#id864"><span class="problematic" id="id865">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -11105,7 +11043,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.min([3, 1, 2])
-<a href="#id868"><span class="problematic" id="id869">``</span></a><a href="#id870"><span class="problematic" id="id871">`</span></a></p>
+<a href="#id866"><span class="problematic" id="id867">``</span></a><a href="#id868"><span class="problematic" id="id869">`</span></a></p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -11123,7 +11061,7 @@ result = await instance.my_method.min([3, 1, 2])
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p><a href="#id872"><span class="problematic" id="id873">``</span></a><a href="#id874"><span class="problematic" id="id875">`</span></a>python
+<p><a href="#id870"><span class="problematic" id="id871">``</span></a><a href="#id872"><span class="problematic" id="id873">`</span></a>python
 class MyClass:</p>
 <blockquote>
 <div><p>&#64;ASyncDescriptor
@@ -11134,7 +11072,7 @@ def my_method(self, x):</p>
 </div></blockquote>
 <p>instance = MyClass()
 result = await instance.my_method.sum([1, 2, 3])
-<a href="#id876"><span class="problematic" id="id877">``</span></a><a href="#id878"><span class="problematic" id="id879">`</span></a></p>
+<a href="#id874"><span class="problematic" id="id875">``</span></a><a href="#id876"><span class="problematic" id="id877">`</span></a></p>
 </dd></dl>
 
 </dd></dl>
