@@ -1,14 +1,16 @@
 # cython: boundscheck=False
+import asyncio
+import copy
+import inspect
 import sys
-from asyncio import TimerHandle, get_event_loop, iscoroutinefunction
-from copy import deepcopy
-from inspect import isasyncgenfunction, isawaitable
+import types
+import typing
+import weakref
 from logging import getLogger
-from types import FunctionType
-from typing import _GenericAlias, get_args
-from weakref import ref as weak_ref
 
-from a_sync._typing import *
+from typing_extensions import Self
+
+from a_sync._typing import AnyFn, AnyIterable, P, T, SyncFn, V
 from a_sync.a_sync._helpers cimport _await
 from a_sync.async_property import async_cached_property
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
@@ -17,7 +19,54 @@ from a_sync.exceptions import SyncModeInAsyncContextError
 from a_sync.functools cimport update_wrapper
 
 
-logger = getLogger(__name__)
+# cdef asyncio
+cdef object get_event_loop = asyncio.get_event_loop
+cdef object iscoroutinefunction = asyncio.iscoroutinefunction
+cdef object TimerHandle = asyncio.TimerHandle
+del asyncio
+
+# cdef copy
+cdef object deepcopy = copy.deepcopy
+del copy
+
+# cdef inspect
+cdef object isasyncgenfunction = inspect.isasyncgenfunction
+cdef object isawaitable = inspect.isawaitable
+del inspect
+
+# cdef logging
+cdef public object logger = getLogger(__name__)
+del getLogger
+
+# cdef types
+cdef object FunctionType = types.FunctionType
+del types
+
+# cdef typing
+cdef object get_args = typing.get_args
+cdef object _GenericAlias = typing._GenericAlias
+cdef object Any = typing.Any
+cdef object AsyncIterable = typing.AsyncIterable
+cdef object AsyncIterator = typing.AsyncIterator
+cdef object AsyncGenerator = typing.AsyncGenerator
+cdef object Callable = typing.Callable
+cdef object Coroutine = typing.Coroutine
+cdef object Generator = typing.Generator
+cdef object Generic = typing.Generic
+cdef object Iterable = typing.Iterable
+cdef object Iterator = typing.Iterator
+cdef object List = typing.List
+cdef object Optional = typing.Optional
+cdef object Type = typing.Type
+cdef object TypeVar = typing.TypeVar
+cdef object Union = typing.Union
+cdef object final = typing.final
+cdef object overload = typing.overload
+del typing
+
+# cdef weakref
+cdef object ref = weakref.ref
+del weakref
 
 if sys.version_info < (3, 10):
     SortKey = SyncFn[T, bool]
@@ -25,6 +74,7 @@ if sys.version_info < (3, 10):
 else:
     SortKey = SyncFn[[T], bool]
     ViewFn = AnyFn[[T], bool]
+del sys
 
 
 cdef tuple[str] _FORMAT_PATTERNS = ("{cls}", "{obj}")
@@ -370,7 +420,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
     _cache_handle: TimerHandle
     "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
 
-    __weakself__: "weak_ref[object]" = None
+    __weakself__: "ref[object]" = None
     "A weak reference to the instance the function is bound to, if any."
 
     def __init__(
@@ -392,7 +442,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
 
         if instance is not None:
             self._cache_handle = self.__get_cache_handle(instance)
-            self.__weakself__ = weak_ref(instance, self.__cancel_cache_handle)
+            self.__weakself__ = ref(instance, self.__cancel_cache_handle)
         update_wrapper(self, self.__wrapped__)
 
     def __repr__(self) -> str:
@@ -478,7 +528,7 @@ class _ASyncView(ASyncIterator[T]):
         if isinstance(iterable, AsyncIterable):
             self.__aiterator__ = iterable.__aiter__()
         elif isinstance(iterable, Iterable):
-            self.__iterator__ = iterable.__iter__()
+            self.__iterator__ = iter(iterable)
         else:
             raise TypeError(
                 "`iterable` must be AsyncIterable or Iterable, you passed {}".format(iterable)
@@ -592,7 +642,9 @@ class ASyncSorter(_ASyncView[T]):
             reverse (optional): If True, the list elements will be sorted in reverse order. Defaults to False.
         """
         _ASyncView.__init__(self, key or _key_if_no_key, iterable)
-        self.__internal = self.__sort(reverse=reverse).__aiter__()
+        internal_aiterator = self.__sort(reverse=reverse).__aiter__()
+        self.__internal = internal_aiterator
+        self.__anext = internal_aiterator.__anext__
         if reverse:
             self.reversed = True
 
@@ -622,7 +674,7 @@ class ASyncSorter(_ASyncView[T]):
         return rep
 
     def __anext__(self) -> T:
-        return self.__internal.__anext__()
+        return self.__anext()
 
     async def __sort(self, reverse: bool) -> AsyncIterator[T]:
         """
