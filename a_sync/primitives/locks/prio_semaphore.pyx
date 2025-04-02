@@ -30,6 +30,8 @@ del heapq
 cdef public object logger = getLogger(__name__)
 cdef object c_logger = logger
 cdef object DEBUG = 10
+cdef object _logger_log = logger._log
+cdef object _logger_is_enabled = logger.isEnabledFor
 del getLogger
 
 class Priority(Protocol):
@@ -223,7 +225,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
 
         cdef list self_waiters = self._Semaphore__waiters
         cdef list potential_lost_waiters = self._potential_lost_waiters
-        cdef bint debug_logs = c_logger.isEnabledFor(DEBUG)
+        cdef bint debug_logs = _logger_is_enabled(DEBUG)
         while self_waiters:
             manager = heappop(self_waiters)
             if len(manager) == 0:
@@ -534,8 +536,6 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
             context_managers[<int>priority] = context_manager
         return context_manager
     
-
-cdef object _logger_log = c_logger._log
 
 cdef void log_debug(str message, tuple args):
     _logger_log(DEBUG, message, args)

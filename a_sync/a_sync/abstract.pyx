@@ -26,7 +26,7 @@ cdef struct ShouldAwaitCache:
 
 logger = getLogger(__name__)
 
-cdef object _logger_is_enabled_for = logger.isEnabledFor
+cdef object _logger_is_enabled = logger.isEnabledFor
 cdef object _logger_log = logger._log
 cdef object DEBUG = 10
 
@@ -163,7 +163,7 @@ class ASyncABC(metaclass=ASyncMeta):
             >>> MyASyncClass.__a_sync_instance_will_be_sync__((), {'sync': True})
             True
         """
-        cdef bint debug_logs = _logger_is_enabled_for(DEBUG)
+        cdef bint debug_logs = _logger_is_enabled(DEBUG)
         
         if debug_logs:
             _log_debug(

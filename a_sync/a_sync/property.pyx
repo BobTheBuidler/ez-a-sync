@@ -46,7 +46,7 @@ del functools
 
 # cdef logging
 cdef public object logger = getLogger(__name__)
-cdef object _logger_is_enabled_for = logger.isEnabledFor
+cdef object _logger_is_enabled = logger.isEnabledFor
 cdef object _logger_debug = logger.debug
 cdef object _logger_log = logger._log
 cdef object DEBUG = 10
@@ -145,7 +145,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
             should_await = not get_event_loop().is_running()
         
         cdef object retval
-        cdef bint debug_logs = _logger_is_enabled_for(DEBUG)
+        cdef bint debug_logs = _logger_is_enabled(DEBUG)
         if should_await:
             if debug_logs:
                 _logger_log(
