@@ -19,6 +19,4 @@ cdef class CythonEvent(_DebugDaemonMixin):
     cpdef void set(self)
     cpdef void clear(self)
     cpdef object wait(self)
-    cdef void c_set(self)
-    cdef void c_clear(self)
     cdef object c_wait(self)
