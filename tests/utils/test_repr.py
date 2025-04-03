@@ -1,10 +1,10 @@
 from a_sync.utils.repr import repr_trunc
 
 def test_repr_trunc_list():
-  assert repr_trunc(list(range(10)) == "[1, 2, 3, 4, 5, ...]"
+  assert repr_trunc(list(range(10))) == "[1, 2, 3, 4, 5, ...]"
                     
 def test_repr_trunc_tuple():
-  assert repr_trunc(tuple(range(10)) == "(1, 2, 3, 4, 5, ...)"
+  assert repr_trunc(tuple(range(10))) == "(1, 2, 3, 4, 5, ...)"
                     
 def test_repr_trunc_dict():
   d = {i: i for i in range(10)}
