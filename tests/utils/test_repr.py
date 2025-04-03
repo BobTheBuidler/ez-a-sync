@@ -2,7 +2,7 @@ from a_sync.utils.repr import repr_trunc
 
 
 def test_repr_trunc_list():
-    assert repr_trunc(list(range(10))) == "[0, 2, 3, 4, ...]"
+    assert repr_trunc(list(range(10))) == "[0, 1, 2, 3, 4, ...]"
 
 
 def test_repr_trunc_tuple():
