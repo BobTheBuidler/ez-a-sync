@@ -41,7 +41,6 @@ del inspect
 
 # cdef typing
 cdef object Any = typing.Any
-cdef object Concatenate = typing.Concatenate
 cdef object Coroutine = typing.Coroutine
 cdef object Generic = typing.Generic
 cdef object Literal = typing.Literal
