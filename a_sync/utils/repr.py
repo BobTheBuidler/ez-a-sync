@@ -38,4 +38,4 @@ def _join_first_5_reprs(iterable: Iterable[Any]) -> str:
     return joined
 
 
-__join_dict_item: lambda item: ": ".join(map(repr, item))
+__join_dict_item = lambda item: ": ".join(map(repr, item))
