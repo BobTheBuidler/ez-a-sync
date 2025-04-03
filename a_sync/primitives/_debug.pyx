@@ -4,18 +4,34 @@ This module provides a mixin class used to facilitate the creation of debugging 
 The mixin provides a framework for managing a debug daemon task, which can be used to emit rich debug logs from subclass instances whenever debug logging is enabled. Subclasses must implement the specific logging behavior.
 """
 
+import asyncio
 import os
-from asyncio import AbstractEventLoop, Future, Task
-from asyncio.events import _running_loop
-from threading import Lock
-from typing import Optional
+import threading
+import typing
 
 from a_sync.a_sync._helpers cimport get_event_loop
 from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.primitives._loggable cimport _LoggerMixin
 
 
-_global_lock = Lock()
+# cdef asyncio
+cdef object AbstractEventLoop = asyncio.AbstractEventLoop
+cdef object Future = asyncio.Future
+cdef object Task = asyncio.Task
+cdef object _running_loop = asyncio.events._running_loop
+del asyncio
+
+# cdef os
+cdef object getpid = os.getpid
+del os
+
+# cdef typing
+cdef object Optional = typing.Optional
+del typing
+
+
+cdef public object _global_lock = threading.Lock()
+del threading
 
 
 cdef object _get_running_loop():
@@ -26,7 +42,7 @@ cdef object _get_running_loop():
     """
     cdef object running_loop, pid
     running_loop, pid = _running_loop.loop_pid
-    if running_loop is not None and <int>pid == <int>os.getpid():
+    if running_loop is not None and <int>pid == <int>getpid():
         return running_loop
 
 

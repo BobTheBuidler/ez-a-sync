@@ -1,10 +1,23 @@
 # mypy: disable-error-code=valid-type
+import typing
 from libc.stdint cimport uint8_t
 
-from a_sync._typing import *
+from a_sync._typing import CoroFn, ModifierKwargs, P, SyncFn, T
 from a_sync.a_sync.config import user_set_default_modifiers, null_modifiers
 from a_sync.a_sync.modifiers import cache, limiter, semaphores
 from a_sync.functools cimport wraps
+
+
+# cdef typing
+cdef object Any = typing.Any
+cdef object Iterator = typing.Iterator
+del typing
+
+# cdef modifier decorators
+cdef object apply_async_cache = cache.apply_async_cache
+cdef object apply_rate_limit = limiter.apply_rate_limit
+cdef object apply_semaphore = semaphores.apply_semaphore
+del cache, limiter, semaphores
 
 
 # TODO give me a docstring
@@ -79,7 +92,7 @@ cdef class ModifierManager:
             The value of the modifier, or the default value if not set.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> manager.cache_type
             'memory'
         """
@@ -96,7 +109,7 @@ cdef class ModifierManager:
         """Determines if a rate limiter should be used.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(runs_per_minute=60))
+            >>> manager = ModifierManager(runs_per_minute=60)
             >>> manager.use_limiter
             True
         """
@@ -107,7 +120,7 @@ cdef class ModifierManager:
         """Determines if a semaphore should be used.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(semaphore=SemaphoreSpec()))
+            >>> manager = ModifierManager(semaphore=SemaphoreSpec())
             >>> manager.use_semaphore
             True
         """
@@ -118,7 +131,7 @@ cdef class ModifierManager:
         """Determines if caching should be used.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> manager.use_cache
             True
         """
@@ -143,16 +156,16 @@ cdef class ModifierManager:
         Examples:
             >>> async def my_coro():
             ...     pass
-            >>> manager = ModifierManager(ModifierKwargs(runs_per_minute=60))
+            >>> manager = ModifierManager(runs_per_minute=60)
             >>> modified_coro = manager.apply_async_modifiers(my_coro)
         """
         # NOTE: THESE STACK IN REVERSE ORDER
         if self.use_limiter:
-            coro_fn = limiter.apply_rate_limit(coro_fn, self.runs_per_minute)
+            coro_fn = apply_rate_limit(coro_fn, self.runs_per_minute)
         if self.use_semaphore:
-            coro_fn = semaphores.apply_semaphore(coro_fn, self.semaphore)
+            coro_fn = apply_semaphore(coro_fn, self.semaphore)
         if self.use_cache:
-            coro_fn = cache.apply_async_cache(
+            coro_fn = apply_async_cache(
                 coro_fn,
                 cache_type=self.cache_type or "memory",
                 cache_typed=self.cache_typed,
@@ -176,7 +189,7 @@ cdef class ModifierManager:
         Examples:
             >>> def my_function():
             ...     pass
-            >>> manager = ModifierManager(ModifierKwargs())
+            >>> manager = ModifierManager()
             >>> modified_function = manager.apply_sync_modifiers(my_function)
         """
 
@@ -191,7 +204,7 @@ cdef class ModifierManager:
         """Returns the keys of the modifiers.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> list(manager.keys())
             ['cache_type']
         """
@@ -201,7 +214,7 @@ cdef class ModifierManager:
         """Returns the values of the modifiers.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> list(manager.values())
             ['memory']
         """
@@ -211,7 +224,7 @@ cdef class ModifierManager:
         """Returns the items of the modifiers.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> list(manager.items())
             [('cache_type', 'memory')]
         """
@@ -224,7 +237,7 @@ cdef class ModifierManager:
             key: The key to check.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> 'cache_type' in manager
             True
         """
@@ -234,7 +247,7 @@ cdef class ModifierManager:
         """Returns an iterator over the modifier keys.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> list(iter(manager))
             ['cache_type']
         """
@@ -244,7 +257,7 @@ cdef class ModifierManager:
         """Returns the number of modifiers.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> len(manager)
             1
         """
@@ -260,7 +273,7 @@ cdef class ModifierManager:
             The value of the modifier.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> manager['cache_type']
             'memory'
         """

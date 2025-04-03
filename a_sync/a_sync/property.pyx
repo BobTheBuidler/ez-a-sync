@@ -1,8 +1,8 @@
 import asyncio
 import functools
+import typing
 from logging import getLogger
-from typing import (TYPE_CHECKING, Any, Awaitable, Callable, Generator, 
-                    Literal, Optional, Tuple, Type, Union, final, overload)
+from typing import Any, Awaitable, Callable, Generator, Optional, Tuple, Type, Union
 
 import async_property as ap  # type: ignore [import]
 from typing_extensions import Concatenate, Self, Unpack
@@ -10,28 +10,19 @@ from typing_extensions import Concatenate, Self, Unpack
 from a_sync._smart cimport shield
 from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction, 
                             DefaultMode, I, ModifierKwargs, P, T)
-from a_sync.a_sync import config
+from a_sync.a_sync import _descriptor, config, function, method
 from a_sync.a_sync._helpers cimport _asyncify, _await
-from a_sync.a_sync._descriptor import ASyncDescriptor
-from a_sync.a_sync.function import (
-    ASyncFunction,
-    ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault,
-)
+
 from a_sync.a_sync.function cimport _ModifiedMixin
-from a_sync.a_sync.method import (
-    ASyncBoundMethod,
-    ASyncBoundMethodAsyncDefault,
-    ASyncMethodDescriptorAsyncDefault,
-)
 from a_sync.a_sync.method cimport _is_a_sync_instance, _update_cache_timer
 from a_sync.async_property import cached
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
 from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.functools cimport wraps
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from a_sync.task import TaskMapping
+
 
 # cdef asyncio
 cdef object get_event_loop = asyncio.get_event_loop
@@ -51,6 +42,29 @@ cdef object _logger_debug = logger.debug
 cdef object _logger_log = logger._log
 cdef object DEBUG = 10
 del getLogger
+
+# cdef typing
+cdef object Literal = typing.Literal
+cdef object final = typing.final
+cdef object overload = typing.overload
+del typing
+
+
+# cdef a_sync.a_sync._descriptor
+cdef object ASyncDescriptor = _descriptor.ASyncDescriptor
+del _descriptor
+
+# cdef a_sync.a_sync.function
+cdef object ASyncFunction = function.ASyncFunction
+cdef object ASyncFunctionAsyncDefault = function.ASyncFunctionAsyncDefault
+cdef object ASyncFunctionSyncDefault = function.ASyncFunctionSyncDefault
+del function
+
+# cdef a_sync.a_sync.method
+cdef object ASyncBoundMethod = method.ASyncBoundMethod
+cdef object ASyncBoundMethodAsyncDefault = method.ASyncBoundMethodAsyncDefault
+cdef object ASyncMethodDescriptorAsyncDefault = method.ASyncMethodDescriptorAsyncDefault
+del method
 
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):

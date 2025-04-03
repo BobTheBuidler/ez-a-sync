@@ -33,7 +33,7 @@ cdef object _AwaitableProxy = AwaitableProxy
 
 def async_cached_property(func, *args, **kwargs) -> "AsyncCachedPropertyDescriptor":
     assert iscoroutinefunction(func), "Can only use with async def"
-    return AsyncCachedPropertyDescriptor(func, *args, **kwargs)
+    return __AsyncCachedPropertyDescriptor(func, *args, **kwargs)
 
 
 cdef class AsyncCachedPropertyInstanceState:
@@ -173,3 +173,6 @@ class AsyncCachedPropertyDescriptor:
             self._load_value = loader
 
         return lambda: shield(loader(instance))
+
+
+cdef object __AsyncCachedPropertyDescriptor = AsyncCachedPropertyDescriptor

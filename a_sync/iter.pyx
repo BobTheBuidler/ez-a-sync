@@ -68,6 +68,8 @@ del typing
 cdef object ref = weakref.ref
 del weakref
 
+
+cdef object SortKey, ViewFn
 if sys.version_info < (3, 10):
     SortKey = SyncFn[T, bool]
     ViewFn = AnyFn[T, bool]
@@ -75,6 +77,8 @@ else:
     SortKey = SyncFn[[T], bool]
     ViewFn = AnyFn[[T], bool]
 del sys
+
+cdef object AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
 
 
 cdef tuple[str] _FORMAT_PATTERNS = ("{cls}", "{obj}")
@@ -138,7 +142,7 @@ cdef class _AwaitableAsyncIterableMixin:
         Returns:
             An instance of :class:`~ASyncSorter` that will yield the {obj} yielded from this {cls}, but sorted.
         """
-        return ASyncSorter(self, key=key, reverse=reverse)
+        return _ASyncSorter(self, key=key, reverse=reverse)
 
     cpdef object filter(self, function: ViewFn[T]):
         """
@@ -150,7 +154,7 @@ cdef class _AwaitableAsyncIterableMixin:
         Returns:
             An instance of :class:`~ASyncFilter` that yields the filtered {obj} from the {cls}.
         """
-        return ASyncFilter(function, self)
+        return _ASyncFilter(function, self)
 
     @async_cached_property
     async def _materialized(self) -> List[T]:
@@ -244,14 +248,14 @@ class ASyncIterable(_AwaitableAsyncIterableMixin, AsyncIterable[T], Iterable[T])
             If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
         """
-        yield from ASyncIterator(self.__aiter__())
+        yield from _ASyncIterator(self.__aiter__())
 
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
         return super().__init_subclass__(**kwargs)
 
 
-AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
+cdef object _ASyncIterable = ASyncIterable
 
 
 class ASyncIterator(_AwaitableAsyncIterableMixin, Iterator[T]):
@@ -396,6 +400,8 @@ class ASyncIterator(_AwaitableAsyncIterableMixin, Iterator[T]):
     __slots__ = ("__anext")
 
 
+cdef object _ASyncIterator = ASyncIterator
+
 class ASyncGeneratorFunction(Generic[P, T]):
     """
     Encapsulates an asynchronous generator function, providing a mechanism to use it as an asynchronous iterator with enhanced capabilities. This class wraps an async generator function, allowing it to be called with parameters and return an :class:`~ASyncIterator` object. It is particularly useful for situations where an async generator function needs to be used in a manner that is consistent with both synchronous and asynchronous execution contexts.
@@ -461,8 +467,8 @@ class ASyncGeneratorFunction(Generic[P, T]):
             **kwargs: Keyword arguments for the function.
         """
         if self.__weakself__ is None:
-            return ASyncIterator(self.__wrapped__(*args, **kwargs))
-        return ASyncIterator(self.__wrapped__(self.__self__, *args, **kwargs))
+            return _ASyncIterator(self.__wrapped__(*args, **kwargs))
+        return _ASyncIterator(self.__wrapped__(self.__self__, *args, **kwargs))
 
     def __get__(self, instance: V, owner: Type[V]) -> "ASyncGeneratorFunction[P, T]":
         "Descriptor method to make the function act like a non-data descriptor."
@@ -500,6 +506,9 @@ class ASyncGeneratorFunction(Generic[P, T]):
         self._cache_handle.cancel()
 
 
+cdef object _ASyncGeneratorFunction = ASyncGeneratorFunction
+
+
 class _ASyncView(ASyncIterator[T]):
     """
     Internal mixin class containing logic for creating specialized views for :class:`~ASyncIterable` objects.
@@ -535,8 +544,11 @@ class _ASyncView(ASyncIterator[T]):
             )
 
 
+cdef object __ASyncView = _ASyncView
+
+
 @final
-class ASyncFilter(_ASyncView[T]):
+class ASyncFilter(__ASyncView[T]):
     """
     An async filter class that filters items of an async iterable based on a provided function.
 
@@ -593,6 +605,8 @@ class ASyncFilter(_ASyncView[T]):
         return bool(await checked) if isawaitable(checked) else bool(checked)
 
 
+cdef object _ASyncFilter = ASyncFilter
+
 cdef object _key_if_no_key(object obj):
     """
     Default key function that returns the object itself if no key is provided.
@@ -603,8 +617,11 @@ cdef object _key_if_no_key(object obj):
     return obj
 
 
+cdef _view_init = __ASyncView.__init__
+
+
 @final
-class ASyncSorter(_ASyncView[T]):
+class ASyncSorter(__ASyncView[T]):
     """
     An async sorter class that sorts items of an async iterable based on a provided key function.
 
@@ -641,7 +658,7 @@ class ASyncSorter(_ASyncView[T]):
             key (optional): A function of one argument that is used to extract a comparison key from each list element. If none is provided, elements themselves will be sorted. Defaults to None.
             reverse (optional): If True, the list elements will be sorted in reverse order. Defaults to False.
         """
-        _ASyncView.__init__(self, key or _key_if_no_key, iterable)
+        _view_init(self, _key_if_no_key if key is None else key, iterable)
         internal_aiterator = self.__sort(reverse=reverse).__aiter__()
         self.__internal = internal_aiterator
         self.__anext = internal_aiterator.__anext__
@@ -718,6 +735,9 @@ class ASyncSorter(_ASyncView[T]):
             for obj in items:
                 yield obj
         self._consumed = True
+
+
+cdef object _ASyncSorter = ASyncSorter
 
 
 cdef void _init_subclass(cls, dict kwargs):
@@ -811,12 +831,12 @@ cdef void _init_subclass(cls, dict kwargs):
             base_definition = getattr(_AwaitableAsyncIterableMixin, function_name)
             if function_obj.__doc__ == base_definition.__doc__:
                 redefined_function_obj = deepcopy(base_definition)
-        elif cls.__name__ != "ASyncIterable" and hasattr(ASyncIterable, function_name):
-            base_definition = getattr(ASyncIterable, function_name)
+        elif cls.__name__ != "ASyncIterable" and hasattr(_ASyncIterable, function_name):
+            base_definition = getattr(_ASyncIterable, function_name)
             if function_obj.__doc__ == base_definition.__doc__:
                 redefined_function_obj = deepcopy(base_definition)
-        elif cls.__name__ not in ("ASyncIterable", "ASyncIterator") and hasattr(ASyncIterator, function_name):
-            base_definition = getattr(ASyncIterator, function_name)
+        elif cls.__name__ not in ("ASyncIterable", "ASyncIterator") and hasattr(_ASyncIterator, function_name):
+            base_definition = getattr(_ASyncIterator, function_name)
             if function_obj.__doc__ == base_definition.__doc__:
                 redefined_function_obj = deepcopy(base_definition)
         

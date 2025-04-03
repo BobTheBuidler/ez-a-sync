@@ -16,8 +16,8 @@ See Also:
 import asyncio
 
 from a_sync._typing import *
-from a_sync.a_sync import decorator
-from a_sync.a_sync.function import ASyncFunction
+from a_sync.a_sync import decorator, function
+#from a_sync.a_sync.function import ASyncFunction
 from a_sync.a_sync.function cimport _ModifiedMixin, _validate_wrapped_fn
 from a_sync.a_sync.modifiers.manager cimport ModifierManager
 from a_sync.functools cimport cached_property_unsafe, update_wrapper
@@ -29,6 +29,10 @@ if TYPE_CHECKING:
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 del asyncio
+
+cdef object a_sync = decorator.a_sync
+cdef object ASyncFunction = function.ASyncFunction
+
 
 class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     """
@@ -81,7 +85,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         if not callable(_fget):
             raise ValueError(f"Unable to decorate {_fget}")
         self.modifiers = ModifierManager(modifiers)
-        if isinstance(_fget, ASyncFunction):
+        if isinstance(_fget, <object>ASyncFunction):
             self.modifiers._modifiers.update((<_ModifiedMixin>_fget).modifiers._modifiers)
             self.__wrapped__ = _fget
         elif iscoroutinefunction(_fget):
@@ -154,7 +158,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = await instance.my_method.all([1, 2, 3])
         """
-        return decorator.a_sync(default=self.default)(self._all)
+        return a_sync(default=self.default)(self._all)
 
     @cached_property_unsafe
     def any(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], bool]":
@@ -173,7 +177,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = await instance.my_method.any([-1, 0, 1])
         """
-        return decorator.a_sync(default=self.default)(self._any)
+        return a_sync(default=self.default)(self._any)
 
     @cached_property_unsafe
     def min(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
@@ -194,7 +198,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method.min([3, 1, 2])
             ```
         """
-        return decorator.a_sync(default=self.default)(self._min)
+        return a_sync(default=self.default)(self._min)
 
     @cached_property_unsafe
     def max(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
@@ -213,7 +217,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = await instance.my_method.max([3, 1, 2])
         """
-        return decorator.a_sync(default=self.default)(self._max)
+        return a_sync(default=self.default)(self._max)
 
     @cached_property_unsafe
     def sum(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
@@ -234,7 +238,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method.sum([1, 2, 3])
             ```
         """
-        return decorator.a_sync(default=self.default)(self._sum)
+        return a_sync(default=self.default)(self._sum)
 
     async def _all(
         self,
