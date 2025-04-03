@@ -9,7 +9,7 @@ Note: It is recommended to use :class:`ASyncGenericBase` for most use cases. Thi
 is intended for more custom implementations if necessary.
 """
 
-import abc
+from abc import abstractmethod
 from logging import getLogger
 from typing import Dict, Any, Tuple
 
@@ -193,7 +193,7 @@ class ASyncABC(metaclass=ASyncMeta):
     ####################
 
     @property
-    @abc.abstractmethod
+    @abstractmethod
     def __a_sync_flag_name__(self) -> str:
         """Abstract property for the flag name.
 
@@ -202,7 +202,7 @@ class ASyncABC(metaclass=ASyncMeta):
         """
 
     @property
-    @abc.abstractmethod
+    @abstractmethod
     def __a_sync_flag_value__(self) -> bool:
         """Abstract property for the flag value.
 
@@ -211,7 +211,7 @@ class ASyncABC(metaclass=ASyncMeta):
         """
 
     @classmethod
-    @abc.abstractmethod  # type: ignore [arg-type, misc]
+    @abstractmethod  # type: ignore [arg-type, misc]
     def __a_sync_default_mode__(cls) -> bool:  # type: ignore [empty-body]
         """Abstract class method for the default execution mode.
 

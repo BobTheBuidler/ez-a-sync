@@ -2,21 +2,21 @@ import asyncio
 import functools
 import inspect
 import sys
+import typing
 from logging import getLogger
 from libc.stdint cimport uintptr_t
 
-from async_lru import _LRUCacheWrapper
-from async_property.base import AsyncPropertyDescriptor  # type: ignore [import]
-from async_property.cached import AsyncCachedPropertyDescriptor  # type: ignore [import]
+import async_lru
+import async_property
+from typing_extensions import Unpack
 
-from a_sync._typing import *
+from a_sync._typing import AnyFn, AnyIterable, CoroFn, DefaultMode, MaybeCoro, ModifierKwargs, P, SyncFn, T
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 from a_sync.a_sync.modifiers cimport ModifierManager
 from a_sync.functools cimport cached_property_unsafe, update_wrapper, wraps
-
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.method import (
         ASyncBoundMethod,
@@ -42,6 +42,24 @@ del inspect
 # cdef logging
 cdef public object logger = getLogger(__name__)
 cdef object _logger_debug = logger.debug
+
+# cdef typing
+cdef object TYPE_CHECKING = typing.TYPE_CHECKING
+cdef object Any = typing.Any
+cdef object Callable = typing.Callable
+cdef object Coroutine = typing.Coroutine
+cdef object Generic = typing.Generic
+cdef object Literal = typing.Literal
+cdef object Optional = typing.Optional
+cdef object overload = typing.overload
+
+
+# cdef async_lru
+cdef object _LRUCacheWrapper = async_lru._LRUCacheWrapper
+
+# cdef async_property
+cdef object AsyncPropertyDescriptor = async_property.base.AsyncPropertyDescriptor
+cdef object AsyncCachedPropertyDescriptor = async_property.cached.AsyncCachedPropertyDescriptor
 
 
 cdef class _ModifiedMixin:

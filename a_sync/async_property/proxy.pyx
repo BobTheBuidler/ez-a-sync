@@ -1,3 +1,10 @@
+
+import operator
+cdef object index = operator.index
+cdef object truediv = operator.truediv
+cdef object itruediv = operator.itruediv
+del operator
+
 cdef class AwaitableOnly:
     """This wraps a coroutine will call it on await."""
 
@@ -39,7 +46,6 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-import operator
 
 
 class _ObjectProxyMethods(object):
@@ -251,7 +257,7 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
         return self.__wrapped__ * other
 
     def __truediv__(self, other):
-        return operator.truediv(self.__wrapped__, other)
+        return truediv(self.__wrapped__, other)
 
     def __floordiv__(self, other):
         return self.__wrapped__ // other
@@ -290,7 +296,7 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
         return other * self.__wrapped__
 
     def __rtruediv__(self, other):
-        return operator.truediv(other, self.__wrapped__)
+        return truediv(other, self.__wrapped__)
 
     def __rfloordiv__(self, other):
         return other // self.__wrapped__
@@ -332,7 +338,7 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
         return self
 
     def __itruediv__(self, other):
-        self.__wrapped__ = operator.itruediv(self.__wrapped__, other)
+        self.__wrapped__ = itruediv(self.__wrapped__, other)
         return self
 
     def __ifloordiv__(self, other):
@@ -395,7 +401,7 @@ class ObjectProxy(metaclass=_ObjectProxyMetaType):
         return hex(self.__wrapped__)
 
     def __index__(self):
-        return operator.index(self.__wrapped__)
+        return index(self.__wrapped__)
 
     def __len__(self):
         return len(self.__wrapped__)

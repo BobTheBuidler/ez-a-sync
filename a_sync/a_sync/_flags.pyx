@@ -11,8 +11,13 @@ You can use any of the provided flags, whichever makes the most sense for your u
 :obj:`NEGATIVE_FLAGS`: Set of flags indicating asynchronous behavior. Currently includes "asynchronous".
 """
 
+from a_sync import exceptions
 from a_sync.a_sync.flags cimport AFFIRMATIVE_FLAGS, NEGATIVE_FLAGS
-from a_sync.exceptions import InvalidFlag, InvalidFlagValue
+
+
+cdef object InvalidFlag = exceptions.InvalidFlag
+cdef object InvalidFlagValue = exceptions.InvalidFlagValue
+del exceptions
 
 
 cdef inline bint negate_if_necessary(str flag, bint flag_value):

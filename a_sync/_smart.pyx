@@ -6,6 +6,7 @@ to protect tasks from cancellation.
 """
 
 import asyncio
+import typing
 import weakref
 from libc.stdint cimport uintptr_t
 from logging import getLogger
@@ -15,10 +16,6 @@ from a_sync._typing import *
 if TYPE_CHECKING:
     from a_sync import SmartProcessingQueue
 
-
-_Args = Tuple[Any]
-_Kwargs = Tuple[Tuple[str, Any]]
-_Key = Tuple[_Args, _Kwargs]
 
 # cdef asyncio
 cdef object ensure_future = asyncio.ensure_future
@@ -31,12 +28,7 @@ cdef dict[object, object] _current_tasks = asyncio.tasks._current_tasks
 cdef object _future_init = asyncio.Future.__init__
 cdef object _get_loop = asyncio.futures._get_loop
 cdef object _task_init = asyncio.Task.__init__
-
 del asyncio
-
-# cdef weakref
-cdef object ref = weakref.ref
-cdef object proxy = weakref.proxy
 
 # cdef logging
 cdef public object logger = getLogger(__name__)
@@ -45,8 +37,23 @@ cdef bint _DEBUG_LOGS_ENABLED = logger.isEnabledFor(DEBUG)
 cdef object _logger_log = logger._log
 del getLogger
 
+# cdef typing
+cdef object Any = typing.Any
+cdef object Generic = typing.Generic
+cdef object Tuple = typing.Tuple
+del typing
+
+# cdef weakref
+cdef object ref = weakref.ref
+cdef object proxy = weakref.proxy
+
 cdef log_await(object arg):
     _logger_log(DEBUG, "awaiting %s", (arg, ))
+
+
+cdef object Args = Tuple[Any]
+cdef object Kwargs = Tuple[Tuple[str, Any]]
+cdef object Key = Tuple[Args, Kwargs]
 
 
 cdef Py_ssize_t ZERO = 0
@@ -182,7 +189,7 @@ class SmartFuture(Future, Generic[T]):
         - :class:`asyncio.Future`
     """
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
-    _key: Optional[_Key] = None
+    _key: Optional[Key] = None
     
     _waiters: "weakref.WeakSet[SmartTask[T]]"
 
@@ -190,7 +197,7 @@ class SmartFuture(Future, Generic[T]):
         self,
         *,
         queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None,
-        key: Optional[_Key] = None,
+        key: Optional[Key] = None,
         loop: Optional[AbstractEventLoop] = None,
     ) -> None:
         """
@@ -312,7 +319,7 @@ cdef inline object current_task(object loop):
   
 cpdef inline object create_future(
     queue: Optional["SmartProcessingQueue"] = None,
-    key: Optional[_Key] = None,
+    key: Optional[Key] = None,
     loop: Optional[AbstractEventLoop] = None,
 ):
     """

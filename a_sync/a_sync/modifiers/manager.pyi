@@ -73,7 +73,7 @@ class ModifierManager(Dict[str, Any]):
             The value of the modifier, or the default value if not set.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> manager.cache_type
             'memory'
         """
@@ -83,7 +83,7 @@ class ModifierManager(Dict[str, Any]):
         """Determines if a rate limiter should be used.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(runs_per_minute=60))
+            >>> manager = ModifierManager(runs_per_minute=60)
             >>> manager.use_limiter
             True
         """
@@ -93,7 +93,7 @@ class ModifierManager(Dict[str, Any]):
         """Determines if a semaphore should be used.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(semaphore=SemaphoreSpec()))
+            >>> manager = ModifierManager(semaphore=Semaphore(5))
             >>> manager.use_semaphore
             True
         """
@@ -103,7 +103,7 @@ class ModifierManager(Dict[str, Any]):
         """Determines if caching should be used.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> manager.use_cache
             True
         """
@@ -120,7 +120,7 @@ class ModifierManager(Dict[str, Any]):
         Examples:
             >>> async def my_coro():
             ...     pass
-            >>> manager = ModifierManager(ModifierKwargs(runs_per_minute=60))
+            >>> manager = ModifierManager(runs_per_minute=60)
             >>> modified_coro = manager.apply_async_modifiers(my_coro)
         """
 
@@ -139,7 +139,7 @@ class ModifierManager(Dict[str, Any]):
         Examples:
             >>> def my_function():
             ...     pass
-            >>> manager = ModifierManager(ModifierKwargs())
+            >>> manager = ModifierManager()
             >>> modified_function = manager.apply_sync_modifiers(my_function)
         """
 
@@ -147,7 +147,7 @@ class ModifierManager(Dict[str, Any]):
         """Returns the keys of the modifiers.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> list(manager.keys())
             ['cache_type']
         """
@@ -156,7 +156,7 @@ class ModifierManager(Dict[str, Any]):
         """Returns the values of the modifiers.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> list(manager.values())
             ['memory']
         """
@@ -165,7 +165,7 @@ class ModifierManager(Dict[str, Any]):
         """Returns the items of the modifiers.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> list(manager.items())
             [('cache_type', 'memory')]
         """
@@ -177,7 +177,7 @@ class ModifierManager(Dict[str, Any]):
             key: The key to check.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> 'cache_type' in manager
             True
         """
@@ -186,7 +186,7 @@ class ModifierManager(Dict[str, Any]):
         """Returns an iterator over the modifier keys.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> list(iter(manager))
             ['cache_type']
         """
@@ -195,7 +195,7 @@ class ModifierManager(Dict[str, Any]):
         """Returns the number of modifiers.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> len(manager)
             1
         """
@@ -210,7 +210,7 @@ class ModifierManager(Dict[str, Any]):
             The value of the modifier.
 
         Examples:
-            >>> manager = ModifierManager(ModifierKwargs(cache_type='memory'))
+            >>> manager = ModifierManager(cache_type='memory')
             >>> manager['cache_type']
             'memory'
         """

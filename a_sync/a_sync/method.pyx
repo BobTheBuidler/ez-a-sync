@@ -10,23 +10,21 @@ asynchronously based on various conditions and configurations.
 # mypy: disable-error-code=misc
 import asyncio
 import inspect
+import typing
 import weakref
 from libc.stdint cimport uintptr_t
 from logging import getLogger
 
-from a_sync._typing import *
+from typing_extensions import Self, Unpack
+
+from a_sync._typing import AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs, P, T
+from a_sync.a_sync import _descriptor, function
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
-from a_sync.a_sync._descriptor import ASyncDescriptor
 from a_sync.a_sync._helpers cimport _await
-from a_sync.a_sync.function import (
-    ASyncFunction,
-    ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault,
-)
 from a_sync.a_sync.function cimport _ModifiedMixin
 from a_sync.functools cimport update_wrapper
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.abstract import ASyncABC
 
@@ -41,9 +39,31 @@ del asyncio
 cdef object isawaitable = inspect.isawaitable
 del inspect
 
+# cdef typing
+cdef object Any = typing.Any
+cdef object Concatenate = typing.Concatenate
+cdef object Coroutine = typing.Coroutine
+cdef object Generic = typing.Generic
+cdef object Literal = typing.Literal
+cdef object Optional = typing.Optional
+cdef object Type = typing.Type
+cdef object Union = typing.Union
+cdef object final = typing.final
+cdef object overload = typing.overload
+del typing
+
 # cdef weakref
 cdef object ref = weakref.ref
 del weakref
+
+
+# cdef a_sync
+cdef object ASyncDescriptor = _descriptor.ASyncDescriptor
+cdef object ASyncFunction = function.ASyncFunction
+cdef object ASyncFunctionAsyncDefault = function.ASyncFunctionAsyncDefault
+cdef object ASyncFunctionSyncDefault = function.ASyncFunctionSyncDefault
+del _descriptor, function
+
 
 cdef public double METHOD_CACHE_TTL = 3600
 

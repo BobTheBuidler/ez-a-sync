@@ -143,6 +143,7 @@ cdef inline void __set_task_name(object task, str name):
 
 cdef public set[object] _persisted_tasks = set()
 
+cdef object __await
 
 async def __await(awaitable: Awaitable[T]) -> T:
     """Wait for the completion of a non-coroutine Awaitable.
@@ -235,6 +236,8 @@ cdef object _get_exception(fut: Future):
 cdef inline bint _exc_exists(tup: Tuple[Future, Optional[Exception]]):
     return tup[1] is not None
 
+
+cdef object __persisted_task_exc_wrap
 
 async def __persisted_task_exc_wrap(task: "Task[T]") -> T:
     """
