@@ -225,7 +225,7 @@ class SmartFuture(Future, Generic[T]):
         self._waiters = WeakSet()
 
     def __repr__(self):
-        return f"<{<str>type(self).__name__} key={self._key} waiters={count_waiters(self)} {<str>self._state}>"
+        return f"<{type(self).__name__} key={self._key} waiters={count_waiters(self)} {<str>self._state}>"
 
     def __lt__(self, other: "SmartFuture[T]") -> bint:
         """
@@ -390,7 +390,7 @@ class SmartTask(Task, Generic[T]):
             - :func:`asyncio.create_task`
         """
         _task_init(self, coro, loop=loop, name=name)
-        self._waiters = <set>set()
+        self._waiters = set()
 
     def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
         """

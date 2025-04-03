@@ -431,8 +431,6 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
             >>> cm2 = _AbstractPrioritySemaphoreContextManager(parent, priority=2)
             >>> cm1 < cm2
         """
-        if other.__class__ is not self.__class__:
-            raise TypeError(f"{other} is not type {self.__class__.__name__}")
         return <int>self._priority < <int>other._priority
 
 cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
