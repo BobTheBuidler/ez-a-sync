@@ -15,7 +15,7 @@ import weakref
 from libc.stdint cimport uintptr_t
 from logging import getLogger
 
-from typing_extensions import Self, Unpack
+import typing_extensions
 
 from a_sync._typing import AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs, P, T
 from a_sync.a_sync import _descriptor, function
@@ -51,6 +51,12 @@ cdef object Union = typing.Union
 cdef object final = typing.final
 cdef object overload = typing.overload
 del typing
+
+# cdef typing_extensions
+cdef object Concatenate = typing_extensions.Concatenate
+cdef object Self = typing_extensions.Self
+cdef object Unpack = typing_extensions.Unpack
+del typing_extensions
 
 # cdef weakref
 cdef object ref = weakref.ref
