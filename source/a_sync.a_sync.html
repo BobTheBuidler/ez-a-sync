@@ -1473,17 +1473,17 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The maximum result.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1501,17 +1501,17 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The minimum result.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1529,17 +1529,17 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The sum of the results.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1884,17 +1884,17 @@ default behavior.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The maximum result.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1912,17 +1912,17 @@ default behavior.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The minimum result.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -1940,17 +1940,17 @@ default behavior.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The sum of the results.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -2295,17 +2295,17 @@ default behavior.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The maximum result.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -2323,17 +2323,17 @@ default behavior.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The minimum result.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -2351,17 +2351,17 @@ default behavior.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The sum of the results.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -2657,7 +2657,7 @@ the provided flags and the method’s configuration.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a>) – The instance to bind the method to.</p></li>
-<li><p><strong>unbound</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>Concatenate</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>Concatenate</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The unbound function.</p></li>
+<li><p><strong>unbound</strong> (<em>AnyFn</em><em>[</em><em>Concatenate</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>, </em><em>P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The unbound function.</p></li>
 <li><p><strong>async_def</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether the original function is an async def.</p></li>
 <li><p><strong>**modifiers</strong> (<em>Unpack</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a><em>]</em>) – Additional modifiers for the function.</p></li>
 </ul>
@@ -2688,10 +2688,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2712,10 +2712,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2764,14 +2764,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2788,14 +2788,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -2812,14 +2812,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3069,7 +3069,7 @@ the provided flags and the method’s configuration.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a>) – The instance to bind the method to.</p></li>
-<li><p><strong>unbound</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>Concatenate</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>Concatenate</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The unbound function.</p></li>
+<li><p><strong>unbound</strong> (<em>AnyFn</em><em>[</em><em>Concatenate</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>, </em><em>P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The unbound function.</p></li>
 <li><p><strong>async_def</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether the original function is an async def.</p></li>
 <li><p><strong>**modifiers</strong> (<em>Unpack</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a><em>]</em>) – Additional modifiers for the function.</p></li>
 </ul>
@@ -3100,10 +3100,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -3124,10 +3124,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -3176,14 +3176,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3200,14 +3200,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3224,14 +3224,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3481,7 +3481,7 @@ the provided flags and the method’s configuration.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instance</strong> (<a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a>) – The instance to bind the method to.</p></li>
-<li><p><strong>unbound</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>Concatenate</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Awaitable" title="(in Python v3.13)"><em>Awaitable</em></a><em>[</em><em>T</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><em>Callable</em></a><em>[</em><em>[</em><em>Concatenate</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>, </em><em>~P</em><em>]</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The unbound function.</p></li>
+<li><p><strong>unbound</strong> (<em>AnyFn</em><em>[</em><em>Concatenate</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>, </em><em>P</em><em>]</em><em>, </em><em>T</em><em>]</em>) – The unbound function.</p></li>
 <li><p><strong>async_def</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether the original function is an async def.</p></li>
 <li><p><strong>**modifiers</strong> (<em>Unpack</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.ModifierKwargs" title="a_sync._typing.ModifierKwargs"><em>ModifierKwargs</em></a><em>]</em>) – Additional modifiers for the function.</p></li>
 </ul>
@@ -3512,10 +3512,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -3536,10 +3536,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -3588,14 +3588,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3612,14 +3612,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -3636,14 +3636,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -7743,10 +7743,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -7767,10 +7767,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -7819,14 +7819,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -7843,14 +7843,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -7867,14 +7867,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -9622,17 +9622,17 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The maximum result.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -9650,17 +9650,17 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The minimum result.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -9678,17 +9678,17 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional maximum number of concurrent tasks.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><em>Any</em><em>]</em>) – Iterable objects to be used as arguments for the function.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional maximum number of concurrent tasks.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the tasks.</p></li>
-<li><p><strong>**function_kwargs</strong> (<em>~P</em>) – Additional keyword arguments to pass to the function.</p></li>
+<li><p><strong>**function_kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments to pass to the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The sum of the results.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>T</em></p>
+<dd class="field-odd"><p>T</p>
 </dd>
 </dl>
 <div class="admonition seealso">
@@ -10378,10 +10378,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -10402,10 +10402,10 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -10454,14 +10454,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -10478,14 +10478,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -10502,14 +10502,14 @@ the provided flags and the method’s configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*iterables</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterable" title="(in Python v3.13)"><em>AsyncIterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
-<li><p><strong>concurrency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> | </em><em>None</em>) – Optional concurrency limit.</p></li>
+<li><p><strong>*iterables</strong> (<em>AnyIterable</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync._typing.I" title="a_sync._typing.I"><em>I</em></a><em>]</em>) – Iterables to map over.</p></li>
+<li><p><strong>concurrency</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>) – Optional concurrency limit.</p></li>
 <li><p><strong>task_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Optional name for the task.</p></li>
-<li><p><strong>**kwargs</strong> (<em>~P</em>) – Additional keyword arguments.</p></li>
+<li><p><strong>**kwargs</strong> (<em>P.kwargs</em>) – Additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>T</em></p>
+<dd class="field-even"><p>T</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
