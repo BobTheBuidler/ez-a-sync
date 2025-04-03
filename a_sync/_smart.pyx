@@ -53,7 +53,8 @@ cdef log_await(object arg):
 
 cdef object Args = Tuple[Any]
 cdef object Kwargs = Tuple[Tuple[str, Any]]
-cdef object Key = Tuple[Args, Kwargs]
+_Key = Tuple[Args, Kwargs]
+cdef object Key = _Key
 
 
 cdef Py_ssize_t ZERO = 0
