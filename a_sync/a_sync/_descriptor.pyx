@@ -30,9 +30,8 @@ if TYPE_CHECKING:
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 del asyncio
 
-from cpython.object cimport PyObject
 cdef object a_sync = decorator.a_sync
-cdef PyObject* ASyncFunction = <PyObject*>function.ASyncFunction
+cdef object ASyncFunction = function.ASyncFunction
 
 
 class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
