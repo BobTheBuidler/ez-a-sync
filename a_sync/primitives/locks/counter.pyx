@@ -189,7 +189,7 @@ cdef class CounterLock(_DebugDaemonMixin):
             while self._heap:
                 key = heappop(self._heap)
                 if key <= self._value:
-                    (<Event>self._events.pop(key)).c_set()
+                    (<Event>self._events.pop(key)).set()
                 else:
                     heappush(self._heap, key)
                     return

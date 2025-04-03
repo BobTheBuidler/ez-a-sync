@@ -108,13 +108,6 @@ cdef class CythonEvent(_DebugDaemonMixin):
         become true are awakened. Coroutine that call wait() once the flag is
         true will not block at all.
         """
-        self.c_set()
-    
-    cdef void c_set(self):
-        """Set the internal flag to true. All coroutines waiting for it to
-        become true are awakened. Coroutine that call wait() once the flag is
-        true will not block at all.
-        """
         cdef object fut
 
         if not self._value:
@@ -125,12 +118,6 @@ cdef class CythonEvent(_DebugDaemonMixin):
                     fut.set_result(True)
 
     cpdef void clear(self):
-        """Reset the internal flag to false. Subsequently, coroutines calling
-        wait() will block until set() is called to set the internal flag
-        to true again."""
-        self._value = False
-    
-    cdef void c_clear(self):
         """Reset the internal flag to false. Subsequently, coroutines calling
         wait() will block until set() is called to set the internal flag
         to true again."""
