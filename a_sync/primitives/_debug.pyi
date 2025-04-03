@@ -4,11 +4,17 @@ This module provides a mixin class used to facilitate the creation of debugging 
 The mixin provides a framework for managing a debug daemon task, which can be used to emit rich debug logs from subclass instances whenever debug logging is enabled. Subclasses must implement the specific logging behavior.
 """
 
-from asyncio import Future
+from asyncio import AbstractEventLoop, Future
 
 from a_sync.primitives._loggable import _LoggerMixin
 
-class _DebugDaemonMixin(_LoggerMixin):
+class _LoopBoundMixin(_LoggerMixin):
+    def __init__(self, *, loop=None): ...
+    @property
+    def _loop(self) -> AbstractEventLoop: ...
+    def _get_loop(self) -> AbstractEventLoop: ...
+
+class _DebugDaemonMixin(_LoopBoundMixin):
     """
     A mixin class that provides a framework for debugging capabilities using a daemon task.
 
