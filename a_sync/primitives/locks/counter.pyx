@@ -114,6 +114,7 @@ cdef class CounterLock(_DebugDaemonMixin):
         See Also:
             :meth:`CounterLock.set` to set the counter value.
         """
+        cdef Event event
         if not self.c_is_ready(value):
             event = self._events.get(value)
             if event is None:
@@ -121,7 +122,7 @@ cdef class CounterLock(_DebugDaemonMixin):
                 self._events[value] = event
                 heappush(self._heap, value)
             self._c_ensure_debug_daemon((),{})
-            await (<Event>event).c_wait()
+            await event.c_wait()
         return True
 
     cpdef void set(self, long long value):
@@ -145,7 +146,18 @@ cdef class CounterLock(_DebugDaemonMixin):
         See Also:
             :meth:`CounterLock.value` for direct value assignment.
         """
-        self.c_set(value)
+        cdef long long key
+        if value > self._value:
+            self._value = value
+            while self._heap:
+                key = heappop(self._heap)
+                if key <= self._value:
+                    (<Event>self._events.pop(key)).set()
+                else:
+                    heappush(self._heap, key)
+                    return
+        elif value < self._value:
+            raise ValueError("You cannot decrease the value.")
 
     @property
     def value(self) -> int:
@@ -180,21 +192,7 @@ cdef class CounterLock(_DebugDaemonMixin):
             ...
             ValueError: You cannot decrease the value.
         """
-        self.c_set(value)
-
-    cdef void c_set(self, long long value):
-        cdef long long key
-        if value > self._value:
-            self._value = value
-            while self._heap:
-                key = heappop(self._heap)
-                if key <= self._value:
-                    (<Event>self._events.pop(key)).set()
-                else:
-                    heappush(self._heap, key)
-                    return
-        elif value < self._value:
-            raise ValueError("You cannot decrease the value.")
+        self.set(value)
 
     @property
     def _name(self) -> str:
