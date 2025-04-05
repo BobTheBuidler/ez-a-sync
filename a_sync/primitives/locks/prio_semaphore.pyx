@@ -328,7 +328,7 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         """Returns a string representation of the context manager without the parent."""
         return f"<{self.__class__.__name__} parent_name={self._parent.name} {self._priority_name}={self._priority} waiters={len(self)}>"
 
-    def __richcmp__(self, _AbstractPrioritySemaphoreContextManager other, int op) -> bool:
+    def __richcmp__(self, _AbstractPrioritySemaphoreContextManager other, int op) -> bint:
         """Rich comparison special method. Compares this context manager with another based on priority.
 
         Args:
@@ -433,7 +433,7 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
         self._Semaphore__waiters = deque()
         self._decorated: Set[str] = set()
 
-    def __richcmp__(self, _PrioritySemaphoreContextManager other, int op):) -> bool:
+    def __richcmp__(self, _PrioritySemaphoreContextManager other, int op) -> bint:
         """Rich comparison special method. Compares this context manager with another based on priority.
 
         Args:
