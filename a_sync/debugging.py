@@ -13,8 +13,8 @@ from a_sync.iter import ASyncGeneratorFunction
 
 
 __P = ParamSpec("__P")
-__B = TypeVar("__B", bound=ASyncGenericBase)
 __T = TypeVar("__T")
+__B = TypeVar("__B", bound=ASyncGenericBase)
 
 
 logger = getLogger("a_sync.debugging")
@@ -119,3 +119,6 @@ async def _stuck_debug_task(
             ),
         )
         await sleep(300)
+
+
+__all__ = ["stuck_coro_debugger"]
