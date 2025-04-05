@@ -457,7 +457,6 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
             >>> cm2 = _AbstractPrioritySemaphoreContextManager(parent, priority=2)
             >>> cm1 < cm2
         """
-
         if op == 0:  # Py_LT
             return <int>self._priority < <int>other._priority
         elif op == 1:  # Py_LE
