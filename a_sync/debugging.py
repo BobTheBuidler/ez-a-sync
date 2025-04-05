@@ -17,40 +17,42 @@ __T = TypeVar("__T")
 __B = TypeVar("__B", bound=ASyncGenericBase)
 
 
+_FIVE_MINUTES = 300
+
 logger = getLogger("a_sync.debugging")
 
 
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__B, __P], AsyncIterator[__T]], logger: Logger = logger
+    fn: Callable[Concatenate[__B, __P], AsyncIterator[__T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
 ) -> ASyncGeneratorFunction[__P, __T]: ...
 
 
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__B, __P], Awaitable[__T]], logger: Logger = logger
+    fn: Callable[Concatenate[__B, __P], Awaitable[__T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
 ) -> ASyncBoundMethod[__B, __P, __T]: ...
 
 
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__B, __P], __T], logger: Logger = logger
+    fn: Callable[Concatenate[__B, __P], __T], logger: Logger = logger, interval: int = _FIVE_MINUTES
 ) -> ASyncBoundMethod[__B, __P, __T]: ...
 
 
 @overload
 def stuck_coro_debugger(
-    fn: Callable[__P, AsyncIterator[__T]], logger: Logger = logger
+    fn: Callable[__P, AsyncIterator[__T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
 ) -> Callable[__P, AsyncIterator[__T]]: ...
 
 
 @overload
 def stuck_coro_debugger(
-    fn: Callable[__P, Awaitable[__T]], logger: Logger = logger
+    fn: Callable[__P, Awaitable[__T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
 ) -> Callable[__P, Awaitable[__T]]: ...
 
 
-def stuck_coro_debugger(fn, logger = logger):
+def stuck_coro_debugger(fn, logger = logger, interval = _FIVE_MINUTES):
     __logger_is_enabled_for = logger.isEnabledFor
 
     if isasyncgenfunction(fn):
@@ -65,7 +67,7 @@ def stuck_coro_debugger(fn, logger = logger):
                 return
 
             task = create_task(
-                coro=_stuck_debug_task(logger, fn, args, kwargs),
+                coro=_stuck_debug_task(logger, interval, fn, args, kwargs),
                 name="_stuck_debug_task",
             )
             try:
@@ -83,7 +85,7 @@ def stuck_coro_debugger(fn, logger = logger):
                 return await fn(*args, **kwargs)
 
             task = create_task(
-                coro=_stuck_debug_task(logger, fn, args, kwargs),
+                coro=_stuck_debug_task(logger, interval, fn, args, kwargs),
                 name="_stuck_debug_task",
             )
             try:
@@ -96,12 +98,12 @@ def stuck_coro_debugger(fn, logger = logger):
 
 
 async def _stuck_debug_task(
-    logger: Logger, fn: Callable[__P, __T], *args: __P.args, **kwargs: __P.kwargs
+    logger: Logger, interval: int, fn: Callable[__P, __T], *args: __P.args, **kwargs: __P.kwargs
 ) -> NoReturn:
     # sleep early so fast-running coros can exit early
-    await sleep(300)
+    await sleep(interval)
 
-    start = time() - 300
+    start = time() - interval
     module = fn.__module__
     name = fn.__name__
     formatted_args = tuple(map(str, args))
@@ -119,7 +121,7 @@ async def _stuck_debug_task(
                 formatted_kwargs,
             ),
         )
-        await sleep(300)
+        await sleep(interval)
 
 
 __all__ = ["stuck_coro_debugger"]
