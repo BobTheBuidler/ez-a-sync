@@ -328,24 +328,43 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         """Returns a string representation of the context manager without the parent."""
         return f"<{self.__class__.__name__} parent_name={self._parent.name} {self._priority_name}={self._priority} waiters={len(self)}>"
 
-    def __lt__(self, _AbstractPrioritySemaphoreContextManager other) -> bool:
-        """Compares this context manager with another based on priority.
+    def __richcmp__(self, _AbstractPrioritySemaphoreContextManager other, int op) -> bool:
+        """Rich comparison special method. Compares this context manager with another based on priority.
 
         Args:
             other: The other context manager to compare with.
+            op: The operation being performed. One of:
+                0 -> Py_LT (a < b)
+                1 -> Py_LE (a <= b)
+                2 -> Py_EQ (a == b)
+                3 -> Py_NE (a != b)
+                4 -> Py_GT (a > b)
+                5 -> Py_GE (a >= b)
 
         Returns:
-            True if this context manager has a lower priority than the other, False otherwise.
+            The boolean result of the comparison.
 
         Raises:
-            TypeError: If the other object is not of the same type.
+            TypeError: If the other object is not an instance of :class:`~_AbstractPrioritySemaphoreContextManager`.
 
         Examples:
             >>> cm1 = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
             >>> cm2 = _AbstractPrioritySemaphoreContextManager(parent, priority=2)
             >>> cm1 < cm2
         """
-        return self._priority < other._priority
+        if op == 0:  # Py_LT
+            return self._priority < other._priority
+        elif op == 1:  # Py_LE
+            return self._priority <= other._priority
+        elif op == 2:  # Py_EQ
+            return self._priority == other._priority
+        elif op == 3:  # Py_NE
+            return self._priority != other._priority
+        elif op == 4:  # Py_GT
+            return self._priority > other._priority
+        elif op == 5:  # Py_GE
+            return self._priority >= other._priority
+        return NotImplemented
 
     cpdef object acquire(self):
         """Acquires the semaphore for this context manager.
@@ -414,24 +433,44 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
         self._Semaphore__waiters = deque()
         self._decorated: Set[str] = set()
 
-    def __lt__(self, _PrioritySemaphoreContextManager other) -> bool:
-        """Compares this context manager with another based on priority.
+    def __richcmp__(self, _PrioritySemaphoreContextManager other, int op):) -> bool:
+        """Rich comparison special method. Compares this context manager with another based on priority.
 
         Args:
             other: The other context manager to compare with.
-
+            op: The operation being performed. One of:
+                0 -> Py_LT (a < b)
+                1 -> Py_LE (a <= b)
+                2 -> Py_EQ (a == b)
+                3 -> Py_NE (a != b)
+                4 -> Py_GT (a > b)
+                5 -> Py_GE (a >= b)
+                
         Returns:
-            True if this context manager has a lower priority than the other, False otherwise.
+            The boolean result of the comparison.
 
         Raises:
-            TypeError: If the other object is not of the same type.
+            TypeError: If the other object is not an instance of :class:`~_PrioritySemaphoreContextManager`.
 
         Examples:
             >>> cm1 = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
             >>> cm2 = _AbstractPrioritySemaphoreContextManager(parent, priority=2)
             >>> cm1 < cm2
         """
-        return <int>self._priority < <int>other._priority
+
+        if op == 0:  # Py_LT
+            return <int>self._priority < <int>other._priority
+        elif op == 1:  # Py_LE
+            return <int>self._priority <= <int>other._priority
+        elif op == 2:  # Py_EQ
+            return <int>self._priority == <int>other._priority
+        elif op == 3:  # Py_NE
+            return <int>self._priority != <int>other._priority
+        elif op == 4:  # Py_GT
+            return <int>self._priority > <int>other._priority
+        elif op == 5:  # Py_GE
+            return <int>self._priority >= <int>other._priority
+        return NotImplemented
 
 cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
     """Semaphore that uses numeric priorities for waiters.
