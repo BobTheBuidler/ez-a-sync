@@ -241,6 +241,7 @@ class SmartFuture(Future, Generic[T]):
             future2 = SmartFuture()
             print(future1 < future2)
             ```
+        
         See Also:
             - :meth:`num_waiters`
         """
