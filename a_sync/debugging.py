@@ -50,7 +50,7 @@ def stuck_coro_debugger(
 ) -> Callable[__P, Awaitable[__T]]: ...
 
 
-def stuck_coro_debugger(fn, logger: Logger = logger):
+def stuck_coro_debugger(fn, logger = logger):
     __logger_is_enabled_for = logger.isEnabledFor
 
     if isasyncgenfunction(fn):
