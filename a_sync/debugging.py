@@ -45,7 +45,9 @@ def stuck_coro_debugger(
 
 
 @overload
-def stuck_coro_debugger(fn: Callable[__P, Awaitable[__T]], logger: Logger = logger) -> Callable[__P, Awaitable[__T]]: ...
+def stuck_coro_debugger(
+    fn: Callable[__P, Awaitable[__T]], logger: Logger = logger
+) -> Callable[__P, Awaitable[__T]]: ...
 
 
 def stuck_coro_debugger(fn, logger: Logger = logger):
@@ -54,9 +56,7 @@ def stuck_coro_debugger(fn, logger: Logger = logger):
     if isasyncgenfunction(fn):
 
         @wraps(fn)
-        async def stuck_async_gen_wrap(
-            *args: __P.args, **kwargs: __P.kwargs
-        ) -> AsyncIterator[__T]:
+        async def stuck_async_gen_wrap(*args: __P.args, **kwargs: __P.kwargs) -> AsyncIterator[__T]:
             aiterator = fn(*args, **kwargs)
 
             if not __logger_is_enabled_for(DEBUG):
