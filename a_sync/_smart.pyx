@@ -227,25 +227,13 @@ class SmartFuture(Future, Generic[T]):
     def __repr__(self):
         return f"<{type(self).__name__} key={self._key} waiters={count_waiters(self)} {<str>self._state}>"
 
-    def __richcmp__(self, other: "SmartFuture[T]", int op) -> bint:
+    def __lt__(self, other: "SmartFuture[T]") -> bint:
         """
-        Rich comparison special method. 
-        
         Compare the number of waiters to determine priority in a heap.
         Lower values indicate higher priority, so more waiters means 'less than'.
 
         Args:
             other: Another SmartFuture to compare with.
-            op: The operation being performed. One of:
-                0 -> Py_LT (a < b)
-                1 -> Py_LE (a <= b)
-                2 -> Py_EQ (a == b)
-                3 -> Py_NE (a != b)
-                4 -> Py_GT (a > b)
-                5 -> Py_GE (a >= b)
-
-        Returns:
-            The boolean result of the comparison.
 
         Example:
             ```python
@@ -253,23 +241,10 @@ class SmartFuture(Future, Generic[T]):
             future2 = SmartFuture()
             print(future1 < future2)
             ```
-
         See Also:
             - :meth:`num_waiters`
         """
-        if op == 0:  # Py_LT
-            return count_waiters(self) > count_waiters(other)
-        elif op == 1:  # Py_LE
-            return count_waiters(self) >= count_waiters(other)
-        elif op == 2:  # Py_EQ
-            return self is other
-        elif op == 3:  # Py_NE
-            return self is not other
-        elif op == 4:  # Py_GT
-            return count_waiters(self) < count_waiters(other)
-        elif op == 5:  # Py_GE
-            return count_waiters(self) <= count_waiters(other)
-        return NotImplemented
+        return count_waiters(self) > count_waiters(other)
 
     def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
         """
