@@ -53,6 +53,15 @@ a\_sync.aliases module
    :show-inheritance:
    :private-members:
 
+a\_sync.debugging module
+------------------------
+
+.. automodule:: a_sync.debugging
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :private-members:
+
 a\_sync.exceptions module
 -------------------------
 
