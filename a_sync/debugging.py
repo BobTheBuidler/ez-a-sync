@@ -24,13 +24,17 @@ logger = getLogger("a_sync.debugging")
 
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__B, __P], AsyncIterator[__T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
+    fn: Callable[Concatenate[__B, __P], AsyncIterator[__T]],
+    logger: Logger = logger,
+    interval: int = _FIVE_MINUTES,
 ) -> ASyncGeneratorFunction[__P, __T]: ...
 
 
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__B, __P], Awaitable[__T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
+    fn: Callable[Concatenate[__B, __P], Awaitable[__T]],
+    logger: Logger = logger,
+    interval: int = _FIVE_MINUTES,
 ) -> ASyncBoundMethod[__B, __P, __T]: ...
 
 
@@ -52,7 +56,7 @@ def stuck_coro_debugger(
 ) -> Callable[__P, Awaitable[__T]]: ...
 
 
-def stuck_coro_debugger(fn, logger = logger, interval = _FIVE_MINUTES):
+def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES):
     __logger_is_enabled_for = logger.isEnabledFor
 
     if isasyncgenfunction(fn):
