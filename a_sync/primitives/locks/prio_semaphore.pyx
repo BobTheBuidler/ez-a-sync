@@ -357,9 +357,9 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         elif op == 1:  # Py_LE
             return self._priority <= other._priority
         elif op == 2:  # Py_EQ
-            return self._priority == other._priority
+            return self is other
         elif op == 3:  # Py_NE
-            return self._priority != other._priority
+            return self is not other
         elif op == 4:  # Py_GT
             return self._priority > other._priority
         elif op == 5:  # Py_GE
@@ -463,9 +463,9 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
         elif op == 1:  # Py_LE
             return <int>self._priority <= <int>other._priority
         elif op == 2:  # Py_EQ
-            return <int>self._priority == <int>other._priority
+            return self is other
         elif op == 3:  # Py_NE
-            return <int>self._priority != <int>other._priority
+            return self is not other
         elif op == 4:  # Py_GT
             return <int>self._priority > <int>other._priority
         elif op == 5:  # Py_GE
