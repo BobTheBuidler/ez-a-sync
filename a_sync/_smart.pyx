@@ -247,7 +247,7 @@ class SmartFuture(Future, Generic[T]):
         """
         return count_waiters(self) > count_waiters(other)
 
-    def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
+    def __await__(self) -> Generator[Any, None, T]:
         """
         Await the smart future or task, handling waiters and logging.
 
@@ -293,9 +293,7 @@ class SmartFuture(Future, Generic[T]):
             queue._futs.pop(self._key, None)
         return _get_result(self)  # May raise too.
 
-    def _waiter_done_cleanup_callback(
-        self: Union["SmartFuture", "SmartTask"], waiter: "SmartTask"
-    ) -> None:
+    def _waiter_done_cleanup_callback(self, waiter: "SmartTask") -> None:
         """
         Callback to clean up waiters when a waiter task is done.
 
@@ -392,7 +390,7 @@ class SmartTask(Task, Generic[T]):
         _task_init(self, coro, loop=loop, name=name)
         self._waiters = set()
 
-    def __await__(self: Union["SmartFuture", "SmartTask"]) -> Generator[Any, None, T]:
+    def __await__(self) -> Generator[Any, None, T]:
         """
         Await the smart future or task, handling waiters and logging.
 
@@ -437,9 +435,7 @@ class SmartTask(Task, Generic[T]):
         self._waiters = set()
         return _get_result(self)  # May raise too.
 
-    def _waiter_done_cleanup_callback(
-        self: Union["SmartFuture", "SmartTask"], waiter: "SmartTask"
-    ) -> None:
+    def _waiter_done_cleanup_callback(self, waiter: "SmartTask") -> None:
         """
         Callback to clean up waiters when a waiter task is done.
 
