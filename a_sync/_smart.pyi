@@ -106,7 +106,7 @@ class SmartFuture(_SmartFutureMixin[_T], Future):
         - :class:`_SmartFutureMixin`
         - :class:`asyncio.Future`
     """
-    
+
     def __await__(self) -> Generator[Any, None, T]:
         """
         Await the SmartFuture, handling waiters and logging.
