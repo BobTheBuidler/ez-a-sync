@@ -226,7 +226,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">__super_submit</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="n">fut</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span><span class="p">()</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_loop</span><span class="p">()</span>
+        <span class="n">fut</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">_set_fut_result</span><span class="p">(</span><span class="n">fut</span><span class="p">,</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
@@ -247,7 +248,7 @@
             <span class="k">def</span><span class="w"> </span><span class="nf">_call_copy_future_state</span><span class="p">(</span><span class="n">cf_fut</span><span class="p">:</span> <span class="s2">&quot;concurrent.futures.Future&quot;</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">_fut_is_cancelled</span><span class="p">(</span><span class="n">fut</span><span class="p">):</span>
                     <span class="k">return</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_call_soon_threadsafe</span><span class="p">(</span>
+                <span class="n">loop</span><span class="o">.</span><span class="n">call_soon_threadsafe</span><span class="p">(</span>
                     <span class="n">_copy_future_state</span><span class="p">,</span>
                     <span class="n">cf_fut</span><span class="p">,</span>
                     <span class="n">fut</span><span class="p">,</span>
@@ -278,10 +279,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__init_mixin__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sync_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_workers</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="n">loop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_loop</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_create_future</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_future</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__super_submit</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">submit</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_call_soon_threadsafe</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">call_soon_threadsafe</span>
 
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_debug_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fut</span><span class="p">:</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Future</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
