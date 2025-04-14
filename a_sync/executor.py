@@ -155,7 +155,8 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
                 self.__super_submit(fn, *args, **kwargs)
             return None
 
-        fut = self._create_future()
+        loop = self._get_loop()
+        fut = loop.create_future()
         if self.sync_mode:
             try:
                 _set_fut_result(fut, fn(*args, **kwargs))
@@ -176,7 +177,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
             def _call_copy_future_state(cf_fut: "concurrent.futures.Future"):
                 if _fut_is_cancelled(fut):
                     return
-                self._call_soon_threadsafe(
+                loop.call_soon_threadsafe(
                     _copy_future_state,
                     cf_fut,
                     fut,
@@ -207,10 +208,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
 
     def __init_mixin__(self):
         self.sync_mode = self._max_workers == 0
-        loop = self._get_loop()
-        self._create_future = loop.create_future
         self.__super_submit = super().submit
-        self._call_soon_threadsafe = loop.call_soon_threadsafe
 
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """
