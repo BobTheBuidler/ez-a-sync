@@ -28,7 +28,7 @@ from a_sync.a_sync.method import (
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.asyncio.gather import Excluder
-from a_sync.asyncio.sleep import sleep0
+from a_sync.asyncio.sleep import sleep0 as yield_to_loop
 from a_sync.functools import cached_property_unsafe
 from a_sync.iter import ASyncIterator, ASyncGeneratorFunction, ASyncSorter
 from a_sync.primitives.locks import Event
@@ -627,7 +627,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                 del self._queue
             self.clear(cancel=True)
             # we need to let the loop run once so the tasks can fully cancel
-            await sleep0()
+            await yield_to_loop()
 
     async def _wait_for_next_key(self) -> None:
         # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
@@ -713,16 +713,11 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
 
     elif isinstance(iterable, Iterable):
         yielded = 0
-
-        async def unblock_loop() -> None:
-            nonlocal yielded
-            yielded += 1
-            if not yielded % 1000:  # arbitrary number, should be adjusted later
-                await sleep0()
-
         for key in iterable:
             yield key
-            await unblock_loop()
+            yielded += 1
+            if not yielded % 5_000:  # arbitrary number, should be adjusted later
+                await yield_to_loop()
 
     elif isawaitable(iterable):
         async for key in _yield_keys(await iterable):
