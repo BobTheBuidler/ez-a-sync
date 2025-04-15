@@ -575,8 +575,9 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
             for iterable in iterables
             if not isinstance(iterable, AsyncIterable) and isinstance(iterable, Iterable)
         )
-        for iterable in containers:
-            async for key in _yield_keys(iterable):
+
+        for keys in map(_yield_keys, containers):
+            async for key in keys:
                 yield key, self[key]
 
         if remaining := tuple(filterfalse(containers.__contains__, iterables):
@@ -599,8 +600,8 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
             for iterable in iterables
             if not isinstance(iterable, AsyncIterable) and isinstance(iterable, Iterable)
         )
-        for iterable in containers:
-            async for key in _yield_keys(iterable):
+        for keys in map(_yield_keys, containers):
+            async for key in keys:
                 yield key, self.__start_task(key)
 
         if remaining := tuple(filterfalse(containers.__contains__, iterables):
