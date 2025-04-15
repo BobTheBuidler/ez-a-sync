@@ -245,7 +245,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
             else:
                 while not self._init_loader.done():
                     await self._wait_for_next_key()
-                    while unyielded := tuple(filterfalse(yielded.__contains__, self):
+                    while unyielded := tuple(filterfalse(yielded.__contains__, self)):
                         if ready := tuple(key for key in unyielded if self[key].done()):
                             if pop:
                                 self_pop = self.pop
