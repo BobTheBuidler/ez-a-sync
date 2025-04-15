@@ -43,7 +43,7 @@ logger = getLogger(__name__)
 MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
 
 
-class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
+class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]): 
     """
     A mapping of keys to asynchronous tasks with additional functionality.
 
