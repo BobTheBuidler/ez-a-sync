@@ -23,9 +23,9 @@ import weakref
 from asyncio import sleep
 from asyncio.futures import _convert_future_exc
 from concurrent.futures import _base, thread
+from functools import cached_property
 
 from a_sync._typing import *
-from a_sync.functools import cached_property_unsafe
 from a_sync.primitives._debug import _DebugDaemonMixin
 
 
@@ -207,12 +207,12 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         """
         return len(getattr(self, f"_{self._workers}"))
 
-    @cached_property_unsafe
+    @cached_property
     def _create_future(self) -> Callable[[], asyncio.Future]:
         # This helper lets us defer getting the loop during init so the user can set a different one
         return self._get_loop().create_future
 
-    @cached_property_unsafe
+    @cached_property
     def _call_soon_threadsafe(self) -> Callable[..., asyncio.TimerHandle]:
         # This helper lets us defer getting the loop during init so the user can set a different one
         return self._get_loop().call_soon_threadsafe
