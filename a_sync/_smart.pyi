@@ -107,6 +107,20 @@ class SmartFuture(_SmartFutureMixin[_T], Future):
         - :class:`asyncio.Future`
     """
 
+    def __await__(self) -> Generator[Any, None, T]:
+        """
+        Await the SmartFuture, handling waiters and logging.
+
+        Yields:
+            The result of the future.
+
+        Example:
+            ```python
+            future = SmartFuture()
+            result = await future
+            ```
+        """
+
 def create_future(
     *,
     queue: Optional["SmartProcessingQueue"] = None,
@@ -154,6 +168,20 @@ class SmartTask(_SmartFutureMixin[_T], Task):
         - :class:`_SmartFutureMixin`
         - :class:`asyncio.Task`
     """
+
+    def __await__(self) -> Generator[Any, None, T]:
+        """
+        Await the SmartTask, handling waiters and logging.
+
+        Yields:
+            The result of the task.
+
+        Example:
+            ```python
+            task = SmartTask(coro=my_coroutine())
+            result = await task
+            ```
+        """
 
 def set_smart_task_factory(loop: AbstractEventLoop = None) -> None:
     """
