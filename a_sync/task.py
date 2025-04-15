@@ -245,7 +245,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
             else:
                 while not self._init_loader.done():
                     await self._wait_for_next_key()
-                    while unyielded := tuple(key for key in self if key not in yielded):
+                    while unyielded := tuple(filterfalse(yielded.__contains__, self):
                         if ready := tuple(key for key in unyielded if self[key].done()):
                             if pop:
                                 self_pop = self.pop
@@ -579,9 +579,9 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
             async for key in _yield_keys(iterable):
                 yield key, self[key]
 
-        if remaining := tuple(iterable for iterable in iterables if iterable not in containers):
+        if remaining := tuple(filterfalse(containers.__contains__, iterables):
             try:
-                async for key in as_yielded(*(_yield_keys(iterable) for iterable in remaining)):  # type: ignore [attr-defined]
+                async for key in as_yielded(*map(_yield_keys, remaining)):
                     yield key, self[key]  # ensure task is running
             except _EmptySequenceError:
                 if len(iterables) == 1:
@@ -603,9 +603,9 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
             async for key in _yield_keys(iterable):
                 yield key, self.__start_task(key)
 
-        if remaining := tuple(iterable for iterable in iterables if iterable not in containers):
+        if remaining := tuple(filterfalse(containers.__contains__, iterables):
             try:
-                async for key in as_yielded(*(_yield_keys(iterable) for iterable in remaining)):  # type: ignore [attr-defined]
+                async for key in as_yielded(*map(_yield_keys, remaining)):
                     yield key, self.__start_task(key)
             except _EmptySequenceError:
                 if len(iterables) == 1:
