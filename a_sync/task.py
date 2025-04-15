@@ -584,7 +584,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                 if not i % 5_000:
                     await yield_to_loop()
 
-        if remaining := tuple(filterfalse(containers.__contains__, iterables):
+        if remaining := tuple(filterfalse(containers.__contains__, iterables)):
             try:
                 async for key in as_yielded(*map(_yield_keys, remaining)):
                     yield key, self[key]  # ensure task is running
@@ -613,7 +613,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                 if not i % 5_000:
                     await yield_to_loop()
 
-        if remaining := tuple(filterfalse(containers.__contains__, iterables):
+        if remaining := tuple(filterfalse(containers.__contains__, iterables)):
             try:
                 async for key in as_yielded(*map(_yield_keys, remaining)):
                     yield key, self.__start_task(key)
