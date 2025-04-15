@@ -577,7 +577,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
         )
 
         i = 0
-        for container in containers):
+        for container in containers:
             for key in container:
                 yield key, self[key]
                 i += 1
