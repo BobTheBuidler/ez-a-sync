@@ -259,7 +259,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                         else:
                             await self._next.wait()
                 # loader is already done by this point, but we need to check for exceptions
-                await self._init_loader
+                self._init_loader.result()
             # if there are any tasks that still need to complete, we need to await them and yield them
             if unyielded := {key: self[key] for key in self if key not in yielded}:
                 if pop:
