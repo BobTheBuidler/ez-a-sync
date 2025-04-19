@@ -171,7 +171,16 @@ cdef void _validate_argspec_cached(fn: Callable):
         _argspec_validated.add(fid)
 
 cdef void _validate_argspec(fn: Callable):
-    fn_args = getfullargspec(fn)[0]
+    try:
+        fn_args = getfullargspec(fn)[0]
+    except TypeError as e:
+        if str(e) != "unsupported callable":
+            raise
+        # I got here by using mypyc to convert python files to c files.
+        # I'll assume you know what you're doing if you get here too,
+        # so I'll let you proceed. Good luck!
+        return
+
     for flag in VIABLE_FLAGS:
         if flag in fn_args:
             raise RuntimeError(
