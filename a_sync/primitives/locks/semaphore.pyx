@@ -101,7 +101,16 @@ cdef class Semaphore(_DebugDaemonMixin):
             ) from e.__cause__
             
         # we need a constant to coerce to char*
-        cdef bytes encoded_name = (name or getattr(self, "__origin__", "")).encode("utf-8")
+        cdef bytes encoded_name
+        try:
+            encoded_name = (name or getattr(self, "__origin__", "")).encode("utf-8")
+        except SystemError:
+            if str(e) == "bad argument to internal function":
+                # This can happen if Semaphore is subclassed in an extension module. No problem.
+                encoded_name = b""
+            else:
+                raise
+        
         cdef Py_ssize_t length = len(encoded_name)
 
         # Allocate memory for the char* and add 1 for the null character
