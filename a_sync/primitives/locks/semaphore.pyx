@@ -104,9 +104,9 @@ cdef class Semaphore(_DebugDaemonMixin):
         cdef bytes encoded_name
         try:
             encoded_name = (name or getattr(self, "__origin__", "")).encode("utf-8")
-        except SystemError:
+        except SystemError as e:
             if str(e) == "bad argument to internal function":
-                # This can happen if Semaphore is subclassed in an extension module. No problem.
+                # This can happen if Semaphore is subclassed in a mypyc extension module due to conflict with getattr. No problem.
                 encoded_name = b""
             else:
                 raise
