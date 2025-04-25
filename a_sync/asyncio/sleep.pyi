@@ -1,5 +1,5 @@
 from types import coroutine
 
 @coroutine
-def sleep0():
+def sleep0() -> None:
     yield
