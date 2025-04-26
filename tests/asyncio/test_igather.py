@@ -1,3 +1,5 @@
+import pytest
+
 from a_sync import igather
 from a_sync.asyncio import sleep0
 
