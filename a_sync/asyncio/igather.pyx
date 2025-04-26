@@ -1,17 +1,26 @@
-from asyncio import CancelledError, Future, current_task, ensure_future
-from asyncio.futures import _get_loop
-from asyncio.tasks import _GatheringFuture
+import asyncio
+from asyncio import futures, tasks
 from typing import Awaitable, Iterable, List, TypeVar
 
-from a_sync._smart import smart_task_factory
-from a_sync.a_sync._helpers import get_event_loop
+from a_sync import _smart
+from a_sync.a_sync._helpers cimport get_event_loop
 
-T = TypeVar("T")
+
+__T = TypeVar("__T")
+
+
+cdef object current_task = asyncio.current_task
+cdef object ensure_future = asyncio.ensure_future
+cdef object CancelledError = asyncio.CancelledError
+cdef object _get_loop = futures._get_loop
+cdef object _GatheringFuture = tasks._GatheringFuture
+
+cdef object smart_task_factory = _smart.smart_task_factory
 
 
 def igather(
-    coros_or_futures: Iterable[Awaitable[T]], bint return_exceptions = False
-) -> Awaitable[List[T]]:
+    coros_or_futures: Iterable[Awaitable[__T]], bint return_exceptions = False
+) -> Awaitable[List[__T]]:
     """A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple."""
     return cigather(coros_or_futures, return_exceptions=return_exceptions)
 
@@ -52,7 +61,7 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
 
     if return_exceptions:
 
-        def _done_callback(fut: Future) -> None:
+        def _done_callback(fut: asyncio.Future) -> None:
             # for some reason this wouldn't work until I added `return_exceptions=return_exceptions` to the func def
             nonlocal nfinished
             nfinished += 1
@@ -77,7 +86,7 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
     
     else:
 
-        def _done_callback(fut: Future) -> None:
+        def _done_callback(fut: asyncio.Future) -> None:
             # for some reason this wouldn't work until I added `return_exceptions=return_exceptions` to the func def
             nonlocal nfinished
             nfinished += 1
@@ -140,7 +149,7 @@ cdef object _get_empty_result_set_fut(loop):
     return fut
 
 
-cdef object _get_result_or_exc(fut: Future):
+cdef object _get_result_or_exc(fut: asyncio.Future):
     if fut.cancelled():
         # Check if 'fut' is cancelled first, as 'fut.exception()'
         # will *raise* a CancelledError instead of returning it.
