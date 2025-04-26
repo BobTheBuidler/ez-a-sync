@@ -18,9 +18,6 @@ from a_sync.a_sync.function import (
     ASyncFunctionAsyncDefault,
     ASyncFunctionSyncDefault,
 )
-from a_sync.a_sync.modifiers.semaphores import apply_semaphore
-
-# NOTE: Some of these we purposely import without including in __all__. Do not remove.
 from a_sync.a_sync.property import (
     ASyncCachedPropertyDescriptor,
     ASyncCachedPropertyDescriptorAsyncDefault,
@@ -35,19 +32,29 @@ from a_sync.a_sync.property import ASyncCachedPropertyDescriptor as cached_prope
 from a_sync.a_sync.property import ASyncPropertyDescriptor as property
 from a_sync.a_sync.singleton import ASyncGenericSingleton
 
+# NOTE: We purposely import this without including in __all__. Do not remove.
+from a_sync.a_sync.modifiers.semaphores import apply_semaphore
+
 
 __all__ = [
     # entrypoints
     "a_sync",
     "ASyncGenericBase",
+    "ASyncGenericSingleton",
     # maybe entrypoints (?)
     # TODO: double check how I intended for these to be used
     "property",
     "cached_property",
     # classes exposed for type hinting only
     "ASyncFunction",
+    "ASyncFunctionSyncDefault",
+    "ASyncFunctionAsyncDefault",
     "ASyncPropertyDescriptor",
+    "ASyncPropertyDescriptorSyncDefault",
+    "ASyncPropertyDescriptorAsyncDefault",
     "ASyncCachedPropertyDescriptor",
+    "ASyncCachedPropertyDescriptorSyncDefault",
+    "ASyncCachedPropertyDescriptorAsyncDefault",
     "HiddenMethod",
     "HiddenMethodDescriptor",
 ]
