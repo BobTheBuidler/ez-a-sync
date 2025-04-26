@@ -142,5 +142,5 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
 cdef void __import_ASyncFunction():
     """This helper func prevents repeated imports due to a circular import"""
     global ASyncFunction
-    from a_sync.function import ASyncFunction as _ASyncFunction
-    ASyncFunction = _ASyncFunction
+    from a_sync.a_sync import function
+    ASyncFunction = function.ASyncFunction
