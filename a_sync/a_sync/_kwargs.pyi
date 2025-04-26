@@ -1,0 +1,3 @@
+from typing import Any, Dict
+
+def get_flag_name(kwargs: Dict[str, Any]) -> str:...
