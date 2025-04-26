@@ -13,7 +13,7 @@ cdef object TooManyFlags = exceptions.TooManyFlags
 del exceptions
 
 
-cpdef inline str get_flag_name(dict kwargs):
+cpdef str get_flag_name(dict kwargs):
     """
     Get the name of the flag present in the kwargs.
 
@@ -46,7 +46,7 @@ cpdef inline str get_flag_name(dict kwargs):
     raise TooManyFlags("kwargs", present_flags)
 
 
-cdef inline bint is_sync(str flag, dict kwargs, bint pop_flag):
+cdef bint is_sync(str flag, dict kwargs, bint pop_flag):
     """
     Determine if the operation should be synchronous based on the flag value.
 
