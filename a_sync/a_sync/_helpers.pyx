@@ -10,6 +10,7 @@ from a_sync import exceptions
 from a_sync._typing import P, T
 from a_sync.functools cimport wraps
 
+
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 cdef object new_event_loop = asyncio.new_event_loop
@@ -23,6 +24,10 @@ del asyncio, aiofutures
 cdef object FunctionNotSync = exceptions.FunctionNotSync
 cdef object SyncModeInAsyncContextError = exceptions.SyncModeInAsyncContextError
 del exceptions
+
+
+# NOTE: we will import this later using the `__import_ASyncFunction` helper
+cdef object ASyncFunction = None
 
 
 cpdef object get_event_loop():
@@ -101,7 +106,8 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
         - :class:`concurrent.futures.Executor`: For managing pools of threads or processes.
         - :func:`asyncio.to_thread`: For running blocking code in a separate thread.
     """
-    from a_sync.a_sync.function import ASyncFunction
+    if ASyncFunction is None:
+        __import_ASyncFunction()
 
     if iscoroutinefunction(func) or isinstance(func, ASyncFunction):
         raise FunctionNotSync(func)
@@ -131,3 +137,10 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
             return await fut
 
         return _asyncify_wrap
+
+
+cdef void __import_ASyncFunction():
+    """This helper func prevents repeated imports due to a circular import"""
+    global ASyncFunction
+    from a_sync.function import ASyncFunction as _ASyncFunction
+    ASyncFunction = _ASyncFunction
