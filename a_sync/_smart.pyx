@@ -11,6 +11,8 @@ import weakref
 from libc.stdint cimport uintptr_t
 from logging import getLogger
 
+cimport cython
+
 from a_sync._typing import *
 
 if TYPE_CHECKING:
@@ -61,6 +63,7 @@ cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
 
 
+@cython.linetrace(False)
 cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
     if _is_done(fut):
         return ZERO
@@ -80,10 +83,23 @@ cdef class WeakSet:
     
     def __cinit__(self):
         self._refs = {}
+    
+    def __repr__(self):
+        # Use list comprehension syntax within the repr function for clarity
+        return f"WeakSet({', '.join(map(repr, self))})"
 
-    cdef void _gc_callback(self, fut: Future):
-        # Callback when a weakly-referenced object is garbage collected
-        self._refs.pop(<uintptr_t>id(fut), None)  # Safely remove the item if it exists
+    @cython.linetrace(False)
+    def __bool__(self) -> bool:
+        return bool(self._refs)
+
+    @cython.linetrace(False)
+    def __len__(self) -> int:
+        return len(self._refs)
+
+    @cython.linetrace(False)
+    def __contains__(self, item: Future) -> bool:
+        ref = self._refs.get(<uintptr_t>id(item))
+        return ref is not None and ref() is item
 
     cdef void add(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
@@ -96,27 +112,20 @@ cdef class WeakSet:
         except KeyError:
             raise KeyError(fut) from None
 
-    def __len__(self) -> int:
-        return len(self._refs)
-
-    def __bool__(self) -> bool:
-        return bool(self._refs)
-
-    def __contains__(self, item: Future) -> bool:
-        ref = self._refs.get(<uintptr_t>id(item))
-        return ref is not None and ref() is item
-
+    @cython.linetrace(False)
     def __iter__(self):
         for ref in self._refs.values():
             item = ref()
             if item is not None:
                 yield item
 
-    def __repr__(self):
-        # Use list comprehension syntax within the repr function for clarity
-        return f"WeakSet({', '.join(map(repr, self))})"
+    @cython.linetrace(False)
+    cdef void _gc_callback(self, fut: Future):
+        # Callback when a weakly-referenced object is garbage collected
+        self._refs.pop(<uintptr_t>id(fut), None)  # Safely remove the item if it exists
 
 
+@cython.linetrace(False)
 cdef inline bint _is_done(fut: Future):
     """Return True if the future is done.
 
@@ -125,6 +134,8 @@ cdef inline bint _is_done(fut: Future):
     """
     return <str>fut._state != "PENDING"
 
+
+@cython.linetrace(False)
 cdef inline bint _is_not_done(fut: Future):
     """Return False if the future is done.
 
@@ -133,10 +144,14 @@ cdef inline bint _is_not_done(fut: Future):
     """
     return <str>fut._state == "PENDING"
 
+
+@cython.linetrace(False)
 cdef inline bint _is_cancelled(fut: Future):
     """Return True if the future was cancelled."""
     return <str>fut._state == "CANCELLED"
 
+
+@cython.linetrace(False)
 cdef object _get_result(fut: Future):
     """Return the result this future represents.
 
@@ -155,6 +170,7 @@ cdef object _get_result(fut: Future):
         raise fut._make_cancelled_error()
     raise InvalidStateError('Result is not ready.')
 
+@cython.linetrace(False)
 cdef object _get_exception(fut: Future):
     """Return the exception that was set on this future.
 
@@ -293,6 +309,7 @@ class SmartFuture(Future, Generic[T]):
             queue._futs.pop(self._key, None)
         return _get_result(self)  # May raise too.
 
+    @cython.linetrace(False)
     def _waiter_done_cleanup_callback(self, waiter: "SmartTask") -> None:
         """
         Callback to clean up waiters when a waiter task is done.
@@ -312,10 +329,12 @@ class SmartFuture(Future, Generic[T]):
 cdef object _SmartFuture = SmartFuture
 
 
+@cython.linetrace(False)
 cdef inline object current_task(object loop):
     return _current_tasks.get(loop)
 
-  
+
+@cython.linetrace(False)
 cpdef inline object create_future(
     queue: Optional["SmartProcessingQueue"] = None,
     key: Optional[Key] = None,
@@ -364,6 +383,7 @@ class SmartTask(Task, Generic[T]):
     """
     _waiters: Set["Task[T]"]
 
+    @cython.linetrace(False)
     def __init__(
         self,
         coro: Awaitable[T],
@@ -435,6 +455,7 @@ class SmartTask(Task, Generic[T]):
         self._waiters = set()
         return _get_result(self)  # May raise too.
 
+    @cython.linetrace(False)
     def _waiter_done_cleanup_callback(self, waiter: "SmartTask") -> None:
         """
         Callback to clean up waiters when a waiter task is done.
@@ -452,6 +473,9 @@ class SmartTask(Task, Generic[T]):
 
 
 cdef object _SmartTask = SmartTask
+
+
+@cython.linetrace(False)
 cpdef object smart_task_factory(loop: AbstractEventLoop, coro: Awaitable[T]):
     """
     Task factory function that an event loop calls to create new tasks.
@@ -589,6 +613,7 @@ cdef tuple _get_done_callbacks(inner: Task, outer: Future):
             inner.remove_done_callback(_inner_done_callback)
     
     return _inner_done_callback, _outer_done_callback
+
 
 __all__ = [
     "create_future",

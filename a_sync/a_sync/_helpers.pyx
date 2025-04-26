@@ -6,6 +6,8 @@ and converting synchronous functions to asynchronous ones.
 import asyncio
 import asyncio.futures as aiofutures
 
+cimport cython
+
 from a_sync import exceptions
 from a_sync._typing import P, T
 from a_sync.functools cimport wraps
@@ -25,7 +27,9 @@ cdef object SyncModeInAsyncContextError = exceptions.SyncModeInAsyncContextError
 del exceptions
 
 
-cpdef object get_event_loop():
+@cython.profile(False)
+@cython.linetrace(False)
+cpdef inline object get_event_loop():
     cdef object loop
     try:
         return _get_event_loop()
@@ -37,6 +41,8 @@ cpdef object get_event_loop():
     return loop
 
 
+@cython.profile(False)
+@cython.linetrace(False)
 cdef object _await(object awaitable):
     """
     Await an awaitable object in a synchronous context.

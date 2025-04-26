@@ -1,3 +1,6 @@
+# cython: profile=False
+# cython: linetrace=False
+
 """
 This module provides functionality for handling synchronous and asynchronous flags
 in the ez-a-sync library.
@@ -53,13 +56,15 @@ cdef inline bint negate_if_necessary(str flag, bint flag_value):
         return not flag_value
     raise InvalidFlag(flag)
 
+
 cdef inline bint validate_and_negate_if_necessary(str flag, object flag_value):
     try:
         return negate_if_necessary(flag, flag_value)
     except TypeError as e:
         raise InvalidFlagValue(flag, flag_value) from e.__cause__
 
-cdef inline bint validate_flag_value(str flag, object flag_value):
+
+cdef bint validate_flag_value(str flag, object flag_value):
     """
     Validate that the flag value is a boolean.
 
