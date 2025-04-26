@@ -1,8 +1,12 @@
+from pathlib import Path
 from Cython.Build import cythonize
 from setuptools import find_packages, setup
 
 with open("requirements.txt", "r") as f:
     requirements = list(map(str.strip, f.read().split("\n")))[:-1]
+    
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="ez-a-sync",
@@ -14,6 +18,8 @@ setup(
         "version_scheme": "python-simplified-semver",
     },
     description="A library that makes it easy to define objects that can be used for both sync and async use cases.",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author="BobTheBuidler",
     author_email="bobthebuidlerdefi@gmail.com",
     url="https://github.com/BobTheBuidler/a-sync",
