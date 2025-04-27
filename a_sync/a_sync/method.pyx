@@ -11,7 +11,7 @@ asynchronously based on various conditions and configurations.
 import asyncio
 import inspect
 import typing
-from cpython.object cimport PyObject
+from cpython.object cimport PyObject, PyObject_CallObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
 from libc.stdint cimport uintptr_t
 from logging import getLogger
@@ -690,10 +690,12 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method.__self__
             <MyClass instance>
         """
-        instance = self.__weakself__()
-        if instance is not None:
-            return instance
-        raise ReferenceError(self)
+        cdef PyObject *instance = PyObject_CallObject(self.__weakself__)
+        if instance == NULL:
+            raise
+        if instance is NONE:
+            raise ReferenceError(self)
+        return <object>instance
 
     def map(
         self,
