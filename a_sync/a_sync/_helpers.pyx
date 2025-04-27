@@ -114,7 +114,6 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
     """
     if ASyncFunction is None:
         __import_ASyncFunction()
-        assert ASyncFunction is not None
 
     if iscoroutinefunction(func) or isinstance(func, ASyncFunction):
         raise FunctionNotSync(func)
