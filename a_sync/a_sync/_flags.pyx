@@ -54,7 +54,8 @@ cdef inline bint negate_if_necessary(str flag, bint flag_value) nogil:
         return flag_value
     elif flag in NEGATIVE_FLAGS:
         return not flag_value
-    raise InvalidFlag(flag)
+    with gil:
+        raise InvalidFlag(flag)
 
 
 cdef inline bint validate_and_negate_if_necessary(str flag, object flag_value):
