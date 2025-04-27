@@ -60,6 +60,9 @@ cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
 cdef PyObject *NONE = <PyObject*>None
 
+if NONE is NULL:
+    raise MemoryError("Could not get pointer to 'None'")
+
 
 cdef log_await(object arg):
     _logger_log(DEBUG, "awaiting %s", (arg, ))
@@ -89,7 +92,10 @@ cdef class WeakSet:
         self._refs = {}
 
     def __init__(self):
-        self.__callback_ptr = <PyObject*>self._gc_callback
+        cdef PyObject *callback_ptr = <PyObject*>self._gc_callback
+        if callback_ptr == NULL:
+            raise MemoryError("Could not get pointer to '_gc_callback'")
+        self.__callback_ptr = callback_ptr
     
     def __repr__(self):
         # Use list comprehension syntax within the repr function for clarity
@@ -110,7 +116,10 @@ cdef class WeakSet:
 
     cdef void add(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
-        cdef PyObject *weakref_ptr = PyWeakref_NewRef(<PyObject*>fut, self.__callback_ptr)
+        cdef PyObject *fut_ptr = <PyObject*>fut
+        cdef PyObject *weakref_ptr = PyWeakref_NewRef(fut_ptr, self.__callback_ptr)
+        if weakref_ptr == NULL:
+            raise MemoryError("Could not create ref")
         self._refs[<uintptr_t>id(fut)] = <object>weakref_ptr
 
     cdef void remove(self, fut: Future):
@@ -241,10 +250,14 @@ class SmartFuture(Future, Generic[T]):
         See Also:
             - :class:`SmartProcessingQueue`
         """
+        cdef PyObject *queue_ptr
         cdef PyObject *proxy_ptr
         _future_init(self, loop=loop)
         if queue:
-            proxy_ptr = PyWeakref_NewProxy(<PyObject*>queue, NONE)
+            queue_ptr = <PyObject*>queue
+            proxy_ptr = PyWeakref_NewProxy(queue_ptr, NONE)
+            if proxy_ptr == NULL:
+                raise MemoryError("Could not create proxy")
             self._queue = <object>proxy_ptr
         if key:
             self._key = key
