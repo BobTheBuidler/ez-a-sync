@@ -983,12 +983,12 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     """
 
 
-cdef void _import_ASyncABC():
+cdef inline void _import_ASyncABC():
     global ASyncABC
     from a_sync.a_sync.abstract import ASyncABC
 
 
-cdef void _import_TaskMapping():
+cdef inline void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping
 

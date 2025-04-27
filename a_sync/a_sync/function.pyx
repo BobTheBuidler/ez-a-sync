@@ -1299,6 +1299,6 @@ cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
         return ASyncFunctionAsyncDefault(func, **self.modifiers._modifiers)
 
 
-cdef void _import_TaskMapping():
+cdef inline void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping

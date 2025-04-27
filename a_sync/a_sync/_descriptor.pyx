@@ -406,6 +406,6 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         return super().__init_subclass__()
 
 
-cdef void _import_TaskMapping():
+cdef inline void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping
