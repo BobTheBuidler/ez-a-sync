@@ -170,7 +170,7 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     except NoFlagsFound:
         for base_ptr in cls_ptr.tp_bases:
             try:
-                return _parse_flag_name_from_dict_keys(cls_ptr, <object>base_ptr.tp_dict)
+                return _get_a_sync_flag_name_from_class_def(cls_ptr)
             except NoFlagsFound:
                 pass
     raise NoFlagsFound(<object>cls_ptr, list(<object>cls_ptr.tp_dict))
