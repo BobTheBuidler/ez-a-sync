@@ -123,6 +123,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
             True
         """
 
+@final
 class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
     """
     A descriptor for :class:`ASyncBoundMethodSyncDefault` objects.
@@ -166,6 +167,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
         self, instance: I, owner: Type[I] = None
     ) -> ASyncBoundMethodSyncDefault[I, P, T]: ...
 
+@final
 class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
     """
     A descriptor for asynchronous methods with an asynchronous default.

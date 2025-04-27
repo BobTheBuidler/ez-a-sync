@@ -45,7 +45,6 @@ del getLogger
 
 # cdef typing
 cdef object Literal = typing.Literal
-cdef object final = typing.final
 cdef object overload = typing.overload
 del typing
 
@@ -233,7 +232,6 @@ class ASyncPropertyDescriptor(
     """Descriptor class for asynchronous properties."""
 
 
-@final
 class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to synchronous behavior.
@@ -268,7 +266,6 @@ class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     """
 
 
-@final
 class ASyncPropertyDescriptorAsyncDefault(ASyncPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to asynchronous behavior.
@@ -516,7 +513,6 @@ class ASyncCachedPropertyDescriptor(
         return lambda: loader(instance)
 
 
-@final
 class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to synchronous behavior.
@@ -547,7 +543,6 @@ class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[I, 
     """
 
 
-@final
 class ASyncCachedPropertyDescriptorAsyncDefault(ASyncCachedPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to asynchronous behavior.
@@ -681,7 +676,6 @@ def a_sync_cached_property(  # type: ignore [misc]
     return decorator if func is None else decorator(func)
 
 
-@final
 class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     """Represents a hidden method for asynchronous properties.
 
@@ -730,7 +724,6 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
         return self.fn(self.__self__, sync=False).__await__()
 
 
-@final
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
     """Descriptor for hidden methods associated with asynchronous properties.
 
