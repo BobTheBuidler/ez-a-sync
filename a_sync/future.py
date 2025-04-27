@@ -29,7 +29,7 @@ import concurrent.futures
 from asyncio import Future, Task, get_event_loop
 from functools import partial, wraps
 from inspect import isawaitable
-from typing import TYPE_CHECKING, Any, Awaitable, List, Union, final
+from typing import TYPE_CHECKING, Any, Awaitable, Generator, Generic, List, Union, final
 
 from typing_extensions import Unpack
 
