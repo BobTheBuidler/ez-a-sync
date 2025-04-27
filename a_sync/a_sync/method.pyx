@@ -39,7 +39,7 @@ else:
 
 
 # cdef asyncio
-cdef PyObject *get_event_loop = asyncio.get_event_loop
+cdef PyObject *get_event_loop = <PyObject*>asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 
 # cdef inspect
@@ -695,7 +695,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             raise
         elif instance is NONE:
             raise ReferenceError(self)
-        return instance
+        return <object>instance
 
     def map(
         self,
