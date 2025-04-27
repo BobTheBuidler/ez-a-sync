@@ -23,7 +23,7 @@ cdef object InvalidFlagValue = exceptions.InvalidFlagValue
 del exceptions
 
 
-cdef inline bint negate_if_necessary(str flag, bint flag_value) nogil:
+cdef inline bint negate_if_necessary(str flag, bint flag_value):
     """Negate the flag value if necessary based on the flag type.
 
     This function checks if the provided flag is in the set of affirmative or negative flags
