@@ -77,13 +77,14 @@ class ASyncGenericBase(ASyncABC):
     def __a_sync_default_mode__(cls) -> bint:  # type: ignore [override]
         cdef object flag
         cdef bint flag_value
+        cdef PyTypeObject *cls_ptr = <PyTypeObject*>cls
         if not _logger_is_enabled(DEBUG):
             # we can optimize this if we dont need to log `flag` and the return value
             try:
-                flag = _get_a_sync_flag_name_from_signature(<PyTypeObject*>cls, False)
+                flag = _get_a_sync_flag_name_from_signature(cls_ptr, False)
                 flag_value = _a_sync_flag_default_value_from_signature(cls)
             except NoFlagsFound:
-                flag = _get_a_sync_flag_name_from_class_def(cls)
+                flag = _get_a_sync_flag_name_from_class_def(cls_ptr)
                 flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
             return validate_and_negate_if_necessary(flag, flag_value)
 
@@ -91,10 +92,10 @@ class ASyncGenericBase(ASyncABC):
         cdef bint sync
         
         try:
-            flag = _get_a_sync_flag_name_from_signature(<PyTypeObject*>cls, True)
+            flag = _get_a_sync_flag_name_from_signature(cls_ptr, True)
             flag_value = _a_sync_flag_default_value_from_signature(cls)
         except NoFlagsFound:
-            flag = _get_a_sync_flag_name_from_class_def(cls)
+            flag = _get_a_sync_flag_name_from_class_def(cls_ptr)
             flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
         
         sync = validate_and_negate_if_necessary(flag, flag_value)
@@ -152,11 +153,12 @@ class ASyncGenericBase(ASyncABC):
 
 
 
-cdef inline str _get_a_sync_flag_name_from_class_def(object cls):
-    cdef PyTypeObject *cls_ptr = <PyTypeObject*>cls
+cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     cdef PyTypeObject *base_ptr
-    
-    _logger_debug("Searching for flags defined on %s", cls)
+
+    if _logger_is_enabled_for(DEBUG):
+        _logger_debug("Searching for flags defined on %s", <object>cls_ptr)
+        
     try:
         return _parse_flag_name_from_dict_keys(cls_ptr, cls_ptr.tp_dict)
     except NoFlagsFound:
@@ -165,7 +167,7 @@ cdef inline str _get_a_sync_flag_name_from_class_def(object cls):
                 return _parse_flag_name_from_dict_keys(cls_ptr, base_ptr.tp_dict)
             except NoFlagsFound:
                 pass
-    raise NoFlagsFound(cls, list(cls_ptr.tp_dict))
+    raise NoFlagsFound(<object>cls_ptr, list(cls_ptr.tp_dict))
 
 
 cdef bint _a_sync_flag_default_value_from_signature(object cls):
