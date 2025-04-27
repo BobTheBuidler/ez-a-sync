@@ -68,7 +68,6 @@ cdef object ASyncFunctionSyncDefault = function.ASyncFunctionSyncDefault
 
 
 cdef public double METHOD_CACHE_TTL = 3600
-cdef PyObject *NONE = <PyObject*>None
 
 
 logger = getLogger(__name__)
