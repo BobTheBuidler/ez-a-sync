@@ -685,7 +685,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method.__self__
             <MyClass instance>
         """
-        cdef PyObject *instance = PyObject_CallObject(self.__weakself__)
+        cdef PyObject *instance = PyObject_CallObject(self.__weakself__, NULL)
         if instance == NULL:
             raise
         if instance is NONE:
