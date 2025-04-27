@@ -23,7 +23,7 @@ cdef object InvalidFlagValue = exceptions.InvalidFlagValue
 del exceptions
 
 
-cdef inline bint negate_if_necessary(str flag, bint flag_value):
+cdef inline bint negate_if_necessary(str flag, bint flag_value) nogil:
     """Negate the flag value if necessary based on the flag type.
 
     This function checks if the provided flag is in the set of affirmative or negative flags
@@ -62,31 +62,3 @@ cdef inline bint validate_and_negate_if_necessary(str flag, object flag_value):
         return negate_if_necessary(flag, flag_value)
     except TypeError as e:
         raise InvalidFlagValue(flag, flag_value) from e.__cause__
-
-
-cdef bint validate_flag_value(str flag, object flag_value):
-    """
-    Validate that the flag value is a boolean.
-
-    This function ensures that the provided flag value is of type boolean. If not, it raises an exception.
-
-    Args:
-        flag: The flag being validated.
-        flag_value: The value to validate.
-
-    Returns:
-        The validated flag value.
-
-    Raises:
-        exceptions.InvalidFlagValue: If the flag value is not a boolean.
-
-    Examples:
-        >>> validate_flag_value('sync', True)
-        True
-
-    See Also:
-        - :func:`negate_if_necessary`: Negates the flag value if necessary based on the flag type.
-    """
-    if not isinstance(flag_value, bool):
-        raise InvalidFlagValue(flag, flag_value)
-    return flag_value
