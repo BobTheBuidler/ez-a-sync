@@ -690,12 +690,10 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method.__self__
             <MyClass instance>
         """
-        cdef PyObject *instance = PyObject_CallObject(<PyObject*>self.__weakself__, NULL)        
-        if instance == NULL:
-            raise
-        elif instance is NONE:
-            raise ReferenceError(self)
-        return <object>instance
+        instance = self.__weakself__()
+        if instance is not None:
+            return instance
+        raise ReferenceError(self)
 
     def map(
         self,
