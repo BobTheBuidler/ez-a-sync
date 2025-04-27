@@ -29,7 +29,7 @@ if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.abstract import ASyncABC
 
-cdef extern from "weakrefmodule.h":
+cdef extern from "weakrefobject.h":
     PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
 
 
