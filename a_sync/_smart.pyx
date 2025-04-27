@@ -7,9 +7,9 @@ to protect tasks from cancellation.
 
 import asyncio
 import typing
-import weakref
 from libc.stdint cimport uintptr_t
 from logging import getLogger
+from weakref import WeakSet
 
 cimport cython
 
@@ -18,6 +18,9 @@ from a_sync._typing import *
 if TYPE_CHECKING:
     from a_sync import SmartProcessingQueue
 
+cdef extern from "_weakref.h":
+    cdef object PyWeakref_NewRef(PyObject*, PyObject*)
+    cdef object PyWeakref_NewProxy(PyObject*, PyObject*)
 
 # cdef asyncio
 cdef object ensure_future = asyncio.ensure_future
@@ -45,13 +48,6 @@ cdef object Generic = typing.Generic
 cdef object Tuple = typing.Tuple
 del typing
 
-# cdef weakref
-cdef object ref = weakref.ref
-cdef object proxy = weakref.proxy
-
-cdef log_await(object arg):
-    _logger_log(DEBUG, "awaiting %s", (arg, ))
-
 
 cdef object Args = Tuple[Any]
 cdef object Kwargs = Tuple[Tuple[str, Any]]
@@ -61,6 +57,10 @@ cdef object Key = _Key
 
 cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
+
+
+cdef log_await(object arg):
+    _logger_log(DEBUG, "awaiting %s", (arg, ))
 
 
 @cython.linetrace(False)
@@ -80,9 +80,14 @@ cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
 cdef class WeakSet:
     cdef readonly dict[uintptr_t, object] _refs
     """Mapping from object ID to weak reference."""
+
+    cdef PyObject* __callback_ptr
     
     def __cinit__(self):
         self._refs = {}
+
+    def __init__(self):
+        self.__callback_ptr = <PyObject*>self._gc_callback
     
     def __repr__(self):
         # Use list comprehension syntax within the repr function for clarity
@@ -103,7 +108,7 @@ cdef class WeakSet:
 
     cdef void add(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
-        self._refs[<uintptr_t>id(fut)] = ref(fut, self._gc_callback)
+        self._refs[<uintptr_t>id(fut)] = PyWeakref_NewRef(<PyObject*>fut, self.__callback_ptr)
 
     cdef void remove(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
@@ -208,7 +213,7 @@ class SmartFuture(Future, Generic[T]):
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
     _key: Optional[Key] = None
     
-    _waiters: "weakref.WeakSet[SmartTask[T]]"
+    _waiters: "WeakSet[SmartTask[T]]"
 
     def __init__(
         self,
@@ -235,7 +240,7 @@ class SmartFuture(Future, Generic[T]):
         """
         _future_init(self, loop=loop)
         if queue:
-            self._queue = proxy(queue)
+            self._queue = PyWeakref_NewProxy(<PyObject*>queue, <PyObject*>None)
         if key:
             self._key = key
         self._waiters = WeakSet()
