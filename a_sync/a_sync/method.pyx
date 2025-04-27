@@ -11,7 +11,8 @@ asynchronously based on various conditions and configurations.
 import asyncio
 import inspect
 import typing
-from cpython.object cimport PyObject
+from asyncio import TimerHandle, get_event_loop
+from cpython.object cimport PyObject, PyObject_CallObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
 from libc.stdint cimport uintptr_t
 from logging import getLogger
@@ -34,9 +35,8 @@ cdef extern from "weakrefobject.h":
 
 
 # cdef asyncio
-cdef object get_event_loop = asyncio.get_event_loop
+cdef PyObject *get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
-cdef object TimerHandle = asyncio.TimerHandle
 del asyncio
 
 # cdef inspect
@@ -71,6 +71,7 @@ del _descriptor, function
 
 
 cdef public double METHOD_CACHE_TTL = 3600
+cdef PyObject *NONE = <PyObject*>None
 
 
 logger = getLogger(__name__)
@@ -288,7 +289,7 @@ cdef void _update_cache_timer(str field_name, instance: I, bound: "ASyncBoundMet
         handle._when = <double>handle._loop.time() + METHOD_CACHE_TTL
     else:
         # create and assign the timer handle
-        loop = get_event_loop()
+        loop = PyObject_CallObject(get_event_loop, NULL)
         # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
         bound._cache_handle = loop.call_at(<double>loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, field_name)
 
@@ -690,11 +691,12 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method.__self__
             <MyClass instance>
         """
-        cdef object instance
-        instance = self.__weakself__()
-        if instance is not None:
-            return instance
-        raise ReferenceError(self)
+        cdef PyObject *instance = PyObject_CallObject(<PyObject*>self.__weakself__, NULL)        
+        if instance == NULL:
+            raise
+        elif instance is NONE:
+            raise ReferenceError(self)
+        return instance
 
     def map(
         self,
@@ -720,7 +722,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> task_mapping = bound_method.map(iterable1, iterable2, concurrency=5)
             TODO briefly include how someone would then use task_mapping
         """
-        from a_sync import TaskMapping
+        if TaskMapping is None:
+            _import_TaskMapping()
+            assert TaskMapping is not None
 
         return TaskMapping(
             self, *iterables, concurrency=concurrency, name=task_name, **kwargs
@@ -857,11 +861,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> bound_method.__cancel_cache_handle(instance)
         """
-        try:
-            self._cache_handle.cancel()
-        except AttributeError:
-            # this runs if _cache_handle is None
-            return
+        handle = self._cache_handle
+        if handle is not None:
+            PyObject_CallObject(<PyObject*>handle.cancel, NULL)
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
@@ -978,3 +980,11 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
         >>> bound_method = ASyncBoundMethodAsyncDefault(instance, my_function, True)
         >>> await bound_method(arg1, arg2, kwarg1=value1)
     """
+
+    
+# We will populate this on demand to avoid a circ import issue
+cdef object TaskMapping = None
+
+cdef void _import_TaskMapping():
+    global TaskMapping
+    from a_sync import TaskMapping
