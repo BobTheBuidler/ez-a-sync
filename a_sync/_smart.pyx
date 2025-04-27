@@ -19,8 +19,8 @@ if TYPE_CHECKING:
     from a_sync import SmartProcessingQueue
 
 cdef extern from "weakrefobject.h":
-    cdef PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
-    cdef PyObject* PyWeakref_NewProxy(PyObject*, PyObject*)
+    PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
+    PyObject* PyWeakref_NewProxy(PyObject*, PyObject*)
 
 # cdef asyncio
 cdef object ensure_future = asyncio.ensure_future
