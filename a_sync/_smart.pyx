@@ -19,7 +19,7 @@ from a_sync._typing import *
 if TYPE_CHECKING:
     from a_sync import SmartProcessingQueue
 
-cdef extern from "_weakref.h":
+cdef extern from "weakrefobject.h":
     cdef object PyWeakref_NewRef(PyObject*, PyObject*)
     cdef object PyWeakref_NewProxy(PyObject*, PyObject*)
 
