@@ -94,7 +94,7 @@ cdef class _ModifiedMixin:
         """
         return self.get_default()
 
-    cdef object _asyncify(self, func: SyncFn[P, T]):
+    cdef inline object _asyncify(self, func: SyncFn[P, T]):
         """
         Converts a synchronous function to an asynchronous one and applies async modifiers.
 
@@ -109,7 +109,7 @@ cdef class _ModifiedMixin:
         """
         return self.modifiers.apply_async_modifiers(_asyncify(func, self.modifiers.executor))
     
-    cdef object get_await(self):
+    cdef inline object get_await(self):
         """
         Applies sync modifiers to the _helpers._await function and caches it.
 
@@ -125,10 +125,10 @@ cdef class _ModifiedMixin:
             self.__await = awaiter
         return awaiter
     
-    cdef str get_default(self):
+    cdef inline str get_default(self):
         default = self.__default
         if default is None:
-            default = self.modifiers.default
+            default = self.modifiers.get_default()
             self.__default = default
         return default
 
@@ -169,13 +169,13 @@ cdef object _function_type = type(getLogger)
 
 cdef set[uintptr_t] _argspec_validated = set()
 
-cdef void _validate_argspec_cached(fn: Callable):
+cdef inline void _validate_argspec_cached(fn: Callable):
     cdef uintptr_t fid = id(fn)
     if fid not in _argspec_validated:
         _validate_argspec(fn)
         _argspec_validated.add(fid)
 
-cdef void _validate_argspec(fn: Callable):
+cdef inline void _validate_argspec(fn: Callable):
     fn_args = getfullargspec(fn)[0]
     for flag in VIABLE_FLAGS:
         if flag in fn_args:

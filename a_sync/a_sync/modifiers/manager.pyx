@@ -104,6 +104,16 @@ cdef class ModifierManager:
             else USER_DEFAULTS._modifiers[modifier_key]
         )
 
+    cdef str get_default(self):
+        cdef str default = self.__default
+        if default is None:
+            if "default" in self._modifiers:
+                default = self._modifiers["default"]
+            else:
+                default = USER_DEFAULTS._modifiers["default"]
+            self.__default = default
+        return default
+
     @property
     def use_limiter(self) -> bint:
         """Determines if a rate limiter should be used.
@@ -251,7 +261,7 @@ cdef class ModifierManager:
             >>> list(iter(manager))
             ['cache_type']
         """
-        return self._modifiers.__iter__()
+        return iter(self._modifiers)
 
     def __len__(self) -> uint8_t:
         """Returns the number of modifiers.
