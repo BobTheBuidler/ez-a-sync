@@ -1,7 +1,6 @@
 # cython: boundscheck=False
 import inspect
 from logging import getLogger
-from libc.stdint cimport uintptr_t
 
 from a_sync._typing import *
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary, validate_flag_value
@@ -9,6 +8,10 @@ from a_sync.a_sync.abstract import ASyncABC
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 from a_sync.exceptions import ASyncFlagException, FlagNotDefined, InvalidFlag, NoFlagsFound, TooManyFlags
 from a_sync.functools cimport cached_property_unsafe
+
+
+ctypedef object ObjectId
+ctypedef dict[str, object] ClsInitParams
 
 
 # cdef inspect
@@ -146,31 +149,32 @@ class ASyncGenericBase(ASyncABC):
 
 
 
-cdef str _get_a_sync_flag_name_from_class_def(object cls):
+cdef inline str _get_a_sync_flag_name_from_class_def(object cls):
     _logger_debug("Searching for flags defined on %s", cls)
+    
+    cdef object base
     try:
-        return _parse_flag_name_from_list(cls, cls.__dict__)  # type: ignore [arg-type]
-        # idk why __dict__ doesn't type check as a dict
+        return _parse_flag_name_from_mapping_proxy(cls, cls.__dict__)
     except NoFlagsFound:
         for base in cls.__bases__:
             try:
-                return _parse_flag_name_from_list(cls, base.__dict__)  # type: ignore [arg-type]  idk why __dict__ doesn't type check as a dict
+                return _parse_flag_name_from_mapping_proxy(cls, base.__dict__)
             except NoFlagsFound:
                 pass
     raise NoFlagsFound(cls, list(cls.__dict__.keys()))
 
 
 cdef bint _a_sync_flag_default_value_from_signature(object cls):
-    cdef object signature = _get_init_signature(cls)
+    cdef ClsInitParams parameters = _get_init_parameters(cls)
     if not _logger_is_enabled(DEBUG):
         # we can optimize this much better
-        return signature.parameters[_get_a_sync_flag_name_from_signature(cls, False)].default
+        return parameters[_get_a_sync_flag_name_from_signature(cls, False)].default
     
     _logger_log(
         DEBUG, "checking `__init__` signature for default %s a_sync flag value", (cls, )
     )
     cdef str flag = _get_a_sync_flag_name_from_signature(cls, True)
-    cdef object flag_value = signature.parameters[flag].default
+    cdef object flag_value = parameters[flag].default
     if flag_value is _empty:  # type: ignore [attr-defined]
         raise NotImplementedError(
             "The implementation for 'cls' uses an arg to specify sync mode, instead of a kwarg. We are unable to proceed. I suppose we can extend the code to accept positional arg flags if necessary"
@@ -190,20 +194,34 @@ cdef str _get_a_sync_flag_name_from_signature(object cls, bint debug_logs):
     # if we fail this one there's no need to check again
     if not debug_logs:
         # we can also skip assigning params to a var
-        return _parse_flag_name_from_list(cls, _get_init_signature(cls).parameters)
+        return _parse_flag_name_from_dict_keys(cls, _get_init_parameters(cls))
 
     _logger_log(DEBUG, "Searching for flags defined on %s.__init__", (cls, ))
-    cdef object parameters = _get_init_signature(cls).parameters
+    cdef ClsInitParams parameters = _get_init_parameters(cls)
     _logger_log(DEBUG, "parameters: %s", (parameters, ))
-    return _parse_flag_name_from_list(cls, parameters)
+    return _parse_flag_name_from_dict_keys(cls, parameters)
 
 
-cdef str _parse_flag_name_from_list(object cls, object items):
+cdef inline str _parse_flag_name_from_dict_keys(object cls, dict[str, object] d):
     cdef str flag
-    cdef list[str] present_flags = [flag for flag in VIABLE_FLAGS if flag in items]
+    cdef list[str] present_flags = [flag for flag in VIABLE_FLAGS if flag in d]
     if not present_flags:
         _logger_debug("There are no flags defined on %s", cls)
-        raise NoFlagsFound(cls, items.keys())
+        raise NoFlagsFound(cls, d.keys())
+    return __select_flag(cls, present_flags)
+
+
+cdef inline str _parse_flag_name_from_mapping_proxy(object cls, object mapping):
+    cdef list[str] present_flags
+    cdef str flag
+    present_flags = [flag for flag in VIABLE_FLAGS if flag in mapping]
+    if not present_flags:
+        _logger_debug("There are no flags defined on %s", cls)
+        raise NoFlagsFound(cls, mapping.keys())
+    return __select_flag(cls, present_flags)
+
+
+cdef str __select_flag(object cls, list[str] present_flags):
     if len(present_flags) > 1:
         _logger_debug("There are too many flags defined on %s", cls)
         raise TooManyFlags(cls, present_flags)
@@ -216,19 +234,24 @@ cdef str _parse_flag_name_from_list(object cls, object items):
 
 cdef inline bint _get_a_sync_flag_value_from_class_def(object cls, str flag):
     cdef object spec
+    cdef bint flag_value
     for spec in [cls, *cls.__bases__]:
-        if flag in spec.__dict__:
-            return spec.__dict__[flag]
+        flag_value = spec.__dict__.get(flag)
+        if flag_value is not None:
+            return flag_value
     raise FlagNotDefined(cls, flag)
 
 
-cdef dict[uintptr_t, object] _init_signature_cache = {}
+cdef dict[ObjectId, ClsInitParams] _init_params_cache = {}
 
 
-cdef _get_init_signature(object cls):
-    cdef uintptr_t cls_init_id = id(cls.__init__)
-    init_sig = _init_signature_cache.get(cls_init_id)
-    if init_sig is None:
-        init_sig = signature(cls.__init__)
-        _init_signature_cache[cls_init_id] = init_sig
-    return init_sig
+cdef inline ClsInitParams _get_init_parameters(object cls):
+    cdef ClsInitParams init_params
+    cdef object init_method = cls.__init__
+    # We keep a smaller dict if we use the id of the method instead of the class
+    cdef ObjectId init_method_id = id(init_method)
+    init_params = _init_params_cache.get(init_method_id)
+    if init_params is None:
+        init_params = dict(signature(init_method).parameters)
+        _init_params_cache[init_method_id] = init_params
+    return init_params
