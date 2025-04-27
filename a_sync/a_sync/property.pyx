@@ -98,9 +98,6 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
 
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
 
-    _TaskMapping: Type[TaskMapping] = None
-    """This silly helper just fixes a circular import"""
-
     def __init__(
         _ModifiedMixin self,
         _fget: AsyncGetterFunction[I, T],
@@ -214,11 +211,10 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         _logger_debug("mapping %s to instances: %s owner: %s", self, instances, owner)
         
         """NOTE: This silly helper just fixes a circular import"""
-        if _ASyncPropertyDescriptorBase._TaskMapping is None:
-            from a_sync.task import TaskMapping
-            _ASyncPropertyDescriptorBase._TaskMapping = TaskMapping
+        if TaskMapping is None:
+            _import_TaskMapping()
 
-        return _ASyncPropertyDescriptorBase._TaskMapping(
+        return TaskMapping(
             self,
             instances,
             owner=owner,
@@ -813,3 +809,8 @@ cdef object _parse_args(
         modifiers["default"] = func
         return None, modifiers
     return func, modifiers
+
+
+cdef void _import_TaskMapping():
+    global TaskMapping
+    from a_sync.task import TaskMapping

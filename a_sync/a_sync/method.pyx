@@ -25,12 +25,15 @@ from a_sync.a_sync._helpers cimport _await
 from a_sync.a_sync.function cimport _ModifiedMixin
 from a_sync.functools cimport update_wrapper
 
+cdef extern from "weakrefobject.h":
+    PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
+
 if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.abstract import ASyncABC
-
-cdef extern from "weakrefobject.h":
-    PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
+else:
+    # Due to circ import issues we will populate these later
+    ASyncABC, TaskMapping = None, None
 
 
 # cdef asyncio
@@ -124,8 +127,6 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     __wrapped__: AnyFn[P, T]
     """The unbound function which will be bound to an instance when :meth:`__get__` is called."""
 
-    __ASyncABC__: Type["ASyncABC"] = None
-
     _initialized = False
 
     async def __call__(self, instance: I, *args: P.args, **kwargs: P.kwargs) -> T:
@@ -172,10 +173,8 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         try:
             bound = instance.__dict__[field_name]
         except KeyError:
-            ASyncABC = ASyncMethodDescriptor.__ASyncABC__
             if ASyncABC is None:
-                from a_sync.a_sync.abstract import ASyncABC
-                ASyncMethodDescriptor.__ASyncABC__ = ASyncABC
+                _import_ASyncABC()
 
             default = _ModifiedMixin.get_default(self)
             if default == "sync":
@@ -480,7 +479,10 @@ cdef bint _is_a_sync_instance(object instance):
     cdef uintptr_t instance_type_uid = id(instance_type)
     if instance_type_uid in _is_a_sync_instance_cache:
         return _is_a_sync_instance_cache[instance_type_uid]
-    from a_sync.a_sync.abstract import ASyncABC
+    
+    if ASyncABC is None:
+        _import_ASyncABC()
+
     cdef bint is_a_sync = issubclass(instance_type, ASyncABC)
     _is_a_sync_instance_cache[instance_type_uid] = is_a_sync
     return is_a_sync
@@ -720,7 +722,8 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> task_mapping = bound_method.map(iterable1, iterable2, concurrency=5)
             TODO briefly include how someone would then use task_mapping
         """
-        from a_sync import TaskMapping
+        if TaskMapping is None:
+            _import_TaskMapping()
 
         return TaskMapping(
             self, *iterables, concurrency=concurrency, name=task_name, **kwargs
@@ -978,3 +981,13 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
         >>> bound_method = ASyncBoundMethodAsyncDefault(instance, my_function, True)
         >>> await bound_method(arg1, arg2, kwarg1=value1)
     """
+
+
+cdef void _import_ASyncABC():
+    global ASyncABC
+    from a_sync.a_sync.abstract import ASyncABC
+
+
+cdef void _import_TaskMapping():
+    global TaskMapping
+    from a_sync import TaskMapping
