@@ -157,11 +157,11 @@ cdef inline str _get_a_sync_flag_name_from_class_def(object cls):
     
     _logger_debug("Searching for flags defined on %s", cls)
     try:
-        return _parse_flag_name_from_dict_keys(cls, cls_ptr.tp_dict)
+        return _parse_flag_name_from_dict_keys(cls_ptr, cls_ptr.tp_dict)
     except NoFlagsFound:
         for base_ptr in cls_ptr.tp_bases:
             try:
-                return _parse_flag_name_from_dict_keys(cls, base_ptr.tp_dict)
+                return _parse_flag_name_from_dict_keys(cls_ptr, base_ptr.tp_dict)
             except NoFlagsFound:
                 pass
     raise NoFlagsFound(cls, list(cls_ptr.tp_dict))
@@ -197,22 +197,24 @@ cdef str _get_a_sync_flag_name_from_signature(object cls, bint debug_logs):
     # if we fail this one there's no need to check again
     if not debug_logs:
         # we can also skip assigning params to a var
-        return _parse_flag_name_from_dict_keys(cls, _get_init_parameters(cls))
+        return _parse_flag_name_from_dict_keys(<PyTypeObject*>cls, _get_init_parameters(cls))
 
     _logger_log(DEBUG, "Searching for flags defined on %s.__init__", (cls, ))
     cdef ClsInitParams parameters = _get_init_parameters(cls)
     _logger_log(DEBUG, "parameters: %s", (parameters, ))
-    return _parse_flag_name_from_dict_keys(cls, parameters)
+    return _parse_flag_name_from_dict_keys(<PyTypeObject*>cls, parameters)
 
 
-cdef inline str _parse_flag_name_from_dict_keys(object cls, dict[str, object] d):
+cdef inline str _parse_flag_name_from_dict_keys(PyTypeObject *cls_ptr, dict[str, object] d):
     cdef str flag
     cdef list[str] present_flags = [flag for flag in VIABLE_FLAGS if flag in d]
     cdef int flags_len = len(present_flags)
     if not flags_len:
+        cls = <object>cls_ptr
         _logger_debug("There are no flags defined on %s", cls)
         raise NoFlagsFound(cls, d.keys())
     if flags_len > 1:
+        cls = <object>cls_ptr
         _logger_debug("There are too many flags defined on %s", cls)
         raise TooManyFlags(cls, present_flags)
     if _logger_is_enabled(DEBUG):
