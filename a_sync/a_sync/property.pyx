@@ -23,6 +23,10 @@ from a_sync.functools cimport wraps
 if typing.TYPE_CHECKING:
     from a_sync.task import TaskMapping
 
+else:
+    # to prevent circ import issues we will import this later
+    TaskMapping = None
+
 
 # cdef asyncio
 cdef object get_event_loop = asyncio.get_event_loop
@@ -806,4 +810,4 @@ cdef object _parse_args(
 
 cdef void _import_TaskMapping():
     global TaskMapping
-    from a_sync.task import TaskMapping
+    from a_sync import TaskMapping
