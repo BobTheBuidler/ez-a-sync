@@ -73,9 +73,12 @@
 <span></span><span class="c1"># mypy: disable-error-code=valid-type</span>
 <span class="c1"># mypy: disable-error-code=misc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">iscoroutinefunction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">overload</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Unpack</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">exceptions</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncDecorator</span><span class="p">,</span> <span class="n">AsyncDecoratorOrCoroFn</span><span class="p">,</span> <span class="n">CoroFn</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">CacheType</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync.modifiers.cache.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_async_memory_cache</span>
 
 
