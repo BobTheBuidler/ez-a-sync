@@ -131,7 +131,7 @@ cdef class _AwaitableAsyncIterableMixin:
         """
         return _await(self._materialized)
 
-    cpdef object sort(self, key: SortKey[T] = None, reverse: bool = False):
+    cpdef inline object sort(self, key: SortKey[T] = None, reverse: bool = False):
         """
         Sort the {obj} yielded by the {cls}.
 
@@ -144,7 +144,7 @@ cdef class _AwaitableAsyncIterableMixin:
         """
         return _ASyncSorter(self, key=key, reverse=reverse)
 
-    cpdef object filter(self, function: ViewFn[T]):
+    cpdef inline object filter(self, function: ViewFn[T]):
         """
         Filters the {obj} yielded by the {cls} based on a function.
 
