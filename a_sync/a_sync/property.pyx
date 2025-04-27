@@ -808,6 +808,6 @@ cdef object _parse_args(
     return func, modifiers
 
 
-cdef void _import_TaskMapping():
+cdef inline void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping
