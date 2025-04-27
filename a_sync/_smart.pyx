@@ -12,7 +12,7 @@ from logging import getLogger
 
 cimport cython
 from cpython.object cimport PyObject
-from cpython.refcount cimport Py_DECREF, Py_INCREF
+from cpython.ref cimport Py_DECREF, Py_INCREF
 
 from a_sync._typing import *
 
