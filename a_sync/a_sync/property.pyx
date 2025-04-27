@@ -45,7 +45,6 @@ del getLogger
 
 # cdef typing
 cdef object Literal = typing.Literal
-cdef object final = typing.final
 cdef object overload = typing.overload
 del typing
 
@@ -97,9 +96,6 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     """The wrapped function or method."""
 
     __slots__ = "hidden_method_name", "hidden_method_descriptor", "_fget"
-
-    _TaskMapping: Type[TaskMapping] = None
-    """This silly helper just fixes a circular import"""
 
     def __init__(
         _ModifiedMixin self,
@@ -214,11 +210,10 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         _logger_debug("mapping %s to instances: %s owner: %s", self, instances, owner)
         
         """NOTE: This silly helper just fixes a circular import"""
-        if _ASyncPropertyDescriptorBase._TaskMapping is None:
-            from a_sync.task import TaskMapping
-            _ASyncPropertyDescriptorBase._TaskMapping = TaskMapping
+        if TaskMapping is None:
+            _import_TaskMapping()
 
-        return _ASyncPropertyDescriptorBase._TaskMapping(
+        return TaskMapping(
             self,
             instances,
             owner=owner,
@@ -233,7 +228,6 @@ class ASyncPropertyDescriptor(
     """Descriptor class for asynchronous properties."""
 
 
-@final
 class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to synchronous behavior.
@@ -268,7 +262,6 @@ class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     """
 
 
-@final
 class ASyncPropertyDescriptorAsyncDefault(ASyncPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to asynchronous behavior.
@@ -516,7 +509,6 @@ class ASyncCachedPropertyDescriptor(
         return lambda: loader(instance)
 
 
-@final
 class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to synchronous behavior.
@@ -547,7 +539,6 @@ class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[I, 
     """
 
 
-@final
 class ASyncCachedPropertyDescriptorAsyncDefault(ASyncCachedPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to asynchronous behavior.
@@ -681,7 +672,6 @@ def a_sync_cached_property(  # type: ignore [misc]
     return decorator if func is None else decorator(func)
 
 
-@final
 class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     """Represents a hidden method for asynchronous properties.
 
@@ -730,7 +720,6 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
         return self.fn(self.__self__, sync=False).__await__()
 
 
-@final
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
     """Descriptor for hidden methods associated with asynchronous properties.
 
@@ -813,3 +802,8 @@ cdef object _parse_args(
         modifiers["default"] = func
         return None, modifiers
     return func, modifiers
+
+
+cdef void _import_TaskMapping():
+    global TaskMapping
+    from a_sync.task import TaskMapping

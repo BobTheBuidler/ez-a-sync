@@ -25,6 +25,10 @@ from a_sync.functools cimport cached_property_unsafe, update_wrapper
 if TYPE_CHECKING:
     from a_sync import TaskMapping
 
+else:
+    # due to circ import issues we will populate this later
+    TaskMapping = None
+
 
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
@@ -137,8 +141,8 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = instance.my_method.map([1, 2, 3])
         """
-        from a_sync.task import TaskMapping
-
+        if TaskMapping is None:
+            _import_TaskMapping()
         return TaskMapping(self, *instances, **bound_method_kwargs)
 
     @cached_property_unsafe
@@ -400,3 +404,8 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             if attr.__doc__ and "{cls}" in attr.__doc__:
                 attr.__doc__ = attr.__doc__.replace("{cls}", f":class:`{cls.__name__}`")
         return super().__init_subclass__()
+
+
+cdef void _import_TaskMapping():
+    global TaskMapping
+    from a_sync import TaskMapping

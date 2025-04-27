@@ -16,6 +16,7 @@ from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 from a_sync.a_sync.modifiers cimport ModifierManager
 from a_sync.functools cimport cached_property_unsafe, update_wrapper, wraps
+
 if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.method import (
@@ -23,6 +24,10 @@ if typing.TYPE_CHECKING:
         ASyncBoundMethodAsyncDefault,
         ASyncBoundMethodSyncDefault,
     )
+
+else:
+    # due to circ import issues we will populate this later
+    TaskMapping = None
 
 
 # cdef asyncio
@@ -459,7 +464,8 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             See Also:
                 - :class:`TaskMapping`
             """
-            from a_sync import TaskMapping
+            if TaskMapping is None:
+                _import_TaskMapping()
 
             return TaskMapping(
                 self,
@@ -638,7 +644,8 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             See Also:
                 - :class:`TaskMapping`
             """
-            from a_sync import TaskMapping
+            if TaskMapping is None:
+                _import_TaskMapping()
 
             return TaskMapping(
                 self,
@@ -1290,3 +1297,8 @@ cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
     def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
         # TODO write specific docs for this implementation
         return ASyncFunctionAsyncDefault(func, **self.modifiers._modifiers)
+
+
+cdef void _import_TaskMapping():
+    global TaskMapping
+    from a_sync import TaskMapping

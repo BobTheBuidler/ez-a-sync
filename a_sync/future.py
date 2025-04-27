@@ -33,6 +33,14 @@ from inspect import isawaitable
 from a_sync._typing import *
 from a_sync.asyncio import create_task, igather
 
+if not TYPE_CHECKING:
+    # To prevent circ import issues, we populate this later
+    a_sync = None
+
+else:
+    # this is just here to keep it function-colored in the IDE
+    from a_sync import a_sync
+
 
 def future(
     callable: AnyFn[P, T] = None,
@@ -1342,7 +1350,9 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
         callable: AnyFn[P, T] = None,
         **kwargs: Unpack[ModifierKwargs],
     ):
-        from a_sync import a_sync
+        if a_sync is None:
+            _import_a_sync()
+            assert a_sync is not None
 
         if callable:
             self.callable = callable
@@ -1458,6 +1468,11 @@ class _ASyncFutureInstanceMethod(Generic[I, P, T]):
 
     def __call__(self, /, *fn_args: P.args, **fn_kwargs: P.kwargs) -> T:
         return self.__wrapper(self.__instance, *fn_args, **fn_kwargs)
+
+
+def _import_a_sync():
+    global a_sync
+    from a_sync import a_sync
 
 
 __all__ = ["future", "ASyncFuture"]

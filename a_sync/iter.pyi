@@ -1,8 +1,26 @@
-from a_sync._typing import *
-import weakref
 from _typeshed import Incomplete
+import weakref
 from collections.abc import Generator
-from typing import Any
+from typing import (
+    Any,
+    AsyncGenerator,
+    AsyncIterable,
+    AsyncIterator,
+    Callable,
+    Coroutine,
+    Iterable,
+    Iterator,
+    Generic,
+    List,
+    Optional,
+    Type,
+    Union,
+    final,
+)
+
+from typing_extensions import Self
+
+from a_sync._typing import P, T, V, AnyFn, AnyIterable, SyncFn
 
 __all__ = [
     "ASyncIterable",
@@ -12,8 +30,9 @@ __all__ = [
     "ASyncGeneratorFunction",
 ]
 
-SortKey = SyncFn[T, bool]
-ViewFn = AnyFn[T, bool]
+SortKey = SyncFn[[T], bool]
+ViewFn = AnyFn[[T], bool]
+AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
 
 class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     """
@@ -276,6 +295,7 @@ class _ASyncView(ASyncIterator[T]):
             iterable: An iterable or an async iterable yielding objects to which `function` will be applied.
         """
 
+@final
 class ASyncFilter(_ASyncView[T]):
     """
     An async filter class that filters items of an async iterable based on a provided function.
@@ -299,6 +319,7 @@ class ASyncFilter(_ASyncView[T]):
 
     async def __anext__(self) -> T: ...
 
+@final
 class ASyncSorter(_ASyncView[T]):
     """
     An async sorter class that sorts items of an async iterable based on a provided key function.

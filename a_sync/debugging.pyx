@@ -28,7 +28,7 @@ cdef object isasyncgenfunction = inspect.isasyncgenfunction
 
 cdef object wraps = functools.wraps
 
-cdef object time = time.time
+cdef object gettime = time.time
 
 cdef object logger = getLogger("a_sync.debugging")
 
@@ -84,11 +84,11 @@ async def _stuck_debug_task(
     # sleep early so fast-running coros can exit early
     await sleep(interval)
 
-    start = time() - interval
-    module = fn.__module__
-    name = fn.__name__
-    formatted_args = tuple(map(str, args))
-    formatted_kwargs = dict(zip(kwargs.keys(), map(str, kwargs.values())))
+    start = gettime() - interval
+    cdef str module = fn.__module__
+    cdef str name = fn.__name__
+    cdef tuple formatted_args = tuple(map(str, args))
+    cdef dict formatted_kwargs = dict(zip(kwargs.keys(), map(str, kwargs.values())))
     log = logger._log
     while True:
         log(
@@ -97,7 +97,7 @@ async def _stuck_debug_task(
             (
                 module,
                 name,
-                round((time() - start) / 60, 2),
+                round((gettime() - start) / 60, 2),
                 formatted_args,
                 formatted_kwargs,
             ),

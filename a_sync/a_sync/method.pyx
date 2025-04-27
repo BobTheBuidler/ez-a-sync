@@ -33,9 +33,8 @@ if typing.TYPE_CHECKING:
     from a_sync.a_sync.abstract import ASyncABC
     
 else:
-    
-    # We will populate this on demand to avoid a circ import issue
-    TaskMapping = None
+    # Due to circ import issues we will populate these later
+    ASyncABC, TaskMapping = None, None
 
 
 # cdef asyncio
@@ -53,7 +52,6 @@ cdef object Literal = typing.Literal
 cdef object Optional = typing.Optional
 cdef object Type = typing.Type
 cdef object Union = typing.Union
-cdef object final = typing.final
 cdef object overload = typing.overload
 
 # cdef typing_extensions
@@ -124,8 +122,6 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     __wrapped__: AnyFn[P, T]
     """The unbound function which will be bound to an instance when :meth:`__get__` is called."""
 
-    __ASyncABC__: Type["ASyncABC"] = None
-
     _initialized = False
 
     async def __call__(self, instance: I, *args: P.args, **kwargs: P.kwargs) -> T:
@@ -172,10 +168,8 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         try:
             bound = instance.__dict__[field_name]
         except KeyError:
-            ASyncABC = ASyncMethodDescriptor.__ASyncABC__
             if ASyncABC is None:
-                from a_sync.a_sync.abstract import ASyncABC
-                ASyncMethodDescriptor.__ASyncABC__ = ASyncABC
+                _import_ASyncABC()
 
             default = _ModifiedMixin.get_default(self)
             if default == "sync":
@@ -293,7 +287,6 @@ cdef void _update_cache_timer(str field_name, instance: I, bound: "ASyncBoundMet
         bound._cache_handle = loop.call_at(<double>loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, field_name)
 
 
-@final
 class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
     """
     A descriptor for :class:`ASyncBoundMethodSyncDefault` objects.
@@ -379,7 +372,6 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
         return bound
 
 
-@final
 class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
     """
     A descriptor for asynchronous methods with an asynchronous default.
@@ -480,7 +472,10 @@ cdef bint _is_a_sync_instance(object instance):
     cdef uintptr_t instance_type_uid = id(instance_type)
     if instance_type_uid in _is_a_sync_instance_cache:
         return _is_a_sync_instance_cache[instance_type_uid]
-    from a_sync.a_sync.abstract import ASyncABC
+    
+    if ASyncABC is None:
+        _import_ASyncABC()
+
     cdef bint is_a_sync = issubclass(instance_type, ASyncABC)
     _is_a_sync_instance_cache[instance_type_uid] = is_a_sync
     return is_a_sync
@@ -723,7 +718,6 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         """
         if TaskMapping is None:
             _import_TaskMapping()
-            assert TaskMapping is not None
 
         return TaskMapping(
             self, *iterables, concurrency=concurrency, name=task_name, **kwargs
@@ -981,10 +975,16 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     """
 
 
+cdef void _import_ASyncABC():
+    global ASyncABC
+    from a_sync.a_sync.abstract import ASyncABC
+
+
 cdef void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping
 
-    
+
 del asyncio, inspect, typing, typing_extensions
-del _descriptor, function, 
+del _descriptor, function
+

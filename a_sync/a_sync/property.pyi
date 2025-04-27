@@ -15,7 +15,7 @@ from a_sync.a_sync.method import (
 )
 from a_sync.task import TaskMapping as TaskMapping
 from collections.abc import Generator
-from typing import Any
+from typing import Any, final
 from typing_extensions import Unpack
 
 logger: Incomplete
@@ -87,6 +87,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
 class ASyncPropertyDescriptor(_ASyncPropertyDescriptorBase[I, T], ap.base.AsyncPropertyDescriptor):
     """Descriptor class for asynchronous properties."""
 
+@final
 class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to synchronous behavior.
@@ -107,6 +108,7 @@ class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
     __get__: Incomplete
 
+@final
 class ASyncPropertyDescriptorAsyncDefault(ASyncPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncPropertyDescriptor` that defaults to asynchronous behavior.
@@ -230,6 +232,7 @@ class ASyncCachedPropertyDescriptor(
             A callable that loads the property value.
         """
 
+@final
 class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[I, T]):
     """
     A variant of :class:`~ASyncCachedPropertyDescriptor` that defaults to synchronous behavior.
@@ -305,7 +308,7 @@ def a_sync_cached_property(
 def a_sync_cached_property(
     func: AnyGetterFunction[I, T], default: DefaultMode = ..., **modifiers: Unpack[ModifierKwargs]
 ) -> ASyncCachedPropertyDescriptor[I, T]: ...
-
+@final
 class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     """Represents a hidden method for asynchronous properties.
 
@@ -334,6 +337,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     def __await__(self) -> Generator[Any, None, T]:
         """Returns an awaitable for the method."""
 
+@final
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
     """Descriptor for hidden methods associated with asynchronous properties.
 
