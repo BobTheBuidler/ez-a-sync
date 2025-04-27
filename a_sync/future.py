@@ -29,8 +29,8 @@ import concurrent.futures
 from asyncio import Future, Task, get_event_loop
 from functools import partial, wraps
 from inspect import isawaitable
+from typing import final
 
-from a_sync._typing import *
 from a_sync.asyncio import create_task, igather
 
 if not TYPE_CHECKING:

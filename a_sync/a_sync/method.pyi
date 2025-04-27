@@ -18,7 +18,7 @@ from a_sync.a_sync.function import (
     ASyncFunctionAsyncDefault as ASyncFunctionAsyncDefault,
     ASyncFunctionSyncDefault as ASyncFunctionSyncDefault,
 )
-from typing import Any
+from typing import Any, final
 
 METHOD_CACHE_TTL: Literal[3600]
 logger: Incomplete
