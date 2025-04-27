@@ -51,7 +51,6 @@ cdef object Literal = typing.Literal
 cdef object Optional = typing.Optional
 cdef object Type = typing.Type
 cdef object Union = typing.Union
-cdef object final = typing.final
 cdef object overload = typing.overload
 del typing
 
@@ -293,7 +292,6 @@ cdef void _update_cache_timer(str field_name, instance: I, bound: "ASyncBoundMet
         bound._cache_handle = loop.call_at(<double>loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, field_name)
 
 
-@final
 class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
     """
     A descriptor for :class:`ASyncBoundMethodSyncDefault` objects.
@@ -379,7 +377,6 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
         return bound
 
 
-@final
 class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
     """
     A descriptor for asynchronous methods with an asynchronous default.

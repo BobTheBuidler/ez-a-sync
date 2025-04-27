@@ -60,7 +60,6 @@ cdef object Optional = typing.Optional
 cdef object Type = typing.Type
 cdef object TypeVar = typing.TypeVar
 cdef object Union = typing.Union
-cdef object final = typing.final
 cdef object overload = typing.overload
 del typing
 
@@ -547,7 +546,6 @@ class _ASyncView(ASyncIterator[T]):
 cdef object __ASyncView = _ASyncView
 
 
-@final
 class ASyncFilter(__ASyncView[T]):
     """
     An async filter class that filters items of an async iterable based on a provided function.
@@ -620,7 +618,6 @@ cdef object _key_if_no_key(object obj):
 cdef _view_init = __ASyncView.__init__
 
 
-@final
 class ASyncSorter(__ASyncView[T]):
     """
     An async sorter class that sorts items of an async iterable based on a provided key function.
