@@ -142,7 +142,7 @@ cdef object _asyncify_with_a_sync_executor(object func, executor: _AsyncExecutor
 
 
 cdef object _asyncify_with_cf_executor(object func, executor: Executor):
-    cdef object executor
+    cdef object submit
     cdef object loop
     cdef object create_future
 
