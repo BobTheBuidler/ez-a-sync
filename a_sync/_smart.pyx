@@ -7,9 +7,9 @@ to protect tasks from cancellation.
 
 import asyncio
 import typing
+import weakref
 from libc.stdint cimport uintptr_t
 from logging import getLogger
-from weakref import WeakSet
 
 cimport cython
 from cpython.object cimport PyObject
@@ -215,7 +215,7 @@ class SmartFuture(Future, Generic[T]):
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
     _key: Optional[Key] = None
     
-    _waiters: "WeakSet[SmartTask[T]]"
+    _waiters: "weakref.WeakSet[SmartTask[T]]"
 
     def __init__(
         self,
