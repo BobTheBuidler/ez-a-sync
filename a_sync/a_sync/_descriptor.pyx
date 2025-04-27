@@ -162,7 +162,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = await instance.my_method.all([1, 2, 3])
         """
-        return a_sync(default=self.get_default())(self._all)
+        return a_sync(default=_ModifiedMixin.get_default(self))(self._all)
 
     @cached_property_unsafe
     def any(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], bool]":
@@ -181,7 +181,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = await instance.my_method.any([-1, 0, 1])
         """
-        return a_sync(default=self.get_default())(self._any)
+        return a_sync(default=_ModifiedMixin.get_default(self))(self._any)
 
     @cached_property_unsafe
     def min(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
@@ -202,7 +202,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method.min([3, 1, 2])
             ```
         """
-        return a_sync(default=self.get_default())(self._min)
+        return a_sync(default=_ModifiedMixin.get_default(self))(self._min)
 
     @cached_property_unsafe
     def max(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
@@ -221,7 +221,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = await instance.my_method.max([3, 1, 2])
         """
-        return a_sync(default=self.get_default())(self._max)
+        return a_sync(default=_ModifiedMixin.get_default(self))(self._max)
 
     @cached_property_unsafe
     def sum(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
@@ -242,7 +242,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method.sum([1, 2, 3])
             ```
         """
-        return a_sync(default=self.get_default())(self._sum)
+        return a_sync(default=_ModifiedMixin.get_default(self))(self._sum)
 
     async def _all(
         self,
