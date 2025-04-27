@@ -1352,7 +1352,7 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
     ):
         if a_sync is None:
             _import_a_sync()
-            assert a_sync is not None:
+            assert a_sync is not None
 
         if callable:
             self.callable = callable
