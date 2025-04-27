@@ -288,7 +288,7 @@ cdef void _update_cache_timer(str field_name, instance: I, bound: "ASyncBoundMet
         handle._when = <double>handle._loop.time() + METHOD_CACHE_TTL
     else:
         # create and assign the timer handle
-        loop = PyObject_CallObject(get_event_loop, NULL)
+        loop = get_event_loop()
         # NOTE: use `instance.__dict__.pop` instead of `delattr` so we don't create a strong ref to `instance`
         bound._cache_handle = loop.call_at(<double>loop.time() + METHOD_CACHE_TTL, instance.__dict__.pop, field_name)
 
