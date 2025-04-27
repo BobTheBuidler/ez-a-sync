@@ -5,16 +5,19 @@ and converting synchronous functions to asynchronous ones.
 
 import asyncio
 import asyncio.futures as aiofutures
+from concurrent.futures import Executor
 
 cimport cython
 
 from a_sync import exceptions
 from a_sync._typing import P, T
+from a_sync.executor import _AsyncExecutorMixin
 from a_sync.functools cimport wraps
 
 
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
+cdef object get_running_loop = asyncio.get_running_loop
 cdef object new_event_loop = asyncio.new_event_loop
 cdef object set_event_loop = asyncio.set_event_loop
 cdef object _chain_future = aiofutures._chain_future
@@ -34,7 +37,7 @@ cdef object ASyncFunction = None
 
 @cython.profile(False)
 @cython.linetrace(False)
-cpdef object get_event_loop():
+cpdef inline object get_event_loop():
     cdef object loop
     try:
         return _get_event_loop()
@@ -118,31 +121,56 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
     if iscoroutinefunction(func) or isinstance(func, ASyncFunction):
         raise FunctionNotSync(func)
     
-    if hasattr(executor, "run"):
+    if isinstance(executor, _AsyncExecutorMixin):
         # ASyncExecutor classes are better optimized.
         # TODO: implement the same optimizations in the else block below
-
-        run = executor.run
-
-        @wraps(func)
-        async def _asyncify_wrap_fast(*args: P.args, **kwargs: P.kwargs) -> T:
-            return await run(func, *args, **kwargs)
-        
-        return _asyncify_wrap_fast
+        return _asyncify_with_a_sync_executor(executor)
 
     else:
+        return _asyncify_with_cf_executor(executor)
 
-        submit = executor.submit
+
+cdef object _asyncify_with_a_sync_executor(object func, executor: _AsyncExecutorMixin):
+    # ASyncExecutor classes are better optimized than normal ones and we can do this
+    run = executor.run
+
+    @wraps(func)
+    async def _asyncify_wrap_fast(*args, **kwargs):
+        return await run(func, *args, **kwargs)
+    
+    return _asyncify_wrap_fast
+
+
+cdef object _asyncify_with_cf_executor(object func, executor: Executor):
+    cdef object executor
+    cdef object loop
+    cdef object create_future
+
+    submit = executor.submit
+
+    try:
+        loop = get_running_loop()
+        create_future = loop.create_future
 
         @wraps(func)
-        async def _asyncify_wrap(*args: P.args, **kwargs: P.kwargs) -> T:
+        async def _asyncify_wrap(*args, **kwargs):
+            fut = create_future()
+            cf_fut = submit(func, *args, **kwargs)
+            _chain_future(cf_fut, fut)
+            return await fut
+
+    except RuntimeError:
+        loop, create_future = None, None
+
+        @wraps(func)
+        async def _asyncify_wrap(*args, **kwargs):
             loop = get_event_loop()
             fut = loop.create_future()
             cf_fut = submit(func, *args, **kwargs)
             _chain_future(cf_fut, fut)
             return await fut
 
-        return _asyncify_wrap
+    return _asyncify_wrap
 
 
 cdef inline void __import_ASyncFunction():
