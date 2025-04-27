@@ -50,8 +50,7 @@ def stuck_coro_debugger(
 ) -> Callable[__P, Awaitable[__T]]: ...
 
 
-def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES):
-    ...
+def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES): ...
 
 
 async def _stuck_debug_task(
