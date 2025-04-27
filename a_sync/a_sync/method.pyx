@@ -11,7 +11,7 @@ asynchronously based on various conditions and configurations.
 import asyncio
 import inspect
 import typing
-from cpython.object cimport PyObject, PyObject_CallObject
+from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
 from libc.stdint cimport uintptr_t
 from logging import getLogger
@@ -860,7 +860,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         """
         handle = self._cache_handle
         if handle is not None:
-            PyObject_CallObject(<PyObject*>handle.cancel, NULL)
+            handle.cancel()
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
