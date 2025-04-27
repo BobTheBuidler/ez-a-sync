@@ -89,14 +89,14 @@ cdef class WeakSet:
         self._refs = {}
 
     def __init__(self):
-        cdef PyObject *callback_ptr = <PyObject*>self._gc_callback
-        Py_INCREF(callback_ptr)
-        self.__callback_ptr = callback_ptr
+        cdef object gc_callback = self._gc_callback
+        self.__callback_ptr = <PyObject*>gc_callback
+        Py_INCREF(gc_callback)
 
     def __dealloc__(self):
         cdef PyObject *callback_ptr = self.__callback_ptr
         if callback_ptr is not NULL:
-            Py_DECREF(callback_ptr)
+            Py_DECREF(<object>callback_ptr)
     
     def __repr__(self):
         # Use list comprehension syntax within the repr function for clarity
