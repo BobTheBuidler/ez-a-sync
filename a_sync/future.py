@@ -29,7 +29,7 @@ import concurrent.futures
 from asyncio import Future, Task, get_event_loop
 from functools import partial, wraps
 from inspect import isawaitable
-from typing import Any, Awaitable, List, Union, final
+from typing import TYPE_CHECKING, Any, Awaitable, List, Union, final
 
 from typing_extensions import Unpack
 
@@ -41,7 +41,7 @@ if not TYPE_CHECKING:
     a_sync = None
 
 else:
-    # this is just here to keep it function-colored in the IDE
+    # this is just here to keep `a_sync` function-colored in the IDE
     from a_sync import a_sync
 
 
