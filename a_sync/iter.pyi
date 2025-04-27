@@ -1,7 +1,22 @@
 from _typeshed import Incomplete
 import weakref
 from collections.abc import Generator
-from typing import Any, AsyncGenerator, AsyncIterable, AsyncIterator, Callable, Coroutine, Iterable, Iterator, Generic, List, Optional, Type, Union, final
+from typing import (
+    Any,
+    AsyncGenerator,
+    AsyncIterable,
+    AsyncIterator,
+    Callable,
+    Coroutine,
+    Iterable,
+    Iterator,
+    Generic,
+    List,
+    Optional,
+    Type,
+    Union,
+    final,
+)
 
 from typing_extensions import Self
 

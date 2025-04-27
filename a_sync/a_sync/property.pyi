@@ -308,7 +308,6 @@ def a_sync_cached_property(
 def a_sync_cached_property(
     func: AnyGetterFunction[I, T], default: DefaultMode = ..., **modifiers: Unpack[ModifierKwargs]
 ) -> ASyncCachedPropertyDescriptor[I, T]: ...
-
 @final
 class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     """Represents a hidden method for asynchronous properties.
