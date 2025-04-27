@@ -12,6 +12,7 @@ from logging import getLogger
 from weakref import WeakSet
 
 cimport cython
+from cpython.object cimport PyObject
 
 from a_sync._typing import *
 
@@ -57,6 +58,7 @@ cdef object Key = _Key
 
 cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
+cdef PyObject *NONE = <PyObject*>None
 
 
 cdef log_await(object arg):
@@ -81,7 +83,7 @@ cdef class WeakSet:
     cdef readonly dict[uintptr_t, object] _refs
     """Mapping from object ID to weak reference."""
 
-    cdef PyObject* __callback_ptr
+    cdef PyObject *__callback_ptr
     
     def __cinit__(self):
         self._refs = {}
@@ -240,7 +242,7 @@ class SmartFuture(Future, Generic[T]):
         """
         _future_init(self, loop=loop)
         if queue:
-            self._queue = PyWeakref_NewProxy(<PyObject*>queue, <PyObject*>None)
+            self._queue = PyWeakref_NewProxy(<PyObject*>queue, NONE)
         if key:
             self._key = key
         self._waiters = WeakSet()
