@@ -2,7 +2,8 @@
 import inspect
 from logging import getLogger
 
-from cpython.types cimport PyTypeObject
+from cpython.type cimport PyTypeObject
+from libc.string cimport strcmp
 
 from a_sync._typing import *
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary, validate_flag_value
@@ -79,7 +80,7 @@ class ASyncGenericBase(ASyncABC):
         if not _logger_is_enabled(DEBUG):
             # we can optimize this if we dont need to log `flag` and the return value
             try:
-                flag = _get_a_sync_flag_name_from_signature(cls, False)
+                flag = _get_a_sync_flag_name_from_signature(<PyTypeObject*>cls, False)
                 flag_value = _a_sync_flag_default_value_from_signature(cls)
             except NoFlagsFound:
                 flag = _get_a_sync_flag_name_from_class_def(cls)
@@ -90,7 +91,7 @@ class ASyncGenericBase(ASyncABC):
         cdef bint sync
         
         try:
-            flag = _get_a_sync_flag_name_from_signature(cls, True)
+            flag = _get_a_sync_flag_name_from_signature(<PyTypeObject*>cls, True)
             flag_value = _a_sync_flag_default_value_from_signature(cls)
         except NoFlagsFound:
             flag = _get_a_sync_flag_name_from_class_def(cls)
@@ -119,7 +120,7 @@ class ASyncGenericBase(ASyncABC):
         if debug_logs := _logger_is_enabled(DEBUG):
             _logger_log(DEBUG, "checking a_sync flag for %s", (self, ))
         try:
-            flag = _get_a_sync_flag_name_from_signature(type(self), debug_logs)
+            flag = _get_a_sync_flag_name_from_signature(<PyTypeObject*>type(self), debug_logs)
         except ASyncFlagException:
             # We can't get the flag name from the __init__ signature,
             # but maybe the implementation sets the flag somewhere else.
@@ -168,15 +169,17 @@ cdef inline str _get_a_sync_flag_name_from_class_def(object cls):
 
 
 cdef bint _a_sync_flag_default_value_from_signature(object cls):
+    cdef PyTypeObject *cls_ptr = <PyTypeObject*>cls
     cdef ClsInitParams parameters = _get_init_parameters(cls)
+    
     if not _logger_is_enabled(DEBUG):
         # we can optimize this much better
-        return parameters[_get_a_sync_flag_name_from_signature(cls, False)].default
+        return parameters[_get_a_sync_flag_name_from_signature(cls_ptr, False)].default
     
     _logger_log(
         DEBUG, "checking `__init__` signature for default %s a_sync flag value", (cls, )
     )
-    cdef str flag = _get_a_sync_flag_name_from_signature(cls, True)
+    cdef str flag = _get_a_sync_flag_name_from_signature(cls_ptr, True)
     cdef object flag_value = parameters[flag].default
     if flag_value is _empty:  # type: ignore [attr-defined]
         raise NotImplementedError(
@@ -186,23 +189,26 @@ cdef bint _a_sync_flag_default_value_from_signature(object cls):
     return flag_value
 
 
-cdef str _get_a_sync_flag_name_from_signature(object cls, bint debug_logs):
-    if cls.__name__ == "ASyncGenericBase":
+cdef str _get_a_sync_flag_name_from_signature(PyTypeObject *cls_ptr, bint debug_logs):
+    if strcmp(cls_ptr.tp_name, b"ASyncGenericBase") == 0:
+        # NOTE: 0 means they matched
         if debug_logs:
             _logger_log(
                 DEBUG, "There are no flags defined on the base class, this is expected. Skipping.", ()
             )
         return ""
 
+    cls_obj = <object>cls_ptr
+    
     # if we fail this one there's no need to check again
     if not debug_logs:
         # we can also skip assigning params to a var
-        return _parse_flag_name_from_dict_keys(<PyTypeObject*>cls, _get_init_parameters(cls))
-
-    _logger_log(DEBUG, "Searching for flags defined on %s.__init__", (cls, ))
-    cdef ClsInitParams parameters = _get_init_parameters(cls)
+        return _parse_flag_name_from_dict_keys(cls_ptr, _get_init_parameters(cls_obj))
+    
+    _logger_log(DEBUG, "Searching for flags defined on %s.__init__", (cls_obj, ))
+    cdef ClsInitParams parameters = _get_init_parameters(cls_obj)
     _logger_log(DEBUG, "parameters: %s", (parameters, ))
-    return _parse_flag_name_from_dict_keys(<PyTypeObject*>cls, parameters)
+    return _parse_flag_name_from_dict_keys(cls_ptr, parameters)
 
 
 cdef inline str _parse_flag_name_from_dict_keys(PyTypeObject *cls_ptr, dict[str, object] d):
