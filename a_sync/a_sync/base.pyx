@@ -2,7 +2,7 @@
 import inspect
 from logging import getLogger
 
-from cpython.type cimport PyTypeObject
+from cpython.ref cimport PyTypeObject
 from libc.string cimport strcmp
 
 from a_sync._typing import *
