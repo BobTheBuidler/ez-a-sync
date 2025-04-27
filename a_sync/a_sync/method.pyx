@@ -12,7 +12,7 @@ import asyncio
 import inspect
 import typing
 from cpython.object cimport PyObject
-from cpython.ref cimport Py_DECREF Py_INCREF
+from cpython.ref cimport Py_DECREF, Py_INCREF
 from libc.stdint cimport uintptr_t
 from logging import getLogger
 
