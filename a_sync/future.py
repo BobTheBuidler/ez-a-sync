@@ -27,10 +27,29 @@ TODO include comparisons between the 'new way' with this future class and the 'o
 
 import concurrent.futures
 from asyncio import Future, Task, get_event_loop
+from decimal import Decimal
 from functools import partial, wraps
 from inspect import isawaitable
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Awaitable,
+    Callable,
+    Dict,
+    Generator,
+    Generic,
+    List,
+    Optional,
+    Set,
+    Type,
+    Union,
+    final,
+    overload,
+)
 
-from a_sync._typing import *
+from typing_extensions import Self, Unpack
+
+from a_sync._typing import I, P, T, AnyFn, MaybeAwaitable, ModifierKwargs, Numeric
 from a_sync.asyncio import create_task, igather
 
 if not TYPE_CHECKING:
@@ -38,7 +57,7 @@ if not TYPE_CHECKING:
     a_sync = None
 
 else:
-    # this is just here to keep it function-colored in the IDE
+    # this is just here to keep `a_sync` function-colored in the IDE
     from a_sync import a_sync
 
 

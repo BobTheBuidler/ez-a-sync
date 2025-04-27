@@ -98,7 +98,6 @@ from typing import (
     TypeVar,
     Union,
     ValuesView,
-    final,
     overload,
     runtime_checkable,
 )
