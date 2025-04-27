@@ -39,7 +39,7 @@ else:
 
 
 # cdef asyncio
-cdef PyObject *get_event_loop = <PyObject*>asyncio.get_event_loop
+cdef object get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 
 # cdef inspect
