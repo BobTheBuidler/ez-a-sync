@@ -8,7 +8,6 @@ to protect tasks from cancellation.
 import asyncio
 import typing
 import weakref
-from libc.stdint cimport uintptr_t
 from logging import getLogger
 
 cimport cython
@@ -60,9 +59,6 @@ cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
 cdef PyObject *NONE = <PyObject*>None
 
-if NONE is NULL:
-    raise MemoryError("Could not get pointer to 'None'")
-
 
 cdef void log_await(object arg):
     _logger_log(DEBUG, "awaiting %s", (arg, ))
@@ -83,7 +79,7 @@ cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
 
 
 cdef class WeakSet:
-    cdef readonly dict[uintptr_t, object] _refs
+    cdef readonly dict _refs
     """Mapping from object ID to weak reference."""
 
     cdef PyObject *__callback_ptr
@@ -92,10 +88,7 @@ cdef class WeakSet:
         self._refs = {}
 
     def __init__(self):
-        cdef PyObject *callback_ptr = <PyObject*>self._gc_callback
-        if callback_ptr == NULL:
-            raise MemoryError("Could not get pointer to '_gc_callback'")
-        self.__callback_ptr = callback_ptr
+        self.__callback_ptr = <PyObject*>self._gc_callback
     
     def __repr__(self):
         # Use list comprehension syntax within the repr function for clarity
@@ -111,7 +104,7 @@ cdef class WeakSet:
 
     @cython.linetrace(False)
     def __contains__(self, item: Future) -> bool:
-        ref = self._refs.get(<uintptr_t>id(item))
+        ref = self._refs.get(id(item))
         return ref is not None and ref() is item
 
     cdef void add(self, fut: Future):
@@ -120,12 +113,12 @@ cdef class WeakSet:
         cdef PyObject *weakref_ptr = PyWeakref_NewRef(fut_ptr, self.__callback_ptr)
         if weakref_ptr == NULL:
             raise MemoryError("Could not create ref")
-        self._refs[<uintptr_t>id(fut)] = <object>weakref_ptr
+        self._refs[id(fut)] = <object>weakref_ptr
 
     cdef void remove(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
         try:
-            self._refs.pop(<uintptr_t>id(fut))
+            self._refs.pop(id(fut))
         except KeyError:
             raise KeyError(fut) from None
 
@@ -139,7 +132,7 @@ cdef class WeakSet:
     @cython.linetrace(False)
     cdef void _gc_callback(self, fut: Future):
         # Callback when a weakly-referenced object is garbage collected
-        self._refs.pop(<uintptr_t>id(fut), None)  # Safely remove the item if it exists
+        self._refs.pop(id(fut), None)  # Safely remove the item if it exists
 
 
 @cython.linetrace(False)
