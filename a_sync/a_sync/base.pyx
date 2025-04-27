@@ -2,6 +2,7 @@
 import inspect
 from logging import getLogger
 
+from cpython.object cimport Py_TYPE
 from cpython.ref cimport PyTypeObject
 from libc.string cimport strcmp
 
@@ -29,6 +30,9 @@ cdef object _logger_debug = logger.debug
 cdef object _logger_log = logger._log
 cdef object DEBUG = 10
 del getLogger
+
+
+cdef object _init_ASyncABC = ASyncABC.__init__
 
 
 class ASyncGenericBase(ASyncABC):
@@ -107,12 +111,12 @@ class ASyncGenericBase(ASyncABC):
         return sync
 
     def __init__(self):
-        if type(self) is ASyncGenericBase:
+        if Py_TYPE(self) == ASyncGenericBase_ptr:
             raise NotImplementedError(
                 "You should not create instances of `ASyncGenericBase` directly, "
                 "you should subclass `ASyncGenericBase` instead."
             )
-        ASyncABC.__init__(self)
+        _init_ASyncABC(self)
 
     @cached_property_unsafe
     def __a_sync_flag_name__(self) -> str:
@@ -121,7 +125,7 @@ class ASyncGenericBase(ASyncABC):
         if debug_logs := _logger_is_enabled(DEBUG):
             _logger_log(DEBUG, "checking a_sync flag for %s", (self, ))
         try:
-            flag = _get_a_sync_flag_name_from_signature(<PyTypeObject*>type(self), debug_logs)
+            flag = _get_a_sync_flag_name_from_signature(Py_TYPE(self), debug_logs)
         except ASyncFlagException:
             # We can't get the flag name from the __init__ signature,
             # but maybe the implementation sets the flag somewhere else.
@@ -152,6 +156,8 @@ class ASyncGenericBase(ASyncABC):
         return validate_flag_value(flag, flag_value)
 
 
+cdef PyTypeObject *ASyncGenericBase_ptr = <PyTypeObject*>ASyncGenericBase
+
 
 cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     cdef PyTypeObject *base_ptr
@@ -160,14 +166,14 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
         _logger_debug("Searching for flags defined on %s", <object>cls_ptr)
         
     try:
-        return _parse_flag_name_from_dict_keys(cls_ptr, cls_ptr.tp_dict)
+        return _parse_flag_name_from_dict_keys(cls_ptr, <object>cls_ptr.tp_dict)
     except NoFlagsFound:
         for base_ptr in cls_ptr.tp_bases:
             try:
-                return _parse_flag_name_from_dict_keys(cls_ptr, base_ptr.tp_dict)
+                return _parse_flag_name_from_dict_keys(cls_ptr, <object>base_ptr.tp_dict)
             except NoFlagsFound:
                 pass
-    raise NoFlagsFound(<object>cls_ptr, list(cls_ptr.tp_dict))
+    raise NoFlagsFound(<object>cls_ptr, list(<object>cls_ptr.tp_dict))
 
 
 cdef bint _a_sync_flag_default_value_from_signature(object cls):
