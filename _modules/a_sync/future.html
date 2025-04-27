@@ -104,6 +104,14 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_task</span><span class="p">,</span> <span class="n">igather</span>
 
+<span class="k">if</span> <span class="ow">not</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="c1"># To prevent circ import issues, we populate this later</span>
+    <span class="n">a_sync</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># this is just here to keep it function-colored in the IDE</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">a_sync</span>
+
 
 <div class="viewcode-block" id="future">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.future.future">[docs]</a>
@@ -1431,7 +1439,9 @@
         <span class="nb">callable</span><span class="p">:</span> <span class="n">AnyFn</span><span class="p">[</span><span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
     <span class="p">):</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">a_sync</span>
+        <span class="k">if</span> <span class="n">a_sync</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_import_a_sync</span><span class="p">()</span>
+            <span class="k">assert</span> <span class="n">a_sync</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="nb">callable</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="o">=</span> <span class="nb">callable</span>
@@ -1547,6 +1557,11 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="n">fn_args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">fn_kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__wrapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__instance</span><span class="p">,</span> <span class="o">*</span><span class="n">fn_args</span><span class="p">,</span> <span class="o">**</span><span class="n">fn_kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_import_a_sync</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">a_sync</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">a_sync</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;future&quot;</span><span class="p">,</span> <span class="s2">&quot;ASyncFuture&quot;</span><span class="p">]</span>
