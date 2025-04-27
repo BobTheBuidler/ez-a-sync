@@ -11,7 +11,7 @@ import weakref
 from logging import getLogger
 
 cimport cython
-from cpython.object cimport PyObject
+from cpython.object cimport Py_DECREF, Py_INCREF, PyObject
 
 from a_sync._typing import *
 
@@ -88,7 +88,14 @@ cdef class WeakSet:
         self._refs = {}
 
     def __init__(self):
-        self.__callback_ptr = <PyObject*>self._gc_callback
+        cdef PyObject *callback_ptr = <PyObject*>self._gc_callback
+        Py_INCREF(callback_ptr)
+        self.__callback_ptr = callback_ptr
+
+    def __dealloc__(self):
+        cdef PyObject *callback_ptr = self.__callback_ptr
+        if callback_ptr is not NULL:
+            Py_DECREF(callback_ptr)
     
     def __repr__(self):
         # Use list comprehension syntax within the repr function for clarity
