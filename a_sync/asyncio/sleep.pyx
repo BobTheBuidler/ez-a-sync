@@ -4,14 +4,13 @@
 cdef class sleep0:
     cdef bint done
     
-    cpdef sleep0 __await__(self) noexcept:
+    def __await__(self) -> sleep0:
         return self
     
-    cpdef sleep0 __iter__(self) noexcept:
+    def __iter__(self) -> sleep0:
         return self
     
-    cpdef object __next__(self) except NULL:
-        if not self.done:
-            self.done = True
-            return None
-        raise StopIteration()
+    def __next__(self) -> None:
+        if self.done:
+            raise StopIteration
+        self.done = True
