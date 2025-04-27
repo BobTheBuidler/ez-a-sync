@@ -31,6 +31,7 @@ cdef extern from "weakrefobject.h":
 if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.abstract import ASyncABC
+    
 else:
     # Due to circ import issues we will populate these later
     ASyncABC, TaskMapping = None, None
@@ -39,12 +40,10 @@ else:
 # cdef asyncio
 cdef object get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
-cdef object TimerHandle = asyncio.TimerHandle
-del asyncio
+cdef object cancel_handle = asyncio.TimerHandle.cancel
 
 # cdef inspect
 cdef object isawaitable = inspect.isawaitable
-del inspect
 
 # cdef typing
 cdef object Any = typing.Any
@@ -55,13 +54,11 @@ cdef object Optional = typing.Optional
 cdef object Type = typing.Type
 cdef object Union = typing.Union
 cdef object overload = typing.overload
-del typing
 
 # cdef typing_extensions
 cdef object Concatenate = typing_extensions.Concatenate
 cdef object Self = typing_extensions.Self
 cdef object Unpack = typing_extensions.Unpack
-del typing_extensions
 
 
 # cdef a_sync
@@ -69,7 +66,8 @@ cdef object ASyncDescriptor = _descriptor.ASyncDescriptor
 cdef object ASyncFunction = function.ASyncFunction
 cdef object ASyncFunctionAsyncDefault = function.ASyncFunctionAsyncDefault
 cdef object ASyncFunctionSyncDefault = function.ASyncFunctionSyncDefault
-del _descriptor, function
+cdef object init_a_sync_function = ASyncFunction.__init__
+cdef object call_a_sync_function = ASyncFunction.__call__
 
 
 cdef public double METHOD_CACHE_TTL = 3600
@@ -168,9 +166,12 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         """
         if instance is None:
             return self
+        
         cdef str field_name = self.field_name
+        cdef dict instance_dict = instance.__dict__
+        
         try:
-            bound = instance.__dict__[field_name]
+            bound = instance_dict[field_name]
         except KeyError:
             if ASyncABC is None:
                 _import_ASyncABC()
@@ -211,7 +212,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
                 bound = ASyncBoundMethod(
                     instance, self.__wrapped__, self.__is_async_def__, **self.modifiers._modifiers
                 )
-            instance.__dict__[field_name] = bound
+            instance_dict[field_name] = bound
             _logger_debug("new bound method: %s", (bound,))
         _update_cache_timer(field_name, instance, bound)
         return bound
@@ -363,14 +364,17 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
         """
         if instance is None:
             return self
+        
         cdef str field_name = self.field_name
+        cdef dict instance_dict = instance.__dict__
+        
         try:
-            bound = instance.__dict__[field_name]
+            bound = instance_dict[field_name]
         except KeyError:
             bound = ASyncBoundMethodSyncDefault(
                 instance, self.__wrapped__, self.__is_async_def__, **self.modifiers._modifiers
             )
-            instance.__dict__[field_name] = bound
+            instance_dict[field_name] = bound
             _logger_debug("new bound method: %s", (bound,))
         _update_cache_timer(field_name, instance, bound)
         return bound
@@ -448,20 +452,22 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
         
         cdef object bound
         cdef str field_name = self.field_name
+        cdef dict instance_dict = instance.__dict__
 
         try:
-            bound = instance.__dict__[field_name]
+            bound = instance_dict[field_name]
         except KeyError:
             bound = ASyncBoundMethodAsyncDefault(
                 instance, self.__wrapped__, self.__is_async_def__, **self.modifiers._modifiers
             )
-            instance.__dict__[field_name] = bound
+            instance_dict[field_name] = bound
             _logger_debug("new bound method: %s", (bound,))
         _update_cache_timer(field_name, instance, bound)
         return bound
 
 
-cdef dict[uintptr_t, bint] _is_a_sync_instance_cache = {}
+cdef dict[object, bint] _is_a_sync_instance_cache = {}
+
 
 cdef bint _is_a_sync_instance(object instance):
     """Checks if an instance is an ASync instance.
@@ -473,7 +479,7 @@ cdef bint _is_a_sync_instance(object instance):
         A boolean indicating if the instance is an ASync instance.
     """
     cdef object instance_type = type(instance)
-    cdef uintptr_t instance_type_uid = id(instance_type)
+    cdef object instance_type_uid = id(instance_type)
     if instance_type_uid in _is_a_sync_instance_cache:
         return _is_a_sync_instance_cache[instance_type_uid]
     
@@ -589,7 +595,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             (<dict>modifiers).update((<_ModifiedMixin>unbound).modifiers._modifiers)
             unbound = unbound.__wrapped__
         # NOTE: the wrapped function was validated when the descriptor was initialized
-        ASyncFunction.__init__(self, unbound, _skip_validate=True, **<dict>modifiers)
+        init_a_sync_function(self, unbound, _skip_validate=True, **<dict>modifiers)
         self._is_async_def = async_def
         """True if `self.__wrapped__` is a coroutine function, False otherwise."""
         update_wrapper(self, unbound)
@@ -658,7 +664,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             _logger_log(DEBUG, "calling %s with args: %s kwargs: %s", (self, args, kwargs))
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
-        retval = coro = ASyncFunction.__call__(self, self.__self__, *args, **kwargs)
+        retval = coro = call_a_sync_function(self, self.__self__, *args, **kwargs)
         if not isawaitable(retval):
             # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
@@ -689,10 +695,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method.__self__
             <MyClass instance>
         """
-        cdef object instance
-        instance = self.__weakself__()
-        if instance is not None:
-            return instance
+        strong_instance = self.__weakself__()
+        if strong_instance is not None:
+            return strong_instance
         raise ReferenceError(self)
 
     def map(
@@ -857,11 +862,9 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> bound_method.__cancel_cache_handle(instance)
         """
-        try:
-            self._cache_handle.cancel()
-        except AttributeError:
-            # this runs if _cache_handle is None
-            return
+        handle = self._cache_handle
+        if handle is not None:
+            cancel_handle(handle)
 
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
@@ -988,3 +991,8 @@ cdef void _import_ASyncABC():
 cdef void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping
+
+
+del asyncio, inspect, typing, typing_extensions
+del _descriptor, function
+
