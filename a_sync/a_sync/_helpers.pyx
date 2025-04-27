@@ -124,10 +124,10 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
     if isinstance(executor, _AsyncExecutorMixin):
         # ASyncExecutor classes are better optimized.
         # TODO: implement the same optimizations in the else block below
-        return _asyncify_with_a_sync_executor(executor)
+        return _asyncify_with_a_sync_executor(func, executor)
 
     else:
-        return _asyncify_with_cf_executor(executor)
+        return _asyncify_with_cf_executor(func, executor)
 
 
 cdef object _asyncify_with_a_sync_executor(object func, executor: _AsyncExecutorMixin):
