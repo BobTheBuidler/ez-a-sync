@@ -110,7 +110,8 @@ cdef class WeakSet:
 
     cdef void add(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
-        self._refs[<uintptr_t>id(fut)] = PyWeakref_NewRef(<PyObject*>fut, self.__callback_ptr)
+        cdef PyObject *weakref_ptr = PyWeakref_NewRef(<PyObject*>fut, self.__callback_ptr)
+        self._refs[<uintptr_t>id(fut)] = <object>weakref_ptr
 
     cdef void remove(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
@@ -240,9 +241,11 @@ class SmartFuture(Future, Generic[T]):
         See Also:
             - :class:`SmartProcessingQueue`
         """
+        cdef PyObject *proxy_ptr
         _future_init(self, loop=loop)
         if queue:
-            self._queue = PyWeakref_NewProxy(<PyObject*>queue, NONE)
+            proxy_ptr = PyWeakref_NewProxy(<PyObject*>queue, NONE)
+            self._queue = <object>proxy_ptr
         if key:
             self._key = key
         self._waiters = WeakSet()
