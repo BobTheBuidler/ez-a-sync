@@ -150,18 +150,19 @@ class ASyncGenericBase(ASyncABC):
 
 
 cdef inline str _get_a_sync_flag_name_from_class_def(object cls):
-    _logger_debug("Searching for flags defined on %s", cls)
+    cdef PyTypeObject *cls_ptr = <PyTypeObject*>cls
+    cdef PyTypeObject *base_ptr
     
-    cdef object base
+    _logger_debug("Searching for flags defined on %s", cls)
     try:
-        return _parse_flag_name_from_mapping_proxy(cls, cls.__dict__)
+        return _parse_flag_name_from_dict_keys(cls, cls_ptr.tp_dict)
     except NoFlagsFound:
-        for base in cls.__bases__:
+        for base_ptr in cls_ptr.tp_bases:
             try:
-                return _parse_flag_name_from_mapping_proxy(cls, base.__dict__)
+                return _parse_flag_name_from_dict_keys(cls, base_ptr.tp_dict)
             except NoFlagsFound:
                 pass
-    raise NoFlagsFound(cls, list(cls.__dict__.keys()))
+    raise NoFlagsFound(cls, list(cls_ptr.tp_dict))
 
 
 cdef bint _a_sync_flag_default_value_from_signature(object cls):
@@ -205,24 +206,11 @@ cdef str _get_a_sync_flag_name_from_signature(object cls, bint debug_logs):
 cdef inline str _parse_flag_name_from_dict_keys(object cls, dict[str, object] d):
     cdef str flag
     cdef list[str] present_flags = [flag for flag in VIABLE_FLAGS if flag in d]
-    if not present_flags:
+    cdef int flags_len = len(present_flags)
+    if not flags_len:
         _logger_debug("There are no flags defined on %s", cls)
         raise NoFlagsFound(cls, d.keys())
-    return __select_flag(cls, present_flags)
-
-
-cdef inline str _parse_flag_name_from_mapping_proxy(object cls, object mapping):
-    cdef list[str] present_flags
-    cdef str flag
-    present_flags = [flag for flag in VIABLE_FLAGS if flag in mapping]
-    if not present_flags:
-        _logger_debug("There are no flags defined on %s", cls)
-        raise NoFlagsFound(cls, mapping.keys())
-    return __select_flag(cls, present_flags)
-
-
-cdef str __select_flag(object cls, list[str] present_flags):
-    if len(present_flags) > 1:
+    if flags_len > 1:
         _logger_debug("There are too many flags defined on %s", cls)
         raise TooManyFlags(cls, present_flags)
     if _logger_is_enabled(DEBUG):
