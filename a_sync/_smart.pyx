@@ -64,7 +64,7 @@ if NONE is NULL:
     raise MemoryError("Could not get pointer to 'None'")
 
 
-cdef log_await(object arg):
+cdef void log_await(object arg):
     _logger_log(DEBUG, "awaiting %s", (arg, ))
 
 
