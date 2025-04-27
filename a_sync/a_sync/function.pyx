@@ -126,7 +126,7 @@ cdef class _ModifiedMixin:
         return awaiter
     
     cdef inline str get_default(self):
-        default = self.__default
+        cdef str default = self.__default
         if default is None:
             default = self.modifiers.get_default()
             self.__default = default
