@@ -11,7 +11,8 @@ asynchronously based on various conditions and configurations.
 import asyncio
 import inspect
 import typing
-import weakref
+from cpython.object cimport PyObject
+from cpython.ref cimport Py_DECREF, Py_INCREF
 from libc.stdint cimport uintptr_t
 from logging import getLogger
 
@@ -27,6 +28,9 @@ from a_sync.functools cimport update_wrapper
 if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.abstract import ASyncABC
+
+cdef extern from "weakrefobject.h":
+    PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
 
 
 # cdef asyncio
@@ -56,10 +60,6 @@ cdef object Concatenate = typing_extensions.Concatenate
 cdef object Self = typing_extensions.Self
 cdef object Unpack = typing_extensions.Unpack
 del typing_extensions
-
-# cdef weakref
-cdef object ref = weakref.ref
-del weakref
 
 
 # cdef a_sync
@@ -578,8 +578,14 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> obj = MyClass(42)
             >>> bound_method = ASyncBoundMethod(obj, MyClass.my_method, True)
         """
-        self.__weakself__ = ref(instance, self.__cancel_cache_handle)
-        # First we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
+        # First we bind the method to a weak reference
+        # - bind and create a strong reference to the cache handle method
+        weakref_callback = self.__cancel_cache_handle
+        # - we do this so the bound callback method does not get garbage collected until this ASyncBoundMethod dies
+        self.__cancel_cache_handle = weakref_callback
+        self.__weakself__ = <object>PyWeakref_NewRef(<PyObject*>instance, <PyObject*>weakref_callback)
+        
+        # Then we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
         if isinstance(unbound, ASyncFunction):
             (<dict>modifiers).update((<_ModifiedMixin>unbound).modifiers._modifiers)
             unbound = unbound.__wrapped__

@@ -8,16 +8,20 @@ to protect tasks from cancellation.
 import asyncio
 import typing
 import weakref
-from libc.stdint cimport uintptr_t
 from logging import getLogger
 
 cimport cython
+from cpython.object cimport PyObject
+from cpython.ref cimport Py_DECREF, Py_INCREF
 
 from a_sync._typing import *
 
 if TYPE_CHECKING:
     from a_sync import SmartProcessingQueue
 
+cdef extern from "weakrefobject.h":
+    PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
+    PyObject* PyWeakref_NewProxy(PyObject*, PyObject*)
 
 # cdef asyncio
 cdef object ensure_future = asyncio.ensure_future
@@ -45,13 +49,6 @@ cdef object Generic = typing.Generic
 cdef object Tuple = typing.Tuple
 del typing
 
-# cdef weakref
-cdef object ref = weakref.ref
-cdef object proxy = weakref.proxy
-
-cdef log_await(object arg):
-    _logger_log(DEBUG, "awaiting %s", (arg, ))
-
 
 cdef object Args = Tuple[Any]
 cdef object Kwargs = Tuple[Tuple[str, Any]]
@@ -61,6 +58,11 @@ cdef object Key = _Key
 
 cdef Py_ssize_t ZERO = 0
 cdef Py_ssize_t ONE = 1
+cdef PyObject *NONE = <PyObject*>None
+
+
+cdef void log_await(object arg):
+    _logger_log(DEBUG, "awaiting %s", (arg, ))
 
 
 @cython.linetrace(False)
@@ -78,11 +80,23 @@ cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
 
 
 cdef class WeakSet:
-    cdef readonly dict[uintptr_t, object] _refs
+    cdef readonly dict _refs
     """Mapping from object ID to weak reference."""
+
+    cdef PyObject *__callback_ptr
     
     def __cinit__(self):
         self._refs = {}
+
+    def __init__(self):
+        cdef object gc_callback = self._gc_callback
+        self.__callback_ptr = <PyObject*>gc_callback
+        Py_INCREF(gc_callback)
+
+    def __dealloc__(self):
+        cdef PyObject *callback_ptr = self.__callback_ptr
+        if callback_ptr is not NULL:
+            Py_DECREF(<object>callback_ptr)
     
     def __repr__(self):
         # Use list comprehension syntax within the repr function for clarity
@@ -98,17 +112,21 @@ cdef class WeakSet:
 
     @cython.linetrace(False)
     def __contains__(self, item: Future) -> bool:
-        ref = self._refs.get(<uintptr_t>id(item))
+        ref = self._refs.get(id(item))
         return ref is not None and ref() is item
 
     cdef void add(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
-        self._refs[<uintptr_t>id(fut)] = ref(fut, self._gc_callback)
+        cdef PyObject *fut_ptr = <PyObject*>fut
+        cdef PyObject *weakref_ptr = PyWeakref_NewRef(fut_ptr, self.__callback_ptr)
+        if weakref_ptr == NULL:
+            raise MemoryError("Could not create ref")
+        self._refs[id(fut)] = <object>weakref_ptr
 
     cdef void remove(self, fut: Future):
         # Keep a weak reference with a callback for when the item is collected
         try:
-            self._refs.pop(<uintptr_t>id(fut))
+            self._refs.pop(id(fut))
         except KeyError:
             raise KeyError(fut) from None
 
@@ -122,7 +140,7 @@ cdef class WeakSet:
     @cython.linetrace(False)
     cdef void _gc_callback(self, fut: Future):
         # Callback when a weakly-referenced object is garbage collected
-        self._refs.pop(<uintptr_t>id(fut), None)  # Safely remove the item if it exists
+        self._refs.pop(id(fut), None)  # Safely remove the item if it exists
 
 
 @cython.linetrace(False)
@@ -233,9 +251,15 @@ class SmartFuture(Future, Generic[T]):
         See Also:
             - :class:`SmartProcessingQueue`
         """
+        cdef PyObject *queue_ptr
+        cdef PyObject *proxy_ptr
         _future_init(self, loop=loop)
         if queue:
-            self._queue = proxy(queue)
+            queue_ptr = <PyObject*>queue
+            proxy_ptr = PyWeakref_NewProxy(queue_ptr, NONE)
+            if proxy_ptr == NULL:
+                raise MemoryError("Could not create proxy")
+            self._queue = <object>proxy_ptr
         if key:
             self._key = key
         self._waiters = WeakSet()
