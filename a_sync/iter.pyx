@@ -23,6 +23,7 @@ from a_sync.functools cimport update_wrapper
 cdef object get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 cdef object TimerHandle = asyncio.TimerHandle
+cdef object cancel_handle = TimerHandle.cancel
 del asyncio
 
 # cdef copy
@@ -480,7 +481,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
         except KeyError:
             gen_func = ASyncGeneratorFunction(self.__wrapped__, instance)
             instance.__dict__[self.field_name] = gen_func
-        gen_func._cache_handle.cancel()
+        cancel_handle(gen_func._cache_handle)
         gen_func._cache_handle = self.__get_cache_handle(instance)
         return gen_func
 
@@ -502,7 +503,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
         )
 
     def __cancel_cache_handle(self, instance: object) -> None:
-        self._cache_handle.cancel()
+        cancel_handle(self._cache_handle)
 
 
 cdef object _ASyncGeneratorFunction = ASyncGeneratorFunction
