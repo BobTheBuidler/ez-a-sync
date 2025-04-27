@@ -11,7 +11,6 @@ asynchronously based on various conditions and configurations.
 import asyncio
 import inspect
 import typing
-from asyncio import TimerHandle, get_event_loop
 from cpython.object cimport PyObject, PyObject_CallObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
 from libc.stdint cimport uintptr_t
@@ -26,22 +25,25 @@ from a_sync.a_sync._helpers cimport _await
 from a_sync.a_sync.function cimport _ModifiedMixin
 from a_sync.functools cimport update_wrapper
 
-if typing.TYPE_CHECKING:
-    from a_sync import TaskMapping
-    from a_sync.a_sync.abstract import ASyncABC
-
 cdef extern from "weakrefobject.h":
     PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
 
+if typing.TYPE_CHECKING:
+    from a_sync import TaskMapping
+    from a_sync.a_sync.abstract import ASyncABC
+    
+else:
+    
+    # We will populate this on demand to avoid a circ import issue
+    TaskMapping = None
+
 
 # cdef asyncio
-cdef PyObject *get_event_loop
+cdef PyObject *get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
-del asyncio
 
 # cdef inspect
 cdef object isawaitable = inspect.isawaitable
-del inspect
 
 # cdef typing
 cdef object Any = typing.Any
@@ -53,13 +55,11 @@ cdef object Type = typing.Type
 cdef object Union = typing.Union
 cdef object final = typing.final
 cdef object overload = typing.overload
-del typing
 
 # cdef typing_extensions
 cdef object Concatenate = typing_extensions.Concatenate
 cdef object Self = typing_extensions.Self
 cdef object Unpack = typing_extensions.Unpack
-del typing_extensions
 
 
 # cdef a_sync
@@ -67,7 +67,6 @@ cdef object ASyncDescriptor = _descriptor.ASyncDescriptor
 cdef object ASyncFunction = function.ASyncFunction
 cdef object ASyncFunctionAsyncDefault = function.ASyncFunctionAsyncDefault
 cdef object ASyncFunctionSyncDefault = function.ASyncFunctionSyncDefault
-del _descriptor, function
 
 
 cdef public double METHOD_CACHE_TTL = 3600
@@ -981,10 +980,11 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
         >>> await bound_method(arg1, arg2, kwarg1=value1)
     """
 
-    
-# We will populate this on demand to avoid a circ import issue
-cdef object TaskMapping = None
 
 cdef void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping
+
+    
+del asyncio, inspect, typing, typing_extensions
+del _descriptor, function, 
