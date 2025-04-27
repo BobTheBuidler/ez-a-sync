@@ -146,7 +146,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         return TaskMapping(self, *instances, **bound_method_kwargs)
 
     @cached_property_unsafe
-    def all(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], bool]":
+    def all(_ModifiedMixin self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], bool]":
         """
         Create an :class:`~ASyncFunction` that checks if all results are truthy.
 
@@ -165,7 +165,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         return a_sync(default=self.get_default())(self._all)
 
     @cached_property_unsafe
-    def any(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], bool]":
+    def any(_ModifiedMixin self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], bool]":
         """
         Create an :class:`~ASyncFunction` that checks if any result is truthy.
 
@@ -184,7 +184,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         return a_sync(default=self.get_default())(self._any)
 
     @cached_property_unsafe
-    def min(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
+    def min(_ModifiedMixin self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
         """
         Create an :class:`~ASyncFunction` that returns the minimum result.
 
@@ -205,7 +205,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         return a_sync(default=self.get_default())(self._min)
 
     @cached_property_unsafe
-    def max(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
+    def max(_ModifiedMixin self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
         """
         Create an :class:`~ASyncFunction` that returns the maximum result.
 
@@ -224,7 +224,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         return a_sync(default=self.get_default())(self._max)
 
     @cached_property_unsafe
-    def sum(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
+    def sum(_ModifiedMixin self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
         """
         Create an :class:`~ASyncFunction` that returns the sum of results.
 
