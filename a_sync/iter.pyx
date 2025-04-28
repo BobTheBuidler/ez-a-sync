@@ -755,10 +755,8 @@ cdef void _init_subclass(cls, dict kwargs):
     for base in getattr(cls, "__orig_bases__", []):
         if not hasattr(base, "__args__"):
             continue
-            
-        args = base.__args__
-        # I'm going to keep this around for now in case I need it to handle complicated cases
-        # args = get_args(base)
+        
+        args = get_args(base)
         if args and not isinstance(type_argument := args[0], TypeVar):
             module = getattr(type_argument, "__module__", "")
             qualname = getattr(type_argument, "__qualname__", "")
