@@ -753,7 +753,15 @@ cdef void _init_subclass(cls, dict kwargs):
     cdef tuple args
     cdef str module, qualname, name
     for base in getattr(cls, "__orig_bases__", []):
+        class Shit(Exception):...
         if not hasattr(base, "__args__"):
+            try:
+                if issubclass(base, _AwaitableAsyncIterableMixin):
+                    raise Shit(base)
+            except Shit:
+                raise
+            except:
+                pass
             continue
         
         args = get_args(base)
