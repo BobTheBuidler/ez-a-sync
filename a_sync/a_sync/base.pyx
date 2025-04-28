@@ -3,7 +3,7 @@ import inspect
 from logging import getLogger
 
 from cpython.object cimport Py_TYPE, PyObject
-from cpython.tuple cimport PyTuple_Size, PyTuple_GetItem
+from cpython.tuple cimport PyTuple_GET_SIZE, PyTuple_GetItem
 from libc.string cimport strcmp
 
 from a_sync._typing import *
@@ -166,6 +166,7 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     cdef PyObject* bases
     cdef PyTypeObject *base_ptr
     cdef object cls_dict
+    cdef Py_ssize_t len_bases
 
     if _logger_is_enabled_for(DEBUG):
         _logger_debug("Searching for flags defined on %s", <object>cls_ptr)
@@ -176,7 +177,8 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     except NoFlagsFound:
         bases = cls_ptr.tp_bases  # This is a tuple or NULL
         if bases != NULL:
-            for i in range(PyTuple_Size(bases)):
+            len_bases = PyTuple_GET_SIZE(bases)
+            for i in range(len_bases):
                 base_ptr = <PyTypeObject*>PyTuple_GetItem(bases, i)
                 try:
                     return _get_a_sync_flag_name_from_class_def(base_ptr)
