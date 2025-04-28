@@ -3,6 +3,7 @@ import inspect
 from logging import getLogger
 
 from cpython.object cimport Py_TYPE
+from cpython.tuple cimport PyTuple_Size, PyTuple_GetItem
 from libc.string cimport strcmp
 
 from a_sync._typing import *
@@ -162,6 +163,7 @@ cdef PyTypeObject *ASyncGenericBase_ptr = <PyTypeObject*>ASyncGenericBase
 
 
 cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
+    cdef PyObject* bases
     cdef PyTypeObject *base_ptr
 
     if _logger_is_enabled_for(DEBUG):
@@ -170,11 +172,14 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     try:
         return _parse_flag_name_from_dict_keys(cls_ptr, <object>cls_ptr.tp_dict)
     except NoFlagsFound:
-        for base_ptr in cls_ptr.tp_bases:
-            try:
-                return _get_a_sync_flag_name_from_class_def(cls_ptr)
-            except NoFlagsFound:
-                pass
+        bases = cls_ptr.tp_bases  # This is a tuple or NULL
+        if bases is not None:
+            for i in range(PyTuple_Size(bases)):
+                base_ptr = PyTuple_GetItem(bases, i)
+                try:
+                    return _get_a_sync_flag_name_from_class_def(base_ptr)
+                except NoFlagsFound:
+                    pass
     raise NoFlagsFound(<object>cls_ptr, list(<object>cls_ptr.tp_dict))
 
 
