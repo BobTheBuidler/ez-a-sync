@@ -8,7 +8,7 @@ import typing
 import weakref
 from logging import getLogger
 
-from cpython.object cimport PyObject, PyObject_GetIter
+from cpython.object cimport PyObject_GetIter
 from cython cimport final
 from typing_extensions import Self
 
@@ -530,7 +530,7 @@ cdef class _ASyncView(_ASyncIterator):
             self.__iterator__ = None
             self.__aiterator__ = iterable.__aiter__()
         elif isinstance(iterable, Iterable):
-            self.__iterator__ = <object>PyObject_GetIter(<PyObject*>iterable)
+            self.__iterator__ = <object>PyObject_GetIter(iterable)
             self.__aiterator__ = None
         else:
             raise TypeError(
