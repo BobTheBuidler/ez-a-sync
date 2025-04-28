@@ -753,8 +753,13 @@ cdef void _init_subclass(cls, dict kwargs):
     cdef tuple args
     cdef str module, qualname, name
     for base in getattr(cls, "__orig_bases__", []):
-        class Shit(Exception):...
+        
         if not hasattr(base, "__args__"):
+            if base in (_ASyncIterable, _ASyncIterator, _ASyncFilter, _ASyncSorter):
+                continue
+                
+            class Shit(Exception):
+                ...
             try:
                 if issubclass(base, _AwaitableAsyncIterableMixin):
                     raise Shit(base)
