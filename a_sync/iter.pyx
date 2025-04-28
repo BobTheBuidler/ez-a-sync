@@ -166,6 +166,9 @@ cdef class _AwaitableAsyncIterableMixin:
         """
         return [obj async for obj in self]
 
+    def __class_getitem__(cls, *a, **k):
+        pass
+
 
 cdef class ASyncIterable(_AwaitableAsyncIterableMixin):
     """
