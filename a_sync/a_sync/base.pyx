@@ -172,8 +172,8 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     cdef PyTypeObject *base_ptr
     cdef Py_ssize_t len_bases
 
-    if _logger_is_enabled_for(DEBUG):
-        _logger_debug("Searching for flags defined on %s", <object>cls_ptr)
+    if _logger_is_enabled(DEBUG):
+        _logger_log(DEBUG, "Searching for flags defined on %s", (<object>cls_ptr,))
 
     cls_dict = <object>cls_ptr.tp_dict
     try:
@@ -274,6 +274,6 @@ cdef inline ClsInitParams _get_init_parameters(object cls):
     cdef ObjectId init_method_id = id(init_method)
     init_params = _init_params_cache.get(init_method_id)
     if init_params is None:
-        init_params = dict(signature(init_method).parameters)
+        init_params = {k: v for k, v in signature(init_method).parameters.items() if k in VIABLE_FLAGS}
         _init_params_cache[init_method_id] = init_params
     return init_params
