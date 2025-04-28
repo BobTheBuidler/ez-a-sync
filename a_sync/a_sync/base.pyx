@@ -214,7 +214,7 @@ cdef str _get_a_sync_flag_name_from_signature(PyTypeObject *cls_ptr, bint debug_
     cdef cls_init_flags flags
     
     if cls_ptr == ASyncGenericBase_ptr:
-        # NOTE: 0 means they matched. There are no flags defined on the base class
+        # There are no flags defined on the base class
         return ""
     
     # if we fail this one there's no need to check again
