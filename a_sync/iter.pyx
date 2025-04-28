@@ -168,6 +168,10 @@ cdef class _AwaitableAsyncIterableMixin:
         """
         return [obj async for obj in self]
 
+    def __class_getitem__(cls, *args, **kwargs) -> Type[Self]:
+        """This is a noop so you can use the subclasses as generics"""
+        return cls
+
 
 cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
     """
