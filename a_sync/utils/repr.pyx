@@ -41,13 +41,13 @@ def repr_trunc(iterable: Iterable[Any]) -> str:
                 for k in islice(iterable, 5)
             ) + ", ...}"
     elif itype == DictKeys_ptr:
-        return f"dict_keys([{_join_first_5_reprs(iterable)}])"
+        return f"dict_keys([{_join_first_5_reprs_generic(iterable)}])"
     elif itype == DictValues_ptr:
-        return f"dict_values([{_join_first_5_reprs(iterable)}])"
+        return f"dict_values([{_join_first_5_reprs_generic(iterable)}])"
     elif itype == DictItems_ptr:
-        return f"dict_items([{_join_first_5_reprs(iterable)}])"
+        return f"dict_items([{_join_first_5_reprs_generic(iterable)}])"
     elif itype == Set_ptr:
-        return "{" + _join_first_5_reprs(iterable) + "}"
+        return "{" + _join_first_5_reprs_generic(iterable) + "}"
     else:
         return PyObject_Repr(iterable)
 
@@ -66,7 +66,7 @@ cdef inline str _join_first_5_reprs_tuple(tuple[object, ...] tup):
         return f"({', '.join(PyObject_Repr(obj) for obj in tup[:5])}, ...)"
 
 
-cdef str _join_first_5_reprs_islice(iterable: Iterable[Any]):
+cdef str _join_first_5_reprs_generic(iterable: Iterable[Any]):
     if len(iterable) <= 5:
         return ", ".join(PyObject_Repr(obj) for obj in iterable)
     else:
