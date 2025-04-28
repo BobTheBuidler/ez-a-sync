@@ -808,10 +808,11 @@ def __class_getitem(untyped_cls: Type, tuple type_args):
     typed_cls_dict = typed_class_dict = {
         "__args__": type_args, 
         "__module__": untyped_cls.__module__,
-        "__qualname__": untyped_cls.__qualname__,
-        "__doc__": untyped_cls.__doc__,
+        "__qualname__": f"{untyped_cls.__qualname__}[{args_string}]",
         "__origin__": untyped_cls,
     }
+    if untyped_cls.__doc__ is not None:
+        typed_cls_dict["__doc__"] = str(untyped_cls.__doc__)
     if hasattr(untyped_cls, "__annotations__"):
         typed_cls_dict["__annotations__"] = untyped_cls.__annotations__
     typed_cls = type(typed_cls_name, (untyped_cls, ), typed_cls_dict)
