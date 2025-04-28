@@ -2,7 +2,7 @@ import pytest
 import re
 from typing import AsyncIterator, Iterator, Tuple, TypeVar
 
-from a_sync import ASyncIterable, ASyncIterator
+from a_sync import ASyncIterable, ASyncFilter, ASyncIterator, ASyncSorter
 from a_sync.exceptions import SyncModeInAsyncContextError
 
 
