@@ -257,13 +257,22 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
 class ASyncIterable(_ASyncIterable):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, *args, **kwargs) -> Type["ASyncIterable[T]"]:
-        """This helper passes type information from subclasses to the subclass object"""
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncIterable[T]"]:
+        """
+        This helper passes type information from subclasses to the subclass object.
+
+        Args:
+            arg_or_args: Either a single type argument or a tuple of the type arguments used.
+        """
         if cls is ASyncIterable:
             if kwargs:
                 raise RuntimeError("Cannot pass kwargs")
+            if len(arg_or_args) == 1:
+                args = (arg_or_args,)
+            else:
+                args = arg_or_args
             return _class_getitem(cls, args)
-        return super().__class_getitem__(*args, **kwargs)
+        return super().__class_getitem__(arg_or_args, **kwargs)
 
 
 cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
@@ -405,13 +414,22 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
 class ASyncIterator(_ASyncIterator):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, *args, **kwargs) -> Type["ASyncIterator[T]"]:
-        """This helper passes type information from subclasses to the subclass object"""
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncIterator[T]"]:
+        """
+        This helper passes type information from subclasses to the subclass object.
+
+        Args:
+            arg_or_args: Either a single type argument or a tuple of the type arguments used.
+        """
         if cls is ASyncIterator:
             if kwargs:
                 raise RuntimeError("Cannot pass kwargs")
+            if len(arg_or_args) == 1:
+                args = (arg_or_args,)
+            else:
+                args = arg_or_args
             return _class_getitem(cls, args)
-        return super().__class_getitem__(*args, **kwargs)
+        return super().__class_getitem__(arg_or_args, **kwargs)
 
 
 class ASyncGeneratorFunction(Generic[P, T]):
@@ -611,13 +629,22 @@ cdef class _ASyncFilter(_ASyncView):
 class ASyncFilter(_ASyncFilter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, *args, **kwargs) -> Type["ASyncFilter[T]"]:
-        """This helper passes type information from subclasses to the subclass object"""
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncFilter[T]"]:
+        """
+        This helper passes type information from subclasses to the subclass object.
+
+        Args:
+            arg_or_args: Either a single type argument or a tuple of the type arguments used.
+        """
         if cls is ASyncFilter:
             if kwargs:
                 raise RuntimeError("Cannot pass kwargs")
+            if len(arg_or_args) == 1:
+                args = (arg_or_args,)
+            else:
+                args = arg_or_args
             return _class_getitem(cls, args)
-        return super().__class_getitem__(*args, **kwargs)
+        return super().__class_getitem__(arg_or_args, **kwargs)
 
 
 cdef object _key_if_no_key(object obj):
@@ -758,13 +785,17 @@ cdef class _ASyncSorter(_ASyncView):
 class ASyncSorter(_ASyncSorter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, *args, **kwargs) -> Type["ASyncSorter[T]"]:
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncSorter[T]"]:
         """This helper passes type information from subclasses to the subclass object"""
         if cls is ASyncSorter:
             if kwargs:
                 raise RuntimeError("Cannot pass kwargs")
+            if len(arg_or_args) == 1:
+                args = (arg_or_args,)
+            else:
+                args = arg_or_args
             return _class_getitem(cls, args)
-        return super().__class_getitem__(*args, **kwargs)
+        return super().__class_getitem__(arg_or_args, **kwargs)
 
     
 @lru_cache(maxsize=None)
