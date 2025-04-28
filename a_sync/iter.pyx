@@ -169,10 +169,9 @@ cdef class _AwaitableAsyncIterableMixin:
         return [obj async for obj in self]
 
     def __class_getitem__(cls, *args, **kwargs) -> Type[Self]:
-        """This is a noop so you can use the subclasses as generics"""
+        """This helper passes type information from subclasses to the subclass object"""
         if cls not in (ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter):
             cls.__args__ = args
-        assert cls.__args__ is not None
         return cls
 
 
