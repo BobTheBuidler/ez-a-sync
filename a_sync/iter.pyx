@@ -168,9 +168,6 @@ cdef class _AwaitableAsyncIterableMixin:
         """
         return [obj async for obj in self]
 
-    def __class_getitem__(cls, *a, **k):
-        pass
-
 
 cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
     """
@@ -256,7 +253,7 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         return ASyncIterator(self.__wrapped__.__aiter__())
 
 
-class ASyncIterable(_ASyncIterable):
+class ASyncIterable(_ASyncIterable, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
 
@@ -397,7 +394,7 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
         return self
 
 
-class ASyncIterator(_ASyncIterator):
+class ASyncIterator(_ASyncIterator, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
 
@@ -596,7 +593,7 @@ cdef class _ASyncFilter(_ASyncView):
         return bool(await checked) if isawaitable(checked) else bool(checked)
 
 
-class ASyncFilter(_ASyncFilter):
+class ASyncFilter(_ASyncFilter, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
 
@@ -736,7 +733,7 @@ cdef class _ASyncSorter(_ASyncView):
         self._consumed = True
 
      
-class ASyncSorter(_ASyncSorter):
+class ASyncSorter(_ASyncSorter, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
 
