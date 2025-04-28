@@ -170,7 +170,11 @@ cdef class _AwaitableAsyncIterableMixin:
 
     def __class_getitem__(cls, *args, **kwargs) -> Type[Self]:
         """This is a noop so you can use the subclasses as generics"""
+        cls.__args__ = args
         return cls
+
+    
+cdef dict[object, tuple] subclass_type_args = {}
 
 
 cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
@@ -754,7 +758,13 @@ cdef void _init_subclass(cls, dict kwargs):
         if not hasattr(base, "__args__"):
             continue
 
-        if issubclass(base, _AwaitableAsyncIterableMixin):
+        try:
+            cls_match = issubclass(base, _AwaitableAsyncIterableMixin)
+        except Exception as e:
+            e.args = *e.args, base
+            raise
+            
+        if cls_match:
             args = base.__args__
             # I'm going to keep this around for now in case I need it to handle complicated cases
             # args = get_args(base)
