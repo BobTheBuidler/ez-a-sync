@@ -272,7 +272,11 @@ class ASyncIterable(_ASyncIterable):
             else:
                 args = (arg_or_args,)
             return _class_getitem(cls, args)
-        return super().__class_getitem__(arg_or_args, **kwargs)
+        
+        if hasattr(cls, "__parameters__"):
+            return super().__class_getitem__(arg_or_args, **kwargs)
+        else:
+            return cls
 
 
 cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
@@ -429,7 +433,11 @@ class ASyncIterator(_ASyncIterator):
             else:
                 args = (arg_or_args,)
             return _class_getitem(cls, args)
-        return super().__class_getitem__(arg_or_args, **kwargs)
+        
+        if hasattr(cls, "__parameters__"):
+            return super().__class_getitem__(arg_or_args, **kwargs)
+        else:
+            return cls
 
 
 class ASyncGeneratorFunction(Generic[P, T]):
@@ -795,7 +803,11 @@ class ASyncSorter(_ASyncSorter):
             else:
                 args = (arg_or_args,)
             return _class_getitem(cls, args)
-        return super().__class_getitem__(arg_or_args, **kwargs)
+        
+        if hasattr(cls, "__parameters__"):
+            return super().__class_getitem__(arg_or_args, **kwargs)
+        else:
+            return cls
 
     
 @lru_cache(maxsize=None)
