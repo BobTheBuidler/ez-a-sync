@@ -238,9 +238,9 @@ cdef class ASyncIterable(_AwaitableAsyncIterableMixin):
         """
         Return an async iterator that yields {obj} from the {cls}.
         """
-        return self.__wrapped__.__aiter__()
+        return aiter(self.__wrapped__)
 
-    def __iter__(self) -> Iterator[T]:
+    def __iter__(self) -> ASyncIterator[T]:
         """
         Return an iterator that yields {obj} from the {cls}.
 
@@ -251,7 +251,7 @@ cdef class ASyncIterable(_AwaitableAsyncIterableMixin):
             If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
         """
-        yield from ASyncIterator(self.__wrapped__.__aiter__())
+        return ASyncIterator(aiter(self.__wrapped__))
 
     # TODO: hack this to somehow work with cdef classes
     #def __init_subclass__(cls, **kwargs) -> None:
@@ -523,7 +523,7 @@ cdef class _ASyncView(ASyncIterator):
         self.__wrapped__ = iterable
         if isinstance(iterable, AsyncIterable):
             self.__iterator__ = None
-            self.__aiterator__ = iterable.__aiter__()
+            self.__aiterator__ = aiter(iterable)
         elif isinstance(iterable, Iterable):
             self.__iterator__ = iter(iterable)
             self.__aiterator__ = None
@@ -643,7 +643,7 @@ cdef class ASyncSorter(_ASyncView):
             reverse (optional): If True, the list elements will be sorted in reverse order. Defaults to False.
         """
         _ASyncView.__init__(self, _key_if_no_key if key is None else key, iterable)
-        internal_aiterator = self.__sort(reverse=reverse).__aiter__()
+        internal_aiterator = aiter(self.__sort(reverse=reverse))
         self.__internal = internal_aiterator
         self._anext = internal_aiterator.__anext__
         if reverse:
