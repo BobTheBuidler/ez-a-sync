@@ -171,6 +171,7 @@ cdef class _AwaitableAsyncIterableMixin:
         pass
 
 
+@final
 cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
     """
     A hybrid Iterable/AsyncIterable implementation designed to offer
@@ -255,7 +256,6 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         return ASyncIterator(aiter(self.__wrapped__))
 
 
-@final
 class ASyncIterable(_ASyncIterable):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
@@ -397,7 +397,6 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
         return self
 
 
-@final
 class ASyncIterator(_ASyncIterator):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
@@ -537,6 +536,7 @@ cdef class _ASyncView(_ASyncIterator):
             )
 
 
+@final
 cdef class _ASyncFilter(_ASyncView):
     """
     An async filter class that filters items of an async iterable based on a provided function.
@@ -594,7 +594,6 @@ cdef class _ASyncFilter(_ASyncView):
         return bool(await checked) if isawaitable(checked) else bool(checked)
 
 
-@final
 class ASyncFilter(_ASyncFilter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
@@ -610,6 +609,7 @@ cdef object _key_if_no_key(object obj):
     return obj
 
 
+@final
 cdef class _ASyncSorter(_ASyncView):
     """
     An async sorter class that sorts items of an async iterable based on a provided key function.
@@ -730,7 +730,6 @@ cdef class _ASyncSorter(_ASyncView):
         self._consumed = True
 
      
-@final   
 class ASyncSorter(_ASyncSorter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
