@@ -770,7 +770,7 @@ class ASyncSorter(_ASyncSorter):
 @lru_cache(maxsize=None)
 def __class_getitem(untyped_cls: Type, tuple type_args):
     typed_cls_name = f"{untyped_cls.__name__}[{', '.join(
-        getattr(arg, "__name__", None) or repr(arg)
+        getattr(arg, '__name__', None) or repr(arg)
         for arg in type_args
     )}]"
     typed_cls_dict = typed_class_dict = {
