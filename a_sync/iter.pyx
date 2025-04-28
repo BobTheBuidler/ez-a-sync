@@ -253,10 +253,10 @@ cdef class ASyncIterable(_AwaitableAsyncIterableMixin):
         """
         return ASyncIterator(aiter(self.__wrapped__))
 
-    # TODO: hack this to somehow work with cdef classes
-    #def __init_subclass__(cls, **kwargs) -> None:
-    #    _init_subclass(cls, kwargs)
-    #    return super().__init_subclass__(**kwargs)
+
+class ASyncIterableTemp(ASyncIterable):
+    def __init_subclass__(cls, **kwargs) -> None:
+        _init_subclass(cls, kwargs)
 
 
 cdef class ASyncIterator(_AwaitableAsyncIterableMixin):
@@ -394,10 +394,11 @@ cdef class ASyncIterator(_AwaitableAsyncIterableMixin):
         "Return the {cls} for aiteration."
         return self
 
-    # TODO: hack this to somehow work with cdef classes
-    #def __init_subclass__(cls, **kwargs) -> None:
-    #    _init_subclass(cls, kwargs)
-    #    return super().__init_subclass__(**kwargs)
+
+class ASyncIterator(_ASyncIterator):
+    def __init_subclass__(cls, **kwargs) -> None:
+        _init_subclass(cls, kwargs)
+
 
 class ASyncGeneratorFunction(Generic[P, T]):
     """
@@ -499,7 +500,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
 cdef object _ASyncGeneratorFunction = ASyncGeneratorFunction
 
 
-cdef class _ASyncView(ASyncIterator):
+cdef class _ASyncView(_ASyncIterator):
     """
     Internal mixin class containing logic for creating specialized views for :class:`~ASyncIterable` objects.
     """
@@ -533,7 +534,7 @@ cdef class _ASyncView(ASyncIterator):
             )
 
 
-cdef class ASyncFilter(_ASyncView):
+cdef class _ASyncFilter(_ASyncView):
     """
     An async filter class that filters items of an async iterable based on a provided function.
 
@@ -588,6 +589,11 @@ cdef class ASyncFilter(_ASyncView):
         """
         cdef object checked = self._function(obj)
         return bool(await checked) if isawaitable(checked) else bool(checked)
+
+
+class ASyncFilter(_ASyncFilter):
+    def __init_subclass__(cls, **kwargs) -> None:
+        _init_subclass(cls, kwargs)
 
 
 cdef object _key_if_no_key(object obj):
@@ -718,6 +724,11 @@ cdef class ASyncSorter(_ASyncView):
             for obj in items:
                 yield obj
         self._consumed = True
+
+        
+class ASyncSorter(_ASyncSorter):
+    def __init_subclass__(cls, **kwargs) -> None:
+        _init_subclass(cls, kwargs)
 
 
 cdef void _init_subclass(cls, dict kwargs):
