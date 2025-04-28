@@ -248,11 +248,12 @@ cdef class ASyncIterable(_AwaitableAsyncIterableMixin):
             If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
         """
-        yield from ASyncIterator(self.__aiter__())
+        yield from ASyncIterator(self.__wrapped__.__aiter__())
 
-    def __init_subclass__(cls, **kwargs) -> None:
-        _init_subclass(cls, kwargs)
-        return super().__init_subclass__(**kwargs)
+    # TODO: hack this to somehow work with cdef classes
+    #def __init_subclass__(cls, **kwargs) -> None:
+    #    _init_subclass(cls, kwargs)
+    #    return super().__init_subclass__(**kwargs)
 
 
 cdef class ASyncIterator(_AwaitableAsyncIterableMixin):
@@ -390,9 +391,10 @@ cdef class ASyncIterator(_AwaitableAsyncIterableMixin):
         "Return the {cls} for aiteration."
         return self
 
-    def __init_subclass__(cls, **kwargs) -> None:
-        _init_subclass(cls, kwargs)
-        return super().__init_subclass__(**kwargs)
+    # TODO: hack this to somehow work with cdef classes
+    #def __init_subclass__(cls, **kwargs) -> None:
+    #    _init_subclass(cls, kwargs)
+    #    return super().__init_subclass__(**kwargs)
 
 class ASyncGeneratorFunction(Generic[P, T]):
     """
