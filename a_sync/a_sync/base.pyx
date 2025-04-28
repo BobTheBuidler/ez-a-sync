@@ -85,7 +85,7 @@ class ASyncGenericBase(ASyncABC):
 
     @classmethod  # type: ignore [misc]
     def __a_sync_default_mode__(cls) -> bint:  # type: ignore [override]
-        cdef object flag
+        cdef str flag
         cdef bint flag_value
         cdef PyTypeObject *cls_ptr = <PyTypeObject*>cls
         if not _logger_is_enabled(DEBUG):
