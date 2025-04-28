@@ -505,6 +505,7 @@ cdef class _ASyncView(ASyncIterator):
     """
     cdef readonly object __aiterator__
     cdef readonly object __iterator__
+    cdef readonly object _function
 
     def __init__(
         _AwaitableAsyncIterableMixin self,
