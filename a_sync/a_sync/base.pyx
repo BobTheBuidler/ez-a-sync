@@ -92,7 +92,7 @@ class ASyncGenericBase(ASyncABC):
             # we can optimize this if we dont need to log `flag` and the return value
             try:
                 flag = _get_a_sync_flag_name_from_signature(cls_ptr, False)
-                flag_value = _a_sync_flag_default_value_from_signature(cls)
+                flag_value = _a_sync_flag_default_value_from_signature(cls_ptr)
             except NoFlagsFound:
                 flag = _get_a_sync_flag_name_from_class_def(cls_ptr)
                 flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
@@ -103,7 +103,7 @@ class ASyncGenericBase(ASyncABC):
         
         try:
             flag = _get_a_sync_flag_name_from_signature(cls_ptr, True)
-            flag_value = _a_sync_flag_default_value_from_signature(cls)
+            flag_value = _a_sync_flag_default_value_from_signature(cls_ptr)
         except NoFlagsFound:
             flag = _get_a_sync_flag_name_from_class_def(cls_ptr)
             flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
@@ -190,19 +190,20 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     raise NoFlagsFound(<object>cls_ptr, list(<object>cls_ptr.tp_dict))
 
 
-cdef bint _a_sync_flag_default_value_from_signature(object cls):
-    cdef PyTypeObject *cls_ptr = <PyTypeObject*>cls
-    cdef ClsInitParams parameters = _get_init_parameters(cls)
+cdef bint _a_sync_flag_default_value_from_signature(PyTypeObject *cls_ptr):
+    cdef ClsInitParams flags = _get_init_flags(cls_ptr)
     
     if not _logger_is_enabled(DEBUG):
         # we can optimize this much better
-        return parameters[_get_a_sync_flag_name_from_signature(cls_ptr, False)].default
+        return flags[_get_a_sync_flag_name_from_signature(cls_ptr, False)].default
     
+    cdef object cls = <object>cls_ptr
     _logger_log(
         DEBUG, "checking `__init__` signature for default %s a_sync flag value", (cls, )
     )
+    
     cdef str flag = _get_a_sync_flag_name_from_signature(cls_ptr, True)
-    cdef object flag_value = parameters[flag].default
+    cdef object flag_value = flags[flag].default
     if flag_value is _empty:  # type: ignore [attr-defined]
         raise NotImplementedError(
             "The implementation for 'cls' uses an arg to specify sync mode, instead of a kwarg. We are unable to proceed. I suppose we can extend the code to accept positional arg flags if necessary"
@@ -219,18 +220,16 @@ cdef str _get_a_sync_flag_name_from_signature(PyTypeObject *cls_ptr, bint debug_
                 DEBUG, "There are no flags defined on the base class, this is expected. Skipping.", ()
             )
         return ""
-
-    cls_obj = <object>cls_ptr
     
     # if we fail this one there's no need to check again
     if not debug_logs:
         # we can also skip assigning params to a var
-        return _parse_flag_name_from_dict_keys(cls_ptr, _get_init_parameters(cls_obj))
-    
-    _logger_log(DEBUG, "Searching for flags defined on %s.__init__", (cls_obj, ))
-    cdef ClsInitParams parameters = _get_init_parameters(cls_obj)
-    _logger_log(DEBUG, "parameters: %s", (parameters, ))
-    return _parse_flag_name_from_dict_keys(cls_ptr, parameters)
+        return _parse_flag_name_from_dict_keys(cls_ptr, _get_init_flags(cls_ptr))
+
+    _logger_log(DEBUG, "Searching for flags defined on %s.__init__", (<object>cls_ptr, ))
+    cdef ClsInitParams flags = _get_init_flags(cls_ptr)
+    _logger_log(DEBUG, "flags: %s", (flags, ))
+    return _parse_flag_name_from_dict_keys(cls_ptr, flags)
 
 
 cdef inline str _parse_flag_name_from_dict_keys(PyTypeObject *cls_ptr, dict[str, object] d):
@@ -262,16 +261,16 @@ cdef inline bint _get_a_sync_flag_value_from_class_def(object cls, str flag):
     raise FlagNotDefined(cls, flag)
 
 
-cdef dict[ObjectId, ClsInitParams] _init_params_cache = {}
+cdef dict[ObjectId, ClsInitParams] _init_flags_cache = {}
 
 
-cdef inline ClsInitParams _get_init_parameters(object cls):
-    cdef ClsInitParams init_params
-    cdef object init_method = cls.__init__
+cdef inline ClsInitParams _get_init_flags(PyTypeObject *cls_ptr):
+    cdef ClsInitParams init_flags
+    cdef object init_method = (<object>cls).__init__
     # We keep a smaller dict if we use the id of the method instead of the class
     cdef ObjectId init_method_id = id(init_method)
-    init_params = _init_params_cache.get(init_method_id)
-    if init_params is None:
-        init_params = {k: v for k, v in signature(init_method).parameters.items() if k in VIABLE_FLAGS}
-        _init_params_cache[init_method_id] = init_params
-    return init_params
+    init_flags = _init_flags_cache.get(init_method_id)
+    if init_flags is None:
+        init_flags = {k: v for k, v in signature(init_method).parameters.items() if k in VIABLE_FLAGS}
+        _init_flags_cache[init_method_id] = init_flags
+    return init_flags
