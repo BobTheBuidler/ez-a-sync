@@ -8,6 +8,7 @@ import typing
 import weakref
 from logging import getLogger
 
+from cython cimport final
 from typing_extensions import Self
 
 from a_sync._typing import AnyFn, AnyIterable, P, T, SyncFn, V
@@ -254,11 +255,12 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         return ASyncIterator(aiter(self.__wrapped__))
 
 
-class ASyncIterable(ASyncIterable):
+class ASyncIterable(_ASyncIterable):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
 
 
+@final
 cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
     """
     A hybrid Iterator/AsyncIterator implementation that bridges the gap between synchronous and asynchronous iteration. This class provides a unified interface for iteration that can seamlessly operate in both synchronous (`for` loop) and asynchronous (`async for` loop) contexts. It allows the wrapping of asynchronous iterable objects or async generator functions, making them usable in synchronous code without explicitly managing event loops or asynchronous context switches.
@@ -534,6 +536,7 @@ cdef class _ASyncView(_ASyncIterator):
             )
 
 
+@final
 cdef class _ASyncFilter(_ASyncView):
     """
     An async filter class that filters items of an async iterable based on a provided function.
@@ -606,6 +609,7 @@ cdef object _key_if_no_key(object obj):
     return obj
 
 
+@final
 cdef class _ASyncSorter(_ASyncView):
     """
     An async sorter class that sorts items of an async iterable based on a provided key function.
