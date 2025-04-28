@@ -15,8 +15,9 @@ from a_sync.functools cimport cached_property_unsafe
 
 cdef extern from "Python.h":
     cdef struct PyTypeObject:
-        cdef char* tp_name
-        cdef PyObject* tp_dict
+        char *tp_name
+        PyObject *tp_bases
+        PyObject *tp_dict
 
 ctypedef object ObjectId
 ctypedef dict[str, object] ClsInitParams
