@@ -211,10 +211,7 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         )
         return cls(wrapped)
 
-    def __init__(
-        _AwaitableAsyncIterableMixin self, 
-        async_iterable: AsyncIterable[T],
-    ):
+    def __init__(self, async_iterable: AsyncIterable[T]):
         """
         Initializes the ASyncIterable with an async iterable.
 
@@ -368,10 +365,7 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
             "You passed {} of type {}".format(wrapped, type(wrapped))
         )
 
-    def __init__(
-        _AwaitableAsyncIterableMixin self, 
-        async_iterator: AsyncIterator[T],
-    ) -> None:
+    def __init__(self, async_iterator: AsyncIterator[T]) -> None:
         """
         Initializes the ASyncIterator with an async iterator.
 
@@ -549,7 +543,7 @@ cdef class _ASyncView(_ASyncIterator):
     cdef readonly object _function
 
     def __init__(
-        _AwaitableAsyncIterableMixin self,
+        self,
         function: ViewFn[T],
         iterable: AnyIterable[T],
     ) -> None:
