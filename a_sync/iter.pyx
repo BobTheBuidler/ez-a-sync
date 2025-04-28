@@ -267,10 +267,10 @@ class ASyncIterable(_ASyncIterable):
         if cls is ASyncIterable:
             if kwargs:
                 raise RuntimeError("Cannot pass kwargs")
-            if len(arg_or_args) == 1:
-                args = (arg_or_args,)
-            else:
+            if isinstance(arg_or_args, tuple):
                 args = arg_or_args
+            else:
+                args = (arg_or_args,)
             return _class_getitem(cls, args)
         return super().__class_getitem__(arg_or_args, **kwargs)
 
@@ -424,10 +424,10 @@ class ASyncIterator(_ASyncIterator):
         if cls is ASyncIterator:
             if kwargs:
                 raise RuntimeError("Cannot pass kwargs")
-            if len(arg_or_args) == 1:
-                args = (arg_or_args,)
-            else:
+            if isinstance(arg_or_args, tuple):
                 args = arg_or_args
+            else:
+                args = (arg_or_args,)
             return _class_getitem(cls, args)
         return super().__class_getitem__(arg_or_args, **kwargs)
 
@@ -639,10 +639,10 @@ class ASyncFilter(_ASyncFilter):
         if cls is ASyncFilter:
             if kwargs:
                 raise RuntimeError("Cannot pass kwargs")
-            if len(arg_or_args) == 1:
-                args = (arg_or_args,)
-            else:
+            if isinstance(arg_or_args, tuple):
                 args = arg_or_args
+            else:
+                args = (arg_or_args,)
             return _class_getitem(cls, args)
         return super().__class_getitem__(arg_or_args, **kwargs)
 
@@ -790,10 +790,10 @@ class ASyncSorter(_ASyncSorter):
         if cls is ASyncSorter:
             if kwargs:
                 raise RuntimeError("Cannot pass kwargs")
-            if len(arg_or_args) == 1:
-                args = (arg_or_args,)
-            else:
+            if isinstance(arg_or_args, tuple):
                 args = arg_or_args
+            else:
+                args = (arg_or_args,)
             return _class_getitem(cls, args)
         return super().__class_getitem__(arg_or_args, **kwargs)
 
