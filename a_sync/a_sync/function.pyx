@@ -180,10 +180,11 @@ cdef inline void _validate_argspec_cached(fn: Callable):
 
 cdef inline void _validate_argspec(fn: Callable):
     cdef tuple[str, ...] fn_args
+    cdef object fn_code
     
     try:
-        code_obj = func.__code__  # May fail for built-ins or special callables
-        fn_args = code_obj.co_varnames[:code_obj.co_argcount]
+        fn_code = fn.__code__  # May fail for built-ins or special callables
+        fn_args = fn_code.co_varnames[:fn_code.co_argcount]
     except:
         fn_args = getargspec(fn)[0]
     
