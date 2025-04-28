@@ -164,15 +164,17 @@ cdef PyTypeObject *ASyncGenericBase_ptr = <PyTypeObject*>ASyncGenericBase
 
 cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     cdef object cls_dict
+    cdef PyObject *cls_dict_ptr
     cdef object bases
-    cdef PyObject* bases_ptr
+    cdef PyObject *bases_ptr
     cdef PyTypeObject *base_ptr
     cdef Py_ssize_t len_bases
 
     if _logger_is_enabled_for(DEBUG):
         _logger_debug("Searching for flags defined on %s", <object>cls_ptr)
 
-    cls_dict = <object>cls_ptr.tp_dict
+    cls_dict_ptr = cls_ptr.tp_dict
+    cls_dict = <object>cls_dict_ptr
     try:
         return _parse_flag_name_from_dict_keys(cls_ptr, cls_dict)
     except NoFlagsFound:
