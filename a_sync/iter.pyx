@@ -82,7 +82,7 @@ del sys
 cdef object AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
 
 
-cdef tuple[str] _FORMAT_PATTERNS = ("{cls}", "{obj}")
+cdef tuple[str, str] _FORMAT_PATTERNS = "{cls}", "{obj}"
 
 
 cdef class _AwaitableAsyncIterableMixin:
