@@ -3,7 +3,7 @@ from typing import Any, Iterable
 
 from cpython.dict cimport PyDict_Size
 from cpython.list cimport PyList_GET_SIZE
-from cpython.object cimport Py_TYPE, PyObject, PyObject_Repr
+from cpython.object cimport Py_TYPE, PyObject_Repr
 from cpython.tuple cimport PyTuple_GET_SIZE
 
 cdef extern from "Python.h":
@@ -13,13 +13,12 @@ cdef extern from "Python.h":
 
 def repr_trunc(iterable: Iterable[Any]) -> str:
     """Returns a truncated `repr` for `iterable`, limited to the first 5 items."""
-    cdef PyObject *iterable_ptr = <PyObject*>iterable
-    cdef PyTypeObject *itype_ptr = Py_TYPE(iterable_ptr)
-    if itype_ptr == List_ptr:
+    cdef PyTypeObject *itype = Py_TYPE(iterable)
+    if itype == List_ptr:
         return _join_first_5_reprs_list(iterable)
-    elif itype_ptr == Tuple_ptr:
+    elif itype == Tuple_ptr:
         return _join_first_5_reprs_tuple(iterable)
-    elif itype_ptr == Dict_ptr:
+    elif itype == Dict_ptr:
         if PyDict_Size(iterable) <= 5:
             return "{" + ", ".join(
                 f"{PyObject_Repr(k)}: {repr(iterable[k])}"
@@ -30,28 +29,27 @@ def repr_trunc(iterable: Iterable[Any]) -> str:
                 f"{PyObject_Repr(k)}: {repr(iterable[k])}"
                 for k in islice(iterable, 5)
             ) + ", ...}"
-    elif itype_ptr == DictKeys_ptr:
+    elif itype == DictKeys_ptr:
         return f"dict_keys([{_join_first_5_reprs(iterable)}])"
-    elif itype_ptr == DictValues_ptr:
+    elif itype == DictValues_ptr:
         return f"dict_values([{_join_first_5_reprs(iterable)}])"
-    elif itype_ptr == DictItems_ptr:
+    elif itype == DictItems_ptr:
         return f"dict_items([{_join_first_5_reprs(iterable)}])"
-    elif itype_ptr == Set_ptr:
+    elif itype == Set_ptr:
         return "{" + _join_first_5_reprs(iterable) + "}"
     else:
-        return PyObject_Repr(iterable_ptr)
+        return PyObject_Repr(iterable)
 
 
-l, s, d = [], set(), {}
-keys, values, items = d.keys(), d.values(), d.items()
-cdef PyTypeObject *List_ptr = Py_TYPE(<PyObject*>l)
-cdef PyTypeObject *Tuple_ptr = Py_TYPE(<PyObject*>())
-cdef PyTypeObject *Dict_ptr = Py_TYPE(<PyObject*>d)
-cdef PyTypeObject *DictKeys_ptr = Py_TYPE(<PyObject*>keys)
-cdef PyTypeObject *DictValues_ptr = Py_TYPE(<PyObject*>values)
-cdef PyTypeObject *DictItems_ptr = Py_TYPE(<PyObject*>items)
-cdef PyTypeObject *Set_ptr = Py_TYPE(<PyObject*>s)
-del l, s, d, keys, values, items
+L, S, D = [], set(), {}
+cdef PyTypeObject *List_ptr = Py_TYPE(L)
+cdef PyTypeObject *Tuple_ptr = Py_TYPE(())
+cdef PyTypeObject *Dict_ptr = Py_TYPE(D)
+cdef PyTypeObject *DictKeys_ptr = Py_TYPE(D.keys())
+cdef PyTypeObject *DictValues_ptr = Py_TYPE(D.values())
+cdef PyTypeObject *DictItems_ptr = Py_TYPE(D.items())
+cdef PyTypeObject *Set_ptr = Py_TYPE(S)
+del L, S, D
 
 
 cdef inline str _join_first_5_reprs_list(list[object] lst):
