@@ -20,8 +20,8 @@ cdef extern from "Python.h":
         PyObject *tp_bases
         PyObject *tp_dict
 
-ctypedef object ObjectId
-ctypedef dict[str, object] ClsInitParams
+ctypedef object object_id
+ctypedef dict[str, object] cls_init_flags
 
 
 # cdef inspect
@@ -191,7 +191,7 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
 
 
 cdef bint _a_sync_flag_default_value_from_signature(PyTypeObject *cls_ptr):
-    cdef ClsInitParams flags = _get_init_flags(cls_ptr)
+    cdef cls_init_flags flags = _get_init_flags(cls_ptr)
     
     if not _logger_is_enabled(DEBUG):
         # we can optimize this much better
@@ -227,7 +227,7 @@ cdef str _get_a_sync_flag_name_from_signature(PyTypeObject *cls_ptr, bint debug_
         return _parse_flag_name_from_dict_keys(cls_ptr, _get_init_flags(cls_ptr))
 
     _logger_log(DEBUG, "Searching for flags defined on %s.__init__", (<object>cls_ptr, ))
-    cdef ClsInitParams flags = _get_init_flags(cls_ptr)
+    cdef cls_init_flags flags = _get_init_flags(cls_ptr)
     _logger_log(DEBUG, "flags: %s", (flags, ))
     return _parse_flag_name_from_dict_keys(cls_ptr, flags)
 
@@ -261,14 +261,14 @@ cdef inline bint _get_a_sync_flag_value_from_class_def(object cls, str flag):
     raise FlagNotDefined(cls, flag)
 
 
-cdef dict[ObjectId, ClsInitParams] _init_flags_cache = {}
+cdef dict[object_id, cls_init_flags] _init_flags_cache = {}
 
 
-cdef inline ClsInitParams _get_init_flags(PyTypeObject *cls_ptr):
-    cdef ClsInitParams init_flags
-    cdef object init_method = (<object>cls).__init__
+cdef inline cls_init_flags _get_init_flags(PyTypeObject *cls_ptr):
+    cdef cls_init_flags init_flags
+    cdef object init_method = (<object>cls_ptr).__init__
     # We keep a smaller dict if we use the id of the method instead of the class
-    cdef ObjectId init_method_id = id(init_method)
+    cdef object_id init_method_id = id(init_method)
     init_flags = _init_flags_cache.get(init_method_id)
     if init_flags is None:
         init_flags = {k: v for k, v in signature(init_method).parameters.items() if k in VIABLE_FLAGS}
