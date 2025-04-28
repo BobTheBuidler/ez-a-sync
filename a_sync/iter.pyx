@@ -170,8 +170,7 @@ cdef class _AwaitableAsyncIterableMixin:
 
     def __class_getitem__(cls, *args, **kwargs) -> Type[Self]:
         """This helper passes type information from subclasses to the subclass object"""
-        if cls not in (ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter):
-            cls.__args__ = args
+        cls.__args__ = args
         return cls
 
 
