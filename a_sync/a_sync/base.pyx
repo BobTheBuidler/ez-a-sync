@@ -165,22 +165,24 @@ cdef PyTypeObject *ASyncGenericBase_ptr = <PyTypeObject*>ASyncGenericBase
 cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     cdef PyObject* bases
     cdef PyTypeObject *base_ptr
+    cdef object cls_dict
 
     if _logger_is_enabled_for(DEBUG):
         _logger_debug("Searching for flags defined on %s", <object>cls_ptr)
-        
+
+    cls_dict = <object>cls_ptr.tp_dict
     try:
-        return _parse_flag_name_from_dict_keys(cls_ptr, <object>cls_ptr.tp_dict)
+        return _parse_flag_name_from_dict_keys(cls_ptr, cls_dict)
     except NoFlagsFound:
         bases = cls_ptr.tp_bases  # This is a tuple or NULL
-        if bases is not None:
+        if bases != NULL:
             for i in range(PyTuple_Size(bases)):
-                base_ptr = PyTuple_GetItem(bases, i)
+                base_ptr = <PyTypeObject*>PyTuple_GetItem(bases, i)
                 try:
                     return _get_a_sync_flag_name_from_class_def(base_ptr)
                 except NoFlagsFound:
                     pass
-    raise NoFlagsFound(<object>cls_ptr, list(<object>cls_ptr.tp_dict))
+    raise NoFlagsFound(<object>cls_ptr, list(cls_dict))
 
 
 cdef bint _a_sync_flag_default_value_from_signature(object cls):
