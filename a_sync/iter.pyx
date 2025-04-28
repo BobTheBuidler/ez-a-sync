@@ -205,7 +205,6 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         - :class:`ASyncSorter`
     """
 
-    @final
     @classmethod
     def wrap(cls, wrapped: AsyncIterable[T]) -> "ASyncIterable[T]":
         "Class method to wrap an AsyncIterable for backward compatibility."
@@ -331,7 +330,6 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
             async_gen_func: The async generator function to wrap.
         """
 
-    @final
     @classmethod
     def wrap(cls, wrapped):
         """Class method to wrap either an AsyncIterator or an async generator function."""
