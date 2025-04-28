@@ -1,7 +1,7 @@
 from itertools import islice
 from typing import Any, Iterable
 
-from cpython.dict cimport PyDict_GET_SIZE
+from cpython.dict cimport PyDict_Size
 from cpython.list cimport PyList_GET_SIZE
 from cpython.object cimport Py_TYPE, PyObject, PyObject_Repr
 from cpython.tuple cimport PyTuple_GET_SIZE
@@ -10,8 +10,8 @@ cdef extern from "Python.h":
     ctypedef struct PyTypeObject:
         pass
     
-        
-cpdef str repr_trunc(iterable: Iterable[Any]):
+
+def repr_trunc(iterable: Iterable[Any]) -> str:
     """Returns a truncated `repr` for `iterable`, limited to the first 5 items."""
     cdef PyObject *iterable_ptr = <PyObject*>iterable
     cdef PyTypeObject *itype_ptr = Py_TYPE(iterable_ptr)
@@ -20,14 +20,14 @@ cpdef str repr_trunc(iterable: Iterable[Any]):
     elif itype_ptr == Tuple_ptr:
         return _join_first_5_reprs_tuple(iterable)
     elif itype_ptr == Dict_ptr:
-        if PyDict_GET_SIZE(iterable) <= 5:
+        if PyDict_Size(iterable) <= 5:
             return "{" + ", ".join(
-                f"{PyObject_Repr(<PyObject*>k)}: {repr(iterable[k])}"
+                f"{PyObject_Repr(k)}: {repr(iterable[k])}"
                 for k in iterable
             ) + "}"
         else:
             return "{" + ", ".join(
-                f"{PyObject_Repr(<PyObject*>k)}: {repr(iterable[k])}"
+                f"{PyObject_Repr(k)}: {repr(iterable[k])}"
                 for k in islice(iterable, 5)
             ) + ", ...}"
     elif itype_ptr == DictKeys_ptr:
@@ -56,20 +56,20 @@ del l, s, d, keys, values, items
 
 cdef inline str _join_first_5_reprs_list(list[object] lst):
     if PyList_GET_SIZE(lst) <= 5:
-        return f"[{', '.join(PyObject_Repr(<PyObject*>obj) for obj in lst)}]"
+        return f"[{', '.join(PyObject_Repr(obj) for obj in lst)}]"
     else:
-        return f"[{', '.join(PyObject_Repr(<PyObject*>obj) for obj in lst[:5])}, ...]"
+        return f"[{', '.join(PyObject_Repr(obj) for obj in lst[:5])}, ...]"
 
 
 cdef inline str _join_first_5_reprs_tuple(tuple[object, ...] tup):
     if PyTuple_GET_SIZE(tup) <= 5:
-        return f"({', '.join(PyObject_Repr(<PyObject*>obj) for obj in tup)})"
+        return f"({', '.join(PyObject_Repr(obj) for obj in tup)})"
     else:
-        return f"({', '.join(PyObject_Repr(<PyObject*>obj) for obj in tup[:5])}, ...)"
+        return f"({', '.join(PyObject_Repr(obj) for obj in tup[:5])}, ...)"
 
 
 cdef str _join_first_5_reprs_islice(iterable: Iterable[Any]):
     if len(iterable) <= 5:
-        return ", ".join(PyObject_Repr(<PyObject*>obj) for obj in iterable)
+        return ", ".join(PyObject_Repr(obj) for obj in iterable)
     else:
-        return f"{', '.join(PyObject_Repr(<PyObject*>obj) for obj in islice(iterable, 5))}, ..."
+        return f"{', '.join(PyObject_Repr(obj) for obj in islice(iterable, 5))}, ..."
