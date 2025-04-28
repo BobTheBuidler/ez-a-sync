@@ -9,7 +9,8 @@ from cpython.tuple cimport PyTuple_GET_SIZE
 
 cpdef str repr_trunc(iterable: Iterable[Any]):
     """Returns a truncated `repr` for `iterable`, limited to the first 5 items."""
-    cdef PyTypeObject *itype_ptr = Py_TYPE(<PyObject*>iterable)
+    cdef PyObject *iterable_ptr = <PyObject*>iterable
+    cdef PyTypeObject *itype_ptr = Py_TYPE(iterable_ptr)
     if itype_ptr == List_ptr:
         return _join_first_5_reprs_list(iterable)
     elif itype_ptr == Tuple_ptr:
@@ -34,7 +35,7 @@ cpdef str repr_trunc(iterable: Iterable[Any]):
     elif itype_ptr == Set_ptr:
         return "{" + _join_first_5_reprs(iterable) + "}"
     else:
-        return PyObject_Repr(<PyObject*>iterable)
+        return PyObject_Repr(iterable_ptr)
 
 
 l, s, d = [], set(), {}
