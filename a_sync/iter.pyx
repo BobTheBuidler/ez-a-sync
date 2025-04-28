@@ -257,7 +257,7 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
 class ASyncIterable(_ASyncIterable, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, type_args, **_) -> Type[ASyncSorter[T]]:
+    def __class_getitem__(cls, *type_args, **_) -> Type[ASyncSorter[T]]:
         """This helper passes type information from subclasses to the subclass object"""
         return _class_getitem(cls, type_args)
 
@@ -401,7 +401,7 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
 class ASyncIterator(_ASyncIterator, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, type_args, **_) -> Type[ASyncSorter[T]]:
+    def __class_getitem__(cls, *type_args, **_) -> Type[ASyncSorter[T]]:
         """This helper passes type information from subclasses to the subclass object"""
         return _class_getitem(cls, type_args)
 
@@ -603,7 +603,7 @@ cdef class _ASyncFilter(_ASyncView):
 class ASyncFilter(_ASyncFilter, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, type_args, **_) -> Type[ASyncSorter[T]]:
+    def __class_getitem__(cls, *type_args, **_) -> Type[ASyncSorter[T]]:
         """This helper passes type information from subclasses to the subclass object"""
         return _class_getitem(cls, type_args)
 
@@ -746,7 +746,7 @@ cdef class _ASyncSorter(_ASyncView):
 class ASyncSorter(_ASyncSorter, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, type_args, **_) -> Type[ASyncSorter[T]]:
+    def __class_getitem__(cls, *type_args, **_) -> Type[ASyncSorter[T]]:
         """This helper passes type information from subclasses to the subclass object"""
         return _class_getitem(cls, type_args)
 
