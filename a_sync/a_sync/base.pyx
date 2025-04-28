@@ -173,8 +173,8 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     if _logger_is_enabled_for(DEBUG):
         _logger_debug("Searching for flags defined on %s", <object>cls_ptr)
 
-    cls_dict_ptr = <PyObject*>cls_ptr.tp_dict
-    cls_dict = <object>cls_dict_ptr
+    #cls_dict_ptr = <PyObject*>(cls_ptr.tp_dict)
+    cls_dict = <object>(cls_ptr.tp_dict)
     try:
         return _parse_flag_name_from_dict_keys(cls_ptr, cls_dict)
     except NoFlagsFound:
