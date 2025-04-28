@@ -2,7 +2,7 @@
 import inspect
 from logging import getLogger
 
-from cpython.object cimport Py_TYPE, PyObject, PyTypeObject
+from cpython.object cimport Py_TYPE, PyObject
 from cpython.tuple cimport PyTuple_GET_SIZE, PyTuple_GetItem
 from libc.string cimport strcmp
 
@@ -13,14 +13,12 @@ from a_sync.a_sync.flags cimport VIABLE_FLAGS
 from a_sync.exceptions import ASyncFlagException, FlagNotDefined, InvalidFlag, NoFlagsFound, TooManyFlags
 from a_sync.functools cimport cached_property_unsafe
 
-#cdef extern from "Python.h":
-#    ctypedef struct _typeobject:
-#        pass
-#    ctypedef _typeobject PyTypeObject
-#    #cdef struct PyTypeObject:
-#    #    char *tp_name
-#    #    PyObject *tp_bases
-#    #    PyObject *tp_dict
+
+cdef extern from "Python.h":
+    ctypedef struct PyTypeObject:
+        const char* tp_name
+        PyObject *tp_bases
+        PyObject *tp_dict
 
 ctypedef object ObjectId
 ctypedef dict[str, object] ClsInitParams
