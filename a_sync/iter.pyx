@@ -254,12 +254,16 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         return ASyncIterator(self.__wrapped__.__aiter__())
 
 
-class ASyncIterable(_ASyncIterable, Generic[T]):
+class ASyncIterable(_ASyncIterable):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, *type_args, **_) -> Type["ASyncIterable[T]"]:
+    def __class_getitem__(cls, *args, **kwargs) -> Type["ASyncIterable[T]"]:
         """This helper passes type information from subclasses to the subclass object"""
-        return _class_getitem(cls, type_args)
+        if cls is ASyncIterable:
+            if kwargs:
+                raise RuntimeError("Cannot pass kwargs")
+            return _class_getitem(cls, args)
+        return super().__class_getitem__(*args, **kwargs)
 
 
 cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
@@ -398,12 +402,16 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
         return self
 
 
-class ASyncIterator(_ASyncIterator, Generic[T]):
+class ASyncIterator(_ASyncIterator):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, *type_args, **_) -> Type["ASyncIterator[T]"]:
+    def __class_getitem__(cls, *args, **kwargs) -> Type["ASyncIterator[T]"]:
         """This helper passes type information from subclasses to the subclass object"""
-        return _class_getitem(cls, type_args)
+        if cls is ASyncIterator:
+            if kwargs:
+                raise RuntimeError("Cannot pass kwargs")
+            return _class_getitem(cls, args)
+        return super().__class_getitem__(*args, **kwargs)
 
 
 class ASyncGeneratorFunction(Generic[P, T]):
@@ -600,12 +608,16 @@ cdef class _ASyncFilter(_ASyncView):
         return bool(await checked) if isawaitable(checked) else bool(checked)
 
 
-class ASyncFilter(_ASyncFilter, Generic[T]):
+class ASyncFilter(_ASyncFilter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, *type_args, **_) -> Type["ASyncFilter[T]"]:
+    def __class_getitem__(cls, *args, **kwargs) -> Type["ASyncFilter[T]"]:
         """This helper passes type information from subclasses to the subclass object"""
-        return _class_getitem(cls, type_args)
+        if cls is ASyncFilter:
+            if kwargs:
+                raise RuntimeError("Cannot pass kwargs")
+            return _class_getitem(cls, args)
+        return super().__class_getitem__(*args, **kwargs)
 
 
 cdef object _key_if_no_key(object obj):
@@ -743,17 +755,24 @@ cdef class _ASyncSorter(_ASyncView):
         self._consumed = True
 
      
-class ASyncSorter(_ASyncSorter, Generic[T]):
+class ASyncSorter(_ASyncSorter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, *type_args, **_) -> Type["ASyncSorter[T]"]:
+    def __class_getitem__(cls, *args, **kwargs) -> Type["ASyncSorter[T]"]:
         """This helper passes type information from subclasses to the subclass object"""
-        return _class_getitem(cls, type_args)
+        if cls is ASyncSorter:
+            if kwargs:
+                raise RuntimeError("Cannot pass kwargs")
+            return _class_getitem(cls, args)
+        return super().__class_getitem__(*args, **kwargs)
 
     
 @lru_cache(maxsize=None)
 def __class_getitem(untyped_cls: Type, tuple type_args):
-    typed_cls_name = f"{untyped_cls.__name__}[{', '.join(arg.__name__ for arg in type_args)}]"
+    typed_cls_name = f"{untyped_cls.__name__}[{', '.join(
+        getattr(arg, "__name__", None) or repr(arg)
+        for arg in type_args
+    )}]"
     typed_cls_dict = typed_class_dict = {
         "__args__": type_args, 
         "__module__": untyped_cls.__module__,
@@ -779,20 +798,7 @@ cdef void _init_subclass(cls, dict kwargs):
     cdef tuple args
     cdef str module, qualname, name
     for base in getattr(cls, "__orig_bases__", []):
-        
         if not hasattr(base, "__args__"):
-            if base in (_ASyncIterable, _ASyncIterator, _ASyncFilter, _ASyncSorter):
-                continue
-                
-            class Shit(Exception):
-                ...
-            try:
-                if issubclass(base, _AwaitableAsyncIterableMixin):
-                    raise Shit(base)
-            except Shit:
-                raise
-            except:
-                pass
             continue
         
         args = get_args(base)
