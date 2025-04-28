@@ -4,7 +4,6 @@ from logging import getLogger
 
 from cpython.object cimport Py_TYPE, PyObject
 from cpython.tuple cimport PyTuple_GET_SIZE, PyTuple_GetItem
-from libc.string cimport strcmp
 
 from a_sync._typing import *
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary, validate_flag_value
@@ -16,7 +15,6 @@ from a_sync.functools cimport cached_property_unsafe
 
 cdef extern from "Python.h":
     ctypedef struct PyTypeObject:
-        const char* tp_name
         PyObject *tp_bases
         PyObject *tp_dict
 
@@ -213,12 +211,10 @@ cdef bint _a_sync_flag_default_value_from_signature(PyTypeObject *cls_ptr):
 
 
 cdef str _get_a_sync_flag_name_from_signature(PyTypeObject *cls_ptr, bint debug_logs):
-    if strcmp(cls_ptr.tp_name, b"ASyncGenericBase") == 0:
-        # NOTE: 0 means they matched
-        if debug_logs:
-            _logger_log(
-                DEBUG, "There are no flags defined on the base class, this is expected. Skipping.", ()
-            )
+    cdef cls_init_flags flags
+    
+    if cls_ptr == ASyncGenericBase_ptr:
+        # NOTE: 0 means they matched. There are no flags defined on the base class
         return ""
     
     # if we fail this one there's no need to check again
@@ -227,7 +223,7 @@ cdef str _get_a_sync_flag_name_from_signature(PyTypeObject *cls_ptr, bint debug_
         return _parse_flag_name_from_dict_keys(cls_ptr, _get_init_flags(cls_ptr))
 
     _logger_log(DEBUG, "Searching for flags defined on %s.__init__", (<object>cls_ptr, ))
-    cdef cls_init_flags flags = _get_init_flags(cls_ptr)
+    flags = _get_init_flags(cls_ptr)
     _logger_log(DEBUG, "flags: %s", (flags, ))
     return _parse_flag_name_from_dict_keys(cls_ptr, flags)
 
