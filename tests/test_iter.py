@@ -7,6 +7,7 @@ from a_sync.exceptions import SyncModeInAsyncContextError
 
 
 test_both = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator])
+test_all = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter])
 
 
 @pytest.fixture
@@ -329,7 +330,7 @@ async def test_async_iterator_aiter_method(async_generator):
     assert async_iterator is ait  # Should return self
 
 
-@test_both
+@test_all
 def test_class_docstring_empty(cls_to_test):
     """Test if the class with no docstring was correctly assigned a docstring."""
 
@@ -348,7 +349,7 @@ def test_class_docstring_empty(cls_to_test):
     )
 
 
-@test_both
+@test_all
 def test_class_docstring_append(cls_to_test):
     """
     Test if the class docstring suffix is correctly formatted and appended using regular expressions.
@@ -371,7 +372,7 @@ def test_class_docstring_append(cls_to_test):
     ), f"Docstring does not match expected pattern. \nDocstring: {SampleClassWithDocstring.__doc__}"
 
 
-@test_both
+@test_all
 def test_method_docstring_replacement(cls_to_test):
     """Test if the method docstring is correctly formatted."""
 
@@ -382,7 +383,7 @@ def test_method_docstring_replacement(cls_to_test):
     assert ":class:`~builtins.str`" in SampleClass.sample_method.__doc__
 
 
-@test_both
+@test_all
 def test_typevar_default(cls_to_test):
     """Ensure that when T is unspecified, 'objects' is used."""
 
@@ -395,7 +396,7 @@ def test_typevar_default(cls_to_test):
     assert "objects" in UnspecifiedTypeClass.sample_method.__doc__
 
 
-@test_both
+@test_all
 def test_typevar_specified(cls_to_test):
     """Ensure the typevar T reflects the specific type used."""
 
@@ -408,7 +409,7 @@ def test_typevar_specified(cls_to_test):
     assert "int" in IntClass.sample_method.__doc__
 
 
-@test_both
+@test_all
 def test_typevar_default(cls_to_test):
     """Ensure that when T is unspecified, ':obj:`T` objects' is used."""
 
@@ -421,13 +422,13 @@ def test_typevar_default(cls_to_test):
     assert ":obj:`T` objects" in UnspecifiedTypeClass.sample_method.__doc__
 
 
-@test_both
+@test_all
 def test_init_subclass_with_typevar(cls_to_test):
     _T = TypeVar("_T")
 
     class MySubclass(cls_to_test[_T]): ...
 
 
-@test_both
+@test_all
 def test_init_subclass_with_generic_alias(cls_to_test):
     class MySubclass(cls_to_test[Tuple[int, str, bool]]): ...
