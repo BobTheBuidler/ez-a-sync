@@ -132,7 +132,7 @@ cdef class _AwaitableAsyncIterableMixin:
         """
         return _await(self._materialized)
 
-    cpdef object sort(self, key: SortKey[T] = None, reverse: bool = False):
+    cpdef inline object sort(self, key: SortKey[T] = None, reverse: bool = False):
         """
         Sort the {obj} yielded by the {cls}.
 
@@ -145,7 +145,7 @@ cdef class _AwaitableAsyncIterableMixin:
         """
         return ASyncSorter(self, key=key, reverse=reverse)
 
-    cpdef object filter(self, function: ViewFn[T]):
+    cpdef inline object filter(self, function: ViewFn[T]):
         """
         Filters the {obj} yielded by the {cls} based on a function.
 
@@ -171,7 +171,6 @@ cdef class _AwaitableAsyncIterableMixin:
         pass
 
 
-@final
 cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
     """
     A hybrid Iterable/AsyncIterable implementation designed to offer
@@ -205,6 +204,7 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         - :class:`ASyncSorter`
     """
 
+    @final
     @classmethod
     def wrap(cls, wrapped: AsyncIterable[T]) -> "ASyncIterable[T]":
         "Class method to wrap an AsyncIterable for backward compatibility."
@@ -241,7 +241,7 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         Return an async iterator that yields {obj} from the {cls}.
         """
         return aiter(self.__wrapped__)
-
+    
     def __iter__(self) -> ASyncIterator[T]:
         """
         Return an iterator that yields {obj} from the {cls}.
@@ -330,6 +330,7 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
             async_gen_func: The async generator function to wrap.
         """
 
+    @final
     @classmethod
     def wrap(cls, wrapped):
         """Class method to wrap either an AsyncIterator or an async generator function."""
@@ -536,7 +537,6 @@ cdef class _ASyncView(_ASyncIterator):
             )
 
 
-@final
 cdef class _ASyncFilter(_ASyncView):
     """
     An async filter class that filters items of an async iterable based on a provided function.
@@ -558,11 +558,13 @@ cdef class _ASyncFilter(_ASyncView):
         - :class:`ASyncSorter`
     """
 
+    @final
     def __repr__(self) -> str:
         return "<ASyncFilter for iterator={} function={} at {}>".format(
             self.__wrapped__, self._function.__name__, hex(id(self))
         )
 
+    @final
     async def __anext__(self) -> T:
         cdef object obj
         if self.__aiterator__:
@@ -580,6 +582,7 @@ cdef class _ASyncFilter(_ASyncView):
             raise TypeError(self.__wrapped__)
         raise StopAsyncIteration from None
 
+    @final
     async def _check(self, obj: T) -> bool:
         """
         Checks if an object passes the filter function.
@@ -609,7 +612,6 @@ cdef object _key_if_no_key(object obj):
     return obj
 
 
-@final
 cdef class _ASyncSorter(_ASyncView):
     """
     An async sorter class that sorts items of an async iterable based on a provided key function.
@@ -637,6 +639,7 @@ cdef class _ASyncSorter(_ASyncView):
         self.reversed = False
         self._consumed = False
         
+    @final
     def __init__(
         self,
         iterable: AsyncIterable[T],
@@ -659,6 +662,7 @@ cdef class _ASyncSorter(_ASyncView):
         if reverse:
             self.reversed = True
 
+    @final
     def __aiter__(self):
         """
         Return an async iterator for the {cls}.
@@ -673,6 +677,7 @@ cdef class _ASyncSorter(_ASyncView):
             raise RuntimeError("{} has already been consumed".format(self))
         return self
 
+    @final
     def __repr__(self) -> str:
         cdef str rep = "<ASyncSorter"
         if self.reversed:
@@ -683,9 +688,11 @@ cdef class _ASyncSorter(_ASyncView):
         rep += " at {}>".format(hex(id(self)))
         return rep
 
+    @final
     def __anext__(self):
         return self._anext()
 
+    @final
     async def __sort(self, bint reverse):
         """
         This method is internal so the original iterator can only ever be consumed once.
