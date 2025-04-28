@@ -8,6 +8,7 @@ import typing
 import weakref
 from logging import getLogger
 
+from cpython.object cimport PyObject_GetIter
 from cython cimport final
 from typing_extensions import Self
 
@@ -240,7 +241,7 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         """
         Return an async iterator that yields {obj} from the {cls}.
         """
-        return aiter(self.__wrapped__)
+        return self.__wrapped__.__aiter__()
     
     def __iter__(self) -> ASyncIterator[T]:
         """
@@ -253,7 +254,7 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
             If you encounter a :class:`~a_sync.exceptions.SyncModeInAsyncContextError`, you are likely working in an async codebase
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
         """
-        return ASyncIterator(aiter(self.__wrapped__))
+        return ASyncIterator(self.__wrapped__.__aiter__())
 
 
 class ASyncIterable(_ASyncIterable):
@@ -523,13 +524,14 @@ cdef class _ASyncView(_ASyncIterator):
             function: A function to apply to the items in the iterable.
             iterable: An iterable or an async iterable yielding objects to which `function` will be applied.
         """
+        cdef PyObject *iterator_ptr
         self._function = function
         self.__wrapped__ = iterable
         if isinstance(iterable, AsyncIterable):
             self.__iterator__ = None
-            self.__aiterator__ = aiter(iterable)
+            self.__aiterator__ = iterable.__aiter__()
         elif isinstance(iterable, Iterable):
-            self.__iterator__ = iter(iterable)
+            self.__iterator__ = <object>PyObject_GetIter(<PyObject*>iterable)
             self.__aiterator__ = None
         else:
             raise TypeError(
@@ -656,7 +658,7 @@ cdef class _ASyncSorter(_ASyncView):
             reverse (optional): If True, the list elements will be sorted in reverse order. Defaults to False.
         """
         _ASyncView.__init__(self, _key_if_no_key if key is None else key, iterable)
-        internal_aiterator = aiter(self.__sort(reverse=reverse))
+        internal_aiterator = self.__sort(reverse=reverse).__aiter__()
         self.__internal = internal_aiterator
         self._anext = internal_aiterator.__anext__
         if reverse:
