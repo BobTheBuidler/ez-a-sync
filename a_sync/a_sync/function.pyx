@@ -42,7 +42,12 @@ cdef object cached_property = functools.cached_property
 del functools
 
 # cdef inspect
-cdef object getargspec = inspect.getargspec
+cdef object getargspec
+if sys.version_info < (3, 11):
+    getargspec = inspect.getargspec
+else:
+    # getargspec was deprecated in python 3.11
+    getargspec = inspect.getfullargspec
 cdef object isasyncgenfunction = inspect.isasyncgenfunction
 cdef object isgeneratorfunction = inspect.isgeneratorfunction
 del inspect
