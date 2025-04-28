@@ -21,9 +21,8 @@ cdef class sleep0:
     cdef bint done
     cdef object result
 
-    def __cinit__(self, result=None) -> None:
+    def __cinit__(self) -> None:
         self.done = False
-        self.result = result
     
     def __await__(self) -> sleep0:
         return self
@@ -33,10 +32,7 @@ cdef class sleep0:
     
     def __next__(self) -> None:
         if self.done:
-            if self.result is None:
-                raise StopIteration
-            else:
-                raise StopIteration(self.result)
+            raise StopIteration
         self.done = True
 
     # For Python 3.7+ compatibility (PEP 479)
