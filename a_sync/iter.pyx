@@ -8,7 +8,6 @@ import typing
 import weakref
 from logging import getLogger
 
-from cpython.object cimport PyTypeObject
 from typing_extensions import Self
 
 from a_sync._typing import AnyFn, AnyIterable, P, T, SyncFn, V
