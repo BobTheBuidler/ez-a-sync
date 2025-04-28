@@ -85,7 +85,9 @@ class ASyncGenericBase(ASyncABC):
     def __a_sync_default_mode__(cls) -> bint:  # type: ignore [override]
         cdef str flag
         cdef bint flag_value
-        cdef PyTypeObject *cls_ptr = <PyTypeObject*>cls
+        cdef PyTypeObject *cls_ptr
+        
+        cls_ptr = <PyTypeObject*>cls
         if not _logger_is_enabled(DEBUG):
             # we can optimize this if we dont need to log `flag` and the return value
             try:
@@ -95,9 +97,6 @@ class ASyncGenericBase(ASyncABC):
                 flag = _get_a_sync_flag_name_from_class_def(cls_ptr)
                 flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
             return validate_and_negate_if_necessary(flag, flag_value)
-
-        # we need an extra var so we can log it
-        cdef bint sync
         
         try:
             flag = _get_a_sync_flag_name_from_signature(cls_ptr, True)
@@ -106,7 +105,7 @@ class ASyncGenericBase(ASyncABC):
             flag = _get_a_sync_flag_name_from_class_def(cls_ptr)
             flag_value = _get_a_sync_flag_value_from_class_def(cls, flag)
         
-        sync = validate_and_negate_if_necessary(flag, flag_value)
+        cdef bint sync = validate_and_negate_if_necessary(flag, flag_value)
         _logger_log(
             DEBUG,
             "`%s.%s` indicates default mode is %ssynchronous",
