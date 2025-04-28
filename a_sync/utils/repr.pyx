@@ -6,7 +6,11 @@ from cpython.list cimport PyList_GET_SIZE
 from cpython.object cimport Py_TYPE, PyObject, PyObject_Repr
 from cpython.tuple cimport PyTuple_GET_SIZE
 
-
+cdef extern from "Python.h":
+    ctypedef struct PyTypeObject:
+        pass
+    
+        
 cpdef str repr_trunc(iterable: Iterable[Any]):
     """Returns a truncated `repr` for `iterable`, limited to the first 5 items."""
     cdef PyObject *iterable_ptr = <PyObject*>iterable
