@@ -170,7 +170,7 @@ cdef class _AwaitableAsyncIterableMixin:
         pass
 
 
-cdef class ASyncIterable(_AwaitableAsyncIterableMixin):
+cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
     """
     A hybrid Iterable/AsyncIterable implementation designed to offer
     dual compatibility with both synchronous and asynchronous
@@ -254,12 +254,12 @@ cdef class ASyncIterable(_AwaitableAsyncIterableMixin):
         return ASyncIterator(aiter(self.__wrapped__))
 
 
-class ASyncIterableTemp(ASyncIterable):
+class ASyncIterable(ASyncIterable):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
 
 
-cdef class ASyncIterator(_AwaitableAsyncIterableMixin):
+cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
     """
     A hybrid Iterator/AsyncIterator implementation that bridges the gap between synchronous and asynchronous iteration. This class provides a unified interface for iteration that can seamlessly operate in both synchronous (`for` loop) and asynchronous (`async for` loop) contexts. It allows the wrapping of asynchronous iterable objects or async generator functions, making them usable in synchronous code without explicitly managing event loops or asynchronous context switches.
 
@@ -606,7 +606,7 @@ cdef object _key_if_no_key(object obj):
     return obj
 
 
-cdef class ASyncSorter(_ASyncView):
+cdef class _ASyncSorter(_ASyncView):
     """
     An async sorter class that sorts items of an async iterable based on a provided key function.
 
