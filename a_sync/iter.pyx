@@ -760,7 +760,7 @@ def __class_getitem(untyped_cls: Type, tuple type_args):
         "__qualname__": untyped_cls.__qualname__,
         "__doc__": untyped_cls.__doc__,
         "__annotations__": untyped_cls.__annotations__,
-        "__origin__": untyped_cls,
+        "__origin__": untyped_cls.__origin__,
     }
     typed_cls = type(typed_cls_name, (untyped_cls, ), typed_cls_dict)
     return typed_cls
