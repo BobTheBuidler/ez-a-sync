@@ -14,10 +14,11 @@ from a_sync.exceptions import ASyncFlagException, FlagNotDefined, InvalidFlag, N
 from a_sync.functools cimport cached_property_unsafe
 
 cdef extern from "Python.h":
-    cdef struct PyTypeObject:
-        char *tp_name
-        PyObject *tp_bases
-        PyObject *tp_dict
+    ctypedef _typeobject PyTypeObject
+    #cdef struct PyTypeObject:
+    #    char *tp_name
+    #    PyObject *tp_bases
+    #    PyObject *tp_dict
 
 ctypedef object ObjectId
 ctypedef dict[str, object] ClsInitParams
