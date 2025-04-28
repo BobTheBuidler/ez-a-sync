@@ -2,7 +2,7 @@
 import inspect
 from logging import getLogger
 
-from cpython.object cimport Py_TYPE
+from cpython.object cimport Py_TYPE, PyObject
 from cpython.tuple cimport PyTuple_Size, PyTuple_GetItem
 from libc.string cimport strcmp
 
