@@ -383,8 +383,16 @@ awaitable objects or a single mapping of awaitables.</p>
 <dt class="sig sig-object py" id="a_sync.asyncio.sleep.sleep0">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.sleep.</span></span><span class="sig-name descname"><span class="pre">sleep0</span></span><a class="headerlink" href="#a_sync.asyncio.sleep.sleep0" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Skip one event loop run cycle.</p>
+<p>This is a hacky helper for ‘asyncio.sleep()’, used
+when the ‘delay’ is set to 0. It yields exactly one
+time (which Task.__step knows how to handle) instead
+of creating a Future object. We monkey patch asyncio
+with our helper so it “just works” without you doing
+anything.</p>
 <p>While asyncio.sleep(0) is already very well-optimized,
-this equivalent helper consumes about 10% less compute.</p>
+this equivalent helper consumes about 10% less compute
+than asyncio’s equivalent internal helper.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.asyncio.sleep.sleep0.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.asyncio.sleep.sleep0.__iter__" title="Link to this definition"></a></dt>
@@ -434,8 +442,16 @@ features and improved functionality for asynchronous programming.</p>
 <dt class="sig sig-object py" id="a_sync.asyncio.sleep0">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.asyncio.</span></span><span class="sig-name descname"><span class="pre">sleep0</span></span><a class="headerlink" href="#a_sync.asyncio.sleep0" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Skip one event loop run cycle.</p>
+<p>This is a hacky helper for ‘asyncio.sleep()’, used
+when the ‘delay’ is set to 0. It yields exactly one
+time (which Task.__step knows how to handle) instead
+of creating a Future object. We monkey patch asyncio
+with our helper so it “just works” without you doing
+anything.</p>
 <p>While asyncio.sleep(0) is already very well-optimized,
-this equivalent helper consumes about 10% less compute.</p>
+this equivalent helper consumes about 10% less compute
+than asyncio’s equivalent internal helper.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.asyncio.sleep0.__iter__">
 <span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.asyncio.sleep0.__iter__" title="Link to this definition"></a></dt>
