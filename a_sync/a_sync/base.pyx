@@ -163,9 +163,10 @@ cdef PyTypeObject *ASyncGenericBase_ptr = <PyTypeObject*>ASyncGenericBase
 
 
 cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
-    cdef PyObject* bases
-    cdef PyTypeObject *base_ptr
     cdef object cls_dict
+    cdef object bases
+    cdef PyObject* bases_ptr
+    cdef PyTypeObject *base_ptr
     cdef Py_ssize_t len_bases
 
     if _logger_is_enabled_for(DEBUG):
@@ -175,8 +176,9 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     try:
         return _parse_flag_name_from_dict_keys(cls_ptr, cls_dict)
     except NoFlagsFound:
-        bases = cls_ptr.tp_bases  # This is a tuple or NULL
-        if bases != NULL:
+        bases_ptr = cls_ptr.tp_bases  # This is a tuple or NULL
+        if bases_ptr != NULL:
+            bases = <object>bases_ptr
             len_bases = PyTuple_GET_SIZE(bases)
             for i in range(len_bases):
                 base_ptr = <PyTypeObject*>PyTuple_GetItem(bases, i)
