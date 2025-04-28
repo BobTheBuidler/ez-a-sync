@@ -101,10 +101,15 @@ cdef class Semaphore(_DebugDaemonMixin):
             ) from e.__cause__
             
         # we need a constant to coerce to char*
-        cdef bytes encoded_name = (name or getattr(self, "__origin__", "")).encode("utf-8")
-        cdef Py_ssize_t length = len(encoded_name)
+        cdef bytes encoded_name
+        try:
+            encoded_name = (name or getattr(self, "__origin__", "")).encode("utf-8")
+        except AttributeError:
+            # just a failsafe, please use string inputs
+            encoded_name = repr(name).encode("utf-8")
 
         # Allocate memory for the char* and add 1 for the null character
+        cdef Py_ssize_t length = len(encoded_name)
         self._name = <char*>malloc(length + 1)
         """An optional name for the counter, used in debug logs."""
 
