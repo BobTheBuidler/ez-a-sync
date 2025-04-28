@@ -171,6 +171,7 @@ cdef class _AwaitableAsyncIterableMixin:
     def __class_getitem__(cls, *args, **kwargs) -> Type[Self]:
         """This is a noop so you can use the subclasses as generics"""
         cls.__args__ = args
+        assert cls.__args__ is not None
         return cls
 
     
