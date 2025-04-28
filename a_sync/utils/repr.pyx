@@ -9,6 +9,17 @@ from cpython.tuple cimport PyTuple_GET_SIZE
 cdef extern from "Python.h":
     ctypedef struct PyTypeObject:
         pass
+
+
+L, S, D = [], set(), {}
+cdef PyTypeObject *List_ptr = Py_TYPE(L)
+cdef PyTypeObject *Tuple_ptr = Py_TYPE(())
+cdef PyTypeObject *Dict_ptr = Py_TYPE(D)
+cdef PyTypeObject *DictKeys_ptr = Py_TYPE(D.keys())
+cdef PyTypeObject *DictValues_ptr = Py_TYPE(D.values())
+cdef PyTypeObject *DictItems_ptr = Py_TYPE(D.items())
+cdef PyTypeObject *Set_ptr = Py_TYPE(S)
+del L, S, D
     
 
 def repr_trunc(iterable: Iterable[Any]) -> str:
@@ -39,17 +50,6 @@ def repr_trunc(iterable: Iterable[Any]) -> str:
         return "{" + _join_first_5_reprs(iterable) + "}"
     else:
         return PyObject_Repr(iterable)
-
-
-L, S, D = [], set(), {}
-cdef PyTypeObject *List_ptr = Py_TYPE(L)
-cdef PyTypeObject *Tuple_ptr = Py_TYPE(())
-cdef PyTypeObject *Dict_ptr = Py_TYPE(D)
-cdef PyTypeObject *DictKeys_ptr = Py_TYPE(D.keys())
-cdef PyTypeObject *DictValues_ptr = Py_TYPE(D.values())
-cdef PyTypeObject *DictItems_ptr = Py_TYPE(D.items())
-cdef PyTypeObject *Set_ptr = Py_TYPE(S)
-del L, S, D
 
 
 cdef inline str _join_first_5_reprs_list(list[object] lst):
