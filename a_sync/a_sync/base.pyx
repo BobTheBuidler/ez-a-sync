@@ -173,12 +173,13 @@ cdef inline str _get_a_sync_flag_name_from_class_def(PyTypeObject *cls_ptr):
     if _logger_is_enabled_for(DEBUG):
         _logger_debug("Searching for flags defined on %s", <object>cls_ptr)
 
+    cls_dict_ptr = cls_ptr.tp_dict
     #cls_dict_ptr = <PyObject*>(cls_ptr.tp_dict)
-    cls_dict = <object>(cls_ptr.tp_dict)
+    cls_dict = <object>cls_dict_ptr
     try:
         return _parse_flag_name_from_dict_keys(cls_ptr, cls_dict)
     except NoFlagsFound:
-        bases_ptr = cls_ptr.tp_bases  # This is a tuple or NULL
+        bases_ptr = <PyObject*>(cls_ptr.tp_bases)  # This is a tuple or NULL
         if bases_ptr != NULL:
             bases = <object>bases_ptr
             len_bases = PyTuple_GET_SIZE(bases)
@@ -213,8 +214,8 @@ cdef bint _a_sync_flag_default_value_from_signature(object cls):
 
 
 cdef str _get_a_sync_flag_name_from_signature(PyTypeObject *cls_ptr, bint debug_logs):
-    cdef char *cls_name = cls_ptr.tp_name
-    if strcmp(cls_name, b"ASyncGenericBase") == 0:
+    cdef str cls_name = cls_ptr.tp_name
+    if strcmp(<char*>cls_name, b"ASyncGenericBase") == 0:
         # NOTE: 0 means they matched
         if debug_logs:
             _logger_log(
