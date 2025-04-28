@@ -7,7 +7,9 @@ from a_sync.exceptions import SyncModeInAsyncContextError
 
 
 test_both = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator])
-test_all = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter])
+test_all = pytest.mark.parametrize(
+    "cls_to_test", [ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter]
+)
 
 
 @pytest.fixture
