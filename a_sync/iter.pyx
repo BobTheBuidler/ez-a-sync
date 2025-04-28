@@ -6,6 +6,7 @@ import sys
 import types
 import typing
 import weakref
+from functools import lru_cache
 from logging import getLogger
 
 from cpython.object cimport PyObject_GetIter
@@ -168,11 +169,6 @@ cdef class _AwaitableAsyncIterableMixin:
         """
         return [obj async for obj in self]
 
-    def __class_getitem__(cls, *args, **kwargs) -> Type[Self]:
-        """This helper passes type information from subclasses to the subclass object"""
-        cls.__args__ = args
-        return cls
-
 
 cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
     """
@@ -261,6 +257,9 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
 class ASyncIterable(_ASyncIterable, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
+    def __class_getitem__(cls, type_args, **_) -> Type[ASyncSorter[T]]:
+        """This helper passes type information from subclasses to the subclass object"""
+        return _class_getitem(cls, type_args)
 
 
 cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
@@ -402,6 +401,9 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
 class ASyncIterator(_ASyncIterator, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
+    def __class_getitem__(cls, type_args, **_) -> Type[ASyncSorter[T]]:
+        """This helper passes type information from subclasses to the subclass object"""
+        return _class_getitem(cls, type_args)
 
 
 class ASyncGeneratorFunction(Generic[P, T]):
@@ -561,7 +563,7 @@ cdef class _ASyncFilter(_ASyncView):
 
     @final
     def __repr__(self) -> str:
-        return "<ASyncFilter for iterator={} function={} at {}>".format(
+        return "<{type(self).__name__} for iterator={} function={} at {}>".format(
             self.__wrapped__, self._function.__name__, hex(id(self))
         )
 
@@ -601,6 +603,9 @@ cdef class _ASyncFilter(_ASyncView):
 class ASyncFilter(_ASyncFilter, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
+    def __class_getitem__(cls, type_args, **_) -> Type[ASyncSorter[T]]:
+        """This helper passes type information from subclasses to the subclass object"""
+        return _class_getitem(cls, type_args)
 
 
 cdef object _key_if_no_key(object obj):
@@ -680,7 +685,7 @@ cdef class _ASyncSorter(_ASyncView):
 
     @final
     def __repr__(self) -> str:
-        cdef str rep = "<ASyncSorter"
+        cdef str rep = f"<{type(self).__name__}"
         if self.reversed:
             rep += " reversed"
         rep += " for iterator={}".format(self.__wrapped__)
@@ -741,6 +746,24 @@ cdef class _ASyncSorter(_ASyncView):
 class ASyncSorter(_ASyncSorter, Generic[T]):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
+    def __class_getitem__(cls, type_args, **_) -> Type[ASyncSorter[T]]:
+        """This helper passes type information from subclasses to the subclass object"""
+        return _class_getitem(cls, type_args)
+
+    
+@lru_cache(maxsize=None):
+def object _class_getitem(object untyped_cls, tuple type_args)"
+    typed_cls_name = f"{untyped_cls.__name__}[{', '.join(arg.__name__ for arg in type_args)}]"
+    typed_cls_dict = typed_class_dict = {
+        "__args__": type_args, 
+        "__module__": untyped_cls.__module__,
+        "__qualname__": untyped_cls.__qualname__,
+        "__doc__": untyped_cls.__doc__,
+        "__annotations__": untyped_cls.__annotations__,
+        "__origin__": untyped_cls,
+    }
+    typed_cls = type(typed_class_name, (untyped_cls, ), typed_cls_dict)
+    return typed_cls
 
 
 cdef void _init_subclass(cls, dict kwargs):
