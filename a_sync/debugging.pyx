@@ -36,8 +36,6 @@ def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES):
     __logger_is_enabled_for = logger.isEnabledFor
 
     if isasyncgenfunction(fn) or isinstance(fn, ASyncGeneratorFunction):
-        if isinstance(fn, ASyncGeneratorFunction) and not isasyncgenfunction(fn.__wrapped__):
-            raise RuntimeError("not an async gen function")
 
         @wraps(fn)
         async def stuck_async_gen_wrap(*args: __P.args, **kwargs: __P.kwargs) -> AsyncIterator[__T]:
