@@ -8,7 +8,7 @@ import typing
 import weakref
 from logging import getLogger
 
-from cpython.object cimport PyObject_GetIter
+from cpython.object cimport PyObject, PyObject_GetIter
 from cython cimport final
 from typing_extensions import Self
 
@@ -524,7 +524,6 @@ cdef class _ASyncView(_ASyncIterator):
             function: A function to apply to the items in the iterable.
             iterable: An iterable or an async iterable yielding objects to which `function` will be applied.
         """
-        cdef PyObject *iterator_ptr
         self._function = function
         self.__wrapped__ = iterable
         if isinstance(iterable, AsyncIterable):
