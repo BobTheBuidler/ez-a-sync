@@ -214,7 +214,7 @@ cdef bint _a_sync_flag_default_value_from_signature(object cls):
 
 
 cdef str _get_a_sync_flag_name_from_signature(PyTypeObject *cls_ptr, bint debug_logs):
-    cdef str cls_name = cls_ptr.tp_name
+    cdef bytes cls_name = cls_ptr.tp_name
     if strcmp(<char*>cls_name, b"ASyncGenericBase") == 0:
         # NOTE: 0 means they matched
         if debug_logs:
