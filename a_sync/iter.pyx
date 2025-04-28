@@ -6,6 +6,7 @@ import sys
 import types
 import typing
 import weakref
+from functools import lru_cache
 from logging import getLogger
 
 from cpython.object cimport PyObject_GetIter
@@ -253,9 +254,25 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
         return ASyncIterator(self.__wrapped__.__aiter__())
 
 
-class ASyncIterable(_ASyncIterable, Generic[T]):
+class ASyncIterable(_ASyncIterable):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncIterable[T]"]:
+        """
+        This helper passes type information from subclasses to the subclass object.
+
+        Args:
+            arg_or_args: Either a single type argument or a tuple of the type arguments used.
+        """
+        if cls is ASyncIterable:
+            if kwargs:
+                raise RuntimeError("Cannot pass kwargs")
+            if isinstance(arg_or_args, tuple):
+                args = arg_or_args
+            else:
+                args = (arg_or_args,)
+            return _class_getitem(cls, args)
+        return super().__class_getitem__(arg_or_args, **kwargs)
 
 
 cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
@@ -394,9 +411,25 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
         return self
 
 
-class ASyncIterator(_ASyncIterator, Generic[T]):
+class ASyncIterator(_ASyncIterator):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncIterator[T]"]:
+        """
+        This helper passes type information from subclasses to the subclass object.
+
+        Args:
+            arg_or_args: Either a single type argument or a tuple of the type arguments used.
+        """
+        if cls is ASyncIterator:
+            if kwargs:
+                raise RuntimeError("Cannot pass kwargs")
+            if isinstance(arg_or_args, tuple):
+                args = arg_or_args
+            else:
+                args = (arg_or_args,)
+            return _class_getitem(cls, args)
+        return super().__class_getitem__(arg_or_args, **kwargs)
 
 
 class ASyncGeneratorFunction(Generic[P, T]):
@@ -556,7 +589,7 @@ cdef class _ASyncFilter(_ASyncView):
 
     @final
     def __repr__(self) -> str:
-        return "<ASyncFilter for iterator={} function={} at {}>".format(
+        return "<{type(self).__name__} for iterator={} function={} at {}>".format(
             self.__wrapped__, self._function.__name__, hex(id(self))
         )
 
@@ -593,9 +626,25 @@ cdef class _ASyncFilter(_ASyncView):
         return bool(await checked) if isawaitable(checked) else bool(checked)
 
 
-class ASyncFilter(_ASyncFilter, Generic[T]):
+class ASyncFilter(_ASyncFilter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncFilter[T]"]:
+        """
+        This helper passes type information from subclasses to the subclass object.
+
+        Args:
+            arg_or_args: Either a single type argument or a tuple of the type arguments used.
+        """
+        if cls is ASyncFilter:
+            if kwargs:
+                raise RuntimeError("Cannot pass kwargs")
+            if isinstance(arg_or_args, tuple):
+                args = arg_or_args
+            else:
+                args = (arg_or_args,)
+            return _class_getitem(cls, args)
+        return super().__class_getitem__(arg_or_args, **kwargs)
 
 
 cdef object _key_if_no_key(object obj):
@@ -675,7 +724,7 @@ cdef class _ASyncSorter(_ASyncView):
 
     @final
     def __repr__(self) -> str:
-        cdef str rep = "<ASyncSorter"
+        cdef str rep = f"<{type(self).__name__}"
         if self.reversed:
             rep += " reversed"
         rep += " for iterator={}".format(self.__wrapped__)
@@ -733,9 +782,44 @@ cdef class _ASyncSorter(_ASyncView):
         self._consumed = True
 
      
-class ASyncSorter(_ASyncSorter, Generic[T]):
+class ASyncSorter(_ASyncSorter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncSorter[T]"]:
+        """This helper passes type information from subclasses to the subclass object"""
+        if cls is ASyncSorter:
+            if kwargs:
+                raise RuntimeError("Cannot pass kwargs")
+            if isinstance(arg_or_args, tuple):
+                args = arg_or_args
+            else:
+                args = (arg_or_args,)
+            return _class_getitem(cls, args)
+        return super().__class_getitem__(arg_or_args, **kwargs)
+
+    
+@lru_cache(maxsize=None)
+def __class_getitem(untyped_cls: Type, tuple type_args):
+    args_string = ", ".join(
+        getattr(arg, "__name__", None) or repr(arg)
+        for arg in type_args
+    )
+    typed_cls_name = f"{untyped_cls.__name__}[{args_string}]"
+    typed_cls_dict = typed_class_dict = {
+        "__args__": type_args, 
+        "__module__": untyped_cls.__module__,
+        "__qualname__": f"{untyped_cls.__qualname__}[{args_string}]",
+        "__origin__": untyped_cls,
+    }
+    if untyped_cls.__doc__ is not None:
+        typed_cls_dict["__doc__"] = str(untyped_cls.__doc__)
+    if hasattr(untyped_cls, "__annotations__"):
+        typed_cls_dict["__annotations__"] = untyped_cls.__annotations__
+    typed_cls = type(typed_cls_name, (untyped_cls, ), typed_cls_dict)
+    return typed_cls
+
+
+cdef object _class_getitem = __class_getitem
 
 
 cdef void _init_subclass(cls, dict kwargs):
@@ -749,8 +833,11 @@ cdef void _init_subclass(cls, dict kwargs):
     for base in getattr(cls, "__orig_bases__", []):
         if not hasattr(base, "__args__"):
             continue
-
+        
         args = get_args(base)
+        if base in (ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter):
+            raise Exception(base, args)
+            
         if args and not isinstance(type_argument := args[0], TypeVar):
             module = getattr(type_argument, "__module__", "")
             qualname = getattr(type_argument, "__qualname__", "")
