@@ -105,7 +105,6 @@ cdef class _AwaitableAsyncIterableMixin:
     """
 
     cdef readonly object __wrapped__
-    cdef readonly PyObject *__wrapped_ptr
     cdef readonly AsyncCachedPropertyInstanceState __async_property__
 
     def __cinit__(self) -> None:
