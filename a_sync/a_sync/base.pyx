@@ -3,7 +3,6 @@ import inspect
 from logging import getLogger
 
 from cpython.object cimport Py_TYPE
-from cpython.ref cimport PyTypeObject
 from libc.string cimport strcmp
 
 from a_sync._typing import *
@@ -13,6 +12,9 @@ from a_sync.a_sync.flags cimport VIABLE_FLAGS
 from a_sync.exceptions import ASyncFlagException, FlagNotDefined, InvalidFlag, NoFlagsFound, TooManyFlags
 from a_sync.functools cimport cached_property_unsafe
 
+cdef extern from "Python.h":
+    cdef struct PyTypeObject:
+        pass
 
 ctypedef object ObjectId
 ctypedef dict[str, object] ClsInitParams
