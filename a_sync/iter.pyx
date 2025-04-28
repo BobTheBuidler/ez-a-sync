@@ -835,6 +835,9 @@ cdef void _init_subclass(cls, dict kwargs):
             continue
         
         args = get_args(base)
+        if base in (ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter):
+            raise Exception(base, args)
+            
         if args and not isinstance(type_argument := args[0], TypeVar):
             module = getattr(type_argument, "__module__", "")
             qualname = getattr(type_argument, "__qualname__", "")
