@@ -751,8 +751,8 @@ class ASyncSorter(_ASyncSorter, Generic[T]):
         return _class_getitem(cls, type_args)
 
     
-@lru_cache(maxsize=None):
-def object _class_getitem(object untyped_cls, tuple type_args)"
+@lru_cache(maxsize=None)
+def _class_getitem(untyped_cls: Type, tuple type_args):
     typed_cls_name = f"{untyped_cls.__name__}[{', '.join(arg.__name__ for arg in type_args)}]"
     typed_cls_dict = typed_class_dict = {
         "__args__": type_args, 
