@@ -80,9 +80,13 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                     # If gather is being cancelled we must propagate the
                     # cancellation regardless of *return_exceptions* argument.
                     # See issue 32684.
-                    outer.set_exception(fut._make_cancelled_error())
+                    try:
+                        exc = fut._make_cancelled_error()
+                    except AttributeError:
+                        exc = CancelledError()
+                    outer.set_exception(exc)
                 else:
-                    outer.set_result(list(map(_get_result_or_exc, children)))
+                    outer.set_result([_get_result_or_exc(child) for child in children])
     
     else:
 
@@ -101,7 +105,11 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                 # Check if 'fut' is cancelled first, as
                 # 'fut.exception()' will *raise* a CancelledError
                 # instead of returning it.
-                outer.set_exception(fut._make_cancelled_error())
+                try:
+                    exc = fut._make_cancelled_error()
+                except AttributeError:
+                    exc = CancelledError()
+                outer.set_exception(exc)
                 return
             else:
                 exc = fut.exception()
@@ -117,10 +125,13 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                     # If gather is being cancelled we must propagate the
                     # cancellation regardless of *return_exceptions* argument.
                     # See issue 32684.
-                    exc = fut._make_cancelled_error()
+                    try:
+                        exc = fut._make_cancelled_error()
+                    except AttributeError:
+                        exc = CancelledError()
                     outer.set_exception(exc)
                 else:
-                    outer.set_result(list(map(_get_result_or_exc, children)))
+                    outer.set_result([_get_result_or_exc(child) for child in children])
     
     if loop._task_factory is smart_task_factory:
         current = current_task()
