@@ -394,15 +394,12 @@ cdef class ASyncIterator(_AwaitableAsyncIterableMixin):
         _init_subclass(cls, kwargs)
         return super().__init_subclass__(**kwargs)
 
-
-cdef class ASyncGeneratorFunction:
+class ASyncGeneratorFunction(Generic[P, T]):
     """
     Encapsulates an asynchronous generator function, providing a mechanism to use it as an asynchronous iterator with enhanced capabilities. This class wraps an async generator function, allowing it to be called with parameters and return an :class:`~ASyncIterator` object. It is particularly useful for situations where an async generator function needs to be used in a manner that is consistent with both synchronous and asynchronous execution contexts.
 
     The ASyncGeneratorFunction class supports dynamic binding to instances, enabling it to be used as a method on class instances. When accessed as a descriptor, it automatically handles the binding to the instance, thereby allowing the wrapped async generator function to be invoked with instance context ('self') automatically provided. This feature is invaluable for designing classes that need to expose asynchronous generators as part of their interface while maintaining the ease of use and calling semantics similar to regular methods.
-
     By providing a unified interface to asynchronous generator functions, this class facilitates the creation of APIs that are flexible and easy to use in a wide range of asynchronous programming scenarios. It abstracts away the complexities involved in managing asynchronous generator lifecycles and invocation semantics, making it easier for developers to integrate asynchronous iteration patterns into their applications.
-
     Example:
         >>> async def my_async_gen():
         ...     yield 1
@@ -410,55 +407,47 @@ cdef class ASyncGeneratorFunction:
         >>> async_gen_func = ASyncGeneratorFunction(my_async_gen)
         >>> for item in async_gen_func():
         ...     print(item)
-
     See Also:
         - :class:`ASyncIterator`
         - :class:`ASyncIterable`
     """
-
-    cdef readonly object _cache_handle
+    
+    _cache_handle: TimerHandle
     "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
-
-    cdef readonly object __weakself__
+    
+    __weakself__: "ref[object]" = None
     "A weak reference to the instance the function is bound to, if any."
-
-    cdef readonly str field_name
-
+    
     def __init__(
         self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None
     ) -> None:
         """
         Initializes the ASyncGeneratorFunction with the given async generator function and optionally an instance.
-
         Args:
             async_gen_func: The async generator function to wrap.
             instance (optional): The object to bind to the function, if applicable.
         """
-
         self.field_name = async_gen_func.__name__
         "The name of the async generator function."
-
+        
         self.__wrapped__ = async_gen_func
         "The actual async generator function."
-
-        if instance is None:
-            self.__weakself__ = None
-        else:
+        
+        update_wrapper(self, self.__wrapped__)
+        if instance is not None:
             self._cache_handle = self.__get_cache_handle(instance)
             self.__weakself__ = ref(instance, self.__cancel_cache_handle)
-        update_wrapper(self, async_gen_func)
-
+        
     def __repr__(self) -> str:
         return "<{} for {} at {}>".format(
             type(self).__name__, 
             self.__wrapped__, 
             hex(id(self))
         )
-
+        
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> ASyncIterator[T]:
         """
         Calls the wrapped async generator function with the given arguments and keyword arguments, returning an :class:`ASyncIterator`.
-
         Args:
             *args: Positional arguments for the function.
             **kwargs: Keyword arguments for the function.
@@ -466,12 +455,11 @@ cdef class ASyncGeneratorFunction:
         if self.__weakself__ is None:
             return ASyncIterator(self.__wrapped__(*args, **kwargs))
         return ASyncIterator(self.__wrapped__(self.__self__, *args, **kwargs))
-
+    
     def __get__(self, instance: V, owner: Type[V]) -> "ASyncGeneratorFunction[P, T]":
         "Descriptor method to make the function act like a non-data descriptor."
         if instance is None:
             return self
-
         cdef object gen_func
         try:
             gen_func = instance.__dict__[self.field_name]
@@ -481,7 +469,7 @@ cdef class ASyncGeneratorFunction:
         cancel_handle(gen_func._cache_handle)
         gen_func._cache_handle = self.__get_cache_handle(instance)
         return gen_func
-
+    
     @property
     def __self__(self) -> object:
         cdef object instance
@@ -492,17 +480,17 @@ cdef class ASyncGeneratorFunction:
         if instance is None:
             raise ReferenceError(self)
         return instance
-
+    
     def __get_cache_handle(self, instance: object) -> TimerHandle:
         # NOTE: we create a strong reference to instance here. I'm not sure if this is good or not but its necessary for now.
         return get_event_loop().call_later(
             300, delattr, instance, self.field_name
         )
-
+        
     def __cancel_cache_handle(self, instance: object) -> None:
         cancel_handle(self._cache_handle)
 
-
+        
 cdef object _ASyncGeneratorFunction = ASyncGeneratorFunction
 
 
