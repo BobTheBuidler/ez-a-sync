@@ -174,9 +174,6 @@ cdef class _AwaitableAsyncIterableMixin:
         assert cls.__args__ is not None
         return cls
 
-    
-cdef dict[object, tuple] subclass_type_args = {}
-
 
 cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
     """
