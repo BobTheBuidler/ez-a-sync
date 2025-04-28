@@ -30,6 +30,9 @@ else:
     TaskMapping = None
 
 
+ctypedef object object_id
+
+
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 del asyncio
@@ -39,7 +42,7 @@ cdef object cached_property = functools.cached_property
 del functools
 
 # cdef inspect
-cdef object getfullargspec = inspect.getfullargspec
+cdef object getargspec = inspect.getargspec
 cdef object isasyncgenfunction = inspect.isasyncgenfunction
 cdef object isgeneratorfunction = inspect.isgeneratorfunction
 del inspect
@@ -167,18 +170,25 @@ cdef void _validate_wrapped_fn(fn: Callable):
 
 cdef object _function_type = type(getLogger)
 
-cdef set[uintptr_t] _argspec_validated = set()
+cdef set[object_id] _argspec_validated = set()
 
 cdef inline void _validate_argspec_cached(fn: Callable):
-    cdef uintptr_t fid = id(fn)
+    cdef object_id fid = id(fn)
     if fid not in _argspec_validated:
         _validate_argspec(fn)
         _argspec_validated.add(fid)
 
 cdef inline void _validate_argspec(fn: Callable):
-    fn_args = getfullargspec(fn)[0]
-    for flag in VIABLE_FLAGS:
-        if flag in fn_args:
+    cdef tuple[str, ...] fn_args
+    
+    try:
+        code_obj = func.__code__  # May fail for built-ins or special callables
+        fn_args = code_obj.co_varnames[:code_obj.co_argcount]
+    except:
+        fn_args = getargspec(fn)[0]
+    
+    for flag in fn_args:
+        if flag in VIABLE_FLAGS:
             raise RuntimeError(
                 f"{fn} must not have any arguments with the following names: {VIABLE_FLAGS}"
             )
