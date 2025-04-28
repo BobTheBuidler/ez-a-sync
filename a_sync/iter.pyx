@@ -752,7 +752,7 @@ class ASyncSorter(_ASyncSorter, Generic[T]):
 
     
 @lru_cache(maxsize=None)
-def _class_getitem(untyped_cls: Type, tuple type_args):
+def __class_getitem(untyped_cls: Type, tuple type_args):
     typed_cls_name = f"{untyped_cls.__name__}[{', '.join(arg.__name__ for arg in type_args)}]"
     typed_cls_dict = typed_class_dict = {
         "__args__": type_args, 
@@ -762,8 +762,11 @@ def _class_getitem(untyped_cls: Type, tuple type_args):
         "__annotations__": untyped_cls.__annotations__,
         "__origin__": untyped_cls,
     }
-    typed_cls = type(typed_class_name, (untyped_cls, ), typed_cls_dict)
+    typed_cls = type(typed_cls_name, (untyped_cls, ), typed_cls_dict)
     return typed_cls
+
+
+cdef object _class_getitem = __class_getitem
 
 
 cdef void _init_subclass(cls, dict kwargs):
