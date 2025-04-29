@@ -457,6 +457,9 @@ class ASyncGeneratorFunction(Generic[P, T]):
     
     __weakself__: "ref[object]" = None
     "A weak reference to the instance the function is bound to, if any."
+
+    @staticmethod
+    
     
     def __init__(
         self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None
@@ -532,6 +535,15 @@ class ASyncGeneratorFunction(Generic[P, T]):
 
         
 cdef object _ASyncGeneratorFunction = ASyncGeneratorFunction
+
+cpdef bint _isasyncgenfunction_patched(func: Callable):
+    """We patch `inspect.isasyncgenfunction` so it returns True for ASyncGeneratorFunction objects.
+    
+    NOTE: This won't work for all use cases but it should work for most of them.
+    """
+    return isasyncgenfunction(func) or isinstance(func, ASyncGeneratorFunction)
+
+inspect.isasyncgenfunction = _isasyncgenfunction_patched
 
 
 cdef class _ASyncView(_ASyncIterator):
