@@ -22,6 +22,9 @@ from a_sync.exceptions import SyncModeInAsyncContextError
 from a_sync.functools cimport update_wrapper
 
 
+cdef bint INSPECT_IS_PATCHED
+
+
 # cdef asyncio
 cdef object get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
@@ -468,6 +471,9 @@ cdef class _ASyncGeneratorFunction:
             async_gen_func: The async generator function to wrap.
             instance (optional): The object to bind to the function, if applicable.
         """
+        if not INSPECT_IS_PATCHED:
+            _monkey_patch_inspect_isasyncgenfunction()
+            
         self.field_name = async_gen_func.__name__
         "The name of the async generator function."
         
@@ -550,6 +556,17 @@ class ASyncGeneratorFunction(_ASyncGeneratorFunction, Generic[P, T]):
         _ASyncGeneratorFunction.__init__(self, async_gen_func, instance)
         update_wrapper(self, self.__wrapped__)
     
+
+cpdef bint _isasyncgenfunction_patched(func: Callable):
+    """We patch `inspect.isasyncgenfunction` so it returns True for ASyncGeneratorFunction objects.
+    
+    NOTE: This won't work for all use cases but it should work for most of them.
+    """
+    return isasyncgenfunction(func) or isinstance(func, ASyncGeneratorFunction)
+
+cdef void _monkey_patch_inspect_isasyncgenfunction():
+    inspect.isasyncgenfunction = _isasyncgenfunction_patched
+    INSPECT_IS_PATCHED = True
 
 
 cdef class _ASyncView(_ASyncIterator):
