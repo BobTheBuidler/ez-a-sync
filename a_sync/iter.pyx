@@ -478,7 +478,7 @@ cdef class _ASyncGeneratorFunction:
             self.__weakself__ = None
             self._cache_handle = None
         else:
-            self.__weakself__ = ref(instance, self.__cancel_cache_handle)
+            self.__weakself__ = ref(instance, _ASyncGeneratorFunction.__cancel_cache_handle)
             self._cache_handle = self._get_cache_handle(instance)
     
     def __repr__(self) -> str:
@@ -533,8 +533,8 @@ cdef class _ASyncGeneratorFunction:
         return get_event_loop().call_later(
             300, delattr, instance, self.field_name
         )
-        
-    cpdef void __cancel_cache_handle(self, object instance):
+
+    cpdef inline void __cancel_cache_handle(self):
         cancel_handle(self._cache_handle)
 
 
