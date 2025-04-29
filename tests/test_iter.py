@@ -4,7 +4,7 @@ from typing import AsyncIterator, Iterator, Tuple, TypeVar
 
 from a_sync import ASyncIterable, ASyncIterator
 from a_sync.exceptions import SyncModeInAsyncContextError
-from a_sync.iter import ASyncFilter, ASyncSorter
+from a_sync.iter import ASyncFilter, ASyncSorter, _isasyncgenfunction_patched
 
 
 test_both = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator])
@@ -435,3 +435,34 @@ def test_init_subclass_with_typevar(cls_to_test):
 @test_all
 def test_init_subclass_with_generic_alias(cls_to_test):
     class MySubclass(cls_to_test[Tuple[int, str, bool]]): ...
+
+
+def test_genfunc_init():
+    async def test_func():
+        yield
+    wrapped = ASyncGeneratorFunction(test_func)
+    assert wrapper.__wrapped__ is test_func
+
+
+def test_genfunc_init_failure_no_iter():
+    with pytest.raises(ValueError):
+        @ASyncGeneratorFunction
+        async def test_func():
+            ...
+
+
+def test_genfunc_init_failure_sync():
+    with pytest.raises(ValueError):
+        @ASyncGeneratorFunction
+        def test_func():
+            yield
+
+
+def test_inspect_monkey_patch():
+    @ASyncGeneratorFunction
+    async def test_func():
+        yield
+    
+    assert inspect.isasyncgenfunction is _isasyncgenfunction_patched
+    assert inspect.isasyncgenfunction(test_func) is True
+    
