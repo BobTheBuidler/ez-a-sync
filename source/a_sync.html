@@ -6067,53 +6067,19 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py class">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncGeneratorFunction">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncGeneratorFunction</span></span><a class="headerlink" href="#a_sync.iter.ASyncGeneratorFunction" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
-<p>Encapsulates an asynchronous generator function, providing a mechanism to use it as an asynchronous iterator with enhanced capabilities. This class wraps an async generator function, allowing it to be called with parameters and return an <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a> object. It is particularly useful for situations where an async generator function needs to be used in a manner that is consistent with both synchronous and asynchronous execution contexts.</p>
-<p>The ASyncGeneratorFunction class supports dynamic binding to instances, enabling it to be used as a method on class instances. When accessed as a descriptor, it automatically handles the binding to the instance, thereby allowing the wrapped async generator function to be invoked with instance context (‘self’) automatically provided. This feature is invaluable for designing classes that need to expose asynchronous generators as part of their interface while maintaining the ease of use and calling semantics similar to regular methods.
-By providing a unified interface to asynchronous generator functions, this class facilitates the creation of APIs that are flexible and easy to use in a wide range of asynchronous programming scenarios. It abstracts away the complexities involved in managing asynchronous generator lifecycles and invocation semantics, making it easier for developers to integrate asynchronous iteration patterns into their applications.
-.. rubric:: Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">my_async_gen</span><span class="p">():</span>
-<span class="gp">... </span>    <span class="k">yield</span> <span class="mi">1</span>
-<span class="gp">... </span>    <span class="k">yield</span> <span class="mi">2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">async_gen_func</span> <span class="o">=</span> <span class="n">ASyncGeneratorFunction</span><span class="p">(</span><span class="n">my_async_gen</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">async_gen_func</span><span class="p">():</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a></p></li>
-<li><p><a class="reference internal" href="#a_sync.iter.ASyncIterable" title="a_sync.iter.ASyncIterable"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterable</span></code></a></p></li>
-</ul>
-</div>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_ASyncGeneratorFunction</span></code>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="#a_sync._typing.P" title="a_sync._typing.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncGeneratorFunction.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><span class="pre">ASyncIterator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncGeneratorFunction.__call__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncGeneratorFunction.__call__" title="Link to this definition"></a></dt>
 <dd><p>Calls the wrapped async generator function with the given arguments and keyword arguments, returning an <a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.
 :param *args: Positional arguments for the function.
 :param **kwargs: Keyword arguments for the function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>args</strong> (<em>~P</em>)</p></li>
-<li><p><strong>kwargs</strong> (<em>~P</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><em>ASyncIterator</em></a>[T][<em>T</em>]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncGeneratorFunction.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">async_gen_func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AsyncGenFunc</span><span class="p"><span class="pre">[</span></span><span class="pre">P</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#a_sync.iter.ASyncGeneratorFunction.__init__" title="Link to this definition"></a></dt>
-<dd><p>Initializes the ASyncGeneratorFunction with the given async generator function and optionally an instance.
-:param async_gen_func: The async generator function to wrap.
-:param instance: The object to bind to the function, if applicable.
-:type instance: optional</p>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>async_gen_func</strong> (<em>AsyncGenFunc</em><em>[</em><em>P</em><em>, </em><em>T</em><em>]</em>)</p></li>
@@ -6128,8 +6094,9 @@ By providing a unified interface to asynchronous generator functions, this class
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncGeneratorFunction._cache_handle">
-<span class="sig-name descname"><span class="pre">_cache_handle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TimerHandle</span></em><a class="headerlink" href="#a_sync.iter.ASyncGeneratorFunction._cache_handle" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">_cache_handle</span></span><a class="headerlink" href="#a_sync.iter.ASyncGeneratorFunction._cache_handle" title="Link to this definition"></a></dt>
+<dd><p>An asyncio handle used to pop the bound method from <cite>instance.__dict__</cite> 5 minutes after its last use.</p>
+</dd></dl>
 
 </dd></dl>
 
