@@ -501,15 +501,20 @@ cdef class _ASyncGeneratorFunction:
     
     def __get__(self, instance: V, owner: Type[V]) -> "ASyncGeneratorFunction[P, T]":
         "Descriptor method to make the function act like a non-data descriptor."
+        cdef _ASyncGeneratorFunction gen_func
+        cdef dict instance_dict
+        
         if instance is None:
             return self
-        cdef object gen_func
-        cdef dict instance_dict = instance.__dict__
+        
+        instance_dict = instance.__dict__
+        
         try:
             gen_func = instance_dict[self.field_name]
         except KeyError:
             gen_func = ASyncGeneratorFunction(self.__wrapped__, instance)
             instance_dict[self.field_name] = gen_func
+            
         gen_func._set_cache_handle(self._get_cache_handle(instance))
         return gen_func
     
