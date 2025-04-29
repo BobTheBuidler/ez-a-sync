@@ -479,7 +479,7 @@ cdef class _ASyncGeneratorFunction:
             self._cache_handle = None
         else:
             self.__weakself__ = ref(instance, self.__cancel_cache_handle)
-            self._cache_handle = self.__get_cache_handle(instance)
+            self._cache_handle = self._get_cache_handle(instance)
     
     def __repr__(self) -> str:
         return "<{} for {} at {}>".format(
@@ -504,13 +504,13 @@ cdef class _ASyncGeneratorFunction:
         if instance is None:
             return self
         cdef object gen_func
+        cdef dict instance_dict = instance.__dict__
         try:
-            gen_func = instance.__dict__[self.field_name]
+            gen_func = instance_dict[self.field_name]
         except KeyError:
             gen_func = ASyncGeneratorFunction(self.__wrapped__, instance)
-            instance.__dict__[self.field_name] = gen_func
-        cancel_handle(gen_func._cache_handle)
-        gen_func._cache_handle = self.__get_cache_handle(instance)
+            instance_dict[self.field_name] = gen_func
+        gen_func._set_cache_handle(self._get_cache_handle(instance))
         return gen_func
     
     @property
@@ -523,14 +523,18 @@ cdef class _ASyncGeneratorFunction:
         if instance is None:
             raise ReferenceError(self)
         return instance
+
+    cdef inline void _set_cache_handle(self, object handle):
+        self.__cancel_cache_handle()
+        self._cache_handle = handle
     
-    cdef object __get_cache_handle(self, object instance):
+    cdef inline object _get_cache_handle(self, object instance):
         # NOTE: we create a strong reference to instance here. I'm not sure if this is good or not but its necessary for now.
         return get_event_loop().call_later(
             300, delattr, instance, self.field_name
         )
         
-    def __cancel_cache_handle(self, instance: object) -> None:
+    cpdef void __cancel_cache_handle(self, object instance):
         cancel_handle(self._cache_handle)
 
 
