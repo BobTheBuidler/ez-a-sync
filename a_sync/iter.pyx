@@ -457,9 +457,6 @@ class ASyncGeneratorFunction(Generic[P, T]):
     
     __weakself__: "ref[object]" = None
     "A weak reference to the instance the function is bound to, if any."
-
-    @staticmethod
-    
     
     def __init__(
         self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None
