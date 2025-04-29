@@ -7,8 +7,8 @@ from typing import (Any, AsyncIterator, Awaitable, Coroutine, Iterable,
                     Iterator, Literal, Mapping, Optional, Tuple, Union,
                     overload)
 
-from a_sync import iter
 from a_sync._typing import K, T, V
+from a_sync.iter cimport ASyncIterator
 
 
 # cdef asyncio
@@ -27,9 +27,6 @@ except ImportError as e:
 
 cdef object _tqdm_as_completed = tqdm_asyncio.as_completed
 del tqdm_asyncio
-
-# cdef iter
-cdef object ASyncIterator = iter.ASyncIterator
 
 
 @overload
