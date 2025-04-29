@@ -434,7 +434,8 @@ class ASyncIterator(_ASyncIterator):
             return cls
 
 
-cdef class _ASyncGeneratorFunction(Generic[P, T]):
+
+cdef class _ASyncGeneratorFunction:
     """
     Encapsulates an asynchronous generator function, providing a mechanism to use it as an asynchronous iterator with enhanced capabilities. This class wraps an async generator function, allowing it to be called with parameters and return an :class:`~ASyncIterator` object. It is particularly useful for situations where an async generator function needs to be used in a manner that is consistent with both synchronous and asynchronous execution contexts.
 
@@ -452,10 +453,10 @@ cdef class _ASyncGeneratorFunction(Generic[P, T]):
         - :class:`ASyncIterable`
     """
     
-    cdef object _cache_handle
+    cdef readonly object _cache_handle
     "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
     
-    cdef object __weakself__
+    cdef readonly object __weakself__
     "A weak reference to the instance the function is bound to, if any."
         
     def __init__(
@@ -479,14 +480,14 @@ cdef class _ASyncGeneratorFunction(Generic[P, T]):
         else:
             self.__weakself__ = ref(instance, self.__cancel_cache_handle)
             self._cache_handle = self.__get_cache_handle(instance)
-        
+    
     def __repr__(self) -> str:
         return "<{} for {} at {}>".format(
             type(self).__name__, 
             self.__wrapped__, 
             hex(id(self))
         )
-        
+     
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> ASyncIterator[T]:
         """
         Calls the wrapped async generator function with the given arguments and keyword arguments, returning an :class:`ASyncIterator`.
