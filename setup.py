@@ -1,3 +1,4 @@
+import os
 from glob import glob
 from pathlib import Path
 from Cython.Build import cythonize
@@ -36,10 +37,11 @@ setup(
     ext_modules=cythonize(
         [
             Extension(
-                "a_sync",
-                sources=[*glob("a_sync/**/*.pyx", recursive=True)],
+                os.path.splitext(pyx_path)[0].replace(os.path.sep, "."),
+                sources=[path],
                 include_dirs=["include"],
-            ),
+            )
+            for pyx_path in glob("a_sync/**/*.pyx", recursive=True)
         ],
         compiler_directives={
             "language_level": 3,
