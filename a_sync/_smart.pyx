@@ -13,7 +13,6 @@ from logging import getLogger
 cimport cython
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
-from pythoncapi_compat cimport PyWeakref_GetRef
 
 from a_sync._typing import *
 
@@ -24,6 +23,9 @@ cdef extern from "weakrefobject.h":
     PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
     PyObject* PyWeakref_NewProxy(PyObject*, PyObject*)
 
+cdef extern from "pythoncapi_compat.h":
+    int PyWeakref_GetRef(PyObject*, PyObject**)
+    
 # cdef asyncio
 cdef object ensure_future = asyncio.ensure_future
 cdef object get_event_loop = asyncio.get_event_loop
