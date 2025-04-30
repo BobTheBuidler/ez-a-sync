@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools","wheel","Cython"]
+requires = ["setuptools","wheel","Cython", "pythoncapi_compat"]
 
 [tool.black]
 line-length = 100
