@@ -4,8 +4,8 @@ envs = EnvVarFactory("EZASYNC")
 
 # We have some envs here to help you debug your custom class implementations
 
-DEBUG_CLASS_NAME = envs.create_env("DEBUG_CLASS_NAME", str, default="", verbose=False)
-"""str: The name of the class to debug.
+cdef public str DEBUG_CLASS_NAME = envs.create_env("DEBUG_CLASS_NAME", str, default="", verbose=False)
+"""The name of the class to debug.
 
 If you're only interested in debugging a specific class, set this to the class name.
 
@@ -17,11 +17,11 @@ Examples:
         export EZASYNC_DEBUG_CLASS_NAME=MyClass
 
 See Also:
-    :func:`DEBUG_MODE` for enabling debug mode on all classes.
+    :obj:`DEBUG_MODE` for enabling debug mode on all classes.
 """
 
-DEBUG_MODE = envs.create_env("DEBUG_MODE", bool, default=bool(DEBUG_CLASS_NAME), verbose=False)
-"""bool: Enables debug mode on all classes.
+cdef public bint DEBUG_MODE = envs.create_env("DEBUG_MODE", bool, default=bool(DEBUG_CLASS_NAME), verbose=False)
+"""Enables debug mode on all classes.
 
 Set this environment variable to `True` to enable debug mode on all classes. 
 If `DEBUG_CLASS_NAME` is set to a non-empty string, 
@@ -38,5 +38,5 @@ Examples:
     automatically be `True` unless `DEBUG_CLASS_NAME` is an empty string.
 
 See Also:
-    :func:`DEBUG_CLASS_NAME` for debugging a specific class.
+    :obj:`DEBUG_CLASS_NAME` for debugging a specific class.
 """
