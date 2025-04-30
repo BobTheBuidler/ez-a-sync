@@ -539,7 +539,7 @@ cdef class _ASyncGeneratorFunction:
             300, delattr, instance, self.field_name
         )
 
-    cpdef void __cancel_cache_handle(self):
+    cpdef __cancel_cache_handle(self):
         cancel_handle(self._cache_handle)
 
 
