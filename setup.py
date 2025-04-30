@@ -2,6 +2,9 @@ from pathlib import Path
 from Cython.Build import cythonize
 from setuptools import find_packages, setup
 
+import pythoncapi_compat
+
+
 with open("requirements.txt", "r") as f:
     requirements = list(map(str.strip, f.read().split("\n")))[:-1]
 
@@ -32,7 +35,13 @@ setup(
     },
     include_package_data=True,
     ext_modules=cythonize(
-        "a_sync/**/*.pyx",
+        [
+            Extension(
+                "a_sync", 
+                sources=["a_sync/**/*.pyx"],
+                include_dirs=[pythoncapi_compat.get_include()],
+            ),
+        ],
         compiler_directives={
             "language_level": 3,
             "embedsignature": True,
