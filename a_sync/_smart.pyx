@@ -13,6 +13,7 @@ from logging import getLogger
 cimport cython
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
+from pythoncapi_compat cimport PyWeakref_GetRef
 
 from a_sync._typing import *
 
@@ -132,10 +133,11 @@ cdef class WeakSet:
 
     @cython.linetrace(False)
     def __iter__(self):
+        cdef PyObject *obj_ptr
         for ref in self._refs.values():
-            item = ref()
-            if item is not None:
-                yield item
+            PyWeakref_GetRef(ref, obj_ptr)
+            if obj_ptr != NULL:
+                yield <object>obj_ptr
 
     @cython.linetrace(False)
     cdef void _gc_callback(self, fut: Future):
