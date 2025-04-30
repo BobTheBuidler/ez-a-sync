@@ -452,12 +452,6 @@ cdef class _ASyncGeneratorFunction:
         - :class:`ASyncIterator`
         - :class:`ASyncIterable`
     """
-    
-    cdef readonly object _cache_handle
-    "An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."
-    
-    cdef readonly object __weakself__
-    "A weak reference to the instance the function is bound to, if any."
         
     def __init__(
         self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None
