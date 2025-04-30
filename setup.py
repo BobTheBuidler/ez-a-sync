@@ -2,8 +2,6 @@ from pathlib import Path
 from Cython.Build import cythonize
 from setuptools import find_packages, setup
 
-import pythoncapi_compat
-
 
 with open("requirements.txt", "r") as f:
     requirements = list(map(str.strip, f.read().split("\n")))[:-1]
