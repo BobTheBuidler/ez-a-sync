@@ -2,7 +2,6 @@ from typing import final
 
 from typed_envs import EnvironmentVariable, EnvVarFactory
 
-
 envs: Final[EnvVarFactory]
 
 DEBUG_CLASS_NAME: Final[EnvironmentVariable[str]]
