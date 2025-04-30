@@ -37,7 +37,7 @@ setup(
     ext_modules=cythonize(
         [
             Extension(
-                "a_sync", 
+                "a_sync",
                 sources=["a_sync/**/*.pyx"],
                 include_dirs=[pythoncapi_compat.get_include()],
             ),
