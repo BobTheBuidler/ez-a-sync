@@ -39,7 +39,7 @@ setup(
             Extension(
                 "a_sync",
                 sources=["a_sync/**/*.pyx"],
-                include_dirs=[pythoncapi_compat.get_include()],
+                include_dirs=["include"],
             ),
         ],
         compiler_directives={
