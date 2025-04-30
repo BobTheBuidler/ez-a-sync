@@ -38,7 +38,7 @@ setup(
         [
             Extension(
                 os.path.splitext(pyx_path)[0].replace(os.path.sep, "."),
-                sources=[path],
+                sources=[pyx_path],
                 include_dirs=["include"],
             )
             for pyx_path in glob("a_sync/**/*.pyx", recursive=True)
