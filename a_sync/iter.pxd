@@ -3,4 +3,4 @@ cdef class _ASyncGeneratorFunction:
     cdef readonly object __weakself__
     cdef inline void _set_cache_handle(self, object handle)
     cdef inline object _get_cache_handle(self, object instance)
-    cpdef void __cancel_cache_handle(self)
+    cdef void __cancel_cache_handle(self)
