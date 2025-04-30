@@ -10,7 +10,7 @@ from typing import AsyncIterator, Callable, NoReturn, TypeVar
 from typing_extensions import Concatenate, ParamSpec
 
 from a_sync.a_sync.base import ASyncGenericBase
-from a_sync.iter import ASyncGeneratorFunction
+from a_sync.iter cimport _ASyncGeneratorFunction
 
 
 __P = ParamSpec("__P")
@@ -35,7 +35,7 @@ cdef object logger = getLogger("a_sync.debugging")
 def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES):
     __logger_is_enabled_for = logger.isEnabledFor
 
-    if isasyncgenfunction(fn) or isinstance(fn, ASyncGeneratorFunction):
+    if isasyncgenfunction(fn) or isinstance(fn, _ASyncGeneratorFunction):
 
         @wraps(fn)
         async def stuck_async_gen_wrap(*args: __P.args, **kwargs: __P.kwargs) -> AsyncIterator[__T]:
