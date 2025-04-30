@@ -135,7 +135,7 @@ cdef class WeakSet:
 
     @cython.linetrace(False)
     def __iter__(self):
-        cdef PyObject *obj_ptr
+        cdef PyObject *obj_ptr = NULL
         for ref in self._refs.values():
             if PyWeakref_GetRef(<PyObject*>ref, obj_ptr) == 1:
                 yield <object>obj_ptr
