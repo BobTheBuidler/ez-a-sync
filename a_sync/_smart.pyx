@@ -23,6 +23,9 @@ cdef extern from "weakrefobject.h":
     PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
     PyObject* PyWeakref_NewProxy(PyObject*, PyObject*)
 
+cdef extern from "pythoncapi_compat.h":
+    int PyWeakref_GetRef(PyObject*, PyObject**)
+    
 # cdef asyncio
 cdef object ensure_future = asyncio.ensure_future
 cdef object get_event_loop = asyncio.get_event_loop
@@ -132,10 +135,10 @@ cdef class WeakSet:
 
     @cython.linetrace(False)
     def __iter__(self):
+        cdef PyObject *obj_ptr = NULL
         for ref in self._refs.values():
-            item = ref()
-            if item is not None:
-                yield item
+            if PyWeakref_GetRef(<PyObject*>ref, &obj_ptr) == 1:
+                yield <object>obj_ptr
 
     @cython.linetrace(False)
     cdef void _gc_callback(self, fut: Future):

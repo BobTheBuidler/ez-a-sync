@@ -1,6 +1,9 @@
+import os
+from glob import glob
 from pathlib import Path
 from Cython.Build import cythonize
-from setuptools import find_packages, setup
+from setuptools import Extension, find_packages, setup
+
 
 with open("requirements.txt", "r") as f:
     requirements = list(map(str.strip, f.read().split("\n")))[:-1]
@@ -32,7 +35,14 @@ setup(
     },
     include_package_data=True,
     ext_modules=cythonize(
-        "a_sync/**/*.pyx",
+        [
+            Extension(
+                os.path.splitext(pyx_path)[0].replace(os.path.sep, "."),
+                sources=[pyx_path],
+                include_dirs=["include"],
+            )
+            for pyx_path in glob("a_sync/**/*.pyx", recursive=True)
+        ],
         compiler_directives={
             "language_level": 3,
             "embedsignature": True,
