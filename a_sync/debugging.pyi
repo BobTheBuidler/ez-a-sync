@@ -1,5 +1,6 @@
 from logging import Logger
 from typing import (
+    Any,
     AsyncGenerator,
     AsyncIterator,
     Awaitable,
@@ -18,42 +19,44 @@ from a_sync.iter import ASyncGeneratorFunction
 
 __P = ParamSpec("__P")
 __T = TypeVar("__T")
-__B = TypeVar("__B", bound=ASyncGenericBase)
+__TYield = TypeVar("__TYield")
+__TReturn = TypeVar("__TReturn")
+__TBase = TypeVar("__TBase", bound=ASyncGenericBase)
 
 _FIVE_MINUTES: Literal[300] = 300
 
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__B, __P], AsyncGenerator[__T, None]],
+    fn: Callable[Concatenate[__TBase, __P], AsyncGenerator[__TYield, Any]],
     logger: Logger = logger,
     interval: int = _FIVE_MINUTES,
-) -> ASyncGeneratorFunction[__P, __T]: ...
+) -> ASyncGeneratorFunction[__P, __TYield]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__B, __P], AsyncIterator[__T]],
+    fn: Callable[Concatenate[__TBase, __P], AsyncIterator[__TYield]],
     logger: Logger = logger,
     interval: int = _FIVE_MINUTES,
-) -> ASyncGeneratorFunction[__P, __T]: ...
+) -> ASyncGeneratorFunction[__P, __TYield]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__B, __P], Awaitable[__T]],
+    fn: Callable[Concatenate[__TBase, __P], Awaitable[__T]],
     logger: Logger = logger,
     interval: int = _FIVE_MINUTES,
-) -> ASyncBoundMethod[__B, __P, __T]: ...
+) -> ASyncBoundMethod[__TBase, __P, __T]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__B, __P], __T], logger: Logger = logger, interval: int = _FIVE_MINUTES
-) -> ASyncBoundMethod[__B, __P, __T]: ...
+    fn: Callable[Concatenate[__TBase, __P], __T], logger: Logger = logger, interval: int = _FIVE_MINUTES
+) -> ASyncBoundMethod[__TBase, __P, __T]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[__P, AsyncGenerator[__T, None]],
+    fn: Callable[__P, AsyncGenerator[__TYield, __TReturn]],
     logger: Logger = logger,
     interval: int = _FIVE_MINUTES,
-) -> Callable[__P, AsyncIterator[__T]]: ...
+) -> Callable[__P, AsyncGenerator[__TYield, __TReturn]]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[__P, AsyncIterator[__T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
-) -> Callable[__P, AsyncIterator[__T]]: ...
+    fn: Callable[__P, AsyncIterator[__TYield]], logger: Logger = logger, interval: int = _FIVE_MINUTES
+) -> Callable[__P, AsyncIterator[__TYield]]: ...
 @overload
 def stuck_coro_debugger(
     fn: Callable[__P, Awaitable[__T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
