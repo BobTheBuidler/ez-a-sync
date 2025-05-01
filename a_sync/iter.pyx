@@ -320,7 +320,7 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
         # If this is the first time this instance has been used synchronously, we
         # cache `loop.run_until_complete` to use it more quickly for subsequent nexts
         cdef object run_loop = self._run_loop
-        if run_loop == NULL:
+        if run_loop is None:
             run_loop = self._run_loop = get_event_loop().run_until_complete
             
         try:
@@ -387,7 +387,7 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
         "The wrapped :class:`AsyncIterator`."
     
         self._anext = async_iterator.__anext__
-        self._run_loop = NULL
+        self._run_loop = None
 
     def __anext__(self) -> Coroutine[Any, Any, T]:
         """
