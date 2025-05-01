@@ -256,38 +256,6 @@ cdef class _ASyncFunction(_ModifiedMixin):
         - :class:`ModifierManager`
     """
 
-    @overload
-    def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
-        """
-        Initializes an ASyncFunction instance for a coroutine function.
-
-        Args:
-            fn: The coroutine function to wrap.
-            **modifiers: Keyword arguments for function modifiers.
-
-        Example:
-            async def my_coroutine(x: int) -> str:
-                return str(x)
-
-            func = ASyncFunction(my_coroutine, cache_type='memory')
-        """
-
-    @overload
-    def __init__(self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
-        """
-        Initializes an ASyncFunction instance for a synchronous function.
-
-        Args:
-            fn: The synchronous function to wrap.
-            **modifiers: Keyword arguments for function modifiers.
-
-        Example:
-            def my_function(x: int) -> str:
-                return str(x)
-
-            func = ASyncFunction(my_function, runs_per_minute=60)
-        """
-
     def __init__(
         self,
         fn: AnyFn[P, T],
@@ -317,81 +285,6 @@ cdef class _ASyncFunction(_ModifiedMixin):
 
         self.__wrapped__ = fn
         """The original function that was wrapped."""
-
-    @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
-        """
-        Calls the wrapped function synchronously.
-
-        Args:
-            *args: Positional arguments to pass to the wrapped function.
-            sync: Must be True to indicate synchronous execution.
-            **kwargs: Keyword arguments to pass to the wrapped function.
-
-        Example:
-            result = func(5, sync=True)
-        """
-
-    @overload
-    def __call__(
-        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]:
-        """
-        Calls the wrapped function asynchronously.
-
-        Args:
-            *args: Positional arguments to pass to the wrapped function.
-            sync: Must be False to indicate asynchronous execution.
-            **kwargs: Keyword arguments to pass to the wrapped function.
-
-        Example:
-            result = await func(5, sync=False)
-        """
-
-    @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T:
-        """
-        Calls the wrapped function synchronously.
-
-        Args:
-            *args: Positional arguments to pass to the wrapped function.
-            asynchronous: Must be False to indicate synchronous execution.
-            **kwargs: Keyword arguments to pass to the wrapped function.
-
-        Example:
-            result = func(5, asynchronous=False)
-        """
-
-    @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]:
-        """
-        Calls the wrapped function asynchronously.
-
-        Args:
-            *args: Positional arguments to pass to the wrapped function.
-            asynchronous: Must be True to indicate asynchronous execution.
-            **kwargs: Keyword arguments to pass to the wrapped function.
-
-        Example:
-            result = await func(5, asynchronous=True)
-        """
-
-    @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
-        """
-        Calls the wrapped function using the default execution mode.
-
-        Args:
-            *args: Positional arguments to pass to the wrapped function.
-            **kwargs: Keyword arguments to pass to the wrapped function.
-
-        Example:
-            result = func(5)
-        """
 
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """
@@ -941,6 +834,39 @@ cdef class _ASyncFunction(_ModifiedMixin):
 
 
 class ASyncFunction(_ASyncFunction, Generic[P, T]):
+
+    @overload
+    def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
+        """
+        Initializes an ASyncFunction instance for a coroutine function.
+
+        Args:
+            fn: The coroutine function to wrap.
+            **modifiers: Keyword arguments for function modifiers.
+
+        Example:
+            async def my_coroutine(x: int) -> str:
+                return str(x)
+
+            func = ASyncFunction(my_coroutine, cache_type='memory')
+        """
+
+    @overload
+    def __init__(self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
+        """
+        Initializes an ASyncFunction instance for a synchronous function.
+
+        Args:
+            fn: The synchronous function to wrap.
+            **modifiers: Keyword arguments for function modifiers.
+
+        Example:
+            def my_function(x: int) -> str:
+                return str(x)
+
+            func = ASyncFunction(my_function, runs_per_minute=60)
+        """
+    
     def __init__(
         self,
         fn: AnyFn[P, T],
@@ -957,6 +883,81 @@ class ASyncFunction(_ASyncFunction, Generic[P, T]):
             )
     
     __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunction`, you can optionally pass either a `sync` or `asynchronous` kwarg with a boolean value."
+
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
+        """
+        Calls the wrapped function synchronously.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            sync: Must be True to indicate synchronous execution.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = func(5, sync=True)
+        """
+
+    @overload
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
+        """
+        Calls the wrapped function asynchronously.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            sync: Must be False to indicate asynchronous execution.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = await func(5, sync=False)
+        """
+
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T:
+        """
+        Calls the wrapped function synchronously.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            asynchronous: Must be False to indicate synchronous execution.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = func(5, asynchronous=False)
+        """
+
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
+        """
+        Calls the wrapped function asynchronously.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            asynchronous: Must be True to indicate asynchronous execution.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = await func(5, asynchronous=True)
+        """
+
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+        """
+        Calls the wrapped function using the default execution mode.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = func(5)
+        """
 
 
 if sys.version_info < (3, 10):
