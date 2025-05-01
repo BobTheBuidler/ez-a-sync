@@ -10,4 +10,7 @@ cdef class _ModifiedMixin:
     cdef str get_default(self)
     cdef object get_await(self)
 
+cdef class _ASyncFunction(_ModifiedMixin):
+    cdef readonly object _fn
+
 cdef void _validate_wrapped_fn(object fn)
