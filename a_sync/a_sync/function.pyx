@@ -287,8 +287,6 @@ cdef class _ASyncFunction(_ModifiedMixin):
 
             func = ASyncFunction(my_function, runs_per_minute=60)
         """
-    
-    cdef readonly object _fn
 
     def __init__(
         self,
