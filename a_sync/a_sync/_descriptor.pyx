@@ -16,9 +16,9 @@ See Also:
 import asyncio
 
 from a_sync._typing import *
-from a_sync.a_sync import decorator, function
-#from a_sync.a_sync.function import ASyncFunction
-from a_sync.a_sync.function cimport _ModifiedMixin, _validate_wrapped_fn
+from a_sync.a_sync import decorator
+from a_sync.a_sync.function import ASyncFunction
+from a_sync.a_sync.function cimport _ASyncFunction, _ModifiedMixin, _validate_wrapped_fn
 from a_sync.a_sync.modifiers.manager cimport ModifierManager
 from a_sync.functools cimport cached_property_unsafe, update_wrapper
 
@@ -35,10 +35,9 @@ cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 del asyncio
 
 cdef object a_sync = decorator.a_sync
-cdef object ASyncFunction = function.ASyncFunction
 
 
-class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
+cdef class _ASyncDescriptor(_ModifiedMixin):
     """
     A descriptor base class for dual-function ASync methods and properties.
 
@@ -66,11 +65,11 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         - :class:`~a_sync.a_sync.function.ASyncFunction`
         - :class:`~a_sync.a_sync.method.ASyncMethodDescriptor`
     """
-
-    __slots__ = "field_name", "_fget"
+    cdef readonly str field_name
+    cdef readonly object _fget
 
     def __init__(
-        _ModifiedMixin self,
+        self,
         _fget: AnyFn[Concatenate[I, P], T],
         field_name: Optional[str] = None,
         **modifiers: ModifierKwargs,
@@ -89,12 +88,13 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         if not callable(_fget):
             raise ValueError(f"Unable to decorate {_fget}")
         self.modifiers = ModifierManager(modifiers)
-        if isinstance(_fget, <object>ASyncFunction):
+        if isinstance(_fget, _ASyncFunction):
             self.modifiers._modifiers.update((<_ModifiedMixin>_fget).modifiers._modifiers)
+            
             self.__wrapped__ = _fget
         elif iscoroutinefunction(_fget):
             _validate_wrapped_fn(_fget)
-            self.__wrapped__: AsyncUnboundMethod[I, P, T] = self.modifiers.apply_async_modifiers(
+            self.__wrapped__ = self.modifiers.apply_async_modifiers(
                 _fget
             )
         else:
@@ -104,9 +104,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
         self.field_name = field_name or _fget.__name__
         """The name of the field the :class:`ASyncDescriptor` is bound to."""
 
-        update_wrapper(self, self.__wrapped__)
-
-    def __repr__(_ModifiedMixin self) -> str:
+    def __repr__(self) -> str:
         return f"<{self.__class__.__name__} for {self.__wrapped__}>"
 
     def __set_name__(self, owner, name):
@@ -162,7 +160,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = await instance.my_method.all([1, 2, 3])
         """
-        return a_sync(default=_ModifiedMixin.get_default(self))(self._all)
+        return a_sync(default=self.get_default())(self._all)
 
     @cached_property_unsafe
     def any(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], bool]":
@@ -181,7 +179,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = await instance.my_method.any([-1, 0, 1])
         """
-        return a_sync(default=_ModifiedMixin.get_default(self))(self._any)
+        return a_sync(default=self.get_default())(self._any)
 
     @cached_property_unsafe
     def min(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
@@ -202,7 +200,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method.min([3, 1, 2])
             ```
         """
-        return a_sync(default=_ModifiedMixin.get_default(self))(self._min)
+        return a_sync(default=self.get_default())(self._min)
 
     @cached_property_unsafe
     def max(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
@@ -221,7 +219,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             instance = MyClass()
             result = await instance.my_method.max([3, 1, 2])
         """
-        return a_sync(default=_ModifiedMixin.get_default(self))(self._max)
+        return a_sync(default=self.get_default())(self._max)
 
     @cached_property_unsafe
     def sum(self) -> "ASyncFunction[Concatenate[AnyIterable[I], P], T]":
@@ -242,7 +240,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             result = await instance.my_method.sum([1, 2, 3])
             ```
         """
-        return a_sync(default=_ModifiedMixin.get_default(self))(self._sum)
+        return a_sync(default=self.get_default())(self._sum)
 
     async def _all(
         self,
@@ -399,6 +397,19 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
             pop=True, sync=False
         )
 
+
+# these resolve a conflict between cdef class and @cached_property
+_ASyncDescriptor.any.__set_name__(_ASyncDescriptor, "any")
+_ASyncDescriptor.all.__set_name__(_ASyncDescriptor, "all")
+_ASyncDescriptor.min.__set_name__(_ASyncDescriptor, "min")
+_ASyncDescriptor.max.__set_name__(_ASyncDescriptor, "max")
+_ASyncDescriptor.sum.__set_name__(_ASyncDescriptor, "sum")
+
+
+class ASyncDescriptor(_ASyncDescriptor, Generic[I, P, T]):
+    def __init__(self, _fget: AnyFn[Concatenate[I, P], T], field_name: Optional[str] = None, **modifiers: ModifierKwargs) -> None:
+        super().__init__(_fget, field_name, **modifiers)
+        update_wrapper(self, self.__wrapped__)
     def __init_subclass__(cls) -> None:
         for attr in cls.__dict__.values():
             if attr.__doc__ and "{cls}" in attr.__doc__:
