@@ -11,5 +11,5 @@ cache/**/*.json
 cache/**/*.pkl
 mypy_plugin_tests/mypy
 mypy_plugin_tests/venv
-*.c
+#*.c
 *.so

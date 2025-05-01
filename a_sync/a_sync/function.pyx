@@ -223,7 +223,7 @@ cdef inline bint _run_sync(object function, dict kwargs):
         # No flag specified in the kwargs, we will defer to 'default'.
         return function._sync_default
     
-class ASyncFunction(_ModifiedMixin, Generic[P, T]):
+cdef class _ASyncFunction(_ModifiedMixin):
     """
     A callable wrapper object that can be executed both synchronously and asynchronously.
 
@@ -256,10 +256,6 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         - :class:`ModifierManager`
     """
 
-    _fn = None
-
-    # NOTE: We can't use __slots__ here because it breaks functools.update_wrapper
-
     @overload
     def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
         """
@@ -291,9 +287,11 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
             func = ASyncFunction(my_function, runs_per_minute=60)
         """
+    
+    cdef readonly object _fn
 
     def __init__(
-        _ModifiedMixin self,
+        self,
         fn: AnyFn[P, T],
         _skip_validate: bint = False,
         **modifiers: Unpack[ModifierKwargs],
@@ -316,16 +314,11 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         self.modifiers = ModifierManager(modifiers)
         """A :class:`~ModifierManager` instance managing function modifiers."""
 
+        self._fn = None
+        """The wrapped callable that will be called. This will be populated the first time it is needed."""
+
         self.__wrapped__ = fn
         """The original function that was wrapped."""
-
-        update_wrapper(self, fn)
-        if self.__doc__ is None:
-            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
-        else:
-            self.__doc__ += (
-                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
-            )
 
     @overload
     def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
@@ -830,7 +823,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         See Also:
             - :attr:`default`
         """
-        cdef str default = _ModifiedMixin.get_default(self)
+        cdef str default = self.get_default()
         return (
             True
             if default == "sync"
@@ -868,7 +861,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
             raise TypeError(
                 f"Can only be applied to sync functions, not {self.__wrapped__}"
             )
-        return _ModifiedMixin._asyncify(self, self._modified_fn)  # type: ignore [arg-type]
+        return self._asyncify(self._modified_fn)  # type: ignore [arg-type]
 
     @cached_property
     def _modified_fn(self) -> AnyFn[P, T]:
@@ -905,7 +898,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
         """
 
         modified_fn = self._modified_fn
-        await_helper = _ModifiedMixin.get_await(self)
+        await_helper = self.get_await()
 
         @wraps(modified_fn)
         def async_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
@@ -948,6 +941,23 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
 
         return sync_wrap
 
+
+class ASyncFunction(_ASyncFunction, Generic[P, T]):
+    def __init__(
+        self,
+        fn: AnyFn[P, T],
+        _skip_validate: bint = False,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
+        _ASyncFunction.__init__(self, fn, _skip_validate=_skip_validate, **modifiers)
+        update_wrapper(self, fn)
+        if self.__doc__ is None:
+            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
+        else:
+            self.__doc__ += (
+                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
+            )
+    
     __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunction`, you can optionally pass either a `sync` or `asynchronous` kwarg with a boolean value."
 
 
