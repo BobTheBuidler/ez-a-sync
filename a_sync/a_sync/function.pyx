@@ -1,5 +1,4 @@
 import asyncio
-import functools
 import inspect
 import sys
 import typing
@@ -15,7 +14,7 @@ from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 from a_sync.a_sync.modifiers cimport ModifierManager
-from a_sync.functools cimport cached_property_unsafe, update_wrapper, wraps
+from a_sync.functools cimport update_wrapper, wraps
 
 if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
@@ -36,10 +35,6 @@ ctypedef object object_id
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 del asyncio
-
-# cdef functools
-cdef object cached_property = functools.cached_property
-del functools
 
 # cdef inspect
 cdef object getargspec
@@ -285,6 +280,9 @@ cdef class _ASyncFunction(_ModifiedMixin):
 
         self.__wrapped__ = fn
         """The original function that was wrapped."""
+
+        self.__sync_default_cached = False
+        self.__async_def_cached = False
 
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """
@@ -700,7 +698,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
                 **function_kwargs,
             ).sum(pop=True, sync=False)
 
-    @cached_property_unsafe
+    @property
     def _sync_default(self) -> bint:
         """
         Determines the default execution mode (sync or async) for the function.
@@ -714,14 +712,20 @@ cdef class _ASyncFunction(_ModifiedMixin):
         See Also:
             - :attr:`default`
         """
+        if self.__sync_default_cached:
+            return self.__sync_default
+
         cdef str default = self.get_default()
-        return (
+        cdef bint sync_default = (
             True
             if default == "sync"
             else False if default == "async" else not self._async_def
         )
+        self.__sync_default = sync_default
+        self.__sync_default_cached = True
+        return sync_default
 
-    @cached_property_unsafe
+    @property
     def _async_def(self) -> bint:
         """
         Checks if the wrapped function is an asynchronous function.
@@ -732,9 +736,14 @@ cdef class _ASyncFunction(_ModifiedMixin):
         See Also:
             - :func:`asyncio.iscoroutinefunction`
         """
-        return iscoroutinefunction(self.__wrapped__)
+        if self.__async_def_cached:
+            return self.__async_def
+        cdef bint async_def
+        async_def = self.__async_def = iscoroutinefunction(self.__wrapped__)
+        self.__async_def_cached = True
+        return async_def
 
-    @cached_property_unsafe
+    @property
     def _asyncified(self) -> CoroFn[P, T]:
         """
         Converts the wrapped function to an asynchronous function and applies both sync and async modifiers.
@@ -748,13 +757,17 @@ cdef class _ASyncFunction(_ModifiedMixin):
         See Also:
             - :meth:`_asyncify`
         """
-        if self._async_def:
-            raise TypeError(
-                f"Can only be applied to sync functions, not {self.__wrapped__}"
-            )
-        return self._asyncify(self._modified_fn)  # type: ignore [arg-type]
+        asyncified = self.__asyncified
+        if asyncified is None:
+            if self._async_def:
+                raise TypeError(
+                    f"Can only be applied to sync functions, not {self.__wrapped__}"
+                )
+            
+            asyncified = self.__asyncified = self._asyncify(self._modified_fn)
+        return asyncified
 
-    @cached_property
+    @property
     def _modified_fn(self) -> AnyFn[P, T]:
         """
         Applies modifiers to the wrapped function.
@@ -769,11 +782,15 @@ cdef class _ASyncFunction(_ModifiedMixin):
             - :meth:`ModifierManager.apply_async_modifiers`
             - :meth:`ModifierManager.apply_sync_modifiers`
         """
-        if self._async_def:
-            return self.modifiers.apply_async_modifiers(self.__wrapped__)  # type: ignore [arg-type]
-        return self.modifiers.apply_sync_modifiers(self.__wrapped__)  # type: ignore [return-value]
+        modified_fn = self.__modified_fn
+        if modified_fn is None:
+            if self._async_def:
+                modified_fn = self.__modified_fn = self.modifiers.apply_async_modifiers(self.__wrapped__)
+            else:
+                modified_fn = self.__modified_fn = self.modifiers.apply_sync_modifiers(self.__wrapped__)
+        return modified_fn
 
-    @cached_property
+    @property
     def _async_wrap(self):  # -> SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]]:
         """
         The final wrapper if the wrapped function is an asynchronous function.
@@ -787,26 +804,30 @@ cdef class _ASyncFunction(_ModifiedMixin):
             - :meth:`_run_sync`
             - :meth:`_await`
         """
+        async_wrap = self.__async_wrap
+        if async_wrap is None:
 
-        modified_fn = self._modified_fn
-        await_helper = self.get_await()
+            modified_fn = self._modified_fn
+            await_helper = self.get_await()
 
-        @wraps(modified_fn)
-        def async_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
-            # sourcery skip: assign-if-exp
-            # we dont want this so profiler outputs are more useful
+            @wraps(modified_fn)
+            def async_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
+                # sourcery skip: assign-if-exp
+                # we dont want this so profiler outputs are more useful
 
-            # Must take place before coro is created, we're popping a kwarg.
-            should_await = _run_sync(self, kwargs)
-            coro = modified_fn(*args, **kwargs)
-            if should_await:
-                return await_helper(coro)
-            else:
-                return coro
+                # Must take place before coro is created, we're popping a kwarg.
+                should_await = _run_sync(self, kwargs)
+                coro = modified_fn(*args, **kwargs)
+                if should_await:
+                    return await_helper(coro)
+                else:
+                    return coro
+        
+            self.__async_wrap = async_wrap
 
         return async_wrap
 
-    @cached_property
+    @property
     def _sync_wrap(self):  # -> SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]:
         """
         The final wrapper if the wrapped function is a synchronous function.
@@ -820,26 +841,21 @@ cdef class _ASyncFunction(_ModifiedMixin):
             - :meth:`_run_sync`
             - :meth:`_asyncified`
         """
+        sync_wrap = self.__sync_wrap
+        if sync_wrap is None:
 
-        modified_fn = self._modified_fn
-        asyncified = self._asyncified
+            modified_fn = self._modified_fn
+            asyncified = self._asyncified
 
-        @wraps(modified_fn)
-        def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
-            if _run_sync(self, kwargs):
-                return modified_fn(*args, **kwargs)
-            return asyncified(*args, **kwargs)
+            @wraps(modified_fn)
+            def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
+                if _run_sync(self, kwargs):
+                    return modified_fn(*args, **kwargs)
+                return asyncified(*args, **kwargs)
+            
+            self.__sync_wrap = sync_wrap
 
         return sync_wrap
-
-
-# resolves a conflict between cdef class and @cached_property
-_ASyncFunction._sync_default.__set_name__(_ASyncFunction, "_sync_default")
-_ASyncFunction._async_def.__set_name__(_ASyncFunction, "_async_def")
-_ASyncFunction._asyncified.__set_name__(_ASyncFunction, "_asyncified")
-_ASyncFunction._modified_fn.__set_name__(_ASyncFunction, "_modified_fn")
-_ASyncFunction._async_wrap.__set_name__(_ASyncFunction, "_async_wrap")
-_ASyncFunction._sync_wrap.__set_name__(_ASyncFunction, "_sync_wrap")
 
 
 class ASyncFunction(_ASyncFunction, Generic[P, T]):
