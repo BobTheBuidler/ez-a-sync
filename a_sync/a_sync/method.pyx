@@ -28,6 +28,9 @@ from a_sync.functools cimport update_wrapper
 cdef extern from "weakrefobject.h":
     PyObject* PyWeakref_NewRef(PyObject*, PyObject*)
 
+cdef extern from "pythoncapi_compat.h":
+    int PyWeakref_GetRef(PyObject*, PyObject**)
+
 if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
     from a_sync.a_sync.abstract import ASyncABC
@@ -695,9 +698,10 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method.__self__
             <MyClass instance>
         """
-        strong_instance = self.__weakself__()
-        if strong_instance is not None:
-            return strong_instance
+        cdef PyObject *self_ptr
+        if PyWeakref_GetRef(<PyObject*>self.__weakself__, &self_ptr) == 1:
+            # 1 is success
+            return <object>self_ptr
         raise ReferenceError(self)
 
     def map(
