@@ -371,8 +371,6 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
             "`wrapped` must be an AsyncIterator or an async generator function. "
             "You passed {} of type {}".format(wrapped, type(wrapped))
         )
-
-    def __cinit__(self) -> None:
     
     def __init__(self, async_iterator: AsyncIterator[T]) -> None:
         """
