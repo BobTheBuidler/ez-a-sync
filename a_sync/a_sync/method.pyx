@@ -22,7 +22,7 @@ from a_sync._typing import AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs, P, 
 from a_sync.a_sync import _descriptor, function
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync._helpers cimport _await
-from a_sync.a_sync.function cimport _ModifiedMixin
+from a_sync.a_sync.function cimport _ASyncFunction, _ModifiedMixin
 from a_sync.functools cimport update_wrapper
 
 cdef extern from "weakrefobject.h":
@@ -66,11 +66,8 @@ cdef object Unpack = typing_extensions.Unpack
 
 # cdef a_sync
 cdef object ASyncDescriptor = _descriptor.ASyncDescriptor
-cdef object ASyncFunction = function.ASyncFunction
 cdef object ASyncFunctionAsyncDefault = function.ASyncFunctionAsyncDefault
 cdef object ASyncFunctionSyncDefault = function.ASyncFunctionSyncDefault
-cdef object init_a_sync_function = ASyncFunction.__init__
-cdef object call_a_sync_function = ASyncFunction.__call__
 
 
 cdef public double METHOD_CACHE_TTL = 3600
@@ -494,7 +491,7 @@ cdef bint _is_a_sync_instance(object instance):
     return is_a_sync
 
 
-cdef bint _should_await(object self, dict kwargs):
+cdef bint _should_await(_ASyncFunction self, dict kwargs):
     """
     Determine if the method should be awaited.
 
@@ -508,7 +505,7 @@ cdef bint _should_await(object self, dict kwargs):
     cdef str flag = get_flag_name(kwargs)
     if flag:
         return is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
-    elif default := _ModifiedMixin.get_default(self):
+    elif default := self.get_default():
         return default == "sync"
     elif _is_a_sync_instance(self.__self__):
         self.__self__: "ASyncABC"
@@ -516,7 +513,7 @@ cdef bint _should_await(object self, dict kwargs):
     return self._is_async_def
 
 
-class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
+class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
     """
     A bound method that can be called both synchronously and asynchronously.
 
@@ -559,7 +556,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     __slots__ = "_is_async_def", "__weakself__"
 
     def __init__(
-        _ModifiedMixin self,
+        _ASyncFunction self,
         instance: I,
         unbound: AnyFn[Concatenate[I, P], T],
         async_def: bool,
@@ -594,11 +591,11 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
         self.__weakself__ = <object>PyWeakref_NewRef(<PyObject*>instance, <PyObject*>weakref_callback)
         
         # Then we unwrap the coro_fn and rewrap it so overriding flag kwargs are handled automagically.
-        if isinstance(unbound, ASyncFunction):
-            (<dict>modifiers).update((<_ModifiedMixin>unbound).modifiers._modifiers)
-            unbound = unbound.__wrapped__
+        if isinstance(unbound, _ASyncFunction):
+            (<dict>modifiers).update((<_ASyncFunction>unbound).modifiers._modifiers)
+            unbound = (<_ASyncFunction>unbound).__wrapped__
         # NOTE: the wrapped function was validated when the descriptor was initialized
-        init_a_sync_function(self, unbound, _skip_validate=True, **<dict>modifiers)
+        _ASyncFunction.__init__(self, unbound, _skip_validate=True, **<dict>modifiers)
         self._is_async_def = async_def
         """True if `self.__wrapped__` is a coroutine function, False otherwise."""
         update_wrapper(self, unbound)
@@ -667,7 +664,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
             _logger_log(DEBUG, "calling %s with args: %s kwargs: %s", (self, args, kwargs))
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
-        retval = coro = call_a_sync_function(self, self.__self__, *args, **kwargs)
+        retval = coro = _ASyncFunction.__call__(self, self.__self__, *args, **kwargs)
         if not isawaitable(retval):
             # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
