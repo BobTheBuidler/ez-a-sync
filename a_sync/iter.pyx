@@ -316,10 +316,11 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
             SyncModeInAsyncContextError: If the event loop is already running.
 
         """
+        cdef tuple retval
         try:
             return get_event_loop().run_until_complete(self._anext())
         except StopAsyncIteration as e:
-            raise StopIteration from e
+            raise StopIteration(e.value) from e.__cause__
         except RuntimeError as e:
             if str(e) == "This event loop is already running":
                 raise SyncModeInAsyncContextError(
