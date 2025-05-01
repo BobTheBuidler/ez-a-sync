@@ -11,6 +11,7 @@ cimport cython
 
 from a_sync import exceptions
 from a_sync._typing import P, T
+from a_sync.a_sync.function cimport _ASyncFunction
 from a_sync.executor import _AsyncExecutorMixin
 from a_sync.functools cimport wraps
 
@@ -29,10 +30,6 @@ del asyncio, aiofutures
 cdef object FunctionNotSync = exceptions.FunctionNotSync
 cdef object SyncModeInAsyncContextError = exceptions.SyncModeInAsyncContextError
 del exceptions
-
-
-# NOTE: we will import this later using the `__import_ASyncFunction` helper
-cdef object ASyncFunction = None
 
 
 @cython.profile(False)
@@ -115,10 +112,7 @@ cdef object _asyncify(object func, executor: Executor):  # type: ignore [misc]
         - :class:`concurrent.futures.Executor`: For managing pools of threads or processes.
         - :func:`asyncio.to_thread`: For running blocking code in a separate thread.
     """
-    if ASyncFunction is None:
-        __import_ASyncFunction()
-
-    if iscoroutinefunction(func) or isinstance(func, ASyncFunction):
+    if iscoroutinefunction(func) or isinstance(func, _ASyncFunction):
         raise FunctionNotSync(func)
     
     if isinstance(executor, _AsyncExecutorMixin):
@@ -171,9 +165,3 @@ cdef object _asyncify_with_cf_executor(object func, executor: Executor):
             return await fut
 
     return _asyncify_wrap
-
-
-cdef inline void __import_ASyncFunction():
-    """This helper func prevents repeated imports due to a circular import"""
-    global ASyncFunction
-    from a_sync.a_sync.function import ASyncFunction
