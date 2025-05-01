@@ -833,6 +833,15 @@ cdef class _ASyncFunction(_ModifiedMixin):
         return sync_wrap
 
 
+# resolves a conflict between cdef class and @cached_property
+_ASyncFunction._sync_default.__set_name__(_ASyncFunction, "_sync_default")
+_ASyncFunction._async_def.__set_name__(_ASyncFunction, "_async_def")
+_ASyncFunction._asyncified.__set_name__(_ASyncFunction, "_asyncified")
+_ASyncFunction._modified_fn.__set_name__(_ASyncFunction, "_modified_fn")
+_ASyncFunction._async_wrap.__set_name__(_ASyncFunction, "_async_wrap")
+_ASyncFunction._sync_wrap.__set_name__(_ASyncFunction, "_sync_wrap")
+
+
 class ASyncFunction(_ASyncFunction, Generic[P, T]):
 
     @overload
