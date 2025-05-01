@@ -298,6 +298,7 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
         - :class:`ASyncSorter`
     """
     cdef readonly object _anext
+    cdef object _loop
 
     def __next__(self) -> T:
         """
@@ -316,8 +317,14 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
             SyncModeInAsyncContextError: If the event loop is already running.
 
         """
+        # If this is the first time this instance has been used synchronously, we
+        # cache `loop.run_until_complete` to use it more quickly for subsequent nexts
+        cdef object run_loop = self._run_loop
+        if run_loop == NULL:
+            run_loop = self._run_loop = get_event_loop().run_until_complete
+            
         try:
-            return get_event_loop().run_until_complete(self._anext())
+            return run_loop(self._anext())
         except StopAsyncIteration as e:
             raise StopIteration from e
         except RuntimeError as e:
@@ -365,6 +372,8 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
             "You passed {} of type {}".format(wrapped, type(wrapped))
         )
 
+    def __cinit__(self) -> None:
+    
     def __init__(self, async_iterator: AsyncIterator[T]) -> None:
         """
         Initializes the ASyncIterator with an async iterator.
@@ -380,6 +389,7 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
         "The wrapped :class:`AsyncIterator`."
     
         self._anext = async_iterator.__anext__
+        self._run_loop = NULL
 
     def __anext__(self) -> Coroutine[Any, Any, T]:
         """
