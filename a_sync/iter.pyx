@@ -9,7 +9,7 @@ import weakref
 from functools import lru_cache
 from logging import getLogger
 
-from cpython.object cimport PyObject_GetIter
+from cpython.object cimport PyObject, PyObject_GetIter
 from cython cimport final
 from typing_extensions import Self
 
@@ -20,6 +20,9 @@ from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
 from a_sync.asyncio cimport cigather, ccreate_task_simple
 from a_sync.exceptions import SyncModeInAsyncContextError
 from a_sync.functools cimport update_wrapper
+
+cdef extern from "pythoncapi_compat.h":
+    int PyWeakref_GetRef(PyObject*, PyObject**)
 
 
 # cdef asyncio
@@ -478,9 +481,12 @@ cdef class _ASyncGeneratorFunction:
         
         if instance is None:
             self.__weakself__ = None
+            self.__weakself_ptr = NULL
             self._cache_handle = None
         else:
-            self.__weakself__ = ref(instance, _ASyncGeneratorFunction.__cancel_cache_handle)
+            weakself = ref(instance, _ASyncGeneratorFunction.__cancel_cache_handle)
+            self.__weakself__ = weakself
+            self.__weakself_ptr = <PyObject*>weakself
             self._cache_handle = self._get_cache_handle(instance)
     
     def __repr__(self) -> str:
@@ -522,14 +528,15 @@ cdef class _ASyncGeneratorFunction:
     
     @property
     def __self__(self) -> object:
-        cdef object instance
-        try:
-            instance = self.__weakself__()
-        except TypeError:
-            raise AttributeError("{} has no attribute '__self__'".format(self)) from None
-        if instance is None:
-            raise ReferenceError(self)
-        return instance
+        cdef PyObject *weakself_ptr = self.__weakself_ptr
+        cdef PyObject *instance_ptr
+
+        if weakself_ptr is NULL:
+            raise AttributeError("{} has no attribute '__self__'".format(self))
+        elif PyWeakref_GetRef(weakself_ptr, &instance_ptr) == 1:
+            # 1 is success
+            return <object>instance_ptr
+        raise ReferenceError(self)
 
     cdef inline void _set_cache_handle(self, object handle):
         self.__cancel_cache_handle()
