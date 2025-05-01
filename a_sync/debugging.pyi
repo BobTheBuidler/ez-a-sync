@@ -45,7 +45,9 @@ def stuck_coro_debugger(
 ) -> ASyncBoundMethod[__TBase, __P, __T]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__TBase, __P], __T], logger: Logger = logger, interval: int = _FIVE_MINUTES
+    fn: Callable[Concatenate[__TBase, __P], __T],
+    logger: Logger = logger,
+    interval: int = _FIVE_MINUTES,
 ) -> ASyncBoundMethod[__TBase, __P, __T]: ...
 @overload
 def stuck_coro_debugger(
@@ -55,7 +57,9 @@ def stuck_coro_debugger(
 ) -> Callable[__P, AsyncGenerator[__TYield, __TReturn]]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[__P, AsyncIterator[__TYield]], logger: Logger = logger, interval: int = _FIVE_MINUTES
+    fn: Callable[__P, AsyncIterator[__TYield]],
+    logger: Logger = logger,
+    interval: int = _FIVE_MINUTES,
 ) -> Callable[__P, AsyncIterator[__TYield]]: ...
 @overload
 def stuck_coro_debugger(
