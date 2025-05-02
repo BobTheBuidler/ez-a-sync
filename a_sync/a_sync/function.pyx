@@ -186,7 +186,16 @@ cdef inline void _validate_argspec(fn: Callable):
         fn_code = fn.__code__  # May fail for built-ins or special callables
         fn_args = fn_code.co_varnames[:fn_code.co_argcount]
     except:
-        fn_args = getargspec(fn)[0]
+        try:
+            argspec = getargspec(fn)
+        except TypeError:
+            warn = logger.warning
+            warn("inspect.{getargspec.__name__} does not support {fn}")
+            warn("we will allow you to proceed but cannot guarantee things will work")
+            warn("hopefully you know what you're doing...")
+            return
+        else:
+            fn_args = argspec[0]
     
     for flag in fn_args:
         if flag in VIABLE_FLAGS:
