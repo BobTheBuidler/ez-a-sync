@@ -190,7 +190,7 @@ cdef inline void _validate_argspec(fn: Callable):
             argspec = getargspec(fn)
         except TypeError:
             warn = logger.warning
-            warn("inspect.{getargspec.__name__} does not support {fn}")
+            warn(f"inspect.{getargspec.__name__} does not support {fn}")
             warn("we will allow you to proceed but cannot guarantee things will work")
             warn("hopefully you know what you're doing...")
             return
