@@ -124,54 +124,54 @@ cdef class _AsyncCachedPropertyDescriptor:
         del self.get_instance_state(instance).cache[self.field_name]
 
     cpdef object get_loader(self, object instance):
-        cdef str field_name
-
-        loader = self._load_value
+        cdef object loader = self._load_value
         if loader is None:
-
-            field_name = self.field_name
-            _fget = self._fget
-            get_instance_state = self.get_instance_state
-
-            if self._fset is None:
-                @wraps(_fget)
-                async def loader(instance):
-                    cdef AsyncCachedPropertyInstanceState instance_state
-                    cdef dict[str, object] cache
-
-                    instance_state = get_instance_state(instance)
-                    locks: defaultdict = instance_state.locks
-                    async with locks[field_name]:
-                        cache = instance_state.cache
-                        if field_name in cache:
-                            return cache[field_name]
-                        value = await _fget(instance)
-                        cache[field_name] = value
-                        dict.pop(locks, field_name)
-                        return value
-            else:
-                _fset = self._fset
-
-                @wraps(_fget)
-                async def loader(instance):
-                    cdef AsyncCachedPropertyInstanceState instance_state
-                    cdef dict[str, object] cache
-
-                    instance_state = get_instance_state(instance)
-                    cache = instance_state.cache
-                    locks: defaultdict = instance_state.locks
-                    async with locks[field_name]:
-                        if field_name in cache:
-                            return cache[field_name]
-                        value = await _fget(instance)
-                        _fset(instance, value)
-                        cache[field_name] = value
-                        dict.pop(locks, field_name)
-                        return value
-
-            self._load_value = loader
-
+            loader = self._load_value = self._make_loader(instance)
         return lambda: shield(loader(instance))
+
+    cdef object _make_loader(self, object instance):
+        cdef str field_name = self.field_name
+        cdef object _fget = self._fget
+
+        if self._fset is None:
+            @wraps(_fget)
+            async def loader(instance):
+                cdef AsyncCachedPropertyInstanceState instance_state
+                cdef dict[str, object] cache
+
+                instance_state = self.get_instance_state(instance)
+                locks: defaultdict = instance_state.locks
+                async with locks[field_name]:
+                    cache = instance_state.cache
+                    if field_name in cache:
+                        return cache[field_name]
+                    value = await _fget(instance)
+                    cache[field_name] = value
+                    dict.pop(locks, field_name)
+                    return value
+                
+        else:
+            
+            _fset = self._fset
+
+            @wraps(_fget)
+            async def loader(instance):
+                cdef AsyncCachedPropertyInstanceState instance_state
+                cdef dict[str, object] cache
+
+                instance_state = self.get_instance_state(instance)
+                cache = instance_state.cache
+                locks: defaultdict = instance_state.locks
+                async with locks[field_name]:
+                    if field_name in cache:
+                        return cache[field_name]
+                    value = await _fget(instance)
+                    _fset(instance, value)
+                    cache[field_name] = value
+                    dict.pop(locks, field_name)
+                    return value
+        
+        return loader
 
 
     cdef void _check_method_name(self, object method, str method_type):
