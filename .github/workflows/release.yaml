@@ -90,7 +90,7 @@ jobs:
       - name: Publish sdist and wheels to PyPI
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
           twine upload \
             dist/* \
