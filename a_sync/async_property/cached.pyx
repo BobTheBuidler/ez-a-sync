@@ -48,18 +48,25 @@ cdef class AsyncCachedPropertyInstanceState:
         return self.cache[field_name]
 
 
-class AsyncCachedPropertyDescriptor:
-    _load_value = None
-
-    def __init__(self, _fget, _fset=None, _fdel=None, field_name=None) -> None:
+cdef class _AsyncCachedPropertyDescriptor:
+    cdef readonly str field_name
+    cdef readonly object _fget
+    cdef readonly object _fset
+    cdef readonly object _fdel
+    cdef readonly object _load_value
+    
+    def __init__(self, _fget, _fset, _fdel, field_name) -> None:
         self._fget = _fget
-        self._fset = _fset
-        self._fdel = _fdel
         self.field_name = field_name or _fget.__name__
-
-        update_wrapper(self, _fget)
+        
         self._check_method_sync(_fset, "setter")
+        self._fset = _fset
+        
         self._check_method_sync(_fdel, "deleter")
+        self._fdel = _fdel
+
+        # this will be set later
+        self._load_value = None
 
     def __set_name__(self, owner, name):
         self.field_name = name
@@ -67,7 +74,7 @@ class AsyncCachedPropertyDescriptor:
     def __get__(self, instance, owner):
         if instance is None:
             return self
-        cache = (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
+        cache = self.get_instance_state(instance).cache
         if self.field_name in cache:
             return _AwaitableProxy(cache[self.field_name])
         return AwaitableOnly(self.get_loader(instance))
@@ -90,15 +97,7 @@ class AsyncCachedPropertyDescriptor:
         self._check_method_name(method, "deleter")
         return type(self)(self._fget, self._fset, method, self.field_name)
 
-    def _check_method_name(self, method, method_type):
-        if method.__name__ != self.field_name:
-            raise AssertionError(f"@{self.field_name}.{method_type} name must match property name")
-
-    def _check_method_sync(self, method, method_type):
-        if method and iscoroutinefunction(method):
-            raise AssertionError(f"@{self.field_name}.{method_type} must be synchronous")
-
-    def get_instance_state(self, instance):
+    cpdef AsyncCachedPropertyInstanceState get_instance_state(self, object instance):
         try:
             return instance.__async_property__
         except AttributeError:
@@ -106,25 +105,25 @@ class AsyncCachedPropertyDescriptor:
             instance.__async_property__ = state
             return state
 
-    def get_lock(self, instance):
-        return (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).get_lock(self.field_name)
+    cpdef object get_lock(self, object instance):
+        return self.get_instance_state(instance).get_lock(self.field_name)
 
-    def get_cache(self, instance):
-        return (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
+    cpdef dict[str, object] get_cache(self, object instance):
+        return self.get_instance_state(instance).cache
 
-    def has_cache_value(self, instance):
-        return self.field_name in (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache
+    cpdef bint has_cache_value(self, object instance):
+        return self.field_name in self.get_instance_state(instance).cache
 
-    def get_cache_value(self, instance):
-        return (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).get_cache_value(self.field_name)
+    cpdef object get_cache_value(self, object instance):
+        return self.get_instance_state(instance).get_cache_value(self.field_name)
 
-    def set_cache_value(self, instance, value):
-        (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache[self.field_name] = value
+    cpdef void set_cache_value(self, instance, value):
+        self.get_instance_state(instance).cache[self.field_name] = value
 
-    def del_cache_value(self, instance):
-        del (<AsyncCachedPropertyInstanceState>self.get_instance_state(instance)).cache[self.field_name]
+    cpdef void del_cache_value(self, instance):
+        del self.get_instance_state(instance).cache[self.field_name]
 
-    def get_loader(self, instance):
+    cpdef object get_loader(self, object instance):
         cdef str field_name
 
         loader = self._load_value
@@ -174,5 +173,19 @@ class AsyncCachedPropertyDescriptor:
 
         return lambda: shield(loader(instance))
 
+
+    cdef void _check_method_name(self, object method, str method_type):
+        if method.__name__ != self.field_name:
+            raise AssertionError(f"@{self.field_name}.{method_type} name must match property name")
+
+    cdef void _check_method_sync(self, object method, str method_type):
+        if method and iscoroutinefunction(method):
+            raise AssertionError(f"@{self.field_name}.{method_type} must be synchronous")
+
+        
+class AsyncCachedPropertyDescriptor(_AsyncCachedPropertyDescriptor):
+    def __init__(self, _fget, _fset=None, _fdel=None, field_name=None) -> None:
+        _AsyncCachedPropertyDescriptor.__init__(self, _fget, _fset, _fdel, field_name)
+        update_wrapper(self, _fget)
 
 cdef object __AsyncCachedPropertyDescriptor = AsyncCachedPropertyDescriptor
