@@ -48,6 +48,16 @@ cdef class AsyncCachedPropertyInstanceState:
         return self.cache[field_name]
 
 
+cdef class _Loader:
+    cdef readonly object func
+    cdef readonly object instance
+    def __cinit__(self, object func, object instance) -> None:
+        self.func = func
+        self.instance = instance
+    def __call__(self):
+        return shield(self.func(self.instance))
+
+
 cdef class _AsyncCachedPropertyDescriptor:
     cdef readonly str field_name
     cdef readonly object _fget
@@ -127,7 +137,7 @@ cdef class _AsyncCachedPropertyDescriptor:
         cdef object loader = self._load_value
         if loader is None:
             loader = self._load_value = self._make_loader(instance)
-        return lambda: shield(loader(instance))
+        return _Loader(loader, instance)
 
     cdef object _make_loader(self, object instance):
         cdef str field_name = self.field_name
