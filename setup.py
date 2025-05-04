@@ -12,7 +12,7 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(
-    name="ez-a-sync",
+    name="ez_a_sync",
     packages=find_packages(exclude=["tests", "tests.*"]),
     use_scm_version={
         "root": ".",
