@@ -12,7 +12,7 @@ from libc.time cimport time
 from weakref import ref
 
 from cpython.object cimport PyObject
-from cpython.string cimport PyUnicode_CompareWithASCIIString
+from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
 from a_sync._typing import *
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
