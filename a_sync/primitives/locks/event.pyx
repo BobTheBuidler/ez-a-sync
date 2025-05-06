@@ -11,7 +11,6 @@ from libc.string cimport strcpy
 from libc.time cimport time
 from weakref import ref
 
-from cpython.object cimport PyObject
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
 from a_sync._typing import *
@@ -183,4 +182,4 @@ cdef class CythonEvent(_DebugDaemonMixin):
 
 
 cdef inline bint _is_not_done(fut: Future):
-    return PyUnicode_CompareWithASCIIString(<PyObject*>fut._state, "PENDING")
+    return PyUnicode_CompareWithASCIIString(fut._state, "PENDING")
