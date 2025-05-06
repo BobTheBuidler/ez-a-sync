@@ -1,7 +1,7 @@
 import asyncio
-import copy
 import functools
 import typing
+from copy import copy as _copy
 from logging import getLogger
 from typing import Any, Awaitable, Callable, Generator, Optional, Tuple, Type, Union
 
@@ -37,8 +37,8 @@ cdef object Task = asyncio.Task
 del asyncio
 
 # cdef copy
-cdef object deepcopy = copy.deepcopy
-del copy
+cdef object copy = _copy
+del _copy
 
 # cdef functools
 cdef object partial = functools.partial
@@ -502,7 +502,7 @@ class ASyncCachedPropertyDescriptor(
                     instance_context = {"property": self, "instance": instance}
                     if e.args and e.args[-1] != instance_context:
                         e.args = *e.args, instance_context
-                    raise deepcopy(e).with_traceback(e.__traceback__)
+                    raise copy(e).with_traceback(e.__traceback__)
                 
                 if self._fset is not None:
                     self._fset(instance, value)
