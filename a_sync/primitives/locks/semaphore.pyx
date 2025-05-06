@@ -10,6 +10,9 @@ from libc.string cimport strcpy
 from libc.stdlib cimport malloc, free
 from typing import Container, Literal, List, Optional, Set
 
+from cpython.object cimport PyObject
+from cpython.unicode cimport PyUnicode_CompareWithASCIIString
+
 from a_sync._typing import CoroFn, P, T
 from a_sync.functools cimport wraps
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
@@ -320,10 +323,10 @@ cdef class Semaphore(_DebugDaemonMixin):
 
 
 cdef inline bint _is_not_done(fut: Future):
-    return <str>fut._state == "PENDING"
+    return PyUnicode_CompareWithASCIIString(<PyObject*>fut._state, "PENDING") == 0
 
 cdef inline bint _is_not_cancelled(fut: Future):
-    return <str>fut._state != "CANCELLED"
+    return PyUnicode_CompareWithASCIIString(<PyObject*>fut._state, "CANCELLED") != 0
 
 
 cdef class DummySemaphore(Semaphore):
