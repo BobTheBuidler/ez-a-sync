@@ -78,27 +78,6 @@ cdef class _AsyncCachedPropertyDescriptor:
         # this will be set later
         self._load_value = None
 
-    def __set_name__(self, owner, name):
-        self.field_name = name
-
-    def __get__(self, instance, owner):
-        if instance is None:
-            return self
-        cache = self.get_instance_state(instance).cache
-        if self.field_name in cache:
-            return _AwaitableProxy(cache[self.field_name])
-        return AwaitableOnly(self.get_loader(instance))
-
-    def __set__(self, instance, value):
-        if self._fset is not None:
-            self._fset(instance, value)
-        self.set_cache_value(instance, value)
-
-    def __delete__(self, instance):
-        if self._fdel is not None:
-            self._fdel(instance)
-        self.del_cache_value(instance)
-
     def setter(self, method):
         self._check_method_name(method, "setter")
         return type(self)(self._fget, method, self._fdel, self.field_name)
@@ -195,7 +174,43 @@ cdef class _AsyncCachedPropertyDescriptor:
         
 class AsyncCachedPropertyDescriptor(_AsyncCachedPropertyDescriptor):
     def __init__(self, _fget, _fset=None, _fdel=None, field_name=None) -> None:
-        _AsyncCachedPropertyDescriptor.__init__(self, _fget, _fset, _fdel, field_name)
+        self._fget = _fget
+        self._fset = _fset
+        self._fdel = _fdel
+        self.field_name = field_name or _fget.__name__
+        self.__c_helper = _AsyncCachedPropertyDescriptor(_fget, _fset, _fdel, field_name)
         update_wrapper(self, _fget)
+        self.setter = self.__c_helper.setter
+        self.deleter = self.__c_helper.deleter
+        self.get_instance_state = self.__c_helper.get_instance_state
+        self.get_lock = self.__c_helper.get_lock
+        self.get_cache = self.__c_helper.get_cache
+        self.has_cache_value = self.__c_helper.has_cache_value
+        self.get_cache_value = self.__c_helper.get_cache_value
+        self.set_cache_value = self.__c_helper.set_cache_value
+        self.del_cache_value = self.__c_helper.del_cache_value
+        self.get_loader = self.__c_helper.get_loader
+
+    def __set_name__(self, owner, name):
+        self.field_name = name
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        cdef dict cache = self.__c_helper.get_instance_state(instance).cache
+        cdef str field_name = self.field_name
+        if field_name in cache:
+            return _AwaitableProxy(cache[field_name])
+        return AwaitableOnly(self.get_loader(instance))
+
+    def __set__(self, instance, value):
+        if self._fset is not None:
+            self._fset(instance, value)
+        self.set_cache_value(instance, value)
+
+    def __delete__(self, instance):
+        if self._fdel is not None:
+            self._fdel(instance)
+        self.del_cache_value(instance)
 
 cdef object __AsyncCachedPropertyDescriptor = AsyncCachedPropertyDescriptor
