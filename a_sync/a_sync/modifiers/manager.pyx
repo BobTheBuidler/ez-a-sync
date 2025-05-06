@@ -77,7 +77,7 @@ cdef class ModifierManager:
                 if key not in _valid_modifiers:
                     raise ValueError(f"'{key}' is not a supported modifier.")
         self._modifiers = modifiers
-
+    
     def __repr__(self) -> str:
         """Returns a string representation of the modifiers."""
         return str(self._modifiers)
@@ -103,6 +103,9 @@ cdef class ModifierManager:
             if modifier_key in self._modifiers
             else USER_DEFAULTS._modifiers[modifier_key]
         )
+
+    def __reduce__(self):
+        return ModifierManager, (self._modifiers, True)
 
     cdef str get_default(self):
         cdef str default = self.__default
