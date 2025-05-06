@@ -206,7 +206,7 @@ cdef object _get_exception(fut: Future):
         fut._Future__log_traceback = False
         return fut._exception
     if PyUnicode_CompareWithASCIIString(state, "CANCELLED"):
-        raise fut._make_cancelled_error()
+        return fut._make_cancelled_error()
     raise InvalidStateError('Exception is not set.')
 
 
@@ -624,7 +624,7 @@ cdef tuple _get_done_callbacks(inner: Task, outer: Future):
         if _is_cancelled(outer):
             if not _is_cancelled(inner):
                 # Mark inner's result as retrieved.
-                _get_exception(inner)
+                inner._exception
             return
 
         if _is_cancelled(inner):
