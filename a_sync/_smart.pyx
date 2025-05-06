@@ -185,7 +185,11 @@ cdef object _get_result(fut: Future):
         fut._Future__log_traceback = False
         exc = fut._exception
         if exc is not None:
-            raise exc.with_traceback(exc.__traceback__)
+            cached_traceback = getattr(fut, "__cached_traceback__", None)
+            if cached_traceback is None:
+                cached_traceback = exc.__traceback__
+                fut.__cached_traceback__ = cached_traceback
+            raise exc.with_traceback(cached_traceback) from exc.__cause__
         return fut._result
     if state == "CANCELLED":
         raise fut._make_cancelled_error()
@@ -633,7 +637,7 @@ cdef tuple _get_done_callbacks(inner: Task, outer: Future):
             if exc is not None:
                 outer.set_exception(exc)
             else:
-                outer.set_result(_get_result(inner))
+                outer.set_result(inner._result)
 
     def _outer_done_callback(outer):
         if _is_not_done(inner):
