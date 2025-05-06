@@ -623,7 +623,7 @@ cdef tuple _get_done_callbacks(inner: Task, outer: Future):
         if _is_cancelled(outer):
             if not _is_cancelled(inner):
                 # Mark inner's result as retrieved.
-                _get_exception(inner)
+                fut._Future__log_traceback = False
             return
 
         if _is_cancelled(inner):
