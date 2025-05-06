@@ -10,12 +10,11 @@ import typing
 import weakref
 from logging import getLogger
 from types import TracebackType
+from typing import Union
 
 cimport cython
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
-
-from a_sync._typing import *
 
 if TYPE_CHECKING:
     from a_sync import SmartProcessingQueue
