@@ -92,6 +92,9 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         """The initial capacity of the semaphore."""
 
         self._top_priority = top_priority
+        self._top_priority_manager = context_manager_class(
+                self, top_priority, name=self.name
+            )
         self._context_manager_class = context_manager_class
 
     def __repr__(self) -> str:
@@ -108,7 +111,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> async with semaphore:
             ...     await do_stuff()
         """
-        await self.c_getitem(self._top_priority).acquire()
+        await self._top_priority_manager.acquire()
 
     async def __aexit__(self, *_) -> None:
         """Exits the semaphore context, releasing it with the top priority.
@@ -120,7 +123,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> async with semaphore:
             ...     await do_stuff()
         """
-        self.c_getitem(self._top_priority).release()
+        self._top_priority_manager.release()
 
     cpdef object acquire(self):
         """Acquires the semaphore with the top priority.
@@ -131,7 +134,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> await semaphore.acquire()
         """
-        return self.c_getitem(self._top_priority).acquire()
+        return self._top_priority_manager.acquire()
 
     def __getitem__(
         self, priority: Optional[PT]
@@ -154,8 +157,10 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         cdef _AbstractPrioritySemaphoreContextManager context_manager
         cdef dict[object, _AbstractPrioritySemaphoreContextManager] context_managers
 
+        if priority is None:
+            return self._top_priority_manager
+        
         context_managers = self._context_managers
-        priority = self._top_priority if priority is None else priority
         context_manager = context_managers.get(priority)
         if context_manager is None:
             context_manager = self._context_manager_class(
@@ -216,6 +221,29 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         cdef Py_ssize_t start_len, end_len
         cdef bint woke_up
 
+        cdef _AbstractPrioritySemaphoreContextManager manager = self._top_priority_manager
+        cdef object manager_waiters = manager._Semaphore__waiters
+        cdef object get_next
+        if manager_waiters:
+            get_next = manager_waiters.popleft
+            while manager_waiters:
+                waiter = get_next()
+                potential_lost_waiters.remove(waiter)
+                if _is_not_done(waiter):
+                    waiter.set_result(None)
+                    if debug_logs:
+                        log_debug("woke up %s", (waiter, ))
+                    return
+        
+        while manager_waiters:
+            waiter = get_next()
+            potential_lost_waiters.remove(waiter)
+            if _is_not_done(waiter):
+                waiter.set_result(None)
+                if debug_logs:
+                    log_debug("woke up %s", (waiter, ))
+                return
+
         cdef list self_waiters = self._Semaphore__waiters
         cdef list potential_lost_waiters = self._potential_lost_waiters
         cdef bint debug_logs = _logger_is_enabled(DEBUG)
@@ -240,8 +268,9 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                 if not manager_waiters:
                     log_debug("not manager._Semaphore__waiters", ())
 
-            while manager_waiters:
-                waiter = manager_waiters.popleft()
+            if manager_waiters:
+                get_next = manager_waiters.popleft
+                waiter = get_next()
                 potential_lost_waiters.remove(waiter)
                 if _is_not_done(waiter):
                     waiter.set_result(None)
@@ -249,6 +278,17 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                     if debug_logs:
                         log_debug("woke up %s", (waiter, ))
                     break
+
+                if not woke_up:
+                    while manager_waiters:
+                        waiter = get_next()
+                        potential_lost_waiters.remove(waiter)
+                        if _is_not_done(waiter):
+                            waiter.set_result(None)
+                            woke_up = True
+                            if debug_logs:
+                                log_debug("woke up %s", (waiter, ))
+                            break
 
             if not woke_up:
                 self._context_managers.pop(manager._priority)
