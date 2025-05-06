@@ -13,7 +13,7 @@ from logging import getLogger
 cimport cython
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
-from cpython.string cimport PyUnicode_CompareWithASCIIString
+from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
 from a_sync._typing import *
 
