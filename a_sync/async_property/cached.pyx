@@ -206,11 +206,11 @@ class AsyncCachedPropertyDescriptor:
     def __set__(self, instance, value):
         if self._fset is not None:
             self._fset(instance, value)
-        self.set_cache_value(instance, value)
+        self.__c_helper.set_cache_value(instance, value)
 
     def __delete__(self, instance):
         if self._fdel is not None:
             self._fdel(instance)
-        self.del_cache_value(instance)
+        self.__c_helper.del_cache_value(instance)
 
 cdef object __AsyncCachedPropertyDescriptor = AsyncCachedPropertyDescriptor
