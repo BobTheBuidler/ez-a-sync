@@ -154,7 +154,7 @@ cdef inline bint _is_done(fut: Future):
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return PyUnicode_CompareWithASCIIString(<PyObject*>fut._state, "PENDING") != 0
+    return PyUnicode_CompareWithASCIIString(fut._state, "PENDING") != 0
 
 
 @cython.linetrace(False)
@@ -164,13 +164,13 @@ cdef inline bint _is_not_done(fut: Future):
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return PyUnicode_CompareWithASCIIString(<PyObject*>fut._state, "PENDING") == 0
+    return PyUnicode_CompareWithASCIIString(fut._state, "PENDING") == 0
 
 
 @cython.linetrace(False)
 cdef inline bint _is_cancelled(fut: Future):
     """Return True if the future was cancelled."""
-    return PyUnicode_CompareWithASCIIString(<PyObject*>fut._state, "CANCELLED") == 0
+    return PyUnicode_CompareWithASCIIString(fut._state, "CANCELLED") == 0
 
 
 @cython.linetrace(False)
@@ -181,7 +181,7 @@ cdef object _get_result(fut: Future):
     future's result isn't yet available, raises InvalidStateError.  If
     the future is done and has an exception set, this exception is raised.
     """
-    cdef PyObject *state = <PyObject*>fut._state
+    cdef str state = fut._state
     if PyUnicode_CompareWithASCIIString(state, "FINISHED") == 0:
         fut._Future__log_traceback = False
         exc = fut._exception
@@ -201,7 +201,7 @@ cdef object _get_exception(fut: Future):
     CancelledError.  If the future isn't done yet, raises
     InvalidStateError.
     """
-    cdef PyObject *state = <PyObject*>fut._state
+    cdef str state = fut._state
     if PyUnicode_CompareWithASCIIString(state, "FINISHED"):
         fut._Future__log_traceback = False
         return fut._exception
