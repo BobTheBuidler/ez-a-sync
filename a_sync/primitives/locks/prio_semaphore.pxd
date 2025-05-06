@@ -5,6 +5,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
     cdef Py_ssize_t _capacity
     cdef list _potential_lost_waiters
     cdef object _top_priority
+    cdef _AbstractPrioritySemaphoreContextManager _top_priority_manager
     cdef object _context_manager_class
     cpdef object acquire(self)
     cdef _AbstractPrioritySemaphoreContextManager c_getitem(self, object priority)
