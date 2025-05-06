@@ -10,7 +10,6 @@ import typing
 import weakref
 from logging import getLogger
 from types import TracebackType
-from typing import TYPE_CHECKING, Generic, Union
 
 cimport cython
 from cpython.object cimport PyObject
@@ -18,7 +17,7 @@ from cpython.ref cimport Py_DECREF, Py_INCREF
 
 from a_sync._typing import T
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from a_sync import SmartProcessingQueue
 
 cdef extern from "weakrefobject.h":
@@ -52,6 +51,7 @@ del getLogger
 cdef object Any = typing.Any
 cdef object Generic = typing.Generic
 cdef object Tuple = typing.Tuple
+cdef object Union = typing.Union
 del typing
 
 
