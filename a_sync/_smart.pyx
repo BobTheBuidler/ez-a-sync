@@ -9,6 +9,7 @@ import asyncio
 import typing
 import weakref
 from logging import getLogger
+from types import TracebackType
 
 cimport cython
 from cpython.object cimport PyObject
@@ -173,7 +174,7 @@ cdef inline bint _is_cancelled(fut: Future):
 
 
 @cython.linetrace(False)
-cdef object _get_result(fut: Future):
+cdef object _get_result(fut: Union["SmartFuture", "SmartTask"]):
     """Return the result this future represents.
 
     If the future has been cancelled, raises CancelledError.  If the
@@ -185,10 +186,10 @@ cdef object _get_result(fut: Future):
         fut._Future__log_traceback = False
         exc = fut._exception
         if exc is not None:
-            cached_traceback = getattr(fut, "__cached_traceback__", None)
+            cached_traceback = fut.__traceback__
             if cached_traceback is None:
                 cached_traceback = exc.__traceback__
-                fut.__cached_traceback__ = cached_traceback
+                fut.__traceback__ = cached_traceback
             raise exc.with_traceback(cached_traceback) from exc.__cause__
         return fut._result
     if state == "CANCELLED":
@@ -234,6 +235,8 @@ class SmartFuture(Future, Generic[T]):
     _key: Optional[Key] = None
     
     _waiters: "weakref.WeakSet[SmartTask[T]]"
+    
+    __traceback__: Optional[TracebackType] = None
 
     def __init__(
         self,
@@ -412,7 +415,10 @@ class SmartTask(Task, Generic[T]):
     See Also:
         - :class:`asyncio.Task`
     """
+    
     _waiters: Set["Task[T]"]
+    
+    __traceback__: Optional[TracebackType] = None
 
     @cython.linetrace(False)
     def __init__(
