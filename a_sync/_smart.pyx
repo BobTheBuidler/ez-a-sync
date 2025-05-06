@@ -181,14 +181,14 @@ cdef object _get_result(fut: Future):
     future's result isn't yet available, raises InvalidStateError.  If
     the future is done and has an exception set, this exception is raised.
     """
-    cdef str state = fut._state
-    if state == "FINISHED":
+    cdef PyObject *state = <PyObject*>fut._state
+    if PyUnicode_CompareWithASCIIString(state, "FINISHED") == 0:
         fut._Future__log_traceback = False
         exc = fut._exception
         if exc is not None:
             raise exc.with_traceback(exc.__traceback__)
         return fut._result
-    if state == "CANCELLED":
+    if PyUnicode_CompareWithASCIIString(state, "CANCELLED") == 0:
         raise fut._make_cancelled_error()
     raise InvalidStateError('Result is not ready.')
 
@@ -201,11 +201,11 @@ cdef object _get_exception(fut: Future):
     CancelledError.  If the future isn't done yet, raises
     InvalidStateError.
     """
-    cdef str state = fut._state
-    if state == "FINISHED":
+    cdef PyObject *state = <PyObject*>fut._state
+    if PyUnicode_CompareWithASCIIString(state, "FINISHED"):
         fut._Future__log_traceback = False
         return fut._exception
-    if state == "CANCELLED":
+    if PyUnicode_CompareWithASCIIString(state, "CANCELLED"):
         raise fut._make_cancelled_error()
     raise InvalidStateError('Exception is not set.')
 
