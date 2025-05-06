@@ -13,6 +13,7 @@ from logging import getLogger
 cimport cython
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
+from cpython.string cimport PyUnicode_CompareWithASCIIString
 
 from a_sync._typing import *
 
@@ -153,7 +154,7 @@ cdef inline bint _is_done(fut: Future):
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return <str>fut._state != "PENDING"
+    return PyUnicode_CompareWithASCIIString(<PyObject*>fut._state, "PENDING") != 0
 
 
 @cython.linetrace(False)
@@ -163,13 +164,13 @@ cdef inline bint _is_not_done(fut: Future):
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return <str>fut._state == "PENDING"
+    return PyUnicode_CompareWithASCIIString(<PyObject*>fut._state, "PENDING") == 0
 
 
 @cython.linetrace(False)
 cdef inline bint _is_cancelled(fut: Future):
     """Return True if the future was cancelled."""
-    return <str>fut._state == "CANCELLED"
+    return PyUnicode_CompareWithASCIIString(<PyObject*>fut._state, "CANCELLED") == 0
 
 
 @cython.linetrace(False)
