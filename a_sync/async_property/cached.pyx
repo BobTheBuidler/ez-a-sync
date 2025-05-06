@@ -172,7 +172,7 @@ cdef class _AsyncCachedPropertyDescriptor:
             raise AssertionError(f"@{self.field_name}.{method_type} must be synchronous")
 
         
-class AsyncCachedPropertyDescriptor(_AsyncCachedPropertyDescriptor):
+class AsyncCachedPropertyDescriptor:
     def __init__(self, _fget, _fset=None, _fdel=None, field_name=None) -> None:
         self._fget = _fget
         self._fset = _fset
@@ -197,8 +197,8 @@ class AsyncCachedPropertyDescriptor(_AsyncCachedPropertyDescriptor):
     def __get__(self, instance, owner):
         if instance is None:
             return self
-        cdef dict cache = self.__c_helper.get_instance_state(instance).cache
         cdef str field_name = self.field_name
+        cdef dict[str, object] cache = self.__c_helper.get_instance_state(instance).cache
         if field_name in cache:
             return _AwaitableProxy(cache[field_name])
         return AwaitableOnly(self.get_loader(instance))
