@@ -216,7 +216,7 @@ cdef void __prune_persisted_tasks():
 
 
 cdef inline bint _is_done(fut: Future):
-    return PyUnicode_CompareWithASCIIString(<PyObject>fut._state, "PENDING") != 0
+    return PyUnicode_CompareWithASCIIString(fut._state, "PENDING") != 0
 
 
 cdef object _get_exception(fut: Future):
@@ -227,7 +227,7 @@ cdef object _get_exception(fut: Future):
     CancelledError.  If the future isn't done yet, raises
     InvalidStateError.
     """
-    cdef PyObject *state = <PyObject*>fut._state
+    cdef str state = fut._state
     if PyUnicode_CompareWithASCIIString(state, "FINISHED") == 0:
         fut._Future__log_traceback = False
         return fut._exception
