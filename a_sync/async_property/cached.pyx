@@ -213,4 +213,12 @@ class AsyncCachedPropertyDescriptor:
             self._fdel(instance)
         self.__c_helper.del_cache_value(instance)
 
+    def _check_method_name(self, object method, str method_type):
+        if method.__name__ != self.field_name:
+            raise AssertionError(f"@{self.field_name}.{method_type} name must match property name")
+
+    def _check_method_sync(self, object method, str method_type):
+        if method and iscoroutinefunction(method):
+            raise AssertionError(f"@{self.field_name}.{method_type} must be synchronous")
+
 cdef object __AsyncCachedPropertyDescriptor = AsyncCachedPropertyDescriptor
