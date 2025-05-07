@@ -228,7 +228,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             get_next = manager_waiters.popleft
             while manager_waiters:
                 waiter = get_next()
-                potential_lost_waiters.remove(waiter)
+                potential_lost_waiters.discard(waiter)
                 if _is_not_done(waiter):
                     waiter.set_result(None)
                     if debug_logs:
@@ -237,7 +237,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         
         while manager_waiters:
             waiter = get_next()
-            potential_lost_waiters.remove(waiter)
+            potential_lost_waiters.discard(waiter)
             if _is_not_done(waiter):
                 waiter.set_result(None)
                 if debug_logs:
@@ -269,7 +269,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             if manager_waiters:
                 get_next = manager_waiters.popleft
                 waiter = get_next()
-                potential_lost_waiters.remove(waiter)
+                potential_lost_waiters.discard(waiter)
                 if _is_not_done(waiter):
                     waiter.set_result(None)
                     woke_up = True
@@ -280,7 +280,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                 if not woke_up:
                     while manager_waiters:
                         waiter = get_next()
-                        potential_lost_waiters.remove(waiter)
+                        potential_lost_waiters.discard(waiter)
                         if _is_not_done(waiter):
                             waiter.set_result(None)
                             woke_up = True
