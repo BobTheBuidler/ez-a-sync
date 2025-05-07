@@ -217,7 +217,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         cdef _AbstractPrioritySemaphoreContextManager manager
         cdef object manager_waiters, get_next
         cdef Py_ssize_t start_len, end_len
-        cdef list potential_lost_waiters
+        cdef set potential_lost_waiters
         cdef bint woke_up, debug_logs
 
         manager = self._top_priority_manager
@@ -245,8 +245,6 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                 return
 
         cdef list self_waiters = self._Semaphore__waiters
-        cdef set potential_lost_waiters = self._potential_lost_waiters
-        cdef bint debug_logs = _logger_is_enabled(DEBUG)
         while self_waiters:
             manager = heappop(self_waiters)
             if len(manager) == 0:
