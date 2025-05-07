@@ -184,11 +184,11 @@ cdef object _get_result(fut: Union["SmartFuture", "SmartTask"]):
     """
     cdef str state = fut._state
     if state == "FINISHED":
-        fut._Future__log_traceback = False
         exc = fut._exception
         if exc is not None:
             cached_traceback = fut.__traceback__
             if cached_traceback is None:
+                fut._Future__log_traceback = False
                 cached_traceback = exc.__traceback__
                 fut.__traceback__ = cached_traceback
             raise exc.with_traceback(cached_traceback) from exc.__cause__
@@ -300,7 +300,7 @@ class SmartFuture(Future, Generic[T]):
 
     def __await__(self) -> Generator[Any, None, T]:
         """
-        Await the smart future or task, handling waiters and logging.
+        Await the future, handling waiters and logging.
 
         Yields:
             The result of the future or task.
@@ -450,7 +450,7 @@ class SmartTask(Task, Generic[T]):
 
     def __await__(self) -> Generator[Any, None, T]:
         """
-        Await the smart future or task, handling waiters and logging.
+        Await the task, handling waiters and logging.
 
         Yields:
             The result of the future or task.
