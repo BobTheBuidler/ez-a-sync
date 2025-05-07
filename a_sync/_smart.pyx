@@ -154,7 +154,7 @@ cdef inline bint _is_done(fut: Future):
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return PyUnicode_CompareWithASCIIString(fut._state, "PENDING") != 0
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") != 0
 
 
 @cython.linetrace(False)
@@ -164,13 +164,13 @@ cdef inline bint _is_not_done(fut: Future):
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return PyUnicode_CompareWithASCIIString(fut._state, "PENDING") == 0
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") == 0
 
 
 @cython.linetrace(False)
 cdef inline bint _is_cancelled(fut: Future):
     """Return True if the future was cancelled."""
-    return PyUnicode_CompareWithASCIIString(fut._state, "CANCELLED") == 0
+    return PyUnicode_CompareWithASCIIString(fut._state, b"CANCELLED") == 0
 
 
 @cython.linetrace(False)
@@ -182,13 +182,13 @@ cdef object _get_result(fut: Future):
     the future is done and has an exception set, this exception is raised.
     """
     cdef str state = fut._state
-    if PyUnicode_CompareWithASCIIString(state, "FINISHED") == 0:
+    if PyUnicode_CompareWithASCIIString(state, b"FINISHED") == 0:
         fut._Future__log_traceback = False
         exc = fut._exception
         if exc is not None:
             raise exc.with_traceback(exc.__traceback__)
         return fut._result
-    if PyUnicode_CompareWithASCIIString(state, "CANCELLED") == 0:
+    if PyUnicode_CompareWithASCIIString(state, b"CANCELLED") == 0:
         raise fut._make_cancelled_error()
     raise InvalidStateError('Result is not ready.')
 
@@ -202,10 +202,10 @@ cdef object _get_exception(fut: Future):
     InvalidStateError.
     """
     cdef str state = fut._state
-    if PyUnicode_CompareWithASCIIString(state, "FINISHED"):
+    if PyUnicode_CompareWithASCIIString(state, b"FINISHED") == 0:
         fut._Future__log_traceback = False
         return fut._exception
-    if PyUnicode_CompareWithASCIIString(state, "CANCELLED"):
+    if PyUnicode_CompareWithASCIIString(state, b"CANCELLED") == 0:
         return fut._make_cancelled_error()
     raise InvalidStateError('Exception is not set.')
 
