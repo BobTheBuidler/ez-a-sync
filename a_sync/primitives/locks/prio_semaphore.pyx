@@ -219,11 +219,13 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         """
         cdef _AbstractPrioritySemaphoreContextManager manager
         cdef Py_ssize_t start_len, end_len
+        cdef object get_next
         cdef bint woke_up
 
         cdef _AbstractPrioritySemaphoreContextManager manager = self._top_priority_manager
         cdef object manager_waiters = manager._Semaphore__waiters
-        cdef object get_next
+        cdef list potential_lost_waiters = self._potential_lost_waiters
+        cdef bint debug_logs = _logger_is_enabled(DEBUG)
         if manager_waiters:
             get_next = manager_waiters.popleft
             while manager_waiters:
@@ -245,8 +247,6 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                 return
 
         cdef list self_waiters = self._Semaphore__waiters
-        cdef list potential_lost_waiters = self._potential_lost_waiters
-        cdef bint debug_logs = _logger_is_enabled(DEBUG)
         while self_waiters:
             manager = heappop(self_waiters)
             if len(manager) == 0:
