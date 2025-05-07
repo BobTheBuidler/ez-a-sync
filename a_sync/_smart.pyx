@@ -212,7 +212,7 @@ cdef object _get_exception(fut: Future):
         fut._Future__log_traceback = False
         return fut._exception
     if PyUnicode_CompareWithASCIIString(state, b"CANCELLED") == 0:
-        return fut._make_cancelled_error()
+        raise fut._make_cancelled_error()
     raise InvalidStateError('Exception is not set.')
 
 
