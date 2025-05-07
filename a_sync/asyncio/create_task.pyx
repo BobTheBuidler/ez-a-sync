@@ -8,6 +8,9 @@ import asyncio.tasks as aiotasks
 import logging
 import typing
 
+from cpython.object cimport PyObject
+from cpython.unicode cimport PyUnicode_CompareWithASCIIString
+
 from a_sync import _smart, exceptions
 from a_sync._typing import T
 
@@ -213,7 +216,7 @@ cdef void __prune_persisted_tasks():
 
 
 cdef inline bint _is_done(fut: Future):
-    return <str>fut._state != "PENDING"
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") != 0
 
 
 cdef object _get_exception(fut: Future):
@@ -225,10 +228,10 @@ cdef object _get_exception(fut: Future):
     InvalidStateError.
     """
     cdef str state = fut._state
-    if state == "FINISHED":
+    if PyUnicode_CompareWithASCIIString(state, b"FINISHED") == 0:
         fut._Future__log_traceback = False
         return fut._exception
-    if state == "CANCELLED":
+    if PyUnicode_CompareWithASCIIString(state, b"CANCELLED") == 0:
         raise fut._make_cancelled_error()
     raise InvalidStateError('Exception is not set.')
 

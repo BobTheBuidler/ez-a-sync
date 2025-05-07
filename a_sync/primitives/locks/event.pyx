@@ -11,6 +11,8 @@ from libc.string cimport strcpy
 from libc.time cimport time
 from weakref import ref
 
+from cpython.unicode cimport PyUnicode_CompareWithASCIIString
+
 from a_sync._typing import *
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
 
@@ -180,4 +182,4 @@ cdef class CythonEvent(_DebugDaemonMixin):
 
 
 cdef inline bint _is_not_done(fut: Future):
-    return <str>fut._state == "PENDING"
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") == 0

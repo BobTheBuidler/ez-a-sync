@@ -14,6 +14,7 @@ from types import TracebackType
 cimport cython
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
+from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
 from a_sync._typing import T
 
@@ -155,7 +156,7 @@ cdef inline bint _is_done(fut: Future):
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return <str>fut._state != "PENDING"
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") != 0
 
 
 @cython.linetrace(False)
@@ -165,13 +166,13 @@ cdef inline bint _is_not_done(fut: Future):
     Done means either that a result / exception are available, or that the
     future was cancelled.
     """
-    return <str>fut._state == "PENDING"
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") == 0
 
 
 @cython.linetrace(False)
 cdef inline bint _is_cancelled(fut: Future):
     """Return True if the future was cancelled."""
-    return <str>fut._state == "CANCELLED"
+    return PyUnicode_CompareWithASCIIString(fut._state, b"CANCELLED") == 0
 
 
 @cython.linetrace(False)
@@ -183,7 +184,7 @@ cdef object _get_result(fut: Union["SmartFuture", "SmartTask"]):
     the future is done and has an exception set, this exception is raised.
     """
     cdef str state = fut._state
-    if state == "FINISHED":
+    if PyUnicode_CompareWithASCIIString(state, b"FINISHED") == 0:
         exc = fut._exception
         if exc is not None:
             cached_traceback = fut.__traceback__
@@ -193,7 +194,7 @@ cdef object _get_result(fut: Union["SmartFuture", "SmartTask"]):
                 fut.__traceback__ = cached_traceback
             raise exc.with_traceback(cached_traceback) from exc.__cause__
         return fut._result
-    if state == "CANCELLED":
+    if PyUnicode_CompareWithASCIIString(state, b"CANCELLED") == 0:
         raise fut._make_cancelled_error()
     raise InvalidStateError('Result is not ready.')
 
@@ -207,10 +208,10 @@ cdef object _get_exception(fut: Future):
     InvalidStateError.
     """
     cdef str state = fut._state
-    if state == "FINISHED":
+    if PyUnicode_CompareWithASCIIString(state, b"FINISHED") == 0:
         fut._Future__log_traceback = False
         return fut._exception
-    if state == "CANCELLED":
+    if PyUnicode_CompareWithASCIIString(state, b"CANCELLED") == 0:
         raise fut._make_cancelled_error()
     raise InvalidStateError('Exception is not set.')
 

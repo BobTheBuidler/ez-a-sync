@@ -11,6 +11,8 @@ import heapq
 from logging import getLogger
 from typing import List, Literal, Optional, Protocol, Set, Type, TypeVar
 
+from cpython.unicode cimport PyUnicode_CompareWithASCIIString
+
 from a_sync.primitives.locks.semaphore cimport Semaphore
 
 
@@ -415,10 +417,10 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
 
 
 cdef inline bint _is_not_done(fut: asyncio.Future):
-    return <str>fut._state == "PENDING"
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") == 0
 
 cdef inline bint _is_not_cancelled(fut: asyncio.Future):
-    return <str>fut._state != "CANCELLED"
+    return PyUnicode_CompareWithASCIIString(fut._state, b"CANCELLED") != 0
 
 
 del asyncio
