@@ -322,10 +322,10 @@ cdef class Semaphore(_DebugDaemonMixin):
 
 
 cdef inline bint _is_not_done(fut: Future):
-    return PyUnicode_CompareWithASCIIString(fut._state, "PENDING") == 0
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") == 0
 
 cdef inline bint _is_not_cancelled(fut: Future):
-    return PyUnicode_CompareWithASCIIString(fut._state, "CANCELLED") != 0
+    return PyUnicode_CompareWithASCIIString(fut._state, b"CANCELLED") != 0
 
 
 cdef class DummySemaphore(Semaphore):
