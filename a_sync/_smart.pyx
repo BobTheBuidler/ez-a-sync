@@ -9,15 +9,16 @@ import asyncio
 import typing
 import weakref
 from logging import getLogger
+from types import TracebackType
 
 cimport cython
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
-from a_sync._typing import *
+from a_sync._typing import T
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from a_sync import SmartProcessingQueue
 
 cdef extern from "weakrefobject.h":
@@ -51,6 +52,7 @@ del getLogger
 cdef object Any = typing.Any
 cdef object Generic = typing.Generic
 cdef object Tuple = typing.Tuple
+cdef object Union = typing.Union
 del typing
 
 
@@ -174,7 +176,7 @@ cdef inline bint _is_cancelled(fut: Future):
 
 
 @cython.linetrace(False)
-cdef object _get_result(fut: Future):
+cdef object _get_result(fut: Union["SmartFuture", "SmartTask"]):
     """Return the result this future represents.
 
     If the future has been cancelled, raises CancelledError.  If the
@@ -183,10 +185,14 @@ cdef object _get_result(fut: Future):
     """
     cdef str state = fut._state
     if PyUnicode_CompareWithASCIIString(state, b"FINISHED") == 0:
-        fut._Future__log_traceback = False
         exc = fut._exception
         if exc is not None:
-            raise exc.with_traceback(exc.__traceback__)
+            cached_traceback = fut.__traceback__
+            if cached_traceback is None:
+                fut._Future__log_traceback = False
+                cached_traceback = exc.__traceback__
+                fut.__traceback__ = cached_traceback
+            raise exc.with_traceback(cached_traceback) from exc.__cause__
         return fut._result
     if PyUnicode_CompareWithASCIIString(state, b"CANCELLED") == 0:
         raise fut._make_cancelled_error()
@@ -231,6 +237,8 @@ class SmartFuture(Future, Generic[T]):
     _key: Optional[Key] = None
     
     _waiters: "weakref.WeakSet[SmartTask[T]]"
+    
+    __traceback__: Optional[TracebackType] = None
 
     def __init__(
         self,
@@ -293,7 +301,7 @@ class SmartFuture(Future, Generic[T]):
 
     def __await__(self) -> Generator[Any, None, T]:
         """
-        Await the smart future or task, handling waiters and logging.
+        Await the future, handling waiters and logging.
 
         Yields:
             The result of the future or task.
@@ -409,7 +417,10 @@ class SmartTask(Task, Generic[T]):
     See Also:
         - :class:`asyncio.Task`
     """
+    
     _waiters: Set["Task[T]"]
+    
+    __traceback__: Optional[TracebackType] = None
 
     @cython.linetrace(False)
     def __init__(
@@ -440,7 +451,7 @@ class SmartTask(Task, Generic[T]):
 
     def __await__(self) -> Generator[Any, None, T]:
         """
-        Await the smart future or task, handling waiters and logging.
+        Await the task, handling waiters and logging.
 
         Yields:
             The result of the future or task.
@@ -624,7 +635,7 @@ cdef tuple _get_done_callbacks(inner: Task, outer: Future):
         if _is_cancelled(outer):
             if not _is_cancelled(inner):
                 # Mark inner's result as retrieved.
-                inner._exception
+                inner._Future__log_traceback = False
             return
 
         if _is_cancelled(inner):
@@ -634,7 +645,7 @@ cdef tuple _get_done_callbacks(inner: Task, outer: Future):
             if exc is not None:
                 outer.set_exception(exc)
             else:
-                outer.set_result(_get_result(inner))
+                outer.set_result(inner._result)
 
     def _outer_done_callback(outer):
         if _is_not_done(inner):
