@@ -182,4 +182,4 @@ cdef class CythonEvent(_DebugDaemonMixin):
 
 
 cdef inline bint _is_not_done(fut: Future):
-    return PyUnicode_CompareWithASCIIString(fut._state, "PENDING")
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING")
