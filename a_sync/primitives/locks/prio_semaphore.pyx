@@ -157,7 +157,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         cdef _AbstractPrioritySemaphoreContextManager context_manager
         cdef dict[object, _AbstractPrioritySemaphoreContextManager] context_managers
 
-        if priority is None:
+        if priority is None or priority == self._top_priority:
             return self._top_priority_manager
         
         context_managers = self._context_managers
