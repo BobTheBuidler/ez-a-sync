@@ -3,7 +3,7 @@ from a_sync.primitives.locks.semaphore cimport Semaphore
 cdef class _AbstractPrioritySemaphore(Semaphore):
     cdef readonly dict[object, _AbstractPrioritySemaphoreContextManager] _context_managers
     cdef readonly Py_ssize_t _capacity
-    cdef readonly list _potential_lost_waiters
+    cdef readonly set _potential_lost_waiters
     cdef readonly object _top_priority
     cdef readonly _AbstractPrioritySemaphoreContextManager _top_priority_manager
     cdef readonly object _context_manager_class

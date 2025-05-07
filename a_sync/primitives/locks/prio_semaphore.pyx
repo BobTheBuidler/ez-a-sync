@@ -13,9 +13,6 @@ from typing import List, Literal, Optional, Protocol, Set, Type, TypeVar
 
 from a_sync.primitives.locks.semaphore cimport Semaphore
 
-# cdef asyncio
-cdef object Future = asyncio.Future
-del asyncio
 
 # cdef collections
 cdef object deque = collections.deque
@@ -65,7 +62,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         """A heap queue of context managers, sorted by priority."""
 
         # NOTE: This should (hopefully) be temporary
-        self._potential_lost_waiters: List["Future[None]"] = []
+        self._potential_lost_waiters = set()
         """A list of futures representing waiters that might have been lost."""
     
     def __init__(
@@ -248,6 +245,8 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
                 return
 
         cdef list self_waiters = self._Semaphore__waiters
+        cdef set potential_lost_waiters = self._potential_lost_waiters
+        cdef bint debug_logs = _logger_is_enabled(DEBUG)
         while self_waiters:
             manager = heappop(self_waiters)
             if len(manager) == 0:
@@ -310,14 +309,14 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         # emergency procedure (hopefully temporary):
         if not debug_logs:
             while potential_lost_waiters:
-                waiter = potential_lost_waiters.pop(0)
+                waiter = potential_lost_waiters.pop()
                 if _is_not_done(waiter):
                     waiter.set_result(None)
                     return
             return
             
         while potential_lost_waiters:
-            waiter = potential_lost_waiters.pop(0)
+            waiter = potential_lost_waiters.pop()
             log_debug("we found a lost waiter %s", (waiter, ))
             if _is_not_done(waiter):
                 waiter.set_result(None)
@@ -434,7 +433,7 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
                 self._Semaphore__waiters = deque()
             fut = self._c_get_loop().create_future()
             self._Semaphore__waiters.append(fut)
-            parent._potential_lost_waiters.append(fut)
+            parent._potential_lost_waiters.add(fut)
             try:
                 await fut
             except:
@@ -458,11 +457,14 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         self._parent.release()
 
 
-cdef inline bint _is_not_done(fut: Future):
+cdef inline bint _is_not_done(fut: asyncio.Future):
     return <str>fut._state == "PENDING"
 
-cdef inline bint _is_not_cancelled(fut: Future):
+cdef inline bint _is_not_cancelled(fut: asyncio.Future):
     return <str>fut._state != "CANCELLED"
+
+
+del asyncio
 
 
 cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager):
@@ -546,7 +548,7 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
         """A heap queue of context managers, sorted by priority."""
 
         # NOTE: This should (hopefully) be temporary
-        self._potential_lost_waiters: List["Future[None]"] = []
+        self._potential_lost_waiters = set()
         """A list of futures representing waiters that might have been lost."""
     
     def __init__(
