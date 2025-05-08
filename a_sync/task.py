@@ -160,11 +160,6 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
 
         if iterables:
 
-            try:
-                argspec = _args[self.__wrapped__]
-            except KeyError:
-                argspec = _args[self.__wrapped__] = getfullargspec(self.__wrapped__).args
-
             set_next = self._next.set
             clear_next = self._next.clear
 
@@ -187,8 +182,14 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                         )
                     ):
                         raise
+                    
                     # NOTE: args ordering is clashing with provided kwargs. We can handle this in a hacky way.
                     # TODO: perform this check earlier and pre-prepare the args/kwargs ordering
+                    try:
+                        argspec = _args[self.__wrapped__]
+                    except KeyError:
+                        argspec = _args[self.__wrapped__] = getfullargspec(self.__wrapped__).args
+                
                     new_args = list(args)
                     new_kwargs = dict(kwargs)
                     try:
