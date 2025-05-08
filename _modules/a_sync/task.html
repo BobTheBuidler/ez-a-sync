@@ -114,6 +114,9 @@
 <span class="n">MappingFn</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="n">Concatenate</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">P</span><span class="p">],</span> <span class="n">Awaitable</span><span class="p">[</span><span class="n">V</span><span class="p">]]</span>
 
 
+<span class="n">_args</span> <span class="o">=</span> <span class="n">WeakKeyDictionary</span><span class="p">()</span>
+
+
 <div class="viewcode-block" id="TaskMapping">
 <a class="viewcode-back" href="../../source/a_sync.html#a_sync.task.TaskMapping">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TaskMapping</span><span class="p">(</span><span class="n">DefaultDict</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="s2">&quot;Task[V]&quot;</span><span class="p">],</span> <span class="n">AsyncIterable</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">]]):</span>
@@ -232,6 +235,9 @@
 
         <span class="k">if</span> <span class="n">iterables</span><span class="p">:</span>
 
+            <span class="n">set_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="o">.</span><span class="n">set</span>
+            <span class="n">clear_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="o">.</span><span class="n">clear</span>
+
             <span class="nd">@wraps</span><span class="p">(</span><span class="n">wrapped_func</span><span class="p">)</span>
             <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_wrapped_set_next</span><span class="p">(</span>
                 <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">__a_sync_recursion</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">P</span><span class="o">.</span><span class="n">kwargs</span>
@@ -242,17 +248,27 @@
                     <span class="n">e</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="o">*</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;wrapped:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="k">raise</span>
                 <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">__a_sync_recursion</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span>
-                        <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">wrapped_func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-                        <span class="ow">and</span> <span class="s2">&quot;got multiple values for argument&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span>
+                        <span class="ow">or</span> <span class="n">__a_sync_recursion</span> <span class="o">&gt;</span> <span class="mi">2</span>
+                        <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span>
+                            <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">wrapped_func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+                            <span class="ow">and</span> <span class="s2">&quot;got multiple values for argument&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                        <span class="p">)</span>
                     <span class="p">):</span>
                         <span class="k">raise</span>
+
                     <span class="c1"># NOTE: args ordering is clashing with provided kwargs. We can handle this in a hacky way.</span>
                     <span class="c1"># TODO: perform this check earlier and pre-prepare the args/kwargs ordering</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">argspec</span> <span class="o">=</span> <span class="n">_args</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">]</span>
+                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                        <span class="n">argspec</span> <span class="o">=</span> <span class="n">_args</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">]</span> <span class="o">=</span> <span class="n">getfullargspec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span><span class="o">.</span><span class="n">args</span>
+
                     <span class="n">new_args</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
                     <span class="n">new_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">getfullargspec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__wrapped__</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">argspec</span><span class="p">):</span>
                             <span class="k">if</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
                                 <span class="n">new_args</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">new_kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">arg</span><span class="p">))</span>
                             <span class="k">else</span><span class="p">:</span>
@@ -269,8 +285,8 @@
                             <span class="k">else</span> <span class="n">e2</span><span class="o">.</span><span class="n">with_traceback</span><span class="p">(</span><span class="n">e2</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)</span>
                         <span class="p">)</span>
                 <span class="k">finally</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+                    <span class="n">set_next</span><span class="p">()</span>
+                    <span class="n">clear_next</span><span class="p">()</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_wrapped_func</span> <span class="o">=</span> <span class="n">_wrapped_set_next</span>
             <span class="n">init_loader_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">K</span><span class="p">,</span> <span class="s2">&quot;Future[V]&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
