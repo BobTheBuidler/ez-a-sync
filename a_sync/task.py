@@ -43,6 +43,9 @@ logger = getLogger(__name__)
 MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
 
 
+_args = WeakKeyDictionary()
+
+
 class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     """
     A mapping of keys to asynchronous tasks with additional functionality.
@@ -153,9 +156,18 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
         if name:
             self._name = name
 
+
         self._next = Event(name=f"{self} `_next`")
 
         if iterables:
+
+            try:
+                argspec = _args[self.__wrapped__]
+            except KeyError:
+                argspec = _args[self.__wrapped__] = getfullargspec(self.__wrapped__).args
+
+            set_next = self._next.set
+            clear_next = self._next.clear
 
             @wraps(wrapped_func)
             async def _wrapped_set_next(
@@ -167,7 +179,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                     e.args = *e.args, f"wrapped:{self.__wrapped__}"
                     raise
                 except TypeError as e:
-                    if __a_sync_recursion > 2 or not (
+                    if args is None or __a_sync_recursion > 2 or not (
                         str(e).startswith(wrapped_func.__name__)
                         and "got multiple values for argument" in str(e)
                     ):
@@ -177,7 +189,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                     new_args = list(args)
                     new_kwargs = dict(kwargs)
                     try:
-                        for i, arg in enumerate(getfullargspec(self.__wrapped__).args):
+                        for i, arg in enumerate(argspec):
                             if arg in kwargs:
                                 new_args.insert(i, new_kwargs.pop(arg))
                             else:
@@ -194,8 +206,8 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                             else e2.with_traceback(e2.__traceback__)
                         )
                 finally:
-                    self._next.set()
-                    self._next.clear()
+                    set_next()
+                    clear_next()
 
             self._wrapped_func = _wrapped_set_next
             init_loader_queue: Queue[Tuple[K, "Future[V]"]] = Queue()
