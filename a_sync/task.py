@@ -156,7 +156,6 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
         if name:
             self._name = name
 
-
         self._next = Event(name=f"{self} `_next`")
 
         if iterables:
@@ -179,9 +178,13 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
                     e.args = *e.args, f"wrapped:{self.__wrapped__}"
                     raise
                 except TypeError as e:
-                    if args is None or __a_sync_recursion > 2 or not (
-                        str(e).startswith(wrapped_func.__name__)
-                        and "got multiple values for argument" in str(e)
+                    if (
+                        args is None
+                        or __a_sync_recursion > 2
+                        or not (
+                            str(e).startswith(wrapped_func.__name__)
+                            and "got multiple values for argument" in str(e)
+                        )
                     ):
                         raise
                     # NOTE: args ordering is clashing with provided kwargs. We can handle this in a hacky way.
