@@ -7,16 +7,13 @@ from a_sync import exceptions
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 
+
 # cdef exceptions
 cdef object TooManyFlags = exceptions.TooManyFlags
 del exceptions
 
 
-def _get_flag_name(dict kwargs) -> str:
-    return get_flag_name(kwargs)
-
-
-cdef inline str get_flag_name(dict kwargs):
+cpdef str get_flag_name(dict kwargs):
     """
     Get the name of the flag present in the kwargs.
 
@@ -49,7 +46,7 @@ cdef inline str get_flag_name(dict kwargs):
     raise TooManyFlags("kwargs", present_flags)
 
 
-cdef inline bint is_sync(str flag, dict kwargs, bint pop_flag):
+cdef bint is_sync(str flag, dict kwargs, bint pop_flag):
     """
     Determine if the operation should be synchronous based on the flag value.
 
