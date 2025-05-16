@@ -259,7 +259,7 @@ implemented.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__">
-<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span> <span class="pre">modifier_key</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__getitem__" title="Link to this definition"></a></dt>
 <dd><p>Gets the value of a modifier by key.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -279,7 +279,7 @@ implemented.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.modifiers.manager.ModifierManager.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__iter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Returns an iterator over the modifier keys.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">)</span>
@@ -399,12 +399,16 @@ implemented.</p>
 <span class="sig-name descname"><span class="pre">use_cache</span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.use_cache" title="Link to this definition"></a></dt>
 <dd><p>bint
 Determines if caching should be used.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">)</span>
+<blockquote>
+<div><dl>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">cache_type</span><span class="o">=</span><span class="s1">&#39;memory&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">use_cache</span>
 <span class="go">True</span>
 </pre></div>
 </div>
+</dd>
+</dl>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ModifierManager.use_cache</p>
@@ -417,12 +421,16 @@ Determines if caching should be used.</p>
 <span class="sig-name descname"><span class="pre">use_limiter</span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.use_limiter" title="Link to this definition"></a></dt>
 <dd><p>bint
 Determines if a rate limiter should be used.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<blockquote>
+<div><dl>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">runs_per_minute</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">use_limiter</span>
 <span class="go">True</span>
 </pre></div>
 </div>
+</dd>
+</dl>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ModifierManager.use_limiter</p>
@@ -435,12 +443,16 @@ Determines if a rate limiter should be used.</p>
 <span class="sig-name descname"><span class="pre">use_semaphore</span></span><a class="headerlink" href="#a_sync.a_sync.modifiers.manager.ModifierManager.use_semaphore" title="Link to this definition"></a></dt>
 <dd><p>bint
 Determines if a semaphore should be used.</p>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">semaphore</span><span class="o">=</span><span class="n">SemaphoreSpec</span><span class="p">())</span>
+<blockquote>
+<div><dl>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span> <span class="o">=</span> <span class="n">ModifierManager</span><span class="p">(</span><span class="n">semaphore</span><span class="o">=</span><span class="n">SemaphoreSpec</span><span class="p">())</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">manager</span><span class="o">.</span><span class="n">use_semaphore</span>
 <span class="go">True</span>
 </pre></div>
 </div>
+</dd>
+</dl>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ModifierManager.use_semaphore</p>

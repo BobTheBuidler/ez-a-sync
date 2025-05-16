@@ -266,13 +266,13 @@ seamless usage in different contexts without changing the underlying implementat
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncFilter</span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__aiter__">
-<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__aiter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__aiter__" title="Link to this definition"></a></dt>
 <dd><p>Return the {cls} for aiteration.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__anext__">
-<span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Coroutine</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__anext__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__anext__" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously fetch the next item from the {cls}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -297,7 +297,7 @@ seamless usage in different contexts without changing the underlying implementat
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__iter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return the {cls} for iteration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -311,7 +311,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.__next__">
-<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__next__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncFilter.__next__" title="Link to this definition"></a></dt>
 <dd><p>Synchronously fetch the next item from the {cls}.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -398,8 +398,8 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncFilter.materialized">
 <span class="sig-name descname"><span class="pre">materialized</span></span><a class="headerlink" href="#a_sync.iter.ASyncFilter.materialized" title="Link to this definition"></a></dt>
-<dd><p>List[T]
-Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>List[T]</p>
+<p>Synchronously iterate through the {cls} and return all {obj}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
@@ -417,7 +417,7 @@ Synchronously iterate through the {cls} and return all {obj}.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncGeneratorFunction</span></span><a class="headerlink" href="#a_sync.iter.ASyncGeneratorFunction" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncGeneratorFunction.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">P.kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="source/a_sync.html#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><span class="pre">ASyncIterator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncGeneratorFunction.__call__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncGeneratorFunction.__call__" title="Link to this definition"></a></dt>
 <dd><p>Calls the wrapped async generator function with the given arguments and keyword arguments, returning an <a class="reference internal" href="source/a_sync.html#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ASyncIterator</span></code></a>.
 :param *args: Positional arguments for the function.
 :param **kwargs: Keyword arguments for the function.</p>
@@ -451,7 +451,7 @@ Synchronously iterate through the {cls} and return all {obj}.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncIterable</span></span><a class="headerlink" href="#a_sync.iter.ASyncIterable" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__aiter__">
-<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AsyncIterator</span><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__aiter__" title="Link to this definition"></a></dt>
 <dd><p>Return an async iterator that yields {obj} from the {cls}.</p>
 </dd></dl>
 
@@ -468,7 +468,7 @@ Synchronously iterate through the {cls} and return all {obj}.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="source/a_sync.html#a_sync.iter.ASyncIterator" title="a_sync.iter.ASyncIterator"><span class="pre">ASyncIterator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__iter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterable.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return an iterator that yields {obj} from the {cls}.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -527,8 +527,8 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterable.materialized">
 <span class="sig-name descname"><span class="pre">materialized</span></span><a class="headerlink" href="#a_sync.iter.ASyncIterable.materialized" title="Link to this definition"></a></dt>
-<dd><p>List[T]
-Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>List[T]</p>
+<p>Synchronously iterate through the {cls} and return all {obj}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
@@ -546,13 +546,13 @@ Synchronously iterate through the {cls} and return all {obj}.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncIterator</span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__aiter__">
-<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__aiter__" title="Link to this definition"></a></dt>
 <dd><p>Return the {cls} for aiteration.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__anext__">
-<span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Coroutine</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__anext__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__anext__" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously fetch the next item from the {cls}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -574,7 +574,7 @@ Synchronously iterate through the {cls} and return all {obj}.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__iter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return the {cls} for iteration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -588,7 +588,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.__next__">
-<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__next__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncIterator.__next__" title="Link to this definition"></a></dt>
 <dd><p>Synchronously fetch the next item from the {cls}.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -653,8 +653,8 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncIterator.materialized">
 <span class="sig-name descname"><span class="pre">materialized</span></span><a class="headerlink" href="#a_sync.iter.ASyncIterator.materialized" title="Link to this definition"></a></dt>
-<dd><p>List[T]
-Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>List[T]</p>
+<p>Synchronously iterate through the {cls} and return all {obj}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
@@ -672,7 +672,7 @@ Synchronously iterate through the {cls} and return all {obj}.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.iter.</span></span><span class="sig-name descname"><span class="pre">ASyncSorter</span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter" title="Link to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__aiter__">
-<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__aiter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__aiter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__aiter__" title="Link to this definition"></a></dt>
 <dd><p>Return an async iterator for the {cls}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -686,7 +686,7 @@ Synchronously iterate through the {cls} and return all {obj}.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__anext__">
-<span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Coroutine</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__anext__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__anext__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__anext__" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously fetch the next item from the {cls}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -712,7 +712,7 @@ Synchronously iterate through the {cls} and return all {obj}.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__iter__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__iter__" title="Link to this definition"></a></dt>
 <dd><p>Return the {cls} for iteration.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -726,7 +726,7 @@ and should consider asynchronous iteration using <a class="reference internal" h
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.__next__">
-<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">T</span></span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__next__" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync.iter.ASyncSorter.__next__" title="Link to this definition"></a></dt>
 <dd><p>Synchronously fetch the next item from the {cls}.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -801,8 +801,8 @@ and should consider asynchronous iteration using <a class="reference internal" h
 <dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.iter.ASyncSorter.materialized">
 <span class="sig-name descname"><span class="pre">materialized</span></span><a class="headerlink" href="#a_sync.iter.ASyncSorter.materialized" title="Link to this definition"></a></dt>
-<dd><p>List[T]
-Synchronously iterate through the {cls} and return all {obj}.</p>
+<dd><p>List[T]</p>
+<p>Synchronously iterate through the {cls} and return all {obj}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A list of the {obj} yielded by the {cls}.</p>
