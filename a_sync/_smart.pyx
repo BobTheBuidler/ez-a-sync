@@ -34,12 +34,12 @@ cdef object get_event_loop = asyncio.get_event_loop
 cdef object AbstractEventLoop = asyncio.AbstractEventLoop
 cdef object Future = asyncio.Future
 cdef object Task = asyncio.Task
+cdef object CancelledError = asyncio.CancelledError
 cdef object InvalidStateError = asyncio.InvalidStateError
 cdef dict[object, object] _current_tasks = asyncio.tasks._current_tasks
 cdef object _future_init = asyncio.Future.__init__
 cdef object _get_loop = asyncio.futures._get_loop
 cdef object _task_init = asyncio.Task.__init__
-del asyncio
 
 # cdef logging
 cdef public object logger = getLogger(__name__)
@@ -509,6 +509,22 @@ class SmartTask(Task, Generic[T]):
         """
         if _is_not_done(self):
             (<set>self._waiters).remove(waiter)
+
+    def _make_cancelled_error(self) -> asyncio.CancelledError:
+        # this function is not present in python3.8 so we're backporting it
+        """Create the CancelledError to raise if the Future is cancelled.
+
+        This should only be called once when handling a cancellation since
+        it erases the saved context exception value.
+        """
+        if self._cancel_message is None:
+            exc = CancelledError()
+        else:
+            exc = CancelledError(self._cancel_message)
+        exc.__context__ = self._cancelled_exc
+        # Remove the reference since we don't need this anymore.
+        self._cancelled_exc = None
+        return exc
 
 
 cdef object _SmartTask = SmartTask
