@@ -2664,10 +2664,15 @@ InvalidStateError.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="a_sync._smart.SmartTask._make_cancelled_error">
-<span class="sig-name descname"><span class="pre">_make_cancelled_error</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#a_sync._smart.SmartTask._make_cancelled_error" title="Link to this definition"></a></dt>
-<dd><p>Create the CancelledError to raise if the Task is cancelled.</p>
+<span class="sig-name descname"><span class="pre">_make_cancelled_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/asyncio-exceptions.html#asyncio.CancelledError" title="(in Python v3.13)"><span class="pre">asyncio.CancelledError</span></a></span></span><a class="headerlink" href="#a_sync._smart.SmartTask._make_cancelled_error" title="Link to this definition"></a></dt>
+<dd><p>Create the CancelledError to raise if the Future is cancelled.</p>
 <p>This should only be called once when handling a cancellation since
-it erases the context exception value.</p>
+it erases the saved context exception value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>CancelledError</em></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
