@@ -2,6 +2,8 @@ from cpython.object cimport PyObject
 
 cdef class _ASyncGeneratorFunction:
     cdef readonly object _cache_handle
+    # must be public for functools.wraps
+    cdef public object __wrapped__
     cdef readonly object __weakself__
     cdef PyObject *__weakself_ptr
     cdef inline void _set_cache_handle(self, object handle)
