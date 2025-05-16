@@ -34,6 +34,7 @@ cdef object get_event_loop = asyncio.get_event_loop
 cdef object AbstractEventLoop = asyncio.AbstractEventLoop
 cdef object Future = asyncio.Future
 cdef object Task = asyncio.Task
+cdef object CancelledError = asyncio.CancelledError
 cdef object InvalidStateError = asyncio.InvalidStateError
 cdef dict[object, object] _current_tasks = asyncio.tasks._current_tasks
 cdef object _future_init = asyncio.Future.__init__
