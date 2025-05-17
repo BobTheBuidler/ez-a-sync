@@ -15,6 +15,7 @@ cimport cython
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
+from cpython.version cimport PY_VERSION_HEX
 
 from a_sync._typing import T
 
@@ -517,7 +518,7 @@ class SmartTask(Task, Generic[T]):
         This should only be called once when handling a cancellation since
         it erases the saved context exception value.
         """
-        if self._cancel_message is None:
+        if PY_VERSION_HEX < "0x03090000" or self._cancel_message is None:
             exc = CancelledError()
         else:
             exc = CancelledError(self._cancel_message)
