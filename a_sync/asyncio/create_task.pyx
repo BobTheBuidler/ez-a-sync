@@ -8,8 +8,8 @@ import asyncio.tasks as aiotasks
 import logging
 import typing
 
-from cpython.object cimport PyObject
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
+from cpython.version cimport PY_VERSION_HEX
 
 from a_sync import _smart, exceptions
 from a_sync._typing import T
@@ -19,6 +19,7 @@ from a_sync._typing import T
 cdef object get_running_loop = asyncio.get_running_loop
 cdef object iscoroutine = asyncio.iscoroutine
 cdef object Future = asyncio.Future
+cdef object CancelledError = asyncio.CancelledError
 cdef object InvalidStateError = asyncio.InvalidStateError
 cdef object Task = asyncio.Task
 cdef object _GatheringFuture = aiotasks._GatheringFuture
@@ -232,7 +233,11 @@ cdef object _get_exception(fut: Future):
         fut._Future__log_traceback = False
         return fut._exception
     if PyUnicode_CompareWithASCIIString(state, b"CANCELLED") == 0:
-        raise fut._make_cancelled_error()
+        raise (
+            CancelledError()
+            if PY_VERSION_HEX < 0x03090000  # Python 3.9
+            else fut._make_cancelled_error()
+        )
     raise InvalidStateError('Exception is not set.')
 
 
