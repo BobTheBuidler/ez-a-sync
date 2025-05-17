@@ -57,6 +57,7 @@ async def test_smart_task_await():
 async def test_smart_task_await_exc():
     async def raise_exc():
         raise ValueError("test")
+
     with pytest.raises(ValueError, match="test"):
         await SmartTask(raise_exc(), loop=None)
 
