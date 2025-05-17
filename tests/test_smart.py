@@ -2,7 +2,7 @@ import pytest
 import weakref
 from asyncio import CancelledError, create_task, get_event_loop, sleep
 
-from a_sync._smart import SmartFuture, SmartTask, set_smart_task_factory, shield, smart_task_factory
+from a_sync._smart import SmartFuture, SmartTask, WeakSet, set_smart_task_factory, shield, smart_task_factory
 
 
 @pytest.mark.asyncio_cooperative
@@ -11,7 +11,7 @@ async def test_smart_future_init_no_args():
     assert fut._loop is get_event_loop()
     assert fut._queue is None
     assert fut._key is None
-    assert isinstance(fut._waiters, weakref.WeakSet)
+    assert isinstance(fut._waiters, WeakSet)
     assert len(fut._waiters) == 0
 
 
@@ -22,7 +22,7 @@ async def test_smart_future_init_loop_arg():
     assert fut._loop is loop
     assert fut._queue is None
     assert fut._key is None
-    assert isinstance(fut._waiters, weakref.WeakSet)
+    assert isinstance(fut._waiters, WeakSet)
     assert len(fut._waiters) == 0
 
 
