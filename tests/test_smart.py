@@ -39,7 +39,7 @@ def test_set_smart_task_factory_with_loop():
 async def test_shield():
     task = create_task(sleep(1))
     shielded = shield(task)
-    await shield
+    await shielded
 
 
 @pytest.mark.asyncio_cooperative
@@ -47,7 +47,7 @@ async def test_shield_exc():
     async def raise_exc():
         raise ValueError
 
-    task = create_task(sleep(1))
+    task = create_task(raise_exc())
     shielded = shield(task)
     with pytest.raises(ValueError):
         await shielded
