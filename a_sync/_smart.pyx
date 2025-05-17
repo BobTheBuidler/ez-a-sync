@@ -518,7 +518,8 @@ class SmartTask(Task, Generic[T]):
         This should only be called once when handling a cancellation since
         it erases the saved context exception value.
         """
-        if PY_VERSION_HEX < "0x03090000" or self._cancel_message is None:
+        # if python version < 3.9
+        if PY_VERSION_HEX < 0x03090000 or self._cancel_message is None:
             exc = CancelledError()
         else:
             exc = CancelledError(self._cancel_message)
