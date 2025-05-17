@@ -106,11 +106,11 @@ async def test_shield():
 @pytest.mark.asyncio_cooperative
 async def test_shield_exc():
     async def raise_exc():
-        raise ValueError
+        raise ValueError("test")
 
     task = create_task(raise_exc())
     shielded = shield(task)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="test"):
         await shielded
 
 
