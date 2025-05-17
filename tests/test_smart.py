@@ -1,5 +1,5 @@
 import pytest
-from asyncio import create_task, get_event_loop, sleep
+from asyncio import CancelledError, create_task, get_event_loop, sleep
 
 from a_sync._smart import SmartTask, set_smart_task_factory, shield, smart_task_factory
 
@@ -58,7 +58,8 @@ async def test_shield_cancel_inner():
     task = create_task(sleep(1))
     shielded = shield(task)
     task.cancel()
-    await shielded
+    with pytest.raises(CancelledError):
+        await shielded
 
 
 @pytest.mark.asyncio_cooperative
