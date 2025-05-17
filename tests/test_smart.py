@@ -46,7 +46,7 @@ async def test_shield():
 async def test_shield_exc():
     async def raise_exc():
         raise ValueError
-    
+
     task = create_task(sleep(1))
     shielded = shield(task)
     with pytest.raises(ValueError):
