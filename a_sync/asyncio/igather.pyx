@@ -2,6 +2,8 @@ import asyncio
 from asyncio import futures, tasks
 from typing import Awaitable, Iterable, List, TypeVar
 
+from cpython.version cimport PY_VERSION_HEX
+
 from a_sync import _smart
 from a_sync.a_sync._helpers cimport get_event_loop
 
@@ -80,10 +82,11 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                     # If gather is being cancelled we must propagate the
                     # cancellation regardless of *return_exceptions* argument.
                     # See issue 32684.
-                    try:
-                        exc = fut._make_cancelled_error()
-                    except AttributeError:
-                        exc = CancelledError()
+                    exc = (
+                        CancelledError()
+                        if PY_VERSION_HEX < 0x03090000  # Python 3.9
+                        else fut._make_cancelled_error()
+                    )
                     outer.set_exception(exc)
                 else:
                     outer.set_result([_get_result_or_exc(child) for child in children])
@@ -105,10 +108,11 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                 # Check if 'fut' is cancelled first, as
                 # 'fut.exception()' will *raise* a CancelledError
                 # instead of returning it.
-                try:
-                    exc = fut._make_cancelled_error()
-                except AttributeError:
-                    exc = CancelledError()
+                exc = (
+                    CancelledError()
+                    if PY_VERSION_HEX < 0x03090000  # Python 3.9
+                    else fut._make_cancelled_error()
+                )
                 outer.set_exception(exc)
                 return
             else:
@@ -125,10 +129,11 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                     # If gather is being cancelled we must propagate the
                     # cancellation regardless of *return_exceptions* argument.
                     # See issue 32684.
-                    try:
-                        exc = fut._make_cancelled_error()
-                    except AttributeError:
-                        exc = CancelledError()
+                    exc = (
+                        CancelledError()
+                        if PY_VERSION_HEX < 0x03090000  # Python 3.9
+                        else fut._make_cancelled_error()
+                    )
                     outer.set_exception(exc)
                 else:
                     outer.set_result([_get_result_or_exc(child) for child in children])
@@ -162,6 +167,8 @@ cdef object _get_empty_result_set_fut(loop):
 
 cdef object _get_result_or_exc(fut: asyncio.Future):
     if fut.cancelled():
+        if PY_VERSION_HEX < 0x03090000:
+            return CancelledError()
         # Check if 'fut' is cancelled first, as 'fut.exception()'
         # will *raise* a CancelledError instead of returning it.
         # Also, since we're adding the exception return value
