@@ -1,7 +1,7 @@
 import pytest
 from asyncio import create_task, get_event_loop, sleep
 
-from a_sync._smart import SmartTask, set_smart_task_factory, smart_task_factory
+from a_sync._smart import SmartTask, set_smart_task_factory, shield, smart_task_factory
 
 
 @pytest.mark.asyncio_cooperative
