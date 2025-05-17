@@ -59,6 +59,8 @@ async def test_shield_cancel_inner():
     shielded = shield(task)
     task.cancel()
     with pytest.raises(CancelledError):
+        await task
+    with pytest.raises(CancelledError):
         await shielded
 
 
@@ -70,3 +72,5 @@ async def test_shield_cancel_outer():
     await sleep(0)
     assert not task.cancelled()
     await task
+    with pytest.raises(CancelledError):
+        await shielded
