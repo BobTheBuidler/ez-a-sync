@@ -1,7 +1,7 @@
 import pytest
-from asyncio import create_task, get_event_loop, sleep
+from asyncio import CancelledError, create_task, get_event_loop, sleep
 
-from a_sync._smart import SmartTask, set_smart_task_factory, smart_task_factory
+from a_sync._smart import SmartTask, set_smart_task_factory, shield, smart_task_factory
 
 
 @pytest.mark.asyncio_cooperative
@@ -33,3 +33,40 @@ def test_set_smart_task_factory_with_loop():
     set_smart_task_factory(loop)
     assert loop.get_task_factory() is smart_task_factory
     loop.run_until_complete(smart_task_coro())
+
+
+@pytest.mark.asyncio_cooperative
+async def test_shield():
+    task = create_task(sleep(1))
+    shielded = shield(task)
+    await shielded
+
+
+@pytest.mark.asyncio_cooperative
+async def test_shield_exc():
+    async def raise_exc():
+        raise ValueError
+
+    task = create_task(raise_exc())
+    shielded = shield(task)
+    with pytest.raises(ValueError):
+        await shielded
+
+
+@pytest.mark.asyncio_cooperative
+async def test_shield_cancel_inner():
+    task = create_task(sleep(1))
+    shielded = shield(task)
+    task.cancel()
+    with pytest.raises(CancelledError):
+        await shielded
+
+
+@pytest.mark.asyncio_cooperative
+async def test_shield_cancel_outer():
+    task = create_task(sleep(1))
+    shielded = shield(task)
+    shielded.cancel()
+    await sleep(0)
+    assert not task.cancelled()
+    await task
