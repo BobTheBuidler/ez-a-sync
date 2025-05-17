@@ -33,3 +33,39 @@ def test_set_smart_task_factory_with_loop():
     set_smart_task_factory(loop)
     assert loop.get_task_factory() is smart_task_factory
     loop.run_until_complete(smart_task_coro())
+
+
+@pytest.mark.asyncio_cooperative
+async def test_shield():
+    task = create_task(sleep(1))
+    shielded = shield(task)
+    await shield
+
+
+@pytest.mark.asyncio_cooperative
+async def test_shield_exc():
+    async def raise_exc():
+        raise ValueError
+    
+    task = create_task(sleep(1))
+    shielded = shield(task)
+    with pytest.raises(ValueError):
+        await shielded
+
+
+@pytest.mark.asyncio_cooperative
+async def test_shield_cancel_inner():
+    task = create_task(sleep(1))
+    shielded = shield(task)
+    task.cancel()
+    await shielded
+
+
+@pytest.mark.asyncio_cooperative
+async def test_shield_cancel_outer():
+    task = create_task(sleep(1))
+    shielded = shield(task)
+    shielded.cancel()
+    await sleep(0)
+    assert not task.cancelled()
+    await task
