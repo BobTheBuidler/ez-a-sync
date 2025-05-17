@@ -362,6 +362,24 @@ class SmartFuture(Future, Generic[T]):
         if _is_not_done(self):
             (<WeakSet>self._waiters).remove(waiter)
 
+    @cython.linetrace(False)
+    def _make_cancelled_error(self) -> asyncio.CancelledError:
+        # this function is not present in python3.8 so we're backporting it
+        """Create the CancelledError to raise if the Future is cancelled.
+
+        This should only be called once when handling a cancellation since
+        it erases the saved context exception value.
+        """
+        # if python version < 3.9
+        if PY_VERSION_HEX < 0x03090000 or self._cancel_message is None:
+            exc = CancelledError()
+        else:
+            exc = CancelledError(self._cancel_message)
+        exc.__context__ = self._cancelled_exc
+        # Remove the reference since we don't need this anymore.
+        self._cancelled_exc = None
+        return exc
+
 
 cdef object _SmartFuture = SmartFuture
 
