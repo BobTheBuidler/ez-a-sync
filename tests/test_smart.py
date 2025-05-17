@@ -1,7 +1,7 @@
 import pytest
 from asyncio import CancelledError, create_task, get_event_loop, sleep
 
-from a_sync._smart import SmartTask, set_smart_task_factory, shield, smart_task_factory
+from a_sync._smart import SmartFuture, SmartTask, set_smart_task_factory, shield, smart_task_factory
 
 
 @pytest.mark.asyncio_cooperative
@@ -57,7 +57,6 @@ async def test_smart_task_await():
 async def test_smart_task_await_exc():
     async def raise_exc():
         raise ValueError("test")
-
     with pytest.raises(ValueError, match="test"):
         await SmartTask(raise_exc(), loop=None)
 
