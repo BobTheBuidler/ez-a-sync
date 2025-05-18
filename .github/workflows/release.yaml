@@ -60,16 +60,16 @@ jobs:
             artifact_name: "wheels-macos-latest"
 
           # ----------------------------------------------------
-          # Windows 64-bit
+          # Windows 64-bit (use "AMD64")
           # ----------------------------------------------------
           - os: windows-latest
             build_type: winx64
             cibw_build: ""
-            cibw_archs_windows: x86_64
+            cibw_archs_windows: AMD64
             artifact_name: "wheels-windows-latest-x64"
 
           # ----------------------------------------------------
-          # Windows 32-bit
+          # Windows 32-bit (use "x86")
           # ----------------------------------------------------
           - os: windows-latest
             build_type: winx86
@@ -87,7 +87,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-        # Do not specify "architecture" here; GitHub's hosted runners are 64-bit by default.
+        # No "architecture" input here; GitHub's hosted runners are 64-bit by default.
 
       - name: Install cibuildwheel
         run: |
@@ -99,7 +99,7 @@ jobs:
           CIBW_SKIP: pp*
           # On Linux: manylinux / musllinux arches
           CIBW_ARCHS_LINUX: ${{ matrix.cibw_archs_linux || '' }}
-          # On Windows: x64 / x86
+          # On Windows: AMD64 / x86
           CIBW_ARCHS_WINDOWS: ${{ matrix.cibw_archs_windows || '' }}
           # Which wheels to build for Linux (manylinux vs. musllinux)
           CIBW_BUILD: ${{ matrix.cibw_build || '' }}
