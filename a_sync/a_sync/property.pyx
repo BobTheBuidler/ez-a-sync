@@ -15,7 +15,7 @@ from a_sync.a_sync import _descriptor, config, function, method
 from a_sync.a_sync._helpers cimport _asyncify, _await
 
 from a_sync.a_sync.function cimport _ModifiedMixin
-from a_sync.a_sync.method cimport _is_a_sync_instance, _update_cache_timer
+from a_sync.a_sync.method cimport _ASyncBoundMethod, _is_a_sync_instance, _update_cache_timer
 from a_sync.async_property import cached
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
 from a_sync.asyncio.create_task cimport ccreate_task_simple
