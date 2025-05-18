@@ -424,6 +424,7 @@ def test_unwrap_a_sync_method():
     class MyClass(ASyncGenericBase):
         def __init__(self, sync):
             self.sync = sync
+
         async def test_fn(): ...
 
     test_fn = MyClass().test_fn
@@ -441,6 +442,7 @@ def test_unwrap_a_sync_method_sync():
     class MyClass(ASyncGenericBase):
         def __init__(self, sync):
             self.sync = sync
+
         @a_sync("sync")
         async def test_fn(): ...
 
@@ -459,6 +461,7 @@ def test_unwrap_a_sync_function_async():
     class MyClass(ASyncGenericBase):
         def __init__(self, sync):
             self.sync = sync
+
         @a_sync("async")
         async def test_fn(): ...
 
