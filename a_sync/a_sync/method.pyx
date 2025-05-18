@@ -673,7 +673,7 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
         return retval  # type: ignore [call-overload, return-value]
 
     @property
-    cpdef __self__(self) -> I:
+    cpdef object __self__(self):
         """
         Get the instance the method is bound to.
 
@@ -691,7 +691,7 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             return <object>self_ptr
         raise ReferenceError(self)
 
-    cpdef map(
+    def map(
         self,
         *iterables: AnyIterable[I],
         concurrency: Optional[int] = None,
@@ -715,6 +715,9 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             >>> task_mapping = bound_method.map(iterable1, iterable2, concurrency=5)
             TODO briefly include how someone would then use task_mapping
         """
+        return self.c_map(iterables, concurrency, task_name, kwargs)
+
+    cdef object c_map(self, tuple iterables, object concurrency, str task_name, dict kwargs):
         if TaskMapping is None:
             _import_TaskMapping()
 
@@ -742,9 +745,7 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.any(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).any(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).any(pop=True, sync=False)
 
     async def all(
         self,
@@ -766,9 +767,7 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.all(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).all(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).all(pop=True, sync=False)
 
     async def min(
         self,
@@ -790,9 +789,7 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.min(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).min(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).min(pop=True, sync=False)
 
     async def max(
         self,
@@ -814,9 +811,7 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.max(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).max(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).max(pop=True, sync=False)
 
     async def sum(
         self,
@@ -838,9 +833,7 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.sum(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).sum(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).sum(pop=True, sync=False)
 
 
 class ASyncBoundMethod(_ASyncBoundMethod, Generic[I, P, T]):
