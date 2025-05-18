@@ -776,7 +776,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
         if instance is None:
             return self
     
-        cdef object bound
+        cdef _ASyncBoundMethod bound
         cdef str field_name = self.field_name
         try:
             bound = instance.__dict__[field_name]
