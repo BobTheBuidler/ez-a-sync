@@ -1131,37 +1131,59 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
     """
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
-        # TODO write specific docs for this overload
-        ...
-
-    @overload
     def __call__(
-        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]:
-        # TODO write specific docs for this overload
-        ...
-
-    @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+        _ASyncFunction self,
+        *args: P.args,
+        sync: Literal[True],
+        **kwargs: P.kwargs,
     ) -> T:
         # TODO write specific docs for this overload
         ...
 
     @overload
     def __call__(
-        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+        _ASyncFunction self,
+        *args: P.args,
+        sync: Literal[False], 
+        **kwargs: P.kwargs,
     ) -> Coroutine[Any, Any, T]:
         # TODO write specific docs for this overload
         ...
 
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:
+    def __call__(
+        _ASyncFunction self,
+        *args: P.args,
+        asynchronous: Literal[False],
+        **kwargs: P.kwargs,
+    ) -> T:
         # TODO write specific docs for this overload
         ...
 
-    def __call__(_ASyncFunction self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+    @overload
+    def __call__(
+        _ASyncFunction self,
+        *args: P.args,
+        asynchronous: Literal[True],
+        **kwargs: P.kwargs,
+    ) -> Coroutine[Any, Any, T]:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(
+        _ASyncFunction self,
+        *args: P.args,
+        **kwargs: P.kwargs,
+    ) -> T:
+        # TODO write specific docs for this overload
+        ...
+
+    def __call__(
+        _ASyncFunction self,
+        *args: P.args,
+        **kwargs: P.kwargs,
+    ) -> MaybeCoro[T]:
         """Calls the wrapped function, defaulting to synchronous execution.
 
         This method overrides the base :meth:`ASyncFunction.__call__` to provide a synchronous
@@ -1209,33 +1231,53 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
     """
 
     @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
-        # TODO write specific docs for this overload
-        ...
-
-    @overload
     def __call__(
-        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]:
-        # TODO write specific docs for this overload
-        ...
-
-    @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+        _ASyncFunction self, 
+        *args: P.args, 
+        sync: Literal[True], 
+        **kwargs: P.kwargs,
     ) -> T:
         # TODO write specific docs for this overload
         ...
 
     @overload
     def __call__(
-        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+        _ASyncFunction self,
+        *args: P.args,
+        sync: Literal[False],
+        **kwargs: P.kwargs,
     ) -> Coroutine[Any, Any, T]:
         # TODO write specific docs for this overload
         ...
 
     @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
+    def __call__(
+        _ASyncFunction self,
+        *args: P.args,
+        asynchronous: Literal[False],
+        **kwargs: P.kwargs,
+    ) -> T:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(
+        _ASyncFunction self,
+        *args: P.args,
+        asynchronous: Literal[True],
+        **kwargs: P.kwargs,
+    ) -> Coroutine[Any, Any, T]:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(
+        _ASyncFunction self,
+        *args: P.args,
+        **kwargs: P.kwargs,
+    ) -> Coroutine[Any, Any, T]:
+        ...
+        
     def __call__(_ASyncFunction self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """Calls the wrapped function, defaulting to asynchronous execution.
 
