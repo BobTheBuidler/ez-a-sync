@@ -272,7 +272,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         return self._is_async_def
 
 
-cdef void _update_cache_timer(str field_name, instance: I, bound: "ASyncBoundMethod"):
+cdef void _update_cache_timer(str field_name, object instance, _ASyncBoundMethod bound):
     """
     Update the TTL for the cache handle for the instance.
 
@@ -491,7 +491,7 @@ cdef bint _is_a_sync_instance(object instance):
     return is_a_sync
 
 
-cdef bint _should_await(_ASyncFunction self, dict kwargs):
+cdef bint _should_await(_ASyncBoundMethod self, dict kwargs):
     """
     Determine if the method should be awaited.
 
@@ -507,13 +507,13 @@ cdef bint _should_await(_ASyncFunction self, dict kwargs):
         return is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
     elif default := self.get_default():
         return default == "sync"
-    elif _is_a_sync_instance(self.__self__):
-        self.__self__: "ASyncABC"
-        return self.__self__.__a_sync_should_await__(kwargs)
+    elif _is_a_sync_instance(instance := self.__c_self__()):
+        instance: "ASyncABC"
+        return instance.__a_sync_should_await__(kwargs)
     return self._is_async_def
 
 
-class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
+cdef class _ASyncBoundMethod(_ASyncFunction):
     """
     A bound method that can be called both synchronously and asynchronously.
 
@@ -541,26 +541,13 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
         - :class:`ASyncMethodDescriptor`
         - :class:`ASyncFunction`
     """
-
-    # NOTE: this is created by the Descriptor
-
-    _cache_handle: TimerHandle = None
-    """An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."""
-
-    __weakself__: "ref[I]"
-    """A weak reference to the instance the function is bound to."""
-
-    __wrapped__: AnyFn[Concatenate[I, P], T]
-    """The original unbound method that was wrapped."""
-
-    __slots__ = "_is_async_def", "__weakself__"
-
+    
     def __init__(
-        _ASyncFunction self,
+        self,
         instance: I,
         unbound: AnyFn[Concatenate[I, P], T],
-        async_def: bool,
-        **modifiers: Unpack[ModifierKwargs],
+        bint async_def,
+        dict modifiers,
     ) -> None:
         """
         Initialize the bound method.
@@ -583,6 +570,9 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             >>> obj = MyClass(42)
             >>> bound_method = ASyncBoundMethod(obj, MyClass.my_method, True)
         """
+        # NOTE: This will be created by the Descriptor
+        self._cache_handle = None
+        
         # First we bind the method to a weak reference
         # - bind and create a strong reference to the cache handle method
         weakref_callback = self.__cancel_cache_handle
@@ -609,15 +599,17 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             >>> repr(bound_method)
             '<ASyncBoundMethod for function module.ClassName.method_name bound to instance>'
         """
-        cdef object instance_type
+        cdef object instance, instance_type
+        
         try:
-            instance_type = type(self.__self__)
+            instance = self.__c_self__()
+            instance_type = type(instance)
             return "<{} for function {}.{}.{} bound to {}>".format(
                 self.__class__.__name__,
                 instance_type.__module__,
                 instance_type.__name__,
                 self.__name__,
-                self.__self__
+                instance,
             )
         except ReferenceError:
             return "<{} for function COLLECTED.COLLECTED.{} bound to {}>".format(
@@ -626,22 +618,6 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
                 self.__weakself__
             )
 
-    @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
-    @overload
-    def __call__(
-        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
-    @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
-    @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
-    @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: ...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """
         Call the bound method.
@@ -664,7 +640,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             _logger_log(DEBUG, "calling %s with args: %s kwargs: %s", (self, args, kwargs))
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
-        retval = coro = _ASyncFunction.__call__(self, self.__self__, *args, **kwargs)
+        retval = coro = _ASyncFunction.__call__(self, self.__c_self__(), *args, **kwargs)
         if not isawaitable(retval):
             # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
@@ -683,7 +659,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
         return retval  # type: ignore [call-overload, return-value]
 
     @property
-    def __self__(self) -> I:
+    def __self__(self) -> object:
         """
         Get the instance the method is bound to.
 
@@ -695,6 +671,9 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method.__self__
             <MyClass instance>
         """
+        return self.__c_self__()
+
+    cdef object __c_self__(self):
         cdef PyObject *self_ptr
         if PyWeakref_GetRef(<PyObject*>self.__weakself__, &self_ptr) == 1:
             # 1 is success
@@ -725,6 +704,9 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             >>> task_mapping = bound_method.map(iterable1, iterable2, concurrency=5)
             TODO briefly include how someone would then use task_mapping
         """
+        return self.c_map(iterables, concurrency, task_name, kwargs)
+
+    cdef object c_map(self, tuple iterables, object concurrency, str task_name, dict kwargs):
         if TaskMapping is None:
             _import_TaskMapping()
 
@@ -752,9 +734,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.any(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).any(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).any(pop=True, sync=False)
 
     async def all(
         self,
@@ -776,9 +756,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.all(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).all(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).all(pop=True, sync=False)
 
     async def min(
         self,
@@ -800,9 +778,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.min(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).min(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).min(pop=True, sync=False)
 
     async def max(
         self,
@@ -824,9 +800,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.max(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).max(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).max(pop=True, sync=False)
 
     async def sum(
         self,
@@ -848,9 +822,57 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             >>> bound_method = ASyncBoundMethod(instance, my_function, True)
             >>> result = await bound_method.sum(iterable1, iterable2)
         """
-        return await self.map(
-            *iterables, concurrency=concurrency, task_name=task_name, **kwargs
-        ).sum(pop=True, sync=False)
+        return await self.c_map(iterables, concurrency, task_name, kwargs).sum(pop=True, sync=False)
+
+
+class ASyncBoundMethod(_ASyncBoundMethod, Generic[I, P, T]):
+    def __init__(
+        _ASyncFunction self,
+        instance: I,
+        unbound: AnyFn[Concatenate[I, P], T],
+        async_def: bool,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
+        """
+        Initialize the bound method.
+
+        Args:
+            instance: The instance to bind the method to.
+            unbound: The unbound function.
+            async_def: Whether the original function is an async def.
+            **modifiers: Additional modifiers for the function.
+
+        Examples:
+            >>> class MyClass:
+            ...     def __init__(self, value):
+            ...         self.value = value
+            ...
+            ...     @ASyncMethodDescriptor
+            ...     async def my_method(self):
+            ...         return self.value
+            ...
+            >>> obj = MyClass(42)
+            >>> bound_method = ASyncBoundMethod(obj, MyClass.my_method, True)
+        """
+        _ASyncBoundMethod.__init__(self, instance, unbound, async_def, modifiers)
+        update_wrapper(self, unbound)
+    
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
+    @overload
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T: ...
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: ...
 
     def __cancel_cache_handle(self, instance: I) -> None:
         """
@@ -866,7 +888,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
         handle = self._cache_handle
         if handle is not None:
             cancel_handle(handle)
-
+            
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     """
@@ -912,18 +934,19 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
 
-    __call__ = ASyncBoundMethod.__call__
-    """
-    Call the bound method with synchronous default behavior.
-
-    Args:
-        *args: Positional arguments.
-        **kwargs: Keyword arguments.
-
-    Examples:
-        >>> bound_method = ASyncBoundMethodSyncDefault(instance, my_function, True)
-        >>> bound_method(arg1, arg2, kwarg1=value1)
-    """
+    def __call__(self, *args, **kwargs):
+        """
+        Call the bound method with synchronous default behavior.
+    
+        Args:
+            *args: Positional arguments.
+            **kwargs: Keyword arguments.
+    
+        Examples:
+            >>> bound_method = ASyncBoundMethodSyncDefault(instance, my_function, True)
+            >>> bound_method(arg1, arg2, kwarg1=value1)
+        """
+        return _ASyncBoundMethod.__call__(self, *args, **kwargs)
 
 
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
@@ -970,18 +993,19 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
 
-    __call__ = ASyncBoundMethod.__call__
-    """
-    Call the bound method with asynchronous default behavior.
-
-    Args:
-        *args: Positional arguments.
-        **kwargs: Keyword arguments.
-
-    Examples:
-        >>> bound_method = ASyncBoundMethodAsyncDefault(instance, my_function, True)
-        >>> await bound_method(arg1, arg2, kwarg1=value1)
-    """
+    def __call__(self, *args, **kwargs):
+        """
+        Call the bound method with asynchronous default behavior.
+    
+        Args:
+            *args: Positional arguments.
+            **kwargs: Keyword arguments.
+    
+        Examples:
+            >>> bound_method = ASyncBoundMethodAsyncDefault(instance, my_function, True)
+            >>> await bound_method(arg1, arg2, kwarg1=value1)
+        """
+        return _ASyncBoundMethod.__call__(self, *args, **kwargs)
 
 
 cdef inline void _import_ASyncABC():
