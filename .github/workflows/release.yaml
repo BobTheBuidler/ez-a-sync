@@ -14,68 +14,23 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # ----------------------------------------------------
-          # manylinux 64-bit
-          # ----------------------------------------------------
+          # Linux
           - os: ubuntu-latest
-            build_type: manylinux-x64
-            cibw_build: "cp3?-*manylinux*"
-            cibw_archs_linux: x86_64
-            artifact_name: "wheels-ubuntu-latest-manylinux-x64"
+            cibw_archs_windows: none
 
-          # ----------------------------------------------------
-          # manylinux 32-bit
-          # ----------------------------------------------------
-          - os: ubuntu-latest
-            build_type: manylinux-x86
-            cibw_build: "cp3?-*manylinux*"
-            cibw_archs_linux: i686
-            artifact_name: "wheels-ubuntu-latest-manylinux-x86"
-
-          # ----------------------------------------------------
-          # musllinux 64-bit
-          # ----------------------------------------------------
-          - os: ubuntu-latest
-            build_type: musllinux-x64
-            cibw_build: "cp3?-*musllinux*"
-            cibw_archs_linux: x86_64
-            artifact_name: "wheels-ubuntu-latest-musllinux-x64"
-
-          # ----------------------------------------------------
-          # musllinux 32-bit
-          # ----------------------------------------------------
-          - os: ubuntu-latest
-            build_type: musllinux-x86
-            cibw_build: "cp3?-*musllinux*"
-            cibw_archs_linux: i686
-            artifact_name: "wheels-ubuntu-latest-musllinux-x86"
-
-          # ----------------------------------------------------
           # macOS
-          # ----------------------------------------------------
           - os: macos-latest
-            build_type: macos
-            cibw_build: ""
-            cibw_archs_linux: ""
-            artifact_name: "wheels-macos-latest"
+            cibw_archs_windows: none
 
-          # ----------------------------------------------------
-          # Windows 64-bit
-          # ----------------------------------------------------
+          # Windows 64-bit wheels
           - os: windows-latest
-            build_type: winx64
-            cibw_build: ""
+            name: windows-x64
             cibw_archs_windows: x86_64
-            artifact_name: "wheels-windows-latest-x64"
 
-          # ----------------------------------------------------
-          # Windows 32-bit
-          # ----------------------------------------------------
+          # Windows 32-bit wheels
           - os: windows-latest
-            build_type: winx86
-            cibw_build: ""
+            name: windows-x86
             cibw_archs_windows: x86
-            artifact_name: "wheels-windows-latest-x86"
 
     steps:
       - name: Check out code
@@ -83,12 +38,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      # ----------------------------------------------------
-      # Only set up Python on non-Windows (Linux, macOS).
-      # On Windows, cibuildwheel will fetch Python via nuget.
-      # ----------------------------------------------------
-      - name: Set up Python (non-Windows)
-        if: ${{ matrix.os != 'windows-latest' }}
+      # On macOS and Windows, actions/setup-python provides Python.
+      # On Ubuntu, cibuildwheel uses Docker to create manylinux wheels by default.
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
@@ -99,21 +51,18 @@ jobs:
 
       - name: Build wheels
         env:
-          # Skip PyPy
+          # skip building wheels for PyPy
           CIBW_SKIP: pp*
-          # On Linux: manylinux or musllinux arches
-          CIBW_ARCHS_LINUX: ${{ matrix.cibw_archs_linux || '' }}
-          # On Windows: 32-bit or 64-bit
-          CIBW_ARCHS_WINDOWS: ${{ matrix.cibw_archs_windows || '' }}
-          # Which wheels to build (cp310-win_*, cp311-win_*, etc.)
-          CIBW_BUILD: ${{ matrix.cibw_build || '' }}
+          # for Windows, specify which architecture to build
+          CIBW_ARCHS_WINDOWS: ${{ matrix.cibw_archs_windows }}
         run: |
           python -m cibuildwheel --output-dir wheelhouse
 
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
+          # include architecture in artifact name
+          name: wheels-${{ matrix.os }}-${{ matrix.cibw_archs_windows }}
           path: wheelhouse/*.whl
 
   publish_sdist_and_wheels:
@@ -125,7 +74,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
+          
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -135,59 +84,36 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel twine cython
-
+  
       - name: Build sdist
         run: |
           python setup.py sdist
 
-      # ----------------------------------------------------
-      # Download wheels built on each runner
-      # ----------------------------------------------------
-      - name: Download manylinux 64-bit wheels
+      # Download and group wheel artifacts
+      - name: Download wheels (Ubuntu)
         uses: actions/download-artifact@v4
         with:
-          name: "wheels-ubuntu-latest-manylinux-x64"
-          path: wheelhouse/linux-many-x64
+          name: "wheels-ubuntu-latest-none"
+          path: wheelhouse/ubuntu
 
-      - name: Download manylinux 32-bit wheels
+      - name: Download wheels (macOS)
         uses: actions/download-artifact@v4
         with:
-          name: "wheels-ubuntu-latest-manylinux-x86"
-          path: wheelhouse/linux-many-x86
-
-      - name: Download musllinux 64-bit wheels
-        uses: actions/download-artifact@v4
-        with:
-          name: "wheels-ubuntu-latest-musllinux-x64"
-          path: wheelhouse/linux-musl-x64
-
-      - name: Download musllinux 32-bit wheels
-        uses: actions/download-artifact@v4
-        with:
-          name: "wheels-ubuntu-latest-musllinux-x86"
-          path: wheelhouse/linux-musl-x86
-
-      - name: Download macOS wheels
-        uses: actions/download-artifact@v4
-        with:
-          name: "wheels-macos-latest"
+          name: "wheels-macos-latest-none"
           path: wheelhouse/macos
 
-      - name: Download Windows 64-bit wheels
+      - name: Download wheels (Windows 64)
         uses: actions/download-artifact@v4
         with:
-          name: "wheels-windows-latest-x64"
+          name: "wheels-windows-latest-x86_64"
           path: wheelhouse/windows-x64
 
-      - name: Download Windows 32-bit wheels
+      - name: Download wheels (Windows 32)
         uses: actions/download-artifact@v4
         with:
           name: "wheels-windows-latest-x86"
           path: wheelhouse/windows-x86
 
-      # ----------------------------------------------------
-      # Publish all built artifacts to PyPI
-      # ----------------------------------------------------
       - name: Publish sdist and wheels to PyPI
         env:
           TWINE_USERNAME: __token__
@@ -195,10 +121,7 @@ jobs:
         run: |
           twine upload \
             dist/* \
-            wheelhouse/linux-many-x64/*.whl \
-            wheelhouse/linux-many-x86/*.whl \
-            wheelhouse/linux-musl-x64/*.whl \
-            wheelhouse/linux-musl-x86/*.whl \
+            wheelhouse/ubuntu/*.whl \
             wheelhouse/macos/*.whl \
             wheelhouse/windows-x64/*.whl \
             wheelhouse/windows-x86/*.whl
