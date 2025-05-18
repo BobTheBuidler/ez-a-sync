@@ -1130,6 +1130,50 @@ cdef class _ASyncFunctionSyncDefault(_ASyncFunction):
         result = await my_function(5, sync=False)  # returns "5"
     """
 
+    def __call__(
+        self,
+        *args: P.args,
+        **kwargs: P.kwargs,
+    ) -> MaybeCoro[T]:
+        """Calls the wrapped function, defaulting to synchronous execution.
+
+        This method overrides the base :meth:`ASyncFunction.__call__` to provide a synchronous
+        default behavior.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Raises:
+            Exception: Any exception that may be raised by the wrapped function.
+
+        Returns:
+            The result of the function call.
+
+        See Also:
+            - :meth:`ASyncFunction.__call__`
+        """
+        return self.get_fn()(*args, **kwargs)
+
+
+class ASyncFunctionSyncDefault(_ASyncFunctionSyncDefault, Generic[P, T]):
+    def __init__(
+        self,
+        fn: AnyFn[P, T],
+        _skip_validate: bint = False,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
+        _ASyncFunction.__init__(self, fn, _skip_validate=_skip_validate, **modifiers)
+        update_wrapper(self, fn)
+        if self.__doc__ is None:
+            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
+        else:
+            self.__doc__ += (
+                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
+            )
+
+    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously."
+
     @overload
     def __call__(
         self,
@@ -1179,50 +1223,6 @@ cdef class _ASyncFunctionSyncDefault(_ASyncFunction):
         # TODO write specific docs for this overload
         ...
 
-    def __call__(
-        self,
-        *args: P.args,
-        **kwargs: P.kwargs,
-    ) -> MaybeCoro[T]:
-        """Calls the wrapped function, defaulting to synchronous execution.
-
-        This method overrides the base :meth:`ASyncFunction.__call__` to provide a synchronous
-        default behavior.
-
-        Args:
-            *args: Positional arguments to pass to the wrapped function.
-            **kwargs: Keyword arguments to pass to the wrapped function.
-
-        Raises:
-            Exception: Any exception that may be raised by the wrapped function.
-
-        Returns:
-            The result of the function call.
-
-        See Also:
-            - :meth:`ASyncFunction.__call__`
-        """
-        return self.get_fn()(*args, **kwargs)
-
-
-class ASyncFunctionSyncDefault(_ASyncFunctionSyncDefault, Generic[P, T]):
-    def __init__(
-        self,
-        fn: AnyFn[P, T],
-        _skip_validate: bint = False,
-        **modifiers: Unpack[ModifierKwargs],
-    ) -> None:
-        _ASyncFunction.__init__(self, fn, _skip_validate=_skip_validate, **modifiers)
-        update_wrapper(self, fn)
-        if self.__doc__ is None:
-            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
-        else:
-            self.__doc__ += (
-                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
-            )
-
-    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously."
-
 
 cdef class _ASyncFunctionAsyncDefault(_ASyncFunction):
     """
@@ -1246,6 +1246,46 @@ cdef class _ASyncFunctionAsyncDefault(_ASyncFunction):
         # Synchronous call
         result = my_function(5, sync=True)  # returns "5"
     """
+        
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+        """Calls the wrapped function, defaulting to asynchronous execution.
+
+        This method overrides the base :meth:`ASyncFunction.__call__` to provide an asynchronous
+        default behavior.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Raises:
+            Exception: Any exception that may be raised by the wrapped function.
+
+        Returns:
+            The result of the function call.
+
+        See Also:
+            - :meth:`ASyncFunction.__call__`
+        """
+        return self.get_fn()(*args, **kwargs)
+
+
+class ASyncFunctionAsyncDefault(_ASyncFunctionAsyncDefault, Generic[P, T]):
+    def __init__(
+        self,
+        fn: AnyFn[P, T],
+        _skip_validate: bint = False,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
+        _ASyncFunction.__init__(self, fn, _skip_validate=_skip_validate, **modifiers)
+        update_wrapper(self, fn)
+        if self.__doc__ is None:
+            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
+        else:
+            self.__doc__ += (
+                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
+            )
+
+    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
 
     @overload
     def __call__(
@@ -1294,46 +1334,6 @@ cdef class _ASyncFunctionAsyncDefault(_ASyncFunction):
         **kwargs: P.kwargs,
     ) -> Coroutine[Any, Any, T]:
         ...
-        
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
-        """Calls the wrapped function, defaulting to asynchronous execution.
-
-        This method overrides the base :meth:`ASyncFunction.__call__` to provide an asynchronous
-        default behavior.
-
-        Args:
-            *args: Positional arguments to pass to the wrapped function.
-            **kwargs: Keyword arguments to pass to the wrapped function.
-
-        Raises:
-            Exception: Any exception that may be raised by the wrapped function.
-
-        Returns:
-            The result of the function call.
-
-        See Also:
-            - :meth:`ASyncFunction.__call__`
-        """
-        return self.get_fn()(*args, **kwargs)
-
-
-class ASyncFunctionAsyncDefault(_ASyncFunctionAsyncDefault, Generic[P, T]):
-    def __init__(
-        self,
-        fn: AnyFn[P, T],
-        _skip_validate: bint = False,
-        **modifiers: Unpack[ModifierKwargs],
-    ) -> None:
-        _ASyncFunction.__init__(self, fn, _skip_validate=_skip_validate, **modifiers)
-        update_wrapper(self, fn)
-        if self.__doc__ is None:
-            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
-        else:
-            self.__doc__ += (
-                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
-            )
-
-    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
 
         
 cdef class ASyncDecoratorSyncDefault(ASyncDecorator):
