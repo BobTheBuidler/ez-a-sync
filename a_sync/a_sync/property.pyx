@@ -727,7 +727,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
         """Returns an awaitable for the method."""
         # NOTE: self(sync=False).__await__() would be cleaner but requires way more compute for no real gain
         _logger_debug("awaiting %s", self)
-        return self.fn(self.__c_self__(), sync=False).__await__()
+        return self.get_fn()(self.__c_self__(), sync=False).__await__()
 
 
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
