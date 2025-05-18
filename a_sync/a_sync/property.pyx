@@ -714,13 +714,14 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
 
     def __repr__(_ASyncBoundMethod self) -> str:
         """Returns a string representation of the HiddenMethod."""
-        instance_type = type(self.__self__)
+        instance = self.__c_self__()
+        instance_type = type(instance)
         return "<{} for property {}.{}.{} bound to {}>".format(
             self.__class__.__name__,
             instance_type.__module__,
             instance_type.__name__,
             self.__name__[2:-2],
-            self.__c_self__(),
+            instance,
         )
 
     def __await__(_ASyncBoundMethod self) -> Generator[Any, None, T]:
