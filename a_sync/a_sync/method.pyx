@@ -547,7 +547,7 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
         instance: I,
         unbound: AnyFn[Concatenate[I, P], T],
         bint async_def,
-        **modifiers: Unpack[ModifierKwargs],
+        dict modifiers,
     ) -> None:
         """
         Initialize the bound method.
