@@ -513,7 +513,7 @@ cdef bint _should_await(_ASyncFunction self, dict kwargs):
     return self._is_async_def
 
 
-class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
+cdef class _ASyncBoundMethod(function._ASyncFunction):
     """
     A bound method that can be called both synchronously and asynchronously.
 
@@ -542,24 +542,14 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
         - :class:`ASyncFunction`
     """
 
-    # NOTE: this is created by the Descriptor
-
-    _cache_handle: TimerHandle = None
-    """An asyncio handle used to pop the bound method from `instance.__dict__` 5 minutes after its last use."""
-
-    __weakself__: "ref[I]"
-    """A weak reference to the instance the function is bound to."""
-
-    __wrapped__: AnyFn[Concatenate[I, P], T]
-    """The original unbound method that was wrapped."""
-
-    __slots__ = "_is_async_def", "__weakself__"
+    cdef readonly bint _is_async_dec
+    cdef readonly object __weakself__
 
     def __init__(
-        _ASyncFunction self,
+        self,
         instance: I,
         unbound: AnyFn[Concatenate[I, P], T],
-        async_def: bool,
+        bint async_def,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
         """
@@ -683,7 +673,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
         return retval  # type: ignore [call-overload, return-value]
 
     @property
-    def __self__(self) -> I:
+    cpdef __self__(self) -> I:
         """
         Get the instance the method is bound to.
 
@@ -701,7 +691,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             return <object>self_ptr
         raise ReferenceError(self)
 
-    def map(
+    cpdef map(
         self,
         *iterables: AnyIterable[I],
         concurrency: Optional[int] = None,
@@ -852,6 +842,39 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
             *iterables, concurrency=concurrency, task_name=task_name, **kwargs
         ).sum(pop=True, sync=False)
 
+
+class ASyncBoundMethod(_ASyncBoundMethod, Generic[I, P, T]):
+    def __init__(
+        _ASyncFunction self,
+        instance: I,
+        unbound: AnyFn[Concatenate[I, P], T],
+        async_def: bool,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
+        """
+        Initialize the bound method.
+
+        Args:
+            instance: The instance to bind the method to.
+            unbound: The unbound function.
+            async_def: Whether the original function is an async def.
+            **modifiers: Additional modifiers for the function.
+
+        Examples:
+            >>> class MyClass:
+            ...     def __init__(self, value):
+            ...         self.value = value
+            ...
+            ...     @ASyncMethodDescriptor
+            ...     async def my_method(self):
+            ...         return self.value
+            ...
+            >>> obj = MyClass(42)
+            >>> bound_method = ASyncBoundMethod(obj, MyClass.my_method, True)
+        """
+        _ASyncBoundMethod.__init__(self, instance, unbound, async_def, modifiers)
+        update_wrapper(self, unbound)
+
     def __cancel_cache_handle(self, instance: I) -> None:
         """
         Cancel the cache handle.
@@ -866,7 +889,7 @@ class ASyncBoundMethod(function.ASyncFunction[P, T], Generic[I, P, T]):
         handle = self._cache_handle
         if handle is not None:
             cancel_handle(handle)
-
+            
 
 class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     """
