@@ -933,7 +933,7 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
 
-    __call__ = _ASyncBoundMethod.__call__
+    __call__ = ASyncBoundMethod.__call__
     """
     Call the bound method with synchronous default behavior.
 
@@ -991,7 +991,7 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
 
-    __call__ = _ASyncBoundMethod.__call__
+    __call__ = ASyncBoundMethod.__call__
     """
     Call the bound method with asynchronous default behavior.
 
