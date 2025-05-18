@@ -1,8 +1,21 @@
 import asyncio
 import pytest
 
-from a_sync import TaskMapping, create_task
-from a_sync.task import _EmptySequenceError
+from a_sync import TaskMapping, a_sync, create_task
+from a_sync.a_sync.base import ASyncGenericBase
+from a_sync.a_sync.function import (
+    _ASyncFunction,
+    ASyncFunction,
+    ASyncFunctionAsyncDefault,
+    ASyncFunctionSyncDefault,
+)
+from a_sync.a_sync.method import (
+    _ASyncBoundMethod,
+    ASyncBoundMethod,
+    ASyncBoundMethodAsyncDefault,
+    ASyncBoundMethodSyncDefault,
+)
+from a_sync.task import _EmptySequenceError, _unwrap
 
 
 async def _coro_fn(key):
@@ -365,3 +378,109 @@ def _assert_len_dictviews(tasks, i):
     assert len(tasks.keys()) == i
     assert len(tasks.values()) == i
     assert len(tasks.items()) == i
+
+
+# TODO: add unwrap tests for bound method and property classes
+def test_unwrap_basic():
+    async def test_fn(): ...
+
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is test_fn
+
+
+def test_unwrap_a_sync_function():
+    @a_sync
+    async def test_fn(): ...
+
+    assert isinstance(test_fn, _ASyncFunction)
+    assert isinstance(test_fn, ASyncFunction)
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert not isinstance(unwrapped, _ASyncFunction)
+    assert not isinstance(unwrapped, ASyncFunction)
+
+
+def test_unwrap_a_sync_function_sync():
+    @a_sync("sync")
+    async def test_fn(): ...
+
+    assert isinstance(test_fn, _ASyncFunction)
+    assert isinstance(test_fn, ASyncFunctionSyncDefault)
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert not isinstance(unwrapped, _ASyncFunction)
+    assert not isinstance(unwrapped, ASyncFunction)
+
+
+def test_unwrap_a_sync_function_async():
+    @a_sync("async")
+    async def test_fn(): ...
+
+    assert isinstance(test_fn, _ASyncFunction)
+    assert isinstance(test_fn, ASyncFunctionAsyncDefault)
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert not isinstance(unwrapped, _ASyncFunction)
+    assert not isinstance(unwrapped, ASyncFunction)
+
+
+def test_unwrap_a_sync_method():
+    class MyClass(ASyncGenericBase):
+        def __init__(self, sync):
+            self.sync = sync
+            super().__init__()
+
+        async def test_fn(self): ...
+
+    test_fn = MyClass(sync=True).test_fn
+    assert isinstance(test_fn, _ASyncFunction)
+    assert isinstance(test_fn, _ASyncBoundMethod)
+    assert isinstance(test_fn, ASyncBoundMethod)
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert not isinstance(unwrapped, _ASyncFunction)
+    assert not isinstance(unwrapped, ASyncFunction)
+
+
+def test_unwrap_a_sync_method_sync():
+    class MyClass(ASyncGenericBase):
+        def __init__(self, sync):
+            self.sync = sync
+            super().__init__()
+
+        @a_sync("sync")
+        async def test_fn(self): ...
+
+    test_fn = MyClass(sync=True).test_fn
+    assert isinstance(test_fn, _ASyncFunction)
+    assert isinstance(test_fn, _ASyncBoundMethod)
+    assert isinstance(test_fn, ASyncBoundMethodSyncDefault)
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert not isinstance(unwrapped, _ASyncFunction)
+    assert not isinstance(unwrapped, ASyncFunction)
+
+
+def test_unwrap_a_sync_method_async():
+    class MyClass(ASyncGenericBase):
+        def __init__(self, sync):
+            self.sync = sync
+            super().__init__()
+
+        @a_sync("async")
+        async def test_fn(self): ...
+
+    test_fn = MyClass(sync=True).test_fn
+    assert isinstance(test_fn, _ASyncFunction)
+    assert isinstance(test_fn, _ASyncBoundMethod)
+    assert isinstance(test_fn, ASyncBoundMethodAsyncDefault)
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert not isinstance(unwrapped, _ASyncFunction)
+    assert not isinstance(unwrapped, ASyncFunction)
