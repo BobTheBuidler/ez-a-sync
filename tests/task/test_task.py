@@ -2,7 +2,7 @@ import asyncio
 import pytest
 
 from a_sync import TaskMapping, create_task
-from a_sync.task import _EmptySequenceError
+from a_sync.task import _EmptySequenceError, _unwrap
 
 
 async def _coro_fn(key):
@@ -365,3 +365,50 @@ def _assert_len_dictviews(tasks, i):
     assert len(tasks.keys()) == i
     assert len(tasks.values()) == i
     assert len(tasks.items()) == i
+
+
+# TODO: add unwrap tests for bound method and property classes
+def test_unwrap_basic():
+    async def test_fn():
+        ...
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is test_fn
+
+
+def test_unwrap_a_sync_function_sync_default():
+    @a_sync
+    async def test_fn():
+        ...
+    assert isinstance(test_fn, _ASyncFunction)
+    assert isinstance(test_fn, ASyncFunction)
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert not isinstance(unwrapped, _ASyncFunction)
+    assert not isinstance(unwrapped, ASyncFunction)
+
+
+def test_unwrap_a_sync_function_sync():
+    @a_sync("sync")
+    async def test_fn():
+        ...
+    assert isinstance(test_fn, _ASyncFunction)
+    assert isinstance(test_fn, ASyncFunctionSyncDefault)
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert not isinstance(unwrapped, _ASyncFunction)
+    assert not isinstance(unwrapped, ASyncFunction)
+
+
+def test_unwrap_a_sync_function_async():
+    @a_sync("async")
+    async def test_fn():
+        ...
+    assert isinstance(test_fn, _ASyncFunction)
+    assert isinstance(test_fn, ASyncFunctionAsyncDefault)
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert not isinstance(unwrapped, _ASyncFunction)
+    assert not isinstance(unwrapped, ASyncFunction)
