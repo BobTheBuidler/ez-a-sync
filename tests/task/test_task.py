@@ -432,7 +432,7 @@ def test_unwrap_a_sync_method():
         def __init__(self, sync):
             self.sync = sync
 
-        async def test_fn(): ...
+        async def test_fn(self): ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
@@ -451,7 +451,7 @@ def test_unwrap_a_sync_method_sync():
             self.sync = sync
 
         @a_sync("sync")
-        async def test_fn(): ...
+        async def test_fn(self): ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
@@ -470,7 +470,7 @@ def test_unwrap_a_sync_method_async():
             self.sync = sync
 
         @a_sync("async")
-        async def test_fn(): ...
+        async def test_fn(self): ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
