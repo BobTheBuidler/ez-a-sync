@@ -464,7 +464,7 @@ def test_unwrap_a_sync_method_sync():
     assert not isinstance(unwrapped, ASyncFunction)
 
 
-def test_unwrap_a_sync_function_async():
+def test_unwrap_a_sync_method_async():
     class MyClass(ASyncGenericBase):
         def __init__(self, sync):
             self.sync = sync
