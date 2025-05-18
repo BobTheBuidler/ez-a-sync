@@ -1110,7 +1110,7 @@ cdef void _check_not_genfunc(func: Callable):
 # Mypy helper classes
 
 
-class ASyncFunctionSyncDefault(_ASyncFunction):
+cdef class _ASyncFunctionSyncDefault(_ASyncFunction):
     """A specialized :class:`~ASyncFunction` that defaults to synchronous execution.
 
     This class is used when the :func:`~a_sync` decorator is applied with `default='sync'`.
@@ -1206,10 +1206,27 @@ class ASyncFunctionSyncDefault(_ASyncFunction):
         """
         return self.get_fn()(*args, **kwargs)
 
+
+class ASyncFunctionSyncDefault(_ASyncFunctionSyncDefault, Generic[P, T]):
+    def __init__(
+        self,
+        fn: AnyFn[P, T],
+        _skip_validate: bint = False,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
+        _ASyncFunction.__init__(self, fn, _skip_validate=_skip_validate, **modifiers)
+        update_wrapper(self, fn)
+        if self.__doc__ is None:
+            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
+        else:
+            self.__doc__ += (
+                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
+            )
+
     __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously."
 
 
-class ASyncFunctionAsyncDefault(_ASyncFunction):
+cdef class _ASyncFunctionAsyncDefault(_ASyncFunction):
     """
     A specialized :class:`~ASyncFunction` that defaults to asynchronous execution.
 
@@ -1301,9 +1318,26 @@ class ASyncFunctionAsyncDefault(_ASyncFunction):
         """
         return self.get_fn()(*args, **kwargs)
 
+
+class ASyncFunctionAsyncDefault(_ASyncFunctionAsyncDefault):
+    def __init__(
+        self,
+        fn: AnyFn[P, T],
+        _skip_validate: bint = False,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
+        _ASyncFunction.__init__(self, fn, _skip_validate=_skip_validate, **modifiers)
+        update_wrapper(self, fn)
+        if self.__doc__ is None:
+            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
+        else:
+            self.__doc__ += (
+                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
+            )
+
     __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
 
-
+        
 cdef class ASyncDecoratorSyncDefault(ASyncDecorator):
     @overload
     def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodSyncDefault[P, T]":  # type: ignore [override]
