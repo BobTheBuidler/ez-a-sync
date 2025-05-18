@@ -88,6 +88,8 @@ def test_method_sync(cls: type, i: int):
         WrongThreadError: If a synchronous method is incorrectly awaited in a :class:`TestSync` instance.
     """
     sync_instance = cls(i, sync=True)
+    assert sync_instance.test_fn.is_async_def()
+    assert sync_instance.test_fn.is_sync_default()
     assert sync_instance.test_fn() == i
 
     # Can we override with kwargs?
@@ -130,6 +132,8 @@ async def test_method_async(cls: type, i: int):
         SyncModeInAsyncContextError: If a synchronous method is run in an asynchronous context.
     """
     async_instance = cls(i, sync=False)
+    assert async_instance.test_fn.is_async_def()
+    assert not async_instance.test_fn.is_sync_default()
     if isinstance(async_instance, TestSync):
         # this raises an assertion error inside of the test_fn execution. this is okay.
         with pytest.raises(WrongThreadError):
