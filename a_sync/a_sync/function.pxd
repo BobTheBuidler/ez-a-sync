@@ -20,5 +20,6 @@ cdef class _ASyncFunction(_ModifiedMixin):
     cdef object __modified_fn
     cdef object __async_wrap
     cdef object __sync_wrap
+    cdef object get_fn(self)
 
 cdef void _validate_wrapped_fn(object fn)
