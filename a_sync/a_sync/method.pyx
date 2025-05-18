@@ -570,6 +570,9 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
             >>> obj = MyClass(42)
             >>> bound_method = ASyncBoundMethod(obj, MyClass.my_method, True)
         """
+        # NOTE: This will be created by the Descriptor
+        self._cache_handle = None
+        
         # First we bind the method to a weak reference
         # - bind and create a strong reference to the cache handle method
         weakref_callback = self.__cancel_cache_handle
