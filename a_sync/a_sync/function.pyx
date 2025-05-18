@@ -815,7 +815,13 @@ cdef class _ASyncFunction(_ModifiedMixin):
         if self.__async_def_cached:
             return self.__async_def
         cdef bint async_def
-        async_def = self.__async_def = iscoroutinefunction(self.__wrapped__)
+
+        # recursively unwrap ASync callables to get the original wrapped fn
+        wrapped = self.__wrapped__
+        while isinstance(wrapped, _ASyncFunction):
+            wrapped = wrapped.__wrapped__
+            
+        async_def = self.__async_def = iscoroutinefunction(wrapped)
         self.__async_def_cached = True
         return async_def
 
