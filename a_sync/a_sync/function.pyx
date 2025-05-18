@@ -341,6 +341,9 @@ cdef class _ASyncFunction(_ModifiedMixin):
             - :meth:`_async_wrap`
             - :meth:`_sync_wrap`
         """
+        return self.get_fn()
+
+    cdef object get_fn(self):
         fn = self._fn
         if fn is None:
             fn = self._async_wrap if self._async_def else self._sync_wrap
@@ -1157,7 +1160,7 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
         # TODO write specific docs for this overload
         ...
 
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+    def __call__(_ASyncFunction self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """Calls the wrapped function, defaulting to synchronous execution.
 
         This method overrides the base :meth:`ASyncFunction.__call__` to provide a synchronous
@@ -1176,7 +1179,7 @@ class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
         See Also:
             - :meth:`ASyncFunction.__call__`
         """
-        return self.fn(*args, **kwargs)
+        return self.get_fn()(*args, **kwargs)
 
     __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously."
 
@@ -1232,7 +1235,7 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
 
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+    def __call__(_ASyncFunction self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """Calls the wrapped function, defaulting to asynchronous execution.
 
         This method overrides the base :meth:`ASyncFunction.__call__` to provide an asynchronous
@@ -1251,7 +1254,7 @@ class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
         See Also:
             - :meth:`ASyncFunction.__call__`
         """
-        return self.fn(*args, **kwargs)
+        return self.get_fn()(*args, **kwargs)
 
     __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
 
