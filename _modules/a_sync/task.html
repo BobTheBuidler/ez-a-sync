@@ -907,7 +907,7 @@
         <span class="c1"># this speeds things up a bit by bypassing some logic</span>
         <span class="c1"># TODO implement it like this elsewhere if profilers suggest</span>
         <span class="n">unwrapped</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_modified_fn</span> <span class="k">if</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_async_def</span> <span class="k">else</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_asyncified</span>
+            <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_modified_fn</span> <span class="k">if</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">is_async_def</span><span class="p">()</span> <span class="k">else</span> <span class="n">wrapped_func</span><span class="o">.</span><span class="n">_asyncified</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">unwrapped</span> <span class="o">=</span> <span class="n">wrapped_func</span>

@@ -1732,6 +1732,42 @@ in the ez-a-sync library.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.function.ASyncFunction.default" title="a_sync.a_sync.function.ASyncFunction.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[P,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction.map" title="Link to this definition"></a></dt>
 <dd><p>Creates a TaskMapping for the wrapped function with the given iterables.</p>
@@ -1844,29 +1880,6 @@ in the ez-a-sync library.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -1938,31 +1951,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunction._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunction._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.function.ASyncFunction.default" title="a_sync.a_sync.function.ASyncFunction.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2159,6 +2147,42 @@ default behavior.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.default" title="a_sync.a_sync.function.ASyncFunctionAsyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[P,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.map" title="Link to this definition"></a></dt>
 <dd><p>Creates a TaskMapping for the wrapped function with the given iterables.</p>
@@ -2271,29 +2295,6 @@ default behavior.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -2365,31 +2366,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionAsyncDefault._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.function.ASyncFunctionAsyncDefault.default" title="a_sync.a_sync.function.ASyncFunctionAsyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2586,6 +2562,42 @@ default behavior.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.default" title="a_sync.a_sync.function.ASyncFunctionSyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[P,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.map" title="Link to this definition"></a></dt>
 <dd><p>Creates a TaskMapping for the wrapped function with the given iterables.</p>
@@ -2698,29 +2710,6 @@ default behavior.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -2792,31 +2781,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.function.ASyncFunctionSyncDefault._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.function.ASyncFunctionSyncDefault.default" title="a_sync.a_sync.function.ASyncFunctionSyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3034,6 +2998,42 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.function._ASyncFunction.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function._ASyncFunction.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.function._ASyncFunction.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.function._ASyncFunction.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.function._ASyncFunction.default" title="a_sync.a_sync.function._ASyncFunction.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.function._ASyncFunction.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[P,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.function._ASyncFunction.map" title="Link to this definition"></a></dt>
 <dd><p>Creates a TaskMapping for the wrapped function with the given iterables.</p>
@@ -3146,29 +3146,6 @@ execution path (sync or async) by leveraging the <cite>_run_sync</cite> method.<
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.function._ASyncFunction._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.function._ASyncFunction._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.function._ASyncFunction._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.function._ASyncFunction._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -3240,31 +3217,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.function._ASyncFunction._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.function._ASyncFunction._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.function._ASyncFunction.default" title="a_sync.a_sync.function._ASyncFunction.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3480,6 +3432,42 @@ asynchronously based on various conditions and configurations.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethod.default" title="a_sync.a_sync.method.ASyncBoundMethod.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[I],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[I,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod.map" title="Link to this definition"></a></dt>
 <dd><p>Create a TaskMapping for this method.</p>
@@ -3580,29 +3568,6 @@ asynchronously based on various conditions and configurations.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -3684,31 +3649,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethod._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethod._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethod.default" title="a_sync.a_sync.method.ASyncBoundMethod.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3910,6 +3850,42 @@ It overrides the <cite>__call__</cite> method to enforce asynchronous default be
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.default" title="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[I],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[I,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.map" title="Link to this definition"></a></dt>
 <dd><p>Create a TaskMapping for this method.</p>
@@ -4010,29 +3986,6 @@ It overrides the <cite>__call__</cite> method to enforce asynchronous default be
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -4114,31 +4067,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.default" title="a_sync.a_sync.method.ASyncBoundMethodAsyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -4340,6 +4268,42 @@ It overrides the <cite>__call__</cite> method to enforce synchronous default beh
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault.default" title="a_sync.a_sync.method.ASyncBoundMethodSyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[I],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[I,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault.map" title="Link to this definition"></a></dt>
 <dd><p>Create a TaskMapping for this method.</p>
@@ -4440,29 +4404,6 @@ It overrides the <cite>__call__</cite> method to enforce synchronous default beh
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -4544,31 +4485,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.method.ASyncBoundMethodSyncDefault._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.method.ASyncBoundMethodSyncDefault.default" title="a_sync.a_sync.method.ASyncBoundMethodSyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5990,6 +5906,42 @@ the provided flags and the method’s configuration.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method._ASyncBoundMethod.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.method._ASyncBoundMethod.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.method._ASyncBoundMethod.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.method._ASyncBoundMethod.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.method._ASyncBoundMethod.default" title="a_sync.a_sync.method._ASyncBoundMethod.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.method._ASyncBoundMethod.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[I],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[I,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.method._ASyncBoundMethod.map" title="Link to this definition"></a></dt>
 <dd><p>Create a TaskMapping for this method.</p>
@@ -6090,29 +6042,6 @@ the provided flags and the method’s configuration.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.method._ASyncBoundMethod._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.method._ASyncBoundMethod._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.method._ASyncBoundMethod._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.method._ASyncBoundMethod._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -6194,31 +6123,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.method._ASyncBoundMethod._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.method._ASyncBoundMethod._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.method._ASyncBoundMethod.default" title="a_sync.a_sync.method._ASyncBoundMethod.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -8980,6 +8884,42 @@ result = await instance.my_method.sum([1, 2, 3])
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.property.HiddenMethod.default" title="a_sync.a_sync.property.HiddenMethod.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[I],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[I,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod.map" title="Link to this definition"></a></dt>
 <dd><p>Create a TaskMapping for this method.</p>
@@ -9080,29 +9020,6 @@ result = await instance.my_method.sum([1, 2, 3])
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -9184,31 +9101,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.property.HiddenMethod._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.property.HiddenMethod._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.property.HiddenMethod.default" title="a_sync.a_sync.property.HiddenMethod.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -11692,6 +11584,42 @@ result = await instance.my_method.sum([1, 2, 3])
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.ASyncFunction.default" title="a_sync.a_sync.ASyncFunction.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[P,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction.map" title="Link to this definition"></a></dt>
 <dd><p>Creates a TaskMapping for the wrapped function with the given iterables.</p>
@@ -11804,29 +11732,6 @@ result = await instance.my_method.sum([1, 2, 3])
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -11898,31 +11803,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunction._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunction._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.ASyncFunction.default" title="a_sync.a_sync.ASyncFunction.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -12119,6 +11999,42 @@ default behavior.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionAsyncDefault.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionAsyncDefault.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionAsyncDefault.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionAsyncDefault.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.ASyncFunctionAsyncDefault.default" title="a_sync.a_sync.ASyncFunctionAsyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionAsyncDefault.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[P,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionAsyncDefault.map" title="Link to this definition"></a></dt>
 <dd><p>Creates a TaskMapping for the wrapped function with the given iterables.</p>
@@ -12231,29 +12147,6 @@ default behavior.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionAsyncDefault._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionAsyncDefault._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionAsyncDefault._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionAsyncDefault._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -12325,31 +12218,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionAsyncDefault._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionAsyncDefault._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.ASyncFunctionAsyncDefault.default" title="a_sync.a_sync.ASyncFunctionAsyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -12546,6 +12414,42 @@ default behavior.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionSyncDefault.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionSyncDefault.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionSyncDefault.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionSyncDefault.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.ASyncFunctionSyncDefault.default" title="a_sync.a_sync.ASyncFunctionSyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionSyncDefault.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[Any],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**function_kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[P,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionSyncDefault.map" title="Link to this definition"></a></dt>
 <dd><p>Creates a TaskMapping for the wrapped function with the given iterables.</p>
@@ -12658,29 +12562,6 @@ default behavior.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionSyncDefault._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionSyncDefault._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionSyncDefault._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionSyncDefault._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -12752,31 +12633,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.ASyncFunctionSyncDefault._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.ASyncFunctionSyncDefault._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.ASyncFunctionSyncDefault.default" title="a_sync.a_sync.ASyncFunctionSyncDefault.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
@@ -14213,6 +14069,42 @@ result = await instance.my_method.sum([1, 2, 3])
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod.is_async_def">
+<span class="sig-name descname"><span class="pre">is_async_def</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethod.is_async_def" title="Link to this definition"></a></dt>
+<dd><p>Checks if the wrapped function is an asynchronous function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod.is_sync_default">
+<span class="sig-name descname"><span class="pre">is_sync_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethod.is_sync_default" title="Link to this definition"></a></dt>
+<dd><p>Determines the default execution mode (sync or async) for the function.</p>
+<p>If the user did not specify a default, this method defers to the function’s
+definition (sync vs async def).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the default is sync, False if async.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#a_sync.a_sync.HiddenMethod.default" title="a_sync.a_sync.HiddenMethod.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod.map">
 <span class="sig-name descname"><span class="pre">map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">self,</span> <span class="pre">*iterables:</span> <span class="pre">AnyIterable[I],</span> <span class="pre">concurrency:</span> <span class="pre">Optional[int]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unicode</span> <span class="pre">task_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">u'',</span> <span class="pre">**kwargs:</span> <span class="pre">P.kwargs</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="s"><span class="pre">'TaskMapping[I,</span> <span class="pre">T]'</span></span></span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethod.map" title="Link to this definition"></a></dt>
 <dd><p>Create a TaskMapping for this method.</p>
@@ -14313,29 +14205,6 @@ result = await instance.my_method.sum([1, 2, 3])
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod._async_def">
-<span class="sig-name descname"><span class="pre">_async_def</span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._async_def" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Checks if the wrapped function is an asynchronous function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the function is asynchronous, otherwise False.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.iscoroutinefunction()</span></code></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._async_def</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod._async_wrap">
 <span class="sig-name descname"><span class="pre">_async_wrap</span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._async_wrap" title="Link to this definition"></a></dt>
 <dd><p>The final wrapper if the wrapped function is an asynchronous function.</p>
@@ -14417,31 +14286,6 @@ If the wrapped function is a synchronous function, this method applies sync modi
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>_ASyncFunction._modified_fn</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="a_sync.a_sync.HiddenMethod._sync_default">
-<span class="sig-name descname"><span class="pre">_sync_default</span></span><a class="headerlink" href="#a_sync.a_sync.HiddenMethod._sync_default" title="Link to this definition"></a></dt>
-<dd><p>bint</p>
-<p>Determines the default execution mode (sync or async) for the function.</p>
-<p>If the user did not specify a default, this method defers to the function’s
-definition (sync vs async def).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if the default is sync, False if async.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#a_sync.a_sync.HiddenMethod.default" title="a_sync.a_sync.HiddenMethod.default"><code class="xref py py-attr docutils literal notranslate"><span class="pre">default</span></code></a></p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>_ASyncFunction._sync_default</p>
 </dd>
 </dl>
 </dd></dl>
