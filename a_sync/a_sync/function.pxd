@@ -23,6 +23,6 @@ cdef class _ASyncFunction(_ModifiedMixin):
     cdef object get_fn(self)
     cdef bint is_async_def(self)
     cdef bint is_sync_default(self)
-    cdef inline bint _run_sync(self)
+    cdef inline bint _run_sync(self, dict kwargs)
 
 cdef void _validate_wrapped_fn(object fn)
