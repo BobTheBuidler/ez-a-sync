@@ -707,11 +707,12 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
             field_name: The name of the field associated with the method.
             **modifiers: Additional modifier arguments.
         """
+        # TODO: copy __init_subclass__ to this class and then use _ASyncBoundMethod.__init__ instead
         ASyncBoundMethod.__init__(self, instance, unbound, async_def, **modifiers)
         self.__name__ = field_name
         """The name of the hidden method."""
 
-    def __repr__(self) -> str:
+    def __repr__(_ASyncBoundMethod self) -> str:
         """Returns a string representation of the HiddenMethod."""
         instance_type = type(self.__self__)
         return "<{} for property {}.{}.{} bound to {}>".format(
@@ -719,14 +720,14 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
             instance_type.__module__,
             instance_type.__name__,
             self.__name__[2:-2],
-            self.__self__,
+            self.__c_self__(),
         )
 
-    def __await__(self) -> Generator[Any, None, T]:
+    def __await__(_ASyncBoundMethod self) -> Generator[Any, None, T]:
         """Returns an awaitable for the method."""
         # NOTE: self(sync=False).__await__() would be cleaner but requires way more compute for no real gain
         _logger_debug("awaiting %s", self)
-        return self.fn(self.__self__, sync=False).__await__()
+        return self.fn(self.__c_self__(), sync=False).__await__()
 
 
 class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
