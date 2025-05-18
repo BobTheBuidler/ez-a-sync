@@ -761,7 +761,7 @@ def _unwrap(
         # this speeds things up a bit by bypassing some logic
         # TODO implement it like this elsewhere if profilers suggest
         unwrapped = (
-            wrapped_func._modified_fn if wrapped_func._async_def else wrapped_func._asyncified
+            wrapped_func._modified_fn if wrapped_func.is_async_def() else wrapped_func._asyncified
         )
     else:
         unwrapped = wrapped_func

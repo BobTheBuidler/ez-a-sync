@@ -21,5 +21,8 @@ cdef class _ASyncFunction(_ModifiedMixin):
     cdef object __async_wrap
     cdef object __sync_wrap
     cdef object get_fn(self)
+    cpdef bint is_async_def(self)
+    cpdef bint is_sync_default(self)
+    cdef inline bint _run_sync(self, dict kwargs)
 
 cdef void _validate_wrapped_fn(object fn)
