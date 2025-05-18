@@ -997,8 +997,6 @@ class ASyncFunction(_ASyncFunction, Generic[P, T]):
             result = func(5)
         """
 
-    def __instancecheck__
-
 
 if sys.version_info < (3, 10):
     _inherit = ASyncFunction[AnyFn[P, T], ASyncFunction[P, T]]
