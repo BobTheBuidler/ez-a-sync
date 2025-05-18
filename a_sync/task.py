@@ -21,7 +21,7 @@ from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
 from a_sync.a_sync.method import (
-    ASyncBoundMethod,
+    _ASyncBoundMethod,
     ASyncMethodDescriptor,
     ASyncMethodDescriptorSyncDefault,
 )
@@ -753,7 +753,7 @@ def _unwrap(
 ) -> Callable[P, Awaitable[T]]:
     if unwrapped := __unwrapped.get(wrapped_func):
         return unwrapped
-    if isinstance(wrapped_func, (ASyncBoundMethod, ASyncMethodDescriptor)):
+    if isinstance(wrapped_func, (_ASyncBoundMethod, ASyncMethodDescriptor)):
         unwrapped = wrapped_func
     elif isinstance(wrapped_func, _ASyncPropertyDescriptorBase):
         unwrapped = wrapped_func.get
