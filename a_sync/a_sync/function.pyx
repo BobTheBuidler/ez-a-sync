@@ -729,10 +729,17 @@ cdef class _ASyncFunction(_ModifiedMixin):
         """
         modified_fn = self.__modified_fn
         if modified_fn is None:
+            
+            # recursively unwrap ASync objects to get to the original wrapped callable
+            wrapped = self.__wrapped__
+            while isinstance(wrapped, _ASyncFunction):
+                wrapped = wrapped.__wrapped__
+                
             if self.is_async_def():
-                modified_fn = self.__modified_fn = self.modifiers.apply_async_modifiers(self.__wrapped__)
+                modified_fn = self.__modified_fn = self.modifiers.apply_async_modifiers(wrapped)
             else:
-                modified_fn = self.__modified_fn = self.modifiers.apply_sync_modifiers(self.__wrapped__)
+                modified_fn = self.__modified_fn = self.modifiers.apply_sync_modifiers(wrapped)
+                
         return modified_fn
 
     @property
