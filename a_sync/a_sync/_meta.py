@@ -6,7 +6,7 @@ from typing import Any, Dict, Tuple
 
 from a_sync import ENVIRONMENT_VARIABLES
 from a_sync.a_sync import modifiers
-from a_sync.a_sync.function import ASyncFunction, _ModifiedMixin
+from a_sync.a_sync.function import _ASyncFunction, _ModifiedMixin
 from a_sync.a_sync.method import ASyncMethodDescriptor
 from a_sync.a_sync.property import (
     ASyncCachedPropertyDescriptor,
@@ -137,7 +137,7 @@ class ASyncMeta(ABCMeta):
                         attr_value.hidden_method_name,
                         attr_value.hidden_method_descriptor,
                     )
-                elif isinstance(attr_value, ASyncFunction):
+                elif isinstance(attr_value, _ASyncFunction):
                     attrs[attr_name] = ASyncMethodDescriptor(attr_value, **fn_modifiers)
                 else:
                     raise NotImplementedError(attr_name, attr_value)
