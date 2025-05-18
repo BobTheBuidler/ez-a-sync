@@ -618,22 +618,6 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
                 self.__weakself__
             )
 
-    @overload
-    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
-    @overload
-    def __call__(
-        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
-    @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
-    ) -> T: ...
-    @overload
-    def __call__(
-        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
-    ) -> Coroutine[Any, Any, T]: ...
-    @overload
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: ...
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
         """
         Call the bound method.
@@ -872,6 +856,23 @@ class ASyncBoundMethod(_ASyncBoundMethod, Generic[I, P, T]):
         """
         _ASyncBoundMethod.__init__(self, instance, unbound, async_def, modifiers)
         update_wrapper(self, unbound)
+    
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T: ...
+    @overload
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T: ...
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]: ...
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]: ...
 
     def __cancel_cache_handle(self, instance: I) -> None:
         """
