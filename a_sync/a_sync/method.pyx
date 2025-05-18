@@ -542,7 +542,7 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
         - :class:`ASyncFunction`
     """
 
-    cdef readonly bint _is_async_dec
+    cdef readonly bint _is_async_def
     cdef readonly object __weakself__
 
     def __init__(
