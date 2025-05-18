@@ -51,11 +51,10 @@ jobs:
             artifact_name: "wheels-ubuntu-latest-musllinux-x86"
 
           # ----------------------------------------------------
-          # macOS
+          # macOS (64-bit only)
           # ----------------------------------------------------
           - os: macos-latest
             build_type: macos
-            # For macOS, we typically don't override CIBW_BUILD or ARCHS
             cibw_build: ""
             cibw_archs_linux: ""
             artifact_name: "wheels-macos-latest"
@@ -88,8 +87,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-          # For Windows runners, specify architecture
-          architecture: ${{ matrix.cibw_archs_windows || '' }}
 
       - name: Install cibuildwheel
         run: |
