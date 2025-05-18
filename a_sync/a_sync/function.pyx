@@ -317,10 +317,11 @@ cdef class _ASyncFunction(_ModifiedMixin):
             - :attr:`default`
             - :meth:`_run_sync`
         """
+        fn = self.get_fn()
         _logger_debug(
-            "calling %s fn: %s with args: %s kwargs: %s", self, self.fn, args, kwargs
+            "calling %s fn: %s with args: %s kwargs: %s", self, fn, args, kwargs
         )
-        return self.fn(*args, **kwargs)
+        return fn(*args, **kwargs)
 
     def __repr__(self) -> str:
         return "<{} {}.{} at {}>".format(
