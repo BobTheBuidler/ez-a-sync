@@ -87,7 +87,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-        # Do not specify "architecture" here; GitHub's hosted runners are 64-bit by default.
 
       - name: Install cibuildwheel
         run: |
