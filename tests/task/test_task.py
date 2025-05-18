@@ -480,3 +480,4 @@ def test_unwrap_a_sync_function_async():
     assert unwrapped is test_fn.__wrapped__
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
+
