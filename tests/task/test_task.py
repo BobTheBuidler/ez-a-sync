@@ -369,16 +369,16 @@ def _assert_len_dictviews(tasks, i):
 
 # TODO: add unwrap tests for bound method and property classes
 def test_unwrap_basic():
-    async def test_fn():
-        ...
+    async def test_fn(): ...
+
     unwrapped = _unwrap(test_fn)
     assert unwrapped is test_fn
 
 
 def test_unwrap_a_sync_function_sync_default():
     @a_sync
-    async def test_fn():
-        ...
+    async def test_fn(): ...
+
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunction)
     unwrapped = _unwrap(test_fn)
@@ -390,8 +390,8 @@ def test_unwrap_a_sync_function_sync_default():
 
 def test_unwrap_a_sync_function_sync():
     @a_sync("sync")
-    async def test_fn():
-        ...
+    async def test_fn(): ...
+
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionSyncDefault)
     unwrapped = _unwrap(test_fn)
@@ -403,8 +403,8 @@ def test_unwrap_a_sync_function_sync():
 
 def test_unwrap_a_sync_function_async():
     @a_sync("async")
-    async def test_fn():
-        ...
+    async def test_fn(): ...
+
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionAsyncDefault)
     unwrapped = _unwrap(test_fn)
