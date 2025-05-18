@@ -2,6 +2,7 @@ import asyncio
 import pytest
 
 from a_sync import TaskMapping, a_sync, create_task
+from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import (
     _ASyncFunction,
     ASyncFunction,
