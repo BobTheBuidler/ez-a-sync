@@ -802,7 +802,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
 
         return sync_wrap
 
-    cdef bint is_async_def(self):
+    cpdef bint is_async_def(self):
         """
         Checks if the wrapped function is an asynchronous function.
 
@@ -819,7 +819,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         self.__async_def_cached = True
         return async_def
 
-    cdef bint is_sync_default(self):
+    cpdef bint is_sync_default(self):
         """
         Determines the default execution mode (sync or async) for the function.
 
