@@ -203,29 +203,6 @@ cdef inline void _validate_argspec(fn: Callable):
                 f"{fn} must not have any arguments with the following names: {VIABLE_FLAGS}"
             )
 
-cdef inline bint _run_sync(object function, dict kwargs):
-    """
-    Determines whether to run the function synchronously or asynchronously.
-
-    This method checks for a flag in the kwargs and defers to it if present.
-    If no flag is specified, it defers to the default execution mode.
-
-    Args:
-        kwargs: The keyword arguments passed to the function.
-
-    Returns:
-        True if the function should run synchronously, otherwise False.
-
-    See Also:
-        - :func:`_kwargs.get_flag_name`
-    """
-    cdef str flag = get_flag_name(kwargs)
-    if flag:
-        # If a flag was specified in the kwargs, we will defer to it.
-        return is_sync(flag, kwargs, pop_flag=True)
-    else:
-        # No flag specified in the kwargs, we will defer to 'default'.
-        return function._sync_default
     
 cdef class _ASyncFunction(_ModifiedMixin):
     """
@@ -347,7 +324,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
     cdef object get_fn(self):
         fn = self._fn
         if fn is None:
-            fn = self._async_wrap if self._async_def else self._sync_wrap
+            fn = self._async_wrap if self.is_async_def() else self._sync_wrap
             self._fn = fn
         return fn
 
@@ -712,51 +689,6 @@ cdef class _ASyncFunction(_ModifiedMixin):
             ).sum(pop=True, sync=False)
 
     @property
-    def _sync_default(self) -> bint:
-        """
-        Determines the default execution mode (sync or async) for the function.
-
-        If the user did not specify a default, this method defers to the function's
-        definition (sync vs async def).
-
-        Returns:
-            True if the default is sync, False if async.
-
-        See Also:
-            - :attr:`default`
-        """
-        if self.__sync_default_cached:
-            return self.__sync_default
-
-        cdef str default = self.get_default()
-        cdef bint sync_default = (
-            True
-            if default == "sync"
-            else False if default == "async" else not self._async_def
-        )
-        self.__sync_default = sync_default
-        self.__sync_default_cached = True
-        return sync_default
-
-    @property
-    def _async_def(self) -> bint:
-        """
-        Checks if the wrapped function is an asynchronous function.
-
-        Returns:
-            True if the function is asynchronous, otherwise False.
-
-        See Also:
-            - :func:`asyncio.iscoroutinefunction`
-        """
-        if self.__async_def_cached:
-            return self.__async_def
-        cdef bint async_def
-        async_def = self.__async_def = iscoroutinefunction(self.__wrapped__)
-        self.__async_def_cached = True
-        return async_def
-
-    @property
     def _asyncified(self) -> CoroFn[P, T]:
         """
         Converts the wrapped function to an asynchronous function and applies both sync and async modifiers.
@@ -772,7 +704,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         """
         asyncified = self.__asyncified
         if asyncified is None:
-            if self._async_def:
+            if self.is_async_def():
                 raise TypeError(
                     f"Can only be applied to sync functions, not {self.__wrapped__}"
                 )
@@ -797,7 +729,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         """
         modified_fn = self.__modified_fn
         if modified_fn is None:
-            if self._async_def:
+            if self.is_async_def():
                 modified_fn = self.__modified_fn = self.modifiers.apply_async_modifiers(self.__wrapped__)
             else:
                 modified_fn = self.__modified_fn = self.modifiers.apply_sync_modifiers(self.__wrapped__)
@@ -829,7 +761,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
                 # we dont want this so profiler outputs are more useful
 
                 # Must take place before coro is created, we're popping a kwarg.
-                should_await = _run_sync(self, kwargs)
+                should_await = self._run_sync(kwargs)
                 coro = modified_fn(*args, **kwargs)
                 if should_await:
                     return await_helper(coro)
@@ -862,13 +794,80 @@ cdef class _ASyncFunction(_ModifiedMixin):
 
             @wraps(modified_fn)
             def sync_wrap(*args: P.args, **kwargs: P.kwargs) -> MaybeAwaitable[T]:  # type: ignore [name-defined]
-                if _run_sync(self, kwargs):
+                if self._run_sync(kwargs):
                     return modified_fn(*args, **kwargs)
                 return asyncified(*args, **kwargs)
             
             self.__sync_wrap = sync_wrap
 
         return sync_wrap
+
+    cdef bint is_async_def(self):
+        """
+        Checks if the wrapped function is an asynchronous function.
+
+        Returns:
+            True if the function is asynchronous, otherwise False.
+
+        See Also:
+            - :func:`asyncio.iscoroutinefunction`
+        """
+        if self.__async_def_cached:
+            return self.__async_def
+        cdef bint async_def
+        async_def = self.__async_def = iscoroutinefunction(self.__wrapped__)
+        self.__async_def_cached = True
+        return async_def
+
+    cdef bint is_sync_default(self):
+        """
+        Determines the default execution mode (sync or async) for the function.
+
+        If the user did not specify a default, this method defers to the function's
+        definition (sync vs async def).
+
+        Returns:
+            True if the default is sync, False if async.
+
+        See Also:
+            - :attr:`default`
+        """
+        if self.__sync_default_cached:
+            return self.__sync_default
+
+        cdef str default = self.get_default()
+        cdef bint sync_default = (
+            True
+            if default == "sync"
+            else False if default == "async" else not self.is_async_def()
+        )
+        self.__sync_default = sync_default
+        self.__sync_default_cached = True
+        return sync_default
+
+    cdef inline bint _run_sync(self, dict kwargs):
+        """
+        Determines whether to run the function synchronously or asynchronously.
+    
+        This method checks for a flag in the kwargs and defers to it if present.
+        If no flag is specified, it defers to the default execution mode.
+    
+        Args:
+            kwargs: The keyword arguments passed to the function.
+    
+        Returns:
+            True if the function should run synchronously, otherwise False.
+    
+        See Also:
+            - :func:`_kwargs.get_flag_name`
+        """
+        cdef str flag = get_flag_name(kwargs)
+        if flag:
+            # If a flag was specified in the kwargs, we will defer to it.
+            return is_sync(flag, kwargs, pop_flag=True)
+        else:
+            # No flag specified in the kwargs, we will defer to 'default'.
+            return function.is_sync_default()
 
 
 class ASyncFunction(_ASyncFunction, Generic[P, T]):
