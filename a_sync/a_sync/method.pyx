@@ -933,18 +933,19 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
 
-    __call__ = ASyncBoundMethod.__call__
-    """
-    Call the bound method with synchronous default behavior.
-
-    Args:
-        *args: Positional arguments.
-        **kwargs: Keyword arguments.
-
-    Examples:
-        >>> bound_method = ASyncBoundMethodSyncDefault(instance, my_function, True)
-        >>> bound_method(arg1, arg2, kwarg1=value1)
-    """
+    def __call__(self, *args, **kwargs):
+        """
+        Call the bound method with synchronous default behavior.
+    
+        Args:
+            *args: Positional arguments.
+            **kwargs: Keyword arguments.
+    
+        Examples:
+            >>> bound_method = ASyncBoundMethodSyncDefault(instance, my_function, True)
+            >>> bound_method(arg1, arg2, kwarg1=value1)
+        """
+        return _ASyncBoundMethod.__call__(self, *args, **kwargs)
 
 
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
@@ -991,18 +992,19 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
 
-    __call__ = ASyncBoundMethod.__call__
-    """
-    Call the bound method with asynchronous default behavior.
-
-    Args:
-        *args: Positional arguments.
-        **kwargs: Keyword arguments.
-
-    Examples:
-        >>> bound_method = ASyncBoundMethodAsyncDefault(instance, my_function, True)
-        >>> await bound_method(arg1, arg2, kwarg1=value1)
-    """
+    def __call__(self, *args, **kwargs):
+        """
+        Call the bound method with asynchronous default behavior.
+    
+        Args:
+            *args: Positional arguments.
+            **kwargs: Keyword arguments.
+    
+        Examples:
+            >>> bound_method = ASyncBoundMethodAsyncDefault(instance, my_function, True)
+            >>> await bound_method(arg1, arg2, kwarg1=value1)
+        """
+        return _ASyncBoundMethod.__call__(self, *args, **kwargs)
 
 
 cdef inline void _import_ASyncABC():
