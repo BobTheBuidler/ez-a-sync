@@ -1317,7 +1317,7 @@ cdef class _ASyncFunctionAsyncDefault(_ASyncFunction):
         return self.get_fn()(*args, **kwargs)
 
 
-class ASyncFunctionAsyncDefault(_ASyncFunctionAsyncDefault):
+class ASyncFunctionAsyncDefault(_ASyncFunctionAsyncDefault, Generic[P, T]):
     def __init__(
         self,
         fn: AnyFn[P, T],
