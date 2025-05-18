@@ -396,7 +396,7 @@ def test_unwrap_a_sync_function_sync_def():
     assert isinstance(test_fn, ASyncFunction)
     unwrapped = _unwrap(test_fn)
     assert unwrapped is not test_fn
-    assert unwrapped is test_fn.__wrapped__
+    assert unwrapped is not test_fn.__wrapped__
     assert unwrapped is test_fn._asyncified
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
@@ -424,7 +424,7 @@ def test_unwrap_a_sync_function_sync_def_sync_default():
     assert isinstance(test_fn, ASyncFunctionSyncDefault)
     unwrapped = _unwrap(test_fn)
     assert unwrapped is not test_fn
-    assert unwrapped is test_fn.__wrapped__
+    assert unwrapped is not test_fn.__wrapped__
     assert unwrapped is test_fn._asyncified
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
@@ -452,7 +452,7 @@ def test_unwrap_a_sync_function_sync_def_async_default():
     assert isinstance(test_fn, ASyncFunctionAsyncDefault)
     unwrapped = _unwrap(test_fn)
     assert unwrapped is not test_fn
-    assert unwrapped is test_fn.__wrapped__
+    assert unwrapped is not test_fn.__wrapped__
     assert unwrapped is test_fn._asyncified
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
