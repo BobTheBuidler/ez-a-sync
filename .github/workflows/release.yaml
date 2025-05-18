@@ -61,21 +61,19 @@ jobs:
 
           # ----------------------------------------------------
           # Windows 64-bit
-          # NOTE: Uses cp311 for Windows x64
           # ----------------------------------------------------
           - os: windows-latest
             build_type: winx64
-            cibw_build: "cp311-win_*"
+            cibw_build: ""
             cibw_archs_windows: x86_64
             artifact_name: "wheels-windows-latest-x64"
 
           # ----------------------------------------------------
           # Windows 32-bit
-          # NOTE: Uses cp310 for Windows x86 (3.11 32-bit is unavailable)
           # ----------------------------------------------------
           - os: windows-latest
             build_type: winx86
-            cibw_build: "cp310-win_*"
+            cibw_build: ""
             cibw_archs_windows: x86
             artifact_name: "wheels-windows-latest-x86"
 
