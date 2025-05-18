@@ -491,7 +491,7 @@ cdef bint _is_a_sync_instance(object instance):
     return is_a_sync
 
 
-cdef bint _should_await(_ASyncFunction self, dict kwargs):
+cdef bint _should_await(_ASyncBoundMethod self, dict kwargs):
     """
     Determine if the method should be awaited.
 
@@ -507,13 +507,13 @@ cdef bint _should_await(_ASyncFunction self, dict kwargs):
         return is_sync(flag, kwargs, pop_flag=True)  # type: ignore [arg-type]
     elif default := self.get_default():
         return default == "sync"
-    elif _is_a_sync_instance(self.__self__):
-        self.__self__: "ASyncABC"
-        return self.__self__.__a_sync_should_await__(kwargs)
+    elif _is_a_sync_instance(instance := self.__c_self__()):
+        instance: "ASyncABC"
+        return instance.__a_sync_should_await__(kwargs)
     return self._is_async_def
 
 
-cdef class _ASyncBoundMethod(function._ASyncFunction):
+cdef class _ASyncBoundMethod(_ASyncFunction):
     """
     A bound method that can be called both synchronously and asynchronously.
 
@@ -599,15 +599,17 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             >>> repr(bound_method)
             '<ASyncBoundMethod for function module.ClassName.method_name bound to instance>'
         """
-        cdef object instance_type
+        cdef object instance, instance_type
+        
         try:
-            instance_type = type(self.__self__)
+            instance = self.__c_self__()
+            instance_type = type(instance)
             return "<{} for function {}.{}.{} bound to {}>".format(
                 self.__class__.__name__,
                 instance_type.__module__,
                 instance_type.__name__,
                 self.__name__,
-                self.__self__
+                instance,
             )
         except ReferenceError:
             return "<{} for function COLLECTED.COLLECTED.{} bound to {}>".format(
@@ -654,7 +656,7 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             _logger_log(DEBUG, "calling %s with args: %s kwargs: %s", (self, args, kwargs))
         # This could either be a coroutine or a return value from an awaited coroutine,
         #   depending on if an overriding flag kwarg was passed into the function call.
-        retval = coro = _ASyncFunction.__call__(self, self.__self__, *args, **kwargs)
+        retval = coro = _ASyncFunction.__call__(self, self.__c_self__(), *args, **kwargs)
         if not isawaitable(retval):
             # The coroutine was already awaited due to the use of an overriding flag kwarg.
             # We can return the value.
@@ -673,7 +675,7 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
         return retval  # type: ignore [call-overload, return-value]
 
     @property
-    cpdef object __self__(self):
+    def __self__(self) -> object:
         """
         Get the instance the method is bound to.
 
@@ -685,6 +687,9 @@ cdef class _ASyncBoundMethod(function._ASyncFunction):
             >>> bound_method.__self__
             <MyClass instance>
         """
+        return self.__c_self__()
+
+    cdef object __c_self__(self):
         cdef PyObject *self_ptr
         if PyWeakref_GetRef(<PyObject*>self.__weakself__, &self_ptr) == 1:
             # 1 is success
