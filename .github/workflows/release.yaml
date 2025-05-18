@@ -55,26 +55,27 @@ jobs:
           # ----------------------------------------------------
           - os: macos-latest
             build_type: macos
-            # For macOS, we typically don't override CIBW_BUILD or ARCHS
             cibw_build: ""
             cibw_archs_linux: ""
             artifact_name: "wheels-macos-latest"
 
           # ----------------------------------------------------
           # Windows 64-bit
+          # NOTE: Uses cp311 for Windows x64
           # ----------------------------------------------------
           - os: windows-latest
             build_type: winx64
-            cibw_build: ""
+            cibw_build: "cp311-win_*"
             cibw_archs_windows: x86_64
             artifact_name: "wheels-windows-latest-x64"
 
           # ----------------------------------------------------
           # Windows 32-bit
+          # NOTE: Uses cp310 for Windows x86 (3.11 32-bit is unavailable)
           # ----------------------------------------------------
           - os: windows-latest
             build_type: winx86
-            cibw_build: ""
+            cibw_build: "cp310-win_*"
             cibw_archs_windows: x86
             artifact_name: "wheels-windows-latest-x86"
 
@@ -84,12 +85,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
+      # ----------------------------------------------------
+      # Only set up Python on non-Windows (Linux, macOS).
+      # On Windows, cibuildwheel will fetch Python via nuget.
+      # ----------------------------------------------------
+      - name: Set up Python (non-Windows)
+        if: ${{ matrix.os != 'windows-latest' }}
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-          # For Windows runners, specify architecture
-          architecture: ${{ matrix.cibw_archs_windows || '' }}
 
       - name: Install cibuildwheel
         run: |
@@ -99,11 +103,11 @@ jobs:
         env:
           # Skip PyPy
           CIBW_SKIP: pp*
-          # On Linux: manylinux / musllinux arches
+          # On Linux: manylinux or musllinux arches
           CIBW_ARCHS_LINUX: ${{ matrix.cibw_archs_linux || '' }}
-          # On Windows: x64 / x86
+          # On Windows: 32-bit or 64-bit
           CIBW_ARCHS_WINDOWS: ${{ matrix.cibw_archs_windows || '' }}
-          # Which wheels to build for Linux (manylinux vs. musllinux)
+          # Which wheels to build (cp310-win_*, cp311-win_*, etc.)
           CIBW_BUILD: ${{ matrix.cibw_build || '' }}
         run: |
           python -m cibuildwheel --output-dir wheelhouse
