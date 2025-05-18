@@ -272,7 +272,7 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         return self._is_async_def
 
 
-cdef void _update_cache_timer(str field_name, instance: I, bound: "ASyncBoundMethod"):
+cdef void _update_cache_timer(str field_name, object instance, _ASyncBoundMethod bound):
     """
     Update the TTL for the cache handle for the instance.
 
@@ -933,7 +933,7 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
 
-    __call__ = ASyncBoundMethod.__call__
+    __call__ = _ASyncBoundMethod.__call__
     """
     Call the bound method with synchronous default behavior.
 
@@ -991,7 +991,7 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
 
-    __call__ = ASyncBoundMethod.__call__
+    __call__ = _ASyncBoundMethod.__call__
     """
     Call the bound method with asynchronous default behavior.
 
