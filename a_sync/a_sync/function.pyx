@@ -867,7 +867,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
             return is_sync(flag, kwargs, pop_flag=True)
         else:
             # No flag specified in the kwargs, we will defer to 'default'.
-            return function.is_sync_default()
+            return self.is_sync_default()
 
 
 class ASyncFunction(_ASyncFunction, Generic[P, T]):
