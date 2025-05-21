@@ -1,16 +1,16 @@
-from a_sync._typing import *
 import functools
-from _typeshed import Incomplete
-from a_sync import TaskMapping as TaskMapping
-from a_sync.a_sync.method import (
-    ASyncBoundMethod as ASyncBoundMethod,
-    ASyncBoundMethodAsyncDefault as ASyncBoundMethodAsyncDefault,
-    ASyncBoundMethodSyncDefault as ASyncBoundMethodSyncDefault,
-)
-from a_sync.a_sync.modifiers.manager import ModifierManager as ModifierManager
+from logging import Logger
 from typing import Any
+from a_sync import TaskMapping
+from a_sync._typing import *
+from a_sync.a_sync.method import (
+    ASyncBoundMethod,
+    ASyncBoundMethodAsyncDefault,
+    ASyncBoundMethodSyncDefault,
+)
+from a_sync.a_sync.modifiers.manager import ModifierManager
 
-logger: Incomplete
+logger: Logger
 
 class _ModifiedMixin:
     """
@@ -330,7 +330,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     __docstring_append__: str
 
 class ASyncDecorator(_ModifiedMixin):
-    modifiers: Incomplete
+    modifiers: ModifierManager
     def __init__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
         """
         Initializes an ASyncDecorator instance.
@@ -372,7 +372,7 @@ class ASyncDecorator(_ModifiedMixin):
         """
 
     @overload
-    def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:
+    def __call__(self, func: CoroFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
         """
         Decorates a function with async or sync behavior based on the default modifier.
 
@@ -380,7 +380,22 @@ class ASyncDecorator(_ModifiedMixin):
             func: The function to decorate.
 
         Returns:
-            An ASyncFunction instance with the appropriate default behavior.
+            An ASyncFunctionAsyncDefault instance.
+
+        See Also:
+            - :class:`ASyncFunction`
+        """
+
+    @overload
+    def __call__(self, func: SyncFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:
+        """
+        Decorates a function with async or sync behavior based on the default modifier.
+
+        Args:
+            func: The function to decorate.
+
+        Returns:
+            An ASyncFunctionSyncDefault instance.
 
         See Also:
             - :class:`ASyncFunction`
