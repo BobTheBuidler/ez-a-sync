@@ -5,6 +5,7 @@ from typing import (
     AsyncIterator,
     Awaitable,
     Callable,
+    Coroutine,
     Literal,
     NoReturn,
     TypeVar,
@@ -39,7 +40,7 @@ def stuck_coro_debugger(
 ) -> ASyncGeneratorFunction[__P, __TYield]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[Concatenate[__TBase, __P], Awaitable[__T]],
+    fn: Callable[Concatenate[__TBase, __P], Coroutine[Any, Any, __T]],
     logger: Logger = logger,
     interval: int = _FIVE_MINUTES,
 ) -> ASyncBoundMethod[__TBase, __P, __T]: ...
@@ -63,8 +64,10 @@ def stuck_coro_debugger(
 ) -> Callable[__P, AsyncIterator[__TYield]]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[__P, Awaitable[__T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
-) -> Callable[__P, Awaitable[__T]]: ...
+    fn: Callable[__P, Coroutine[Any, Any, __T]],
+    logger: Logger = logger,
+    interval: int = _FIVE_MINUTES,
+) -> Callable[__P, Coroutine[Any, Any, __T]]: ...
 def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES): ...
 async def _stuck_debug_task(
     logger: Logger, interval: int, fn: Callable[__P, __T], *args: __P.args, **kwargs: __P.kwargs
