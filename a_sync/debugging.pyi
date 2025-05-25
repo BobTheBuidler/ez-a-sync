@@ -64,7 +64,9 @@ def stuck_coro_debugger(
 ) -> Callable[__P, AsyncIterator[__TYield]]: ...
 @overload
 def stuck_coro_debugger(
-    fn: Callable[__P, Coroutine[Any, Any, __T]], logger: Logger = logger, interval: int = _FIVE_MINUTES
+    fn: Callable[__P, Coroutine[Any, Any, __T]],
+    logger: Logger = logger,
+    interval: int = _FIVE_MINUTES,
 ) -> Callable[__P, Coroutine[Any, Any, __T]]: ...
 def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES): ...
 async def _stuck_debug_task(
