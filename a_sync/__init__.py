@@ -103,6 +103,7 @@ __all__ = [
     # classes
     "ASyncIterable",
     "ASyncIterator",
+    "ASyncGenericBase",
     "ASyncGenericSingleton",
     "TaskMapping",
     # property
