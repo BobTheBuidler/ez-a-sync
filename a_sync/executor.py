@@ -23,8 +23,9 @@ import weakref
 from asyncio import sleep
 from asyncio.futures import _convert_future_exc
 from concurrent.futures import _base, thread
+from typing import Any, Callable, Literal
 
-from a_sync._typing import *
+from a_sync._typing import P, T
 from a_sync.primitives._debug import _DebugDaemonMixin
 
 
@@ -471,11 +472,11 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
 
     def __init__(
         self,
-        max_workers=None,
-        thread_name_prefix="",
-        initializer=None,
-        initargs=(),
-        timeout=TEN_MINUTES,
+        max_workers: Optional[int] = None,
+        thread_name_prefix: str = "",
+        initializer: Optional[Initializer] = None,
+        initargs: Tuple[Any, ...] = (),
+        timeout: int = TEN_MINUTES,
     ):
         """
         Initializes the PruningThreadPoolExecutor.
