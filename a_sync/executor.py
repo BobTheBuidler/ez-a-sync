@@ -477,7 +477,7 @@ class PruningThreadPoolExecutor(AsyncThreadPoolExecutor):
         initializer: Optional[Initializer] = None,
         initargs: Tuple[Any, ...] = (),
         timeout: int = TEN_MINUTES,
-    ):
+    ) -> None:
         """
         Initializes the PruningThreadPoolExecutor.
 
