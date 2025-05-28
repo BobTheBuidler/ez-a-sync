@@ -109,7 +109,7 @@ def a_sync(
         True
 
     See Also:
-        :class:`ASyncDecorator`
+        :class:`ASyncDecoratorSyncDefault`
     """
 
 
@@ -165,7 +165,7 @@ def a_sync(
         True
 
     See Also:
-        :class:`ASyncDecorator`
+        :class:`ASyncDecoratorSyncDefault`
     """
 
 
