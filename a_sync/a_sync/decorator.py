@@ -86,6 +86,36 @@ def a_sync(
 @overload
 def a_sync(
     default: Literal["sync"],
+    executor: Executor,
+    **modifiers: Unpack[ModifierKwargs],
+) -> ASyncDecoratorSyncDefault:
+    """
+    Creates a synchronous default decorator to run a sync function in an executor when called asynchronously.
+
+    Args:
+        default: Specifies the default execution mode as 'sync'.
+        executor: The executor that will be used to call the sync function.
+        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.
+
+    Examples:
+        Usage with an executor without specifying a default mode:
+
+        >>> @a_sync(default="sync", executor=ThreadPoolExecutor(4))
+        ... def my_function():
+        ...     return True
+        >>> my_function()
+        True
+        >>> await my_function(sync=False)
+        True
+
+    See Also:
+        :class:`ASyncDecorator`
+    """
+
+
+@overload
+def a_sync(
+    default: Literal["sync"],
     **modifiers: Unpack[ModifierKwargs],
 ) -> ASyncDecoratorSyncDefault:
     """
