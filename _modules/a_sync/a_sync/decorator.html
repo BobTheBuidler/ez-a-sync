@@ -71,6 +71,7 @@
   <h1>Source code for a_sync.a_sync.decorator</h1><div class="highlight"><pre>
 <span></span><span class="c1"># mypy: disable-error-code=valid-type</span>
 <span class="c1"># mypy: disable-error-code=misc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">Executor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync._typing</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">a_sync.a_sync.function</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -93,6 +94,36 @@
 <span class="c1"># @a_sync</span>
 <span class="c1"># async def some_fn():</span>
 <span class="c1">#     pass</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;async&quot;</span><span class="p">],</span>
+    <span class="n">executor</span><span class="p">:</span> <span class="n">Executor</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorAsyncDefault</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates an asynchronous default decorator to run a sync function in an executor.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        default: Specifies the default execution mode as &#39;async&#39;.</span>
+<span class="sd">        executor: The executor that will be used to call the sync function.</span>
+<span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        Basic usage with an asynchronous default:</span>
+
+<span class="sd">        &gt;&gt;&gt; @a_sync(default=&#39;async&#39;, executor=ThreadPoolExecutor(4))</span>
+<span class="sd">        ... def my_function():</span>
+<span class="sd">        ...     return True</span>
+<span class="sd">        &gt;&gt;&gt; await my_function()</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; my_function(sync=True)</span>
+<span class="sd">        True</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`ASyncDecoratorAsyncDefault`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
 
 <span class="nd">@overload</span>
@@ -126,6 +157,36 @@
 <span class="nd">@overload</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
     <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
+    <span class="n">executor</span><span class="p">:</span> <span class="n">Executor</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorSyncDefault</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a synchronous default decorator to run a sync function in an executor when called asynchronously.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        default: Specifies the default execution mode as &#39;sync&#39;.</span>
+<span class="sd">        executor: The executor that will be used to call the sync function.</span>
+<span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        Usage with an executor without specifying a default mode:</span>
+
+<span class="sd">        &gt;&gt;&gt; @a_sync(default=&quot;sync&quot;, executor=ThreadPoolExecutor(4))</span>
+<span class="sd">        ... def my_function():</span>
+<span class="sd">        ...     return True</span>
+<span class="sd">        &gt;&gt;&gt; my_function()</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; await my_function(sync=False)</span>
+<span class="sd">        True</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`ASyncDecoratorSyncDefault`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sync&quot;</span><span class="p">],</span>
     <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorSyncDefault</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -139,6 +200,34 @@
 <span class="sd">        Basic usage with a synchronous default:</span>
 
 <span class="sd">        &gt;&gt;&gt; @a_sync(default=&#39;sync&#39;)</span>
+<span class="sd">        ... def my_function():</span>
+<span class="sd">        ...     return True</span>
+<span class="sd">        &gt;&gt;&gt; my_function()</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; await my_function(sync=False)</span>
+<span class="sd">        True</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :class:`ASyncDecoratorSyncDefault`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">a_sync</span><span class="p">(</span>
+    <span class="n">executor</span><span class="p">:</span> <span class="n">Executor</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">modifiers</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">ModifierKwargs</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ASyncDecoratorSyncDefault</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a synchronous default decorator to run a sync function in an executor when called asynchronously.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        executor: The executor that will be used to call the sync function.</span>
+<span class="sd">        **modifiers: Additional keyword arguments to modify the behavior of the decorated function.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        Usage with an executor without specifying a default mode:</span>
+
+<span class="sd">        &gt;&gt;&gt; @a_sync(executor=ThreadPoolExecutor(4))</span>
 <span class="sd">        ... def my_function():</span>
 <span class="sd">        ...     return True</span>
 <span class="sd">        &gt;&gt;&gt; my_function()</span>
