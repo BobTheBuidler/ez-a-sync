@@ -10,6 +10,7 @@ import typing
 import weakref
 from logging import getLogger
 from types import TracebackType
+from typing import Awaitable, Generator, Optional, Set
 
 cimport cython
 from cpython.object cimport PyObject
