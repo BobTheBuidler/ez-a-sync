@@ -323,6 +323,9 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
             err += f"{VIABLE_FLAGS}"
         BaseException.__init__(self, err)
 
+    def __reduce__(self):
+        return (self.__class__, (str(self),))
+
 
 class MappingError(Exception):
     """
