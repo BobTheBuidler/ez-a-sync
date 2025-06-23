@@ -56,9 +56,7 @@ def test_sync(cls_to_test, async_generator):
     assert [i for i in cls_to_test(async_generator())] == [0, 1, 2]
 
     # iteration
-    result = []
-    for item in cls_to_test(async_generator()):
-        result.append(item)
+    result = list(cls_to_test(async_generator()))
     assert result == [0, 1, 2]
 
     # wrap
