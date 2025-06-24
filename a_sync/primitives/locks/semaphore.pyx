@@ -1,6 +1,6 @@
 """
 This module provides various semaphore implementations, including a debug-enabled semaphore,
-a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi-threaded applications.
+a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi‐threaded applications.
 """
 
 import asyncio
@@ -49,23 +49,23 @@ cdef class Semaphore(_DebugDaemonMixin):
     Example:
         You can write this pattern:
 
-        ```
-        semaphore = Semaphore(5)
+        ::
+        
+            semaphore = Semaphore(5)
 
-        async def limited():
-            async with semaphore:
-                return 1
-        ```
+            async def limited():
+                async with semaphore:
+                    return 1
 
         like this:
 
-        ```
-        semaphore = Semaphore(5)
+        ::
+        
+            semaphore = Semaphore(5)
 
-        @semaphore
-        async def limited():
-            return 1
-        ```
+            @semaphore
+            async def limited():
+                return 1
 
     See Also:
         :class:`_DebugDaemonMixin` for more details on debugging capabilities.
@@ -82,11 +82,28 @@ cdef class Semaphore(_DebugDaemonMixin):
         object loop = None,
     ) -> None:
         """
-        Initialize the semaphore with a given value and optional name for debugging.
+        Initialize the semaphore with a given value, an optional name for debugging, and an optional loop.
 
         Args:
             value: The initial value for the semaphore.
-            name (optional): An optional name used only to provide useful context in debug logs.
+            name (optional): An optional string used only to provide useful context in debug logs.
+            loop (optional): Reserved parameter for binding the semaphore to a specific event loop.
+                This parameter is no longer used and should be left as None.
+
+        Raises:
+            ValueError: If the initial value is negative.
+            MemoryError: If memory allocation for the semaphore name fails.
+            OverflowError: If the value is too large.
+        
+        Examples:
+            ::
+            
+                # Normal initialization of a semaphore with 3 permits.
+                semaphore = Semaphore(3, name="mySemaphore")
+
+                # The 'loop' parameter is reserved; simply leave it as None.
+                semaphore = Semaphore(3, name="mySemaphore", loop=None)
+
         """
         _LoopBoundMixin.__init__(self, loop=loop)
         if value < 0:
@@ -132,11 +149,16 @@ cdef class Semaphore(_DebugDaemonMixin):
         This allows rewriting the pattern of acquiring a semaphore within a coroutine using a decorator.
 
         Example:
-            semaphore = Semaphore(5)
+            ::
+            
+                semaphore = Semaphore(5)
 
-            @semaphore
-            async def limited():
-                return 1
+                @semaphore
+                async def limited():
+                    return 1
+
+        See Also:
+            :meth:`decorate`
         """
         return self.decorate(fn)  # type: ignore [arg-type, return-value]
 
@@ -157,7 +179,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         self.release()
 
     cpdef bint locked(self):
-        """Returns True if semaphore cannot be acquired immediately."""
+        """Returns True if the semaphore cannot be acquired immediately."""
         if self._Semaphore__value == 0:
             return True
         for w in self._Semaphore__waiters:
@@ -172,11 +194,19 @@ cdef class Semaphore(_DebugDaemonMixin):
         Wrap a coroutine function to ensure it runs with the semaphore.
 
         Example:
-            semaphore = Semaphore(5)
+            ::
+            
+                semaphore = Semaphore(5)
 
-            @semaphore
-            async def limited():
-                return 1
+                @semaphore
+                async def limited():
+                    return 1
+
+        Raises:
+            TypeError: If the provided function is not a coroutine function.
+
+        See Also:
+            :meth:`__call__`
         """
         if not iscoroutinefunction(fn):
             raise TypeError(f"{fn} must be a coroutine function")
@@ -193,14 +223,14 @@ cdef class Semaphore(_DebugDaemonMixin):
         """
         Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.
 
-        If the internal counter is larger than zero on entry, decrement it by one and return
-        True immediately.  If it is zero on entry, block, waiting until some other coroutine 
-        has called release() to make it larger than 0, and then return True.
-
-        If the semaphore value is zero or less, the debug daemon is started to log the state of the semaphore.
-
+        If the internal counter is greater than zero on entry, it is decremented by one and a no-op awaitable is returned.
+        If the counter is zero or less, the debug daemon is started and the coroutine waits until the semaphore is available.
+        
         Returns:
-            True when the semaphore is successfully acquired.
+            An awaitable that resolves to True when the semaphore is successfully acquired.
+
+        See Also:
+            :meth:`release`
         """
         if self._Semaphore__value <= 0:
             self._c_ensure_debug_daemon((),{})
@@ -237,41 +267,50 @@ cdef class Semaphore(_DebugDaemonMixin):
     cpdef void release(self):
         """Release a semaphore, incrementing the internal counter by one.
 
-        When it was zero on entry and another coroutine is waiting for it to
-        become larger than zero again, wake up that coroutine.
+        When the counter is zero on entry and another coroutine is waiting for it to
+        become greater than zero, this method wakes up that coroutine.
+
+        See Also:
+            :meth:`acquire`
         """
         self._Semaphore__value += 1
         self._wake_up_next()
 
     @property
     def name(self) -> str:
+        """Return the decoded name of this semaphore."""
         return self.decode_name()
     
     cdef str decode_name(self):
+        """Decode the name stored in the C-allocated memory block for debug logs."""
         return (self._name or b"").decode("utf-8")
 
     @property
     def _value(self) -> int:
-        # required for subclass compatability
+        # required for subclass compatibility
         return self._Semaphore__value
     
     @_value.setter
     def _value(self, unsigned long long value):
-        # required for subclass compatability
+        # required for subclass compatibility
         self._Semaphore__value = value
 
     @property
     def _waiters(self) -> List[Future]:
-        # required for subclass compatability
+        # required for subclass compatibility
         return self._Semaphore__waiters
     
     @_waiters.setter
     def _waiters(self, value: Container):
-        # required for subclass compatability
+        # required for subclass compatibility
         self._Semaphore__waiters = value
 
     cpdef void _wake_up_next(self):
-        """Wake up the first waiter that isn't done."""
+        """Wake up the first waiter that is still pending.
+
+        This method searches the waiters list and, upon finding a waiter that has not yet completed,
+        decrements the semaphore value and sets the waiter's result to True.
+        """
         if not self._Semaphore__waiters:
             return
 
@@ -283,18 +322,25 @@ cdef class Semaphore(_DebugDaemonMixin):
             
     async def _debug_daemon(self) -> None:
         """
-        Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.
+        Daemon coroutine (runs in a background task) that emits a debug log every minute while the semaphore has waiters.
 
-        This method is part of the :class:`_DebugDaemonMixin` and is used to provide detailed logging information
-        about the semaphore's state when it is being waited on.
+        This method is part of the :class:`_DebugDaemonMixin` and is used to provide detailed logging
+        about the semaphore's state during contention.
 
-        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
+        Examples:
+            ::
+            
+                semaphore = Semaphore(5)
+                
+                async def monitor():
+                    await semaphore._debug_daemon()
 
-        Example:
-            semaphore = Semaphore(5)
+        Note:
+            This coroutine runs only if :attr:`logger.isEnabledFor(DEBUG)` is True.
 
-            async def monitor():
-                await semaphore._debug_daemon()
+        See Also:
+            - :meth:`_ensure_debug_daemon`
+            - :attr:`logger`
         """
         cdef object waiters = self._Semaphore__waiters
         cdef set decorated = self._decorated
@@ -330,16 +376,22 @@ cdef inline bint _is_not_cancelled(fut: Future):
 
 cdef class DummySemaphore(Semaphore):
     """
-    A dummy semaphore that implements the standard :class:`asyncio.Semaphore` API but does nothing.
+    A dummy semaphore that implements the standard :class:`asyncio.Semaphore` API but performs no synchronization.
 
-    This class is useful for scenarios where a semaphore interface is required but no actual synchronization is needed.
+    This class is useful for scenarios where a semaphore interface is required but no actual blocking or synchronization is needed.
+    It immediately returns when acquired and does nothing on release.
 
     Example:
-        dummy_semaphore = DummySemaphore()
+        ::
+        
+            dummy_semaphore = DummySemaphore()
 
-        async def no_op():
-            async with dummy_semaphore:
-                return 1
+            async def no_op():
+                async with dummy_semaphore:
+                    return 1
+
+    See Also:
+        :class:`Semaphore`
     """
 
     def __cinit__(self):
@@ -352,7 +404,7 @@ cdef class DummySemaphore(Semaphore):
         Initialize the dummy semaphore with an optional name.
 
         Args:
-            name (optional): An optional name for the dummy semaphore.
+            name (optional): An optional string to identify the dummy semaphore in debug logs.
         """
             
         # we need a constant to coerce to char*
@@ -373,46 +425,95 @@ cdef class DummySemaphore(Semaphore):
         return "<{} name={}>".format(self.__class__.__name__, self.decode_name())
 
     async def acquire(self) -> Literal[True]:
-        """Acquire the dummy semaphore, which is a no-op."""
+        """Acquire the dummy semaphore, which is a no-op.
+
+        Returns:
+            Always returns True immediately.
+
+        Examples:
+            ::
+            
+                dummy_semaphore = DummySemaphore()
+                result = await dummy_semaphore.acquire()
+                # result is True
+
+        """
         return True
 
     cpdef void release(self):
-        """No-op release method."""
+        """No-op release method.
+
+        Does nothing.
+        """
 
     async def __aenter__(self):
-        """No-op context manager entry."""
+        """No-op context manager entry.
+
+        Returns:
+            The dummy semaphore itself.
+        """
         return self
 
     async def __aexit__(self, *args):
         """No-op context manager exit."""
+        pass
 
 
 cdef class ThreadsafeSemaphore(Semaphore):
     """
     A semaphore that works in a multi-threaded environment.
 
-    This semaphore ensures that the program functions correctly even when used with multiple event loops.
-    It provides a workaround for edge cases involving multiple threads and event loops by using a separate semaphore
-    for each thread.
+    This semaphore ensures proper behavior even when used across multiple threads and event loops.
+    It provides a workaround for edge cases by maintaining a separate semaphore for each thread.
+    Specifically:
+    
+    - If the provided initial value is -1, the semaphore operates in dummy mode by employing a
+      :class:`DummySemaphore` (i.e. no actual synchronization is performed).
+    - Otherwise, a default dictionary is created mapping each thread to its own :class:`Semaphore`
+      instance initialized with the given value.
 
     Example:
-        semaphore = ThreadsafeSemaphore(5)
+        ::
+        
+            # Using a normal threadsafe semaphore with 5 permits
+            semaphore = ThreadsafeSemaphore(5)
 
-        async def limited():
-            async with semaphore:
-                return 1
+            async def limited():
+                async with semaphore:
+                    return 1
+
+            # Using dummy mode (value set to -1) so that acquiring is a no-op.
+            dummy_semaphore = ThreadsafeSemaphore(-1)
+            async def non_blocking():
+                async with dummy_semaphore:
+                    return "immediate"
 
     See Also:
-        :class:`Semaphore` for the base class implementation.
+        :class:`Semaphore` for the base semaphore implementation.
+        :class:`DummySemaphore` for the non-blocking version.
     """
 
     def __init__(self, value: Optional[int], name: Optional[str] = None) -> None:
         """
-        Initialize the threadsafe semaphore with a given value and optional name.
+        Initialize the threadsafe semaphore with a given value and an optional name.
 
         Args:
-            value: The initial value for the semaphore, should be an integer.
-            name (optional): An optional name for the semaphore.
+            value: The initial semaphore value as an integer. If value is -1,
+                this semaphore will use dummy mode and perform no synchronization.
+            name (optional): An optional string name for the semaphore, useful for debugging.
+
+        Raises:
+            AssertionError: If value is not of type int.
+        
+        Examples:
+            ::
+            
+                # Normal per-thread semaphore
+                semaphore = ThreadsafeSemaphore(5, name="workerSemaphore")
+                
+                # Dummy semaphore mode (non-blocking behavior)
+                dummy = ThreadsafeSemaphore(-1, name="dummySemaphore")
+
         """
         assert isinstance(value, int), f"{value} should be an integer."
         Semaphore.__init__(self, value, name=name)
@@ -432,16 +533,21 @@ cdef class ThreadsafeSemaphore(Semaphore):
     @property
     def semaphore(self) -> Semaphore:
         """
-        Returns the appropriate semaphore for the current thread.
+        Return the appropriate semaphore for the current thread.
 
-        NOTE: We can't cache this property because we need to check the current thread every time we access it.
+        Note:
+            This property is not cached because the current thread must be checked with every access.
 
         Example:
-            semaphore = ThreadsafeSemaphore(5)
+            ::
+            
+                semaphore = ThreadsafeSemaphore(5)
+                async def limited():
+                    # Get the per-thread semaphore dynamically
+                    current_semaphore = semaphore.semaphore
+                    async with current_semaphore:
+                        return 1
 
-            async def limited():
-                async with semaphore.semaphore:
-                    return 1
         """
     
     cdef Semaphore c_get_semaphore(self):
@@ -452,3 +558,10 @@ cdef class ThreadsafeSemaphore(Semaphore):
 
     async def __aexit__(self, *args):
         self.c_get_semaphore().release()
+
+
+cdef inline bint _is_not_done(fut: Future):
+    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") == 0
+
+cdef inline bint _is_not_cancelled(fut: Future):
+    return PyUnicode_CompareWithASCIIString(fut._state, b"CANCELLED") != 0
