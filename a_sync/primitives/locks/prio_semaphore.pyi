@@ -47,11 +47,18 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         """Initializes the priority semaphore.
 
         Args:
-            value: The initial capacity of the semaphore.
+            context_manager_class: The class used to create context managers for acquiring the semaphore.
+                This class must be a subclass of :class:`_AbstractPrioritySemaphoreContextManager`.
+            top_priority: A comparable value representing the default top priority that is used when no
+                explicit priority is provided.
+            value: The initial capacity of the semaphore. Defaults to 1.
             name: An optional name for the semaphore, used for debugging.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5, name="test_semaphore")
+            Creating a numeric priority semaphore:
+            >>> from a_sync.primitives.locks.prio_semaphore import _AbstractPrioritySemaphore, _PrioritySemaphoreContextManager
+            >>> from a_sync._typing import Numeric
+            >>> semaphore = _AbstractPrioritySemaphore(_PrioritySemaphoreContextManager, top_priority=-1, value=5, name="test_semaphore")
         """
 
     async def __aenter__(self) -> None:
@@ -60,7 +67,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         This method is part of the asynchronous context management protocol.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> semaphore = _AbstractPrioritySemaphore(..., top_priority=-1)
             >>> async with semaphore:
             ...     await do_stuff()
         """
@@ -71,7 +78,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         This method is part of the asynchronous context management protocol.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> semaphore = _AbstractPrioritySemaphore(..., top_priority=-1)
             >>> async with semaphore:
             ...     await do_stuff()
         """
@@ -82,7 +89,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         This method overrides :meth:`Semaphore.acquire` to handle priority-based logic.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> semaphore = _AbstractPrioritySemaphore(..., top_priority=-1)
             >>> await semaphore.acquire()
         """
 
@@ -96,7 +103,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             The context manager associated with the given priority.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> semaphore = _AbstractPrioritySemaphore(..., top_priority=-1)
             >>> context_manager = semaphore[priority]
         """
 
@@ -107,7 +114,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             True if the semaphore cannot be acquired immediately, False otherwise.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
+            >>> semaphore = _AbstractPrioritySemaphore(..., top_priority=-1)
             >>> semaphore.locked()
         """
 
@@ -133,7 +140,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
             name: An optional name for the context manager, used for debugging.
 
         Examples:
-            >>> parent_semaphore = _AbstractPrioritySemaphore(5)
+            >>> parent_semaphore = _AbstractPrioritySemaphore(..., top_priority=-1)
             >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent_semaphore, priority=1)
         """
 
@@ -166,11 +173,8 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
     async def acquire(self) -> Literal[True]:
         """Acquires the semaphore for this context manager.
 
-        If the internal counter is larger than zero on entry,
-        decrement it by one and return True immediately. If it is
-        zero on entry, block, waiting until some other coroutine has
-        called release() to make it larger than 0, and then return
-        True.
+        If the internal counter is larger than zero on entry, decrement it by one and return True immediately.
+        If it is zero, block until a release occurs and then return True.
 
         This method overrides :meth:`Semaphore.acquire` to handle priority-based logic.
 
@@ -200,14 +204,12 @@ class PrioritySemaphore(_AbstractPrioritySemaphore[Numeric, _PrioritySemaphoreCo
     and the `_top_priority` is set to -1, which is the highest priority.
 
     Examples:
-        The primary way to use this semaphore is by specifying a priority.
-
+        Using the semaphore with a specified priority:
         >>> priority_semaphore = PrioritySemaphore(10)
         >>> async with priority_semaphore[priority]:
         ...     await do_stuff()
 
-        You can also enter and exit this semaphore without specifying a priority, and it will use the top priority by default:
-
+        Entering the semaphore without specifying a priority (using top priority):
         >>> priority_semaphore = PrioritySemaphore(10)
         >>> async with priority_semaphore:
         ...     await do_stuff()
