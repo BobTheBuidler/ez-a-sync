@@ -235,13 +235,16 @@ class SmartFuture(Future, Generic[T]):
     Example:
         Creating and awaiting a SmartFuture:
 
-        ```python
-        future = SmartFuture()
-        await future
-        ```
+        >>> future = SmartFuture()
+        >>> await future
+
+        Creating a SmartFuture with a processing queue and key:
+
+        >>> future = SmartFuture(queue=my_queue, key=my_key)
+        >>> await future
 
     See Also:
-        - :class:`asyncio.Future`
+        :class:`asyncio.Future`
     """
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
     _key: Optional[Key] = None
@@ -266,12 +269,11 @@ class SmartFuture(Future, Generic[T]):
             loop: Optional; the event loop.
 
         Example:
-            ```python
-            future = SmartFuture(queue=my_queue, key=my_key)
-            ```
+            >>> future = SmartFuture(queue=my_queue, key=my_key)
+            >>> await future
 
         See Also:
-            - :class:`SmartProcessingQueue`
+            :class:`SmartProcessingQueue`
         """
         cdef PyObject *queue_ptr
         cdef PyObject *proxy_ptr
@@ -292,20 +294,22 @@ class SmartFuture(Future, Generic[T]):
     def __lt__(self, other: "SmartFuture[T]") -> bint:
         """
         Compare the number of waiters to determine priority in a heap.
-        Lower values indicate higher priority, so more waiters means 'less than'.
+
+        This method is implemented in an inverted manner: a task with more waiters is considered
+        "less than" a task with fewer waiters, indicating a lower priority. In other words, when
+        sorting, tasks with fewer waiters (i.e., higher priority) will come before those with more waiters.
 
         Args:
             other: Another SmartFuture to compare with.
 
         Example:
-            ```python
-            future1 = SmartFuture()
-            future2 = SmartFuture()
-            print(future1 < future2)
-            ```
+            >>> future1 = SmartFuture()
+            >>> future2 = SmartFuture()
+            >>> # Suppose future1 has 3 waiters and future2 has 1 waiter.
+            >>> print(future1 < future2)  # Returns True because 3 > 1, implying future1 has lower priority.
 
         See Also:
-            - :meth:`num_waiters`
+            :meth:`num_waiters`
         """
         return count_waiters(self) > count_waiters(other)
 
@@ -320,19 +324,14 @@ class SmartFuture(Future, Generic[T]):
             RuntimeError: If await wasn't used with future.
 
         Example:
-            Awaiting a SmartFuture:
+            >>> future = SmartFuture()
+            >>> result = await future
 
-            ```python
-            future = SmartFuture()
-            result = await future
-            ```
+            >>> task = SmartTask(coro=my_coroutine())
+            >>> result = await task
 
-            Awaiting a SmartTask:
-
-            ```python
-            task = SmartTask(coro=my_coroutine())
-            result = await task
-            ```
+        See Also:
+            :func:`asyncio.Future.__await__`
         """
         if _is_done(self):
             return _get_result(self)  # May raise too.
@@ -366,7 +365,7 @@ class SmartFuture(Future, Generic[T]):
             waiter: The waiter task to clean up.
 
         Example:
-            Automatically called when a waiter task completes.
+            This method is automatically called when a waiter task completes.
         """
         if _is_not_done(self):
             (<WeakSet>self._waiters).remove(waiter)
@@ -398,14 +397,11 @@ cpdef inline object create_future(
         A SmartFuture instance.
 
     Example:
-        Creating a SmartFuture using the factory function:
-
-        ```python
-        future = create_future(queue=my_queue, key=my_key)
-        ```
+        >>> future = create_future(queue=my_queue, key=my_key)
+        >>> await future
 
     See Also:
-        - :class:`SmartFuture`
+        :class:`SmartFuture`
     """
     return _SmartFuture(queue=queue, key=key, loop=loop or get_event_loop())
 
@@ -419,13 +415,11 @@ class SmartTask(Task, Generic[T]):
     Example:
         Creating and awaiting a SmartTask:
 
-        ```python
-        task = SmartTask(coro=my_coroutine())
-        await task
-        ```
+        >>> task = SmartTask(coro=my_coroutine())
+        >>> await task
 
     See Also:
-        - :class:`asyncio.Task`
+        :class:`asyncio.Task`
     """
     
     _waiters: Set["Task[T]"]
@@ -449,12 +443,11 @@ class SmartTask(Task, Generic[T]):
             name: Optional; the name of the task.
 
         Example:
-            ```python
-            task = SmartTask(coro=my_coroutine(), name="my_task")
-            ```
+            >>> task = SmartTask(coro=my_coroutine(), name="my_task")
+            >>> await task
 
         See Also:
-            - :func:`asyncio.create_task`
+            :func:`asyncio.create_task`
         """
         _task_init(self, coro, loop=loop, name=name)
         self._waiters = set()
@@ -470,19 +463,11 @@ class SmartTask(Task, Generic[T]):
             RuntimeError: If await wasn't used with future.
 
         Example:
-            Awaiting a SmartFuture:
+            >>> task = SmartTask(coro=my_coroutine())
+            >>> result = await task
 
-            ```python
-            future = SmartFuture()
-            result = await future
-            ```
-
-            Awaiting a SmartTask:
-
-            ```python
-            task = SmartTask(coro=my_coroutine())
-            result = await task
-            ```
+        See Also:
+            :func:`asyncio.Task.__await__`
         """
         if _is_done(self):
             return _get_result(self)  # May raise too.
@@ -515,7 +500,7 @@ class SmartTask(Task, Generic[T]):
             waiter: The waiter task to clean up.
 
         Example:
-            Automatically called when a waiter task completes.
+            This callback is automatically invoked once the waiter completes.
         """
         if _is_not_done(self):
             (<set>self._waiters).remove(waiter)
@@ -539,16 +524,13 @@ cpdef object smart_task_factory(loop: AbstractEventLoop, coro: Awaitable[T]):
         A SmartTask instance running the provided coroutine.
 
     Example:
-        Using the smart task factory to create a SmartTask:
-
-        ```python
-        loop = asyncio.get_event_loop()
-        task = smart_task_factory(loop, my_coroutine())
-        ```
+        >>> loop = asyncio.get_event_loop()
+        >>> task = smart_task_factory(loop, my_coroutine())
+        >>> await task
 
     See Also:
-        - :func:`set_smart_task_factory`
-        - :class:`SmartTask`
+        :func:`set_smart_task_factory`,
+        :class:`SmartTask`
     """
     return _SmartTask(coro, loop=loop)
 
@@ -561,14 +543,10 @@ def set_smart_task_factory(loop: AbstractEventLoop = None) -> None:
         loop: Optional; the event loop. If None, the current event loop is used.
 
     Example:
-        Setting the smart task factory for the current event loop:
-
-        ```python
-        set_smart_task_factory()
-        ```
+        >>> set_smart_task_factory()
 
     See Also:
-        - :func:`smart_task_factory`
+        :func:`smart_task_factory`
     """
     if loop is None:
         import a_sync.asyncio
@@ -595,30 +573,26 @@ cpdef object shield(arg: Awaitable[T]):
     CancelledError.  Note: If something() is cancelled by other means
     this will still cancel shield().
 
-    If you want to completely ignore cancellation (not recommended)
-    you can combine shield() with a try/except clause, as follows:
-
-        try:
-            res = await shield(something())
-        except CancelledError:
-            res = None
-
     Args:
         arg: The awaitable to shield from cancellation.
-        loop: Optional; the event loop. Deprecated since Python 3.8.
 
     Returns:
         A :class:`SmartFuture` or :class:`asyncio.Future` instance.
 
     Example:
-        Using shield to protect a coroutine from cancellation:
+        Shielding a coroutine from cancellation:
 
-        ```python
-        result = await shield(my_coroutine())
-        ```
+        >>> result = await shield(my_coroutine())
+
+        Using shield in a try/except block:
+
+        >>> try:
+        ...     result = await shield(my_coroutine())
+        ... except CancelledError:
+        ...     result = None
 
     See Also:
-        - :func:`asyncio.shield`
+        :func:`asyncio.shield`
     """
     inner = ensure_future(arg)
     if _is_done(inner):
