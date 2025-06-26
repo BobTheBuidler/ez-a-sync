@@ -1,5 +1,4 @@
 # type: ignore [var-annotated]
-
 """
 The `future.py` module provides functionality for handling asynchronous futures,
 including a decorator for converting callables into `ASyncFuture` objects and
@@ -180,36 +179,13 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     Example:
         >>> async def async_fn():
         ...     return 42
-        >>> future = ASyncFuture(async_fn())
+        >>> future = ASyncFuture(asyncio.sleep(1, result=42))
         >>> await future
         42
 
     Note:
         Arithmetic operations are implemented, allowing for mathematical operations on future results.
         You no longer have to choose between optimized async code and clean, readable code.
-
-    Example:
-        >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-        >>> future2 = ASyncFuture(asyncio.sleep(1, result=5))
-        >>> future3 = ASyncFuture(asyncio.sleep(1, result=10))
-        >>> future4 = ASyncFuture(asyncio.sleep(1, result=2))
-        >>> result = (future1 + future2) / future3 ** future4
-        >>> await result
-        0.15
-
-    Attribute Access:
-        The `ASyncFuture` allows attribute access on the materialized result.
-
-    Example:
-        >>> class Example:
-        ...     def __init__(self, value):
-        ...         self.value = value
-        >>> future = ASyncFuture(asyncio.sleep(1, result=Example(42)))
-        >>> future.value
-        42
-
-    See Also:
-        :func:`future` for creating `ASyncFuture` instances.
     """
 
     __slots__ = "__awaitable__", "__dependencies", "__dependants", "__task"
@@ -353,18 +329,26 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     # not sure what to call these
     def __contains__(self, key: Any) -> bool:
         """
-        Checks if a key is in the materialized result.
+        Checks if a key is contained in the materialized result by creating a new ASyncFuture.
+
+        This method wraps the membership test of the materialized result in an ASyncFuture,
+        which must be awaited to obtain the boolean value.
 
         Args:
-            key: The key to check.
+            key: The key to check in the materialized result.
 
         Returns:
-            True if the key is in the materialized result, False otherwise.
+            An ASyncFuture that, when awaited, yields True if the key is present in the
+            materialized result, or False otherwise.
 
         Example:
             >>> future = ASyncFuture(asyncio.sleep(1, result={'key': 'value'}))
-            >>> 'key' in future
+            >>> result_future = future.__contains__('key')
+            >>> await result_future
             True
+
+        See Also:
+            :meth:`__getitem__`
         """
         return _materialize(
             ASyncFuture(self.__contains(key), dependencies=self.__list_dependencies(key))
@@ -372,16 +356,34 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
     def __await__(self) -> Generator[Any, None, T]:
         """
-        Makes the `ASyncFuture` awaitable.
+        Makes the ASyncFuture awaitable by delegating to an internal asynchronous helper.
+
+        The public __await__ method calls an internal asynchronous __await function to
+        obtain the result once the underlying awaitable completes, and returns an iterator for awaiting.
 
         Example:
             >>> future = ASyncFuture(asyncio.sleep(1, result=42))
-            >>> await future
+            >>> result = await future
+            >>> result
             42
+
+        See Also:
+            :meth:`__await` (internal coroutine)
         """
         return self.__await().__await__()
 
     async def __await(self) -> T:
+        """
+        Internal asynchronous helper for awaiting the ASyncFuture.
+
+        If the future is not done, awaits the associated task and sets the result.
+        Returns the final result of the future.
+
+        Example:
+            >>> future = ASyncFuture(asyncio.sleep(1, result=42))
+            >>> await future.__await()
+            42
+        """
         if not self.done():
             self.set_result(await self.__task__)
         return self._result
@@ -663,20 +665,24 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
 
     def __pow__(self, other) -> "ASyncFuture":
         """
-        Raises the result of this `ASyncFuture` to the power of another value or `ASyncFuture`.
-
+        Duplicate overload for raising the future result to a power. This implementation
+        is synonymous with the previous __pow__ operator and is maintained for overload resolution.
+        
         Args:
-            other: The exponent value or `ASyncFuture`.
-
+            other: The exponent value or ASyncFuture.
+        
         Returns:
-            A new `ASyncFuture` representing the power.
-
+            A new ASyncFuture representing the power operation.
+        
         Example:
             >>> future1 = ASyncFuture(asyncio.sleep(1, result=2))
             >>> future2 = ASyncFuture(asyncio.sleep(1, result=3))
             >>> result = future1 ** future2
             >>> await result
             8
+        
+        Note:
+            This duplicate definition is intentional for overload resolution.
         """
         return ASyncFuture(self.__pow(other), dependencies=self.__list_dependencies(other))
 
@@ -998,9 +1004,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     async def __add(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[float]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    async def __add(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
     async def __add(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
@@ -1014,14 +1018,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[Decimal]", other: Awaitable[int]
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __add__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __add(
-        self: "ASyncFuture[int]", other: Awaitable[Decimal]
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __add__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
 
     async def __add(self, other) -> "Any":
         a, b = await _gather_check_and_materialize(self, other)
@@ -1102,51 +1102,45 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     async def __radd(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
+    async def __radd__(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
+    async def __radd__(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
+    async def __radd__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
+    async def __radd__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
+    async def __radd__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
+    async def __radd__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
+    async def __radd__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[float]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    async def __radd__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
+    async def __radd__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
+    async def __radd__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(
+    async def __radd__(
         self: "ASyncFuture[Decimal]", other: Awaitable[Decimal]
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[Decimal]", other: Awaitable[int]
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __radd__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __radd(
-        self: "ASyncFuture[int]", other: Awaitable[Decimal]
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __radd__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
 
     async def __radd(self, other) -> "Any":
         a, b = await _gather_check_and_materialize(other, self)
@@ -1156,51 +1150,45 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     async def __rsub(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __rsub(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
+    async def __rsub__(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
+    async def __rsub__(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
+    async def __rsub__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
+    async def __rsub__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __rsub(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
+    async def __rsub__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __rsub(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
+    async def __rsub__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __rsub(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
+    async def __rsub__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[float]", other: Awaitable[float]
-    ) -> "ASyncFuture[float]": ...
+    async def __rsub__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
+    async def __rsub__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
+    async def __rsub__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __rsub(
+    async def __rsub__(
         self: "ASyncFuture[Decimal]", other: Awaitable[Decimal]
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[Decimal]", other: Awaitable[int]
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __rsub__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __rsub(
-        self: "ASyncFuture[int]", other: Awaitable[Decimal]
-    ) -> "ASyncFuture[Decimal]": ...
+    async def __rsub__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
 
     async def __rsub(self, other) -> "Any":
         a, b = await _gather_check_and_materialize(other, self)
