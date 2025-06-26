@@ -1,5 +1,5 @@
 """
-This module provides various semaphore implementations, including a debug-enabled semaphore,
+This module provides various semaphore implementations, including a debug‐enabled semaphore,
 a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi‐threaded applications.
 """
 
@@ -50,7 +50,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         You can write this pattern:
 
         ::
-        
+
             semaphore = Semaphore(5)
 
             async def limited():
@@ -60,7 +60,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         like this:
 
         ::
-        
+
             semaphore = Semaphore(5)
 
             @semaphore
@@ -476,14 +476,14 @@ cdef class ThreadsafeSemaphore(Semaphore):
         ::
         
             # Using a normal threadsafe semaphore with 5 permits
-            semaphore = ThreadsafeSemaphore(5)
+            semaphore = ThreadsafeSemaphore(5, name="workerSemaphore")
 
             async def limited():
                 async with semaphore:
                     return 1
 
             # Using dummy mode (value set to -1) so that acquiring is a no-op.
-            dummy_semaphore = ThreadsafeSemaphore(-1)
+            dummy_semaphore = ThreadsafeSemaphore(-1, name="dummySemaphore")
             async def non_blocking():
                 async with dummy_semaphore:
                     return "immediate"
@@ -513,7 +513,6 @@ cdef class ThreadsafeSemaphore(Semaphore):
                 
                 # Dummy semaphore mode (non-blocking behavior)
                 dummy = ThreadsafeSemaphore(-1, name="dummySemaphore")
-
         """
         assert isinstance(value, int), f"{value} should be an integer."
         Semaphore.__init__(self, value, name=name)
@@ -533,21 +532,25 @@ cdef class ThreadsafeSemaphore(Semaphore):
     @property
     def semaphore(self) -> Semaphore:
         """
-        Return the appropriate semaphore for the current thread.
+        Return the per-thread semaphore associated with the current thread.
 
-        Note:
-            This property is not cached because the current thread must be checked with every access.
+        This property dynamically retrieves the appropriate semaphore instance by 
+        calling the internal :meth:`c_get_semaphore`. When the ThreadsafeSemaphore
+        is configured in dummy mode (i.e. when the initial value is -1), it returns
+        the dummy semaphore instance. Otherwise, it returns the thread-specific
+        :class:`Semaphore` instance from an internal mapping.
 
-        Example:
+        Examples:
             ::
-            
-                semaphore = ThreadsafeSemaphore(5)
-                async def limited():
-                    # Get the per-thread semaphore dynamically
-                    current_semaphore = semaphore.semaphore
-                    async with current_semaphore:
-                        return 1
+                # Create a threadsafe semaphore with 5 permits
+                semaphore = ThreadsafeSemaphore(5, name="workerSemaphore")
+                # Retrieve the semaphore for the current thread
+                current_semaphore = semaphore.semaphore
+                async with current_semaphore:
+                    result = await some_coroutine()
 
+        See Also:
+            :meth:`c_get_semaphore` for detailed implementation.
         """
     
     cdef Semaphore c_get_semaphore(self):
