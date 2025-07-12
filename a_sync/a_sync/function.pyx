@@ -195,7 +195,9 @@ cdef inline void _validate_argspec(fn: Callable):
             warn("hopefully you know what you're doing...")
             return
         else:
-            fn_args = argspec[0]
+            # python argspec is already a tuple but mypyc compiled functions
+            # return a list which me must coerce to tuple.
+            fn_args = tuple(argspec[0])
     
     for flag in fn_args:
         if flag in VIABLE_FLAGS:
