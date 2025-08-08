@@ -128,14 +128,17 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
             persisted = task_factory(loop, persisted)
             if name:
                 __set_task_name(persisted, name)
-            
+
+        persisted.add_done_callback(_persisted_task_callback)
         _persisted_tasks.add(persisted)
 
     if log_destroy_pending is False:
         task._log_destroy_pending = False
 
-    if _persisted_tasks:
-        __prune_persisted_tasks()
+    if _exceptions:
+        for task, exc in _exceptions:
+            __log_exception(exc)
+            raise exc.with_traceback(exc.__traceback__)
 
     return task
 
@@ -145,7 +148,39 @@ cdef inline void __set_task_name(object task, str name):
          set_name(name)
 
 
+def _persisted_task_callback(task: Task[Any]) -> None:
+    """Remove completed tasks from the set of persisted tasks.
+
+    This callback function checks each persisted task as it completes. If a task has a :class:`PersistedTaskException`,
+    it logs the exception before discarding the task. If it has any other type of Exception, it adds it to `_exceptions`
+    to be raised later.
+
+    See Also:
+        - :class:`PersistedTaskException`
+    """
+    cdef dict context
+    if task.cancelled():
+        pass
+    elif exc := task.exception():
+        if isinstance(exc, PersistedTaskException):
+            # we have to manually log the traceback that asyncio would usually log
+            # since we already got the exception from the task and the usual handler will now not run
+            context = {
+                "message": f"{task.__class__.__name__} exception was never retrieved",
+                "exception": exc,
+                "future": task,
+            }
+            if task._source_traceback:
+                context["source_traceback"] = task._source_traceback
+            task._loop.call_exception_handler(context)
+        else:
+            # force exceptions related to this lib to bubble up
+            _exceptions.add((task, exc))
+    _persisted_tasks.discard(task)
+
+
 cdef public set[object] _persisted_tasks = set()
+cdef public set[tuple[object, object]] _exceptions = set()
 
 cdef object __await
 
@@ -178,46 +213,6 @@ async def __await(awaitable: Awaitable[T]) -> T:
 
    
 cdef object __log_exception = logger.exception
-
-
-cdef void __prune_persisted_tasks():
-    """Remove completed tasks from the set of persisted tasks.
-
-    This function checks each task in the persisted tasks set. If a task is done and has an exception,
-    it logs the exception and raises it if it's not a :class:`PersistedTaskException`. It also logs the traceback
-    manually since the usual handler will not run after retrieving the exception.
-
-    See Also:
-        - :class:`PersistedTaskException`
-    """
-    cdef object task
-    cdef dict context
-    cdef list done = [t for t in _persisted_tasks if _is_done(t)]
-    if not done:
-        return
-    _persisted_tasks.difference_update(done)
-    for task in done:
-        exc = _get_exception(task)
-        if exc is None:
-            continue
-        # force exceptions related to this lib to bubble up
-        if not isinstance(exc, PersistedTaskException):
-            __log_exception(exc)
-            raise exc
-        # we have to manually log the traceback that asyncio would usually log
-        # since we already got the exception from the task and the usual handler will now not run
-        context = {
-            "message": f"{task.__class__.__name__} exception was never retrieved",
-            "exception": exc,
-            "future": task,
-        }
-        if task._source_traceback:
-            context["source_traceback"] = task._source_traceback
-        task._loop.call_exception_handler(context)
-
-
-cdef inline bint _is_done(fut: Future):
-    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") != 0
 
 
 cdef object _get_exception(fut: Future):
