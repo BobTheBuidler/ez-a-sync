@@ -1,7 +1,22 @@
 # cython: boundscheck=False
 """
 This module provides an enhanced version of :func:`asyncio.gather`.
+
+This implementation supports two kinds of inputs:
+  1. A series of awaitable objects passed as separate positional arguments.
+  2. A mapping (i.e. a dict) where each key maps to an awaitable.
+
+In both cases, additional functionality is provided:
+  - The progress of the gathered awaitables may be reported using tqdm if enabled.
+  - A filtering callable may be passed with the ``exclude_if`` parameter. The callable 
+    is applied to each result regardless of whether the input was a mapping or a list.
+    Any result for which ``exclude_if(result)`` returns True will be excluded from the final
+    output.
+
+See Also:
+    :func:`asyncio.gather`
 """
+
 from itertools import filterfalse
 from typing import Any, Awaitable, Dict, List, Mapping, Union, overload
 
@@ -32,22 +47,34 @@ async def gather(
     **tqdm_kwargs: Any,
 ) -> Dict[K, V]:
     """
-    Concurrently awaits a k:v mapping of awaitables and returns the results.
+    Concurrently awaits a mapping of awaitables and returns a dictionary of results.
+
+    The filtering callable passed via ``exclude_if`` is applied to each awaited result.
+    Any result for which ``exclude_if(result)`` returns True is omitted from the final output,
+    even when the input is provided as a mapping.
 
     Args:
-        awaitables (Mapping[K, Awaitable[V]]): A mapping of keys to awaitable objects.
-        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        exclude_if (Optional[Excluder[V]], optional): A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None. Note: This is only applied when the input is not a mapping.
+        awaitables (Mapping[K, Awaitable[V]]): A mapping object where each key maps to an awaitable.
+        return_exceptions (bool, optional): If True, exceptions raised during awaiting are returned as
+            results rather than being raised. Defaults to False.
+        exclude_if (Optional[Excluder[V]], optional): A callable that takes a single result as an argument.
+            If the callable returns True for a given result, that result is excluded from the final output.
+            Defaults to None.
         tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
-        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
+        **tqdm_kwargs: Additional keyword arguments passed to tqdm if progress reporting is enabled.
 
     Examples:
-        Awaiting a mapping of awaitables:
+        Awaiting a mapping of awaitables with filtering:
 
-        >>> mapping = {'key1': thing1(), 'key2': thing2()}
-        >>> results = await gather(mapping)
-        >>> results
-        {'key1': 'result', 'key2': 123}
+            >>> mapping = {
+            ...     'task1': async_function1(),
+            ...     'task2': async_function2(),
+            ...     'task3': async_function3(),
+            ... }
+            >>> # Exclude tasks that return None
+            >>> results = await gather(mapping, exclude_if=lambda res: res is None)
+            >>> results
+            {'task1': 'result', 'task3': 123}
 
     See Also:
         :func:`asyncio.gather`
@@ -63,21 +90,29 @@ async def gather(
     **tqdm_kwargs: Any,
 ) -> List[T]:
     """
-    Concurrently awaits a series of awaitable objects and returns the results.
+    Concurrently awaits a sequence of awaitable objects and returns a list of their results.
+
+    The filtering callable passed via ``exclude_if`` is applied to each awaited result.
+    Any result for which ``exclude_if(result)`` returns True is excluded from the final output.
 
     Args:
-        *awaitables (Awaitable[T]): The awaitables to await concurrently.
-        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        exclude_if (Optional[Excluder[T]], optional): A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None.
+        *awaitables (Awaitable[T]): Awaitable objects passed as positional arguments.
+        return_exceptions (bool, optional): If True, exceptions raised during awaiting are returned as
+            results rather than being raised. Defaults to False.
+        exclude_if (Optional[Excluder[T]], optional): A callable that takes a single result as input.
+            A result is omitted from the final output list if ``exclude_if(result)`` returns True.
+            Defaults to None.
         tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
-        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
+        **tqdm_kwargs: Additional keyword arguments passed to tqdm if progress reporting is enabled.
 
     Examples:
-        Awaiting individual awaitables:
+        Awaiting individual awaitables with filtering:
 
-        >>> results = await gather(thing1(), thing2())
-        >>> results
-        ['result', 123]
+            >>> async def foo(x): return x if x % 2 == 0 else None
+            >>> results = await gather(foo(2), foo(3), foo(4), exclude_if=lambda res: res is None)
+            >>> # Expected output: [2, 4]
+            >>> print(results)
+            [2, 4]
 
     See Also:
         :func:`asyncio.gather`
@@ -92,37 +127,48 @@ async def gather(
     **tqdm_kwargs: Any,
 ) -> Union[List[T], Dict[K, V]]:
     """
-    Concurrently awaits a list of awaitable objects or a k:v mapping of awaitables, and returns the results.
+    Concurrently awaits a set of awaitables given either as separate arguments or as a mapping,
+    and returns the aggregated results.
 
-    This function extends Python's :func:`asyncio.gather`, providing additional features for handling either individual
-    awaitable objects or a single mapping of awaitables.
+    This function extends Python's :func:`asyncio.gather` with additional features:
 
-    Differences from :func:`asyncio.gather`:
-    - Uses type hints for use with static type checkers.
-    - Supports gathering either individual awaitables or a k:v mapping of awaitables.
-    - Provides progress reporting using tqdm if 'tqdm' is set to True.
-    - Allows exclusion of results based on a condition using the 'exclude_if' parameter. Note: This is only applied when the input is not a mapping.
+      - It accepts both a series of awaitable objects as positional arguments and
+        a mapping (e.g. a dict) of awaitables.
+      - It provides progress reporting via tqdm if the ``tqdm`` parameter is True.
+      - The filtering callable provided via the ``exclude_if`` parameter is applied
+        to every awaited result regardless of the input type. If ``exclude_if(result)``
+        returns True for a result, that result is excluded from the final output.
+      - If the input is a mapping, the order of keys in the output dictionary is preserved.
 
     Args:
-        *awaitables (Union[Awaitable[T], Mapping[K, Awaitable[V]]]): The awaitables to await concurrently. It can be a list of individual awaitables or a single mapping of awaitables.
-        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        exclude_if (Optional[Excluder[T]], optional): A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None. Note: This is only applied when the input is not a mapping.
+        *awaitables (Union[Awaitable[T], Mapping[K, Awaitable[V]]]): Either multiple awaitable objects,
+            or a single mapping of keys to awaitables.
+        return_exceptions (bool, optional): If set to True, exceptions are returned as part of the results
+            instead of raising them. Defaults to False.
+        exclude_if (Optional[Excluder[T]], optional): A callable that takes the result of an awaited call
+            and returns True if that result should be excluded from the final output. This parameter is applied
+            uniformly whether the input is provided as positional arguments or as a mapping. Defaults to None.
         tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
-        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
+        **tqdm_kwargs: Additional keyword arguments passed to tqdm if progress reporting is enabled.
 
     Examples:
-        Awaiting individual awaitables:
+        Awaiting individual awaitables with filtering:
 
-        >>> results = await gather(thing1(), thing2())
-        >>> results
-        ['result', 123]
+            >>> async def process(n):
+            ...     return n if n % 2 == 0 else None
+            >>> results = await gather(process(1), process(2), process(3), process(4), exclude_if=lambda r: r is None)
+            >>> print(results)
+            [2, 4]
 
-        Awaiting a mapping of awaitables:
+        Awaiting a mapping of awaitables with filtering:
 
-        >>> mapping = {'key1': thing1(), 'key2': thing2()}
-        >>> results = await gather(mapping)
-        >>> results
-        {'key1': 'result', 'key2': 123}
+            >>> async def fetch_data(url):
+            ...     # Placeholder for actual asynchronous fetching logic
+            ...     return url if "https" in url else None
+            >>> urls = {'secure': 'https://secure.com', 'insecure': 'http://insecure.com'}
+            >>> results = await gather(urls, exclude_if=lambda r: r is None)
+            >>> print(results)
+            {'secure': 'https://secure.com'}
 
     See Also:
         :func:`asyncio.gather`
@@ -158,22 +204,34 @@ async def gather_mapping(
     """
     Concurrently awaits a mapping of awaitable objects and returns a dictionary of results.
 
-    This function is designed to await a mapping of awaitable objects, where each key-value pair represents a unique awaitable. It enables concurrent execution and gathers results into a dictionary.
+    In this function, the filtering callable provided as ``exclude_if`` is applied to each awaited result;
+    if ``exclude_if(result)`` returns True, then that key-result pair is omitted from the final dictionary.
+    This behavior applies uniformly regardless of the input type.
 
     Args:
-        mapping (Mapping[K, Awaitable[V]]): A dictionary-like object where keys are of type K and values are awaitable objects of type V.
-        return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
-        exclude_if (Optional[Excluder[V]], optional): A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None. Note: This is not applied when the input is a mapping.
+        mapping (Mapping[K, Awaitable[V]]): A mapping where keys are associated with awaitable objects.
+        return_exceptions (bool, optional): If True, any exceptions raised during the awaiting process are returned
+            as their corresponding values rather than being raised. Defaults to False.
+        exclude_if (Optional[Excluder[V]], optional): A callable that receives the result of each awaitable. If
+            the callable returns True for a particular result, that result is excluded from the output.
+            Defaults to None.
         tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
-        **tqdm_kwargs: Additional keyword arguments for tqdm if progress reporting is enabled.
+        **tqdm_kwargs: Additional keyword arguments passed to tqdm when progress reporting is enabled.
 
-    Example:
-        The 'results' dictionary will contain the awaited results, where keys match the keys in the 'mapping' and values contain the results of the corresponding awaitables.
+    Examples:
+        Awaiting a mapping of awaitables with filtering:
 
-        >>> mapping = {'task1': async_function1(), 'task2': async_function2(), 'task3': async_function3()}
-        >>> results = await gather_mapping(mapping)
-        >>> results
-        {'task1': "result", 'task2': 123, 'task3': None}
+            >>> async def compute(x):
+            ...     return x * 2
+            >>> mapping = {
+            ...     'first': compute(10),
+            ...     'second': compute(20),
+            ...     'third': compute(0),
+            ... }
+            >>> # Exclude results that are zero.
+            >>> results = await gather_mapping(mapping, exclude_if=lambda r: r == 0)
+            >>> print(results)
+            {'first': 20, 'second': 40}
 
     See Also:
         :func:`asyncio.gather`
@@ -190,12 +248,12 @@ async def gather_mapping(
         )
         if exclude_if is None or not exclude_if(v)
     }
-    # return data in same order as input mapping
+    # Return data in the same order as the input mapping
     return {k: results[k] for k in mapping}
 
 
 def cgather(*coros_or_futures: Awaitable[T], bint return_exceptions = False) -> Awaitable[List[T]]:
-    """`asyncio.gather` implemented in c"""
+    """`asyncio.gather` implemented in C."""
     return cigather(coros_or_futures, return_exceptions=return_exceptions)
 
 
@@ -204,13 +262,23 @@ cdef inline bint _is_mapping(tuple awaitables):
 
 
 async def _exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
-    """Wraps an awaitable to catch exceptions and return them instead of raising.
+    """
+    Wrap an awaitable to catch exceptions and return them as the result.
 
     Args:
-        awaitable: The awaitable to wrap.
+        awaitable: An awaitable object which may raise an exception during awaiting.
 
-    Returns:
-        The result of the awaitable or the exception if one is raised.
+    Examples:
+        Suppose a coroutine might raise an exception; wrapping it will yield either its result or the exception:
+
+            >>> result = await _exc_wrap(might_fail())
+            >>> if isinstance(result, Exception):
+            ...     print("An error occurred:", result)
+            ... else:
+            ...     print("Success:", result)
+
+    See Also:
+        :func:`asyncio.gather`
     """
     try:
         return await awaitable

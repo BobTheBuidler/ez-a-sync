@@ -1,36 +1,35 @@
-"""Sphinx documentation plugin used to document ASyncFunction instances.
+"""Sphinx documentation plugin used to document ASyncFunction, ASyncDescriptor, and ASyncGeneratorFunction instances.
 
-Introduction
-============
+This extension requires Sphinx 2.0 or later. It automatically finds ASyncFunction objects, ASyncDescriptor objects, and ASyncGeneratorFunction objects (e.g. when using the automodule directive) and generates documentation with standardized prefixes.
 
-Usage
------
+To enable this extension, add it to your :file:`docs/conf.py` configuration file:
 
-The ez-a-sync extension for Sphinx requires Sphinx 2.0 or later.
+    extensions = (
+        ...,
+        'a_sync.sphinx.ext',
+    )
 
-Add the extension to your :file:`docs/conf.py` configuration module:
+You can customize the prefixes used in the reference documentation by setting the following configuration values in your Sphinx configuration:
 
-.. code-block:: python
+    a_sync_function_prefix = "ASyncFunction"              # Default prefix for dual-function tasks
+    a_sync_function_sync_prefix = "ASyncFunction (sync)"    # Prefix for tasks with synchronous default
+    a_sync_function_async_prefix = "ASyncFunction (async)"  # Prefix for tasks with asynchronous default
+    a_sync_descriptor_prefix = "ASyncDescriptor"            # Default prefix for descriptors
+    a_sync_generator_function_prefix = "ASyncGeneratorFunction"  # Default prefix for generator functions
 
-    extensions = (...,
-                  'a_sync.sphinx.ext')
+Example:
+    In your Sphinx configuration, you could override the default prefixes as follows:
 
-If you'd like to change the prefix for tasks in reference documentation
-then you can change the ``a_sync_function_prefix`` configuration value:
+    .. code-block:: python
 
-.. code-block:: python
+        a_sync_function_prefix = "CustomFunction"
+        a_sync_descriptor_prefix = "CustomDescriptor"
+        a_sync_generator_function_prefix = "CustomGenFunction"
 
-    a_sync_function_prefix = '(function)'  # < default
-    a_sync_descriptor_prefix = '(descriptor)'  # < default
-    a_sync_generator_function_prefix = '(genfunc)'  # < default
-
-With the extension installed `autodoc` will automatically find
-ASyncFunction objects (e.g. when using the automodule directive)
-and generate the correct (as well as add a ``(function)`` prefix),
-and you can also refer to the tasks using `:task:proj.tasks.add`
-syntax.
-
-Use ``.. autotask::`` to alternatively manually document a task.
+See Also:
+    :class:`~a_sync.a_sync.function.ASyncFunction`
+    :class:`~a_sync.a_sync._descriptor.ASyncDescriptor`
+    :class:`~a_sync.a_sync.iter.ASyncGeneratorFunction`
 """
 
 from inspect import signature
@@ -49,7 +48,20 @@ from a_sync.iter import ASyncGeneratorFunction
 
 
 class _ASyncWrapperDocumenter:
-    """Base class for documenters that handle wrapped ASync functions."""
+    """Base class for documenters that handle wrapped ASync functions.
+
+    This class provides helper methods to check if a member can be documented
+    as a dual-mode function by verifying that it is an instance of a specific type
+    and that it wraps another callable object.
+
+    Example:
+        >>> if _ASyncWrapperDocumenter.can_document_member(member, 'name', False, parent):
+        ...     # Proceed with documentation of the member
+        ...     pass
+
+    See Also:
+        :class:`~a_sync.a_sync.function.ASyncFunction`
+    """
 
     typ: type
 
@@ -83,10 +95,10 @@ class _ASyncWrapperDocumenter:
             bool: True if the object is defined in the expected module, False otherwise.
 
         Note:
-            Normally checks if *self.object* is really defined in the module
-            given by *self.modname*. But since functions decorated with the @task
-            decorator are instances living in the celery.local, we have to check
-            the wrapped function instead.
+            Normally, this checks if *self.object* is defined in the module
+            given by *self.modname*. For functions decorated with the task decorator,
+            the descriptor holds the wrapped function and this method ensures that
+            the wrapped function is used for the module check.
         """
         wrapped = getattr(self.object, "__wrapped__", None)
         if wrapped and getattr(wrapped, "__module__") == self.modname:
@@ -95,7 +107,18 @@ class _ASyncWrapperDocumenter:
 
 
 class _ASyncFunctionDocumenter(_ASyncWrapperDocumenter, FunctionDocumenter):
-    """Documenter for ASyncFunction instances."""
+    """Documenter for ASyncFunction instances.
+
+    This documenter formats the arguments of the wrapped function by inspecting
+    the signature of the original callable.
+
+    Example:
+        Given a function decorated with @a_sync('async'), this documenter
+        will generate its signature for the autodoc documentation.
+        
+    See Also:
+        :class:`~a_sync.a_sync.function.ASyncFunction`
+    """
 
     def format_args(self):
         """Format the arguments of the wrapped function.
@@ -113,7 +136,14 @@ class _ASyncFunctionDocumenter(_ASyncWrapperDocumenter, FunctionDocumenter):
 
 
 class _ASyncMethodDocumenter(_ASyncWrapperDocumenter, MethodDocumenter):
-    """Documenter for ASyncMethod instances."""
+    """Documenter for ASyncMethod instances.
+
+    This documenter formats the arguments of the wrapped method by using the signature
+    of the original callable.
+
+    See Also:
+        :class:`~a_sync.a_sync.function.ASyncFunction`
+    """
 
     def format_args(self):
         """Format the arguments of the wrapped method.
@@ -128,7 +158,11 @@ class _ASyncMethodDocumenter(_ASyncWrapperDocumenter, MethodDocumenter):
 
 
 class _ASyncDirective:
-    """Base class for ASync directives."""
+    """Base class for ASync directives.
+
+    Provides common functionality for generating a signature prefix
+    from Sphinx configuration values.
+    """
 
     prefix_env: str
 
@@ -140,25 +174,41 @@ class _ASyncDirective:
 
         Returns:
             list: A list of nodes representing the signature prefix.
+
+        Example:
+            This method returns nodes such as :obj:`nodes.Text(...)`
+            with the prefix read from Sphinx configuration.
         """
         return [nodes.Text(getattr(self.env.config, self.prefix_env))]
 
 
 class _ASyncFunctionDirective(_ASyncDirective, PyFunction):
-    """Directive for ASyncFunction instances."""
+    """Directive for ASyncFunction instances.
 
+    This directive uses the prefix defined by the Sphinx configuration
+    value :confval:`a_sync_function_prefix`.
+    """
     pass
 
 
 class _ASyncMethodDirective(_ASyncDirective, PyMethod):
-    """Directive for ASyncMethod instances."""
+    """Directive for ASyncMethod instances.
 
+    This directive uses the prefix defined by the Sphinx configuration
+    value :confval:`a_sync_descriptor_prefix`.
+    """
     pass
 
 
 class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):
-    """Document ASyncFunction instance definitions."""
+    """Document ASyncFunction instance definitions.
 
+    This documenter registers itself under the object type ``a_sync_function``
+    and uses the default prefix from :confval:`a_sync_function_prefix`.
+
+    Example:
+        In the generated documentation, the function will be prefixed with "ASyncFunction".
+    """
     objtype = "a_sync_function"
     typ = ASyncFunction
     priority = 15
@@ -166,8 +216,14 @@ class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):
 
 
 class ASyncFunctionSyncDocumenter(_ASyncFunctionDocumenter):
-    """Document ASyncFunctionSyncDefault instance definitions."""
+    """Document ASyncFunctionSyncDefault instance definitions.
 
+    This documenter registers itself under the object type ``a_sync_function_sync``
+    and uses the prefix from :confval:`a_sync_function_sync_prefix`.
+
+    Example:
+        A function decorated with @a_sync('sync') will use this documenter and appear with the prefix "ASyncFunction (sync)".
+    """
     objtype = "a_sync_function_sync"
     typ = ASyncFunctionSyncDefault
     priority = 14
@@ -175,8 +231,14 @@ class ASyncFunctionSyncDocumenter(_ASyncFunctionDocumenter):
 
 
 class ASyncFunctionAsyncDocumenter(_ASyncFunctionDocumenter):
-    """Document ASyncFunctionAsyncDefault instance definitions."""
+    """Document ASyncFunctionAsyncDefault instance definitions.
 
+    This documenter registers itself under the object type ``a_sync_function_async``
+    and uses the prefix from :confval:`a_sync_function_async_prefix`.
+
+    Example:
+        A function decorated with @a_sync('async') will use this documenter and appear with the prefix "ASyncFunction (async)".
+    """
     objtype = "a_sync_function_async"
     typ = ASyncFunctionAsyncDefault
     priority = 13
@@ -184,48 +246,67 @@ class ASyncFunctionAsyncDocumenter(_ASyncFunctionDocumenter):
 
 
 class ASyncFunctionDirective(_ASyncFunctionDirective):
-    """Directive for ASyncFunction instances."""
+    """Directive for ASyncFunction instances.
 
+    Uses the configuration value :confval:`a_sync_function_prefix` as a prefix for the signature.
+    """
     prefix_env = "a_sync_function_prefix"
 
 
 class ASyncFunctionSyncDirective(_ASyncFunctionDirective):
-    """Directive for ASyncFunctionSyncDefault instances."""
+    """Directive for ASyncFunctionSyncDefault instances.
 
+    Uses the configuration value :confval:`a_sync_function_sync_prefix` as a prefix.
+    """
     prefix_env = "a_sync_function_sync_prefix"
 
 
 class ASyncFunctionAsyncDirective(_ASyncFunctionDirective):
-    """Directive for ASyncFunctionAsyncDefault instances."""
+    """Directive for ASyncFunctionAsyncDefault instances.
 
+    Uses the configuration value :confval:`a_sync_function_async_prefix` as a prefix.
+    """
     prefix_env = "a_sync_function_async_prefix"
 
 
 class ASyncDescriptorDocumenter(_ASyncMethodDocumenter):
-    """Document ASyncDescriptor instance definitions."""
+    """Document ASyncDescriptor instance definitions.
 
+    This documenter is used to generate documentation for ASyncDescriptor objects.
+    It registers under the type ``a_sync_descriptor`` and uses the appropriate prefix.
+    """
     objtype = "a_sync_descriptor"
     typ = ASyncDescriptor
     # member_order = 11
 
 
 class ASyncDescriptorDirective(_ASyncMethodDirective):
-    """Directive for ASyncDescriptor instances."""
+    """Directive for ASyncDescriptor instances.
 
+    Uses the configuration value :confval:`a_sync_descriptor_prefix` to generate prefixes.
+    """
     prefix_env = "a_sync_descriptor_prefix"
 
 
 class ASyncGeneratorFunctionDocumenter(_ASyncFunctionDocumenter):
-    """Document ASyncGeneratorFunction instance definitions."""
+    """Document ASyncGeneratorFunction instance definitions.
 
+    This documenter registers under the object type ``a_sync_generator_function``
+    and uses the prefix from :confval:`a_sync_generator_function_prefix`.
+
+    Example:
+        When documenting an async generator function, the signature will be prefixed with "ASyncGeneratorFunction".
+    """
     objtype = "a_sync_generator_function"
     typ = ASyncGeneratorFunction
     # member_order = 11
 
 
 class ASyncGeneratorFunctionDirective(_ASyncFunctionDirective):
-    """Directive for ASyncGeneratorFunction instances."""
+    """Directive for ASyncGeneratorFunction instances.
 
+    Uses the configuration value :confval:`a_sync_generator_function_prefix` as its signature prefix.
+    """
     prefix_env = "a_sync_generator_function_prefix"
 
 
@@ -242,6 +323,10 @@ def autodoc_skip_member_handler(app, what, name, obj, skip, options):
 
     Returns:
         bool: True if the member should be skipped, False otherwise.
+
+    Example:
+        This handler ensures that ASyncFunction, ASyncDescriptor, and ASyncGeneratorFunction
+        objects with a __wrapped__ attribute are not skipped automatically.
     """
     if isinstance(obj, (ASyncFunction, ASyncDescriptor, ASyncGeneratorFunction)) and getattr(
         obj, "__wrapped__"
@@ -259,6 +344,13 @@ def setup(app):
 
     Returns:
         dict: A dictionary with metadata about the extension.
+
+    Example:
+        When Sphinx starts, it calls this setup function to register autodocumenters,
+        directives, and configuration values for ASync objects.
+
+    Note:
+        There is no alternate manual directive (such as ``.. autotask::``) registered by this extension.
     """
     app.setup_extension("sphinx.ext.autodoc")
 
@@ -279,7 +371,6 @@ def setup(app):
     app.add_config_value("a_sync_descriptor_prefix", "ASyncDescriptor", True)
 
     # generator
-
     app.add_autodocumenter(ASyncGeneratorFunctionDocumenter)
     app.add_directive_to_domain("py", "a_sync_generator_function", ASyncGeneratorFunctionDirective)
     app.add_config_value("a_sync_generator_function_prefix", "ASyncGeneratorFunction", True)
