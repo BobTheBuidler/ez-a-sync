@@ -45,5 +45,5 @@ jobs:
           pip install -e .
       
       - name: Run test suite
-        run: pytest
+        run: pytest -v
       
