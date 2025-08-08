@@ -192,7 +192,7 @@ cdef void __prune_persisted_tasks():
     """
     cdef object task
     cdef dict context
-    cdef list done = list(filter(_is_done, _persisted_tasks))
+    cdef list done = [t for t in _persisted_tasks if _is_done(t)]
     if not done:
         return
     _persisted_tasks.difference_update(done)
