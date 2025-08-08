@@ -176,7 +176,7 @@ def _persisted_task_callback(task: Task[Any]) -> None:
         else:
             # force exceptions related to this lib to bubble up
             _exceptions.add((task, exc))
-    _persisted_tasks.discard(t)
+    _persisted_tasks.discard(task)
 
 
 cdef public set[object] _persisted_tasks = set()
