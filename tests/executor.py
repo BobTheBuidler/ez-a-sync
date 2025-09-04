@@ -1,9 +1,23 @@
 import asyncio
+import atexit
+import signal
 import time
 
 import pytest
 
 from a_sync import ProcessPoolExecutor, ThreadPoolExecutor, PruningThreadPoolExecutor
+from a_sync.executor import (
+    _EXECUTORS,
+    _shutdown_all_executors,
+)
+
+
+class DummyExecutor:
+    def __init__(self):
+        self.shutdown_called = False
+
+    def shutdown(self, wait=True):
+        self.shutdown_called = True
 
 
 @pytest.mark.asyncio_cooperative
@@ -238,3 +252,90 @@ async def test_pruning_thread_pool_executor_sync_submit():
     fut = executor.submit(time.sleep, 0.1)
     assert isinstance(fut, asyncio.Future)
     await fut
+
+
+def test_executor_registration_and_shutdown(monkeypatch):
+    """
+    Test that executors are registered and shutdown is called on all of them.
+    """
+    dummy1 = DummyExecutor()
+    dummy2 = DummyExecutor()
+    _EXECUTORS.clear()
+    from a_sync.executor import register_executor
+
+    register_executor(dummy1)
+    register_executor(dummy2)
+    assert dummy1 in _EXECUTORS
+    assert dummy2 in _EXECUTORS
+    _shutdown_all_executors()
+    assert dummy1.shutdown_called
+    assert dummy2.shutdown_called
+
+
+def test_signal_and_atexit_registration(monkeypatch):
+    """
+    Test that signal handlers and atexit are registered and chainable.
+    """
+    called = {"atexit": False, "sigint": False, "sigterm": False}
+
+    def fake_atexit(func):
+        called["atexit"] = True
+        return func
+
+    def fake_signal(sig, handler):
+        if sig == signal.SIGINT:
+            called["sigint"] = True
+        elif sig == signal.SIGTERM:
+            called["sigterm"] = True
+        return handler
+
+    monkeypatch.setattr(atexit, "register", fake_atexit)
+    monkeypatch.setattr(signal, "signal", fake_signal)
+    # Re-register handlers with monkeypatched functions
+    from a_sync.executor import _register_executor_shutdown as reg
+
+    reg()
+    assert called["atexit"]
+    assert called["sigint"]
+    assert called["sigterm"]
+
+
+def test_multiple_executor_shutdown(monkeypatch):
+    """
+    Test that all registered executors are shut down, even if one raises.
+    """
+
+    class FailingExecutor:
+        def __init__(self):
+            self.shutdown_called = False
+
+        def shutdown(self, wait=True):
+            self.shutdown_called = True
+            raise RuntimeError("fail")
+
+    dummy = DummyExecutor()
+    failing = FailingExecutor()
+    _EXECUTORS.clear()
+    from a_sync.executor import register_executor
+
+    register_executor(dummy)
+    register_executor(failing)
+    # Should not raise
+    _shutdown_all_executors()
+    assert dummy.shutdown_called
+    assert failing.shutdown_called
+
+
+def test_real_executor_registration():
+    """
+    Test that real executors are registered and can be shut down.
+    """
+    _EXECUTORS.clear()
+    tpe = ThreadPoolExecutor(max_workers=1)
+    ppe = ProcessPoolExecutor(max_workers=1)
+    pe = PruningThreadPoolExecutor(max_workers=1)
+    assert tpe in _EXECUTORS
+    assert ppe in _EXECUTORS
+    assert pe in _EXECUTORS
+    _shutdown_all_executors()
+    # No exceptions should be raised

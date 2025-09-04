@@ -15,9 +15,11 @@ See Also:
 """
 
 import asyncio
+import atexit
 import concurrent.futures
 import multiprocessing.context
 import queue
+import signal
 import threading
 import weakref
 from asyncio import sleep
@@ -27,6 +29,47 @@ from concurrent.futures import _base, thread
 from a_sync._typing import *
 from a_sync.primitives._debug import _DebugDaemonMixin
 
+# === Executor Shutdown Logic ===
+# All executors (module-level and user-created) are registered for shutdown on interpreter exit and signals.
+# Signal handlers are chainable: after our cleanup, the previous handler is called (unless SIG_DFL or SIG_IGN).
+# This ensures compatibility with other libraries and deduplicates shutdown logic.
+
+_EXECUTORS = set()
+
+
+def register_executor(executor) -> None:
+    """Register an executor for shutdown on exit/signals."""
+    _EXECUTORS.add(executor)
+
+
+def _shutdown_all_executors(*args) -> None:
+    """Shutdown all registered executors (non-blocking)."""
+    for executor in list(_EXECUTORS):
+        try:
+            executor.shutdown(wait=False)
+        except Exception:
+            pass
+
+
+def _register_executor_shutdown() -> None:
+    """Register atexit and chainable signal handlers for executor shutdown."""
+    atexit.register(_shutdown_all_executors)
+
+    def make_chainable_signal_handler(signalnum):
+        prev_handler = signal.getsignal(signalnum)
+
+        def handler(signum, frame):
+            _shutdown_all_executors()
+            if callable(prev_handler) and prev_handler not in (signal.SIG_DFL, signal.SIG_IGN):
+                prev_handler(signum, frame)
+
+        signal.signal(signalnum, handler)
+
+    make_chainable_signal_handler(signal.SIGINT)
+    make_chainable_signal_handler(signal.SIGTERM)
+
+
+_register_executor_shutdown()
 
 TEN_MINUTES = 60 * 10
 
@@ -209,6 +252,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
     def __init_mixin__(self):
         self.sync_mode = self._max_workers == 0
         self.__super_submit = super().submit
+        register_executor(self)
 
     async def _debug_daemon(self, fut: asyncio.Future, fn, *args, **kwargs) -> None:
         """
