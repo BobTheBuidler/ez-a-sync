@@ -36,9 +36,11 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 
 _EXECUTORS = set()
 
+
 def register_executor(executor) -> None:
     """Register an executor for shutdown on exit/signals."""
     _EXECUTORS.add(executor)
+
 
 def _shutdown_all_executors(*args) -> None:
     """Shutdown all registered executors (non-blocking)."""
@@ -48,18 +50,24 @@ def _shutdown_all_executors(*args) -> None:
         except Exception:
             pass
 
+
 def _register_executor_shutdown() -> None:
     """Register atexit and chainable signal handlers for executor shutdown."""
     atexit.register(_shutdown_all_executors)
+
     def make_chainable_signal_handler(signalnum):
         prev_handler = signal.getsignal(signalnum)
+
         def handler(signum, frame):
             _shutdown_all_executors()
             if callable(prev_handler) and prev_handler not in (signal.SIG_DFL, signal.SIG_IGN):
                 prev_handler(signum, frame)
+
         signal.signal(signalnum, handler)
+
     make_chainable_signal_handler(signal.SIGINT)
     make_chainable_signal_handler(signal.SIGTERM)
+
 
 _register_executor_shutdown()
 
