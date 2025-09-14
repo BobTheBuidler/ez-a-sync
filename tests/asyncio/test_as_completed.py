@@ -1,5 +1,32 @@
-import asyncio
+"""
+Tests for the :func:`a_sync.asyncio.as_completed` helper function.
 
+This test module verifies the behavior of :func:`a_sync.asyncio.as_completed` from the
+``a_sync.asyncio`` module. Important: when using :func:`as_completed` in synchronous mode
+(i.e. with aiter=False), the iterator yields awaitable objects rather than the final results.
+Therefore, each yielded item must be explicitly awaited in order to obtain its result.
+Similarly, when a mapping of awaitables is provided, each yielded awaitable (in non‐async iteration)
+returns a tuple (key, value) that must be awaited to extract the actual key and value.
+
+Examples:
+    For a list of awaitables:
+        tasks = [sample_task(i) for i in range(5)]
+        results = [await result for result in a_sync.as_completed(tasks, aiter=False)]
+        # Each item is an awaitable; you must await it to obtain the numeric result.
+
+    For a mapping of awaitables:
+        tasks = {"task1": sample_task(1), "task2": sample_task(2)}
+        results = {}
+        for result in a_sync.as_completed(tasks, aiter=False):
+            key, value = await result
+            results[key] = value
+        # Here, the yielded values are awaitables that return (key, value) tuples when awaited.
+
+See Also:
+    - :func:`a_sync.asyncio.as_completed`
+"""
+
+import asyncio
 import a_sync
 import pytest
 
