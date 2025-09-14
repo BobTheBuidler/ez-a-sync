@@ -8,6 +8,7 @@ asynchronously based on various conditions and configurations.
 
 from a_sync._typing import *
 import functools
+import logging
 import weakref
 from _typeshed import Incomplete
 from a_sync import TaskMapping as TaskMapping
@@ -21,7 +22,7 @@ from a_sync.a_sync.function import (
 from typing import Any, final
 
 METHOD_CACHE_TTL: Literal[3600]
-logger: Incomplete
+logger: logging.Logger
 
 class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
     """
