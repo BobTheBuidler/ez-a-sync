@@ -12,13 +12,13 @@ is intended for more custom implementations if necessary.
 from a_sync._typing import *
 import abc
 import functools
-from _typeshed import Incomplete
+import logging
 from a_sync import exceptions as exceptions
 from a_sync.a_sync import modifiers as modifiers
 from a_sync.a_sync._meta import ASyncMeta as ASyncMeta
 from a_sync.exceptions import NoFlagsFound as NoFlagsFound
 
-logger: Incomplete
+logger: logging.Logger
 
 class ASyncABC(metaclass=ASyncMeta):
     """Abstract Base Class for defining asynchronous and synchronous behavior.
