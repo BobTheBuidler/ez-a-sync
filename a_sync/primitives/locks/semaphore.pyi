@@ -1,11 +1,12 @@
-from a_sync._typing import *
 import asyncio
 import functools
-from _typeshed import Incomplete
-from a_sync.primitives._debug import _DebugDaemonMixin
+from logging import Logger
 from threading import Thread as Thread
+from typing_extensions import Never
+from a_sync._typing import *
+from a_sync.primitives._debug import _DebugDaemonMixin
 
-logger: Incomplete
+logger: Logger
 
 class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     """
@@ -39,8 +40,8 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
         :class:`_DebugDaemonMixin` for more details on debugging capabilities.
     """
 
-    name: Incomplete
-    def __init__(self, value: int, name: Incomplete | None = None, **kwargs) -> None:
+    name: str
+    def __init__(self, value: int, name: str = "", **kwargs) -> None:
         """
         Initialize the semaphore with a given value and optional name for debugging.
 
@@ -116,7 +117,7 @@ class DummySemaphore(asyncio.Semaphore):
                 return 1
     """
 
-    name: Incomplete
+    name: str
     def __init__(self, name: Optional[str] = None) -> None:
         """
         Initialize the dummy semaphore with an optional name.
@@ -156,8 +157,8 @@ class ThreadsafeSemaphore(Semaphore):
         :class:`Semaphore` for the base class implementation.
     """
 
-    semaphores: Incomplete
-    dummy: Incomplete
+    semaphores: DefaultDict[Thread, Semaphore] | Dict[Never, Never]
+    dummy: DummySemaphore | None
     def __init__(self, value: Optional[int], name: Optional[str] = None) -> None:
         """
         Initialize the threadsafe semaphore with a given value and optional name.
