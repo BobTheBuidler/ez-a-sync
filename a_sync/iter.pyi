@@ -1,4 +1,3 @@
-from _typeshed import Incomplete
 import weakref
 from collections.abc import Generator
 from typing import (
@@ -14,13 +13,14 @@ from typing import (
     List,
     Optional,
     Type,
+    TypeVar,
     Union,
     final,
 )
 
-from typing_extensions import Self
+from typing_extensions import ParamSpec, Self
 
-from a_sync._typing import P, T, V, AnyFn, AnyIterable, SyncFn
+from a_sync._typing import AnyFn, AnyIterable, SyncFn
 
 __all__ = [
     "ASyncIterable",
@@ -29,6 +29,10 @@ __all__ = [
     "ASyncSorter",
     "ASyncGeneratorFunction",
 ]
+
+T = TypeVar("T")
+V = TypeVar("V")
+P = ParamSpec("P")
 
 SortKey = SyncFn[[T], bool]
 ViewFn = AnyFn[[T], bool]
@@ -132,7 +136,7 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     @classmethod
     def wrap(cls, wrapped: AsyncIterable[T]) -> ASyncIterable[T]:
         """Class method to wrap an AsyncIterable for backward compatibility."""
-    __wrapped__: Incomplete
+    __wrapped__: AsyncIterable[T]
     def __init__(self, async_iterable: AsyncIterable[T]) -> None:
         """
         Initializes the ASyncIterable with an async iterable.
@@ -197,7 +201,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
             SyncModeInAsyncContextError: If the event loop is already running.
 
         """
-    __wrapped__: Incomplete
+    __wrapped__: AsyncIterator[T]
     def __init__(self, async_iterator: AsyncIterator[T]) -> None:
         """
         Initializes the ASyncIterator with an async iterator.
@@ -252,8 +256,8 @@ class ASyncGeneratorFunction(Generic[P, T]):
     """
 
     __weakself__: weakref.ref[object]
-    field_name: Incomplete
-    __wrapped__: Incomplete
+    field_name: str
+    __wrapped__: AsyncGenFunc[P, T]
     def __init__(self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None) -> None:
         """
         Initializes the ASyncGeneratorFunction with the given async generator function and optionally an instance.
@@ -285,7 +289,7 @@ class _ASyncView(ASyncIterator[T]):
 
     __aiterator__: Optional[AsyncIterator[T]]
     __iterator__: Optional[Iterator[T]]
-    __wrapped__: Incomplete
+    __wrapped__: ViewFn[T]
     def __init__(self, function: ViewFn[T], iterable: AnyIterable[T]) -> None:
         """
         Initializes the {cls} with a function and an iterable.
