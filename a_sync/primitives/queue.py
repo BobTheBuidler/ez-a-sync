@@ -862,7 +862,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             unwrapped = func
             while callable(getattr(unwrapped, "__wrapped__", None)):
                 unwrapped = unwrapped.__wrapped__
-            name = f"{func.__module__}.{unwrapped.__qualname__}"
+            name = f"{unwrapped.__module__}.{unwrapped.__qualname__}"
         ProcessingQueue.__init__(self, func, num_workers, return_data=True, name=name, loop=loop)
         self._futs = WeakValueDictionary()
 
