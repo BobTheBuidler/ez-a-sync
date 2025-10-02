@@ -1,21 +1,20 @@
 from a_sync._typing import *
-from _typeshed import Incomplete
-from a_sync import TaskMapping as TaskMapping
-from a_sync.a_sync import decorator as decorator
+from a_sync import TaskMapping
+from a_sync.a_sync import decorator
 from a_sync.a_sync.function import (
-    ASyncFunction as ASyncFunction,
-    ModifierManager as ModifierManager,
+    ASyncFunction,
+    ModifierManager,
     _ModifiedMixin,
 )
 from a_sync.functools import (
-    cached_property_unsafe as cached_property_unsafe,
-    update_wrapper as update_wrapper,
+    cached_property_unsafe,
+    update_wrapper,
 )
 
 class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     __wrapped__: AnyFn[Concatenate[I, P], T]
-    modifiers: Incomplete
-    field_name: Incomplete
+    modifiers: ModifierManager
+    field_name: str
     def __init__(
         self,
         _fget: AnyFn[Concatenate[I, P], T],
