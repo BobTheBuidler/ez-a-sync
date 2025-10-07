@@ -121,10 +121,10 @@ This mechanism ensures that the merged stream of items is delivered in an order 
 The <code class="xref py py-class docutils literal notranslate"><span class="pre">_Done</span></code> sentinel class is used internally to signal the completion of processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.AsyncIterator" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterator</span></code></a> objects to be merged.</p>
+<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.14)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.AsyncIterator" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterator</span></code></a> objects to be merged.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.14)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -159,7 +159,7 @@ to be consumed by other parts of an application, enabling a producer-consumer pa
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to exhaust.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue-like object where iterated items will be placed.
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.14)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue-like object where iterated items will be placed.
 The queue should support the <cite>put_nowait</cite> method. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
@@ -185,18 +185,18 @@ The queue should support the <cite>put_nowait</cite> method. If None, items are 
 <dt class="sig sig-object py" id="a_sync.utils.iterators.exhaust_iterators">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.iterators.</span></span><span class="sig-name descname"><span class="pre">exhaust_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterators</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils/iterators.html#exhaust_iterators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.utils.iterators.exhaust_iterators" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.</p>
-<p>This function leverages <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.gather" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.gather()</span></code></a> to concurrently exhaust multiple async iterators. It’s useful in scenarios where items
+<p>This function leverages <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.gather" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.gather()</span></code></a> to concurrently exhaust multiple async iterators. It’s useful in scenarios where items
 from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterators</strong> – A sequence of async iterators to be exhausted concurrently.</p></li>
 <li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync.Queue" title="a_sync.Queue"><em>Queue</em></a><em>]</em>) – An optional queue-like object where items from all iterators will be placed. If None, items are simply consumed.</p></li>
-<li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
+<li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>join</cite> is True but no <cite>queue</cite> is provided.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <cite>join</cite> is True but no <cite>queue</cite> is provided.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -221,14 +221,14 @@ from multiple async sources need to be processed or collected together, supporti
 <span id="a-sync-utils-repr-module"></span><h2>a_sync.utils.repr module<a class="headerlink" href="#module-a_sync.utils.repr" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="a_sync.utils.repr.repr_trunc">
-<span class="sig-prename descclassname"><span class="pre">a_sync.utils.repr.</span></span><span class="sig-name descname"><span class="pre">repr_trunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#a_sync.utils.repr.repr_trunc" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">a_sync.utils.repr.</span></span><span class="sig-name descname"><span class="pre">repr_trunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#a_sync.utils.repr.repr_trunc" title="Link to this definition"></a></dt>
 <dd><p>Returns a truncated <cite>repr</cite> for <cite>iterable</cite>, limited to the first 5 items.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>iterable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>iterable</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.14)"><em>Iterable</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -250,10 +250,10 @@ This mechanism ensures that the merged stream of items is delivered in an order 
 The <code class="xref py py-class docutils literal notranslate"><span class="pre">_Done</span></code> sentinel class is used internally to signal the completion of processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.AsyncIterator" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterator</span></code></a> objects to be merged.</p>
+<dd class="field-odd"><p><strong>*iterators</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.14)"><em>AsyncIterator</em></a><em>[</em><em>T</em><em>]</em>) – Variable length list of <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.AsyncIterator" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterator</span></code></a> objects to be merged.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.13)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncIterator" title="(in Python v3.14)"><em>AsyncIterator</em></a>[<em>T</em>]</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -288,7 +288,7 @@ to be consumed by other parts of an application, enabling a producer-consumer pa
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterator</strong> (<em>AsyncIterator</em><em>[</em><em>T</em><em>]</em>) – The async iterator to exhaust.</p></li>
-<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.13)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue-like object where iterated items will be placed.
+<li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/asyncio-queue.html#asyncio.Queue" title="(in Python v3.14)"><em>asyncio.Queue</em></a><em>]</em>) – An optional queue-like object where iterated items will be placed.
 The queue should support the <cite>put_nowait</cite> method. If None, items are simply consumed.</p></li>
 </ul>
 </dd>
@@ -314,18 +314,18 @@ The queue should support the <cite>put_nowait</cite> method. If None, items are 
 <dt class="sig sig-object py" id="a_sync.utils.exhaust_iterators">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">a_sync.utils.</span></span><span class="sig-name descname"><span class="pre">exhaust_iterators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterators</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/a_sync/utils/iterators.html#exhaust_iterators"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#a_sync.utils.exhaust_iterators" title="Link to this definition"></a></dt>
 <dd><p>Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.</p>
-<p>This function leverages <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.gather" title="(in Python v3.13)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.gather()</span></code></a> to concurrently exhaust multiple async iterators. It’s useful in scenarios where items
+<p>This function leverages <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.gather" title="(in Python v3.14)"><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.gather()</span></code></a> to concurrently exhaust multiple async iterators. It’s useful in scenarios where items
 from multiple async sources need to be processed or collected together, supporting concurrent operations and efficient multitasking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>iterators</strong> – A sequence of async iterators to be exhausted concurrently.</p></li>
 <li><p><strong>queue</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="a_sync.html#a_sync.Queue" title="a_sync.Queue"><em>Queue</em></a><em>]</em>) – An optional queue-like object where items from all iterators will be placed. If None, items are simply consumed.</p></li>
-<li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
+<li><p><strong>join</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>]</em>) – If a queue was provided and join is True, this coroutine will continue to run until all queue items have been processed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If <cite>join</cite> is True but no <cite>queue</cite> is provided.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <cite>join</cite> is True but no <cite>queue</cite> is provided.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
