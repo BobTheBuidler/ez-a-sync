@@ -2,6 +2,7 @@ import asyncio
 import inspect
 import sys
 import typing
+from contextlib import contextmanager
 from logging import ERROR, getLogger
 from libc.stdint cimport uintptr_t
 
