@@ -161,11 +161,11 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
     sum: ASyncFunctionSyncDefault[Concatenate[AnyIterable[I], P], T]
     @overload
     def __get__(
-        self, instance: None, owner: Type[I] = None
+        self, instance: None, owner: Type[I]
     ) -> ASyncMethodDescriptorSyncDefault[I, P, T]: ...
     @overload
     def __get__(
-        self, instance: I, owner: Type[I] = None
+        self, instance: I, owner: Type[I]
     ) -> ASyncBoundMethodSyncDefault[I, P, T]: ...
 
 @final
