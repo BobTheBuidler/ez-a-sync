@@ -10,6 +10,9 @@ on:
       - '**.pyx'
       - '**/pytest.yaml'
       - '!**/docs/conf.py'
+      - 'pyproject.toml'
+      - 'requirements.txt'
+      - 'requirements-dev.txt'
       
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
