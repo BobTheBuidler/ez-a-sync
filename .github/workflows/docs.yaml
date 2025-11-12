@@ -27,22 +27,14 @@ jobs:
         with:
           python-version: '3.14'
 
-      - name: Install dependencies
-        run: |
-          pip install wheel
-          pip install --no-build-isolation "Cython<3" "pyyaml==5.4.1"
-          pip install -r requirements.txt
-          pip install sphinx sphinx-rtd-theme
+      - name: Install ez-a-sync and docs dependencies
+        run: pip install . sphinx sphinx-rtd-theme
 
       - name: Build documentation config
-        run: |
-          pip install .
-          make docs
+        run: make docs
 
       - name: Build documentation
-        run: |
-          cd docs
-          make html
+        run: cd docs && make html
         continue-on-error: true
 
       - name: Deploy to GitHub Pages
