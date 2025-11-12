@@ -164,9 +164,7 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
         self, instance: None, owner: Type[I]
     ) -> ASyncMethodDescriptorSyncDefault[I, P, T]: ...
     @overload
-    def __get__(
-        self, instance: I, owner: Type[I]
-    ) -> ASyncBoundMethodSyncDefault[I, P, T]: ...
+    def __get__(self, instance: I, owner: Type[I]) -> ASyncBoundMethodSyncDefault[I, P, T]: ...
 
 @final
 class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
