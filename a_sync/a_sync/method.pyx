@@ -340,14 +340,14 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
 
     @overload
     def __get__(
-        self, instance: None, owner: Type[I] = None
+        self, instance: None, owner: Type[I]
     ) -> "ASyncMethodDescriptorSyncDefault[I, P, T]": ...
     @overload
     def __get__(
-        self, instance: I, owner: Type[I] = None
+        self, instance: I, owner: Type[I]
     ) -> "ASyncBoundMethodSyncDefault[I, P, T]": ...
     def __get__(
-        _ModifiedMixin self, instance: Optional[I], owner: Type[I] = None
+        _ModifiedMixin self, instance: Optional[I], owner: Type[I]
     ) -> (
         "Union[ASyncMethodDescriptorSyncDefault, ASyncBoundMethodSyncDefault[I, P, T]]"
     ):
