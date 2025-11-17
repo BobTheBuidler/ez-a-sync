@@ -30,10 +30,13 @@ cdef class CythonEvent(_DebugDaemonMixin):
     """
     An asyncio.Event with additional debug logging to help detect deadlocks.
 
-    This event class extends asyncio.Event by adding debug logging capabilities. It logs
-    detailed information about the event state and waiters, which can be useful for
-    diagnosing and debugging potential deadlocks.
+    This enhanced event class adds debug logging to the typical asyncio.Event behavior,
+    enabling detailed diagnosis on potential deadlocks.
+
+    See Also:
+        :class:`~a_sync.primitives._debug._LoopBoundMixin`
     """
+
     def __cinit__(self):
         self._waiters = []
         
@@ -45,12 +48,29 @@ cdef class CythonEvent(_DebugDaemonMixin):
         loop: Optional[AbstractEventLoop] = None,
     ):
         """
-        Initializes the Event.
+        Initializes the event.
 
         Args:
             name (str): An optional name for the event, used in debug logs.
-            debug_daemon_interval (int): The interval in seconds for the debug daemon to log information.
-            loop (Optional[AbstractEventLoop]): The event loop to use.
+            debug_daemon_interval (int): The interval in seconds at which the debug daemon logs event information.
+            loop (Optional[AbstractEventLoop]): An optional event loop to associate with the event.
+
+        Examples:
+            Creating an event with a custom name and default interval:
+            
+                >>> from asyncio import get_event_loop
+                >>> evt = CythonEvent(name="my_event", debug_daemon_interval=300, loop=get_event_loop())
+                >>> print(evt._name)
+                my_event
+
+            Creating an event with an empty name:
+            
+                >>> evt2 = CythonEvent()
+                >>> print(evt2._name)
+                ''
+
+        See Also:
+            :meth:`~a_sync.primitives._debug._LoopBoundMixin._get_loop`
         """
         if _loop_kwarg_deprecated:
             _LoopBoundMixin.__init__(self)
@@ -69,12 +89,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
 
         # Allocate memory for the char* and add 1 for the null character
         self.__name = <char*>malloc(length + 1)
-        """An optional name for the counter, used in debug logs."""
-
-        if self.__name == NULL:
-            raise MemoryError("Failed to allocate memory for __name.")
-        # Copy the bytes data into the char*
-        strcpy(self.__name, encoded_name)
+        """An optional name for the event, used in debug logs."""
 
     def __dealloc__(self):
         # Free the memory allocated for __name
@@ -107,7 +122,7 @@ cdef class CythonEvent(_DebugDaemonMixin):
 
     cpdef void set(self):
         """Set the internal flag to true. All coroutines waiting for it to
-        become true are awakened. Coroutine that call wait() once the flag is
+        become true are awakened. Coroutines that call wait() once the flag is
         true will not block at all.
         """
         cdef object fut
@@ -121,19 +136,27 @@ cdef class CythonEvent(_DebugDaemonMixin):
 
     cpdef void clear(self):
         """Reset the internal flag to false. Subsequently, coroutines calling
-        wait() will block until set() is called to set the internal flag
-        to true again."""
+        wait() will block until set() is called to set the flag to true again.
+        """
         self._value = False
 
     cpdef object wait(self):
         """Block until the internal flag is true.
 
-        If the internal flag is true on entry, return True
-        immediately.  Otherwise, block until another coroutine calls
-        set() to set the flag to true, then return True.
+        If the internal flag is true on entry, return True immediately.
+        Otherwise, block until another coroutine calls set() to set the flag
+        to true, then return True.
 
         Returns:
             True when the event is set.
+            
+        Examples:
+            >>> evt = CythonEvent(name="demo")
+            >>> res = await evt.wait()
+            >>> assert res is True
+
+        See Also:
+            :meth:`c_wait`
         """
         return self.c_wait()
     
@@ -162,7 +185,16 @@ cdef class CythonEvent(_DebugDaemonMixin):
         """
         Periodically logs debug information about the event state and waiters.
 
-        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
+        This method is activated when debug logging is enabled for the event's logger.
+        It periodically computes and logs the duration the event has been waiting and the count of waiting coroutines.
+        
+        Examples:
+            >>> # Assume debug logs are enabled for the event's logger.
+            >>> await event._debug_daemon()
+
+        See Also:
+            :func:`~asyncio.sleep`
+            :attr:`~a_sync.primitives.locks.event.DEBUG`
         """
         cdef time_t start, now 
         cdef object weakself = ref(self)

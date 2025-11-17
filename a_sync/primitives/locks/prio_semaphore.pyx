@@ -1,8 +1,8 @@
 # cython: boundscheck=False
 """
-This module provides priority-based semaphore implementations. These semaphores allow 
-waiters to be assigned priorities, ensuring that higher priority waiters are 
-processed before lower priority ones.
+This module provides priority‐based semaphore implementations. These semaphores allow
+waiters to be assigned priorities, ensuring that higher priority waiters are processed
+before lower priority ones.
 """
 
 import asyncio
@@ -33,39 +33,40 @@ cdef object _logger_log = logger._log
 cdef object _logger_is_enabled = logger.isEnabledFor
 del getLogger
 
-class Priority(Protocol):
-    def __lt__(self, other) -> bool: ...
-
-
-PT = TypeVar("PT", bound=Priority)
-
-CM = TypeVar("CM", bound="_AbstractPrioritySemaphoreContextManager[Priority]")
+# Type variables for priority and context manager types
+PT = TypeVar("PT", bound=object)
+CM = TypeVar("CM", bound="_AbstractPrioritySemaphoreContextManager")
 
 
 cdef class _AbstractPrioritySemaphore(Semaphore):
-    """
-    A semaphore that allows prioritization of waiters.
+    """A semaphore that allows prioritization of waiters.
 
-    This semaphore manages waiters with associated priorities, ensuring that waiters with higher
-    priorities are processed before those with lower priorities. Subclasses must define the
-    `_top_priority` attribute to specify the default top priority behavior.
-
-    The `_context_manager_class` attribute should specify the class used for managing semaphore contexts.
+    This semaphore manages waiters with associated priorities, ensuring that
+    waiters with higher priorities are processed before those with lower priorities.
+    Subclasses must define the `_top_priority` attribute to specify the default top
+    priority behavior. The attribute `_context_manager_class` should specify the class
+    used for managing semaphore contexts.
 
     See Also:
         :class:`PrioritySemaphore` for an implementation using numeric priorities.
+
+    Examples:
+        >>> semaphore = PrioritySemaphore(5, name="test_semaphore")
+        >>> async with semaphore:
+        ...     # do something
+        ...     pass
     """
 
     def __cinit__(self) -> None:
         self._context_managers = {}
-        """A dictionary mapping priorities to their context managers."""
+        """dict: A dictionary mapping priorities to their context managers."""
     
         self._Semaphore__waiters = []
-        """A heap queue of context managers, sorted by priority."""
+        """list: A heap queue of context managers, sorted by priority."""
 
         # NOTE: This should (hopefully) be temporary
         self._potential_lost_waiters = set()
-        """A list of futures representing waiters that might have been lost."""
+        """set: A set of futures representing waiters that might have been lost."""
     
     def __init__(
         self, 
@@ -75,20 +76,22 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         *, 
         name: Optional[str] = None, 
     ) -> None:
-        """Initializes the priority semaphore.
+        """Initialize the priority semaphore.
 
         Args:
+            context_manager_class: The class used to manage context for a given priority.
+            top_priority: The default top priority value.
             value: The initial capacity of the semaphore.
             name: An optional name for the semaphore, used for debugging.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5, name="test_semaphore")
+            >>> semaphore = PrioritySemaphore(5, name="test_semaphore")
         """
         # context manager class is some temporary hacky shit, just ignore this
         Semaphore.__init__(self, value, name=name)
 
         self._capacity = value
-        """The initial capacity of the semaphore."""
+        """int: The initial capacity of the semaphore."""
 
         self._top_priority = top_priority
         self._top_priority_manager = context_manager_class(
@@ -97,40 +100,38 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         self._context_manager_class = context_manager_class
 
     def __repr__(self) -> str:
-        """Returns a string representation of the semaphore."""
+        """Return a string representation of the semaphore.
+
+        Examples:
+            >>> repr(semaphore)
+            '<_AbstractPrioritySemaphore name=test_semaphore capacity=5 value=3 waiters={...}>'
+        """
         return f"<{self.__class__.__name__} name={self.name} capacity={self._capacity} value={self._Semaphore__value} waiters={self._count_waiters()}>"
 
     async def __aenter__(self) -> None:
-        """Enters the semaphore context, acquiring it with the top priority.
-
-        This method is part of the asynchronous context management protocol.
+        """Acquire the semaphore with top priority when entering an async context.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> async with semaphore:
             ...     await do_stuff()
         """
         await self._top_priority_manager.acquire()
 
     async def __aexit__(self, *_) -> None:
-        """Exits the semaphore context, releasing it with the top priority.
-
-        This method is part of the asynchronous context management protocol.
+        """Release the semaphore with top priority when exiting an async context.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> async with semaphore:
             ...     await do_stuff()
         """
         self._top_priority_manager.release()
 
     cpdef object acquire(self):
-        """Acquires the semaphore with the top priority.
+        """Acquire the semaphore with top priority.
 
-        This method overrides :meth:`Semaphore.acquire` to handle priority-based logic.
+        Overrides :meth:`Semaphore.acquire` to handle priority-based logic.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> await semaphore.acquire()
         """
         return self._top_priority_manager.acquire()
@@ -138,17 +139,20 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
     def __getitem__(
         self, priority: Optional[PT]
     ) -> "_AbstractPrioritySemaphoreContextManager[PT]":
-        """Gets the context manager for a given priority.
+        """Retrieve the context manager for a given priority.
 
         Args:
-            priority: The priority for which to get the context manager. If None, uses the top priority.
+            priority: The priority for which to retrieve the context manager.
+                If None, the top priority is used.
 
         Returns:
-            The context manager associated with the given priority.
+            The context manager associated with the specified priority.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
-            >>> context_manager = semaphore[priority]
+            >>> semaphore = PrioritySemaphore(5)
+            >>> context_manager = semaphore[3]
+            >>> async with context_manager:
+            ...     await do_something()
         """
         return self.c_getitem(priority)
     
@@ -170,14 +174,13 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         return context_manager
 
     cpdef bint locked(self):
-        """Checks if the semaphore is locked.
+        """Determine if the semaphore is locked.
 
         Returns:
             True if the semaphore cannot be acquired immediately, False otherwise.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
-            >>> semaphore.locked()
+            >>> is_locked = semaphore.locked()
         """
         cdef list waiters
         if self._Semaphore__value == 0:
@@ -190,30 +193,25 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         return False
 
     cdef dict[object, Py_ssize_t] _count_waiters(self):
-        """Counts the number of waiters for each priority.
+        """Count the number of waiters for each priority.
 
         Returns:
-            A dictionary mapping each priority to the number of waiters.
+            A dict mapping each priority to the count of waiters with that priority.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
-            >>> semaphore._count_waiters()
+            >>> counts = semaphore._count_waiters()
         """
         cdef _AbstractPrioritySemaphoreContextManager manager
         cdef list[_AbstractPrioritySemaphoreContextManager] waiters = self._Semaphore__waiters
         return {manager._priority: len(manager._Semaphore__waiters) for manager in sorted(waiters)}
         
     cpdef void _wake_up_next(self):
-        """Wakes up the next waiter in line.
+        """Wake up the next waiting context manager based on priority.
 
-        This method handles the waking of waiters based on priority. It includes an emergency
-        procedure to handle potential lost waiters, ensuring that no waiter is left indefinitely
-        waiting.
-
-        The emergency procedure is a temporary measure to address potential issues with lost waiters.
+        This method handles waking waiters with priority order and includes an emergency
+        mechanism to handle potentially lost waiters.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
             >>> semaphore._wake_up_next()
         """
         cdef _AbstractPrioritySemaphoreContextManager manager
@@ -250,7 +248,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         while self_waiters:
             manager = heappop(self_waiters)
             if len(manager) == 0:
-                # There are no more waiters, get rid of the empty manager
+                # There are no more waiters, remove the empty manager.
                 if debug_logs:
                     log_debug(
                         "manager %s has no more waiters, popping from %s",
@@ -299,14 +297,14 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
             assert start_len > end_len, f"start {start_len} end {end_len}"
 
             if end_len:
-                # There are still waiters, put the manager back
+                # Still waiters remain; add the manager back.
                 heappush(self_waiters, manager)
             else:
-                # There are no more waiters, get rid of the empty manager
+                # Remove empty manager.
                 self._context_managers.pop(manager._priority)
             return
 
-        # emergency procedure (hopefully temporary):
+        # Emergency procedure (temporary):
         if not debug_logs:
             while potential_lost_waiters:
                 waiter = potential_lost_waiters.pop()
@@ -327,11 +325,13 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
 
 
 cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
-    """
-    A context manager for priority semaphore waiters.
+    """Context manager for priority semaphore waiters.
 
     This context manager is associated with a specific priority and handles
     the acquisition and release of the semaphore for waiters with that priority.
+
+    See Also:
+        :class:`PrioritySemaphore` for an overview of numeric priority surrogates.
     """
 
     def __init__(
@@ -340,52 +340,51 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         priority: PT,
         name: Optional[str] = None,
     ) -> None:
-        """Initializes the context manager for a specific priority.
+        """Initialize the context manager for a specific priority.
 
         Args:
             parent: The parent semaphore.
             priority: The priority associated with this context manager.
-            name: An optional name for the context manager, used for debugging.
+            name: An optional name for debugging purposes.
 
         Examples:
-            >>> parent_semaphore = _AbstractPrioritySemaphore(5)
-            >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent_semaphore, priority=1)
+            >>> parent_semaphore = PrioritySemaphore(5)
+            >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent_semaphore, priority=3)
         """
-
         Semaphore.__init__(self, 0, name=name)
 
         self._parent = parent
-        """The parent semaphore."""
-
+        """_AbstractPrioritySemaphore: The parent semaphore."""
         self._priority = priority
-        """The priority associated with this context manager."""
+        """object: The priority associated with this context manager."""
 
     def __repr__(self) -> str:
-        """Returns a string representation of the context manager."""
+        """Return a string representation of the context manager.
+
+        Examples:
+            >>> context_manager.__repr__()
+            "<_AbstractPrioritySemaphoreContextManager parent_name=test_semaphore priority=3 waiters=2>"
+        """
         return f"<{self.__class__.__name__} parent={self._parent} {self._priority_name}={self._priority} waiters={len(self)}>"
 
     cpdef str _repr_no_parent_(self):
-        """Returns a string representation of the context manager without the parent."""
+        """Return a string representation of the context manager excluding the parent.
+
+        Examples:
+            >>> context_manager._repr_no_parent_()
+            "<_AbstractPrioritySemaphoreContextManager parent_name=test_semaphore priority=3 waiters=2>"
+        """
         return f"<{self.__class__.__name__} parent_name={self._parent.name} {self._priority_name}={self._priority} waiters={len(self)}>"
 
     def __richcmp__(self, _AbstractPrioritySemaphoreContextManager other, int op) -> bint:
-        """Rich comparison special method. Compares this context manager with another based on priority.
+        """Perform rich comparison based on priority.
 
         Args:
-            other: The other context manager to compare with.
-            op: The operation being performed. One of:
-                0 -> Py_LT (a < b)
-                1 -> Py_LE (a <= b)
-                2 -> Py_EQ (a == b)
-                3 -> Py_NE (a != b)
-                4 -> Py_GT (a > b)
-                5 -> Py_GE (a >= b)
+            other: Another context manager.
+            op: Comparison operator (0: <, 1: <=, 2: ==, 3: !=, 4: >, 5: >=).
 
         Returns:
             The boolean result of the comparison.
-
-        Raises:
-            TypeError: If the other object is not an instance of :class:`~_AbstractPrioritySemaphoreContextManager`.
 
         Examples:
             >>> cm1 = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
@@ -407,18 +406,12 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         return NotImplemented
 
     cpdef object acquire(self):
-        """Acquires the semaphore for this context manager.
+        """Acquire the semaphore for this priority context.
 
-        If the internal counter is larger than zero on entry,
-        decrement it by one and return True immediately. If it is
-        zero on entry, block, waiting until some other coroutine has
-        called release() to make it larger than 0, and then return
-        True.
-
-        This method overrides :meth:`Semaphore.acquire` to handle priority-based logic.
+        If the internal counter is positive, it is decremented by one and returns immediately.
+        Otherwise, it blocks until another coroutine calls release().
 
         Examples:
-            >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
             >>> await context_manager.acquire()
         """
         if self._parent._Semaphore__value <= 0:
@@ -437,7 +430,6 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
             try:
                 await fut
             except:
-                # See the similar code in Queue.get.
                 fut.cancel()
                 if parent._Semaphore__value > 0 and _is_not_cancelled(fut):
                     parent._wake_up_next()
@@ -446,25 +438,14 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         return True
 
     cpdef void release(self):
-        """Releases the semaphore for this context manager.
+        """Release the semaphore for this priority context.
 
-        This method overrides :meth:`Semaphore.release` to handle priority-based logic.
+        This calls the parent's release() method to update the semaphore state.
 
         Examples:
-            >>> context_manager = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
             >>> context_manager.release()
         """
         self._parent.release()
-
-
-cdef inline bint _is_not_done(fut: asyncio.Future):
-    return PyUnicode_CompareWithASCIIString(fut._state, b"PENDING") == 0
-
-cdef inline bint _is_not_cancelled(fut: asyncio.Future):
-    return PyUnicode_CompareWithASCIIString(fut._state, b"CANCELLED") != 0
-
-
-del asyncio
 
 
 cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextManager):
@@ -472,32 +453,22 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
 
     def __cinit__(self):
         self._priority_name = "priority"
-        # Semaphore.__cinit__(self)
         self._Semaphore__waiters = deque()
         self._decorated: Set[str] = set()
 
     def __richcmp__(self, _PrioritySemaphoreContextManager other, int op) -> bint:
-        """Rich comparison special method. Compares this context manager with another based on priority.
+        """Perform rich comparison for numeric priority context managers.
 
         Args:
-            other: The other context manager to compare with.
-            op: The operation being performed. One of:
-                0 -> Py_LT (a < b)
-                1 -> Py_LE (a <= b)
-                2 -> Py_EQ (a == b)
-                3 -> Py_NE (a != b)
-                4 -> Py_GT (a > b)
-                5 -> Py_GE (a >= b)
-                
-        Returns:
-            The boolean result of the comparison.
+            other: Another priority context manager.
+            op: Comparison operator (0: <, 1: <=, 2: ==, 3: !=, 4: >, 5: >=).
 
-        Raises:
-            TypeError: If the other object is not an instance of :class:`~_PrioritySemaphoreContextManager`.
+        Returns:
+            The boolean result of the comparison based on numeric priority.
 
         Examples:
-            >>> cm1 = _AbstractPrioritySemaphoreContextManager(parent, priority=1)
-            >>> cm2 = _AbstractPrioritySemaphoreContextManager(parent, priority=2)
+            >>> cm1 = _PrioritySemaphoreContextManager(parent, 1)
+            >>> cm2 = _PrioritySemaphoreContextManager(parent, 2)
             >>> cm1 < cm2
         """
         if op == 0:  # Py_LT
@@ -517,39 +488,35 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
 cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
     """Semaphore that uses numeric priorities for waiters.
 
-    This class extends :class:`_AbstractPrioritySemaphore` and provides a concrete implementation
-    using numeric priorities. The `_context_manager_class` is set to :class:`_PrioritySemaphoreContextManager`,
-    and the `_top_priority` is set to -1, which is the highest priority.
+    This class extends :class:`_AbstractPrioritySemaphore` and provides a concrete
+    implementation using numeric priorities. The `_context_manager_class` is set to
+    :class:`_PrioritySemaphoreContextManager`, and the `_top_priority` is set to -1,
+    which is considered the highest (default) priority.
 
     Examples:
-        The primary way to use this semaphore is by specifying a priority.
-
+        Using numeric priorities with the semaphore:
         >>> priority_semaphore = PrioritySemaphore(10)
-        >>> async with priority_semaphore[priority]:
-        ...     await do_stuff()
+        >>> async with priority_semaphore[3]:
+        ...     await do_something()
 
-        You can also enter and exit this semaphore without specifying a priority, and it will use the top priority by default:
-
-        >>> priority_semaphore = PrioritySemaphore(10)
+        Using top priority (default) when no specific priority is provided:
         >>> async with priority_semaphore:
-        ...     await do_stuff()
+        ...     await do_something()
 
     See Also:
-        :class:`_AbstractPrioritySemaphore` for the base class implementation.
+        :class:`_AbstractPrioritySemaphore` for the base priority semaphore implementation.
     """
 
     def __cinit__(self):        
-        # _AbstractPrioritySemaphore.__cinit__(self)
-
         self._context_managers = {}
-        """A dictionary mapping priorities to their context managers."""
+        """dict: Maps numeric priorities to their context managers."""
     
         self._Semaphore__waiters = []
-        """A heap queue of context managers, sorted by priority."""
+        """list: A heap queue of context managers, sorted by numeric priority."""
 
         # NOTE: This should (hopefully) be temporary
         self._potential_lost_waiters = set()
-        """A list of futures representing waiters that might have been lost."""
+        """set: A set of futures representing waiters that might have been lost."""
     
     def __init__(
         self, 
@@ -557,23 +524,24 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
         *, 
         name: Optional[str] = None, 
     ) -> None:
-        # context manager class is some temporary hacky shit, just ignore this
         _AbstractPrioritySemaphore.__init__(self, _PrioritySemaphoreContextManager, -1, value, name=name)
 
     def __getitem__(
         self, priority: Optional[PT]
     ) -> "_PrioritySemaphoreContextManager[PT]":
-        """Gets the context manager for a given priority.
+        """Retrieve the numeric priority context manager for a given priority.
 
         Args:
-            priority: The priority for which to get the context manager. If None, uses the top priority.
+            priority: The numeric priority to retrieve. If None, the top priority (-1) is used.
 
         Returns:
-            The context manager associated with the given priority.
+            The numeric priority context manager associated with the given priority.
 
         Examples:
-            >>> semaphore = _AbstractPrioritySemaphore(5)
-            >>> context_manager = semaphore[priority]
+            >>> semaphore = PrioritySemaphore(5)
+            >>> context_manager = semaphore[3]
+            >>> async with context_manager:
+            ...     await do_something()
         """
         return self.c_getitem(priority or -1)
     
