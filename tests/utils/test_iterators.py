@@ -3,14 +3,17 @@ import pytest
 
 from a_sync.utils.iterators import as_yielded
 
+
 # Helpers
 class AsyncGen:
     def __init__(self, values, delay=0):
         self.values = list(values)
         self.delay = delay
+
     def __aiter__(self):
         self._idx = 0
         return self
+
     async def __anext__(self):
         if self._idx >= len(self.values):
             raise StopAsyncIteration
@@ -20,11 +23,14 @@ class AsyncGen:
             await asyncio.sleep(self.delay)
         return val
 
+
 class ErrorGen:
     def __aiter__(self):
         return self
+
     async def __anext__(self):
         raise Exception("Iterator Error!")
+
 
 @pytest.mark.asyncio_cooperative
 async def test_simple_merge():
@@ -33,7 +39,8 @@ async def test_simple_merge():
     results = set()
     async for item in as_yielded(gen1, gen2):
         results.add(item)
-    assert results == {1,2,3,10,20}
+    assert results == {1, 2, 3, 10, 20}
+
 
 @pytest.mark.asyncio_cooperative
 async def test_merge_with_empty():
@@ -44,24 +51,27 @@ async def test_merge_with_empty():
         results.append(item)
     assert results == [5]
 
+
 @pytest.mark.asyncio_cooperative
 async def test_merge_slow_fast():
-    fast = AsyncGen([1,2,3], delay=0.01)
-    slow = AsyncGen(['a','b'], delay=0.05)
+    fast = AsyncGen([1, 2, 3], delay=0.01)
+    slow = AsyncGen(["a", "b"], delay=0.05)
     got = []
     async for item in as_yielded(fast, slow):
         got.append(item)
     # All should appear, timing for order is implementation dependent.
-    assert set(got) == {1,2,3,'a','b'}
+    assert set(got) == {1, 2, 3, "a", "b"}
+
 
 @pytest.mark.asyncio_cooperative
 async def test_error_in_iterator():
     error_gen = ErrorGen()
-    ok_gen = AsyncGen([4,5])
+    ok_gen = AsyncGen([4, 5])
     got = []
     with pytest.raises(Exception, match="Iterator Error!"):
         async for item in as_yielded(error_gen, ok_gen):
             got.append(item)
+
 
 @pytest.mark.asyncio_cooperative
 async def test_single_iterator():
@@ -69,7 +79,8 @@ async def test_single_iterator():
     results = []
     async for item in as_yielded(gen):
         results.append(item)
-    assert results == [0,1,2,3,4]
+    assert results == [0, 1, 2, 3, 4]
+
 
 @pytest.mark.asyncio_cooperative
 async def test_all_empty_iterators():
@@ -78,6 +89,7 @@ async def test_all_empty_iterators():
     async for item in as_yielded(*gens):
         results.append(item)
     assert results == []
+
 
 @pytest.mark.asyncio_cooperative
 async def test_consumer_cancels_early():
