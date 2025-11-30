@@ -978,7 +978,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                     continue
 
                 log("processing %s", fut)
-                
+
                 # TODO: implement some callback to handle cancellation
 
                 try:
