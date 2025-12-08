@@ -86,7 +86,9 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     _init_loader: Optional["Task[None]"] = None
     "An asyncio Task used to preload values from the iterables."
 
-    _init_loader_next: Optional[Callable[[], Coroutine[Any, Any, Tuple[Tuple[K, "Task[V]"]]]]] = None
+    _init_loader_next: Optional[Callable[[], Coroutine[Any, Any, Tuple[Tuple[K, "Task[V]"]]]]] = (
+        None
+    )
     "A coro function that blocks until the _init_loader starts a new task(s), and then returns a `Tuple[Tuple[K, Task[V]]]` with all of the new tasks and the keys that started them."
 
     _name: Optional[str] = None
