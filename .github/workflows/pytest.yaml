@@ -42,8 +42,14 @@ jobs:
         with:
           python-version: ${{ matrix.pyversion }}
 
+      - name: Upgrade pip
+        run: pip install --upgrade pip
+
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+
       - name: Install ez-a-sync
-        run: pip install . -r requirements-dev.txt
+        run: pip install -e .
       
       - name: Run test suite
         run: pytest
