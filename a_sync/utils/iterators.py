@@ -228,7 +228,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
     # hypothesis idea: _Done should never be exposed to user, works for all desired input types
     queue: Queue[Union[T, _Done]] = Queue()
 
-    def _as_yielded_done_callback(t: asyncio.Task) -> None:
+    def _as_yielded_done_callback(t: asyncio.Task, queue: Queue[Union[T, _Done]] = queue) -> None:
         if t.cancelled():
             return
         if e := t.exception():

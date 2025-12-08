@@ -780,9 +780,8 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
     
         cdef _ASyncBoundMethod bound
         cdef str field_name = self.field_name
-        try:
-            bound = instance.__dict__[field_name]
-        except KeyError:
+        bound = instance.__dict__.get(field_name)
+        if bound is None:
             bound = HiddenMethod(
                 instance,
                 self.__wrapped__,

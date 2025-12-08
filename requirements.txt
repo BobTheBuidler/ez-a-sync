@@ -1,5 +1,5 @@
 aiolimiter>=1
-async_lru_threadsafe==2.0.4
-async_property==0.2.1
+async_lru_threadsafe==2.0.5
+async_property==0.2.2
 typed_envs>=0.0.5
 typing_extensions>=4.1.0  # typing_extensions.Unpack was introduced in 4.1.0

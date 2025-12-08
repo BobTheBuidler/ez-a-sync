@@ -1,11 +1,11 @@
 from a_sync._typing import *
 import asyncio
-from _typeshed import Incomplete
+import logging
 from a_sync.primitives.locks.semaphore import Semaphore as Semaphore
 from functools import cached_property as cached_property
 from typing import Protocol, TypeVar
 
-logger: Incomplete
+logger: logging.Logger
 
 class Priority(Protocol):
     def __lt__(self, other) -> bool: ...

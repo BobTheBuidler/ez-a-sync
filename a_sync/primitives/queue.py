@@ -535,10 +535,12 @@ class ProcessingQueue(_Queue[Tuple[P, "Future[V]"]], Generic[P, V]):
                         return
                     raise
 
-                if fut is None:
+                if fut is None or fut.cancelled():
                     # the weakref was already cleaned up, we don't need to process this item
                     task_done()
                     continue
+
+                # TODO: implement some callback to handle cancellation
 
                 try:
                     result = await func(*args, **kwargs)
@@ -858,7 +860,11 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Example:
             >>> queue = SmartProcessingQueue(func=my_task_func, num_workers=3, name='smart_queue')
         """
-        name = name or f"{func.__module__}.{func.__qualname__}"
+        if not name:
+            unwrapped = func
+            while callable(getattr(unwrapped, "__wrapped__", None)):
+                unwrapped = unwrapped.__wrapped__
+            name = f"{unwrapped.__module__}.{unwrapped.__qualname__}"
         ProcessingQueue.__init__(self, func, num_workers, return_data=True, name=name, loop=loop)
         self._futs = WeakValueDictionary()
 
@@ -966,12 +972,14 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                         return
                     raise
 
-                if fut is None:
+                if fut is None or fut.cancelled():
                     # the weakref was already cleaned up, we don't need to process this item
                     task_done()
                     continue
 
                 log("processing %s", fut)
+
+                # TODO: implement some callback to handle cancellation
 
                 try:
                     result = await func(*args, **kwargs)
