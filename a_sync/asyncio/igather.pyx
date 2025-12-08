@@ -1,6 +1,6 @@
 import asyncio
 from asyncio import futures, tasks
-from typing import Awaitable, Iterable, List, TypeVar
+from typing import Awaitable, Coroutine, Iterable, List, TypeVar
 
 from cpython.version cimport PY_VERSION_HEX
 
