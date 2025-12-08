@@ -86,7 +86,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     _init_loader: Optional["Task[None]"] = None
     "An asyncio Task used to preload values from the iterables."
 
-    _init_loader_next: Optional[Callable[[], Awaitable[Tuple[Tuple[K, "Task[V]"]]]]] = None
+    _init_loader_next: Optional[Callable[[], Coroutine[Any, Any, Tuple[Tuple[K, "Task[V]"]]]]] = None
     "A coro function that blocks until the _init_loader starts a new task(s), and then returns a `Tuple[Tuple[K, Task[V]]]` with all of the new tasks and the keys that started them."
 
     _name: Optional[str] = None
@@ -101,7 +101,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     __iterables__: Tuple[AnyIterableOrAwaitableIterable[K], ...] = ()
     "The original iterables, if any, used to initialize this mapping."
 
-    __init_loader_coro: Optional[Awaitable[None]] = None
+    __init_loader_coro: Optional[Coroutine[Any, Any, None]] = None
     """An optional asyncio Coroutine to be run by the `_init_loader`"""
 
     __slots__ = "_wrapped_func", "__wrapped__", "__dict__", "__weakref__"
