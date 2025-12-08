@@ -22,7 +22,7 @@ cdef object smart_task_factory = _smart.smart_task_factory
 
 def igather(
     coros_or_futures: Iterable[Awaitable[__T]], bint return_exceptions = False
-) -> Awaitable[List[__T]]:
+) -> tasks._GatheringFuture[List[__T]]:
     """A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple."""
     return cigather(coros_or_futures, return_exceptions=return_exceptions)
 
@@ -89,7 +89,7 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                     )
                     outer.set_exception(exc)
                 else:
-                    outer.set_result([_get_result_or_exc(child) for child in children])
+                    outer.set_result(list(map(_get_result_or_exc, children)))
     
     else:
 
@@ -136,7 +136,7 @@ cdef object cigather(object coros_or_futures, bint return_exceptions = False):
                     )
                     outer.set_exception(exc)
                 else:
-                    outer.set_result([_get_result_or_exc(child) for child in children])
+                    outer.set_result(list(map(_get_result_or_exc, children)))
     
     if loop._task_factory is smart_task_factory:
         current = current_task()
@@ -175,8 +175,9 @@ cdef object _get_result_or_exc(fut: asyncio.Future):
         # to 'results' instead of raising it, don't bother
         # setting __context__.  This also lets us preserve
         # calling '_make_cancelled_error()' at most once.
-        return CancelledError("" if fut._cancel_message is None else fut._cancel_message)
-    res = fut.exception()
-    if res is None:
+        cancel_message = "" if fut._cancel_message is None else fut._cancel_message
+        return CancelledError(cancel_message)
+    exc = fut.exception()
+    if exc is None:
         return fut.result()
-    return res
+    return exc
