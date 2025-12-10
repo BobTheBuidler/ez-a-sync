@@ -41,6 +41,8 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     """
 
     name: str
+    """An optional name for the counter, used in debug logs. Defaults to an empty string."""
+
     def __init__(self, value: int, name: str = "", **kwargs) -> None:
         """
         Initialize the semaphore with a given value and optional name for debugging.

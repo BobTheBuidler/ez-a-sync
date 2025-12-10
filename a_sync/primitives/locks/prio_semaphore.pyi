@@ -34,7 +34,22 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
         :class:`PrioritySemaphore` for an implementation using numeric priorities.
     """
 
-    name: Optional[str]
+    _capacity: int
+    """The initial capacity of the semaphore."""
+
+    _top_priority: PT
+    _top_priority_manager: CM
+    _context_manager_class: Type[CM]
+
+    _context_managers: Dict[PT, CM]
+    """A dictionary mapping priorities to their context managers."""
+
+    _Semaphore__waiters: List[CM]
+    """A heap queue of context managers, sorted by priority."""
+
+    # NOTE: This should (hopefully) be temporary
+    _potential_lost_waiters: Set[asyncio.Future[None]]
+    """A set of futures representing waiters that might have been lost."""
 
     def __init__(
         self,
