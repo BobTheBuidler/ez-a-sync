@@ -51,7 +51,6 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
     _potential_lost_waiters: Set[asyncio.Future[None]]
     """A set of futures representing waiters that might have been lost."""
 
-
     def __init__(
         self,
         context_manager_class: Type[_AbstractPrioritySemaphoreContextManager],
