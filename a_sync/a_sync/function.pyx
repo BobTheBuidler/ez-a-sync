@@ -927,12 +927,16 @@ class ASyncFunction(_ASyncFunction, Generic[P, T]):
     ) -> None:
         _ASyncFunction.__init__(self, fn, _skip_validate=_skip_validate, **modifiers)
         update_wrapper(self, fn)
-        if self.__doc__ is None:
-            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
-        else:
-            self.__doc__ += (
-                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
-            )
+        try:
+            if self.__doc__ is None:
+                self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
+            else:
+                self.__doc__ += (
+                    f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
+                )
+        except AttributeError:
+            # __name__ could not be assigned by `update_wrapper`, bail out
+            pass
     
     __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunction`, you can optionally pass either a `sync` or `asynchronous` kwarg with a boolean value."
 
