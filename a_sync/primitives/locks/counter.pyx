@@ -91,12 +91,12 @@ cdef class CounterLock(_DebugDaemonMixin):
         else:
             return "<CounterLock value={} waiters={}>".format(self._value, waiters)
 
-    cpdef bint is_ready(self, long long v):
+    cpdef bint is_ready(self, long long value):
         """A function that indicates whether the current counter value is greater than or equal to a given value."""
-        return self._value >= v
+        return self._value >= value
     
-    cdef inline bint c_is_ready(self, long long v):
-        return self._value >= v
+    cdef inline bint c_is_ready(self, long long value):
+        return self._value >= value
 
     async def wait_for(self, long long value) -> bint:
         """
