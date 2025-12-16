@@ -10,7 +10,6 @@ from a_sync._typing import *
 import functools
 import logging
 import weakref
-from _typeshed import Incomplete
 from a_sync import TaskMapping
 from a_sync.a_sync._descriptor import ASyncDescriptor
 from a_sync.a_sync.abstract import ASyncABC
