@@ -1,3 +1,4 @@
+from logging import Logger
 from a_sync._typing import *
 import async_property as ap
 from _typeshed import Incomplete
@@ -18,7 +19,7 @@ from collections.abc import Generator
 from typing import Any, final
 from typing_extensions import Unpack
 
-logger: Incomplete
+logger: Logger
 
 class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     """Base class for creating asynchronous properties.
@@ -35,7 +36,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     sum: ASyncFunction[AnyIterable[I], T]
     hidden_method_descriptor: HiddenMethodDescriptor[T]
     __wrapped__: Callable[[I], T]
-    hidden_method_name: Incomplete
+    hidden_method_name: str
     def __init__(
         self,
         _fget: AsyncGetterFunction[I, T],
@@ -106,7 +107,7 @@ class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
-    __get__: Incomplete
+    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[T, Self]: ...
 
 @final
 class ASyncPropertyDescriptorAsyncDefault(ASyncPropertyDescriptor[I, T]):
@@ -192,7 +193,7 @@ class ASyncCachedPropertyDescriptor(
         _fget: AsyncGetterFunction[I, T],
         _fset: Incomplete | None = None,
         _fdel: Incomplete | None = None,
-        field_name: Incomplete | None = None,
+        field_name: str | None = None,
         **modifiers: Unpack[ModifierKwargs]
     ) -> None:
         """Initializes the ASyncCachedPropertyDescriptor.
@@ -246,7 +247,7 @@ class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[I, 
     def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
     def __get__(self, instance: I, owner: Type[I]) -> T: ...
-    __get__: Incomplete
+    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[T, Self]: ...
 
 class ASyncCachedPropertyDescriptorAsyncDefault(ASyncCachedPropertyDescriptor[I, T]):
     """
