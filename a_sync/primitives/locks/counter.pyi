@@ -16,7 +16,6 @@ class CounterLock(_DebugDaemonMixin):
         :class:`CounterLockCluster` for managing multiple :class:`CounterLock` instances.
     """
 
-    is_ready: Incomplete
     def __init__(self, start_value: int = 0, name: Optional[str] = None) -> None:
         """
         Initializes the :class:`CounterLock` with a starting value and an optional name.
@@ -30,6 +29,9 @@ class CounterLock(_DebugDaemonMixin):
             >>> counter.value
             0
         """
+
+    def is_ready(self, value: int) -> bool:
+        """A function that indicates whether the current counter value is greater than or equal to a given value."""
 
     async def wait_for(self, value: int) -> bool:
         """
