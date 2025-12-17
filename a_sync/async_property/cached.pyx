@@ -41,7 +41,7 @@ cdef class AsyncCachedPropertyInstanceState:
     def __cinit__(self) -> None:
         self.cache: Dict[FieldName, Any] = {}
         self.locks: DefaultDict[FieldName, Lock] = defaultdict(Lock)
-        self._tasks: Dict[FieldName, Task[Any]] = {}
+        self.tasks: Dict[FieldName, Task[Any]] = {}
     
     cdef object get_lock(self, str field_name):
         return self.locks[field_name]
