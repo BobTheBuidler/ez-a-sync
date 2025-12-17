@@ -186,7 +186,7 @@ class AsyncCachedPropertyDescriptor:
 
             self._load_value = loader
 
-        return lambda: shield(loader(instance))
+        return lambda: loader(instance)
 
 
 cdef object __AsyncCachedPropertyDescriptor = AsyncCachedPropertyDescriptor
