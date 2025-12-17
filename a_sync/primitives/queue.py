@@ -25,7 +25,7 @@ from weakref import WeakValueDictionary, proxy, ref
 from a_sync._smart import SmartFuture, create_future
 from a_sync._smart import _Key as _SmartKey
 from a_sync._typing import *
-from a_sync.asyncio import create_task, igather
+from a_sync.asyncio import create_task, igather, shield
 from a_sync.functools import cached_property_unsafe
 
 logger = getLogger(__name__)
@@ -922,12 +922,12 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         """
         self._ensure_workers()
         key = self._get_key(*args, **kwargs)
-        if fut := self._futs.get(key, None):
-            return fut
-        fut = SmartFuture(queue=self, key=key, loop=self._loop)
-        self._futs[key] = fut
-        Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
-        return fut
+        fut = self._futs.get(key, None)
+        if fut is None:
+            fut = SmartFuture(queue=self, key=key, loop=self._loop)
+            self._futs[key] = fut
+            Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
+        return shield(fut)
 
     def _get(self):
         """
@@ -972,8 +972,13 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                         return
                     raise
 
-                if fut is None or fut.cancelled():
-                    # the weakref was already cleaned up, we don't need to process this item
+                if fut is None:
+                    # The weakref was already cleaned up, which means there are no waiters.
+                    # We do not need to process this item.
+                    task_done()
+                    continue
+                elif fut.cancelled():
+                    self._futs.pop(self._get_key(*args, **kwargs), None)
                     task_done()
                     continue
 
