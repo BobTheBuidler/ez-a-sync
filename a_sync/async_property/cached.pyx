@@ -149,12 +149,20 @@ class AsyncCachedPropertyDescriptor:
                         cache = instance_state.cache
                         if field_name in cache:
                             return cache[field_name]
+                        
                         tasks = instance_state.tasks
                         if field_name in tasks:
                             task = tasks[field_name]
                         else:
                             task = tasks[field_name] = ccreate_task_simple(_fget(instance))
-                        value = await shield(task)
+                        
+                        try:
+                            value = await shield(task)
+                        except:
+                            if task.done():
+                                tasks.pop(field_name)
+                            raise
+                                
                         cache[field_name] = value
                         tasks.pop(field_name)
                         dict.pop(locks, field_name)
@@ -173,12 +181,20 @@ class AsyncCachedPropertyDescriptor:
                     async with locks[field_name]:
                         if field_name in cache:
                             return cache[field_name]
+                        
                         tasks = instance_state.tasks
                         if field_name in tasks:
                             task = tasks[field_name]
                         else:
                             task = tasks[field_name] = ccreate_task_simple(_fget(instance))
-                        value = await shield(task)
+                        
+                        try:
+                            value = await shield(task)
+                        except:
+                            if task.done():
+                                tasks.pop(field_name)
+                            raise
+                            
                         _fset(instance, value)
                         cache[field_name] = value
                         tasks.pop(field_name)
