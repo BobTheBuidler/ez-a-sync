@@ -17,6 +17,7 @@ def async_cached_property(
 class AsyncCachedPropertyInstanceState(Generic[__T]):
     cache: Dict[FieldName, __T]
     locks: Dict[FieldName, Lock]
+    _tasks: Dict[FieldName, object]
 
 class AsyncCachedPropertyDescriptor(Generic[__I, __T]):
     field_name: FieldName
