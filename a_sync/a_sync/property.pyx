@@ -30,6 +30,7 @@ else:
 
 
 # cdef asyncio
+cdef object CancelledError = asyncio.CancelledError
 cdef object get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 cdef object Lock = asyncio.Lock
@@ -509,6 +510,9 @@ class ASyncCachedPropertyDescriptor(
 
                     try:
                         value = await shield(inner_task)
+                    except CancelledError:
+                        tasks.pop(field_name)
+                        raise
                     except Exception as e:
                         copied_exc = copy(e)
                         instance_context = {"property": self, "instance": instance}
