@@ -22,7 +22,7 @@ from heapq import heappop, heappush, heappushpop
 from logging import getLogger
 from weakref import WeakValueDictionary, proxy, ref
 
-from a_sync._smart import SmartFuture, create_future
+from a_sync._smart import SmartFuture, create_future, shield
 from a_sync._smart import _Key as _SmartKey
 from a_sync._typing import *
 from a_sync.asyncio import create_task, igather
@@ -922,12 +922,15 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         """
         self._ensure_workers()
         key = self._get_key(*args, **kwargs)
-        if fut := self._futs.get(key, None):
+        fut = self._futs.get(key, None)
+        if fut is None:
+            fut = SmartFuture(queue=self, key=key, loop=self._loop)
+            self._futs[key] = fut
+            Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
+        elif fut.done():
+            # no need to shield it from cancellation if its already done
             return fut
-        fut = SmartFuture(queue=self, key=key, loop=self._loop)
-        self._futs[key] = fut
-        Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
-        return fut
+        return shield(fut)
 
     def _get(self):
         """
@@ -972,8 +975,9 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                         return
                     raise
 
-                if fut is None or fut.cancelled():
-                    # the weakref was already cleaned up, we don't need to process this item
+                if fut is None:
+                    # The weakref was already cleaned up, which means there are no waiters.
+                    # We do not need to process this item.
                     task_done()
                     continue
 
@@ -985,6 +989,8 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                     result = await func(*args, **kwargs)
                 except Exception as e:
                     log("%s: %s", type(e).__name__, e)
+                    # We don't want to cache the exception
+                    self._futs.pop(self._get_key(*args, **kwargs), None)
                     try:
                         fut.set_exception(e)
                     except InvalidStateError:
