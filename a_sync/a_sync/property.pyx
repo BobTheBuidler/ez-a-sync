@@ -524,6 +524,7 @@ class ASyncCachedPropertyDescriptor(
                 
                 if field_name not in cache:
                     cache[field_name] = value
+                    tasks.pop(field_name)
                     locks.pop(field_name)
                 
                 return value
