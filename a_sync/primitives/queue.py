@@ -927,7 +927,11 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             fut = SmartFuture(queue=self, key=key, loop=self._loop)
             self._futs[key] = fut
             Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
-        return shield(fut)
+        elif fut.done():
+            # no need to shield it from cancellation if its already done
+            return fut
+        else:
+            return shield(fut)
 
     def _get(self):
         """
