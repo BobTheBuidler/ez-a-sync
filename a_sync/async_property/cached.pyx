@@ -2,8 +2,10 @@ import asyncio
 import collections
 import functools
 import typing
+from asyncio import Task
 
 from a_sync._smart cimport shield
+from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.async_property.proxy import AwaitableProxy
 from a_sync.async_property.proxy cimport AwaitableOnly
 from a_sync.functools cimport update_wrapper
@@ -40,6 +42,7 @@ cdef class AsyncCachedPropertyInstanceState:
     def __cinit__(self) -> None:
         self.cache: Dict[FieldName, Any] = {}
         self.locks: DefaultDict[FieldName, Lock] = defaultdict(Lock)
+        self.tasks: Dict[FieldName, Task[Any]] = {}
     
     cdef object get_lock(self, str field_name):
         return self.locks[field_name]
@@ -146,8 +149,14 @@ class AsyncCachedPropertyDescriptor:
                         cache = instance_state.cache
                         if field_name in cache:
                             return cache[field_name]
-                        value = await _fget(instance)
+                        tasks = instance_state.tasks
+                        if field_name in tasks:
+                            task = tasks[field_name]
+                        else:
+                            task = tasks[field_name] = ccreate_task_simple(_fget(instance))
+                        value = await shield(task)
                         cache[field_name] = value
+                        tasks.pop(field_name)
                         dict.pop(locks, field_name)
                         return value
             else:
@@ -164,15 +173,21 @@ class AsyncCachedPropertyDescriptor:
                     async with locks[field_name]:
                         if field_name in cache:
                             return cache[field_name]
-                        value = await _fget(instance)
+                        tasks = instance_state.tasks
+                        if field_name in tasks:
+                            task = tasks[field_name]
+                        else:
+                            task = tasks[field_name] = ccreate_task_simple(_fget(instance))
+                        value = await shield(task)
                         _fset(instance, value)
                         cache[field_name] = value
+                        tasks.pop(field_name)
                         dict.pop(locks, field_name)
                         return value
 
             self._load_value = loader
 
-        return lambda: shield(loader(instance))
+        return lambda: loader(instance)
 
 
 cdef object __AsyncCachedPropertyDescriptor = AsyncCachedPropertyDescriptor
