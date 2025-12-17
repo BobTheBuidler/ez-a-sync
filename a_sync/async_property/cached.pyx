@@ -5,6 +5,7 @@ import typing
 from asyncio import Task
 
 from a_sync._smart cimport shield
+from a_sync.asyncio.create_task cimport create_task_simple
 from a_sync.async_property.proxy import AwaitableProxy
 from a_sync.async_property.proxy cimport AwaitableOnly
 from a_sync.functools cimport update_wrapper
@@ -152,7 +153,7 @@ class AsyncCachedPropertyDescriptor:
                         if field_name in tasks:
                             task = tasks[field_name]
                         else:
-                            task = tasks[field_name] = create_task(_fget(instance))
+                            task = tasks[field_name] = create_task_simple(_fget(instance))
                         value = await shield(task)
                         cache[field_name] = value
                         tasks.pop(field_name)
@@ -176,7 +177,7 @@ class AsyncCachedPropertyDescriptor:
                         if field_name in tasks:
                             task = tasks[field_name]
                         else:
-                            task = tasks[field_name] = create_task(_fget(instance))
+                            task = tasks[field_name] = create_task_simple(_fget(instance))
                         value = await shield(task)
                         _fset(instance, value)
                         cache[field_name] = value
