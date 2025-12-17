@@ -22,10 +22,10 @@ from heapq import heappop, heappush, heappushpop
 from logging import getLogger
 from weakref import WeakValueDictionary, proxy, ref
 
-from a_sync._smart import SmartFuture, create_future
+from a_sync._smart import SmartFuture, create_future, shield
 from a_sync._smart import _Key as _SmartKey
 from a_sync._typing import *
-from a_sync.asyncio import create_task, igather, shield
+from a_sync.asyncio import create_task, igather
 from a_sync.functools import cached_property_unsafe
 
 logger = getLogger(__name__)
