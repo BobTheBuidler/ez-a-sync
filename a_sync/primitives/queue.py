@@ -981,10 +981,6 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                     # We do not need to process this item.
                     task_done()
                     continue
-                elif fut.cancelled():
-                    self._futs.pop(self._get_key(*args, **kwargs), None)
-                    task_done()
-                    continue
 
                 log("processing %s", fut)
 
@@ -994,6 +990,8 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                     result = await func(*args, **kwargs)
                 except Exception as e:
                     log("%s: %s", type(e).__name__, e)
+                    # We don't want to cache the exception
+                    self._futs.pop(self._get_key(*args, **kwargs), None)
                     try:
                         fut.set_exception(e)
                     except InvalidStateError:
