@@ -512,7 +512,7 @@ class ASyncCachedPropertyDescriptor(
                     except Exception as e:
                         copied_exc = copy(e)
                         instance_context = {"property": self, "instance": instance}
-                        copied_exc.args = copied_exce.args, instance_context
+                        copied_exc.args = copied_exc.args, instance_context
                         raise copied_exc.with_traceback(e.__traceback__)
                 
                 if self._fset is not None:
