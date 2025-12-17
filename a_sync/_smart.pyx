@@ -630,7 +630,7 @@ cpdef object shield(arg: Awaitable[T]):
 
     # special handling to connect SmartFutures to SmartTasks if enabled
     if (waiters := getattr(inner, "_waiters", None)) is not None:
-        waiters.add(outer)
+        (<WeakSet>waiters).add(outer)
 
     _inner_done_callback, _outer_done_callback = _get_done_callbacks(inner, outer)
 
