@@ -635,7 +635,7 @@ cpdef object shield(arg: Awaitable[T]):
         (<WeakSet>waiters).add(outer)
     elif waiters is not None:
         # SmartTask _waiters is a builtins.set
-        waiters.add(other)
+        waiters.add(outer)
 
     _inner_done_callback, _outer_done_callback = _get_done_callbacks(inner, outer)
 
