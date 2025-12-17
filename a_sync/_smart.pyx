@@ -629,8 +629,13 @@ cpdef object shield(arg: Awaitable[T]):
     outer = _SmartFuture(loop=loop)
 
     # special handling to connect SmartFutures to SmartTasks if enabled
-    if (waiters := getattr(inner, "_waiters", None)) is not None:
+    waiters = getattr(inner, "_waiters", None)
+    if isinstance(waiters, WeakSet):
+        # SmartFuture._waiters is a WeakSet
         (<WeakSet>waiters).add(outer)
+    elif waiters is not None:
+        # SmartTask _waiters is a builtins.set
+        waiters.add(other)
 
     _inner_done_callback, _outer_done_callback = _get_done_callbacks(inner, outer)
 
