@@ -8,3 +8,4 @@ cdef class AsyncCachedPropertyInstanceState:
     cdef readonly object locks
     cdef object get_lock(self, str field_name)
     cdef object get_cache_value(self, str field_name)
+    cdef readonly dict[FieldName, object] _tasks
