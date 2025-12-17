@@ -511,9 +511,12 @@ class ASyncCachedPropertyDescriptor(
                     try:
                         value = await shield(inner_task)
                     except CancelledError:
-                        tasks.pop(field_name)
+                        # The CancelledError *can* come from inside the shielded task
+                        if inner_task.done():
+                            tasks.pop(field_name)
                         raise
                     except Exception as e:
+                        tasks.pop(field_name)
                         copied_exc = copy(e)
                         instance_context = {"property": self, "instance": instance}
                         copied_exc.args = copied_exc.args, instance_context
@@ -522,10 +525,9 @@ class ASyncCachedPropertyDescriptor(
                 if self._fset is not None:
                     self._fset(instance, value)
                 
-                if field_name not in cache:
-                    cache[field_name] = value
-                    tasks.pop(field_name)
-                    locks.pop(field_name)
+                cache[field_name] = value
+                tasks.pop(field_name)
+                locks.pop(field_name)
                 
                 return value
 
