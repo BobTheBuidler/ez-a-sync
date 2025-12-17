@@ -1,15 +1,7 @@
 from a_sync._typing import *
-from _typeshed import Incomplete
-from a_sync.a_sync.config import (
-    null_modifiers as null_modifiers,
-    user_set_default_modifiers as user_set_default_modifiers,
-)
-from a_sync.a_sync.modifiers import (
-    cache as cache,
-    limiter as limiter,
-    semaphores as semaphores,
-)
-from typing import Any
+from a_sync.a_sync.config import null_modifiers, user_set_default_modifiers
+from a_sync.a_sync.modifiers import cache, limiter, semaphores
+from typing import Any, Final
 
 valid_modifiers: Tuple[str, ...]
 
@@ -215,5 +207,5 @@ class ModifierManager(Dict[str, Any]):
             'memory'
         """
 
-NULLS: Incomplete
-USER_DEFAULTS: Incomplete
+NULLS: Final[ModifierManager]
+USER_DEFAULTS: Final[ModifierManager]

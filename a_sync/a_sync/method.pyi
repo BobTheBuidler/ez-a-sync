@@ -10,14 +10,13 @@ from a_sync._typing import *
 import functools
 import logging
 import weakref
-from _typeshed import Incomplete
-from a_sync import TaskMapping as TaskMapping
-from a_sync.a_sync._descriptor import ASyncDescriptor as ASyncDescriptor
-from a_sync.a_sync.abstract import ASyncABC as ASyncABC
+from a_sync import TaskMapping
+from a_sync.a_sync._descriptor import ASyncDescriptor
+from a_sync.a_sync.abstract import ASyncABC
 from a_sync.a_sync.function import (
-    ASyncFunction as ASyncFunction,
-    ASyncFunctionAsyncDefault as ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault as ASyncFunctionSyncDefault,
+    ASyncFunction,
+    ASyncFunctionAsyncDefault,
+    ASyncFunctionSyncDefault,
 )
 from typing import Any, final
 
@@ -477,7 +476,7 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     ) -> Coroutine[Any, Any, T]: ...
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
-    __call__: Incomplete
+    def __call__(self, *args, **kwargs):
 
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     """
@@ -520,4 +519,4 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     ) -> Coroutine[Any, Any, T]: ...
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
-    __call__: Incomplete
+    def __call__(self, *args, **kwargs):
