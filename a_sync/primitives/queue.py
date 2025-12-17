@@ -930,8 +930,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         elif fut.done():
             # no need to shield it from cancellation if its already done
             return fut
-        else:
-            return shield(fut)
+        return shield(fut)
 
     def _get(self):
         """
