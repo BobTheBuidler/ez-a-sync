@@ -10,6 +10,7 @@ from typing import AsyncIterator, Callable, NoReturn, TypeVar
 from typing_extensions import Concatenate, ParamSpec
 
 from a_sync.a_sync.base import ASyncGenericBase
+from a_sync.asyncio.create_task cimport ccreate_task_simple
 from a_sync.iter cimport _ASyncGeneratorFunction
 
 
@@ -20,7 +21,6 @@ __B = TypeVar("__B", bound=ASyncGenericBase)
 
 cdef object _FIVE_MINUTES = 300
 
-cdef object create_task = asyncio.create_task
 cdef object sleep = asyncio.sleep
 
 cdef object isasyncgenfunction = inspect.isasyncgenfunction
@@ -46,7 +46,7 @@ def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES):
                     yield thing
                 return
 
-            task = create_task(
+            task = ccreate_task_simple(
                 coro=_stuck_debug_task(logger, interval, fn, args, kwargs),
                 name="_stuck_debug_task",
             )
@@ -64,7 +64,7 @@ def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES):
             if not __logger_is_enabled_for(DEBUG):
                 return await fn(*args, **kwargs)
 
-            task = create_task(
+            task = ccreate_task_simple(
                 coro=_stuck_debug_task(logger, interval, fn, args, kwargs),
                 name="_stuck_debug_task",
             )
