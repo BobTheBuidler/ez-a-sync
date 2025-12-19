@@ -10,7 +10,7 @@ from typing import AsyncIterator, Callable, NoReturn, TypeVar
 from typing_extensions import Concatenate, ParamSpec
 
 from a_sync.a_sync.base import ASyncGenericBase
-from a_sync.asyncio.create_task cimport ccreate_task_simple
+from a_sync.asyncio.create_task cimport ccreate_task
 from a_sync.iter cimport _ASyncGeneratorFunction
 
 
@@ -46,9 +46,11 @@ def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES):
                     yield thing
                 return
 
-            task = ccreate_task_simple(
-                coro=_stuck_debug_task(logger, interval, fn, args, kwargs),
-                name="_stuck_debug_task",
+            task = ccreate_task(
+                _stuck_debug_task(logger, interval, fn, args, kwargs),
+                "_stuck_debug_task",
+                False,
+                True,
             )
             try:
                 async for thing in aiterator:
@@ -64,9 +66,11 @@ def stuck_coro_debugger(fn, logger=logger, interval=_FIVE_MINUTES):
             if not __logger_is_enabled_for(DEBUG):
                 return await fn(*args, **kwargs)
 
-            task = ccreate_task_simple(
-                coro=_stuck_debug_task(logger, interval, fn, args, kwargs),
-                name="_stuck_debug_task",
+            task = ccreate_task(
+                _stuck_debug_task(logger, interval, fn, args, kwargs),
+                "_stuck_debug_task",
+                False,
+                True,
             )
             try:
                 retval = await fn(*args, **kwargs)
