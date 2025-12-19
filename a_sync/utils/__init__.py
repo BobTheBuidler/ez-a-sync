@@ -125,7 +125,6 @@ class CancelMessage:
         self.result: Final = result
 
     def __repr__(self) -> str:
-        r = self.__repr
         return f"CancelMessage('{str(self)}')"
 
     def __str__(self) -> str:
