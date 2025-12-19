@@ -654,7 +654,7 @@ cdef tuple _get_done_callbacks(inner: Task, outer: Future):
             return
 
         if _is_cancelled(inner):
-            outer.cancel()
+            outer.cancel(f"[a_sync.shield] inner task is cancelled: {inner}")
         else:
             exc = _get_exception(inner)
             if exc is not None:
