@@ -117,11 +117,14 @@ class CancelMessage:
     pass it around freely as one object but only construct the
     string representation when required by something downstream.
     """
+
     def __init__(self, message: str, result: Any) -> None:
         self.message: Final = message
         self.result: Final = result
+
     def __repr__(self) -> str:
         r = self.__repr
         return f"CancelMessage('{str(self)}')"
+
     def __str__(self) -> str:
         return f"{message}: {result!r}"
