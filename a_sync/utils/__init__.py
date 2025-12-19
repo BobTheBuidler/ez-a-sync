@@ -4,7 +4,7 @@ iterators and implementing asynchronous versions of the built-in any and all fun
 """
 
 from asyncio import as_completed, ensure_future
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Final, final
 
 from a_sync.utils.iterators import as_yielded, exhaust_iterator, exhaust_iterators
 
