@@ -3,12 +3,14 @@ This module initializes the utility functions for the a_sync library, including 
 iterators and implementing asynchronous versions of the built-in any and all functions.
 """
 
-from _typeshed import SupportsBool
 from asyncio import as_completed, ensure_future
 from asyncio.tasks import _FutureLike
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from a_sync.utils.iterators import as_yielded, exhaust_iterator, exhaust_iterators
+
+if TYPE_CHECKING:
+    from _typeshed import SupportsBool
 
 
 __all__ = [
@@ -20,7 +22,7 @@ __all__ = [
 ]
 
 
-async def any(*awaitables: _FutureLike[SupportsBool]) -> bool:
+async def any(*awaitables: _FutureLike["SupportsBool"]) -> bool:
     """
     Asynchronously evaluates whether any of the given awaitables evaluates to True.
 
@@ -67,7 +69,7 @@ async def any(*awaitables: _FutureLike[SupportsBool]) -> bool:
     return False
 
 
-async def all(*awaitables: _FutureLike[SupportsBool]) -> bool:
+async def all(*awaitables: _FutureLike["SupportsBool"]) -> bool:
     """
     Asynchronously evaluates whether all of the given awaitables evaluate to True.
 
