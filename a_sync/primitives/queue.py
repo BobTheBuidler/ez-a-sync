@@ -867,6 +867,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             name = f"{unwrapped.__module__}.{unwrapped.__qualname__}"
         ProcessingQueue.__init__(self, func, num_workers, return_data=True, name=name, loop=loop)
         self._futs = WeakValueDictionary()
+        self._processing: dict[_SmartKey[T], SmartFuture[T]] = {}
 
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
         # sourcery skip: use-contextlib-suppress
@@ -926,11 +927,18 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         if fut is None:
             fut = SmartFuture(queue=self, key=key, loop=self._loop)
             self._futs[key] = fut
+            self._pending[key] = fut
             Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
         elif fut.done():
             # no need to shield it from cancellation if its already done
             return fut
-        return shield(fut)
+        # we want to shield the task now so our done callback is the 2nd to run after shield's callback
+        shielded = shield(fut)
+        def pop_pending(t: asyncio.Task[Any]) -> None:
+            self._pending.pop(key, None)
+        fut.add_done_callback(pop_pending)
+        return shielded
+
 
     def _get(self):
         """
