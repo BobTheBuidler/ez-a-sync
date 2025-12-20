@@ -8,7 +8,7 @@ The main components include:
 - TaskMappingItems: A view to asynchronously iterate over the items (key-value pairs) of a TaskMapping.
 """
 
-from asyncio import FIRST_COMPLETED, Future, Task, sleep, wait
+from asyncio import FIRST_COMPLETED, CancelledError, Future, Task, sleep, wait
 from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
