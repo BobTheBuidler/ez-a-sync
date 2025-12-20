@@ -927,6 +927,8 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         if fut is None:
             fut = SmartFuture(queue=self, key=key, loop=self._loop)
             self._futs[key] = fut
+            # we need a strong ref to the fut at least until the callbacks run,
+            # even if the outer task is cancelled or garbage collected
             self._pending[key] = fut
             Queue.put_nowait(self, (_SmartFutureRef(fut), args, kwargs))
         elif fut.done():
@@ -934,12 +936,12 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             return fut
         # we want to shield the task now so our done callback is the 2nd to run after shield's callback
         shielded = shield(fut)
-
-        def pop_pending(t: asyncio.Task[Any]) -> None:
+        def pop_pending(f: asyncio.Future[Any]) -> None:
+            # Now that the shield callback has run, we can pop the strong reference
             self._pending.pop(key, None)
-
         fut.add_done_callback(pop_pending)
         return shielded
+
 
     def _get(self):
         """
