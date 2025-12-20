@@ -648,18 +648,21 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
             await yield_to_loop()
 
     async def _wait_for_next_key(self) -> None:
-        # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
-        done, pending = await wait(
-            (
-                create_task(self._init_loader_next(), log_destroy_pending=False),
-                self._init_loader,
-            ),
-            return_when=FIRST_COMPLETED,
+        get_next = create_task(
+            self._init_loader_next(), name=self._name or str(self), log_destroy_pending=False
         )
+        # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
+        done, pending = await wait((get_next, self._init_loader), return_when=FIRST_COMPLETED)
         task: Task
         for task in done:
             # check for exceptions
             task.result()
+        if self._init_loader.done() and not get_next.done():
+            get_next.cancel()
+            try:
+                await get_next
+            except CancelledError:
+                pass
 
     def __start_task(self, item: K) -> "Future[V]":
         if self.concurrency:
