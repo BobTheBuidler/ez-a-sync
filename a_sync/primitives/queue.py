@@ -867,7 +867,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
             name = f"{unwrapped.__module__}.{unwrapped.__qualname__}"
         ProcessingQueue.__init__(self, func, num_workers, return_data=True, name=name, loop=loop)
         self._futs = WeakValueDictionary()
-        self._processing: dict[_SmartKey[T], SmartFuture[T]] = {}
+        self._pending: dict[_SmartKey[T], SmartFuture[T]] = {}
 
     async def put(self, *args: P.args, **kwargs: P.kwargs) -> SmartFuture[V]:
         # sourcery skip: use-contextlib-suppress
