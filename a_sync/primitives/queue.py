@@ -945,7 +945,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
 
         def check_safety(f: SmartFuture[Any]) -> None:
             if not fut.done() and f not in fut._waiters:
-                logger.error('outer is missing from inner._waiters. outer=%s inner=%s', f, fut)
+                logger.error("outer is missing from inner._waiters. outer=%s inner=%s", f, fut)
 
         shielded.add_done_callback(check_safety)
         return shielded
