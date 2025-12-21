@@ -234,6 +234,14 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     def __hash__(self) -> int:
         return id(self)
 
+    def __del__(self) -> None:
+        """Make sure there are no tasks left hanging."""
+        # _queue is a cached_property, we don't want to create it if it doesn't exist
+        if self.concurrency and "_queue" in self.__dict__:
+            self._queue.close()
+            del self._queue
+        self.clear(cancel=True)
+
     def __setitem__(self, item: Any, value: Any) -> None:
         raise NotImplementedError("You cannot manually set items in a TaskMapping")
 
