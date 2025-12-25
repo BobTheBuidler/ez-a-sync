@@ -1,7 +1,9 @@
 """
 This module provides a mixin class used to facilitate the creation of debugging daemons in subclasses.
 
-The mixin provides a framework for managing a debug daemon task, which can be used to emit rich debug logs from subclass instances whenever debug logging is enabled. Subclasses must implement the specific logging behavior.
+It supplies base functionality for binding an event loop and for managing a daemon task for debug logging.
+See Also:
+    :func:`~a_sync.a_sync._helpers.get_event_loop`
 """
 
 import asyncio
@@ -47,24 +49,78 @@ cdef object _get_running_loop():
 
 
 cdef class _LoopBoundMixin(_LoggerMixin):
+    """Base mixin for objects that require binding to an asyncio event loop.
+
+    The event loop associated with an instance is determined automatically at first use.
+    Note:
+        The ``loop`` parameter is no longer supported. Any attempt to supply a loop (e.g. ``MyClass(loop=some_loop)``)
+        will raise a ``TypeError``.
+    
+    Examples:
+        >>> class MyDebugClass(_LoopBoundMixin):
+        ...     pass
+        >>> import asyncio
+        >>> loop = asyncio.get_event_loop()
+        >>> MyDebugClass(loop=loop)
+        Traceback (most recent call last):
+          ...
+        TypeError: The loop parameter is not supported. As of 3.10, the *loop* parameter was removed from MyDebugClass() since it is no longer necessary.
+
+    See Also:
+        :func:`~a_sync.a_sync._helpers.get_event_loop`
+    """
     def __cinit__(self):
         self._LoopBoundMixin__loop = None
+
     def __init__(self, *, loop=None):
+        """Initialize the loop-bound object.
+
+        Keyword Args:
+            loop: This parameter is not supported and must be omitted.
+
+        Raises:
+            TypeError: If a non-None value is provided for the loop parameter.
+
+        Examples:
+            >>> class MyDebugClass(_LoopBoundMixin):
+            ...     pass
+            >>> MyDebugClass()  # Proper usage.
+            <MyDebugClass ...>
+            >>> MyDebugClass(loop=object())
+            Traceback (most recent call last):
+              ...
+            TypeError: The loop parameter is not supported. As of 3.10, the *loop* parameter was removed from MyDebugClass() since it is no longer necessary.
+        """
         if loop is not None:
             raise TypeError(
                 'The loop parameter is not supported. '
                 'As of 3.10, the *loop* parameter was removed'
                 '{}() since it is no longer necessary.'.format(type(self).__name__)
             )
-    @property
-    def _loop(self) -> AbstractEventLoop:
-        return self._LoopBoundMixin__loop
-    @_loop.setter
-    def _loop(self, loop: AbstractEventLoop):
-        self._LoopBoundMixin__loop = loop
+
     cpdef object _get_loop(self):
         return self._c_get_loop()
+
     cdef object _c_get_loop(self):
+        """Retrieve and validate the event loop associated with the current thread.
+
+        This method obtains the currently running event loop and binds it to the instance
+        if no loop has been previously bound. If the instance already has a bound loop, but the
+        current running loop differs from it, a RuntimeError is raised.
+
+        Examples:
+            >>> import asyncio
+            >>> instance = MyDebugClass()
+            >>> current_loop = asyncio.get_event_loop()
+            >>> # First call binds current_loop to the instance.
+            >>> bound_loop = instance._c_get_loop()  
+            >>> assert bound_loop is current_loop
+            >>> # In a different context if a different loop is running:
+            >>> # instance._c_get_loop() will raise a RuntimeError.
+
+        See Also:
+            :func:`~a_sync.a_sync._helpers.get_event_loop`
+        """
         cdef object loop = _get_running_loop()
         if self._LoopBoundMixin__loop is None:
             with _global_lock:
@@ -85,10 +141,34 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
     """
     A mixin class that provides a framework for debugging capabilities using a daemon task.
 
-    This mixin sets up the structure for managing a debug daemon task. Subclasses are responsible for implementing the specific behavior of the daemon, including any logging functionality.
+    This mixin sets up the structure for managing a debug daemon task.
+    Subclasses must implement the specific behavior of the daemon by overriding
+    the _debug_daemon() method.
+
+    Note:
+        The event loop associated with the instance is determined automatically at first use.
+        If the currently running event loop does not match the loop bound to the instance,
+        a RuntimeError is raised indicating that the object is bound to a different event loop.
+
+    Examples:
+        Implementing a simple debug daemon in a subclass:
+
+        .. code-block:: python
+
+            import asyncio
+
+            class MyDebugClass(_DebugDaemonMixin):
+                async def _debug_daemon(self, fut, fn, *args, **kwargs):
+                    while not fut.done():
+                        self.logger.debug("Debugging...")
+                        await asyncio.sleep(1)
+
+        In the above example, the debug daemon will run as long as debug logging is enabled
+        and the event loop remains consistent.
 
     See Also:
-        :class:`_LoggerMixin` for logging capabilities.
+        :class:`_LoggerMixin`,
+        :func:`~a_sync.a_sync._helpers.get_event_loop`
     """
     
     def __cinit__(self):
@@ -99,19 +179,17 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         """
         Abstract method to define the debug daemon's behavior.
 
-        Subclasses must implement this method to specify what the debug daemon should do, including any logging or monitoring tasks.
-
-        This code will only run if `self.logger.isEnabledFor(logging.DEBUG)` is True. You do not need to include any level checks in your custom implementations.
+        Subclasses must override this method to specify what the debug daemon should do,
+        including any logging or monitoring tasks. This method is only invoked if debug logging
+        is enabled. There is no need to perform further level checks within custom implementations.
 
         Args:
-            fut: The future associated with the daemon.
+            fut: The Future associated with the daemon.
             fn: The function to be debugged.
-            *args: Positional arguments for the function.
-            **kwargs: Keyword arguments for the function.
+            *args: Positional arguments for the debug task.
+            **kwargs: Keyword arguments for the debug task.
 
         Examples:
-            Implementing a simple debug daemon in a subclass:
-
             .. code-block:: python
 
                 class MyDebugClass(_DebugDaemonMixin):
@@ -119,6 +197,9 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
                         while not fut.done():
                             self.logger.debug("Debugging...")
                             await asyncio.sleep(1)
+
+        Raises:
+            NotImplementedError: Always, in the base mixin.
         """
         raise NotImplementedError
 
@@ -126,25 +207,23 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         """
         Starts the debug daemon task if debug logging is enabled and the event loop is running.
 
-        This method checks if debug logging is enabled and if the event loop is running. If both conditions are met, it starts the debug daemon task.
+        This method checks whether debug logging is enabled and verifies that the event loop
+        obtained via :meth:`_c_get_loop` is running. If both conditions are met, it starts the
+        debug daemon task asynchronously. Otherwise, a dummy future is returned.
 
         Args:
             *args: Positional arguments for the debug daemon.
             **kwargs: Keyword arguments for the debug daemon.
 
         Returns:
-            The debug daemon task as an asyncio.Task, or a dummy future if debug logs are not enabled or if the daemon cannot be created.
+            A Future representing the debug daemon task, or a dummy future if conditions are not met.
 
         Examples:
-            Starting the debug daemon:
-
             .. code-block:: python
 
                 my_instance = MyDebugClass()
-                my_instance._start_debug_daemon()
-
-        See Also:
-            :meth:`_ensure_debug_daemon` for ensuring the daemon is running.
+                task = my_instance._start_debug_daemon()
+                # task will be an asyncio Task if debug logging is enabled
         """
         return self._c_start_debug_daemon(args, kwargs)
     
@@ -158,25 +237,20 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         """
         Ensures that the debug daemon task is running.
 
-        This method checks if the debug daemon is already running and starts it if necessary. If debug logging is not enabled, it sets the daemon to a dummy future.
+        This method verifies if the debug daemon is already running and starts it if necessary.
+        If debug logging is not enabled, it sets the daemon to a dummy future.
 
         Args:
             *args: Positional arguments for the debug daemon.
             **kwargs: Keyword arguments for the debug daemon.
 
-        Returns:
-            Either the debug daemon task or a dummy future if debug logging is not enabled.
-
         Examples:
-            Ensuring the debug daemon is running:
-
             .. code-block:: python
 
                 my_instance = MyDebugClass()
                 my_instance._ensure_debug_daemon()
-
         See Also:
-            :meth:`_start_debug_daemon` for starting the daemon.
+            :meth:`_start_debug_daemon`
         """
         self._c_ensure_debug_daemon(args, kwargs)
     
@@ -197,24 +271,20 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         """
         Stops the debug daemon task.
 
-        This method cancels the debug daemon task if it is running. Raises a ValueError if the task to be stopped is not the current daemon.
+        This method cancels the debug daemon task if it is running.
+        It raises a ValueError if the task supplied for stopping is not the current daemon.
 
         Args:
-            t (optional): The task to be stopped, if any.
-
-        Raises:
-            ValueError: If `t` is not the current daemon.
+            t (optional): The task to be stopped, if specified.
 
         Examples:
-            Stopping the debug daemon:
-
             .. code-block:: python
 
                 my_instance = MyDebugClass()
                 my_instance._stop_debug_daemon()
 
         See Also:
-            :meth:`_ensure_debug_daemon` for ensuring the daemon is running.
+            :meth:`_ensure_debug_daemon`
         """
         if t and t != self._daemon:
             raise ValueError(f"{t} is not {self._daemon}")

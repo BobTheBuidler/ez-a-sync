@@ -1,16 +1,15 @@
-"""
-This module provides various queue implementations for managing asynchronous tasks.
+"""This module provides various queue implementations for managing asynchronous tasks.
 It includes standard FIFO queues, priority queues, and processing queues with enhanced functionality.
 
 Classes:
-    Queue: A generic asynchronous queue that extends the functionality of `asyncio.Queue`.
+    Queue: A generic asynchronous queue that extends the functionality of :class:`~asyncio.Queue`.
     ProcessingQueue: A queue designed for processing tasks asynchronously with multiple workers.
     PriorityProcessingQueue: A priority-based processing queue where tasks are processed based on priority.
+    VariablePriorityQueue: A :class:`~asyncio.PriorityQueue` subclass that allows dynamic priority updates.
     SmartProcessingQueue: A processing queue that executes jobs with the most waiters first, supporting dynamic priorities.
 
 See Also:
-    `asyncio.Queue`: The base class for asynchronous FIFO queues.
-    `asyncio.PriorityQueue`: The base class for priority queues.
+    :class:`~asyncio.Queue`, :class:`~asyncio.PriorityQueue`
 """
 
 import asyncio
@@ -59,7 +58,7 @@ else:
 
 class Queue(_Queue[T]):
     """
-    A generic asynchronous queue that extends the functionality of `asyncio.Queue`.
+    A generic asynchronous queue that extends the functionality of :class:`~asyncio.Queue`.
 
     This implementation supports retrieving multiple items at once and handling
     task processing in both FIFO and LIFO order. It provides enhanced type hinting
@@ -78,6 +77,9 @@ class Queue(_Queue[T]):
         >>> all_tasks = await queue.get_all()
         >>> print(all_tasks)
         ['task2']
+
+    See Also:
+        :class:`~asyncio.Queue`
     """
 
     def __bool__(self) -> Literal[True]:
@@ -306,13 +308,19 @@ class ProcessingQueue(_Queue[Tuple[P, "Future[V]"]], Generic[P, V]):
 
         Args:
             func: The task function to process.
-            num_workers: Number of workers to process tasks.
+            num_workers: The number of worker tasks to process.
             return_data: Whether tasks should return data via futures. Defaults to True.
             name: Name of the queue. Defaults to an empty string.
-            loop: Optional event loop for the queue.
+            loop: Optional event loop for the queue. Note: In Python 3.10 and above, passing a value for `loop` is not supported and will raise NotImplementedError.
 
         Example:
-            >>> queue = ProcessingQueue(func=my_task_func, num_workers=3, name='myqueue')
+            >>> async def process_task(data): return data.upper()
+            >>> queue = ProcessingQueue(func=process_task, num_workers=3, name='myqueue')
+            >>> fut = await queue.put(item='task')
+            >>> print(await fut)
+
+        See Also:
+            :class:`~asyncio.Queue`
         """
         if not _loop_kwarg_deprecated:
             _init(self, loop=loop)
@@ -665,7 +673,6 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         >>> queue = PriorityProcessingQueue(func=process_task, num_workers=5)
         >>> fut = await queue.put(priority=1, item='task')
         >>> print(await fut)
-        TASK
 
     See Also:
         :class:`~ProcessingQueue`
@@ -687,6 +694,9 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         Example:
             >>> fut = await queue.put(priority=1, item='task')
             >>> print(await fut)
+
+        See Also:
+            :class:`~ProcessingQueue`
         """
         while self.full():
             putter = self._get_loop().create_future()
@@ -736,7 +746,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         Retrieves the highest priority task from the queue.
 
         Returns:
-            The priority, task arguments, keyword arguments, and future of the task.
+            The task arguments, keyword arguments, and future of the task.
 
         Example:
             >>> task = queue._get()
@@ -853,12 +863,18 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
 
         Args:
             func: The worker function.
-            num_workers: Number of worker tasks.
+            num_workers: The number of worker tasks.
             name: Optional name for the queue.
-            loop: Optional event loop.
+            loop: Optional event loop. Note: In Python 3.10 and above, passing a value for `loop` is not supported and will raise NotImplementedError.
 
         Example:
-            >>> queue = SmartProcessingQueue(func=my_task_func, num_workers=3, name='smart_queue')
+            >>> async def process_task(data): return data.upper()
+            >>> queue = SmartProcessingQueue(func=process_task, num_workers=3, name='smart_queue')
+            >>> fut = await queue.put(item='task')
+            >>> print(await fut)
+
+        See Also:
+            :class:`~ProcessingQueue`
         """
         if not name:
             unwrapped = func
@@ -883,6 +899,9 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Example:
             >>> fut = await queue.put(item='task')
             >>> print(await fut)
+
+        See Also:
+            :class:`~ProcessingQueue`
         """
         while self.full():
             putter = self._loop.create_future()
@@ -919,6 +938,9 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Example:
             >>> fut = queue.put_nowait(item='task')
             >>> print(await fut)
+
+        See Also:
+            :class:`~ProcessingQueue`
         """
         self._ensure_workers()
         key = self._get_key(*args, **kwargs)
@@ -937,7 +959,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Retrieves the task with the highest priority from the queue.
 
         Returns:
-            The priority, task arguments, keyword arguments, and future of the task.
+            The task arguments, keyword arguments, and future of the task.
 
         Example:
             >>> task = queue._get()
@@ -953,7 +975,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         Retrieves tasks, executes them, and sets the results or exceptions for the futures.
 
         Raises:
-            Any: Exceptions raised during task processing are logged.
+            Any exception raised during task processing is logged.
 
         Example:
             >>> await queue._worker_coro()
