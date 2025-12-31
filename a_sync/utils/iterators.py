@@ -229,12 +229,14 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
     queue: Queue[Union[T, _Done]] = Queue()
 
     def _as_yielded_done_callback(t: asyncio.Task, queue: Queue[Union[T, _Done]] = queue) -> None:
-        if t.cancelled():
-            return
-        if e := t.exception():
-            traceback.extract_stack
+        try:
+            if e := t.exception():
+                traceback.clear_frames(e.__traceback__)
+                queue.put_nowait(_Done(e))
+        except CancelledError as e:
             traceback.clear_frames(e.__traceback__)
             queue.put_nowait(_Done(e))
+            
 
     task = create_task(
         coro=exhaust_iterators(iterators, queue=queue, join=True),
