@@ -8,7 +8,7 @@ The main components include:
 - TaskMappingItems: A view to asynchronously iterate over the items (key-value pairs) of a TaskMapping.
 """
 
-from asyncio import FIRST_COMPLETED, Future, Task, sleep, wait
+from asyncio import FIRST_COMPLETED, CancelledError, Future, Task, sleep, wait
 from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
@@ -86,7 +86,9 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     _init_loader: Optional["Task[None]"] = None
     "An asyncio Task used to preload values from the iterables."
 
-    _init_loader_next: Optional[Callable[[], Awaitable[Tuple[Tuple[K, "Task[V]"]]]]] = None
+    _init_loader_next: Optional[Callable[[], Coroutine[Any, Any, Tuple[Tuple[K, "Task[V]"]]]]] = (
+        None
+    )
     "A coro function that blocks until the _init_loader starts a new task(s), and then returns a `Tuple[Tuple[K, Task[V]]]` with all of the new tasks and the keys that started them."
 
     _name: Optional[str] = None
@@ -101,7 +103,7 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     __iterables__: Tuple[AnyIterableOrAwaitableIterable[K], ...] = ()
     "The original iterables, if any, used to initialize this mapping."
 
-    __init_loader_coro: Optional[Awaitable[None]] = None
+    __init_loader_coro: Optional[Coroutine[Any, Any, None]] = None
     """An optional asyncio Coroutine to be run by the `_init_loader`"""
 
     __slots__ = "_wrapped_func", "__wrapped__", "__dict__", "__weakref__"
@@ -646,18 +648,21 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
             await yield_to_loop()
 
     async def _wait_for_next_key(self) -> None:
-        # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
-        done, pending = await wait(
-            (
-                create_task(self._init_loader_next(), log_destroy_pending=False),
-                self._init_loader,
-            ),
-            return_when=FIRST_COMPLETED,
+        get_next = create_task(
+            self._init_loader_next(), name=self._name or str(self), log_destroy_pending=False
         )
+        # NOTE if `_init_loader` has an exception it will return first, otherwise `_init_loader_next` will return always
+        done, pending = await wait((get_next, self._init_loader), return_when=FIRST_COMPLETED)
         task: Task
         for task in done:
             # check for exceptions
             task.result()
+        if self._init_loader.done() and not get_next.done():
+            get_next.cancel()
+            try:
+                await get_next
+            except CancelledError:
+                pass
 
     def __start_task(self, item: K) -> "Future[V]":
         if self.concurrency:

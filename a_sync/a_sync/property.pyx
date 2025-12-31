@@ -30,6 +30,7 @@ else:
 
 
 # cdef asyncio
+cdef object CancelledError = asyncio.CancelledError
 cdef object get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 cdef object Lock = asyncio.Lock
@@ -489,27 +490,44 @@ class ASyncCachedPropertyDescriptor(
             async def loader(instance):
                 cdef AsyncCachedPropertyInstanceState cache_state
                 cache_state = self.get_instance_state(instance)
+                
+                cdef dict cache = cache_state.cache
 
-                inner_task = cache_state.locks[field_name]
-                if isinstance(inner_task, Lock):
-                    # default behavior uses lock but we want to use a Task so all waiters wake up together
-                    inner_task = ccreate_task_simple(self._fget(instance))
-                    cache_state.locks[field_name] = inner_task
+                if field_name in cache:
+                    return cache[field_name]
 
-                try:
-                    value = await shield(inner_task)
-                except Exception as e:
-                    instance_context = {"property": self, "instance": instance}
-                    if e.args and e.args[-1] != instance_context:
-                        e.args = *e.args, instance_context
-                    raise copy(e).with_traceback(e.__traceback__)
+                cdef dict tasks = cache_state.tasks
+                locks = cache_state.locks
+
+                async with locks[field_name]:
+                    if field_name in cache:
+                        return cache[field_name]
+                    
+                    if field_name in tasks:
+                        inner_task = tasks[field_name]
+                    else:
+                        inner_task = tasks[field_name] = ccreate_task_simple(self._fget(instance))
+
+                    try:
+                        value = await shield(inner_task)
+                    except CancelledError:
+                        # The CancelledError *can* come from inside the shielded task
+                        if inner_task.done():
+                            tasks.pop(field_name)
+                        raise
+                    except Exception as e:
+                        tasks.pop(field_name)
+                        copied_exc = copy(e)
+                        instance_context = {"property": self, "instance": instance}
+                        copied_exc.args = copied_exc.args, instance_context
+                        raise copied_exc.with_traceback(e.__traceback__)
                 
                 if self._fset is not None:
                     self._fset(instance, value)
                 
-                if field_name not in cache_state.cache:
-                    cache_state.cache[field_name] = value
-                    cache_state.locks.pop(field_name)
+                cache[field_name] = value
+                tasks.pop(field_name)
+                locks.pop(field_name)
                 
                 return value
 

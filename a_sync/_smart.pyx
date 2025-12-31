@@ -629,7 +629,12 @@ cpdef object shield(arg: Awaitable[T]):
     outer = _SmartFuture(loop=loop)
 
     # special handling to connect SmartFutures to SmartTasks if enabled
-    if (waiters := getattr(inner, "_waiters", None)) is not None:
+    waiters = getattr(inner, "_waiters", None)
+    if isinstance(waiters, WeakSet):
+        # SmartFuture._waiters is a WeakSet
+        (<WeakSet>waiters).add(outer)
+    elif waiters is not None:
+        # SmartTask _waiters is a builtins.set
         waiters.add(outer)
 
     _inner_done_callback, _outer_done_callback = _get_done_callbacks(inner, outer)
@@ -649,7 +654,7 @@ cdef tuple _get_done_callbacks(inner: Task, outer: Future):
             return
 
         if _is_cancelled(inner):
-            outer.cancel()
+            outer.cancel(CancelMessage(inner))
         else:
             exc = _get_exception(inner)
             if exc is not None:
@@ -662,6 +667,22 @@ cdef tuple _get_done_callbacks(inner: Task, outer: Future):
             inner.remove_done_callback(_inner_done_callback)
     
     return _inner_done_callback, _outer_done_callback
+
+
+cdef class CancelMessage:
+    """
+    This class wraps a cancelled task for an asyncio cancel message so that
+    we can pass it around freely as one object but only construct the string
+    representation when required by something downstream.
+    """
+    cdef object task
+    def __cinit__(self, object task) -> None:
+        self.task = task
+    def __repr__(self) -> str:
+        return f"CancelMessage('{str(self)}')"
+    def __str__(self) -> str:
+        return f"[a_sync.shield] inner task is cancelled: {self.task!r}"
+        
 
 
 __all__ = [

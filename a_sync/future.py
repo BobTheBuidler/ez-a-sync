@@ -1377,7 +1377,9 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
             self.callable = callable
             """The callable function."""
 
-            self._callable_name = callable.__name__
+            self._callable_name = (
+                callable.__name__ if hasattr(callable, "__name__") else repr(callable)
+            )
             """The name of the callable function."""
 
             a_sync_callable = a_sync(callable, default="async", **kwargs)

@@ -13,10 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        pyversion: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13" ]
+        pyversion: [ "3.10", "3.11", "3.12", "3.13", "3.14" ]
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
         
@@ -25,9 +25,11 @@ jobs:
       with:
         python-version: ${{ matrix.pyversion }}
 
+    - name: Update pip
+      run: python -m pip install --upgrade pip
+      
     - name: Install MyPy
-      run: |
-        python -m pip install --upgrade pip
-        pip install mypy types-requests
+      run: pip install mypy types-requests
+      
     - name: Run MyPy
       run: mypy ./a_sync --pretty --ignore-missing-imports --show-error-codes --show-error-context --enable-incomplete-feature=Unpack --install-types --non-interactive

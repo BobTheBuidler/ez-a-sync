@@ -4,8 +4,13 @@ iterators and implementing asynchronous versions of the built-in any and all fun
 """
 
 from asyncio import as_completed, ensure_future
+from typing import TYPE_CHECKING, Any, Final, final
 
 from a_sync.utils.iterators import as_yielded, exhaust_iterator, exhaust_iterators
+
+if TYPE_CHECKING:
+    from _typeshed import SupportsBool
+    from asyncio.tasks import _FutureLike
 
 
 __all__ = [
@@ -17,7 +22,7 @@ __all__ = [
 ]
 
 
-async def any(*awaitables) -> bool:
+async def any(*awaitables: "_FutureLike[SupportsBool]") -> bool:
     """
     Asynchronously evaluates whether any of the given awaitables evaluates to True.
 
@@ -50,20 +55,21 @@ async def any(*awaitables) -> bool:
     futs = list(map(ensure_future, awaitables))
     for fut in as_completed(futs):
         try:
-            result = bool(await fut)
+            result = await fut
         except RuntimeError as e:
             if str(e) == "cannot reuse already awaited coroutine":
                 raise RuntimeError(str(e), fut) from e
             else:
                 raise
-        if result:
+        if bool(result):
+            cancel_msg = CancelMessage("[a_sync.any] exiting early due to Truthy result", result)
             for fut in futs:
-                fut.cancel()
+                fut.cancel(cancel_msg)
             return True
     return False
 
 
-async def all(*awaitables) -> bool:
+async def all(*awaitables: "_FutureLike[SupportsBool]") -> bool:
     """
     Asynchronously evaluates whether all of the given awaitables evaluate to True.
 
@@ -92,14 +98,34 @@ async def all(*awaitables) -> bool:
     futs = list(map(ensure_future, awaitables))
     for fut in as_completed(futs):
         try:
-            result = bool(await fut)
+            result = await fut
         except RuntimeError as e:
             if str(e) == "cannot reuse already awaited coroutine":
                 raise RuntimeError(str(e), fut) from e
             else:
                 raise
-        if not result:
+        if not bool(result):
+            cancel_msg = CancelMessage("[a_sync.all] exiting early due to Falsey result", result)
             for fut in futs:
-                fut.cancel()
+                fut.cancel(cancel_msg)
             return False
     return True
+
+
+@final
+class CancelMessage:
+    """
+    This class wraps a cancel message + result pair so that we can
+    pass it around freely as one object but only construct the
+    string representation when required by something downstream.
+    """
+
+    def __init__(self, message: str, result: Any) -> None:
+        self.message: Final = message
+        self.result: Final = result
+
+    def __repr__(self) -> str:
+        return f"CancelMessage('{str(self)}')"
+
+    def __str__(self) -> str:
+        return f"{message}: {result!r}"

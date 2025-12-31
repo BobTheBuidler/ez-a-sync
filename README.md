@@ -27,7 +27,7 @@
 <!-- /TOC -->
 ## Introduction
 
-`ez-a-sync` is a Python library that enables developers to write both synchronous and asynchronous code without having to write redundant code. It provides a decorator `@a_sync()`, as well as a base class `ASyncGenericBase` which can be used to create classes that can be executed in both synchronous and asynchronous contexts.
+`ez-a-sync` is a Cython library which enables Python developers to write both synchronous and asynchronous code without redundant code. It provides a decorator `@a_sync()`, as well as a base class `ASyncGenericBase` which can be used to create classes that can be executed in both synchronous and asynchronous contexts.
 
 It also contains implementations of various asyncio primitives with extra functionality, including queues and various types of locks.
 \# TODO add links to various objects' docs
