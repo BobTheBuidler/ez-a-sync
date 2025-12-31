@@ -236,7 +236,6 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
         except CancelledError as e:
             traceback.clear_frames(e.__traceback__)
             queue.put_nowait(_Done(e))
-            
 
     task = create_task(
         coro=exhaust_iterators(iterators, queue=queue, join=True),
