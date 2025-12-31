@@ -7,6 +7,7 @@ flow of items in an asynchronous context.
 import asyncio
 import asyncio.futures
 import traceback
+from asyncio import CancelledError
 from logging import DEBUG, getLogger
 from types import TracebackType
 
@@ -230,12 +231,12 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
 
     def _as_yielded_done_callback(t: asyncio.Task, queue: Queue[Union[T, _Done]] = queue) -> None:
         try:
-            if e := t.exception():
-                traceback.clear_frames(e.__traceback__)
-                queue.put_nowait(_Done(e))
+            exc = t.exception()
         except CancelledError as e:
-            traceback.clear_frames(e.__traceback__)
-            queue.put_nowait(_Done(e))
+            exc = e
+        if exc is not None:
+            traceback.clear_frames(exc.__traceback__)
+            queue.put_nowait(_Done(exc))
 
     task = create_task(
         coro=exhaust_iterators(iterators, queue=queue, join=True),
@@ -247,7 +248,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
     while not task.done():
         try:
             items = await queue.get_all()
-        except asyncio.CancelledError:
+        except CancelledError:
             # cleanup lingering objects and reraise
             del task
             del queue
