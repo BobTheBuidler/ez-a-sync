@@ -80,15 +80,7 @@ async def exhaust_iterators(
     """
     if queue is None and join:
         raise ValueError("You must provide a `queue` to use kwarg `join`")
-
-    for x in await igather(
-        (exhaust_iterator(iterator, queue=queue) for iterator in iterators),
-        return_exceptions=True,
-    ):
-        if isinstance(x, Exception):
-            # raise it with its original traceback instead of from here
-            raise x.with_traceback(x.__traceback__)
-
+    await igather(exhaust_iterator(iterator, queue=queue) for iterator in iterators)
     if queue is not None:
         queue.put_nowait(_Done())
         if join:
