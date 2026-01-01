@@ -62,8 +62,8 @@ def apply_rate_limit(
 
 
 def apply_rate_limit(
-    coro_fn: Optional[Union[CoroFn[P, T], int]] = None,
-    runs_per_minute: Optional[LimiterSpec] = None,
+    coro_fn: CoroFn[P, T] | int | None = None,
+    runs_per_minute: LimiterSpec | None = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
     """Applies a rate limit to an asynchronous function.
 

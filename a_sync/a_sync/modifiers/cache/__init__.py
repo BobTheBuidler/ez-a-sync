@@ -19,10 +19,10 @@ class CacheArgs(TypedDict):
     cache_typed: bool
     """Whether to consider types for cache keys."""
 
-    ram_cache_maxsize: Optional[int]
+    ram_cache_maxsize: int | None
     """The maximum size for the LRU cache."""
 
-    ram_cache_ttl: Optional[int]
+    ram_cache_ttl: int | None
     """The time-to-live for items in the LRU cache."""
 
 
@@ -98,11 +98,11 @@ def apply_async_cache(
 
 
 def apply_async_cache(
-    coro_fn: Union[CoroFn[P, T], CacheType, int] = None,
+    coro_fn: CoroFn[P, T] | CacheType | int = None,
     cache_type: CacheType = "memory",
     cache_typed: bool = False,
-    ram_cache_maxsize: Optional[int] = None,
-    ram_cache_ttl: Optional[int] = None,
+    ram_cache_maxsize: int | None = None,
+    ram_cache_ttl: int | None = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
     """Applies an asynchronous cache to a coroutine function.
 

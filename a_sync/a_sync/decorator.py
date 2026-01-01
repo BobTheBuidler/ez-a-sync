@@ -526,7 +526,7 @@ def a_sync(
 
 # catchall
 def a_sync(
-    coro_fn: Optional[AnyFn[P, T]] = None,
+    coro_fn: AnyFn[P, T] | None = None,
     default: DefaultMode = config.DEFAULT_MODE,
     # default values are set by passing these kwargs into a ModifierManager object.
     **modifiers: Unpack[ModifierKwargs],

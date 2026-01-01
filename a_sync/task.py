@@ -15,10 +15,11 @@ from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
 from logging import getLogger
-from typing import Any, Callable, DefaultDict, Generic, Literal, Union, overload
+from typing import Any, DefaultDict, Generic, Literal, Union, overload
+from collections.abc import Callable
 from weakref import WeakKeyDictionary, proxy
 
-from typing_extensions import Concatenate
+from typing import Concatenate
 
 from a_sync import exceptions
 from a_sync._typing import AnyFn, AnyIterableOrAwaitableIterable, I, K, P, T, V
