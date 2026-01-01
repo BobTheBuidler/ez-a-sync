@@ -341,7 +341,7 @@ async def test_task_mapping_empty_iterable():
     """Test TaskMapping with an empty iterable."""
     tasks = TaskMapping(_coro_fn, [])
     assert len(tasks) == 0
-    with pytest.raises(_EmptySequenceError, match="\[\]"):
+    with pytest.raises(_EmptySequenceError, match=r"\[\]"):
         await tasks
 
 

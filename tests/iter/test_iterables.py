@@ -1,7 +1,8 @@
 import pytest
 import re
 from asyncio import TimerHandle
-from typing import AsyncIterator, Iterator, Tuple, TypeVar
+from typing import Tuple, TypeVar
+from collections.abc import AsyncIterator, Iterator
 
 from a_sync import ASyncIterable, ASyncIterator
 from a_sync.exceptions import SyncModeInAsyncContextError
@@ -433,4 +434,4 @@ def test_init_subclass_with_typevar(cls_to_test):
 
 @test_all
 def test_init_subclass_with_generic_alias(cls_to_test):
-    class MySubclass(cls_to_test[Tuple[int, str, bool]]): ...
+    class MySubclass(cls_to_test[tuple[int, str, bool]]): ...
