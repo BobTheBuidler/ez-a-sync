@@ -15,9 +15,10 @@ See Also:
 
 import asyncio
 from typing import Generic
+
 from typing_extensions import Concatenate
 
-from a_sync._typing import AnyIterable, AnyFn, I, P, T
+from a_sync._typing import AnyFn, AnyIterable, I, P, T
 from a_sync.a_sync import decorator
 from a_sync.a_sync.function import ASyncFunction
 
