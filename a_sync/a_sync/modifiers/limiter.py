@@ -6,13 +6,7 @@ from typing import Optional, Union, overload
 from aiolimiter import AsyncLimiter
 
 from a_sync import aliases, exceptions
-from a_sync._typing import (
-    AsyncDecorator,
-    AsyncDecoratorOrCoroFn,
-    CoroFn,
-    P,
-    T,
-)
+from a_sync._typing import AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, P, T
 
 LimiterSpec = Union[int, AsyncLimiter]
 
