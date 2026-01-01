@@ -15,7 +15,7 @@ from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
 from logging import getLogger
-from typing import Any, Callable, DefaultDict, Literal, overload
+from typing import Any, Callable, DefaultDict, Literal, Union, overload
 from weakref import WeakKeyDictionary, proxy
 
 from typing_extensions import Concatenate
@@ -751,7 +751,7 @@ __unwrapped = WeakKeyDictionary()
 
 
 def _unwrap(
-    wrapped_func: AnyFn[P, T] | ASyncMethodDescriptor[P, T] | _ASyncPropertyDescriptorBase[I, T],
+    wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[I, T]],
 ) -> Callable[P, Awaitable[T]]:
     if unwrapped := __unwrapped.get(wrapped_func):
         return unwrapped
