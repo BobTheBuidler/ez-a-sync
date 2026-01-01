@@ -24,8 +24,9 @@ import threading
 import weakref
 from asyncio import sleep
 from asyncio.futures import _convert_future_exc
+from collections.abc import Callable
 from concurrent.futures import _base, thread
-from typing import Any, Callable, Literal, overload
+from typing import Any, Literal, overload
 
 from a_sync._typing import P, T
 from a_sync.primitives._debug import _DebugDaemonMixin

@@ -17,14 +17,12 @@ import asyncio
 import sys
 from asyncio import AbstractEventLoop, Future, InvalidStateError, QueueEmpty, Task
 from asyncio.events import _get_running_loop
-from collections.abc import Awaitable
+from collections.abc import Awaitable, Callable
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
-from typing import Any, Callable, Final, Generic, Literal, NoReturn, Optional
+from typing import Any, Concatenate, Final, Generic, Literal, NoReturn
 from weakref import WeakValueDictionary, proxy, ref
-
-from typing_extensions import Concatenate
 
 from a_sync._smart import SmartFuture
 from a_sync._smart import _Key as _SmartKey
@@ -228,7 +226,7 @@ class ProcessingQueue(asyncio.Queue[tuple[P, "Future[V]"]], Generic[P, V]):
         *,
         return_data: bool = True,
         name: str = "",
-        loop: Optional[AbstractEventLoop] = None,
+        loop: AbstractEventLoop | None = None,
     ) -> None:
         """
         Initializes a processing queue with the given worker function and worker count.
@@ -775,7 +773,7 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         num_workers: int,
         *,
         name: str = "",
-        loop: Optional[AbstractEventLoop] = None,
+        loop: AbstractEventLoop | None = None,
     ) -> None:
         """
         Initializes a smart processing queue with the given worker function.

@@ -2,7 +2,7 @@
 # mypy: disable-error-code=misc
 import asyncio
 import functools
-from typing import Optional, Union, overload
+from typing import overload
 
 from a_sync import exceptions, primitives
 from a_sync._typing import AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, P, SemaphoreSpec, T
@@ -87,7 +87,7 @@ def apply_semaphore(
 
 
 def apply_semaphore(
-    coro_fn: Optional[Union[CoroFn[P, T], SemaphoreSpec]] = None,
+    coro_fn: CoroFn[P, T] | SemaphoreSpec | None = None,
     semaphore: SemaphoreSpec = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
     """Apply a semaphore to a coroutine function or return a decorator.

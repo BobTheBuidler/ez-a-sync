@@ -27,11 +27,11 @@ TODO include comparisons between the 'new way' with this future class and the 'o
 
 import concurrent.futures
 from asyncio import Future, Task, get_event_loop
-from collections.abc import Awaitable, Generator
+from collections.abc import Awaitable, Callable, Generator
 from decimal import Decimal
 from functools import partial, wraps
 from inspect import isawaitable
-from typing import TYPE_CHECKING, Any, Callable, Generic, Optional, Union, final, overload
+from typing import TYPE_CHECKING, Any, Generic, Union, final, overload
 
 from typing_extensions import Self, Unpack
 
@@ -264,7 +264,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         return [self, other] if isinstance(other, ASyncFuture) else [self]
 
     @property
-    def result(self) -> Union[Callable[[], T], Any]:
+    def result(self) -> Callable[[], T] | Any:
         # sourcery skip: assign-if-exp, reintroduce-else
         """
         If this future is not done, it will work like `cf.Future.result`. It will block, await the awaitable, and return the result when ready.
@@ -1424,7 +1424,7 @@ class _ASyncFutureInstanceMethod(Generic[I, P, T]):
     __qualname__: str
     """The qualified name of the wrapper."""
 
-    __doc__: Optional[str]
+    __doc__: str | None
     """The docstring of the wrapper."""
 
     __annotations__: dict[str, Any]

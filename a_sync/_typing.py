@@ -65,11 +65,11 @@ See Also:
 """
 
 import asyncio
-from collections.abc import AsyncIterable, Awaitable, Coroutine, Iterable
+from collections.abc import AsyncIterable, Awaitable, Callable, Coroutine, Iterable
 from concurrent.futures._base import Executor
 from decimal import Decimal
-from typing import (TYPE_CHECKING, Any, Callable, Literal, Optional, Protocol, TypedDict, TypeVar,
-                    Union, runtime_checkable)
+from typing import (TYPE_CHECKING, Any, Literal, Optional, Protocol, TypedDict, TypeVar, Union,
+                    runtime_checkable)
 
 from typing_extensions import ParamSpec
 
@@ -209,9 +209,9 @@ class ModifierKwargs(TypedDict, total=False):
     default: DefaultMode
     cache_type: CacheType
     cache_typed: bool
-    ram_cache_maxsize: Optional[int]
-    ram_cache_ttl: Optional[Numeric]
-    runs_per_minute: Optional[int]
+    ram_cache_maxsize: int | None
+    ram_cache_ttl: Numeric | None
+    runs_per_minute: int | None
     semaphore: SemaphoreSpec
     # sync modifiers
     executor: Executor

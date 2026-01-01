@@ -9,16 +9,14 @@ The main components include:
 """
 
 from asyncio import FIRST_COMPLETED, CancelledError, Future, Task, wait
-from collections.abc import (AsyncIterable, AsyncIterator, Awaitable, Coroutine, Generator,
-                             Iterable, Iterator)
+from collections.abc import (AsyncIterable, AsyncIterator, Awaitable, Callable, Coroutine,
+                             Generator, Iterable, Iterator)
 from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
 from logging import getLogger
-from typing import Any, Callable, DefaultDict, Generic, Literal, Union, overload
+from typing import Any, Concatenate, DefaultDict, Generic, Literal, Union, overload
 from weakref import WeakKeyDictionary, proxy
-
-from typing_extensions import Concatenate
 
 from a_sync import exceptions
 from a_sync._typing import AnyFn, AnyIterableOrAwaitableIterable, I, K, P, T, V
