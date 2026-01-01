@@ -1,5 +1,6 @@
-from _typeshed import Incomplete as Incomplete
 from typing import Callable, Generic, Optional, Type, TypeVar
+
+from _typeshed import Incomplete as Incomplete
 
 I = TypeVar("I")
 T = TypeVar("T")

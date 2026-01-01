@@ -1,9 +1,10 @@
-from a_sync._typing import *
 import asyncio
 import logging
-from a_sync.primitives.locks.semaphore import Semaphore as Semaphore
 from functools import cached_property as cached_property
 from typing import Protocol, TypeVar
+
+from a_sync._typing import *
+from a_sync.primitives.locks.semaphore import Semaphore as Semaphore
 
 logger: logging.Logger
 

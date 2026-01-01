@@ -10,7 +10,8 @@ import traceback
 from asyncio import CancelledError
 from logging import DEBUG, getLogger
 from types import TracebackType
-from typing import AsyncIterator, Final, Optional, TypeVar, Union, cast, final, overload
+from typing import (AsyncIterator, Final, Optional, TypeVar, Union, cast,
+                    final, overload)
 
 from a_sync._typing import T
 from a_sync.asyncio import create_task, igather

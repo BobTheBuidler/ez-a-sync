@@ -1,7 +1,8 @@
+from typing import Any, Final
+
 from a_sync._typing import *
 from a_sync.a_sync.config import null_modifiers, user_set_default_modifiers
 from a_sync.a_sync.modifiers import cache, limiter, semaphores
-from typing import Any, Final
 
 valid_modifiers: Tuple[str, ...]
 

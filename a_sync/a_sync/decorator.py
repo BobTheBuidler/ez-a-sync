@@ -1,16 +1,13 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 from concurrent.futures import Executor
+
 from a_sync._typing import *
 from a_sync.a_sync import config
-from a_sync.a_sync.function import (
-    ASyncDecorator,
-    ASyncFunction,
-    ASyncDecoratorAsyncDefault,
-    ASyncDecoratorSyncDefault,
-    ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault,
-)
+from a_sync.a_sync.function import (ASyncDecorator, ASyncDecoratorAsyncDefault,
+                                    ASyncDecoratorSyncDefault, ASyncFunction,
+                                    ASyncFunctionAsyncDefault,
+                                    ASyncFunctionSyncDefault)
 
 ########################
 # The a_sync decorator #

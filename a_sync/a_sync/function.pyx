@@ -3,26 +3,27 @@ import inspect
 import sys
 import typing
 from logging import getLogger
+
 from libc.stdint cimport uintptr_t
 
 import async_lru
 import async_property
 from typing_extensions import Unpack
 
-from a_sync._typing import AnyFn, AnyIterable, CoroFn, DefaultMode, MaybeCoro, ModifierKwargs, P, SyncFn, T
-from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
+from a_sync._typing import (AnyFn, AnyIterable, CoroFn, DefaultMode, MaybeCoro,
+                            ModifierKwargs, P, SyncFn, T)
+
 from a_sync.a_sync._helpers cimport _asyncify, _await
+from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 from a_sync.a_sync.modifiers cimport ModifierManager
 from a_sync.functools cimport update_wrapper, wraps
 
 if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
-    from a_sync.a_sync.method import (
-        ASyncBoundMethod,
-        ASyncBoundMethodAsyncDefault,
-        ASyncBoundMethodSyncDefault,
-    )
+    from a_sync.a_sync.method import (ASyncBoundMethod,
+                                      ASyncBoundMethodAsyncDefault,
+                                      ASyncBoundMethodSyncDefault)
 
 else:
     # due to circ import issues we will populate this later

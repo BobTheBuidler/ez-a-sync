@@ -1,10 +1,12 @@
 # mypy: disable-error-code=valid-type
 import typing
+
 from libc.stdint cimport uint8_t
 
 from a_sync._typing import CoroFn, ModifierKwargs, P, SyncFn, T
-from a_sync.a_sync.config import user_set_default_modifiers, null_modifiers
+from a_sync.a_sync.config import null_modifiers, user_set_default_modifiers
 from a_sync.a_sync.modifiers import cache, limiter, semaphores
+
 from a_sync.functools cimport wraps
 
 

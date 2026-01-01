@@ -1,5 +1,6 @@
-from a_sync._typing import *
 import asyncio
+
+from a_sync._typing import *
 from a_sync.primitives._debug import _DebugDaemonMixin
 
 class CythonEvent(asyncio.Event, _DebugDaemonMixin):

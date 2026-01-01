@@ -1,5 +1,6 @@
 from asyncio import AbstractEventLoop, Future, Task
-from typing import TYPE_CHECKING, Any, Awaitable, Generic, Optional, Tuple, TypeVar, Union
+from typing import (TYPE_CHECKING, Any, Awaitable, Generic, Optional, Tuple,
+                    TypeVar, Union)
 from weakref import WeakSet
 
 if TYPE_CHECKING:

@@ -5,7 +5,8 @@ import functools
 from typing import Optional, Union, overload
 
 from a_sync import exceptions, primitives
-from a_sync._typing import P, T, AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, SemaphoreSpec
+from a_sync._typing import (AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, P,
+                            SemaphoreSpec, T)
 
 
 @overload

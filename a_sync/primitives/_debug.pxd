@@ -1,5 +1,6 @@
 from a_sync.primitives._loggable cimport _LoggerMixin
 
+
 cdef class _LoopBoundMixin(_LoggerMixin):
     cdef object __loop
     cpdef object _get_loop(self)

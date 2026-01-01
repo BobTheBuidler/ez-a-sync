@@ -4,8 +4,10 @@ This module provides utility functions for handling keyword arguments related to
 """
 
 from a_sync import exceptions
+
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
+
 
 # cdef exceptions
 cdef object TooManyFlags = exceptions.TooManyFlags

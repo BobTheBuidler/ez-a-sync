@@ -6,13 +6,16 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 import asyncio
 import collections
 import threading
+
+from libc.stdlib cimport free, malloc
 from libc.string cimport strcpy
-from libc.stdlib cimport malloc, free
-from typing import Container, Literal, List, Optional, Set
+
+from typing import Container, List, Literal, Optional, Set
 
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
 from a_sync._typing import CoroFn, P, T
+
 from a_sync.functools cimport wraps
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
 

@@ -6,19 +6,17 @@ asynchronous interfaces, allowing methods to be called both synchronously and
 asynchronously based on various conditions and configurations.
 """
 
-from a_sync._typing import *
 import functools
 import logging
 import weakref
+from typing import Any, final
+
 from a_sync import TaskMapping
+from a_sync._typing import *
 from a_sync.a_sync._descriptor import ASyncDescriptor
 from a_sync.a_sync.abstract import ASyncABC
-from a_sync.a_sync.function import (
-    ASyncFunction,
-    ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault,
-)
-from typing import Any, final
+from a_sync.a_sync.function import (ASyncFunction, ASyncFunctionAsyncDefault,
+                                    ASyncFunctionSyncDefault)
 
 METHOD_CACHE_TTL: Literal[3600]
 logger: logging.Logger
