@@ -1,22 +1,6 @@
 import weakref
-from collections.abc import Generator
-from typing import (
-    Any,
-    AsyncGenerator,
-    AsyncIterable,
-    AsyncIterator,
-    Callable,
-    Coroutine,
-    Iterable,
-    Iterator,
-    Generic,
-    List,
-    Optional,
-    Type,
-    TypeVar,
-    Union,
-    final,
-)
+from collections.abc import AsyncGenerator, AsyncIterable, AsyncIterator, Callable, Coroutine, Generator
+from typing import Any, Iterable, Iterator, Generic, TypeVar, final
 
 from typing_extensions import ParamSpec, Self
 
@@ -36,7 +20,7 @@ P = ParamSpec("P")
 
 SortKey = SyncFn[[T], bool]
 ViewFn = AnyFn[[T], bool]
-AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
+AsyncGenFunc = Callable[P, AsyncGenerator[T, None] | AsyncIterator[T]]
 
 class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     """
@@ -58,7 +42,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     """
 
     __wrapped__: AsyncIterable[T]
-    def __await__(self) -> Generator[Any, Any, List[T]]:
+    def __await__(self) -> Generator[Any, Any, list[T]]:
         """
         Asynchronously iterate through the {cls} and return all {obj}.
 
@@ -67,7 +51,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
         """
 
     @property
-    def materialized(self) -> List[T]:
+    def materialized(self) -> list[T]:
         """
         Synchronously iterate through the {cls} and return all {obj}.
 
@@ -276,7 +260,7 @@ class ASyncGeneratorFunction(Generic[P, T]):
             **kwargs: Keyword arguments for the function.
         """
 
-    def __get__(self, instance: V, owner: Type[V]) -> ASyncGeneratorFunction[P, T]:
+    def __get__(self, instance: V, owner: type[V]) -> ASyncGeneratorFunction[P, T]:
         """Descriptor method to make the function act like a non-data descriptor."""
 
     @property
@@ -287,8 +271,8 @@ class _ASyncView(ASyncIterator[T]):
     Internal mixin class containing logic for creating specialized views for :class:`~ASyncIterable` objects.
     """
 
-    __aiterator__: Optional[AsyncIterator[T]]
-    __iterator__: Optional[Iterator[T]]
+    __aiterator__: AsyncIterator[T] | None
+    __iterator__: Iterator[T] | None
     __wrapped__: ViewFn[T]
     def __init__(self, function: ViewFn[T], iterable: AnyIterable[T]) -> None:
         """
