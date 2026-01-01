@@ -14,7 +14,7 @@ from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
 from logging import getLogger
-from typing import Any, Callable, DefaultDict
+from typing import Any, Callable, Coroutine, DefaultDict, AsyncIterator, Iterable, Iterator,Literal,  AsyncIterable
 from weakref import WeakKeyDictionary, proxy
 
 from typing_extensions import Concatenate
@@ -89,7 +89,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
     _init_loader_next: Callable[[], Coroutine[Any, Any, tuple[tuple[K, Task[V]]]]] | None = None
     "A coro function that blocks until the _init_loader starts a new task(s), and then returns a `tuple[tuple[K, Task[V]]]` with all of the new tasks and the keys that started them."
 
-    _name: Optional[str] = None
+    _name: str | None = None
     "Optional name for tasks created by this mapping."
 
     _next: Event = None
@@ -101,7 +101,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
     __iterables__: tuple[AnyIterableOrAwaitableIterable[K], ...] = ()
     "The original iterables, if any, used to initialize this mapping."
 
-    __init_loader_coro: Optional[Coroutine[Any, Any, None]] = None
+    __init_loader_coro: Coroutine[Any, Any, None] | None = None
     """An optional asyncio Coroutine to be run by the `_init_loader`"""
 
     __slots__ = "_wrapped_func", "__wrapped__", "__dict__", "__weakref__"
@@ -235,7 +235,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
     def __setitem__(self, item: Any, value: Any) -> None:
         raise NotImplementedError("You cannot manually set items in a TaskMapping")
 
-    def __getitem__(self, item: K) -> "Task[V]":
+    def __getitem__(self, item: K) -> Task[V]:
         try:
             return dict.__getitem__(self, item)
         except KeyError:
@@ -547,7 +547,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
                 pop(k, cancel=cancel)
 
     @cached_property_unsafe
-    def _init_loader(self) -> Optional["Task[None]"]:
+    def _init_loader(self) -> Task[None] | None:
         # sourcery skip: raise-from-previous-error
         if self.__init_loader_coro is None:
             return None
@@ -583,7 +583,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
     @ASyncGeneratorFunction
     async def _tasks_for_iterables(
         self, *iterables: AnyIterableOrAwaitableIterable[K]
-    ) -> AsyncIterator[tuple[K, "Task[V]"]]:
+    ) -> AsyncIterator[tuple[K, Task[V]]]:
         """Ensure tasks are running for each key in the provided iterables."""
         # if we have any regular containers we can yield their contents right away
         containers = tuple(
@@ -597,7 +597,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
 
         if remaining := tuple(iterable for iterable in iterables if iterable not in containers):
             try:
-                async for key in as_yielded(*(_yield_keys(iterable) for iterable in remaining)):  # type: ignore [attr-defined]
+                async for key in as_yielded(*map(_yield_keys, remaining)):
                     yield key, self[key]  # ensure task is running
             except _EmptySequenceError:
                 if len(iterables) == 1:
@@ -607,7 +607,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
     @ASyncGeneratorFunction
     async def _start_tasks_for_iterables(
         self, *iterables: AnyIterableOrAwaitableIterable[K]
-    ) -> AsyncIterator[tuple[K, "Task[V]"]]:
+    ) -> AsyncIterator[tuple[K, Task[V]]]:
         """Start new tasks for each key in the provided iterables."""
         # if we have any regular containers we can yield their contents right away
         containers = tuple(
@@ -674,7 +674,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
         dict.__setitem__(self, item, fut)
         return fut
 
-    def __cleanup(self, t: "Task[None]") -> None:
+    def __cleanup(self, t: Task[None]) -> None:
         # clear the slot and let the bound Queue die
         del self.__init_loader_coro
 
