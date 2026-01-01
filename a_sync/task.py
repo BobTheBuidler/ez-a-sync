@@ -21,7 +21,7 @@ from weakref import WeakKeyDictionary, proxy
 from typing_extensions import Concatenate
 
 from a_sync import exceptions
-from a_sync._typing import AnyFn, AnyIterableOrAwaitableIterable, K, P, V
+from a_sync._typing import AnyFn, AnyIterableOrAwaitableIterable, K, I, T, P, V
 from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
