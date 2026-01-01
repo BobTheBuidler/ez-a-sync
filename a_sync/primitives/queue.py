@@ -20,6 +20,7 @@ from asyncio.events import _get_running_loop
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
+from typing import Final
 from weakref import WeakValueDictionary, proxy, ref
 
 from a_sync._smart import SmartFuture
@@ -29,36 +30,11 @@ from a_sync._typing import *
 from a_sync.asyncio import create_task, igather
 from a_sync.functools import cached_property_unsafe
 
-logger = getLogger(__name__)
-log_debug = logger.debug
-
-if sys.version_info < (3, 9):
-
-    class _Queue(asyncio.Queue, Generic[T]):
-        __slots__ = (
-            "_queue",
-            "_maxsize",
-            "_loop",
-            "_getters",
-            "_putters",
-            "_unfinished_tasks",
-            "_finished",
-        )
-
-else:
-
-    class _Queue(asyncio.Queue[T]):
-        __slots__ = (
-            "_queue",
-            "_maxsize",
-            "_getters",
-            "_putters",
-            "_unfinished_tasks",
-            "_finished",
-        )
+logger: Final = getLogger(__name__)
+log_debug: Final = logger.debug
 
 
-class Queue(_Queue[T]):
+class Queue(asyncio.Queue[T]):
     """
     A generic asynchronous queue that extends the functionality of `asyncio.Queue`.
 
@@ -81,6 +57,15 @@ class Queue(_Queue[T]):
         ['task2']
     """
 
+    __slots__ = (
+        "_queue",
+        "_maxsize",
+        "_getters",
+        "_putters",
+        "_unfinished_tasks",
+        "_finished",
+    )
+
     def __bool__(self) -> Literal[True]:
         """A Queue will always exist, even without items."""
         return True
@@ -88,66 +73,6 @@ class Queue(_Queue[T]):
     def __len__(self) -> int:
         """Returns the number of items currently in the queue."""
         return len(self._queue)
-
-    async def get(self) -> T:
-        """
-        Asynchronously retrieves and removes the next item from the queue.
-
-        If the queue is empty, this method will block until an item is available.
-
-        Example:
-            >>> result = await queue.get()
-            >>> print(result)
-        """
-        return await _Queue.get(self)
-
-    def get_nowait(self) -> T:
-        """
-        Retrieves and removes the next item from the queue without blocking.
-
-        This method does not wait for an item to be available and will raise
-        an exception if the queue is empty.
-
-        Raises:
-            :exc:`~asyncio.QueueEmpty`: If the queue is empty.
-
-        Example:
-            >>> result = queue.get_nowait()
-            >>> print(result)
-        """
-        return _Queue.get_nowait(self)
-
-    async def put(self, item: T) -> None:
-        """
-        Asynchronously adds an item to the queue.
-
-        If the queue is full, this method will block until space is available.
-
-        Args:
-            item: The item to add to the queue.
-
-        Example:
-            >>> await queue.put(item='task')
-        """
-        await _Queue.put(self, item)
-
-    def put_nowait(self, item: T) -> None:
-        """
-        Adds an item to the queue without blocking.
-
-        This method does not wait for space to be available and will raise
-        an exception if the queue is full.
-
-        Args:
-            item: The item to add to the queue.
-
-        Raises:
-            :exc:`~asyncio.QueueFull`: If the queue is full.
-
-        Example:
-            >>> queue.put_nowait(item='task')
-        """
-        return _Queue.put_nowait(self, item)
 
     async def get_all(self) -> List[T]:
         """
@@ -272,7 +197,7 @@ _put_nowait = asyncio.Queue.put_nowait
 _loop_kwarg_deprecated = sys.version_info >= (3, 10)
 
 
-class ProcessingQueue(_Queue[Tuple[P, "Future[V]"]], Generic[P, V]):
+class ProcessingQueue(asyncio.Queue[Tuple[P, "Future[V]"]], Generic[P, V]):
     """
     A queue designed for processing tasks asynchronously with multiple workers.
 
@@ -729,7 +654,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         """
         self._ensure_workers()
         fut = Future(loop=self._workers._loop)
-        _Queue.put_nowait(self, (priority, args, kwargs, fut))
+        asyncio.Queue.put_nowait(self, (priority, args, kwargs, fut))
         return fut
 
     def _get(self, heappop=heappop):

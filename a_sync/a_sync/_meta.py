@@ -149,7 +149,7 @@ class ASyncMeta(ABCMeta):
                     new_class_name,
                     attr_name,
                 )
-        return super(ASyncMeta, cls).__new__(cls, new_class_name, bases, attrs)
+        return super().__new__(cls, new_class_name, bases, attrs)
 
 
 class ASyncSingletonMeta(ASyncMeta):
@@ -171,8 +171,8 @@ class ASyncSingletonMeta(ASyncMeta):
         - :class:`~a_sync.a_sync._meta.ASyncMeta`
     """
 
-    def __init__(cls, name: str, bases: Tuple[type, ...], namespace: Dict[str, Any]) -> None:
-        cls.__instances: Dict[bool, object] = {}
+    def __init__(cls, name: str, bases: tuple[type, ...], namespace: dict[str, Any]) -> None:
+        cls.__instances: dict[bool, object] = {}
         """Dictionary to store singleton instances."""
         cls.__lock = threading.Lock()
         """Lock to ensure thread-safe instance creation."""

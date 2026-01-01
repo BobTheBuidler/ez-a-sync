@@ -5,7 +5,7 @@ from pathlib import Path
 from Cython.Build import cythonize
 from setuptools import Extension, find_packages, setup
 
-with open("requirements.txt", "r") as f:
+with open("requirements.txt") as f:
     requirements = list(map(str.strip, f.read().split("\n")))[:-1]
 
 this_directory = Path(__file__).parent
