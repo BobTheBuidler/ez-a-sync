@@ -25,9 +25,9 @@ import weakref
 from asyncio import sleep
 from asyncio.futures import _convert_future_exc
 from concurrent.futures import _base, thread
-from typing import overload
+from typing import Callable, Literal, overload
 
-from a_sync._typing import *
+from a_sync._typing import P, T
 from a_sync.primitives._debug import _DebugDaemonMixin
 
 # === Executor Shutdown Logic ===
@@ -152,7 +152,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
         """
 
     @overload
-    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> "asyncio.Future[T]":  # type: ignore [override]
+    def submit(self, fn: Callable[P, T], *args: P.args, **kwargs: P.kwargs) -> asyncio.Future[T]:  # type: ignore [override]
         """
         Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.
 
@@ -170,7 +170,7 @@ class _AsyncExecutorMixin(concurrent.futures.Executor, _DebugDaemonMixin):
             - :meth:`run` for running functions with the executor.
         """
 
-    def submit(self, fn: Callable[P, T], *args: P.args, fire_and_forget: bool = False, **kwargs: P.kwargs) -> Optional["asyncio.Future[T]"]:  # type: ignore [override]
+    def submit(self, fn: Callable[P, T], *args: P.args, fire_and_forget: bool = False, **kwargs: P.kwargs) -> asyncio.Future[T] | None:  # type: ignore [override]
         # sourcery skip: simplify-boolean-comparison
         """
         Submits a job to the executor and returns an :class:`asyncio.Future` that can be awaited for the result without blocking.
@@ -325,10 +325,10 @@ class AsyncProcessPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ProcessPo
 
     def __init__(
         self,
-        max_workers: Optional[int] = None,
-        mp_context: Optional[multiprocessing.context.BaseContext] = None,
-        initializer: Optional[Initializer] = None,
-        initargs: Tuple[Any, ...] = (),
+        max_workers: int | None = None,
+        mp_context: multiprocessing.context.BaseContext | None = None,
+        initializer: Initializer | None = None,
+        initargs: tuple[Any, ...] = (),
     ) -> None:
         """
         Initializes the AsyncProcessPoolExecutor.
@@ -383,10 +383,10 @@ class AsyncThreadPoolExecutor(_AsyncExecutorMixin, concurrent.futures.ThreadPool
 
     def __init__(
         self,
-        max_workers: Optional[int] = None,
+        max_workers: int | None = None,
         thread_name_prefix: str = "",
-        initializer: Optional[Initializer] = None,
-        initargs: Tuple[Any, ...] = (),
+        initializer: Initializer | None = None,
+        initargs: tuple[Any, ...] = (),
     ) -> None:
         """
         Initializes the AsyncThreadPoolExecutor.
