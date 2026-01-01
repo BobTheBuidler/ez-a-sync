@@ -1,7 +1,7 @@
 import pytest
 
 from a_sync import property
-from a_sync.a_sync.function import _ASyncFunction, ASyncFunction
+from a_sync.a_sync.function import ASyncFunction, _ASyncFunction
 
 
 class PropertyTester:

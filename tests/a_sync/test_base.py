@@ -4,18 +4,11 @@ import time
 import pytest
 
 from a_sync.a_sync import HiddenMethod
-from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync._meta import ASyncMeta
+from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.method import ASyncBoundMethodAsyncDefault
 from a_sync.exceptions import SyncModeInAsyncContextError
-from tests.fixtures import (
-    TestClass,
-    TestInheritor,
-    TestMeta,
-    increment,
-    TestSync,
-    WrongThreadError,
-)
+from tests.fixtures import TestClass, TestInheritor, TestMeta, TestSync, WrongThreadError, increment
 
 
 def test_base_direct_init():

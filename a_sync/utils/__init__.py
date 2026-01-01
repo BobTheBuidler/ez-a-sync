@@ -9,8 +9,9 @@ from typing import TYPE_CHECKING, Any, Final, final
 from a_sync.utils.iterators import as_yielded, exhaust_iterator, exhaust_iterators
 
 if TYPE_CHECKING:
-    from _typeshed import SupportsBool
     from asyncio.tasks import _FutureLike
+
+    from _typeshed import SupportsBool
 
 
 __all__ = [

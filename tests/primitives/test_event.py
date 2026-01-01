@@ -1,5 +1,7 @@
-import pytest
 import asyncio
+
+import pytest
+
 from a_sync.primitives import Event
 
 

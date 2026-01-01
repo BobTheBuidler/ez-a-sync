@@ -1,5 +1,6 @@
 from a_sync.primitives.locks.semaphore cimport Semaphore
 
+
 cdef class _AbstractPrioritySemaphore(Semaphore):
     cdef readonly dict[object, _AbstractPrioritySemaphoreContextManager] _context_managers
     cdef readonly Py_ssize_t _capacity

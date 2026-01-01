@@ -4,6 +4,8 @@ This module provides a mixin class to add debug logging capabilities to other cl
 """
 
 import logging
+
+
 cdef object Logger = logging.Logger
 cdef object getLogger = logging.getLogger
 cdef object isEnabledFor = Logger.isEnabledFor

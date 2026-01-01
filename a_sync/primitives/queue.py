@@ -23,8 +23,9 @@ from logging import getLogger
 from typing import Final
 from weakref import WeakValueDictionary, proxy, ref
 
-from a_sync._smart import SmartFuture, create_future, shield
+from a_sync._smart import SmartFuture
 from a_sync._smart import _Key as _SmartKey
+from a_sync._smart import create_future, shield
 from a_sync._typing import *
 from a_sync.asyncio import create_task, igather
 from a_sync.functools import cached_property_unsafe

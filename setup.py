@@ -1,6 +1,7 @@
 import os
 from glob import glob
 from pathlib import Path
+
 from Cython.Build import cythonize
 from setuptools import Extension, find_packages, setup
 

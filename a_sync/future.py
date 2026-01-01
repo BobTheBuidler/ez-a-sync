@@ -48,7 +48,7 @@ from collections.abc import Awaitable, Generator
 
 from typing_extensions import Self, Unpack
 
-from a_sync._typing import I, P, T, AnyFn, MaybeAwaitable, ModifierKwargs, Numeric
+from a_sync._typing import AnyFn, I, MaybeAwaitable, ModifierKwargs, Numeric, P, T
 from a_sync.asyncio import create_task, igather
 
 if not TYPE_CHECKING:
