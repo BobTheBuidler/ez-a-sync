@@ -17,15 +17,12 @@ import asyncio
 import sys
 from asyncio import AbstractEventLoop, Future, InvalidStateError, QueueEmpty, Task
 from asyncio.events import _get_running_loop
-from collections.abc import Awaitable
+from collections.abc import Awaitable, Callable
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
-from typing import Any, Final, Generic, Literal, NoReturn
-from collections.abc import Callable
+from typing import Any, Concatenate, Final, Generic, Literal, NoReturn
 from weakref import WeakValueDictionary, proxy, ref
-
-from typing import Concatenate
 
 from a_sync._smart import SmartFuture
 from a_sync._smart import _Key as _SmartKey
