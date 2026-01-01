@@ -5,7 +5,8 @@ from asyncio import iscoroutinefunction
 from aiolimiter import AsyncLimiter
 
 from a_sync import aliases, exceptions
-from a_sync._typing import AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, Optional, P, T, Union, overload
+from a_sync._typing import (AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, Optional, P, T, Union,
+                            overload)
 
 LimiterSpec = Union[int, AsyncLimiter]
 
