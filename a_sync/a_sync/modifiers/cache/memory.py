@@ -2,7 +2,7 @@
 # mypy: disable-error-code=misc
 
 from asyncio import iscoroutinefunction
-from typing import Literal, Optional, TypedDict, Union, overload
+from typing import Literal, TypedDict, overload
 
 from async_lru import alru_cache
 from typing_extensions import Unpack

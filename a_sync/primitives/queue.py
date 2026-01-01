@@ -21,7 +21,7 @@ from collections.abc import Awaitable
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
-from typing import Any, Final, Generic, Literal, NoReturn, Optional
+from typing import Any, Final, Generic, Literal, NoReturn
 from collections.abc import Callable
 from weakref import WeakValueDictionary, proxy, ref
 

@@ -1,7 +1,7 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 from asyncio import iscoroutinefunction
-from typing import Optional, Union, overload
+from typing import Union, overload
 
 from aiolimiter import AsyncLimiter
 

@@ -31,7 +31,7 @@ from collections.abc import Awaitable, Generator
 from decimal import Decimal
 from functools import partial, wraps
 from inspect import isawaitable
-from typing import TYPE_CHECKING, Any, Generic, Optional, Union, final, overload
+from typing import TYPE_CHECKING, Any, Generic, Union, final, overload
 from collections.abc import Callable
 
 from typing_extensions import Self, Unpack

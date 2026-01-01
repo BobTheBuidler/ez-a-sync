@@ -1,7 +1,7 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 from concurrent.futures import Executor
-from typing import Literal, Optional, Union, overload
+from typing import Literal, Union, overload
 
 from typing_extensions import Unpack
 
