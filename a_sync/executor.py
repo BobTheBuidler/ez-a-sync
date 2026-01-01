@@ -25,6 +25,7 @@ import weakref
 from asyncio import sleep
 from asyncio.futures import _convert_future_exc
 from concurrent.futures import _base, thread
+from typing import overload
 
 from a_sync._typing import *
 from a_sync.primitives._debug import _DebugDaemonMixin
