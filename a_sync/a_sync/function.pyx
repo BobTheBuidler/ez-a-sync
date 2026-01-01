@@ -10,8 +10,8 @@ import async_lru
 import async_property
 from typing_extensions import Unpack
 
-from a_sync._typing import (AnyFn, AnyIterable, CoroFn, DefaultMode, MaybeCoro,
-                            ModifierKwargs, P, SyncFn, T)
+from a_sync._typing import (AnyFn, AnyIterable, CoroFn, DefaultMode, MaybeCoro, ModifierKwargs, P,
+                            SyncFn, T)
 
 from a_sync.a_sync._helpers cimport _asyncify, _await
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
@@ -21,8 +21,7 @@ from a_sync.functools cimport update_wrapper, wraps
 
 if typing.TYPE_CHECKING:
     from a_sync import TaskMapping
-    from a_sync.a_sync.method import (ASyncBoundMethod,
-                                      ASyncBoundMethodAsyncDefault,
+    from a_sync.a_sync.method import (ASyncBoundMethod, ASyncBoundMethodAsyncDefault,
                                       ASyncBoundMethodSyncDefault)
 
 else:

@@ -19,8 +19,7 @@ from a_sync._typing import *
 from a_sync.a_sync import decorator
 from a_sync.a_sync.function import ASyncFunction
 
-from a_sync.a_sync.function cimport (_ASyncFunction, _ModifiedMixin,
-                                     _validate_wrapped_fn)
+from a_sync.a_sync.function cimport _ASyncFunction, _ModifiedMixin, _validate_wrapped_fn
 from a_sync.a_sync.modifiers.manager cimport ModifierManager
 from a_sync.functools cimport cached_property_unsafe, update_wrapper
 

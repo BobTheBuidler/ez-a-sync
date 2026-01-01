@@ -20,8 +20,7 @@ from logging import getLogger
 
 import typing_extensions
 
-from a_sync._typing import (AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs,
-                            P, T)
+from a_sync._typing import AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs, P, T
 from a_sync.a_sync import _descriptor, function
 
 from a_sync.a_sync._helpers cimport _await
