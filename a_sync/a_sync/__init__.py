@@ -13,19 +13,28 @@ The rest of the objects are exposed for type checking only, you should not make 
 
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.decorator import a_sync
-from a_sync.a_sync.function import (ASyncFunction, ASyncFunctionAsyncDefault,
-                                    ASyncFunctionSyncDefault)
+from a_sync.a_sync.function import (
+    ASyncFunction,
+    ASyncFunctionAsyncDefault,
+    ASyncFunctionSyncDefault,
+)
+
 # NOTE: We purposely import this without including in __all__. Do not remove.
 from a_sync.a_sync.modifiers.semaphores import apply_semaphore
 from a_sync.a_sync.property import ASyncCachedPropertyDescriptor
 from a_sync.a_sync.property import ASyncCachedPropertyDescriptor as cached_property
-from a_sync.a_sync.property import (ASyncCachedPropertyDescriptorAsyncDefault,
-                                    ASyncCachedPropertyDescriptorSyncDefault)
+from a_sync.a_sync.property import (
+    ASyncCachedPropertyDescriptorAsyncDefault,
+    ASyncCachedPropertyDescriptorSyncDefault,
+)
 from a_sync.a_sync.property import ASyncPropertyDescriptor
 from a_sync.a_sync.property import ASyncPropertyDescriptor as property
-from a_sync.a_sync.property import (ASyncPropertyDescriptorAsyncDefault,
-                                    ASyncPropertyDescriptorSyncDefault, HiddenMethod,
-                                    HiddenMethodDescriptor)
+from a_sync.a_sync.property import (
+    ASyncPropertyDescriptorAsyncDefault,
+    ASyncPropertyDescriptorSyncDefault,
+    HiddenMethod,
+    HiddenMethodDescriptor,
+)
 from a_sync.a_sync.singleton import ASyncGenericSingleton
 
 __all__ = [
