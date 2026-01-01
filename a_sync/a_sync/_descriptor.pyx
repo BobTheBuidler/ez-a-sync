@@ -14,7 +14,7 @@ See Also:
 """
 
 import asyncio
-from typing import Generic
+from typing import TYPE_CHECKING, Generic
 
 from typing_extensions import Concatenate
 
