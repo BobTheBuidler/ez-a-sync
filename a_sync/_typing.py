@@ -68,8 +68,17 @@ import asyncio
 from collections.abc import AsyncIterable, Awaitable, Coroutine, Iterable
 from concurrent.futures._base import Executor
 from decimal import Decimal
-from typing import (TYPE_CHECKING, Any, Literal, Optional, Protocol, TypedDict, TypeVar,
-                    Union, runtime_checkable)
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Literal,
+    Optional,
+    Protocol,
+    TypedDict,
+    TypeVar,
+    Union,
+    runtime_checkable,
+)
 from collections.abc import Callable
 
 from typing_extensions import ParamSpec
