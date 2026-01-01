@@ -55,7 +55,7 @@ class Queue(asyncio.Queue[T]):
         >>> print(all_tasks)
         ['task2']
     """
-    
+
     __slots__ = (
         "_queue",
         "_maxsize",
