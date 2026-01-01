@@ -9,8 +9,15 @@ The main components include:
 """
 
 from asyncio import FIRST_COMPLETED, CancelledError, Future, Task, wait
-from collections.abc import (AsyncIterable, AsyncIterator, Awaitable, Coroutine, Generator,
-                             Iterable, Iterator)
+from collections.abc import (
+    AsyncIterable,
+    AsyncIterator,
+    Awaitable,
+    Coroutine,
+    Generator,
+    Iterable,
+    Iterator,
+)
 from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
@@ -25,8 +32,11 @@ from a_sync._typing import AnyFn, AnyIterableOrAwaitableIterable, I, K, P, T, V
 from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
-from a_sync.a_sync.method import (ASyncBoundMethod, ASyncMethodDescriptor,
-                                  ASyncMethodDescriptorSyncDefault)
+from a_sync.a_sync.method import (
+    ASyncBoundMethod,
+    ASyncMethodDescriptor,
+    ASyncMethodDescriptorSyncDefault,
+)
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.asyncio.gather import Excluder
@@ -751,7 +761,9 @@ __unwrapped = WeakKeyDictionary()
 
 
 def _unwrap(
-    wrapped_func: Union[AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[I, T]],
+    wrapped_func: Union[
+        AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[I, T]
+    ],
 ) -> Callable[P, Awaitable[T]]:
     if unwrapped := __unwrapped.get(wrapped_func):
         return unwrapped
