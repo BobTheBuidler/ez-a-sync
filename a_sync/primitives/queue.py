@@ -20,6 +20,7 @@ from asyncio.events import _get_running_loop
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
+from typing import Final
 from weakref import WeakValueDictionary, proxy, ref
 
 from a_sync._smart import SmartFuture, create_future, shield
@@ -28,22 +29,11 @@ from a_sync._typing import *
 from a_sync.asyncio import create_task, igather
 from a_sync.functools import cached_property_unsafe
 
-logger = getLogger(__name__)
-log_debug = logger.debug
+logger: Final = getLogger(__name__)
+log_debug: Final = logger.debug
 
 
-class _Queue(asyncio.Queue[T]):
-    __slots__ = (
-        "_queue",
-        "_maxsize",
-        "_getters",
-        "_putters",
-        "_unfinished_tasks",
-        "_finished",
-    )
-
-
-class Queue(_Queue[T]):
+class Queue(asyncio.Queue[T]):
     """
     A generic asynchronous queue that extends the functionality of `asyncio.Queue`.
 
@@ -65,6 +55,15 @@ class Queue(_Queue[T]):
         >>> print(all_tasks)
         ['task2']
     """
+    
+    __slots__ = (
+        "_queue",
+        "_maxsize",
+        "_getters",
+        "_putters",
+        "_unfinished_tasks",
+        "_finished",
+    )
 
     def __bool__(self) -> Literal[True]:
         """A Queue will always exist, even without items."""
