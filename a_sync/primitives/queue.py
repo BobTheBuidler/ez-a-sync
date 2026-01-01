@@ -15,18 +15,21 @@ See Also:
 
 import asyncio
 import sys
-from asyncio import AbstractEventLoop, Future, InvalidStateError, QueueEmpty, Task, get_event_loop
+from asyncio import AbstractEventLoop, Future, InvalidStateError, QueueEmpty, Task
 from asyncio.events import _get_running_loop
+from collections.abc import Awaitable
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
-from typing import Final
+from typing import Any, Callable, Final, Generic, Literal, NoReturn, Optional
 from weakref import WeakValueDictionary, proxy, ref
+
+from typing_extensions import Concatenate
 
 from a_sync._smart import SmartFuture
 from a_sync._smart import _Key as _SmartKey
-from a_sync._smart import create_future, shield
-from a_sync._typing import *
+from a_sync._smart import shield
+from a_sync._typing import P, T, V
 from a_sync.asyncio import create_task, igather
 from a_sync.functools import cached_property_unsafe
 
@@ -74,7 +77,7 @@ class Queue(asyncio.Queue[T]):
         """Returns the number of items currently in the queue."""
         return len(self._queue)
 
-    async def get_all(self) -> List[T]:
+    async def get_all(self) -> list[T]:
         """
         Asynchronously retrieves and removes all available items from the queue.
 
@@ -90,7 +93,7 @@ class Queue(asyncio.Queue[T]):
         except QueueEmpty:
             return [await self.get()]
 
-    def get_all_nowait(self) -> List[T]:
+    def get_all_nowait(self) -> list[T]:
         """
         Retrieves and removes all available items from the queue without waiting.
 
@@ -105,7 +108,7 @@ class Queue(asyncio.Queue[T]):
             >>> print(tasks)
         """
         get_nowait = self.get_nowait
-        values: List[T] = []
+        values: list[T] = []
         append = values.append
 
         while True:
@@ -116,7 +119,7 @@ class Queue(asyncio.Queue[T]):
                     raise QueueEmpty from e
                 return values
 
-    async def get_multi(self, i: int, can_return_less: bool = False) -> List[T]:
+    async def get_multi(self, i: int, can_return_less: bool = False) -> list[T]:
         """
         Asynchronously retrieves up to `i` items from the queue.
 
@@ -144,7 +147,7 @@ class Queue(asyncio.Queue[T]):
                 items = [await get_next()]
         return items
 
-    def get_multi_nowait(self, i: int, can_return_less: bool = False) -> List[T]:
+    def get_multi_nowait(self, i: int, can_return_less: bool = False) -> list[T]:
         """
         Retrieves up to `i` items from the queue without waiting.
 
@@ -197,7 +200,7 @@ _put_nowait = asyncio.Queue.put_nowait
 _loop_kwarg_deprecated = sys.version_info >= (3, 10)
 
 
-class ProcessingQueue(asyncio.Queue[Tuple[P, "Future[V]"]], Generic[P, V]):
+class ProcessingQueue(asyncio.Queue[tuple[P, "Future[V]"]], Generic[P, V]):
     """
     A queue designed for processing tasks asynchronously with multiple workers.
 
@@ -399,7 +402,7 @@ class ProcessingQueue(asyncio.Queue[Tuple[P, "Future[V]"]], Generic[P, V]):
         if self._closed:
             raise RuntimeError(f"{type(self).__name__} is closed: ", self) from None
         if self._workers.done():
-            worker_subtasks: List["Task[NoReturn]"] = self._workers._workers
+            worker_subtasks: list["Task[NoReturn]"] = self._workers._workers
             for worker in worker_subtasks:
                 if worker.done():  # its only done if its broken
                     exc = worker.exception()
@@ -556,7 +559,7 @@ class _PriorityQueueMixin(Generic[T]):
         Example:
             >>> queue._init(maxsize=10)
         """
-        self._queue: List[T] = []
+        self._queue: list[T] = []
 
     def _put(self, item, heappush=heappush):
         """

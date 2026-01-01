@@ -1,4 +1,3 @@
-import weakref
 from asyncio import CancelledError, create_task, get_event_loop, sleep
 
 import pytest

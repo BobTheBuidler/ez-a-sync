@@ -103,12 +103,10 @@ class TestMeta(TestClass, metaclass=ASyncMeta):
 
 class TestSingleton(ASyncGenericSingleton, TestClass):
     runs_per_minute = 100
-    pass
 
 
 class TestSingletonMeta(TestClass, metaclass=ASyncSingletonMeta):
     semaphore = 1
-    pass
 
 
 class TestSemaphore(ASyncBase):
