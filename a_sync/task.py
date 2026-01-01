@@ -20,11 +20,8 @@ from a_sync._typing import *
 from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
-from a_sync.a_sync.method import (
-    ASyncBoundMethod,
-    ASyncMethodDescriptor,
-    ASyncMethodDescriptorSyncDefault,
-)
+from a_sync.a_sync.method import (ASyncBoundMethod, ASyncMethodDescriptor,
+                                  ASyncMethodDescriptorSyncDefault)
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.asyncio.gather import Excluder

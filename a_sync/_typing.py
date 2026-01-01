@@ -65,44 +65,14 @@ See Also:
 """
 
 import asyncio
+from collections.abc import (AsyncGenerator, AsyncIterable, AsyncIterator, Awaitable, Coroutine,
+                             Generator, ItemsView, Iterable, Iterator, KeysView, Mapping,
+                             ValuesView)
 from concurrent.futures._base import Executor
 from decimal import Decimal
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    DefaultDict,
-    Deque,
-    Dict,
-    Generic,
-    List,
-    Literal,
-    NoReturn,
-    Optional,
-    Protocol,
-    Set,
-    Tuple,
-    Type,
-    TypedDict,
-    TypeVar,
-    Union,
-    overload,
-    runtime_checkable,
-)
-from collections.abc import (
-    AsyncGenerator,
-    AsyncIterable,
-    AsyncIterator,
-    Awaitable,
-    Coroutine,
-    Generator,
-    ItemsView,
-    Iterable,
-    Iterator,
-    KeysView,
-    Mapping,
-    ValuesView,
-)
+from typing import (TYPE_CHECKING, Any, Callable, DefaultDict, Deque, Dict, Generic, List, Literal,
+                    NoReturn, Optional, Protocol, Set, Tuple, Type, TypedDict, TypeVar, Union,
+                    overload, runtime_checkable)
 
 from typing_extensions import Concatenate, ParamSpec, Self, Unpack
 

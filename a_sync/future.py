@@ -27,24 +27,12 @@ TODO include comparisons between the 'new way' with this future class and the 'o
 
 import concurrent.futures
 from asyncio import Future, Task, get_event_loop
+from collections.abc import Awaitable, Generator
 from decimal import Decimal
 from functools import partial, wraps
 from inspect import isawaitable
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    Generic,
-    List,
-    Optional,
-    Set,
-    Type,
-    Union,
-    final,
-    overload,
-)
-from collections.abc import Awaitable, Generator
+from typing import (TYPE_CHECKING, Any, Callable, Dict, Generic, List, Optional, Set, Type, Union,
+                    final, overload)
 
 from typing_extensions import Self, Unpack
 

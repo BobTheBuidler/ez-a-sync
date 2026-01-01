@@ -1,7 +1,7 @@
 import re
 from asyncio import TimerHandle
-from typing import Tuple, TypeVar
 from collections.abc import AsyncIterator, Iterator
+from typing import Tuple, TypeVar
 
 import pytest
 
