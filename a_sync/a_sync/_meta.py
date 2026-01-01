@@ -8,8 +8,7 @@ from a_sync import ENVIRONMENT_VARIABLES
 from a_sync.a_sync import modifiers
 from a_sync.a_sync.function import _ASyncFunction, _ModifiedMixin
 from a_sync.a_sync.method import ASyncMethodDescriptor
-from a_sync.a_sync.property import (ASyncCachedPropertyDescriptor,
-                                    ASyncPropertyDescriptor)
+from a_sync.a_sync.property import ASyncCachedPropertyDescriptor, ASyncPropertyDescriptor
 from a_sync.future import _ASyncFutureWrappedFn  # type: ignore [attr-defined]
 from a_sync.iter import ASyncGeneratorFunction
 from a_sync.primitives.locks.semaphore import Semaphore
