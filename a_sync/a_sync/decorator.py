@@ -1,9 +1,11 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 from concurrent.futures import Executor
+from typing import Literal, Optional, Union, overload
+from typing_extensions import Unpack
 
-from a_sync._typing import (AnyFn, CoroFn, DefaultMode, Literal, ModifierKwargs, Optional, P,
-                            SyncFn, T, Union, Unpack, overload)
+from a_sync._typing import (AnyFn, CoroFn, DefaultMode, ModifierKwargs, P,
+                            SyncFn, T)
 from a_sync.a_sync import config
 from a_sync.a_sync.function import (ASyncDecorator, ASyncDecoratorAsyncDefault,
                                     ASyncDecoratorSyncDefault, ASyncFunction,
