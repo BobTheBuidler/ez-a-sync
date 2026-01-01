@@ -25,8 +25,11 @@ from a_sync._typing import AnyIterableOrAwaitableIterable, K, P, V
 from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
-from a_sync.a_sync.method import (ASyncBoundMethod, ASyncMethodDescriptor,
-                                  ASyncMethodDescriptorSyncDefault)
+from a_sync.a_sync.method import (
+    ASyncBoundMethod,
+    ASyncMethodDescriptor,
+    ASyncMethodDescriptorSyncDefault,
+)
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.asyncio.gather import Excluder
@@ -87,9 +90,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
     _init_loader: Task[None] | None = None
     "An asyncio Task used to preload values from the iterables."
 
-    _init_loader_next: Callable[[], Coroutine[Any, Any, tuple[tuple[K, Task[V]]]]] | None = (
-        None
-    )
+    _init_loader_next: Callable[[], Coroutine[Any, Any, tuple[tuple[K, Task[V]]]]] | None = None
     "A coro function that blocks until the _init_loader starts a new task(s), and then returns a `tuple[tuple[K, Task[V]]]` with all of the new tasks and the keys that started them."
 
     _name: Optional[str] = None
