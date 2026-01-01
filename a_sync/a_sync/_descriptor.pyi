@@ -1,8 +1,7 @@
 from a_sync import TaskMapping
 from a_sync._typing import *
 from a_sync.a_sync import decorator
-from a_sync.a_sync.function import (ASyncFunction, ModifierManager,
-                                    _ModifiedMixin)
+from a_sync.a_sync.function import ASyncFunction, ModifierManager, _ModifiedMixin
 from a_sync.functools import cached_property_unsafe, update_wrapper
 
 class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):

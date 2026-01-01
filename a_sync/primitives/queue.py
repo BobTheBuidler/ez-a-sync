@@ -15,8 +15,7 @@ See Also:
 
 import asyncio
 import sys
-from asyncio import (AbstractEventLoop, Future, InvalidStateError, QueueEmpty,
-                     Task, get_event_loop)
+from asyncio import AbstractEventLoop, Future, InvalidStateError, QueueEmpty, Task, get_event_loop
 from asyncio.events import _get_running_loop
 from functools import wraps
 from heapq import heappop, heappush, heappushpop

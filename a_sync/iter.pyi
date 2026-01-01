@@ -1,8 +1,22 @@
 import weakref
 from collections.abc import Generator
-from typing import (Any, AsyncGenerator, AsyncIterable, AsyncIterator,
-                    Callable, Coroutine, Generic, Iterable, Iterator, List,
-                    Optional, Type, TypeVar, Union, final)
+from typing import (
+    Any,
+    AsyncGenerator,
+    AsyncIterable,
+    AsyncIterator,
+    Callable,
+    Coroutine,
+    Generic,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+    final,
+)
 
 from typing_extensions import ParamSpec, Self
 

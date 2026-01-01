@@ -2,8 +2,13 @@ import asyncio
 
 import pytest
 
-from a_sync.task import (TaskMapping, TaskMappingItems, TaskMappingKeys,
-                         TaskMappingValues, _EmptySequenceError)
+from a_sync.task import (
+    TaskMapping,
+    TaskMappingItems,
+    TaskMappingKeys,
+    TaskMappingValues,
+    _EmptySequenceError,
+)
 
 views = [TaskMappingKeys, TaskMappingValues, TaskMappingItems]
 
