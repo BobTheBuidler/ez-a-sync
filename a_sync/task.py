@@ -13,12 +13,14 @@ from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
 from logging import getLogger
-from typing import Any, Generator, Coroutine, Callable, Awaitable, AsyncIterator, AsyncIterable
+from typing import Any, Callable
+from collections.abc import Generator, Coroutine, Awaitable, AsyncIterator, AsyncIterable
 from typing_extensions import Concatenate
 from weakref import WeakKeyDictionary, proxy
 
 from a_sync import exceptions
-from typing import DefaultDict, AsyncIterable
+from typing import DefaultDict
+from collections.abc import AsyncIterable
 from a_sync._typing import AnyIterableOrAwaitableIterable, K, P, V
 from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
