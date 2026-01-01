@@ -2,7 +2,7 @@ import logging
 import threading
 from abc import ABCMeta
 from inspect import isasyncgenfunction
-from typing import Any, Dict, Tuple
+from typing import Any
 
 from a_sync import ENVIRONMENT_VARIABLES
 from a_sync.a_sync import modifiers

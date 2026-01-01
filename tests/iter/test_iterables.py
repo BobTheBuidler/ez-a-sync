@@ -1,13 +1,12 @@
 import re
-from asyncio import TimerHandle
 from collections.abc import AsyncIterator, Iterator
-from typing import Tuple, TypeVar
+from typing import TypeVar
 
 import pytest
 
 from a_sync import ASyncIterable, ASyncIterator
 from a_sync.exceptions import SyncModeInAsyncContextError
-from a_sync.iter import ASyncFilter, ASyncGeneratorFunction, ASyncSorter
+from a_sync.iter import ASyncFilter, ASyncSorter
 
 test_both = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator])
 test_all = pytest.mark.parametrize(
