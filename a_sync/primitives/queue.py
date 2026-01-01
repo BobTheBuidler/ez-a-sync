@@ -653,7 +653,7 @@ class PriorityProcessingQueue(_PriorityQueueMixin[T], ProcessingQueue[T, V]):
         """
         self._ensure_workers()
         fut = Future(loop=self._workers._loop)
-        super().put_nowait((priority, args, kwargs, fut))
+        asyncio.Queue.put_nowait(self, (priority, args, kwargs, fut))
         return fut
 
     def _get(self, heappop=heappop):
