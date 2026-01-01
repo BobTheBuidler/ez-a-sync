@@ -15,7 +15,7 @@ from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
 from logging import getLogger
-from typing import Any, Callable, DefaultDict, Literal
+from typing import Any, Callable, DefaultDict, Literal, overload
 from weakref import WeakKeyDictionary, proxy
 
 from typing_extensions import Concatenate
