@@ -9,13 +9,13 @@ The main components include:
 """
 
 from asyncio import FIRST_COMPLETED, CancelledError, Future, Task, wait
-from collections.abc import AsyncIterable, AsyncIterator, Awaitable, Coroutine, Generator
+from collections.abc import (AsyncIterable, AsyncIterator, Awaitable, Coroutine, Generator,
+                             Iterable, Iterator)
 from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
 from logging import getLogger
 from typing import Any, Callable, DefaultDict, Literal
-from collections.abc import Coroutine, AsyncIterator, Iterable, Iterator, AsyncIterable
 from weakref import WeakKeyDictionary, proxy
 
 from typing_extensions import Concatenate
@@ -25,11 +25,8 @@ from a_sync._typing import AnyIterableOrAwaitableIterable, K, P, V
 from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
-from a_sync.a_sync.method import (
-    ASyncBoundMethod,
-    ASyncMethodDescriptor,
-    ASyncMethodDescriptorSyncDefault,
-)
+from a_sync.a_sync.method import (ASyncBoundMethod, ASyncMethodDescriptor,
+                                  ASyncMethodDescriptorSyncDefault)
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.asyncio.gather import Excluder
