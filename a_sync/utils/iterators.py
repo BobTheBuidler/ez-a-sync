@@ -10,12 +10,13 @@ import traceback
 from asyncio import CancelledError
 from logging import DEBUG, getLogger
 from types import TracebackType
+from typing import AsyncIterator, Final, Optional, TypeVar, Union, cast, final, overload
 
-from a_sync._typing import *
+from a_sync._typing import T
 from a_sync.asyncio import create_task, igather
 from a_sync.primitives.queue import Queue
 
-logger = getLogger(__name__)
+logger: Final = getLogger(__name__)
 
 
 async def exhaust_iterator(
@@ -78,11 +79,17 @@ async def exhaust_iterators(
         - :func:`exhaust_iterator`
         - :func:`as_yielded`
     """
-    if queue is None and join:
-        raise ValueError("You must provide a `queue` to use kwarg `join`")
-    await igather(exhaust_iterator(iterator, queue=queue) for iterator in iterators)
-    if queue is not None:
-        queue.put_nowait(_Done())
+    if queue is None:
+        if join:
+            raise ValueError("You must provide a `queue` to use kwarg `join`")
+        await igather(exhaust_iterator(iterator, queue=queue) for iterator in iterators)
+    else:
+        try:
+            await igather(exhaust_iterator(iterator, queue=queue) for iterator in iterators)
+        except Exception as e:
+            queue.put_nowait(_Done(e))
+        else:
+            queue.put_nowait(_Done())
         if join:
             await queue.join()
 
@@ -260,6 +267,7 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
     await task
 
 
+@final
 class _Done:
     """
     A sentinel class used to signal the completion of processing in the :func:`as_yielded` function.
@@ -272,12 +280,12 @@ class _Done:
     """
 
     def __init__(self, exc: Optional[Exception] = None) -> None:
-        self._exc = exc
+        self._exc: Final = exc
 
     @property
     def _tb(self) -> TracebackType:
         """Returns the traceback associated with the exception, if any."""
-        return self._exc.__traceback__  # type: ignore [union-attr]
+        return cast(Exception, self._exc).__traceback__
 
 
 __all__ = ["as_yielded", "exhaust_iterator", "exhaust_iterators"]
