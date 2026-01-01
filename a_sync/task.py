@@ -21,7 +21,7 @@ from weakref import WeakKeyDictionary, proxy
 from typing_extensions import Concatenate
 
 from a_sync import exceptions
-from a_sync._typing import AnyIterableOrAwaitableIterable, K, P, V
+from a_sync._typing import AnyFn, AnyIterableOrAwaitableIterable, K, P, V
 from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
@@ -506,7 +506,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
         )
 
     @overload
-    def pop(self, item: K, *, cancel: bool = False) -> "Union[Task[V], Future[V]]":
+    def pop(self, item: K, *, cancel: bool = False) -> Task[V] | Future[V]:
         """Pop a task from the TaskMapping.
 
         Args:
@@ -515,7 +515,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
         """
 
     @overload
-    def pop(self, item: K, default: K, *, cancel: bool = False) -> "Union[Task[V], Future[V]]":
+    def pop(self, item: K, default: K, *, cancel: bool = False) -> Task[V] | Future[V]:
         """Pop a task from the TaskMapping.
 
         Args:
@@ -524,7 +524,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
             cancel: Whether to cancel the task when popping it.
         """
 
-    def pop(self, *args: K, cancel: bool = False) -> "Union[Task[V], Future[V]]":
+    def pop(self, *args: K, cancel: bool = False) -> Task[V] | Future[V]:
         """Pop a task from the TaskMapping.
 
         Args:
@@ -691,7 +691,7 @@ def _yield(
 def _yield(
     key: K, value: V, yields: Literal["both"]
 ) -> tuple[K, V]: ...  # TODO write specific docs for this overload
-def _yield(key: K, value: V, yields: Literal["keys", "both"]) -> Union[K, tuple[K, V]]:
+def _yield(key: K, value: V, yields: Literal["keys", "both"]) -> K | tuple[K, V]:
     """
     Yield either the key, value, or both based on the 'yields' parameter.
 
@@ -750,11 +750,7 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
 __unwrapped = WeakKeyDictionary()
 
 
-def _unwrap(
-    wrapped_func: Union[
-        AnyFn[P, T], "ASyncMethodDescriptor[P, T]", _ASyncPropertyDescriptorBase[I, T]
-    ],
-) -> Callable[P, Awaitable[T]]:
+def _unwrap(wrapped_func: AnyFn[P, T] | ASyncMethodDescriptor[P, T] | _ASyncPropertyDescriptorBase[I, T]) -> Callable[P, Awaitable[T]]:
     if unwrapped := __unwrapped.get(wrapped_func):
         return unwrapped
     if isinstance(wrapped_func, (ASyncBoundMethod, ASyncMethodDescriptor)):
