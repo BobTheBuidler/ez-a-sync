@@ -865,7 +865,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         else:
             yield from tuple(mapping)
 
-    async def __load_init_loader(self, yielded: Set[K]) -> AsyncIterator[K]:
+    async def __load_init_loader(self, yielded: set[K]) -> AsyncIterator[K]:
         # sourcery skip: hoist-loop-from-if
         # strongref
         mapping = self.__mapping__
@@ -928,9 +928,4 @@ class TaskMappingValues(_TaskMappingView[V, K, V], Generic[K, V]):
                 yield await mapping[key]
 
 
-__all__ = [
-    "TaskMapping",
-    "TaskMappingKeys",
-    "TaskMappingValues",
-    "TaskMappingItems",
-]
+__all__ = ["TaskMapping", "TaskMappingKeys", "TaskMappingValues", "TaskMappingItems"]
