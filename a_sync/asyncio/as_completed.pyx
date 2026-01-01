@@ -3,9 +3,8 @@ This module extends Python's :func:`asyncio.as_completed` with additional functi
 """
 
 import asyncio
-from typing import (Any, AsyncIterator, Awaitable, Coroutine, Iterable,
-                    Iterator, Literal, Mapping, Optional, Tuple, Union,
-                    overload)
+from typing import (Any, AsyncIterator, Awaitable, Coroutine, Iterable, Iterator, Literal, Mapping,
+                    Optional, Tuple, Union, overload)
 
 from a_sync import iter
 from a_sync._typing import K, T, V

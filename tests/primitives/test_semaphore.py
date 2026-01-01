@@ -1,11 +1,11 @@
-import pytest
 import asyncio
 import sys
 from time import time
 
+import pytest
+
 from a_sync.primitives.locks.semaphore import Semaphore
 from tests.fixtures import TestSemaphore, increment
-
 
 # ISSUES
 # - We are unable to pass in an existing semaphore object, it attaches to a different loop.

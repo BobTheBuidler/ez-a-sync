@@ -2,8 +2,9 @@
 This module provides an enhanced version of :func:`asyncio.gather`.
 """
 
-from a_sync._typing import *
 from typing import Any, Awaitable, Dict, List, Mapping, overload
+
+from a_sync._typing import *
 
 __all__ = ["gather", "gather_mapping"]
 

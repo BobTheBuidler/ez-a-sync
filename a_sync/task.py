@@ -20,22 +20,18 @@ from a_sync._typing import *
 from a_sync.a_sync._kwargs import _get_flag_name
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.function import ASyncFunction
-from a_sync.a_sync.method import (
-    ASyncBoundMethod,
-    ASyncMethodDescriptor,
-    ASyncMethodDescriptorSyncDefault,
-)
+from a_sync.a_sync.method import (ASyncBoundMethod, ASyncMethodDescriptor,
+                                  ASyncMethodDescriptorSyncDefault)
 from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.asyncio.gather import Excluder
 from a_sync.asyncio.sleep import sleep0 as yield_to_loop
 from a_sync.functools import cached_property_unsafe
-from a_sync.iter import ASyncIterator, ASyncGeneratorFunction, ASyncSorter
+from a_sync.iter import ASyncGeneratorFunction, ASyncIterator, ASyncSorter
 from a_sync.primitives.locks import Event
-from a_sync.primitives.queue import Queue, ProcessingQueue
+from a_sync.primitives.queue import ProcessingQueue, Queue
 from a_sync.utils.iterators import as_yielded, exhaust_iterator
 from a_sync.utils.repr import repr_trunc
-
 
 logger = getLogger(__name__)
 

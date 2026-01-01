@@ -7,7 +7,6 @@ from aiolimiter import AsyncLimiter
 from a_sync import aliases, exceptions
 from a_sync._typing import *
 
-
 LimiterSpec = Union[int, AsyncLimiter]
 
 

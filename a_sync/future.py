@@ -30,26 +30,12 @@ from asyncio import Future, Task, get_event_loop
 from decimal import Decimal
 from functools import partial, wraps
 from inspect import isawaitable
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Awaitable,
-    Callable,
-    Dict,
-    Generator,
-    Generic,
-    List,
-    Optional,
-    Set,
-    Type,
-    Union,
-    final,
-    overload,
-)
+from typing import (TYPE_CHECKING, Any, Awaitable, Callable, Dict, Generator, Generic, List,
+                    Optional, Set, Type, Union, final, overload)
 
 from typing_extensions import Self, Unpack
 
-from a_sync._typing import I, P, T, AnyFn, MaybeAwaitable, ModifierKwargs, Numeric
+from a_sync._typing import AnyFn, I, MaybeAwaitable, ModifierKwargs, Numeric, P, T
 from a_sync.asyncio import create_task, igather
 
 if not TYPE_CHECKING:

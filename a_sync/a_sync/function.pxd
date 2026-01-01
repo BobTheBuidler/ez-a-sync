@@ -1,5 +1,6 @@
 from a_sync.a_sync.modifiers.manager cimport ModifierManager
 
+
 cdef class _ModifiedMixin:
     cdef readonly ModifierManager modifiers
     cdef public object __wrapped__

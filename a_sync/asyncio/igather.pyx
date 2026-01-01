@@ -5,8 +5,8 @@ from typing import Awaitable, Coroutine, Iterable, List, TypeVar
 from cpython.version cimport PY_VERSION_HEX
 
 from a_sync import _smart
-from a_sync.a_sync._helpers cimport get_event_loop
 
+from a_sync.a_sync._helpers cimport get_event_loop
 
 __T = TypeVar("__T")
 

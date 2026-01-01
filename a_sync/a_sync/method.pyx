@@ -11,19 +11,23 @@ asynchronously based on various conditions and configurations.
 import asyncio
 import inspect
 import typing
+
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
 from libc.stdint cimport uintptr_t
+
 from logging import getLogger
 
 import typing_extensions
 
 from a_sync._typing import AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs, P, T
 from a_sync.a_sync import _descriptor, function
-from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
+
 from a_sync.a_sync._helpers cimport _await
+from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 from a_sync.a_sync.function cimport _ASyncFunction, _ModifiedMixin
 from a_sync.functools cimport update_wrapper
+
 
 cdef extern from "weakrefobject.h":
     PyObject* PyWeakref_NewRef(PyObject*, PyObject*)

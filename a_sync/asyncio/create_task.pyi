@@ -3,8 +3,9 @@ This module extends :func:`asyncio.create_task` to support any :class:`Awaitable
 manage task lifecycle, and enhance error handling.
 """
 
-from a_sync._typing import *
 import asyncio
+
+from a_sync._typing import *
 
 __all__ = ["create_task"]
 
