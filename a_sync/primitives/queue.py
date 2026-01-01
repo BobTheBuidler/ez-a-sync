@@ -20,14 +20,14 @@ from asyncio.events import _get_running_loop
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
-from typing import Final
+from typing import Any, Awaitable, Callable, Final, Generic, List, Literal, NoReturn,Optional, Tuple
+from typing_extensions import Concatenate
 from weakref import WeakValueDictionary, proxy, ref
 
 from a_sync._smart import SmartFuture
 from a_sync._smart import _Key as _SmartKey
 from a_sync._smart import shield
-from a_sync._typing import (Any, Awaitable, Callable, Concatenate, Generic, List, Literal, NoReturn,
-                            Optional, P, T, Tuple, V)
+from a_sync._typing import P, T, V
 from a_sync.asyncio import create_task, igather
 from a_sync.functools import cached_property_unsafe
 
