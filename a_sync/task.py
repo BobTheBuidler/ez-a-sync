@@ -14,7 +14,8 @@ from functools import wraps
 from inspect import getfullargspec, isawaitable
 from itertools import filterfalse
 from logging import getLogger
-from typing import Any, Callable, Coroutine, DefaultDict, AsyncIterator, Iterable, Iterator,Literal,  AsyncIterable
+from typing import Any, Callable, DefaultDict,Literal
+from collections.abc import Coroutine, AsyncIterator, Iterable, Iterator, AsyncIterable
 from weakref import WeakKeyDictionary, proxy
 
 from typing_extensions import Concatenate
