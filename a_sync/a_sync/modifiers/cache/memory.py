@@ -1,8 +1,9 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 
-from async_lru import alru_cache
 from typing import Literal, Optional, TypedDict, Union, overload
+
+from async_lru import alru_cache
 from typing_extensions import Unpack
 
 from a_sync._typing import AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, P, T, iscoroutinefunction
