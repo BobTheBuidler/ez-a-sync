@@ -3,8 +3,20 @@
 
 from async_lru import alru_cache
 
-from a_sync._typing import (AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, Literal, Optional, P, T,
-                            TypedDict, Union, Unpack, iscoroutinefunction, overload)
+from a_sync._typing import (
+    AsyncDecorator,
+    AsyncDecoratorOrCoroFn,
+    CoroFn,
+    Literal,
+    Optional,
+    P,
+    T,
+    TypedDict,
+    Union,
+    Unpack,
+    iscoroutinefunction,
+    overload,
+)
 from a_sync.exceptions import FunctionNotAsync
 
 
