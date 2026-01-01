@@ -14,8 +14,10 @@ See Also:
 """
 
 import asyncio
+from typing import Generic
+from typing_extensions import Concatenate
 
-from a_sync._typing import *
+from a_sync._typing import AnyIterable, AnyFn, I, P, T
 from a_sync.a_sync import decorator
 from a_sync.a_sync.function import ASyncFunction
 
@@ -72,7 +74,7 @@ cdef class _ASyncDescriptor(_ModifiedMixin):
     def __init__(
         self,
         _fget: AnyFn[Concatenate[I, P], T],
-        field_name: Optional[str] = None,
+        field_name: str | None = None,
         **modifiers: ModifierKwargs,
     ) -> None:
         """
@@ -246,7 +248,7 @@ cdef class _ASyncDescriptor(_ModifiedMixin):
     async def _all(
         self,
         *instances: AnyIterable[I],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         name: str = "",
         **kwargs: P.kwargs,
     ) -> bool:
@@ -277,7 +279,7 @@ cdef class _ASyncDescriptor(_ModifiedMixin):
     async def _any(
         self,
         *instances: AnyIterable[I],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         name: str = "",
         **kwargs: P.kwargs,
     ) -> bool:
@@ -308,7 +310,7 @@ cdef class _ASyncDescriptor(_ModifiedMixin):
     async def _min(
         self,
         *instances: AnyIterable[I],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         name: str = "",
         **kwargs: P.kwargs,
     ) -> T:
@@ -339,7 +341,7 @@ cdef class _ASyncDescriptor(_ModifiedMixin):
     async def _max(
         self,
         *instances: AnyIterable[I],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         name: str = "",
         **kwargs: P.kwargs,
     ) -> T:
@@ -370,7 +372,7 @@ cdef class _ASyncDescriptor(_ModifiedMixin):
     async def _sum(
         self,
         *instances: AnyIterable[I],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         name: str = "",
         **kwargs: P.kwargs,
     ) -> T:
@@ -408,7 +410,7 @@ _ASyncDescriptor.sum.__set_name__(_ASyncDescriptor, "sum")
 
 
 class ASyncDescriptor(_ASyncDescriptor, Generic[I, P, T]):
-    def __init__(self, _fget: AnyFn[Concatenate[I, P], T], field_name: Optional[str] = None, **modifiers: ModifierKwargs) -> None:
+    def __init__(self, _fget: AnyFn[Concatenate[I, P], T], field_name: str | None = None, **modifiers: ModifierKwargs) -> None:
         super().__init__(_fget, field_name, **modifiers)
         update_wrapper(self, self.__wrapped__)
     def __init_subclass__(cls) -> None:
