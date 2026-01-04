@@ -3,10 +3,10 @@ This module defines custom exceptions for the a_sync library.
 """
 
 from asyncio import Task
-
 from typing import TYPE_CHECKING, Any
 
 from a_sync._typing import E
+
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 
 if TYPE_CHECKING:
