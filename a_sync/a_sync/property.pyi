@@ -1,9 +1,9 @@
+from asyncio import Task
 from collections.abc import Generator
 from logging import Logger
 from typing import Any, Awaitable, Callable, Literal, final, overload
 
 import async_property as ap
-from _typeshed import Incomplete
 from typing_extensions import Concatenate, Self, Unpack
 
 from a_sync import exceptions as exceptions
@@ -191,8 +191,8 @@ class ASyncCachedPropertyDescriptor(
     def __init__(
         self,
         _fget: AsyncGetterFunction[I, T],
-        _fset: Incomplete | None = None,
-        _fdel: Incomplete | None = None,
+        _fset: Callable[[I, T], Any] | None = None,
+        _fdel: Callable[[I], Any] | None = None,
         field_name: str | None = None,
         **modifiers: Unpack[ModifierKwargs]
     ) -> None:
@@ -206,7 +206,7 @@ class ASyncCachedPropertyDescriptor(
             **modifiers: Additional modifier arguments.
         """
 
-    def get_lock(self, instance: I) -> asyncio.Task[T]:
+    def get_lock(self, instance: I) -> Task[T]:
         """Retrieves the lock for the property.
 
         Args:
@@ -346,7 +346,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, tuple[()], T])
     asynchronous properties.
     """
 
-    __doc__: Incomplete
+    __doc__: str | None
     def __init__(
         self,
         _fget: AnyFn[Concatenate[I, P], Awaitable[T]],

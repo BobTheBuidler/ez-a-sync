@@ -1,4 +1,4 @@
-from typing import Generic, Optional
+from typing import Generic
 
 from typing_extensions import Concatenate
 
@@ -15,7 +15,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     def __init__(
         self,
         _fget: AnyFn[Concatenate[I, P], T],
-        field_name: Optional[str] = None,
+        field_name: str | None = None,
         **modifiers: ModifierKwargs
     ) -> None: ...
     def __set_name__(self, owner, name) -> None: ...

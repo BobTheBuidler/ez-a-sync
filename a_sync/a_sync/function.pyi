@@ -1,6 +1,6 @@
 import functools
 from logging import Logger
-from typing import Any, Coroutine, Generic, Literal, Optional, overload
+from typing import Any, Coroutine, Generic, Literal, overload
 
 from typing_extensions import Concatenate, Unpack
 
@@ -194,7 +194,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     def map(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> TaskMapping[P, T]:
@@ -217,7 +217,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def any(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> bool:
@@ -240,7 +240,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def all(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> bool:
@@ -263,7 +263,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def min(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> T:
@@ -286,7 +286,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def max(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> T:
@@ -309,7 +309,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def sum(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: Optional[int] = None,
+        concurrency: int | None = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> T:
