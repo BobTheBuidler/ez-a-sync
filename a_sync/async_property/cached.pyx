@@ -1,8 +1,8 @@
 import asyncio
 import collections
 import functools
-import typing
 from asyncio import Task
+from typing import Any, DefaultDict
 
 from a_sync._smart cimport shield
 from a_sync.asyncio.create_task cimport ccreate_task_simple
@@ -25,11 +25,6 @@ del collections
 # cdef functools
 cdef object wraps = functools.wraps
 del functools
-
-# cdef typing
-cdef object Any = typing.Any
-cdef object DefaultDict = typing.DefaultDict
-del typing
 
 
 cdef object _AwaitableProxy = AwaitableProxy
@@ -209,3 +204,6 @@ class AsyncCachedPropertyDescriptor:
 
 
 cdef object __AsyncCachedPropertyDescriptor = AsyncCachedPropertyDescriptor
+
+
+del Any, DefaultDict, Task

@@ -3,6 +3,7 @@ import inspect
 import sys
 import typing
 from logging import getLogger
+from collections.abc import Callable, Coroutine
 
 from libc.stdint cimport uintptr_t
 
@@ -54,8 +55,6 @@ cdef object _logger_debug = logger.debug
 # cdef typing
 cdef object TYPE_CHECKING = typing.TYPE_CHECKING
 cdef object Any = typing.Any
-cdef object Callable = typing.Callable
-cdef object Coroutine = typing.Coroutine
 cdef object Generic = typing.Generic
 cdef object Literal = typing.Literal
 cdef object overload = typing.overload
@@ -1382,3 +1381,6 @@ cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
 cdef inline void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping
+
+
+del Callable, Coroutine
