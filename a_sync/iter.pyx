@@ -980,4 +980,4 @@ __all__ = [
 ]
 
 
-del AsyncGenerator, AsyncIterable, Callable, Coroutine, Generator, Iterable, Iterator
+del AsyncGenerator, Callable, Coroutine, Generator, Iterator
