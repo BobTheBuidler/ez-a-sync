@@ -10,7 +10,7 @@ import typing
 import weakref
 from logging import getLogger
 from types import TracebackType
-from typing import Awaitable, Generator, Optional, Set
+from typing import Awaitable, Generator, Optional
 
 cimport cython
 from cpython.object cimport PyObject
@@ -53,14 +53,13 @@ del getLogger
 # cdef typing
 cdef object Any = typing.Any
 cdef object Generic = typing.Generic
-cdef object Tuple = typing.Tuple
 cdef object Union = typing.Union
 del typing
 
 
-cdef object Args = Tuple[Any]
-cdef object Kwargs = Tuple[Tuple[str, Any]]
-_Key = Tuple[Args, Kwargs]
+cdef object Args = tuple[Any]
+cdef object Kwargs = tuple[tuple[str, Any]]
+_Key = tuple[Args, Kwargs]
 cdef object Key = _Key
 
 
@@ -244,18 +243,18 @@ class SmartFuture(Future, Generic[T]):
         - :class:`asyncio.Future`
     """
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
-    _key: Optional[Key] = None
+    _key: Key | None = None
     
     _waiters: "weakref.WeakSet[SmartTask[T]]"
     
-    __traceback__: Optional[TracebackType] = None
+    __traceback__: TracebackType | None = None
 
     def __init__(
         self,
         *,
         queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None,
-        key: Optional[Key] = None,
-        loop: Optional[AbstractEventLoop] = None,
+        key: Key | None = None,
+        loop: AbstractEventLoop | None = None,
     ) -> None:
         """
         Initialize the SmartFuture with an optional queue and key.
@@ -383,8 +382,8 @@ cdef inline object current_task(object loop):
 @cython.linetrace(False)
 cpdef inline object create_future(
     queue: Optional["SmartProcessingQueue"] = None,
-    key: Optional[Key] = None,
-    loop: Optional[AbstractEventLoop] = None,
+    key: Key | None = None,
+    loop: AbstractEventLoop | None = None,
 ):
     """
     Create a :class:`~SmartFuture` instance.
@@ -428,17 +427,17 @@ class SmartTask(Task, Generic[T]):
         - :class:`asyncio.Task`
     """
     
-    _waiters: Set["Task[T]"]
+    _waiters: set["Task[T]"]
     
-    __traceback__: Optional[TracebackType] = None
+    __traceback__: TracebackType | None = None
 
     @cython.linetrace(False)
     def __init__(
         self,
         coro: Awaitable[T],
         *,
-        loop: Optional[AbstractEventLoop] = None,
-        name: Optional[str] = None,
+        loop: AbstractEventLoop | None = None,
+        name: str | None = None,
     ) -> None:
         """
         Initialize the SmartTask with a coroutine and optional event loop.

@@ -1,9 +1,9 @@
 from asyncio import Lock
-from typing import Any, Callable, Dict, Generic, Optional, TypeVar, Union
+from typing import Any, Callable, Generic, TypeVar
 
 from a_sync.async_property.proxy import AwaitableOnly, AwaitableProxy
 
-ProxyType = Union[AwaitableOnly[__T], AwaitableProxy[__T]]
+ProxyType = AwaitableOnly[__T] | AwaitableProxy[__T]
 
 FieldName = str
 
@@ -15,16 +15,16 @@ def async_cached_property(
 ) -> "AsyncCachedPropertyDescriptor[__I, __T]": ...
 
 class AsyncCachedPropertyInstanceState(Generic[__T]):
-    cache: Dict[FieldName, __T]
-    locks: Dict[FieldName, Lock]
-    tasks: Dict[FieldName, object]
+    cache: dict[FieldName, __T]
+    locks: dict[FieldName, Lock]
+    tasks: dict[FieldName, object]
 
 class AsyncCachedPropertyDescriptor(Generic[__I, __T]):
     field_name: FieldName
     _load_value: Callable[[__I], __T]
     _fget: Callable[[__I], __T]
-    _fset: Optional[Callable]
-    _fdel: Optional[Callable]
+    _fset: Callable | None
+    _fdel: Callable | None
     def __init__(
         self, _fget: Callable[[__I], __T], _fset=None, _fdel=None, field_name=None
     ) -> None: ...
@@ -38,7 +38,7 @@ class AsyncCachedPropertyDescriptor(Generic[__I, __T]):
     def _check_method_sync(self, method, method_type) -> None: ...
     def get_instance_state(self, instance) -> AsyncCachedPropertyInstanceState[__T]: ...
     def get_lock(self, instance: __I) -> Lock: ...
-    def get_cache(self, instance: __I) -> Dict[field_name, Any]: ...
+    def get_cache(self, instance: __I) -> dict[field_name, Any]: ...
     def has_cache_value(self, instance: __I) -> bool: ...
     def get_cache_value(self, instance: __I) -> __T: ...
     def set_cache_value(self, instance: __I, value: __T) -> None: ...

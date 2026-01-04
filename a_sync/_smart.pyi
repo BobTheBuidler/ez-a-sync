@@ -1,15 +1,15 @@
 from asyncio import AbstractEventLoop, Future, Task
-from typing import TYPE_CHECKING, Any, Awaitable, Generic, Optional, Tuple, TypeVar, Union
+from typing import Any, Awaitable, Generator, Generic, Optional, TypeVar, Union
 from weakref import WeakSet
 
-if TYPE_CHECKING:
-    from a_sync.primitives.queue import SmartProcessingQueue
+from a_sync._typing import T
+from a_sync.primitives.queue import SmartProcessingQueue
 
 _T = TypeVar("_T")
 
-_Args = Tuple[Any]
-_Kwargs = Tuple[Tuple[str, Any]]
-_Key = Tuple[_Args, _Kwargs]
+_Args = tuple[Any, ...]
+_Kwargs = tuple[tuple[str, Any], ...]
+_Key = tuple[_Args, _Kwargs]
 
 def shield(arg: Awaitable[_T]) -> Union[SmartFuture[_T], "Future[_T]"]:
     """

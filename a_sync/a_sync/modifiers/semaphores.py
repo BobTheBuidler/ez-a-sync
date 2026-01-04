@@ -18,7 +18,7 @@ def apply_semaphore(  # type: ignore [misc]
     returning a decorator that can be applied to a coroutine function.
 
     Args:
-        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):
+        semaphore (int | asyncio.Semaphore | primitives.Semaphore):
             The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Examples:
@@ -60,7 +60,7 @@ def apply_semaphore(
 
     Args:
         coro_fn (Callable): The coroutine function to which the semaphore will be applied.
-        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):
+        semaphore (int | asyncio.Semaphore | primitives.Semaphore):
             The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Examples:
@@ -99,7 +99,7 @@ def apply_semaphore(
     Args:
         coro_fn (Optional[Callable]): The coroutine function to which the semaphore will be applied,
             or None if the semaphore is to be used as a decorator.
-        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):
+        semaphore (int | asyncio.Semaphore | primitives.Semaphore):
             The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Raises:

@@ -30,10 +30,9 @@ cdef public object logger = logging.getLogger(__name__)
 del logging
 
 # cdef typing
+cdef object Any = typing.Any
 cdef object Awaitable = typing.Awaitable
 cdef object Optional = typing.Optional
-cdef object Tuple = typing.Tuple
-cdef object Set = typing.Set
 del typing
 
 # cdef _smart
@@ -236,7 +235,7 @@ cdef object _get_exception(fut: Future):
     raise InvalidStateError('Exception is not set.')
 
 
-cdef inline bint _exc_exists(tup: Tuple[Future, Optional[Exception]]):
+cdef inline bint _exc_exists(tup: tuple[Future, Optional[Exception]]):
     return tup[1] is not None
 
 
@@ -266,6 +265,6 @@ __all__ = ["create_task"]
 
 # For testing purposes only
 
-def _get_persisted_tasks() -> Set[Task]:
+def _get_persisted_tasks() -> set[Task]:
     # we can't import this directly to the .py test file
     return _persisted_tasks

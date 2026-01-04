@@ -2,7 +2,7 @@
 This module provides an enhanced version of :func:`asyncio.gather`.
 """
 
-from typing import Any, Awaitable, Dict, List, Mapping, overload
+from typing import Any, Awaitable, Mapping, overload
 
 from a_sync._typing import *
 
@@ -18,10 +18,10 @@ Excluder = Callable[[T], bool]
 async def gather(
     awaitables: Mapping[K, Awaitable[V]],
     return_exceptions: bool = False,
-    exclude_if: Optional[Excluder[V]] = None,
+    exclude_if: Excluder[V] | None = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> Dict[K, V]:
+) -> dict[K, V]:
     """
     Concurrently awaits a k:v mapping of awaitables and returns the results.
 
@@ -48,10 +48,10 @@ async def gather(
 async def gather(
     *awaitables: Awaitable[T],
     return_exceptions: bool = False,
-    exclude_if: Optional[Excluder[T]] = None,
+    exclude_if: Excluder[T] | None = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> List[T]:
+) -> list[T]:
     """
     Concurrently awaits a series of awaitable objects and returns the results.
 
@@ -76,10 +76,10 @@ async def gather(
 async def gather_mapping(
     mapping: Mapping[K, Awaitable[V]],
     return_exceptions: bool = False,
-    exclude_if: Optional[Excluder[V]] = None,
+    exclude_if: Excluder[V] | None = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> Dict[K, V]:
+) -> dict[K, V]:
     """
     Concurrently awaits a mapping of awaitable objects and returns a dictionary of results.
 
@@ -104,5 +104,5 @@ async def gather_mapping(
         :func:`asyncio.gather`
     """
 
-def cgather(*coros_or_futures: Awaitable[T], return_exceptions: bool = False) -> Awaitable[List[T]]:
+def cgather(*coros_or_futures: Awaitable[T], return_exceptions: bool = False) -> Awaitable[list[T]]:
     """`asyncio.gather` implemented in c"""
