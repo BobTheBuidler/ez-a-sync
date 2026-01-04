@@ -9,10 +9,12 @@ asynchronously based on various conditions and configurations.
 import functools
 import logging
 import weakref
-from typing import Any, final
+from typing import Any, Coroutine, Generic, Literal, Optional, Type, final, overload
+
+from typing_extensions import Concatenate, Self, Unpack
 
 from a_sync import TaskMapping
-from a_sync._typing import *
+from a_sync._typing import AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs, P, T
 from a_sync.a_sync._descriptor import ASyncDescriptor
 from a_sync.a_sync.abstract import ASyncABC
 from a_sync.a_sync.function import (ASyncFunction, ASyncFunctionAsyncDefault,
