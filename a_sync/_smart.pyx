@@ -8,9 +8,10 @@ to protect tasks from cancellation.
 import asyncio
 import typing
 import weakref
+from collections.abc import Awaitable, Generator
 from logging import getLogger
 from types import TracebackType
-from typing import Awaitable, Generator, Optional
+from typing import Any, Optional
 
 cimport cython
 from cpython.object cimport PyObject
@@ -50,12 +51,6 @@ cdef bint _DEBUG_LOGS_ENABLED = logger.isEnabledFor(DEBUG)
 cdef object _logger_log = logger._log
 del getLogger
 
-# cdef typing
-cdef object Any = typing.Any
-cdef object Generic = typing.Generic
-cdef object Union = typing.Union
-del typing
-
 
 cdef object Args = tuple[Any]
 cdef object Kwargs = tuple[tuple[str, Any]]
@@ -73,7 +68,7 @@ cdef void log_await(object arg):
 
 
 @cython.linetrace(False)
-cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
+cdef Py_ssize_t count_waiters(fut: SmartFuture[Any] | SmartTask[Any]):
     if _is_done(fut):
         return ZERO
     try:
@@ -177,7 +172,7 @@ cdef inline bint _is_cancelled(fut: Future):
 
 
 @cython.linetrace(False)
-cdef object _get_result(fut: Union["SmartFuture", "SmartTask"]):
+cdef object _get_result(fut: SmartFuture[Any] | SmartTask[Any]):
     """Return the result this future represents.
 
     If the future has been cancelled, raises CancelledError.  If the
@@ -225,7 +220,7 @@ cdef object _get_exception(fut: Future):
     raise InvalidStateError('Exception is not set.')
 
 
-class SmartFuture(Future, Generic[T]):
+class SmartFuture(Future[T]):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
 
@@ -409,7 +404,7 @@ cpdef inline object create_future(
     return _SmartFuture(queue=queue, key=key, loop=loop or get_event_loop())
 
 
-class SmartTask(Task, Generic[T]):
+class SmartTask(Task[T]):
     """
     A smart task that tracks waiters and integrates with a smart processing queue.
 
@@ -692,3 +687,6 @@ __all__ = [
     "smart_task_factory",
     "set_smart_task_factory",
 ]
+
+
+del Any, Awaitable, Generator, Optional, TracebackType

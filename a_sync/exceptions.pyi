@@ -6,6 +6,7 @@ from asyncio import Task
 from typing import Any
 
 from a_sync import TaskMapping
+from a_sync.task import TaskMapping
 
 class ASyncFlagException(ValueError):
     """

@@ -2,6 +2,7 @@ import asyncio
 import inspect
 import sys
 import typing
+from collections.abc import Callable, Coroutine
 from logging import getLogger
 
 from libc.stdint cimport uintptr_t
@@ -54,11 +55,8 @@ cdef object _logger_debug = logger.debug
 # cdef typing
 cdef object TYPE_CHECKING = typing.TYPE_CHECKING
 cdef object Any = typing.Any
-cdef object Callable = typing.Callable
-cdef object Coroutine = typing.Coroutine
 cdef object Generic = typing.Generic
 cdef object Literal = typing.Literal
-cdef object Optional = typing.Optional
 cdef object overload = typing.overload
 
 
@@ -335,7 +333,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         def map(
             self,
             *iterables: AnyIterable[P.args],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> "TaskMapping[P, T]":
@@ -368,7 +366,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def any(
             self,
             *iterables: AnyIterable[P.args],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> bint:
@@ -397,7 +395,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def all(
             self,
             *iterables: AnyIterable[P.args],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> bint:
@@ -426,7 +424,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def min(
             self,
             *iterables: AnyIterable[P.args],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> T:
@@ -455,7 +453,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def max(
             self,
             *iterables: AnyIterable[P.args],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> T:
@@ -484,7 +482,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def sum(
             self,
             *iterables: AnyIterable[P.args],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> T:
@@ -515,7 +513,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         def map(
             self,
             *iterables: AnyIterable[Any],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> "TaskMapping[P, T]":
@@ -548,7 +546,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def any(
             self,
             *iterables: AnyIterable[Any],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> bint:
@@ -577,7 +575,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def all(
             self,
             *iterables: AnyIterable[Any],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> bint:
@@ -606,7 +604,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def min(
             self,
             *iterables: AnyIterable[Any],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> T:
@@ -635,7 +633,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def max(
             self,
             *iterables: AnyIterable[Any],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> T:
@@ -664,7 +662,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
         async def sum(
             self,
             *iterables: AnyIterable[Any],
-            concurrency: Optional[int] = None,
+            concurrency: int | None = None,
             task_name: str = "",
             **function_kwargs: P.kwargs,
         ) -> T:
@@ -1383,3 +1381,6 @@ cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
 cdef inline void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping
+
+
+del Callable, Coroutine

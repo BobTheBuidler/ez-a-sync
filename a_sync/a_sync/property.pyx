@@ -1,9 +1,10 @@
 import asyncio
 import functools
 import typing
+from collections.abc import Awaitable, Callable
 from copy import copy as _copy
 from logging import getLogger
-from typing import Any, Awaitable, Callable, Generator, Union
+from typing import Any, Generator
 
 import async_property as ap  # type: ignore [import]
 from typing_extensions import Concatenate, Self, Unpack
@@ -390,14 +391,14 @@ def a_sync_property(  # type: ignore [misc]
 def a_sync_property(  # type: ignore [misc]
     func: AnyGetterFunction[I, T] | DefaultMode = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> Union[
-    ASyncPropertyDescriptor[I, T],
-    ASyncPropertyDescriptorSyncDefault[I, T],
-    ASyncPropertyDescriptorAsyncDefault[I, T],
-    ASyncPropertyDecorator[I, T],
-    ASyncPropertyDecoratorSyncDefault[I, T],
-    ASyncPropertyDecoratorAsyncDefault[I, T],
-]:
+) -> (
+    ASyncPropertyDescriptor[I, T]
+    | ASyncPropertyDescriptorSyncDefault[I, T]
+    | ASyncPropertyDescriptorAsyncDefault[I, T]
+    | ASyncPropertyDecorator[I, T]
+    | ASyncPropertyDecoratorSyncDefault[I, T]
+    | ASyncPropertyDecoratorAsyncDefault[I, T]
+):
     """Decorator for creating properties that can be accessed both synchronously and asynchronously.
 
     Args:
@@ -673,14 +674,14 @@ def a_sync_cached_property(  # type: ignore [misc]
 def a_sync_cached_property(  # type: ignore [misc]
     func: AnyGetterFunction[I, T] | None = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> Union[
-    ASyncCachedPropertyDescriptor[I, T],
-    ASyncCachedPropertyDescriptorSyncDefault[I, T],
-    ASyncCachedPropertyDescriptorAsyncDefault[I, T],
-    ASyncCachedPropertyDecorator[I, T],
-    ASyncCachedPropertyDecoratorSyncDefault[I, T],
-    ASyncCachedPropertyDecoratorAsyncDefault[I, T],
-]:
+) -> (
+    ASyncCachedPropertyDescriptor[I, T]
+    | ASyncCachedPropertyDescriptorSyncDefault[I, T]
+    | ASyncCachedPropertyDescriptorAsyncDefault[I, T]
+    | ASyncCachedPropertyDecorator[I, T]
+    | ASyncCachedPropertyDecoratorSyncDefault[I, T]
+    | ASyncCachedPropertyDecoratorAsyncDefault[I, T]
+):
     """Decorator for creating cached properties that can be accessed both synchronously and asynchronously.
 
     Args:
