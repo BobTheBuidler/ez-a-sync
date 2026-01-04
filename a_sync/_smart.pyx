@@ -10,7 +10,7 @@ import typing
 import weakref
 from logging import getLogger
 from types import TracebackType
-from typing import Awaitable, Generator, Optional
+from typing import Any, Awaitable, Generator, Generic, Optional
 
 cimport cython
 from cpython.object cimport PyObject
@@ -49,12 +49,6 @@ cdef object DEBUG = 10
 cdef bint _DEBUG_LOGS_ENABLED = logger.isEnabledFor(DEBUG)
 cdef object _logger_log = logger._log
 del getLogger
-
-# cdef typing
-cdef object Any = typing.Any
-cdef object Generic = typing.Generic
-cdef object TypeVar = typing.TypeVar
-del typing
 
 
 cdef object Args = tuple[Any]
@@ -692,3 +686,6 @@ __all__ = [
     "smart_task_factory",
     "set_smart_task_factory",
 ]
+
+
+del Any, Awaitable, Generator, Generic, Optional, TracebackType

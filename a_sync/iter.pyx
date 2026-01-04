@@ -6,6 +6,7 @@ import sys
 import types
 import typing
 import weakref
+from collections.abc import AsyncGenerator, AsyncIterable, AsyncIterator, Callable, Coroutine, Generator, Iterable, Iterator
 from functools import lru_cache
 from logging import getLogger
 
@@ -60,15 +61,7 @@ del types
 cdef object get_args = typing.get_args
 cdef object _GenericAlias = typing._GenericAlias
 cdef object Any = typing.Any
-cdef object AsyncIterable = typing.AsyncIterable
-cdef object AsyncIterator = typing.AsyncIterator
-cdef object AsyncGenerator = typing.AsyncGenerator
-cdef object Callable = typing.Callable
-cdef object Coroutine = typing.Coroutine
-cdef object Generator = typing.Generator
 cdef object Generic = typing.Generic
-cdef object Iterable = typing.Iterable
-cdef object Iterator = typing.Iterator
 cdef object TypeVar = typing.TypeVar
 cdef object overload = typing.overload
 del typing
@@ -982,3 +975,6 @@ __all__ = [
     "ASyncSorter",
     "ASyncGeneratorFunction",
 ]
+
+
+del AsyncGenerator, AsyncIterable, AsyncIterator, Callable, Coroutine, Generator, Iterable, Iterator

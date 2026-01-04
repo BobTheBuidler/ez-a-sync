@@ -11,6 +11,7 @@ asynchronously based on various conditions and configurations.
 import asyncio
 import inspect
 import typing
+from collections.abc import Coroutine
 
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
@@ -54,7 +55,6 @@ cdef object isawaitable = inspect.isawaitable
 
 # cdef typing
 cdef object Any = typing.Any
-cdef object Coroutine = typing.Coroutine
 cdef object Generic = typing.Generic
 cdef object Literal = typing.Literal
 cdef object overload = typing.overload
@@ -1019,3 +1019,4 @@ cdef inline void _import_TaskMapping():
 
 del asyncio, inspect, typing, typing_extensions
 del _descriptor, function
+del Coroutine
