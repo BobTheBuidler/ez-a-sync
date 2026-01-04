@@ -689,4 +689,4 @@ __all__ = [
 ]
 
 
-del Any, Awaitable, Generator, Generic, Optional, TracebackType
+del Any, Awaitable, Generator, Optional, TracebackType
