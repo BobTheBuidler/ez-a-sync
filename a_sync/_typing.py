@@ -70,24 +70,12 @@ from decimal import Decimal
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncGenerator,
-    AsyncIterable,
-    AsyncIterator,
-    Awaitable,
-    Callable,
-    Coroutine,
     DefaultDict,
     Deque,
     Dict,
-    Generator,
     Generic,
-    ItemsView,
-    Iterable,
-    Iterator,
-    KeysView,
     List,
     Literal,
-    Mapping,
     NoReturn,
     Optional,
     Protocol,
@@ -97,12 +85,13 @@ from typing import (
     TypedDict,
     TypeVar,
     Union,
-    ValuesView,
     overload,
     runtime_checkable,
 )
+from collections.abc import AsyncGenerator, AsyncIterable, AsyncIterator, Awaitable, Callable, Coroutine, Generator, ItemsView, Iterable, Iterator, KeysView, Mapping, ValuesView
 
-from typing_extensions import Concatenate, ParamSpec, Self, Unpack
+from typing_extensions import ParamSpec, Self, Unpack
+from typing import Concatenate
 
 if TYPE_CHECKING:
     from a_sync import ASyncGenericBase
@@ -118,7 +107,7 @@ I = TypeVar("I")
 """A :class:`TypeVar` that is used to represent instances of a common class."""
 
 E = TypeVar("E", bound=Exception)
-TYPE = TypeVar("TYPE", bound=Type)
+TYPE = TypeVar("TYPE", bound=type)
 
 P = ParamSpec("P")
 """A :class:`ParamSpec` used everywhere in the lib."""
@@ -189,7 +178,7 @@ class AsyncUnboundMethod(Protocol[I, P, T]):
     It's essentially the function object itself, before it's accessed through an instance.
     """
 
-    __get__: Callable[[I, Type], CoroBoundMethod[I, P, T]]
+    __get__: Callable[[I, type], CoroBoundMethod[I, P, T]]
 
 
 @runtime_checkable
@@ -201,7 +190,7 @@ class SyncUnboundMethod(Protocol[I, P, T]):
     It's essentially the function object itself, before it's accessed through an instance.
     """
 
-    __get__: Callable[[I, Type], SyncBoundMethod[I, P, T]]
+    __get__: Callable[[I, type], SyncBoundMethod[I, P, T]]
 
 
 AnyUnboundMethod = Union[AsyncUnboundMethod[I, P, T], SyncUnboundMethod[I, P, T]]
@@ -240,9 +229,9 @@ class ModifierKwargs(TypedDict, total=False):
     default: DefaultMode
     cache_type: CacheType
     cache_typed: bool
-    ram_cache_maxsize: Optional[int]
-    ram_cache_ttl: Optional[Numeric]
-    runs_per_minute: Optional[int]
+    ram_cache_maxsize: int | None
+    ram_cache_ttl: Numeric | None
+    runs_per_minute: int | None
     semaphore: SemaphoreSpec
     # sync modifiers
     executor: Executor

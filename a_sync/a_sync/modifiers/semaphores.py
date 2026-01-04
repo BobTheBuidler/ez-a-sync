@@ -87,7 +87,7 @@ def apply_semaphore(
 
 
 def apply_semaphore(
-    coro_fn: Optional[Union[CoroFn[P, T], SemaphoreSpec]] = None,
+    coro_fn: CoroFn[P, T] | SemaphoreSpec | None = None,
     semaphore: SemaphoreSpec = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
     """Apply a semaphore to a coroutine function or return a decorator.
