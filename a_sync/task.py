@@ -237,9 +237,8 @@ class TaskMapping(DefaultDict[K, "Task[V]"], AsyncIterable[Tuple[K, V]]):
     def __del__(self) -> None:
         """Make sure there are no tasks left hanging."""
         # _queue is a cached_property, we don't want to create it if it doesn't exist
-        if self.concurrency and "_queue" in self.__dict__:
-            self._queue.close()
-            del self._queue
+        if queue := self.__dict__.get("_queue"):
+            queue.close()
         self.clear(cancel=True)
 
     def __setitem__(self, item: Any, value: Any) -> None:
