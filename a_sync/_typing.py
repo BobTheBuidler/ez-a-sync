@@ -88,7 +88,21 @@ from typing import (
     overload,
     runtime_checkable,
 )
-from collections.abc import AsyncGenerator, AsyncIterable, AsyncIterator, Awaitable, Callable, Coroutine, Generator, ItemsView, Iterable, Iterator, KeysView, Mapping, ValuesView
+from collections.abc import (
+    AsyncGenerator,
+    AsyncIterable,
+    AsyncIterator,
+    Awaitable,
+    Callable,
+    Coroutine,
+    Generator,
+    ItemsView,
+    Iterable,
+    Iterator,
+    KeysView,
+    Mapping,
+    ValuesView,
+)
 
 from typing_extensions import ParamSpec, Self, Unpack
 from typing import Concatenate
