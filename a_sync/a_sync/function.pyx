@@ -2,8 +2,8 @@ import asyncio
 import inspect
 import sys
 import typing
-from logging import getLogger
 from collections.abc import Callable, Coroutine
+from logging import getLogger
 
 from libc.stdint cimport uintptr_t
 

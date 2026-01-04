@@ -8,9 +8,10 @@ to protect tasks from cancellation.
 import asyncio
 import typing
 import weakref
+from collections.abc import Awaitable, Generator
 from logging import getLogger
 from types import TracebackType
-from typing import Any, Awaitable, Generator, Generic, Optional
+from typing import Any, Optional
 
 cimport cython
 from cpython.object cimport PyObject
@@ -219,7 +220,7 @@ cdef object _get_exception(fut: Future):
     raise InvalidStateError('Exception is not set.')
 
 
-class SmartFuture(Future, Generic[T]):
+class SmartFuture(Future[T]):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
 
@@ -403,7 +404,7 @@ cpdef inline object create_future(
     return _SmartFuture(queue=queue, key=key, loop=loop or get_event_loop())
 
 
-class SmartTask(Task, Generic[T]):
+class SmartTask(Task[T]):
     """
     A smart task that tracks waiters and integrates with a smart processing queue.
 
