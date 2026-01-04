@@ -14,8 +14,9 @@ from a_sync.a_sync.function import ASyncFunction as ASyncFunction
 from a_sync.a_sync.function import ASyncFunctionAsyncDefault as ASyncFunctionAsyncDefault
 from a_sync.a_sync.function import ASyncFunctionSyncDefault as ASyncFunctionSyncDefault
 from a_sync.a_sync.method import ASyncBoundMethodAsyncDefault as ASyncBoundMethodAsyncDefault
-from a_sync.a_sync.method import \
-    ASyncMethodDescriptorAsyncDefault as ASyncMethodDescriptorAsyncDefault
+from a_sync.a_sync.method import (
+    ASyncMethodDescriptorAsyncDefault as ASyncMethodDescriptorAsyncDefault,
+)
 from a_sync.task import TaskMapping as TaskMapping
 
 logger: Logger
