@@ -15,11 +15,13 @@ from typing import Final, TypeVar, cast, final, overload
 
 from a_sync._typing import T
 from a_sync.asyncio import create_task, igather
+from a_sync.debugging import stuck_coro_debugger
 from a_sync.primitives.queue import Queue
 
 logger: Final = getLogger(__name__)
 
 
+@stuck_coro_debugger
 async def exhaust_iterator(
     iterator: AsyncIterator[T], *, queue: asyncio.Queue | None = None
 ) -> None:
@@ -55,6 +57,7 @@ async def exhaust_iterator(
             queue.put_nowait(thing)
 
 
+@stuck_coro_debugger
 async def exhaust_iterators(
     iterators, *, queue: asyncio.Queue | None = None, join: bool = False
 ) -> None:
@@ -196,6 +199,7 @@ def as_yielded(
     iterator2: AsyncIterator[T2],
     *iterators: AsyncIterator[T],
 ) -> AsyncIterator[T0 | T1 | T2 | T]: ...
+@stuck_coro_debugger
 async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type: ignore [misc]
     """
     Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.
