@@ -7,16 +7,26 @@ from _typeshed import Incomplete
 from typing_extensions import Concatenate, Self, Unpack
 
 from a_sync import exceptions as exceptions
-from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction,
-                            DefaultMode, I, ModifierKwargs, P, T)
+from a_sync._typing import (
+    AnyFn,
+    AnyGetterFunction,
+    AnyIterable,
+    AsyncGetterFunction,
+    DefaultMode,
+    I,
+    ModifierKwargs,
+    P,
+    T,
+)
 from a_sync.a_sync import config as config
 from a_sync.a_sync._descriptor import ASyncDescriptor as ASyncDescriptor
 from a_sync.a_sync.function import ASyncFunction as ASyncFunction
 from a_sync.a_sync.function import ASyncFunctionAsyncDefault as ASyncFunctionAsyncDefault
 from a_sync.a_sync.function import ASyncFunctionSyncDefault as ASyncFunctionSyncDefault
 from a_sync.a_sync.method import ASyncBoundMethodAsyncDefault as ASyncBoundMethodAsyncDefault
-from a_sync.a_sync.method import \
-    ASyncMethodDescriptorAsyncDefault as ASyncMethodDescriptorAsyncDefault
+from a_sync.a_sync.method import (
+    ASyncMethodDescriptorAsyncDefault as ASyncMethodDescriptorAsyncDefault,
+)
 from a_sync.task import TaskMapping as TaskMapping
 
 logger: Logger
