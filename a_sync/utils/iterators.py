@@ -15,7 +15,7 @@ from typing import Final, TypeVar, cast, final, overload
 
 from a_sync._typing import T
 from a_sync.asyncio import create_task, igather
-from a_sync.primitives._debug import stuck_coro_debugger
+from a_sync.debugging import stuck_coro_debugger
 from a_sync.primitives.queue import Queue
 
 logger: Final = getLogger(__name__)
