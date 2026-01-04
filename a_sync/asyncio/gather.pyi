@@ -2,9 +2,9 @@
 This module provides an enhanced version of :func:`asyncio.gather`.
 """
 
-from typing import Any, Awaitable, Mapping, overload
+from typing import Any, Awaitable, Callable, Mapping, overload
 
-from a_sync._typing import *
+from a_sync._typing import K, T, V
 
 __all__ = ["gather", "gather_mapping"]
 
@@ -73,6 +73,14 @@ async def gather(
         :func:`asyncio.gather`
     """
 
+async def gather(
+    *awaitables: Awaitable[T] | Mapping[K, Awaitable[V]],
+    return_exceptions: bool = False,
+    exclude_if: Excluder[T] | None = None,
+    tqdm: bool = False,
+    **tqdm_kwargs: Any
+) -> list[T] | dict[K, V]: ...
+
 async def gather_mapping(
     mapping: Mapping[K, Awaitable[V]],
     return_exceptions: bool = False,
@@ -106,3 +114,5 @@ async def gather_mapping(
 
 def cgather(*coros_or_futures: Awaitable[T], return_exceptions: bool = False) -> Awaitable[list[T]]:
     """`asyncio.gather` implemented in c"""
+
+async def _exc_wrap(awaitable: Awaitable[T]) -> T | Exception: ...

@@ -2,14 +2,16 @@ import asyncio
 import functools
 from logging import Logger
 from threading import Thread
-from typing import DefaultDict
+from typing import DefaultDict, Literal
 
 from typing_extensions import Never
 
-from a_sync._typing import *
+from a_sync._typing import CoroFn, P, T
 from a_sync.primitives._debug import _DebugDaemonMixin
 
 logger: Logger
+
+async def _noop() -> Literal[True]: ...
 
 class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     """
