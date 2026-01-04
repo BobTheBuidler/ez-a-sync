@@ -275,6 +275,7 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
         See Also:
             - :class:`ASyncRuntimeError`
         """
+
     def __reduce__(self): ...
 
 class MappingError(Exception):

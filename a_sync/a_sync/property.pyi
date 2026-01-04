@@ -7,8 +7,8 @@ import async_property as ap
 from typing_extensions import Concatenate, Self, Unpack
 
 from a_sync import exceptions as exceptions
-from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction,
-                            DefaultMode, I, ModifierKwargs, P, T)
+from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction, DefaultMode,
+                            I, ModifierKwargs, P, T)
 from a_sync.a_sync import config as config
 from a_sync.a_sync._descriptor import ASyncDescriptor as ASyncDescriptor
 from a_sync.a_sync.function import ASyncFunction as ASyncFunction

@@ -80,7 +80,6 @@ async def gather(
     tqdm: bool = False,
     **tqdm_kwargs: Any
 ) -> list[T] | dict[K, V]: ...
-
 async def gather_mapping(
     mapping: Mapping[K, Awaitable[V]],
     return_exceptions: bool = False,
