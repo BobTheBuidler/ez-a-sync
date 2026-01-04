@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any
 
 
 cdef object _NOT_FOUND = object()
@@ -12,7 +12,7 @@ cdef class cached_property_unsafe:
         self._doc = func.__doc__
     
     @property
-    def __doc__(self) -> Optional[str]:
+    def __doc__(self) -> str | None:
         return self._doc
 
     def __set_name__(self, owner, str name):
@@ -137,3 +137,5 @@ cdef wraps(wrapped):
 
     """
     return lambda wrapper: update_wrapper(wrapper, wrapped)
+
+del Any

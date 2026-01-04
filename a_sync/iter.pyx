@@ -69,7 +69,6 @@ cdef object Generator = typing.Generator
 cdef object Generic = typing.Generic
 cdef object Iterable = typing.Iterable
 cdef object Iterator = typing.Iterator
-cdef object Optional = typing.Optional
 cdef object TypeVar = typing.TypeVar
 cdef object overload = typing.overload
 del typing

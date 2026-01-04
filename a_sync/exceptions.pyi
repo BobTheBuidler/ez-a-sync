@@ -5,6 +5,8 @@ This module defines custom exceptions for the a_sync library.
 from asyncio import Task
 from typing import Any, Optional, Type
 
+from a_sync.task import TaskMapping
+
 class ASyncFlagException(ValueError):
     """
     Base exception class for flag-related errors in the a_sync library.

@@ -53,7 +53,7 @@ del getLogger
 # cdef typing
 cdef object Any = typing.Any
 cdef object Generic = typing.Generic
-cdef object Union = typing.Union
+cdef object TypeVar = typing.TypeVar
 del typing
 
 
@@ -73,7 +73,7 @@ cdef void log_await(object arg):
 
 
 @cython.linetrace(False)
-cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
+cdef Py_ssize_t count_waiters(fut: SmartFuture[Any] | SmartTask[Any]):
     if _is_done(fut):
         return ZERO
     try:
@@ -177,7 +177,7 @@ cdef inline bint _is_cancelled(fut: Future):
 
 
 @cython.linetrace(False)
-cdef object _get_result(fut: Union["SmartFuture", "SmartTask"]):
+cdef object _get_result(fut: SmartFuture[Any] | SmartTask[Any]):
     """Return the result this future represents.
 
     If the future has been cancelled, raises CancelledError.  If the
