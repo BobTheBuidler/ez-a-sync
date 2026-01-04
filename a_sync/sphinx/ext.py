@@ -74,7 +74,6 @@ class _ASyncWrapperDocumenter:
         Args:
             all_members: Boolean indicating if all members should be documented.
         """
-        pass
 
     def check_module(self):
         """Check if the object is defined in the expected module.
@@ -147,13 +146,11 @@ class _ASyncDirective:
 class _ASyncFunctionDirective(_ASyncDirective, PyFunction):
     """Directive for ASyncFunction instances."""
 
-    pass
 
 
 class _ASyncMethodDirective(_ASyncDirective, PyMethod):
     """Directive for ASyncMethod instances."""
 
-    pass
 
 
 class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):

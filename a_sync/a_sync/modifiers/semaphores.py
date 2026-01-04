@@ -2,7 +2,7 @@
 # mypy: disable-error-code=misc
 import asyncio
 import functools
-from typing import Optional, Union, overload
+from typing import overload
 
 from a_sync import exceptions, primitives
 from a_sync._typing import P, T, AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, SemaphoreSpec

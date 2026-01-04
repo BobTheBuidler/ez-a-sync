@@ -1,5 +1,4 @@
 import pytest
-import weakref
 from asyncio import CancelledError, create_task, get_event_loop, sleep
 
 from a_sync._smart import (
