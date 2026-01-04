@@ -1,8 +1,9 @@
-import pytest
 from asyncio import get_event_loop, sleep
 
+import pytest
+
 from a_sync._smart import SmartTask, set_smart_task_factory
-from a_sync.asyncio.create_task import create_task, _get_persisted_tasks
+from a_sync.asyncio.create_task import _get_persisted_tasks, create_task
 
 
 @pytest.mark.asyncio_cooperative

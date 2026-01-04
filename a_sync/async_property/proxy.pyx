@@ -1,5 +1,7 @@
 
 import operator
+
+
 cdef object index = operator.index
 cdef object truediv = operator.truediv
 cdef object itruediv = operator.itruediv

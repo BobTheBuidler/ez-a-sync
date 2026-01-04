@@ -1,13 +1,12 @@
 import functools
 from logging import Logger
 from typing import Any
+
 from a_sync import TaskMapping
 from a_sync._typing import *
-from a_sync.a_sync.method import (
-    ASyncBoundMethod,
-    ASyncBoundMethodAsyncDefault,
-    ASyncBoundMethodSyncDefault,
-)
+from a_sync.a_sync.method import (ASyncBoundMethod,
+                                  ASyncBoundMethodAsyncDefault,
+                                  ASyncBoundMethodSyncDefault)
 from a_sync.a_sync.modifiers.manager import ModifierManager
 
 logger: Logger

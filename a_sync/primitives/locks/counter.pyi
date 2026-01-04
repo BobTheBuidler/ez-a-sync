@@ -1,6 +1,7 @@
+from typing import Iterable, List, Optional
+
 from a_sync.primitives._debug import _DebugDaemonMixin
 from a_sync.primitives.locks import Event
-from typing import Iterable, List, Optional
 
 class CounterLock(_DebugDaemonMixin):
     """

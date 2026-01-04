@@ -5,16 +5,20 @@ This module provides an enhanced version of asyncio.Event with additional debug 
 
 import sys
 from asyncio import AbstractEventLoop, Future, get_event_loop, sleep
+
 from libc.stdint cimport uint16_t
-from libc.stdlib cimport malloc, free
+from libc.stdlib cimport free, malloc
 from libc.string cimport strcpy
 from libc.time cimport time
+
 from weakref import ref
 
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
 from a_sync._typing import *
+
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
+
 
 cdef extern from "time.h":
     ctypedef long time_t

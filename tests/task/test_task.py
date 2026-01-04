@@ -1,20 +1,15 @@
 import asyncio
+
 import pytest
 
 from a_sync import TaskMapping, a_sync, create_task
 from a_sync.a_sync.base import ASyncGenericBase
-from a_sync.a_sync.function import (
-    _ASyncFunction,
-    ASyncFunction,
-    ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault,
-)
-from a_sync.a_sync.method import (
-    _ASyncBoundMethod,
-    ASyncBoundMethod,
-    ASyncBoundMethodAsyncDefault,
-    ASyncBoundMethodSyncDefault,
-)
+from a_sync.a_sync.function import (ASyncFunction, ASyncFunctionAsyncDefault,
+                                    ASyncFunctionSyncDefault, _ASyncFunction)
+from a_sync.a_sync.method import (ASyncBoundMethod,
+                                  ASyncBoundMethodAsyncDefault,
+                                  ASyncBoundMethodSyncDefault,
+                                  _ASyncBoundMethod)
 from a_sync.task import _EmptySequenceError, _unwrap
 
 

@@ -1,5 +1,6 @@
 from a_sync.primitives._debug cimport _DebugDaemonMixin
 
+
 cdef class Semaphore(_DebugDaemonMixin):
     cdef unsigned long long __value
     cdef object __waiters

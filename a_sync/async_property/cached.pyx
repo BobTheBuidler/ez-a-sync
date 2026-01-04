@@ -6,9 +6,12 @@ from asyncio import Task
 
 from a_sync._smart cimport shield
 from a_sync.asyncio.create_task cimport ccreate_task_simple
+
 from a_sync.async_property.proxy import AwaitableProxy
+
 from a_sync.async_property.proxy cimport AwaitableOnly
 from a_sync.functools cimport update_wrapper
+
 
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction

@@ -1,16 +1,6 @@
 from logging import Logger
-from typing import (
-    Any,
-    AsyncGenerator,
-    AsyncIterator,
-    Awaitable,
-    Callable,
-    Coroutine,
-    Literal,
-    NoReturn,
-    TypeVar,
-    overload,
-)
+from typing import (Any, AsyncGenerator, AsyncIterator, Awaitable, Callable,
+                    Coroutine, Literal, NoReturn, TypeVar, overload)
 
 from typing_extensions import Concatenate, ParamSpec
 

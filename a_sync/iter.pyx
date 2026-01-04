@@ -11,15 +11,22 @@ from logging import getLogger
 
 from cpython.object cimport PyObject, PyObject_GetIter
 from cython cimport final
+
 from typing_extensions import Self
 
-from a_sync._typing import AnyFn, AnyIterable, P, T, SyncFn, V
+from a_sync._typing import AnyFn, AnyIterable, P, SyncFn, T, V
+
 from a_sync.a_sync._helpers cimport _await
+
 from a_sync.async_property import async_cached_property
+
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
-from a_sync.asyncio cimport cigather, ccreate_task_simple
+from a_sync.asyncio cimport ccreate_task_simple, cigather
+
 from a_sync.exceptions import SyncModeInAsyncContextError
+
 from a_sync.functools cimport update_wrapper
+
 
 cdef extern from "pythoncapi_compat.h":
     int PyWeakref_GetRef(PyObject*, PyObject**)

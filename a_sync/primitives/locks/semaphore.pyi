@@ -2,7 +2,9 @@ import asyncio
 import functools
 from logging import Logger
 from threading import Thread as Thread
+
 from typing_extensions import Never
+
 from a_sync._typing import *
 from a_sync.primitives._debug import _DebugDaemonMixin
 
