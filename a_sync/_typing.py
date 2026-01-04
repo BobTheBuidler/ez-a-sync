@@ -65,44 +65,12 @@ See Also:
 """
 
 import asyncio
+from collections.abc import AsyncIterable, Awaitable, Callable, Coroutine, Iterable
 from concurrent.futures._base import Executor
 from decimal import Decimal
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    AsyncGenerator,
-    AsyncIterable,
-    AsyncIterator,
-    Awaitable,
-    Callable,
-    Coroutine,
-    DefaultDict,
-    Deque,
-    Dict,
-    Generator,
-    Generic,
-    ItemsView,
-    Iterable,
-    Iterator,
-    KeysView,
-    List,
-    Literal,
-    Mapping,
-    NoReturn,
-    Optional,
-    Protocol,
-    Set,
-    Tuple,
-    Type,
-    TypedDict,
-    TypeVar,
-    Union,
-    ValuesView,
-    overload,
-    runtime_checkable,
-)
+from typing import TYPE_CHECKING, Any, Literal, Protocol, TypedDict, TypeVar, runtime_checkable
 
-from typing_extensions import Concatenate, ParamSpec, Self, Unpack
+from typing_extensions import ParamSpec
 
 if TYPE_CHECKING:
     from a_sync import ASyncGenericBase
@@ -118,18 +86,18 @@ I = TypeVar("I")
 """A :class:`TypeVar` that is used to represent instances of a common class."""
 
 E = TypeVar("E", bound=Exception)
-TYPE = TypeVar("TYPE", bound=Type)
+TYPE = TypeVar("TYPE", bound=type)
 
 P = ParamSpec("P")
 """A :class:`ParamSpec` used everywhere in the lib."""
 
-Numeric = Union[int, float, Decimal]
+Numeric = int | float | Decimal
 """Type alias for numeric values of types int, float, or Decimal."""
 
-MaybeAwaitable = Union[Awaitable[T], T]
+MaybeAwaitable = Awaitable[T] | T
 """Type alias for values that may or may not be awaitable. Useful for functions that can return either an awaitable or a direct value."""
 
-MaybeCoro = Union[Coroutine[Any, Any, T], T]
+MaybeCoro = Coroutine[Any, Any, T] | T
 "Type alias for values that may or may not be coroutine."
 
 CoroFn = Callable[P, Awaitable[T]]
@@ -138,7 +106,7 @@ CoroFn = Callable[P, Awaitable[T]]
 SyncFn = Callable[P, T]
 """Type alias for synchronous functions."""
 
-AnyFn = Union[CoroFn[P, T], SyncFn[P, T]]
+AnyFn = CoroFn[P, T] | SyncFn[P, T]
 "Type alias for any function, whether synchronous or asynchronous."
 
 
@@ -176,7 +144,7 @@ class SyncBoundMethod(Protocol[I, P, T]):
     __call__: Callable[P, T]
 
 
-AnyBoundMethod = Union[CoroBoundMethod[Any, P, T], SyncBoundMethod[Any, P, T]]
+AnyBoundMethod = CoroBoundMethod[Any, P, T] | SyncBoundMethod[Any, P, T]
 "Type alias for any bound method, whether synchronous or asynchronous."
 
 
@@ -189,7 +157,7 @@ class AsyncUnboundMethod(Protocol[I, P, T]):
     It's essentially the function object itself, before it's accessed through an instance.
     """
 
-    __get__: Callable[[I, Type], CoroBoundMethod[I, P, T]]
+    __get__: Callable[[I, type], CoroBoundMethod[I, P, T]]
 
 
 @runtime_checkable
@@ -201,10 +169,10 @@ class SyncUnboundMethod(Protocol[I, P, T]):
     It's essentially the function object itself, before it's accessed through an instance.
     """
 
-    __get__: Callable[[I, Type], SyncBoundMethod[I, P, T]]
+    __get__: Callable[[I, type], SyncBoundMethod[I, P, T]]
 
 
-AnyUnboundMethod = Union[AsyncUnboundMethod[I, P, T], SyncUnboundMethod[I, P, T]]
+AnyUnboundMethod = AsyncUnboundMethod[I, P, T] | SyncUnboundMethod[I, P, T]
 "Type alias for any unbound method, whether synchronous or asynchronous."
 
 AsyncGetterFunction = Callable[[I], Awaitable[T]]
@@ -213,13 +181,13 @@ AsyncGetterFunction = Callable[[I], Awaitable[T]]
 SyncGetterFunction = Callable[[I], T]
 "Type alias for synchronous getter functions."
 
-AnyGetterFunction = Union[AsyncGetterFunction[I, T], SyncGetterFunction[I, T]]
+AnyGetterFunction = AsyncGetterFunction[I, T] | SyncGetterFunction[I, T]
 "Type alias for any getter function, whether synchronous or asynchronous."
 
 AsyncDecorator = Callable[[CoroFn[P, T]], CoroFn[P, T]]
 "Type alias for decorators for coroutine functions."
 
-AsyncDecoratorOrCoroFn = Union[AsyncDecorator[P, T], CoroFn[P, T]]
+AsyncDecoratorOrCoroFn = AsyncDecorator[P, T] | CoroFn[P, T]
 "Type alias for either an asynchronous decorator or a coroutine function."
 
 DefaultMode = Literal["sync", "async", None]
@@ -228,7 +196,7 @@ DefaultMode = Literal["sync", "async", None]
 CacheType = Literal["memory", None]
 "Type alias for cache types."
 
-SemaphoreSpec = Optional[Union[asyncio.Semaphore, int]]
+SemaphoreSpec = asyncio.Semaphore | int | None
 "Type alias for semaphore specifications."
 
 
@@ -240,18 +208,18 @@ class ModifierKwargs(TypedDict, total=False):
     default: DefaultMode
     cache_type: CacheType
     cache_typed: bool
-    ram_cache_maxsize: Optional[int]
-    ram_cache_ttl: Optional[Numeric]
-    runs_per_minute: Optional[int]
+    ram_cache_maxsize: int | None
+    ram_cache_ttl: Numeric | None
+    runs_per_minute: int | None
     semaphore: SemaphoreSpec
     # sync modifiers
     executor: Executor
 
 
-AnyIterable = Union[AsyncIterable[K], Iterable[K]]
+AnyIterable = AsyncIterable[K] | Iterable[K]
 "Type alias for any iterable, whether synchronous or asynchronous."
 
-AnyIterableOrAwaitableIterable = Union[AnyIterable[K], Awaitable[AnyIterable[K]]]
+AnyIterableOrAwaitableIterable = AnyIterable[K] | Awaitable[AnyIterable[K]]
 """
 Type alias for any iterable, whether synchronous or asynchronous, 
 or an awaitable that resolves to any iterable, whether synchronous or asynchronous.

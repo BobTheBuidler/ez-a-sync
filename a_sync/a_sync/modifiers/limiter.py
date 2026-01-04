@@ -1,14 +1,14 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 from asyncio import iscoroutinefunction
+from typing import overload
 
 from aiolimiter import AsyncLimiter
 
 from a_sync import aliases, exceptions
-from a_sync._typing import *
+from a_sync._typing import AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, P, T
 
-
-LimiterSpec = Union[int, AsyncLimiter]
+LimiterSpec = int | AsyncLimiter
 
 
 @overload
@@ -62,8 +62,8 @@ def apply_rate_limit(
 
 
 def apply_rate_limit(
-    coro_fn: Optional[Union[CoroFn[P, T], int]] = None,
-    runs_per_minute: Optional[LimiterSpec] = None,
+    coro_fn: CoroFn[P, T] | int | None = None,
+    runs_per_minute: LimiterSpec | None = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
     """Applies a rate limit to an asynchronous function.
 

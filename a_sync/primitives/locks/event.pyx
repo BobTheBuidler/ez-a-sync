@@ -5,16 +5,20 @@ This module provides an enhanced version of asyncio.Event with additional debug 
 
 import sys
 from asyncio import AbstractEventLoop, Future, get_event_loop, sleep
+
 from libc.stdint cimport uint16_t
-from libc.stdlib cimport malloc, free
+from libc.stdlib cimport free, malloc
 from libc.string cimport strcpy
 from libc.time cimport time
+
 from weakref import ref
 
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
 from a_sync._typing import *
+
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
+
 
 cdef extern from "time.h":
     ctypedef long time_t
@@ -42,15 +46,15 @@ cdef class CythonEvent(_DebugDaemonMixin):
         name: str = "",
         debug_daemon_interval: int = 300,
         *,
-        loop: Optional[AbstractEventLoop] = None,
+        loop: AbstractEventLoop | None = None,
     ):
         """
         Initializes the Event.
 
         Args:
-            name (str): An optional name for the event, used in debug logs.
-            debug_daemon_interval (int): The interval in seconds for the debug daemon to log information.
-            loop (Optional[AbstractEventLoop]): The event loop to use.
+            name: An optional name for the event, used in debug logs.
+            debug_daemon_interval: The interval in seconds for the debug daemon to log information.
+            loop: The event loop to use.
         """
         if _loop_kwarg_deprecated:
             _LoopBoundMixin.__init__(self)

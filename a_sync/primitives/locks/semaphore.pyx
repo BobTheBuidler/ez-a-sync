@@ -6,13 +6,16 @@ a dummy semaphore that does nothing, and a threadsafe semaphore for use in multi
 import asyncio
 import collections
 import threading
+
+from libc.stdlib cimport free, malloc
 from libc.string cimport strcpy
-from libc.stdlib cimport malloc, free
-from typing import Container, Literal, List, Optional, Set
+
+from typing import Container, Literal
 
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
 from a_sync._typing import CoroFn, P, T
+
 from a_sync.functools cimport wraps
 from a_sync.primitives._debug cimport _DebugDaemonMixin, _LoopBoundMixin
 
@@ -73,7 +76,7 @@ cdef class Semaphore(_DebugDaemonMixin):
 
     def __cinit__(self) -> None:
         self._Semaphore__waiters = deque()
-        self._decorated: Set[str] = set()
+        self._decorated: set[str] = set()
     
     def __init__(
         self, 
@@ -261,7 +264,7 @@ cdef class Semaphore(_DebugDaemonMixin):
         self._Semaphore__value = value
 
     @property
-    def _waiters(self) -> List[Future]:
+    def _waiters(self) -> list[Future]:
         # required for subclass compatability
         return self._Semaphore__waiters
     
@@ -347,7 +350,7 @@ cdef class DummySemaphore(Semaphore):
         self._Semaphore__waiters = deque()
         self._decorated = None
 
-    def __init__(self, name: Optional[str] = None):
+    def __init__(self, name: str | None = None):
         """
         Initialize the dummy semaphore with an optional name.
 
@@ -406,7 +409,7 @@ cdef class ThreadsafeSemaphore(Semaphore):
         :class:`Semaphore` for the base class implementation.
     """
 
-    def __init__(self, value: Optional[int], name: Optional[str] = None) -> None:
+    def __init__(self, value: int | None, name: str | None = None) -> None:
         """
         Initialize the threadsafe semaphore with a given value and optional name.
 

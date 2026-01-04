@@ -1,9 +1,11 @@
-from a_sync._typing import *
 import asyncio
 import logging
-from a_sync.primitives.locks.semaphore import Semaphore as Semaphore
+from collections.abc import Coroutine
 from functools import cached_property as cached_property
-from typing import Protocol, TypeVar
+from typing import Any, Deque, Generic, Literal, Protocol, TypeVar
+
+from a_sync._typing import Numeric
+from a_sync.primitives.locks.semaphore import Semaphore as Semaphore
 
 logger: logging.Logger
 
@@ -39,25 +41,25 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
 
     _top_priority: PT
     _top_priority_manager: CM
-    _context_manager_class: Type[CM]
+    _context_manager_class: type[CM]
 
-    _context_managers: Dict[PT, CM]
+    _context_managers: dict[PT, CM]
     """A dictionary mapping priorities to their context managers."""
 
-    _Semaphore__waiters: List[CM]
+    _Semaphore__waiters: list[CM]
     """A heap queue of context managers, sorted by priority."""
 
     # NOTE: This should (hopefully) be temporary
-    _potential_lost_waiters: Set[asyncio.Future[None]]
+    _potential_lost_waiters: set[asyncio.Future[None]]
     """A set of futures representing waiters that might have been lost."""
 
     def __init__(
         self,
-        context_manager_class: Type[_AbstractPrioritySemaphoreContextManager],
+        context_manager_class: type[_AbstractPrioritySemaphoreContextManager],
         top_priority: Comparable,
         value: int = 1,
         *,
-        name: Optional[str] = None,
+        name: str | None = None,
     ) -> None:
         """Initializes the priority semaphore.
 
@@ -101,7 +103,7 @@ class _AbstractPrioritySemaphore(Semaphore, Generic[PT, CM]):
             >>> await semaphore.acquire()
         """
 
-    def __getitem__(self, priority: Optional[PT]) -> _AbstractPrioritySemaphoreContextManager[PT]:
+    def __getitem__(self, priority: PT | None) -> _AbstractPrioritySemaphoreContextManager[PT]:
         """Gets the context manager for a given priority.
 
         Args:
@@ -138,7 +140,7 @@ class _AbstractPrioritySemaphoreContextManager(Semaphore, Generic[PT]):
         self,
         parent: _AbstractPrioritySemaphore,
         priority: PT,
-        name: Optional[str] = None,
+        name: str | None = None,
     ) -> None:
         """Initializes the context manager for a specific priority.
 

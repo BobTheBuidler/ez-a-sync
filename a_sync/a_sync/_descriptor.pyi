@@ -1,15 +1,12 @@
-from a_sync._typing import *
+from typing import Generic
+
+from typing_extensions import Concatenate
+
 from a_sync import TaskMapping
+from a_sync._typing import AnyFn, AnyIterable, I, ModifierKwargs, P, T
 from a_sync.a_sync import decorator
-from a_sync.a_sync.function import (
-    ASyncFunction,
-    ModifierManager,
-    _ModifiedMixin,
-)
-from a_sync.functools import (
-    cached_property_unsafe,
-    update_wrapper,
-)
+from a_sync.a_sync.function import ASyncFunction, ModifierManager, _ModifiedMixin
+from a_sync.functools import cached_property_unsafe, update_wrapper
 
 class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     __wrapped__: AnyFn[Concatenate[I, P], T]
@@ -18,7 +15,7 @@ class ASyncDescriptor(_ModifiedMixin, Generic[I, P, T]):
     def __init__(
         self,
         _fget: AnyFn[Concatenate[I, P], T],
-        field_name: Optional[str] = None,
+        field_name: str | None = None,
         **modifiers: ModifierKwargs
     ) -> None: ...
     def __set_name__(self, owner, name) -> None: ...

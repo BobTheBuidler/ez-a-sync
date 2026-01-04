@@ -1,14 +1,9 @@
-import pytest
 import asyncio
 
-from a_sync.task import (
-    TaskMapping,
-    TaskMappingKeys,
-    TaskMappingValues,
-    TaskMappingItems,
-    _EmptySequenceError,
-)
+import pytest
 
+from a_sync.task import (TaskMapping, TaskMappingItems, TaskMappingKeys, TaskMappingValues,
+                         _EmptySequenceError)
 
 views = [TaskMappingKeys, TaskMappingValues, TaskMappingItems]
 
@@ -68,7 +63,7 @@ async def test_empty_taskmapping_views_async(view_class):
     assert results == []
 
 
-""" # NOTE not sure why this fails but we can get to it later
+r""" # NOTE not sure why this fails but we can get to it later
 @pytest.mark.parametrize("view_class", views)
 def test_empty_taskmapping_views_broken_mapping_sync(view_class):
     tasks = TaskMapping(sample_task, [])
@@ -82,7 +77,7 @@ def test_empty_taskmapping_views_broken_mapping_sync(view_class):
 async def test_empty_taskmapping_views_broken_mapping_async(view_class):
     tasks = TaskMapping(sample_task, [])
     view = view_class([], tasks)
-    with pytest.raises(_EmptySequenceError, match="\[\]"):
+    with pytest.raises(_EmptySequenceError, match=r"\[\]"):
         results = [item async for item in view]
 
 

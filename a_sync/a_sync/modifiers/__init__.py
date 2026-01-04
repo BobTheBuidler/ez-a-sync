@@ -25,8 +25,6 @@ See Also:
     - :mod:`a_sync.a_sync.modifiers.semaphores`
 """
 
-from typing import Union
-
 from aiolimiter import AsyncLimiter
 
 from a_sync._typing import ModifierKwargs
@@ -34,7 +32,7 @@ from a_sync.a_sync.modifiers.manager import valid_modifiers
 from a_sync.primitives.locks import ThreadsafeSemaphore
 
 
-def get_modifiers_from(thing: Union[dict, type, object]) -> ModifierKwargs:
+def get_modifiers_from(thing: dict | type | object) -> ModifierKwargs:
     """Extracts valid modifiers from a given object, type, or dictionary.
 
     Args:

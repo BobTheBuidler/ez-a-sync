@@ -8,19 +8,22 @@ import asyncio
 import asyncio.futures
 import traceback
 from asyncio import CancelledError
+from collections.abc import AsyncIterator
 from logging import DEBUG, getLogger
 from types import TracebackType
-from typing import AsyncIterator, Final, Optional, TypeVar, Union, cast, final, overload
+from typing import Final, TypeVar, cast, final, overload
 
 from a_sync._typing import T
 from a_sync.asyncio import create_task, igather
+from a_sync.debugging import stuck_coro_debugger
 from a_sync.primitives.queue import Queue
 
 logger: Final = getLogger(__name__)
 
 
+@stuck_coro_debugger
 async def exhaust_iterator(
-    iterator: AsyncIterator[T], *, queue: Optional[asyncio.Queue] = None
+    iterator: AsyncIterator[T], *, queue: asyncio.Queue | None = None
 ) -> None:
     """
     Asynchronously iterates over items from the given async iterator and optionally places them into a queue.
@@ -54,8 +57,9 @@ async def exhaust_iterator(
             queue.put_nowait(thing)
 
 
+@stuck_coro_debugger
 async def exhaust_iterators(
-    iterators, *, queue: Optional[asyncio.Queue] = None, join: bool = False
+    iterators, *, queue: asyncio.Queue | None = None, join: bool = False
 ) -> None:
     """
     Asynchronously iterates over multiple async iterators concurrently and optionally places their items into a queue.
@@ -120,7 +124,7 @@ def as_yielded(
     iterator7: AsyncIterator[T7],
     iterator8: AsyncIterator[T8],
     iterator9: AsyncIterator[T9],
-) -> AsyncIterator[Union[T0, T1, T2, T3, T4, T5, T6, T7, T8, T9]]: ...
+) -> AsyncIterator[T0 | T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9]: ...
 @overload
 def as_yielded(
     iterator0: AsyncIterator[T0],
@@ -132,7 +136,7 @@ def as_yielded(
     iterator6: AsyncIterator[T6],
     iterator7: AsyncIterator[T7],
     iterator8: AsyncIterator[T8],
-) -> AsyncIterator[Union[T0, T1, T2, T3, T4, T5, T6, T7, T8]]: ...
+) -> AsyncIterator[T0 | T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8]: ...
 @overload
 def as_yielded(
     iterator0: AsyncIterator[T0],
@@ -143,7 +147,7 @@ def as_yielded(
     iterator5: AsyncIterator[T5],
     iterator6: AsyncIterator[T6],
     iterator7: AsyncIterator[T7],
-) -> AsyncIterator[Union[T0, T1, T2, T3, T4, T5, T6, T7]]: ...
+) -> AsyncIterator[T0 | T1 | T2 | T3 | T4 | T5 | T6 | T7]: ...
 @overload
 def as_yielded(
     iterator0: AsyncIterator[T0],
@@ -153,7 +157,7 @@ def as_yielded(
     iterator4: AsyncIterator[T4],
     iterator5: AsyncIterator[T5],
     iterator6: AsyncIterator[T6],
-) -> AsyncIterator[Union[T0, T1, T2, T3, T4, T5, T6]]: ...
+) -> AsyncIterator[T0 | T1 | T2 | T3 | T4 | T5 | T6]: ...
 @overload
 def as_yielded(
     iterator0: AsyncIterator[T0],
@@ -162,7 +166,7 @@ def as_yielded(
     iterator3: AsyncIterator[T3],
     iterator4: AsyncIterator[T4],
     iterator5: AsyncIterator[T5],
-) -> AsyncIterator[Union[T0, T1, T2, T3, T4, T5]]: ...
+) -> AsyncIterator[T0 | T1 | T2 | T3 | T4 | T5]: ...
 @overload
 def as_yielded(
     iterator0: AsyncIterator[T0],
@@ -170,31 +174,32 @@ def as_yielded(
     iterator2: AsyncIterator[T2],
     iterator3: AsyncIterator[T3],
     iterator4: AsyncIterator[T4],
-) -> AsyncIterator[Union[T0, T1, T2, T3, T4]]: ...
+) -> AsyncIterator[T0 | T1 | T2 | T3 | T4]: ...
 @overload
 def as_yielded(
     iterator0: AsyncIterator[T0],
     iterator1: AsyncIterator[T1],
     iterator2: AsyncIterator[T2],
     iterator3: AsyncIterator[T3],
-) -> AsyncIterator[Union[T0, T1, T2, T3]]: ...
+) -> AsyncIterator[T0 | T1 | T2 | T3]: ...
 @overload
 def as_yielded(
     iterator0: AsyncIterator[T0],
     iterator1: AsyncIterator[T1],
     iterator2: AsyncIterator[T2],
-) -> AsyncIterator[Union[T0, T1, T2]]: ...
+) -> AsyncIterator[T0 | T1 | T2]: ...
 @overload
 def as_yielded(
     iterator0: AsyncIterator[T0], iterator1: AsyncIterator[T1]
-) -> AsyncIterator[Union[T0, T1]]: ...
+) -> AsyncIterator[T0 | T1]: ...
 @overload
 def as_yielded(
     iterator0: AsyncIterator[T0],
     iterator1: AsyncIterator[T1],
     iterator2: AsyncIterator[T2],
     *iterators: AsyncIterator[T],
-) -> AsyncIterator[Union[T0, T1, T2, T]]: ...
+) -> AsyncIterator[T0 | T1 | T2 | T]: ...
+@stuck_coro_debugger
 async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type: ignore [misc]
     """
     Merges multiple async iterators into a single async iterator that yields items as they become available from any of the source iterators.
@@ -226,9 +231,9 @@ async def as_yielded(*iterators: AsyncIterator[T]) -> AsyncIterator[T]:  # type:
         - :func:`exhaust_iterators`
     """
     # hypothesis idea: _Done should never be exposed to user, works for all desired input types
-    queue: Queue[Union[T, _Done]] = Queue()
+    queue: Queue[T | _Done] = Queue()
 
-    def _as_yielded_done_callback(t: asyncio.Task, queue: Queue[Union[T, _Done]] = queue) -> None:
+    def _as_yielded_done_callback(t: asyncio.Task, queue: Queue[T | _Done] = queue) -> None:
         try:
             exc = t.exception()
         except CancelledError as e:
@@ -279,7 +284,7 @@ class _Done:
         exc (Optional[Exception]): An optional exception to be associated with the completion.
     """
 
-    def __init__(self, exc: Optional[Exception] = None) -> None:
+    def __init__(self, exc: Exception | None = None) -> None:
         self._exc: Final = exc
 
     @property

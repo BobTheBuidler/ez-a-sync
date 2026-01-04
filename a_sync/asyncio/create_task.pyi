@@ -3,15 +3,17 @@ This module extends :func:`asyncio.create_task` to support any :class:`Awaitable
 manage task lifecycle, and enhance error handling.
 """
 
-from a_sync._typing import *
 import asyncio
+from typing import Awaitable
+
+from a_sync._typing import T
 
 __all__ = ["create_task"]
 
 def create_task(
     coro: Awaitable[T],
     *,
-    name: Optional[str] = None,
+    name: str = "",
     skip_gc_until_done: bool = False,
     log_destroy_pending: bool = True
 ) -> asyncio.Task[T]:

@@ -1,17 +1,15 @@
 # mypy: disable-error-code=valid-type
-import typing
+from collections.abc import Iterator
+from typing import Any
+
 from libc.stdint cimport uint8_t
 
 from a_sync._typing import CoroFn, ModifierKwargs, P, SyncFn, T
-from a_sync.a_sync.config import user_set_default_modifiers, null_modifiers
+from a_sync.a_sync.config import null_modifiers, user_set_default_modifiers
 from a_sync.a_sync.modifiers import cache, limiter, semaphores
+
 from a_sync.functools cimport wraps
 
-
-# cdef typing
-cdef object Any = typing.Any
-cdef object Iterator = typing.Iterator
-del typing
 
 # cdef modifier decorators
 cdef object apply_async_cache = cache.apply_async_cache
@@ -297,3 +295,6 @@ cdef class ModifierManager:
 cdef public ModifierManager NULLS, USER_DEFAULTS
 NULLS = ModifierManager(null_modifiers)
 USER_DEFAULTS = ModifierManager(user_set_default_modifiers)
+
+
+del Any, Iterator

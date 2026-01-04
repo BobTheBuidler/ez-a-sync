@@ -9,11 +9,12 @@ Note: It is recommended to use :class:`ASyncGenericBase` for most use cases. Thi
 is intended for more custom implementations if necessary.
 """
 
-from a_sync._typing import *
 import abc
 import functools
 import logging
+
 from a_sync import exceptions as exceptions
+from a_sync._typing import ModifierKwargs
 from a_sync.a_sync import modifiers as modifiers
 from a_sync.a_sync._meta import ASyncMeta as ASyncMeta
 from a_sync.exceptions import NoFlagsFound as NoFlagsFound

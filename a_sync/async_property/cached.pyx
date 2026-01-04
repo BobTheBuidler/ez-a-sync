@@ -1,14 +1,17 @@
 import asyncio
 import collections
 import functools
-import typing
 from asyncio import Task
+from typing import Any, DefaultDict
 
 from a_sync._smart cimport shield
 from a_sync.asyncio.create_task cimport ccreate_task_simple
+
 from a_sync.async_property.proxy import AwaitableProxy
+
 from a_sync.async_property.proxy cimport AwaitableOnly
 from a_sync.functools cimport update_wrapper
+
 
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
@@ -23,12 +26,6 @@ del collections
 cdef object wraps = functools.wraps
 del functools
 
-# cdef typing
-cdef object Any = typing.Any
-cdef object DefaultDict = typing.DefaultDict
-cdef object Dict = typing.Dict
-del typing
-
 
 cdef object _AwaitableProxy = AwaitableProxy
 
@@ -40,9 +37,9 @@ def async_cached_property(func, *args, **kwargs) -> "AsyncCachedPropertyDescript
 
 cdef class AsyncCachedPropertyInstanceState:
     def __cinit__(self) -> None:
-        self.cache: Dict[FieldName, Any] = {}
+        self.cache: dict[FieldName, Any] = {}
         self.locks: DefaultDict[FieldName, Lock] = defaultdict(Lock)
-        self.tasks: Dict[FieldName, Task[Any]] = {}
+        self.tasks: dict[FieldName, Task[Any]] = {}
     
     cdef object get_lock(self, str field_name):
         return self.locks[field_name]
@@ -207,3 +204,6 @@ class AsyncCachedPropertyDescriptor:
 
 
 cdef object __AsyncCachedPropertyDescriptor = AsyncCachedPropertyDescriptor
+
+
+del Any, DefaultDict, Task

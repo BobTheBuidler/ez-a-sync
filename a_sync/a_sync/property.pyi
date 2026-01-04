@@ -1,27 +1,27 @@
+from asyncio import Task
+from collections.abc import Generator
 from logging import Logger
-from a_sync._typing import *
+from typing import Any, Awaitable, Callable, Literal, final, overload
+
 import async_property as ap
-from _typeshed import Incomplete
+from typing_extensions import Concatenate, Self, Unpack
+
 from a_sync import exceptions as exceptions
+from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction, DefaultMode,
+                            I, ModifierKwargs, P, T)
 from a_sync.a_sync import config as config
 from a_sync.a_sync._descriptor import ASyncDescriptor as ASyncDescriptor
-from a_sync.a_sync.function import (
-    ASyncFunction as ASyncFunction,
-    ASyncFunctionAsyncDefault as ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault as ASyncFunctionSyncDefault,
-)
-from a_sync.a_sync.method import (
-    ASyncBoundMethodAsyncDefault as ASyncBoundMethodAsyncDefault,
-    ASyncMethodDescriptorAsyncDefault as ASyncMethodDescriptorAsyncDefault,
-)
+from a_sync.a_sync.function import ASyncFunction as ASyncFunction
+from a_sync.a_sync.function import ASyncFunctionAsyncDefault as ASyncFunctionAsyncDefault
+from a_sync.a_sync.function import ASyncFunctionSyncDefault as ASyncFunctionSyncDefault
+from a_sync.a_sync.method import ASyncBoundMethodAsyncDefault as ASyncBoundMethodAsyncDefault
+from a_sync.a_sync.method import \
+    ASyncMethodDescriptorAsyncDefault as ASyncMethodDescriptorAsyncDefault
 from a_sync.task import TaskMapping as TaskMapping
-from collections.abc import Generator
-from typing import Any, final
-from typing_extensions import Unpack
 
 logger: Logger
 
-class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
+class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, tuple[()], T]):
     """Base class for creating asynchronous properties.
 
     This class provides the foundation for defining properties that can be accessed
@@ -40,7 +40,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     def __init__(
         self,
         _fget: AsyncGetterFunction[I, T],
-        field_name: Optional[str] = None,
+        field_name: str | None = None,
         **modifiers: Unpack[ModifierKwargs]
     ) -> None:
         """Initializes the _ASyncPropertyDescriptorBase.
@@ -52,10 +52,10 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
         """
 
     @overload
-    def __get__(self, instance: None, owner: Type[I]) -> Self: ...
+    def __get__(self, instance: None, owner: type[I]) -> Self: ...
     @overload
-    def __get__(self, instance: I, owner: Type[I]) -> Awaitable[T]: ...
-    async def get(self, instance: I, owner: Optional[Type[I]] = None) -> T:
+    def __get__(self, instance: I, owner: type[I]) -> Awaitable[T]: ...
+    async def get(self, instance: I, owner: type[I] | None = None) -> T:
         """Asynchronously retrieves the property value.
 
         Args:
@@ -69,8 +69,8 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     def map(
         self,
         instances: AnyIterable[I],
-        owner: Optional[Type[I]] = None,
-        concurrency: Optional[int] = None,
+        owner: type[I] | None = None,
+        concurrency: int | None = None,
         name: str = "",
     ) -> TaskMapping[I, T]:
         """Maps the property across multiple instances.
@@ -104,10 +104,10 @@ class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     max: ASyncFunctionSyncDefault[AnyIterable[I], T]
     sum: ASyncFunctionSyncDefault[AnyIterable[I], T]
     @overload
-    def __get__(self, instance: None, owner: Type[I]) -> Self: ...
+    def __get__(self, instance: None, owner: type[I]) -> Self: ...
     @overload
-    def __get__(self, instance: I, owner: Type[I]) -> T: ...
-    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[T, Self]: ...
+    def __get__(self, instance: I, owner: type[I]) -> T: ...
+    def __get__(self, instance: I | None, owner: type[I]) -> T | Self: ...
 
 @final
 class ASyncPropertyDescriptorAsyncDefault(ASyncPropertyDescriptor[I, T]):
@@ -191,8 +191,8 @@ class ASyncCachedPropertyDescriptor(
     def __init__(
         self,
         _fget: AsyncGetterFunction[I, T],
-        _fset: Incomplete | None = None,
-        _fdel: Incomplete | None = None,
+        _fset: Callable[[I, T], Any] | None = None,
+        _fdel: Callable[[I], Any] | None = None,
         field_name: str | None = None,
         **modifiers: Unpack[ModifierKwargs]
     ) -> None:
@@ -206,7 +206,7 @@ class ASyncCachedPropertyDescriptor(
             **modifiers: Additional modifier arguments.
         """
 
-    def get_lock(self, instance: I) -> asyncio.Task[T]:
+    def get_lock(self, instance: I) -> Task[T]:
         """Retrieves the lock for the property.
 
         Args:
@@ -244,10 +244,10 @@ class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[I, 
 
     default: Literal["sync"]
     @overload
-    def __get__(self, instance: None, owner: Type[I]) -> Self: ...
+    def __get__(self, instance: None, owner: type[I]) -> Self: ...
     @overload
-    def __get__(self, instance: I, owner: Type[I]) -> T: ...
-    def __get__(self, instance: Optional[I], owner: Type[I]) -> Union[T, Self]: ...
+    def __get__(self, instance: I, owner: type[I]) -> T: ...
+    def __get__(self, instance: I | None, owner: type[I]) -> T | Self: ...
 
 class ASyncCachedPropertyDescriptorAsyncDefault(ASyncCachedPropertyDescriptor[I, T]):
     """
@@ -310,7 +310,7 @@ def a_sync_cached_property(
     func: AnyGetterFunction[I, T], default: DefaultMode = ..., **modifiers: Unpack[ModifierKwargs]
 ) -> ASyncCachedPropertyDescriptor[I, T]: ...
 @final
-class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
+class HiddenMethod(ASyncBoundMethodAsyncDefault[I, tuple[()], T]):
     """Represents a hidden method for asynchronous properties.
 
     This class is used internally to manage hidden methods associated with
@@ -339,18 +339,18 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
         """Returns an awaitable for the method."""
 
 @final
-class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
+class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, tuple[()], T]):
     """Descriptor for hidden methods associated with asynchronous properties.
 
     This class is used internally to manage hidden methods associated with
     asynchronous properties.
     """
 
-    __doc__: Incomplete
+    __doc__: str | None
     def __init__(
         self,
         _fget: AnyFn[Concatenate[I, P], Awaitable[T]],
-        field_name: Optional[str] = None,
+        field_name: str | None = None,
         **modifiers: Unpack[ModifierKwargs]
     ) -> None:
         """
@@ -365,7 +365,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T])
             ValueError: If _fget is not callable.
         """
 
-    def __get__(self, instance: I, owner: Type[I]) -> HiddenMethod[I, T]:
+    def __get__(self, instance: I, owner: type[I]) -> HiddenMethod[I, T]:
         """Retrieves the hidden method for the property.
 
         Args:

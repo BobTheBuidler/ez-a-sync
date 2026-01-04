@@ -56,20 +56,21 @@ See Also:
 from a_sync import aliases, exceptions, functools, iter, task
 from a_sync.a_sync import ASyncGenericBase, ASyncGenericSingleton, a_sync
 from a_sync.a_sync.modifiers.semaphores import apply_semaphore
-from a_sync.a_sync.property import ASyncCachedPropertyDescriptor, ASyncPropertyDescriptor
+from a_sync.a_sync.property import ASyncCachedPropertyDescriptor
 from a_sync.a_sync.property import ASyncCachedPropertyDescriptor as cached_property
+from a_sync.a_sync.property import ASyncPropertyDescriptor
 from a_sync.a_sync.property import ASyncPropertyDescriptor as property
-from a_sync.asyncio import as_completed, create_task, gather, cgather, igather
-from a_sync.executor import *
-from a_sync.executor import AsyncThreadPoolExecutor as ThreadPoolExecutor
+from a_sync.asyncio import as_completed, cgather, create_task, gather, igather
 from a_sync.executor import AsyncProcessPoolExecutor as ProcessPoolExecutor
+from a_sync.executor import AsyncThreadPoolExecutor as ThreadPoolExecutor
+from a_sync.executor import *
 from a_sync.future import ASyncFuture, future  # type: ignore [attr-defined]
 from a_sync.iter import ASyncFilter as filter
-from a_sync.iter import ASyncSorter as sorted
 from a_sync.iter import ASyncIterable, ASyncIterator
+from a_sync.iter import ASyncSorter as sorted
 from a_sync.primitives import *
-from a_sync.task import TaskMapping as map
 from a_sync.task import TaskMapping
+from a_sync.task import TaskMapping as map
 from a_sync.utils import all, any, as_yielded
 
 # I alias the aliases for your convenience.
@@ -135,6 +136,7 @@ __all__ = [
 def _patch_async_property() -> None:
     import async_property.base as base
     import async_property.cached as cached
+
     from a_sync.async_property.proxy import AwaitableOnly, AwaitableProxy
 
     base.AwaitableOnly = AwaitableOnly

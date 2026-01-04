@@ -40,11 +40,8 @@ from sphinx.domains.python import PyFunction, PyMethod
 from sphinx.ext.autodoc import FunctionDocumenter, MethodDocumenter
 
 from a_sync.a_sync._descriptor import ASyncDescriptor
-from a_sync.a_sync.function import (
-    ASyncFunction,
-    ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault,
-)
+from a_sync.a_sync.function import (ASyncFunction, ASyncFunctionAsyncDefault,
+                                    ASyncFunctionSyncDefault)
 from a_sync.iter import ASyncGeneratorFunction
 
 
@@ -74,7 +71,6 @@ class _ASyncWrapperDocumenter:
         Args:
             all_members: Boolean indicating if all members should be documented.
         """
-        pass
 
     def check_module(self):
         """Check if the object is defined in the expected module.
@@ -147,13 +143,9 @@ class _ASyncDirective:
 class _ASyncFunctionDirective(_ASyncDirective, PyFunction):
     """Directive for ASyncFunction instances."""
 
-    pass
-
 
 class _ASyncMethodDirective(_ASyncDirective, PyMethod):
     """Directive for ASyncMethod instances."""
-
-    pass
 
 
 class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):

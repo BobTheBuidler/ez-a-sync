@@ -2,6 +2,7 @@ from libc.stdint cimport uint16_t
 
 from a_sync.primitives._debug cimport _DebugDaemonMixin
 
+
 cdef class CythonEvent(_DebugDaemonMixin):
     """
     An asyncio.Event with additional debug logging to help detect deadlocks.

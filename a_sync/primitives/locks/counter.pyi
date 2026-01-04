@@ -1,6 +1,7 @@
+from typing import Iterable
+
 from a_sync.primitives._debug import _DebugDaemonMixin
 from a_sync.primitives.locks import Event
-from typing import Iterable, List, Optional
 
 class CounterLock(_DebugDaemonMixin):
     """
@@ -15,7 +16,7 @@ class CounterLock(_DebugDaemonMixin):
         :class:`CounterLockCluster` for managing multiple :class:`CounterLock` instances.
     """
 
-    def __init__(self, start_value: int = 0, name: Optional[str] = None) -> None:
+    def __init__(self, start_value: int = 0, name: str | None = None) -> None:
         """
         Initializes the :class:`CounterLock` with a starting value and an optional name.
 
@@ -123,7 +124,7 @@ class CounterLockCluster:
         :class:`CounterLock` for managing individual counters.
     """
 
-    locks: List[CounterLock]
+    locks: list[CounterLock]
     def __init__(self, counter_locks: Iterable[CounterLock]) -> None:
         """
         Initializes the :class:`CounterLockCluster` with a collection of :class:`CounterLock` objects.

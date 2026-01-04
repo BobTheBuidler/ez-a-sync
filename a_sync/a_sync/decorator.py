@@ -1,16 +1,15 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 from concurrent.futures import Executor
-from a_sync._typing import *
+from typing import Literal, Union, overload
+
+from typing_extensions import Unpack
+
+from a_sync._typing import AnyFn, CoroFn, DefaultMode, ModifierKwargs, P, SyncFn, T
 from a_sync.a_sync import config
-from a_sync.a_sync.function import (
-    ASyncDecorator,
-    ASyncFunction,
-    ASyncDecoratorAsyncDefault,
-    ASyncDecoratorSyncDefault,
-    ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault,
-)
+from a_sync.a_sync.function import (ASyncDecorator, ASyncDecoratorAsyncDefault,
+                                    ASyncDecoratorSyncDefault, ASyncFunction,
+                                    ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault)
 
 ########################
 # The a_sync decorator #
@@ -527,7 +526,7 @@ def a_sync(
 
 # catchall
 def a_sync(
-    coro_fn: Optional[AnyFn[P, T]] = None,
+    coro_fn: AnyFn[P, T] | None = None,
     default: DefaultMode = config.DEFAULT_MODE,
     # default values are set by passing these kwargs into a ModifierManager object.
     **modifiers: Unpack[ModifierKwargs],

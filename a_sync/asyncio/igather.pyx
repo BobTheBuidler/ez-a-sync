@@ -1,12 +1,12 @@
 import asyncio
 from asyncio import futures, tasks
-from typing import Awaitable, Coroutine, Iterable, List, TypeVar
+from typing import Awaitable, Iterable, TypeVar
 
 from cpython.version cimport PY_VERSION_HEX
 
 from a_sync import _smart
-from a_sync.a_sync._helpers cimport get_event_loop
 
+from a_sync.a_sync._helpers cimport get_event_loop
 
 __T = TypeVar("__T")
 
@@ -22,7 +22,7 @@ cdef object smart_task_factory = _smart.smart_task_factory
 
 def igather(
     coros_or_futures: Iterable[Awaitable[__T]], bint return_exceptions = False
-) -> tasks._GatheringFuture[List[__T]]:
+) -> tasks._GatheringFuture[list[__T]]:
     """A clone of asyncio.gather that takes a single iterator of coroutines instead of an unpacked tuple."""
     return cigather(coros_or_futures, return_exceptions=return_exceptions)
 

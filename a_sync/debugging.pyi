@@ -1,18 +1,8 @@
 from logging import Logger
-from typing import (
-    Any,
-    AsyncGenerator,
-    AsyncIterator,
-    Awaitable,
-    Callable,
-    Coroutine,
-    Literal,
-    NoReturn,
-    TypeVar,
-    overload,
-)
+from typing import (Any, AsyncGenerator, AsyncIterator, Callable, Coroutine, Final, Literal,
+                    NoReturn, ParamSpec, TypeVar, overload)
 
-from typing_extensions import Concatenate, ParamSpec
+from typing_extensions import Concatenate
 
 from a_sync.a_sync.base import ASyncGenericBase
 from a_sync.a_sync.method import ASyncBoundMethod
@@ -24,7 +14,9 @@ __TYield = TypeVar("__TYield")
 __TReturn = TypeVar("__TReturn")
 __TBase = TypeVar("__TBase", bound=ASyncGenericBase)
 
-_FIVE_MINUTES: Literal[300] = 300
+_FIVE_MINUTES: Final[Literal[300]]
+
+logger: Logger
 
 @overload
 def stuck_coro_debugger(

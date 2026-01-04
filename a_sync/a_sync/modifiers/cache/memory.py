@@ -1,17 +1,21 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 
-from async_lru import alru_cache
+from asyncio import iscoroutinefunction
+from typing import Literal, TypedDict, overload
 
-from a_sync._typing import *
+from async_lru import alru_cache
+from typing_extensions import Unpack
+
+from a_sync._typing import AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, P, T
 from a_sync.exceptions import FunctionNotAsync
 
 
 class CacheKwargs(TypedDict):
     """Typed dictionary for cache keyword arguments."""
 
-    maxsize: Optional[int]
-    ttl: Optional[int]
+    maxsize: int | None
+    ttl: int | None
     typed: bool
 
 
@@ -108,9 +112,9 @@ def apply_async_memory_cache(
 
 
 def apply_async_memory_cache(
-    coro_fn: Optional[Union[CoroFn[P, T], int]] = None,
-    maxsize: Optional[int] = None,
-    ttl: Optional[int] = None,
+    coro_fn: CoroFn[P, T] | int | None = None,
+    maxsize: int | None = None,
+    ttl: int | None = None,
     typed: bool = False,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
     """

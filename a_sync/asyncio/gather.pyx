@@ -3,9 +3,9 @@
 This module provides an enhanced version of :func:`asyncio.gather`.
 """
 from itertools import filterfalse
-from typing import Any, Awaitable, Dict, List, Mapping, Union, overload
+from typing import Any, Awaitable, Callable, Mapping, overload
 
-from a_sync._typing import *
+from a_sync._typing import K, T, V
 from a_sync.asyncio cimport as_completed_mapping, cigather
 
 try:
@@ -27,10 +27,10 @@ Excluder = Callable[[T], bool]
 async def gather(
     awaitables: Mapping[K, Awaitable[V]],
     bint return_exceptions = False,
-    exclude_if: Optional[Excluder[V]] = None,
+    exclude_if: Excluder[V] | None = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any,
-) -> Dict[K, V]:
+) -> dict[K, V]:
     """
     Concurrently awaits a k:v mapping of awaitables and returns the results.
 
@@ -58,10 +58,10 @@ async def gather(
 async def gather(
     *awaitables: Awaitable[T],
     bint return_exceptions = False,
-    exclude_if: Optional[Excluder[T]] = None,
+    exclude_if: Excluder[T] | None = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any,
-) -> List[T]:
+) -> list[T]:
     """
     Concurrently awaits a series of awaitable objects and returns the results.
 
@@ -85,12 +85,12 @@ async def gather(
 
 
 async def gather(
-    *awaitables: Union[Awaitable[T], Mapping[K, Awaitable[V]]],
+    *awaitables: Awaitable[T] | Mapping[K, Awaitable[V]],
     bint return_exceptions = False,
-    exclude_if: Optional[Excluder[T]] = None,
+    exclude_if: Excluder[T] | None = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any,
-) -> Union[List[T], Dict[K, V]]:
+) -> list[T] | dict[K, V]:
     """
     Concurrently awaits a list of awaitable objects or a k:v mapping of awaitables, and returns the results.
 
@@ -104,7 +104,7 @@ async def gather(
     - Allows exclusion of results based on a condition using the 'exclude_if' parameter. Note: This is only applied when the input is not a mapping.
 
     Args:
-        *awaitables (Union[Awaitable[T], Mapping[K, Awaitable[V]]]): The awaitables to await concurrently. It can be a list of individual awaitables or a single mapping of awaitables.
+        *awaitables (Awaitable[T] | Mapping[K, Awaitable[V]]): The awaitables to await concurrently. It can be a list of individual awaitables or a single mapping of awaitables.
         return_exceptions (bool, optional): If True, exceptions are returned as results instead of raising them. Defaults to False.
         exclude_if (Optional[Excluder[T]], optional): A callable that takes a result and returns True if the result should be excluded from the final output. Defaults to None. Note: This is only applied when the input is not a mapping.
         tqdm (bool, optional): If True, enables progress reporting using tqdm. Defaults to False.
@@ -151,10 +151,10 @@ async def gather(
 async def gather_mapping(
     mapping: Mapping[K, Awaitable[V]],
     bint return_exceptions = False,
-    exclude_if: Optional[Excluder[V]] = None,
+    exclude_if: Excluder[V] | None = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any,
-) -> Dict[K, V]:
+) -> dict[K, V]:
     """
     Concurrently awaits a mapping of awaitable objects and returns a dictionary of results.
 
@@ -194,7 +194,7 @@ async def gather_mapping(
     return {k: results[k] for k in mapping}
 
 
-def cgather(*coros_or_futures: Awaitable[T], bint return_exceptions = False) -> Awaitable[List[T]]:
+def cgather(*coros_or_futures: Awaitable[T], bint return_exceptions = False) -> Awaitable[list[T]]:
     """`asyncio.gather` implemented in c"""
     return cigather(coros_or_futures, return_exceptions=return_exceptions)
 
@@ -203,7 +203,7 @@ cdef inline bint _is_mapping(tuple awaitables):
     return len(awaitables) == 1 and isinstance(awaitables[0], Mapping)
 
 
-async def _exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
+async def _exc_wrap(awaitable: Awaitable[T]) -> T | Exception:
     """Wraps an awaitable to catch exceptions and return them instead of raising.
 
     Args:

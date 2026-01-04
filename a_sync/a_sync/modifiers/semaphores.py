@@ -2,10 +2,10 @@
 # mypy: disable-error-code=misc
 import asyncio
 import functools
-from typing import Optional, Union, overload
+from typing import overload
 
 from a_sync import exceptions, primitives
-from a_sync._typing import P, T, AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, SemaphoreSpec
+from a_sync._typing import AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, P, SemaphoreSpec, T
 
 
 @overload
@@ -18,7 +18,7 @@ def apply_semaphore(  # type: ignore [misc]
     returning a decorator that can be applied to a coroutine function.
 
     Args:
-        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):
+        semaphore (int | asyncio.Semaphore | primitives.Semaphore):
             The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Examples:
@@ -60,7 +60,7 @@ def apply_semaphore(
 
     Args:
         coro_fn (Callable): The coroutine function to which the semaphore will be applied.
-        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):
+        semaphore (int | asyncio.Semaphore | primitives.Semaphore):
             The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Examples:
@@ -87,7 +87,7 @@ def apply_semaphore(
 
 
 def apply_semaphore(
-    coro_fn: Optional[Union[CoroFn[P, T], SemaphoreSpec]] = None,
+    coro_fn: CoroFn[P, T] | SemaphoreSpec | None = None,
     semaphore: SemaphoreSpec = None,
 ) -> AsyncDecoratorOrCoroFn[P, T]:
     """Apply a semaphore to a coroutine function or return a decorator.
@@ -99,7 +99,7 @@ def apply_semaphore(
     Args:
         coro_fn (Optional[Callable]): The coroutine function to which the semaphore will be applied,
             or None if the semaphore is to be used as a decorator.
-        semaphore (Union[int, asyncio.Semaphore, primitives.Semaphore]):
+        semaphore (int | asyncio.Semaphore | primitives.Semaphore):
             The semaphore to apply, which can be an integer, an `asyncio.Semaphore`, or a `primitives.Semaphore`.
 
     Raises:

@@ -8,9 +8,10 @@ to protect tasks from cancellation.
 import asyncio
 import typing
 import weakref
+from collections.abc import Awaitable, Generator
 from logging import getLogger
 from types import TracebackType
-from typing import Awaitable, Generator, Optional, Set
+from typing import Any, Optional
 
 cimport cython
 from cpython.object cimport PyObject
@@ -50,17 +51,10 @@ cdef bint _DEBUG_LOGS_ENABLED = logger.isEnabledFor(DEBUG)
 cdef object _logger_log = logger._log
 del getLogger
 
-# cdef typing
-cdef object Any = typing.Any
-cdef object Generic = typing.Generic
-cdef object Tuple = typing.Tuple
-cdef object Union = typing.Union
-del typing
 
-
-cdef object Args = Tuple[Any]
-cdef object Kwargs = Tuple[Tuple[str, Any]]
-_Key = Tuple[Args, Kwargs]
+cdef object Args = tuple[Any]
+cdef object Kwargs = tuple[tuple[str, Any]]
+_Key = tuple[Args, Kwargs]
 cdef object Key = _Key
 
 
@@ -74,7 +68,7 @@ cdef void log_await(object arg):
 
 
 @cython.linetrace(False)
-cdef Py_ssize_t count_waiters(fut: Union["SmartFuture", "SmartTask"]):
+cdef Py_ssize_t count_waiters(fut: SmartFuture[Any] | SmartTask[Any]):
     if _is_done(fut):
         return ZERO
     try:
@@ -178,7 +172,7 @@ cdef inline bint _is_cancelled(fut: Future):
 
 
 @cython.linetrace(False)
-cdef object _get_result(fut: Union["SmartFuture", "SmartTask"]):
+cdef object _get_result(fut: SmartFuture[Any] | SmartTask[Any]):
     """Return the result this future represents.
 
     If the future has been cancelled, raises CancelledError.  If the
@@ -226,7 +220,7 @@ cdef object _get_exception(fut: Future):
     raise InvalidStateError('Exception is not set.')
 
 
-class SmartFuture(Future, Generic[T]):
+class SmartFuture(Future[T]):
     """
     A smart future that tracks waiters and integrates with a smart processing queue.
 
@@ -244,18 +238,18 @@ class SmartFuture(Future, Generic[T]):
         - :class:`asyncio.Future`
     """
     _queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None
-    _key: Optional[Key] = None
+    _key: Key | None = None
     
     _waiters: "weakref.WeakSet[SmartTask[T]]"
     
-    __traceback__: Optional[TracebackType] = None
+    __traceback__: TracebackType | None = None
 
     def __init__(
         self,
         *,
         queue: Optional["SmartProcessingQueue[Any, Any, T]"] = None,
-        key: Optional[Key] = None,
-        loop: Optional[AbstractEventLoop] = None,
+        key: Key | None = None,
+        loop: AbstractEventLoop | None = None,
     ) -> None:
         """
         Initialize the SmartFuture with an optional queue and key.
@@ -383,8 +377,8 @@ cdef inline object current_task(object loop):
 @cython.linetrace(False)
 cpdef inline object create_future(
     queue: Optional["SmartProcessingQueue"] = None,
-    key: Optional[Key] = None,
-    loop: Optional[AbstractEventLoop] = None,
+    key: Key | None = None,
+    loop: AbstractEventLoop | None = None,
 ):
     """
     Create a :class:`~SmartFuture` instance.
@@ -410,7 +404,7 @@ cpdef inline object create_future(
     return _SmartFuture(queue=queue, key=key, loop=loop or get_event_loop())
 
 
-class SmartTask(Task, Generic[T]):
+class SmartTask(Task[T]):
     """
     A smart task that tracks waiters and integrates with a smart processing queue.
 
@@ -428,17 +422,17 @@ class SmartTask(Task, Generic[T]):
         - :class:`asyncio.Task`
     """
     
-    _waiters: Set["Task[T]"]
+    _waiters: set["Task[T]"]
     
-    __traceback__: Optional[TracebackType] = None
+    __traceback__: TracebackType | None = None
 
     @cython.linetrace(False)
     def __init__(
         self,
         coro: Awaitable[T],
         *,
-        loop: Optional[AbstractEventLoop] = None,
-        name: Optional[str] = None,
+        loop: AbstractEventLoop | None = None,
+        name: str | None = None,
     ) -> None:
         """
         Initialize the SmartTask with a coroutine and optional event loop.
@@ -693,3 +687,6 @@ __all__ = [
     "smart_task_factory",
     "set_smart_task_factory",
 ]
+
+
+del Any, Awaitable, Generator, Optional, TracebackType

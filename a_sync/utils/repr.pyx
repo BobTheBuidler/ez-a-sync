@@ -6,6 +6,7 @@ from cpython.list cimport PyList_GET_SIZE
 from cpython.object cimport Py_TYPE, PyObject_Repr
 from cpython.tuple cimport PyTuple_GET_SIZE
 
+
 cdef extern from "Python.h":
     ctypedef struct PyTypeObject:
         pass
