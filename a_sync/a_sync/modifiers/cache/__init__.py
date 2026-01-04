@@ -1,7 +1,7 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 from asyncio import iscoroutinefunction
-from typing import Optional, TypedDict, Union, overload
+from typing import TypedDict, overload
 
 from typing_extensions import Unpack
 

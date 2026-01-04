@@ -310,7 +310,7 @@ cdef class _ASyncFunction(_ModifiedMixin):
     @property
     def fn(self):
         # NOTE type hint doesnt work in py3.8 or py3.9, debug later
-        #  -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
+        #  -> SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]] | SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]:
         """
         Returns the final wrapped version of :attr:`ASyncFunction.__wrapped__` decorated with all of the a_sync goodness.
 

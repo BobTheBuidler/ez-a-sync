@@ -1,14 +1,14 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 from asyncio import iscoroutinefunction
-from typing import Union, overload
+from typing import overload
 
 from aiolimiter import AsyncLimiter
 
 from a_sync import aliases, exceptions
 from a_sync._typing import AsyncDecorator, AsyncDecoratorOrCoroFn, CoroFn, P, T
 
-LimiterSpec = Union[int, AsyncLimiter]
+LimiterSpec = int | AsyncLimiter
 
 
 @overload

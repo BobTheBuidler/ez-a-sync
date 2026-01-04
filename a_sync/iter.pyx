@@ -69,11 +69,8 @@ cdef object Generator = typing.Generator
 cdef object Generic = typing.Generic
 cdef object Iterable = typing.Iterable
 cdef object Iterator = typing.Iterator
-cdef object List = typing.List
 cdef object Optional = typing.Optional
-cdef object Type = typing.Type
 cdef object TypeVar = typing.TypeVar
-cdef object Union = typing.Union
 cdef object overload = typing.overload
 del typing
 
@@ -91,7 +88,7 @@ else:
     ViewFn = AnyFn[[T], bool]
 del sys
 
-cdef object AsyncGenFunc = Callable[P, Union[AsyncGenerator[T, None], AsyncIterator[T]]]
+cdef object AsyncGenFunc = Callable[P, AsyncGenerator[T, None] | AsyncIterator[T]]
 
 
 cdef tuple[str, str] _FORMAT_PATTERNS = ("{cls}", "{obj}")
@@ -125,7 +122,7 @@ cdef class _AwaitableAsyncIterableMixin:
     def __aiter__(self) -> AsyncIterator[T]:
         raise NotImplementedError
         
-    def __await__(self) -> Generator[Any, Any, List[T]]:
+    def __await__(self) -> Generator[Any, Any, list[T]]:
         """
         Asynchronously iterate through the {cls} and return all {obj}.
 
@@ -135,7 +132,7 @@ cdef class _AwaitableAsyncIterableMixin:
         return self._materialized.__await__()
 
     @property
-    def materialized(self) -> List[T]:
+    def materialized(self) -> list[T]:
         """
         Synchronously iterate through the {cls} and return all {obj}.
 
@@ -170,7 +167,7 @@ cdef class _AwaitableAsyncIterableMixin:
         return ASyncFilter(function, self)
 
     @async_cached_property
-    async def _materialized(self) -> List[T]:
+    async def _materialized(self) -> list[T]:
         """
         Asynchronously iterate through the {cls} and return all {obj}.
 
@@ -264,7 +261,7 @@ cdef class _ASyncIterable(_AwaitableAsyncIterableMixin):
 class ASyncIterable(_ASyncIterable):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncIterable[T]"]:
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> type["ASyncIterable[T]"]:
         """
         This helper passes type information from subclasses to the subclass object.
 
@@ -430,7 +427,7 @@ cdef class _ASyncIterator(_AwaitableAsyncIterableMixin):
 class ASyncIterator(_ASyncIterator):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncIterator[T]"]:
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> type["ASyncIterator[T]"]:
         """
         This helper passes type information from subclasses to the subclass object.
 
@@ -514,7 +511,7 @@ cdef class _ASyncGeneratorFunction:
             return ASyncIterator(self.__wrapped__(*args, **kwargs))
         return ASyncIterator(self.__wrapped__(self.__self__, *args, **kwargs))
     
-    def __get__(self, instance: V, owner: Type[V]) -> "ASyncGeneratorFunction[P, T]":
+    def __get__(self, instance: V, owner: type[V]) -> "ASyncGeneratorFunction[P, T]":
         "Descriptor method to make the function act like a non-data descriptor."
         cdef _ASyncGeneratorFunction gen_func
         cdef dict instance_dict
@@ -665,7 +662,7 @@ cdef class _ASyncFilter(_ASyncView):
 class ASyncFilter(_ASyncFilter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncFilter[T]"]:
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> type["ASyncFilter[T]"]:
         """
         This helper passes type information from subclasses to the subclass object.
 
@@ -821,7 +818,7 @@ cdef class _ASyncSorter(_ASyncView):
 class ASyncSorter(_ASyncSorter):
     def __init_subclass__(cls, **kwargs) -> None:
         _init_subclass(cls, kwargs)
-    def __class_getitem__(cls, arg_or_args, **kwargs) -> Type["ASyncSorter[T]"]:
+    def __class_getitem__(cls, arg_or_args, **kwargs) -> type["ASyncSorter[T]"]:
         """This helper passes type information from subclasses to the subclass object"""
         if cls is ASyncSorter:
             if kwargs:
@@ -839,7 +836,7 @@ class ASyncSorter(_ASyncSorter):
 
     
 @lru_cache(maxsize=None)
-def __class_getitem(untyped_cls: Type, tuple type_args):
+def __class_getitem(untyped_cls: type, tuple type_args):
     args_string = ", ".join(
         getattr(arg, "__name__", None) or repr(arg)
         for arg in type_args

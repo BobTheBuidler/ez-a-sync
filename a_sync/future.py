@@ -6,9 +6,9 @@ including a decorator for converting callables into `ASyncFuture` objects and
 utilities for managing asynchronous computations.
 
 Functions:
-    future(callable: Union[Callable[P, Awaitable[T]], Callable[P, T]] = None, **kwargs: Unpack[ModifierKwargs]) -> Callable[P, Union[T, "ASyncFuture[T]"]]:
+    future(callable: Callable[P, Awaitable[T]] | Callable[P, T] | None = None, **kwargs: Unpack[ModifierKwargs]) -> Callable[P, Union[T, "ASyncFuture[T]"]]:
         A decorator to convert a callable into an `ASyncFuture`, with optional modifiers.
-    _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> List[T]:
+    _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> list[T]:
         Gathers and materializes a list of awaitable or non-awaitable items.
     _check_and_materialize(thing: T) -> T:
         Checks if an item is awaitable and materializes it.

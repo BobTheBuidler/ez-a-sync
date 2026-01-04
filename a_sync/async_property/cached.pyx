@@ -29,7 +29,6 @@ del functools
 # cdef typing
 cdef object Any = typing.Any
 cdef object DefaultDict = typing.DefaultDict
-cdef object Dict = typing.Dict
 del typing
 
 
@@ -43,9 +42,9 @@ def async_cached_property(func, *args, **kwargs) -> "AsyncCachedPropertyDescript
 
 cdef class AsyncCachedPropertyInstanceState:
     def __cinit__(self) -> None:
-        self.cache: Dict[FieldName, Any] = {}
+        self.cache: dict[FieldName, Any] = {}
         self.locks: DefaultDict[FieldName, Lock] = defaultdict(Lock)
-        self.tasks: Dict[FieldName, Task[Any]] = {}
+        self.tasks: dict[FieldName, Task[Any]] = {}
     
     cdef object get_lock(self, str field_name):
         return self.locks[field_name]

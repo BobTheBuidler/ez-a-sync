@@ -2,7 +2,10 @@
 This module extends Python's :func:`asyncio.as_completed` with additional functionality.
 """
 
-from a_sync._typing import *
+from collections.abc import Awaitable, Coroutine, Iterable, Iterator, Mapping
+from typing import Any, Literal, overload
+
+from a_sync._typing import K, T, V
 from a_sync.iter import ASyncIterator
 
 __all__ = ["as_completed"]
@@ -15,7 +18,7 @@ class tqdm_asyncio:
 def as_completed(
     fs: Iterable[Awaitable[T]],
     *,
-    timeout: Optional[float] = None,
+    timeout: float | None = None,
     return_exceptions: bool = False,
     aiter: Literal[False] = False,
     tqdm: bool = False,
@@ -25,7 +28,7 @@ def as_completed(
 def as_completed(
     fs: Iterable[Awaitable[T]],
     *,
-    timeout: Optional[float] = None,
+    timeout: float | None = None,
     return_exceptions: bool = False,
     aiter: Literal[True] = True,
     tqdm: bool = False,
@@ -35,26 +38,26 @@ def as_completed(
 def as_completed(
     fs: Mapping[K, Awaitable[V]],
     *,
-    timeout: Optional[float] = None,
+    timeout: float | None = None,
     return_exceptions: bool = False,
     aiter: Literal[False] = False,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> Iterator[Coroutine[Any, Any, Tuple[K, V]]]: ...
+) -> Iterator[Coroutine[Any, Any, tuple[K, V]]]: ...
 @overload
 def as_completed(
     fs: Mapping[K, Awaitable[V]],
     *,
-    timeout: Optional[float] = None,
+    timeout: float | None = None,
     return_exceptions: bool = False,
     aiter: Literal[True] = True,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> ASyncIterator[Tuple[K, V]]: ...
+) -> ASyncIterator[tuple[K, V]]: ...
 def as_completed(
     fs,
     *,
-    timeout: Optional[float] = None,
+    timeout: float | None = None,
     return_exceptions: bool = False,
     aiter: bool = False,
     tqdm: bool = False,
