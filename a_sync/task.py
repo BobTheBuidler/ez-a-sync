@@ -29,6 +29,7 @@ from a_sync.a_sync.property import _ASyncPropertyDescriptorBase
 from a_sync.asyncio import as_completed, create_task, gather
 from a_sync.asyncio.gather import Excluder
 from a_sync.asyncio.sleep import sleep0 as yield_to_loop
+from a_sync.debugging import stuck_coro_debugger
 from a_sync.functools import cached_property_unsafe
 from a_sync.iter import ASyncGeneratorFunction, ASyncIterator, ASyncSorter
 from a_sync.primitives.locks import Event
@@ -244,6 +245,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
         """Wait for all tasks to complete and return a dictionary of the results."""
         return self.gather(sync=False).__await__()
 
+    @stuck_coro_debugger
     async def __aiter__(self, pop: bool = False) -> AsyncIterator[tuple[K, V]]:
         # sourcery skip: hoist-loop-from-if, hoist-similar-statement-from-if, hoist-statement-from-if
         """Asynchronously iterate through all key-task pairs, yielding the key-result pair as each task completes."""
@@ -604,6 +606,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
                 raise RuntimeError("DEV: figure out how to handle this situation") from None
 
     @ASyncGeneratorFunction
+    @stuck_coro_debugger
     async def _start_tasks_for_iterables(
         self, *iterables: AnyIterableOrAwaitableIterable[K]
     ) -> AsyncIterator[tuple[K, Task[V]]]:
@@ -644,6 +647,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
             # we need to let the loop run once so the tasks can fully cancel
             await yield_to_loop()
 
+    @stuck_coro_debugger
     async def _wait_for_next_key(self) -> None:
         get_next = create_task(
             self._init_loader_next(), name=self._name or str(self), log_destroy_pending=False
