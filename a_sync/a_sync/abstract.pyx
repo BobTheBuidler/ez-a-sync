@@ -13,8 +13,6 @@ from abc import abstractmethod
 from logging import getLogger
 from typing import Any
 
-from a_sync._typing import *
-
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
 
