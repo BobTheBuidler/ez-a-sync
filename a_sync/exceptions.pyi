@@ -3,7 +3,9 @@ This module defines custom exceptions for the a_sync library.
 """
 
 from asyncio import Task
-from typing import Any, Optional, Type
+from typing import Any
+
+from a_sync import TaskMapping
 
 class ASyncFlagException(ValueError):
     """
@@ -106,7 +108,7 @@ class InvalidFlag(ASyncFlagException):
         - :const:`VIABLE_FLAGS`
     """
 
-    def __init__(self, flag: Optional[str]) -> None:
+    def __init__(self, flag: str | None) -> None:
         """
         Initializes the InvalidFlag exception.
 
@@ -156,7 +158,7 @@ class FlagNotDefined(ASyncFlagException):
         <class '__main__.SomeClass'> flag some_flag is not defined.
     """
 
-    def __init__(self, obj: Type, flag: str) -> None:
+    def __init__(self, obj: type, flag: str) -> None:
         """
         Initializes the FlagNotDefined exception.
 
@@ -273,6 +275,8 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
         See Also:
             - :class:`ASyncRuntimeError`
         """
+
+    def __reduce__(self): ...
 
 class MappingError(Exception):
     """

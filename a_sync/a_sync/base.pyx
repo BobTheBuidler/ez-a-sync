@@ -5,8 +5,6 @@ from logging import getLogger
 from cpython.object cimport Py_TYPE, PyObject
 from cpython.tuple cimport PyTuple_GET_SIZE, PyTuple_GetItem
 
-from a_sync._typing import *
-
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary, validate_flag_value
 
 from a_sync.a_sync.abstract import ASyncABC
