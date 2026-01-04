@@ -2,14 +2,8 @@ from asyncio import CancelledError, create_task, get_event_loop, sleep
 
 import pytest
 
-from a_sync._smart import (
-    SmartFuture,
-    SmartTask,
-    WeakSet,
-    set_smart_task_factory,
-    shield,
-    smart_task_factory,
-)
+from a_sync._smart import (SmartFuture, SmartTask, WeakSet, set_smart_task_factory, shield,
+                           smart_task_factory)
 
 
 @pytest.mark.asyncio_cooperative
