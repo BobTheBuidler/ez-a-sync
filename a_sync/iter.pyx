@@ -6,8 +6,8 @@ import sys
 import types
 import typing
 import weakref
-from collections.abc import (AsyncGenerator, AsyncIterable, Callable, Coroutine,
-                             Generator, Iterable, Iterator)
+from collections.abc import (AsyncGenerator, AsyncIterable, Callable, Coroutine, Generator,
+                             Iterable, Iterator)
 from functools import lru_cache
 from logging import getLogger
 
