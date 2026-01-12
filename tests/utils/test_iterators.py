@@ -2,7 +2,7 @@ import asyncio
 
 import pytest
 
-from a_sync.utils.iterators import as_yielded
+from a_sync.utils.iterators import _Done, as_yielded
 
 
 # Helpers
@@ -102,3 +102,25 @@ async def test_consumer_cancels_early():
         if count >= 5:
             break
     assert count == 5
+
+
+def test_done_repr_no_exception():
+    done = _Done()
+    assert repr(done) == "a_sync.utils.iterators._Done(exc=None)"
+
+
+def test_done_repr_with_exception():
+    exc = ValueError("bad input")
+    done = _Done(exc)
+    assert repr(done) == "a_sync.utils.iterators._Done(exc=ValueError('bad input'))"
+
+
+def test_done_tb_returns_exception_traceback():
+    def raise_error():
+        raise ValueError("traceback test")
+
+    try:
+        raise_error()
+    except ValueError as exc:
+        done = _Done(exc)
+        assert done._tb is exc.__traceback__

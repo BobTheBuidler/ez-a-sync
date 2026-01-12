@@ -287,6 +287,9 @@ class _Done:
     def __init__(self, exc: Exception | None = None) -> None:
         self._exc: Final = exc
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__module__}.{self.__class__.__qualname__}(exc={self._exc!r})"
+
     @property
     def _tb(self) -> TracebackType:
         """Returns the traceback associated with the exception, if any."""
