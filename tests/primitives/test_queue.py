@@ -1,27 +1,36 @@
 import asyncio
+from collections.abc import Callable
+from typing import Any, TypeVar, cast, override
 
 import pytest
 
-from a_sync.primitives.queue import (PriorityProcessingQueue, ProcessingQueue, Queue,
-                                     SmartProcessingQueue)
+from a_sync.primitives.queue import (
+    PriorityProcessingQueue,
+    ProcessingQueue,
+    Queue,
+    SmartProcessingQueue,
+)
+
+_F = TypeVar("_F", bound=Callable[..., Any])
+asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)
 
 
-@pytest.mark.asyncio_cooperative
-async def test_queue_initialization():
+@asyncio_cooperative
+async def test_queue_initialization() -> None:
     queue = Queue()
     assert isinstance(queue, Queue)
 
 
-@pytest.mark.asyncio_cooperative
-async def test_put_and_get():
+@asyncio_cooperative
+async def test_put_and_get() -> None:
     queue = Queue()
     await queue.put("item1")
     result = await queue.get()
     assert result == "item1"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_put_nowait_and_get_nowait():
+@asyncio_cooperative
+async def test_put_nowait_and_get_nowait() -> None:
     queue = Queue()
     queue.put_nowait("item2")
     result = queue.get_nowait()
@@ -31,8 +40,8 @@ async def test_put_nowait_and_get_nowait():
         queue.get_nowait()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_get_all():
+@asyncio_cooperative
+async def test_get_all() -> None:
     queue = Queue()
     await queue.put("item3")
     await queue.put("item4")
@@ -40,8 +49,8 @@ async def test_get_all():
     assert result == ["item3", "item4"]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_get_all_nowait():
+@asyncio_cooperative
+async def test_get_all_nowait() -> None:
     queue = Queue()
     queue.put_nowait("item5")
     queue.put_nowait("item6")
@@ -52,8 +61,8 @@ async def test_get_all_nowait():
         queue.get_all_nowait()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_get_multi():
+@asyncio_cooperative
+async def test_get_multi() -> None:
     queue = Queue()
     await queue.put("item7")
     await queue.put("item8")
@@ -61,8 +70,8 @@ async def test_get_multi():
     assert result == ["item7", "item8"]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_get_multi_nowait():
+@asyncio_cooperative
+async def test_get_multi_nowait() -> None:
     queue = Queue()
     queue.put_nowait("item9")
     queue.put_nowait("item10")
@@ -75,8 +84,8 @@ async def test_get_multi_nowait():
         queue.get_multi_nowait(2)
 
 
-@pytest.mark.asyncio_cooperative
-async def test_queue_length():
+@asyncio_cooperative
+async def test_queue_length() -> None:
     queue = Queue()
     await queue.put("item11")
     assert not queue.empty()
@@ -85,16 +94,16 @@ async def test_queue_length():
     assert len(queue) == 0
 
 
-@pytest.mark.asyncio_cooperative
-async def test_concurrent_access():
+@asyncio_cooperative
+async def test_concurrent_access() -> None:
     queue = Queue()
-    results = []
+    results: list[str] = []
 
-    async def producer():
+    async def producer() -> None:
         for i in range(5):
             await queue.put(f"item{i}")
 
-    async def consumer():
+    async def consumer() -> None:
         for _ in range(5):
             item = await queue.get()
             results.append(item)
@@ -103,12 +112,12 @@ async def test_concurrent_access():
     assert results == [f"item{i}" for i in range(5)]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_empty_queue_behavior():
-    queue = Queue()
+@asyncio_cooperative
+async def test_empty_queue_behavior() -> None:
+    queue: Queue[str] = Queue()
 
-    async def consumer():
-        return await queue.get()
+    async def consumer() -> str:
+        return cast(str, await queue.get())
 
     consumer_task = asyncio.create_task(consumer())
     await asyncio.sleep(0.1)  # Ensure the consumer is waiting
@@ -117,15 +126,16 @@ async def test_empty_queue_behavior():
     assert result == "item1"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_cancellation():
+@asyncio_cooperative
+async def test_cancellation() -> None:
     queue = Queue()
 
-    async def consumer():
+    async def consumer() -> str | None:
         try:
             await queue.get()
         except asyncio.CancelledError:
             return "cancelled"
+        return None
 
     consumer_task = asyncio.create_task(consumer())
     await asyncio.sleep(0.1)  # Ensure the consumer is waiting
@@ -134,15 +144,15 @@ async def test_cancellation():
     assert result == "cancelled"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_invalid_get_multi():
+@asyncio_cooperative
+async def test_invalid_get_multi() -> None:
     queue = Queue()
     with pytest.raises(ValueError):
         await queue.get_multi(-1)
 
 
-@pytest.mark.asyncio_cooperative
-async def test_type_consistency():
+@asyncio_cooperative
+async def test_type_consistency() -> None:
     queue = Queue()
     await queue.put(1)
     await queue.put("string")
@@ -153,16 +163,16 @@ async def test_type_consistency():
     assert await queue.get() is None
 
 
-@pytest.mark.asyncio_cooperative
-async def test_stress_testing():
+@asyncio_cooperative
+async def test_stress_testing() -> None:
     queue = Queue()
     num_items = 1000
 
-    async def producer():
+    async def producer() -> None:
         for i in range(num_items):
             await queue.put(f"item{i}")
 
-    async def consumer():
+    async def consumer() -> None:
         for _ in range(num_items):
             await queue.get()
 
@@ -170,8 +180,8 @@ async def test_stress_testing():
     assert len(queue) == 0
 
 
-@pytest.mark.asyncio_cooperative
-async def test_order_preservation():
+@asyncio_cooperative
+async def test_order_preservation() -> None:
     queue = Queue()
     items = ["item1", "item2", "item3"]
     for item in items:
@@ -181,8 +191,8 @@ async def test_order_preservation():
         assert await queue.get() == item
 
 
-@pytest.mark.asyncio_cooperative
-async def test_edge_case_values():
+@asyncio_cooperative
+async def test_edge_case_values() -> None:
     queue = Queue()
     await queue.put(None)
     await queue.put("")
@@ -193,27 +203,28 @@ async def test_edge_case_values():
     assert await queue.get() == " "
 
 
-@pytest.mark.asyncio_cooperative
-async def test_timeout_on_get():
+@asyncio_cooperative
+async def test_timeout_on_get() -> None:
     queue = Queue()
 
-    async def consumer():
+    async def consumer() -> str | None:
         try:
             await asyncio.wait_for(queue.get(), timeout=0.1)
         except asyncio.TimeoutError:
             return "timeout"
+        return None
 
     result = await consumer()
     assert result == "timeout"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_exception_handling_in_callbacks():
+@asyncio_cooperative
+async def test_exception_handling_in_callbacks() -> None:
     queue = Queue()
 
-    async def faulty_consumer():
+    async def faulty_consumer() -> str:
         try:
-            item = await queue.get()
+            await queue.get()
             raise ValueError("Intentional error")
         except ValueError as e:
             return str(e)
@@ -223,8 +234,8 @@ async def test_exception_handling_in_callbacks():
     assert result == "Intentional error"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_memory_usage():
+@asyncio_cooperative
+async def test_memory_usage() -> None:
     queue = Queue()
     large_object = "x" * 10**6  # 1 MB string
     await queue.put(large_object)
@@ -232,16 +243,16 @@ async def test_memory_usage():
     assert result == large_object
 
 
-@pytest.mark.asyncio_cooperative
-async def test_thread_safety():
+@asyncio_cooperative
+async def test_thread_safety() -> None:
     queue = Queue()
 
-    async def producer():
+    async def producer() -> None:
         for i in range(5):
             await queue.put(f"item{i}")
 
-    async def consumer():
-        results = []
+    async def consumer() -> list[str]:
+        results: list[str] = []
         for _ in range(5):
             item = await queue.get()
             results.append(item)
@@ -253,13 +264,16 @@ async def test_thread_safety():
     assert len(queue) == 0
 
 
-@pytest.mark.asyncio_cooperative
-async def test_custom_object_handling():
+@asyncio_cooperative
+async def test_custom_object_handling() -> None:
     class CustomObject:
-        def __init__(self, value):
+        def __init__(self, value: int) -> None:
             self.value = value
 
-        def __eq__(self, other):
+        @override
+        def __eq__(self, other: object) -> bool:
+            if not isinstance(other, CustomObject):
+                return False
             return self.value == other.value
 
     queue = Queue()
@@ -272,8 +286,8 @@ async def test_custom_object_handling():
     assert await queue.get() == obj2
 
 
-@pytest.mark.asyncio_cooperative
-async def test_queue_capacity():
+@asyncio_cooperative
+async def test_queue_capacity() -> None:
     queue = Queue(maxsize=2)
     await queue.put("item1")
     await queue.put("item2")
@@ -282,16 +296,16 @@ async def test_queue_capacity():
         queue.put_nowait("item3")
 
 
-@pytest.mark.asyncio_cooperative
-async def test_performance_under_load():
+@asyncio_cooperative
+async def test_performance_under_load() -> None:
     queue = Queue()
     num_items = 10000
 
-    async def producer():
+    async def producer() -> None:
         for i in range(num_items):
             await queue.put(f"item{i}")
 
-    async def consumer():
+    async def consumer() -> None:
         for _ in range(num_items):
             await queue.get()
 
@@ -299,8 +313,8 @@ async def test_performance_under_load():
     assert len(queue) == 0
 
 
-@pytest.mark.asyncio_cooperative
-async def test_state_persistence():
+@asyncio_cooperative
+async def test_state_persistence() -> None:
     queue = Queue()
     await queue.put("item1")
     await queue.put("item2")
@@ -316,8 +330,8 @@ async def test_state_persistence():
     assert await restored_queue.get() == "item2"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_unusual_data_types():
+@asyncio_cooperative
+async def test_unusual_data_types() -> None:
     queue = Queue()
     await queue.put({"key": "value"})
     await queue.put(["list", "of", "items"])
@@ -332,8 +346,8 @@ async def coro_fn(x: str) -> int:
     return int(x)
 
 
-@pytest.mark.asyncio_cooperative
-async def test_processing_queue_initialization():
+@asyncio_cooperative
+async def test_processing_queue_initialization() -> None:
     queue = ProcessingQueue(coro_fn, 2)
     assert isinstance(queue, ProcessingQueue)
     assert queue.func == coro_fn
@@ -341,8 +355,8 @@ async def test_processing_queue_initialization():
     assert queue.empty()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_processing_put_and_await():
+@asyncio_cooperative
+async def test_processing_put_and_await() -> None:
     queue = ProcessingQueue(coro_fn, 2)
     fut = await queue.put("1")
     assert isinstance(fut, asyncio.Future)
@@ -351,8 +365,8 @@ async def test_processing_put_and_await():
     assert queue.empty()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_processing_put_nowait_and_await():
+@asyncio_cooperative
+async def test_processing_put_nowait_and_await() -> None:
     queue = ProcessingQueue(coro_fn, 2)
     fut = queue.put_nowait("2")
     assert isinstance(fut, asyncio.Future)
@@ -362,8 +376,8 @@ async def test_processing_put_nowait_and_await():
         queue.get_nowait()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_processing_call():
+@asyncio_cooperative
+async def test_processing_call() -> None:
     queue = ProcessingQueue(coro_fn, 10)
     big_work = map(queue, map(str, range(100)))
     results = await asyncio.gather(*big_work)
@@ -371,8 +385,8 @@ async def test_processing_call():
     assert queue.empty()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_smart_processing_queue_initialization():
+@asyncio_cooperative
+async def test_smart_processing_queue_initialization() -> None:
     queue = SmartProcessingQueue(coro_fn, 2)
     assert isinstance(queue, ProcessingQueue)
     assert queue.func == coro_fn
@@ -380,8 +394,8 @@ async def test_smart_processing_queue_initialization():
     assert queue.empty()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_priority_processing_queue_initialization():
+@asyncio_cooperative
+async def test_priority_processing_queue_initialization() -> None:
     queue = PriorityProcessingQueue(coro_fn, 2)
     assert isinstance(queue, PriorityProcessingQueue)
     assert queue.func == coro_fn
@@ -389,8 +403,8 @@ async def test_priority_processing_queue_initialization():
     assert queue.empty()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_smart_processing_put_and_await():
+@asyncio_cooperative
+async def test_smart_processing_put_and_await() -> None:
     queue = SmartProcessingQueue(coro_fn, 2)
     fut = await queue.put("1")
     assert isinstance(fut, asyncio.Future)
@@ -399,8 +413,8 @@ async def test_smart_processing_put_and_await():
     assert queue.empty()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_priority_processing_put_and_await():
+@asyncio_cooperative
+async def test_priority_processing_put_and_await() -> None:
     queue = PriorityProcessingQueue(coro_fn, 2)
     fut = await queue.put(5, "1")
     assert isinstance(fut, asyncio.Future)
@@ -409,8 +423,8 @@ async def test_priority_processing_put_and_await():
     assert queue.empty()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_smart_processing_put_nowait_and_await():
+@asyncio_cooperative
+async def test_smart_processing_put_nowait_and_await() -> None:
     queue = SmartProcessingQueue(coro_fn, 2)
     fut = queue.put_nowait("2")
     assert isinstance(fut, asyncio.Future)
@@ -420,8 +434,8 @@ async def test_smart_processing_put_nowait_and_await():
         queue.get_nowait()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_priority_processing_put_nowait_and_await():
+@asyncio_cooperative
+async def test_priority_processing_put_nowait_and_await() -> None:
     queue = PriorityProcessingQueue(coro_fn, 2)
     fut = queue.put_nowait(5, "2")
     assert isinstance(fut, asyncio.Future)
@@ -431,8 +445,8 @@ async def test_priority_processing_put_nowait_and_await():
         queue.get_nowait()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_smart_processing_call():
+@asyncio_cooperative
+async def test_smart_processing_call() -> None:
     queue = SmartProcessingQueue(coro_fn, 10)
     big_work = map(queue, map(str, range(100)))
     results = await asyncio.gather(*big_work)
@@ -440,8 +454,8 @@ async def test_smart_processing_call():
     assert queue.empty()
 
 
-@pytest.mark.asyncio_cooperative
-async def test_priority_processing_call():
+@asyncio_cooperative
+async def test_priority_processing_call() -> None:
     queue = PriorityProcessingQueue(coro_fn, 10)
     big_work = (queue(i, str(i)) for i in range(100))
     results = await asyncio.gather(*big_work)
