@@ -207,7 +207,1116 @@ cdef inline void _validate_argspec(fn: Callable):
             )
 
     
-# ... content unchanged ...
+cdef class _ASyncFunction(_ModifiedMixin):
+    """
+    A callable wrapper object that can be executed both synchronously and asynchronously.
+
+    This class wraps a function or coroutine function, allowing it to be called in both
+    synchronous and asynchronous contexts. It provides a flexible interface for handling
+    different execution modes and applying various modifiers to the function's behavior.
+
+    The class supports various modifiers that can alter the behavior of functions,
+    such as caching, rate limiting, and execution in specific contexts (e.g., thread pools).
+
+    Note:
+        The logic for determining whether to execute the function synchronously or asynchronously
+        is handled by the `self.fn` property, which checks for flags in the `kwargs` and defers
+        to the default execution mode if no flags are specified.
+
+    Example:
+        async def my_coroutine(x: int) -> str:
+            return str(x)
+
+        func = ASyncFunction(my_coroutine)
+
+        # Synchronous call
+        result = func(5, sync=True)  # returns "5"
+
+        # Asynchronous call
+        result = await func(5)  # returns "5"
+
+    See Also:
+        - :class:`_ModifiedMixin`
+        - :class:`ModifierManager`
+    """
+
+    def __init__(
+        self,
+        fn: AnyFn[P, T],
+        _skip_validate: bint = False,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
+        """
+        Initializes an ASyncFunction instance.
+
+        Args:
+            fn: The function to wrap.
+            _skip_validate: For internal use only. Skips validation of the wrapped function when its already been validated once before.
+            **modifiers: Keyword arguments for function modifiers.
+
+        See Also:
+            - :func:`_validate_wrapped_fn`
+            - :class:`ModifierManager`
+        """
+        if not _skip_validate:
+            _validate_wrapped_fn(fn)
+
+        self.modifiers = ModifierManager(modifiers)
+        """A :class:`~ModifierManager` instance managing function modifiers."""
+
+        self._fn = None
+        """The wrapped callable that will be called. This will be populated the first time it is needed."""
+
+        self.__wrapped__ = fn
+        """The original function that was wrapped."""
+
+        self.__sync_default_cached = False
+        self.__async_def_cached = False
+
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+        """
+        Calls the wrapped function either synchronously or asynchronously.
+
+        This method determines whether to execute the wrapped function synchronously
+        or asynchronously based on the default mode and any provided flags. The
+        decision logic is encapsulated within the `self.fn` property, which uses
+        the `_run_sync` method to decide the execution mode.
+
+        Note:
+            The `self.fn` property is responsible for selecting the appropriate
+            execution path (sync or async) by leveraging the `_run_sync` method.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Raises:
+            Exception: Any exception that may be raised by the wrapped function.
+
+        See Also:
+            - :attr:`default`
+            - :meth:`_run_sync`
+        """
+        fn = self.get_fn()
+        _logger_debug(
+            "calling %s fn: %s with args: %s kwargs: %s", self, fn, args, kwargs
+        )
+        return fn(*args, **kwargs)
+
+    def __repr__(self) -> str:
+        return "<{} {}.{} at {}>".format(
+            self.__class__.__name__, self.__module__, self.__name__, hex(id(self))
+        )
+
+    @property
+    def fn(self):
+        # NOTE type hint doesnt work in py3.8 or py3.9, debug later
+        #  -> Union[SyncFn[[CoroFn[P, T]], MaybeAwaitable[T]], SyncFn[[SyncFn[P, T]], MaybeAwaitable[T]]]:
+        """
+        Returns the final wrapped version of :attr:`ASyncFunction.__wrapped__` decorated with all of the a_sync goodness.
+
+        Returns:
+            The final wrapped function.
+
+        See Also:
+            - :meth:`_async_wrap`
+            - :meth:`_sync_wrap`
+        """
+        return self.get_fn()
+
+    cdef object get_fn(self):
+        fn = self._fn
+        if fn is None:
+            fn = self._async_wrap if self.is_async_def() else self._sync_wrap
+            self._fn = fn
+        return fn
+
+    if sys.version_info >= (3, 11) or TYPE_CHECKING:
+        # we can specify P.args in python>=3.11 but in lower versions it causes a crash. Everything should still type check correctly on all versions.
+        def map(
+            self,
+            *iterables: AnyIterable[P.args],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> "TaskMapping[P, T]":
+            """
+            Creates a TaskMapping for the wrapped function with the given iterables.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                A TaskMapping object for managing concurrent execution.
+
+            See Also:
+                - :class:`TaskMapping`
+            """
+            if TaskMapping is None:
+                _import_TaskMapping()
+
+            return TaskMapping(
+                self,
+                *iterables,
+                concurrency=concurrency,
+                name=task_name,
+                **function_kwargs,
+            )
+
+        async def any(
+            self,
+            *iterables: AnyIterable[P.args],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> bint:
+            """
+            Checks if any result of the function applied to the iterables is truthy.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                True if any result is truthy, otherwise False.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).any(pop=True, sync=False)
+
+        async def all(
+            self,
+            *iterables: AnyIterable[P.args],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> bint:
+            """
+            Checks if all results of the function applied to the iterables are truthy.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                True if all results are truthy, otherwise False.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).all(pop=True, sync=False)
+
+        async def min(
+            self,
+            *iterables: AnyIterable[P.args],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> T:
+            """
+            Finds the minimum result of the function applied to the iterables.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                The minimum result.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).min(pop=True, sync=False)
+
+        async def max(
+            self,
+            *iterables: AnyIterable[P.args],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> T:
+            """
+            Finds the maximum result of the function applied to the iterables.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                The maximum result.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).max(pop=True, sync=False)
+
+        async def sum(
+            self,
+            *iterables: AnyIterable[P.args],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> T:
+            """
+            Calculates the sum of the results of the function applied to the iterables.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                The sum of the results.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).sum(pop=True, sync=False)
+
+    else:
+
+        def map(
+            self,
+            *iterables: AnyIterable[Any],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> "TaskMapping[P, T]":
+            """
+            Creates a TaskMapping for the wrapped function with the given iterables.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                A TaskMapping object for managing concurrent execution.
+
+            See Also:
+                - :class:`TaskMapping`
+            """
+            if TaskMapping is None:
+                _import_TaskMapping()
+
+            return TaskMapping(
+                self,
+                *iterables,
+                concurrency=concurrency,
+                name=task_name,
+                **function_kwargs,
+            )
+
+        async def any(
+            self,
+            *iterables: AnyIterable[Any],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> bint:
+            """
+            Checks if any result of the function applied to the iterables is truthy.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                True if any result is truthy, otherwise False.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).any(pop=True, sync=False)
+
+        async def all(
+            self,
+            *iterables: AnyIterable[Any],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> bint:
+            """
+            Checks if all results of the function applied to the iterables are truthy.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                True if all results are truthy, otherwise False.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).all(pop=True, sync=False)
+
+        async def min(
+            self,
+            *iterables: AnyIterable[Any],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> T:
+            """
+            Finds the minimum result of the function applied to the iterables.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                The minimum result.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).min(pop=True, sync=False)
+
+        async def max(
+            self,
+            *iterables: AnyIterable[Any],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> T:
+            """
+            Finds the maximum result of the function applied to the iterables.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                The maximum result.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).max(pop=True, sync=False)
+
+        async def sum(
+            self,
+            *iterables: AnyIterable[Any],
+            concurrency: Optional[int] = None,
+            task_name: str = "",
+            **function_kwargs: P.kwargs,
+        ) -> T:
+            """
+            Calculates the sum of the results of the function applied to the iterables.
+
+            Args:
+                *iterables: Iterable objects to be used as arguments for the function.
+                concurrency: Optional maximum number of concurrent tasks.
+                task_name: Optional name for the tasks.
+                **function_kwargs: Additional keyword arguments to pass to the function.
+
+            Returns:
+                The sum of the results.
+
+            See Also:
+                - :meth:`map`
+            """
+            return await self.map(
+                *iterables,
+                concurrency=concurrency,
+                task_name=task_name,
+                **function_kwargs,
+            ).sum(pop=True, sync=False)
+
+    cdef void _async_wrap(self):
+        """
+        Returns an async wrapper for the function.
+
+        Returns:
+            The async wrapper function.
+        """
+        if self.__async_wrap is None:
+            self._create_async_wrap()
+        return self.__async_wrap
+
+    cdef void _create_async_wrap(self):
+        cdef object fn = self.__wrapped__
+        cdef object modified_fn = fn
+
+        # Apply async modifiers
+        modified_fn = self._asyncify(fn)
+
+        async def async_wrap(*args: P.args, **kwargs: P.kwargs):
+            return await modified_fn(*args, **kwargs)
+
+        self.__async_wrap = async_wrap
+
+    cdef object _sync_wrap(self):
+        """
+        Returns a sync wrapper for the function.
+
+        Returns:
+            The sync wrapper function.
+        """
+        if self.__sync_wrap is None:
+            self._create_sync_wrap()
+        return self.__sync_wrap
+
+    cdef void _create_sync_wrap(self):
+        cdef object modified_fn = self.__wrapped__
+
+        # Apply sync modifiers
+        modified_fn = self.modifiers.apply_sync_modifiers(modified_fn)
+        if self._asyncified is None:
+            self._asyncified = self._asyncify(modified_fn)
+
+        asyncified = self._asyncified
+
+        @wraps(modified_fn)
+        def sync_wrap(*args: P.args, **kwargs: P.kwargs):  # type: ignore [name-defined]
+            if self._run_sync(kwargs):
+                return modified_fn(*args, **kwargs)
+            return asyncified(*args, **kwargs)
+        
+        self.__sync_wrap = sync_wrap
+
+    cdef object _asyncified
+    cdef object __async_wrap
+    cdef object __sync_wrap
+    cdef object __await
+    cdef object __default
+    cdef bint __sync_default_cached
+    cdef bint __sync_default
+    cdef bint __async_def_cached
+    cdef bint __async_def
+
+    cpdef bint is_async_def(self):
+        """
+        Checks if the wrapped function is an asynchronous function.
+
+        Returns:
+            True if the function is asynchronous, otherwise False.
+
+        See Also:
+            - :func:`asyncio.iscoroutinefunction`
+        """
+        if self.__async_def_cached:
+            return self.__async_def
+        cdef bint async_def
+
+        # recursively unwrap ASync callables to get the original wrapped fn
+        wrapped = self.__wrapped__
+        while isinstance(wrapped, _ASyncFunction):
+            wrapped = wrapped.__wrapped__
+            
+        async_def = self.__async_def = iscoroutinefunction(wrapped)
+        self.__async_def_cached = True
+        return async_def
+
+    cpdef bint is_sync_default(self):
+        """
+        Determines the default execution mode (sync or async) for the function.
+
+        If the user did not specify a default, this method defers to the function's
+        definition (sync vs async def).
+
+        Returns:
+            True if the default is sync, False if async.
+
+        See Also:
+            - :attr:`default`
+        """
+        if self.__sync_default_cached:
+            return self.__sync_default
+
+        cdef str default = self.get_default()
+        cdef bint sync_default = (
+            True
+            if default == "sync"
+            else False if default == "async" else not self.is_async_def()
+        )
+        self.__sync_default = sync_default
+        self.__sync_default_cached = True
+        return sync_default
+
+    cdef inline bint _run_sync(self, dict kwargs):
+        """
+        Determines whether to run the function synchronously or asynchronously.
+    
+        This method checks for a flag in the kwargs and defers to it if present.
+        If no flag is specified, it defers to the default execution mode.
+    
+        Args:
+            kwargs: The keyword arguments passed to the function.
+    
+        Returns:
+            True if the function should run synchronously, otherwise False.
+    
+        See Also:
+            - :func:`_kwargs.get_flag_name`
+        """
+        cdef str flag = get_flag_name(kwargs)
+        if flag:
+            # If a flag was specified in the kwargs, we will defer to it.
+            return is_sync(flag, kwargs, pop_flag=True)
+        else:
+            # No flag specified in the kwargs, we will defer to 'default'.
+            return self.is_sync_default()
+
+
+class ASyncFunction(_ASyncFunction, Generic[P, T]):
+
+    @overload
+    def __init__(self, fn: CoroFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
+        """
+        Initializes an ASyncFunction instance for a coroutine function.
+
+        Args:
+            fn: The coroutine function to wrap.
+            **modifiers: Keyword arguments for function modifiers.
+
+        Example:
+            async def my_coroutine(x: int) -> str:
+                return str(x)
+
+            func = ASyncFunction(my_coroutine, cache_type='memory')
+        """
+
+    @overload
+    def __init__(self, fn: SyncFn[P, T], **modifiers: Unpack[ModifierKwargs]) -> None:
+        """
+        Initializes an ASyncFunction instance for a synchronous function.
+
+        Args:
+            fn: The synchronous function to wrap.
+            **modifiers: Keyword arguments for function modifiers.
+
+        Example:
+            def my_function(x: int) -> str:
+                return str(x)
+
+            func = ASyncFunction(my_function, runs_per_minute=60)
+        """
+    
+    def __init__(
+        self,
+        fn: AnyFn[P, T],
+        _skip_validate: bint = False,
+        **modifiers: Unpack[ModifierKwargs],
+    ) -> None:
+        _ASyncFunction.__init__(self, fn, _skip_validate=_skip_validate, **modifiers)
+        update_wrapper(self, fn)
+        if self.__doc__ is None:
+            self.__doc__ = f"Since `{self.__name__}` is an {self.__docstring_append__}"
+        else:
+            self.__doc__ += (
+                f"\n\nSince `{self.__name__}` is an {self.__docstring_append__}"
+            )
+    
+    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunction`, you can optionally pass either a `sync` or `asynchronous` kwarg with a boolean value."
+
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
+        """
+        Calls the wrapped function synchronously.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            sync: Must be True to indicate synchronous execution.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = func(5, sync=True)
+        """
+
+    @overload
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
+        """
+        Calls the wrapped function asynchronously.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            sync: Must be False to indicate asynchronous execution.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = await func(5, sync=False)
+        """
+
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T:
+        """
+        Calls the wrapped function synchronously.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            asynchronous: Must be False to indicate synchronous execution.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = func(5, asynchronous=False)
+        """
+
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
+        """
+        Calls the wrapped function asynchronously.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            asynchronous: Must be True to indicate asynchronous execution.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = await func(5, asynchronous=True)
+        """
+
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+        """
+        Calls the wrapped function using the default execution mode.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Example:
+            result = func(5)
+        """
+
+
+if sys.version_info < (3, 10):
+    _inherit = ASyncFunction[AnyFn[P, T], ASyncFunction[P, T]]
+else:
+    _inherit = ASyncFunction[[AnyFn[P, T]], ASyncFunction[P, T]]
+
+
+cdef class ASyncDecorator(_ModifiedMixin):
+    def __cinit__(self, **modifiers: Unpack[ModifierKwargs]) -> None:
+        """
+        Initializes an ASyncDecorator instance by validating the inputs.
+
+        Args:
+            **modifiers: Keyword arguments for function modifiers.
+
+        Raises:
+            ValueError: If 'default' is not 'sync', 'async', or None.
+
+        See Also:
+            - :class:`ModifierManager`
+        """
+        if modifiers.get("default", object) not in ("sync", "async", None):
+            if "default" not in modifiers:
+                raise ValueError("you must pass a value for `default`")
+            raise ValueError(
+                f"'default' must be either 'sync', 'async', or None. You passed {modifiers['default']}."
+            )
+        self.modifiers = ModifierManager(modifiers)
+
+    @overload
+    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethod[B, P, T]":  # type: ignore [override]
+        """
+        Decorates a bound method with async or sync behavior based on the default modifier.
+
+        Args:
+            func: The bound method to decorate.
+
+        Returns:
+            An ASyncBoundMethod instance with the appropriate default behavior.
+
+        See Also:
+            - :class:`ASyncBoundMethod`
+        """
+
+    @overload
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
+        """
+        Decorates a function with async or sync behavior based on the default modifier.
+
+        Args:
+            func: The function to decorate.
+
+        Returns:
+            An ASyncFunction instance with the appropriate default behavior.
+
+        See Also:
+            - :class:`ASyncFunction`
+        """
+
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunction[P, T]:  # type: ignore [override]
+        """
+        Decorates a function with async or sync behavior based on the default modifier.
+
+        Args:
+            func: The function to decorate.
+
+        Returns:
+            An ASyncFunction instance with the appropriate default behavior.
+
+        See Also:
+            - :class:`ASyncFunction`
+        """
+        cdef str default = self.get_default()
+        if default == "async":
+            return ASyncFunctionAsyncDefault(func, **self.modifiers._modifiers)
+        elif default == "sync":
+            return ASyncFunctionSyncDefault(func, **self.modifiers._modifiers)
+        elif iscoroutinefunction(func):
+            return ASyncFunctionAsyncDefault(func, **self.modifiers._modifiers)
+        else:
+            return ASyncFunctionSyncDefault(func, **self.modifiers._modifiers)
+
+
+cdef set[uintptr_t] _is_genfunc_cache = set()
+
+cdef void _check_not_genfunc_cached(func: Callable):
+    cdef uintptr_t fid = id(func)
+    if fid not in _is_genfunc_cache:
+        _check_not_genfunc(func)
+        _is_genfunc_cache.add(fid)
+
+cdef void _check_not_genfunc(func: Callable):
+    """Raises an error if the function is a generator or async generator.
+
+    Args:
+        func: The function to check.
+
+    Raises:
+        ValueError: If the function is a generator or async generator.
+
+    See Also:
+        - :func:`inspect.isasyncgenfunction`
+        - :func:`inspect.isgeneratorfunction`
+    """
+    if isasyncgenfunction(func) or isgeneratorfunction(func):
+        raise ValueError("unable to decorate generator functions with this decorator")
+
+
+# Mypy helper classes
+
+
+class ASyncFunctionSyncDefault(ASyncFunction[P, T]):
+    """A specialized :class:`~ASyncFunction` that defaults to synchronous execution.
+
+    This class is used when the :func:`~a_sync` decorator is applied with `default='sync'`.
+    It provides type hints to indicate that the default call behavior is synchronous and
+    supports IDE type checking for most use cases.
+
+    The wrapped function can still be called asynchronously by passing `sync=False`
+    or `asynchronous=True` as a keyword argument.
+
+    Example:
+        @a_sync(default='sync')
+        async def my_function(x: int) -> str:
+            return str(x)
+
+        # Synchronous call (default behavior)
+        result = my_function(5)  # returns "5"
+
+        # Asynchronous call
+        result = await my_function(5, sync=False)  # returns "5"
+    """
+
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T:
+        # TODO write specific docs for this overload
+        ...
+
+    def __call__(_ASyncFunction self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+        """Calls the wrapped function, defaulting to synchronous execution.
+
+        This method overrides the base :meth:`ASyncFunction.__call__` to provide a synchronous
+        default behavior.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Raises:
+            Exception: Any exception that may be raised by the wrapped function.
+
+        Returns:
+            The result of the function call.
+
+        See Also:
+            - :meth:`ASyncFunction.__call__`
+        """
+        return self.get_fn()(*args, **kwargs)
+
+    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionSyncDefault`, you can optionally pass `sync=False` or `asynchronous=True` to force it to return a coroutine. Without either kwarg, it will run synchronously."
+
+
+class ASyncFunctionAsyncDefault(ASyncFunction[P, T]):
+    """
+    A specialized :class:`~ASyncFunction` that defaults to asynchronous execution.
+
+    This class is used when the :func:`~a_sync` decorator is applied with `default='async'`.
+    It provides type hints to indicate that the default call behavior is asynchronous
+    and supports IDE type checking for most use cases.
+
+    The wrapped function can still be called synchronously by passing `sync=True`
+    or `asynchronous=False` as a keyword argument.
+
+    Example:
+        @a_sync(default='async')
+        async def my_function(x: int) -> str:
+            return str(x)
+
+        # Asynchronous call (default behavior)
+        result = await my_function(5)  # returns "5"
+
+        # Synchronous call
+        result = my_function(5, sync=True)  # returns "5"
+    """
+
+    @overload
+    def __call__(self, *args: P.args, sync: Literal[True], **kwargs: P.kwargs) -> T:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(
+        self, *args: P.args, sync: Literal[False], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[False], **kwargs: P.kwargs
+    ) -> T:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(
+        self, *args: P.args, asynchronous: Literal[True], **kwargs: P.kwargs
+    ) -> Coroutine[Any, Any, T]:
+        # TODO write specific docs for this overload
+        ...
+
+    @overload
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
+    def __call__(_ASyncFunction self, *args: P.args, **kwargs: P.kwargs) -> MaybeCoro[T]:
+        """Calls the wrapped function, defaulting to asynchronous execution.
+
+        This method overrides the base :meth:`ASyncFunction.__call__` to provide an asynchronous
+        default behavior.
+
+        Args:
+            *args: Positional arguments to pass to the wrapped function.
+            **kwargs: Keyword arguments to pass to the wrapped function.
+
+        Raises:
+            Exception: Any exception that may be raised by the wrapped function.
+
+        Returns:
+            The result of the function call.
+
+        See Also:
+            - :meth:`ASyncFunction.__call__`
+        """
+        return self.get_fn()(*args, **kwargs)
+
+    __docstring_append__ = ":class:`~a_sync.a_sync.function.ASyncFunctionAsyncDefault`, you can optionally pass `sync=True` or `asynchronous=False` to force it to run synchronously and return a value. Without either kwarg, it will return a coroutine for you to await."
+
+
+cdef class ASyncDecoratorSyncDefault(ASyncDecorator):
+    @overload
+    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodSyncDefault[P, T]":  # type: ignore [override]
+        """
+        Decorates a bound method with synchronous default behavior.
+
+        Args:
+            func: The bound method to decorate.
+
+        Returns:
+            An ASyncBoundMethodSyncDefault instance with synchronous default behavior.
+
+        See Also:
+            - :class:`ASyncBoundMethodSyncDefault`
+        """
+
+    @overload
+    def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
+        """
+        Decorates a bound method with synchronous default behavior.
+
+        Args:
+            func: The bound method to decorate.
+
+        Returns:
+            An ASyncFunctionSyncDefault instance with synchronous default behavior.
+
+        See Also:
+            - :class:`ASyncFunctionSyncDefault`
+        """
+
+    @overload
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:  # type: ignore [override]
+        """
+        Decorates a function with synchronous default behavior.
+
+        Args:
+            func: The function to decorate.
+
+        Returns:
+            An ASyncFunctionSyncDefault instance with synchronous default behavior.
+
+        See Also:
+            - :class:`ASyncFunctionSyncDefault`
+        """
+
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionSyncDefault[P, T]:
+        # TODO write specific docs for this implementation
+        return ASyncFunctionSyncDefault(func, **self.modifiers._modifiers)
+
+
+cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
+    @overload
+    def __call__(self, func: AnyFn[Concatenate[B, P], T]) -> "ASyncBoundMethodAsyncDefault[P, T]":  # type: ignore [override]
+        """
+        Decorates a bound method with asynchronous default behavior.
+
+        Args:
+            func: The bound method to decorate.
+
+        Returns:
+            An ASyncBoundMethodAsyncDefault instance with asynchronous default behavior.
+
+        See Also:
+            - :class:`ASyncBoundMethodAsyncDefault`
+        """
+
+    @overload
+    def __call__(self, func: AnyBoundMethod[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
+        """
+        Decorates a bound method with asynchronous default behavior.
+
+        Args:
+            func: The bound method to decorate.
+
+        Returns:
+            An ASyncFunctionAsyncDefault instance with asynchronous default behavior.
+
+        See Also:
+            - :class:`ASyncFunctionAsyncDefault`
+        """
+
+    @overload
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:  # type: ignore [override]
+        """
+        Decorates a function with asynchronous default behavior.
+
+        Args:
+            func: The function to decorate.
+
+        Returns:
+            An ASyncFunctionAsyncDefault instance with asynchronous default behavior.
+
+        See Also:
+            - :class:`ASyncFunctionAsyncDefault`
+        """
+
+    def __call__(self, func: AnyFn[P, T]) -> ASyncFunctionAsyncDefault[P, T]:
+        # TODO write specific docs for this implementation
+        return ASyncFunctionAsyncDefault(func, **self.modifiers._modifiers)
+
 
 cdef inline void _import_TaskMapping():
     global TaskMapping
