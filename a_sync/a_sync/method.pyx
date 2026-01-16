@@ -21,7 +21,7 @@ import typing_extensions
 from a_sync._typing import AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs, P, T
 from a_sync.a_sync import _descriptor, function
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
-from a_sync.a_sync._helpers cimport _await
+from a_sync.a_sync._helpers cimport _await, get_event_loop
 from a_sync.a_sync.function cimport _ASyncFunction, _ModifiedMixin
 from a_sync.functools cimport update_wrapper
 
@@ -41,7 +41,6 @@ else:
 
 
 # cdef asyncio
-cdef object get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 cdef object cancel_handle = asyncio.TimerHandle.cancel
 
@@ -1020,4 +1019,3 @@ cdef inline void _import_TaskMapping():
 
 del asyncio, inspect, typing, typing_extensions
 del _descriptor, function
-

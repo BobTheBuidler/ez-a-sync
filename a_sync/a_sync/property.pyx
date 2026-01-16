@@ -12,7 +12,7 @@ from a_sync._smart cimport shield
 from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction, 
                             DefaultMode, I, ModifierKwargs, P, T)
 from a_sync.a_sync import _descriptor, config, function, method
-from a_sync.a_sync._helpers cimport _asyncify, _await
+from a_sync.a_sync._helpers cimport _asyncify, _await, get_event_loop
 
 from a_sync.a_sync.function cimport _ModifiedMixin
 from a_sync.a_sync.method cimport _ASyncBoundMethod, _is_a_sync_instance, _update_cache_timer
@@ -30,7 +30,6 @@ else:
 
 
 # cdef asyncio
-cdef object get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 cdef object Lock = asyncio.Lock
 cdef object Task = asyncio.Task

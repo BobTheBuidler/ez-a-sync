@@ -14,7 +14,7 @@ from cython cimport final
 from typing_extensions import Self
 
 from a_sync._typing import AnyFn, AnyIterable, P, T, SyncFn, V
-from a_sync.a_sync._helpers cimport _await
+from a_sync.a_sync._helpers cimport _await, get_event_loop
 from a_sync.async_property import async_cached_property
 from a_sync.async_property.cached cimport AsyncCachedPropertyInstanceState
 from a_sync.asyncio cimport cigather, ccreate_task_simple
@@ -26,7 +26,6 @@ cdef extern from "pythoncapi_compat.h":
 
 
 # cdef asyncio
-cdef object get_event_loop = asyncio.get_event_loop
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 cdef object TimerHandle = asyncio.TimerHandle
 cdef object cancel_handle = TimerHandle.cancel
@@ -877,13 +876,13 @@ cdef void _init_subclass(cls, dict kwargs):
             name = getattr(type_argument, "__name__", "")
             
             if module and qualname:
-                type_string = ":class:`~{}.{}`".format(module, qualname)
+                type_string = ":class:`~{}.{}".format(module, qualname)
             elif module and name:
-                type_string = (":class:`~{}.{}`".format(module, name))
+                type_string = (":class:`~{}.{}".format(module, name))
             elif qualname:
-                type_string = ":class:`{}`".format(qualname)
+                type_string = ":class:`{}".format(qualname)
             elif name:
-                type_string = ":class:`{}`".format(name)
+                type_string = ":class:`{}".format(name)
             else:
                 type_string = str(type_argument)
 
