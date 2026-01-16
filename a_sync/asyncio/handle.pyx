@@ -1,18 +1,45 @@
-import asyncio
+import contextvars
+import sys
+import typing
+
+import asyncio.format_helpers as format_helpers
 from asyncio.events import AbstractEventLoop
-from typiing import Any, Callable, List, Optional
+
+# cdef contextvars
+cdef object copy_context = contextvars.copy_context
+del contextvars
+
+# cdef sys
+cdef object getframe = sys._getframe
+del sys
+
+# cdef format_helpers
+cdef object extract_stack = format_helpers.extract_stack
+cdef object format_callback_source = format_helpers._format_callback_source
+del format_helpers
+
+# cdef typing
+cdef object Any = typing.Any
+cdef object Callable = typing.Callable
+cdef object List = typing.List
+cdef object Optional = typing.Optional
+cdef object Tuple = typing.Tuple
+del typing
 
 
-Callback =  Callable[[asyncio.Task[Any]], None]
+Callback = Callable[..., Any]
 
 cdef class Handle:
     """Object returned by callback registration methods."""
 
     cdef bint _cancelled
-    # TODO: cdef more attributes
-
-    def __cinit__(self) -> None:
-        self._cancelled = False
+    cdef object _context
+    cdef object _loop
+    cdef object _callback
+    cdef object _args
+    cdef object _source_traceback
+    cdef object _repr
+    cdef object __weakref__
         
     def __init__(
         self,
@@ -22,15 +49,15 @@ cdef class Handle:
         context=None,
     ) -> None:
         if context is None:
-            context = contextvars.copy_context()
+            context = copy_context()
         self._context = context
         self._loop = loop
         self._callback = callback
         self._args = args
-        self._repr: Optional[str] = None
+        self._cancelled = False
+        self._repr = None
         if self._loop.get_debug():
-            self._source_traceback = format_helpers.extract_stack(
-                sys._getframe(1))
+            self._source_traceback = extract_stack(getframe(1))
         else:
             self._source_traceback = None
 
@@ -39,8 +66,11 @@ cdef class Handle:
         if self._cancelled:
             info.append('cancelled')
         if self._callback is not None:
-            info.append(format_helpers._format_callback_source(
-                self._callback, self._args))
+            info.append(format_callback_source(
+                self._callback,
+                self._args,
+                debug=self._loop.get_debug(),
+            ))
         if self._source_traceback:
             frame = self._source_traceback[-1]
             info.append(f'created at {frame[0]}:{frame[1]}')
@@ -51,6 +81,9 @@ cdef class Handle:
             return self._repr
         info = self._repr_info()
         return '<{}>'.format(' '.join(info))
+
+    def get_context(self):
+        return self._context
 
     def cancel(self) -> None:
         if not self._cancelled:
@@ -72,8 +105,11 @@ cdef class Handle:
         except (SystemExit, KeyboardInterrupt):
             raise
         except BaseException as exc:
-            cb = format_helpers._format_callback_source(
-                self._callback, self._args)
+            cb = format_callback_source(
+                self._callback,
+                self._args,
+                debug=self._loop.get_debug(),
+            )
             msg = f'Exception in callback {cb}'
             context = {
                 'message': msg,
@@ -91,9 +127,6 @@ cdef class TimerHandle(Handle):
 
     cdef float _when
     cdef bint _scheduled
-
-    def __cinit__(self) -> None:
-        self._scheduled = False
         
     def __init__(
         self,
@@ -108,6 +141,7 @@ cdef class TimerHandle(Handle):
         if self._source_traceback:
             del self._source_traceback[-1]
         self._when = when
+        self._scheduled = False
 
     def _repr_info(self) -> List[str]:
         info = super()._repr_info()
