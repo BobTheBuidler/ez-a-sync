@@ -32,13 +32,13 @@ Callback = Callable[..., Any]
 cdef class Handle:
     """Object returned by callback registration methods."""
 
-    cdef bint _cancelled
-    cdef object _context
-    cdef object _loop
-    cdef object _callback
-    cdef object _args
-    cdef object _source_traceback
-    cdef object _repr
+    cdef public bint _cancelled
+    cdef public object _context
+    cdef public object _loop
+    cdef public object _callback
+    cdef public object _args
+    cdef public object _source_traceback
+    cdef public object _repr
     cdef object __weakref__
         
     def __init__(
@@ -125,8 +125,8 @@ cdef class Handle:
 cdef class TimerHandle(Handle):
     """Object returned by timed callback registration methods."""
 
-    cdef float _when
-    cdef bint _scheduled
+    cdef public float _when
+    cdef public bint _scheduled
         
     def __init__(
         self,
