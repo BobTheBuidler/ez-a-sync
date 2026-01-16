@@ -3,7 +3,8 @@ This module defines custom exceptions for the a_sync library.
 """
 
 from asyncio import Task
-from typing import Any
+from collections.abc import Iterable
+from typing import Any, override
 
 from a_sync import TaskMapping
 from a_sync.task import TaskMapping
@@ -28,7 +29,7 @@ class ASyncFlagException(ValueError):
 
     viable_flags: set[str]
     """The set of viable flags: {'sync', 'asynchronous'}."""
-    def desc(self, target) -> str:
+    def desc(self, target: Any) -> str:
         """
         Returns a description of the target for the flag error message.
 
@@ -58,7 +59,7 @@ class NoFlagsFound(ASyncFlagException):
         This is likely an issue with a custom subclass definition.
     """
 
-    def __init__(self, target, kwargs_keys=None) -> None:
+    def __init__(self, target: Any, kwargs_keys: Iterable[str] | None = None) -> None:
         """
         Initializes the NoFlagsFound exception.
 
@@ -81,7 +82,7 @@ class TooManyFlags(ASyncFlagException):
         This is likely an issue with a custom subclass definition.
     """
 
-    def __init__(self, target, present_flags) -> None:
+    def __init__(self, target: Any, present_flags: Iterable[str]) -> None:
         """
         Initializes the TooManyFlags exception.
 
@@ -195,7 +196,7 @@ class FunctionNotAsync(ImproperFunctionType):
         `coro_fn` must be a coroutine function defined with `async def`. You passed <function some_function at 0x...>.
     """
 
-    def __init__(self, fn) -> None:
+    def __init__(self, fn: Any) -> None:
         """
         Initializes the FunctionNotAsync exception.
 
@@ -221,7 +222,7 @@ class FunctionNotSync(ImproperFunctionType):
         `func` must be a coroutine function defined with `def`. You passed <function some_async_function at 0x...>.
     """
 
-    def __init__(self, fn) -> None:
+    def __init__(self, fn: Any) -> None:
         """
         Initializes the FunctionNotSync exception.
 
@@ -277,7 +278,8 @@ class SyncModeInAsyncContextError(ASyncRuntimeError):
             - :class:`ASyncRuntimeError`
         """
 
-    def __reduce__(self): ...
+    @override
+    def __reduce__(self) -> str | tuple[Any, ...]: ...
 
 class MappingError(Exception):
     """
@@ -356,7 +358,7 @@ class PersistedTaskException(Exception):
         ValueError: Some error
     """
 
-    def __init__(self, exc: Exception, task: Task) -> None:
+    def __init__(self, exc: Exception, task: Task[Any]) -> None:
         """
         Initializes the PersistedTaskException exception.
 

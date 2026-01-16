@@ -1,12 +1,17 @@
 from asyncio import TimerHandle
+from collections.abc import AsyncIterator, Callable
+from typing import Any, TypeVar, cast
 
 import pytest
 
 from a_sync.iter import ASyncGeneratorFunction, ASyncIterator
 
+_F = TypeVar("_F", bound=Callable[..., Any])
+asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)
 
-def test_a_sync_generator_function_init():
-    async def test():
+
+def test_a_sync_generator_function_init() -> None:
+    async def test() -> AsyncIterator[int]:
         yield 1
         yield 2
 
@@ -18,9 +23,9 @@ def test_a_sync_generator_function_init():
     assert wrapped._cache_handle is None
 
 
-def test_a_sync_generator_function_decorate_func():
+def test_a_sync_generator_function_decorate_func() -> None:
     @ASyncGeneratorFunction
-    async def test():
+    async def test() -> AsyncIterator[int]:
         yield 1
         yield 2
 
@@ -30,10 +35,10 @@ def test_a_sync_generator_function_decorate_func():
     assert test._cache_handle is None
 
 
-def test_a_sync_generator_function_decorate_method():
+def test_a_sync_generator_function_decorate_method() -> None:
     class MyClass:
         @ASyncGeneratorFunction
-        async def test(self):
+        async def test(self) -> AsyncIterator[int]:
             yield 1
             yield 2
 
@@ -51,9 +56,9 @@ def test_a_sync_generator_function_decorate_method():
     assert isinstance(instance.test._cache_handle, TimerHandle)
 
 
-def test_a_sync_generator_function_call_iter():
+def test_a_sync_generator_function_call_iter() -> None:
     @ASyncGeneratorFunction
-    async def test():
+    async def test() -> AsyncIterator[int]:
         yield 1
         yield 2
 
@@ -62,23 +67,23 @@ def test_a_sync_generator_function_call_iter():
     assert list(retval) == [1, 2]
 
 
-def test_a_sync_generator_method_call_iter():
+def test_a_sync_generator_method_call_iter() -> None:
     class MyClass:
         @ASyncGeneratorFunction
-        async def test(self):
+        async def test(self) -> AsyncIterator[int]:
             yield 1
             yield 2
 
     instance = MyClass()
-    retval = instance.test()
+    retval = cast(Any, instance.test)()
     assert isinstance(retval, ASyncIterator)
     assert list(retval) == [1, 2]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_a_sync_generator_function_call_aiter():
+@asyncio_cooperative
+async def test_a_sync_generator_function_call_aiter() -> None:
     @ASyncGeneratorFunction
-    async def test():
+    async def test() -> AsyncIterator[int]:
         yield 1
         yield 2
 
@@ -87,24 +92,24 @@ async def test_a_sync_generator_function_call_aiter():
     assert [x async for x in retval] == [1, 2]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_a_sync_generator_method_call_aiter():
+@asyncio_cooperative
+async def test_a_sync_generator_method_call_aiter() -> None:
     class MyClass:
         @ASyncGeneratorFunction
-        async def test(self):
+        async def test(self) -> AsyncIterator[int]:
             yield 1
             yield 2
 
     instance = MyClass()
-    retval = instance.test()
+    retval = cast(Any, instance.test)()
     assert isinstance(retval, ASyncIterator)
     assert [x async for x in retval] == [1, 2]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_a_sync_generator_function_call_await():
+@asyncio_cooperative
+async def test_a_sync_generator_function_call_await() -> None:
     @ASyncGeneratorFunction
-    async def test():
+    async def test() -> AsyncIterator[int]:
         yield 1
         yield 2
 
@@ -113,15 +118,15 @@ async def test_a_sync_generator_function_call_await():
     assert await retval == [1, 2]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_a_sync_generator_method_call_await():
+@asyncio_cooperative
+async def test_a_sync_generator_method_call_await() -> None:
     class MyClass:
         @ASyncGeneratorFunction
-        async def test(self):
+        async def test(self) -> AsyncIterator[int]:
             yield 1
             yield 2
 
     instance = MyClass()
-    retval = instance.test()
+    retval = cast(Any, instance.test)()
     assert isinstance(retval, ASyncIterator)
     assert await retval == [1, 2]
