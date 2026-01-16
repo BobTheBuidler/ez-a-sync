@@ -86,8 +86,16 @@ def create_task(
 cdef object ccreate_task_simple(object coro):
     return ccreate_task(coro, "", False, True)
     
+cdef inline void _prune_persisted_tasks():
+    cdef object persisted
+    if _persisted_tasks:
+        for persisted in tuple(_persisted_tasks):
+            if persisted.done():
+                _persisted_task_callback(persisted)
+
 cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint log_destroy_pending):
     cdef object loop = get_running_loop()
+    _prune_persisted_tasks()
     cdef object task_factory = loop._task_factory
     cdef object task, persisted
     

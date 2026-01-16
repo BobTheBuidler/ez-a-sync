@@ -617,7 +617,7 @@ cdef class _ASyncFilter(_ASyncView):
 
     @final
     def __repr__(self) -> str:
-        return "<{type(self).__name__} for iterator={} function={} at {}>".format(
+        return "<{} for iterator={} function={} at {}>".format(
             self.__wrapped__, self._function.__name__, hex(id(self))
         )
 
@@ -860,16 +860,24 @@ cdef void _init_subclass(cls, dict kwargs):
     cdef str type_string = ":obj:`T` objects"
 
     cdef object base
+    cdef object bases
+    cdef object origin
     cdef tuple args
     cdef str module, qualname, name
-    for base in getattr(cls, "__orig_bases__", []):
-        if not hasattr(base, "__args__"):
+    bases = getattr(cls, "__orig_bases__", None)
+    if not bases:
+        bases = cls.__bases__
+    for base in bases:
+        origin = getattr(base, "__origin__", None)
+        if origin is None:
+            origin = base
+        if origin not in (ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter):
             continue
-        
+
         args = get_args(base)
-        if base in (ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter):
-            raise Exception(base, args)
-            
+        if not args:
+            args = getattr(base, "__args__", None) or ()
+
         if args and not isinstance(type_argument := args[0], TypeVar):
             module = getattr(type_argument, "__module__", "")
             qualname = getattr(type_argument, "__qualname__", "")
