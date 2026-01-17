@@ -26,28 +26,18 @@ def test_im_a_fuckin_pro_dont_worry_suppresses_warnings(caplog) -> None:
     caplog.set_level(logging.WARNING, logger=logger_name)
 
     _trigger_argspec_warning()
-    messages = [
-        record.getMessage() for record in caplog.records if record.name == logger_name
-    ]
-    assert any(
-        "inspect." in message and "does not support" in message for message in messages
-    )
+    messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
+    assert any("inspect." in message and "does not support" in message for message in messages)
     assert "we will allow you to proceed but cannot guarantee things will work" in messages
     assert "hopefully you know what you're doing..." in messages
 
     caplog.clear()
     with im_a_fuckin_pro_dont_worry():
         _trigger_argspec_warning()
-    messages = [
-        record.getMessage() for record in caplog.records if record.name == logger_name
-    ]
+    messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
     assert not messages
 
     caplog.clear()
     _trigger_argspec_warning()
-    messages = [
-        record.getMessage() for record in caplog.records if record.name == logger_name
-    ]
-    assert any(
-        "inspect." in message and "does not support" in message for message in messages
-    )
+    messages = [record.getMessage() for record in caplog.records if record.name == logger_name]
+    assert any("inspect." in message and "does not support" in message for message in messages)
