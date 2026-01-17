@@ -6,20 +6,13 @@ import pytest
 
 from a_sync import TaskMapping, a_sync, create_task
 from a_sync.a_sync.base import ASyncGenericBase
-from a_sync.a_sync.function import (  # type: ignore[attr-defined]
-    ASyncFunction,
-    ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault,
-    _ASyncFunction,
-)
-from a_sync.a_sync.method import (  # type: ignore[attr-defined]
-    ASyncBoundMethod,
-    ASyncBoundMethodAsyncDefault,
-    ASyncBoundMethodSyncDefault,
-    _ASyncBoundMethod,
-)
+from a_sync.a_sync.function import (ASyncFunction,  # type: ignore[attr-defined]
+                                    ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault,
+                                    _ASyncFunction)
+from a_sync.a_sync.method import (ASyncBoundMethod,  # type: ignore[attr-defined]
+                                  ASyncBoundMethodAsyncDefault, ASyncBoundMethodSyncDefault,
+                                  _ASyncBoundMethod)
 from a_sync.task import _EmptySequenceError, _unwrap
-
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)

@@ -4,13 +4,8 @@ from typing import Any, TypeVar, cast
 
 import pytest
 
-from a_sync.task import (
-    TaskMapping,
-    TaskMappingItems,
-    TaskMappingKeys,
-    TaskMappingValues,
-    _EmptySequenceError,
-)
+from a_sync.task import (TaskMapping, TaskMappingItems, TaskMappingKeys, TaskMappingValues,
+                         _EmptySequenceError)
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)
