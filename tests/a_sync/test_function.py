@@ -1,6 +1,5 @@
-import logging
-
 import importlib
+import logging
 
 _a_sync_function = importlib.import_module("a_sync.a_sync.function")
 from a_sync.a_sync.function import ASyncFunction, im_a_fuckin_pro_dont_worry
