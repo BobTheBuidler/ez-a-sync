@@ -392,8 +392,7 @@ def _assert_len_dictviews(tasks: TaskMapping[int, str], expected: int) -> None:
 
 # TODO: add unwrap tests for bound method and property classes
 def test_unwrap_basic() -> None:
-    async def test_fn() -> None:
-        ...
+    async def test_fn() -> None: ...
 
     unwrapped: Any = _unwrap(cast(Any, test_fn))
     assert unwrapped is test_fn
@@ -401,8 +400,7 @@ def test_unwrap_basic() -> None:
 
 def test_unwrap_a_sync_function_sync_def() -> None:
     @a_sync_typed
-    def test_fn() -> None:
-        ...
+    def test_fn() -> None: ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunction)
@@ -417,8 +415,7 @@ def test_unwrap_a_sync_function_sync_def() -> None:
 
 def test_unwrap_a_sync_function_async_def() -> None:
     @a_sync_typed
-    async def test_fn() -> None:
-        ...
+    async def test_fn() -> None: ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunction)
@@ -433,8 +430,7 @@ def test_unwrap_a_sync_function_async_def() -> None:
 
 def test_unwrap_a_sync_function_sync_def_sync_default() -> None:
     @a_sync_sync
-    def test_fn() -> None:
-        ...
+    def test_fn() -> None: ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionSyncDefault)
@@ -449,8 +445,7 @@ def test_unwrap_a_sync_function_sync_def_sync_default() -> None:
 
 def test_unwrap_a_sync_function_async_def_sync_default() -> None:
     @a_sync_sync
-    async def test_fn() -> None:
-        ...
+    async def test_fn() -> None: ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionSyncDefault)
@@ -465,8 +460,7 @@ def test_unwrap_a_sync_function_async_def_sync_default() -> None:
 
 def test_unwrap_a_sync_function_sync_def_async_default() -> None:
     @a_sync_async
-    def test_fn() -> None:
-        ...
+    def test_fn() -> None: ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionAsyncDefault)
@@ -481,8 +475,7 @@ def test_unwrap_a_sync_function_sync_def_async_default() -> None:
 
 def test_unwrap_a_sync_function_async_def_async_default() -> None:
     @a_sync_async
-    async def test_fn() -> None:
-        ...
+    async def test_fn() -> None: ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionAsyncDefault)
@@ -501,8 +494,7 @@ def test_unwrap_a_sync_method_sync_def() -> None:
             self.sync = sync
             super().__init__()
 
-        def test_fn(self) -> None:
-            ...
+        def test_fn(self) -> None: ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
@@ -518,8 +510,7 @@ def test_unwrap_a_sync_method_async_def() -> None:
             self.sync = sync
             super().__init__()
 
-        async def test_fn(self) -> None:
-            ...
+        async def test_fn(self) -> None: ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
@@ -536,8 +527,7 @@ def test_unwrap_a_sync_method_sync_def_sync_defult() -> None:
             super().__init__()
 
         @a_sync_sync
-        def test_fn(self) -> None:
-            ...
+        def test_fn(self) -> None: ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
@@ -554,8 +544,7 @@ def test_unwrap_a_sync_method_async_def_sync_defult() -> None:
             super().__init__()
 
         @a_sync_sync
-        async def test_fn(self) -> None:
-            ...
+        async def test_fn(self) -> None: ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
@@ -572,8 +561,7 @@ def test_unwrap_a_sync_method_sync_def_async_default() -> None:
             super().__init__()
 
         @a_sync_async
-        def test_fn(self) -> None:
-            ...
+        def test_fn(self) -> None: ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
@@ -590,8 +578,7 @@ def test_unwrap_a_sync_method_async_def_async_default() -> None:
             super().__init__()
 
         @a_sync_async
-        async def test_fn(self) -> None:
-            ...
+        async def test_fn(self) -> None: ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)

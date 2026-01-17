@@ -4,8 +4,13 @@ from typing import Any, TypeVar, cast
 
 import pytest
 
-from a_sync.task import (TaskMapping, TaskMappingItems, TaskMappingKeys, TaskMappingValues,
-                         _EmptySequenceError)
+from a_sync.task import (
+    TaskMapping,
+    TaskMappingItems,
+    TaskMappingKeys,
+    TaskMappingValues,
+    _EmptySequenceError,
+)
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)
@@ -95,9 +100,7 @@ async def test_empty_taskmapping_views_broken_mapping_async(view_class: type[Any
         (TaskMappingItems, [("key1", "result for key1")]),
     ],
 )
-def test_single_item_taskmapping_views_sync(
-    view_class: type[Any], expected: list[Any]
-) -> None:
+def test_single_item_taskmapping_views_sync(view_class: type[Any], expected: list[Any]) -> None:
     tasks = TaskMapping(sample_task, ["key1"])
     view = view_class(expected, tasks)
     results = list(view)
