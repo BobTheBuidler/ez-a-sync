@@ -2,16 +2,8 @@ from collections.abc import ItemsView, Iterator, KeysView, ValuesView
 from concurrent.futures import Executor
 from typing import Any, Final
 
-from a_sync._typing import (
-    CacheType,
-    CoroFn,
-    DefaultMode,
-    ModifierKwargs,
-    P,
-    SemaphoreSpec,
-    SyncFn,
-    T,
-)
+from a_sync._typing import (CacheType, CoroFn, DefaultMode, ModifierKwargs, P, SemaphoreSpec,
+                            SyncFn, T)
 from a_sync.a_sync.config import null_modifiers, user_set_default_modifiers
 from a_sync.a_sync.modifiers import cache, limiter, semaphores
 
