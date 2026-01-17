@@ -49,7 +49,9 @@ def async_error_generator() -> Callable[[], AsyncIterator[int]]:
 
 
 @test_both
-def test_wrap_types(cls_to_test: type[Any], async_generator: Callable[..., AsyncIterator[int]]) -> None:
+def test_wrap_types(
+    cls_to_test: type[Any], async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     assert isinstance(cls_to_test(async_generator()), cls_to_test)
     assert isinstance(cls_to_test.wrap(async_generator()), cls_to_test)
 
@@ -77,7 +79,9 @@ def test_sync(cls_to_test: type[Any], async_generator: Callable[..., AsyncIterat
 
 @test_both
 @asyncio_cooperative
-async def test_async(cls_to_test: type[Any], async_generator: Callable[..., AsyncIterator[int]]) -> None:
+async def test_async(
+    cls_to_test: type[Any], async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     ait = cls_to_test(async_generator())
 
     # comprehension
@@ -223,7 +227,6 @@ async def test_aiterable_decorated_func_async(
             yield 0
 
 
-
 def test_aiterator_decorated_func_sync(
     async_generator: Callable[..., AsyncIterator[int]],
 ) -> None:
@@ -251,7 +254,6 @@ async def test_aiterator_decorated_func_async(
     assert await retval == [0, 1, 2]
 
 
-
 def test_aiterable_decorated_method_sync() -> None:
     with pytest.raises(TypeError, match=""):
 
@@ -269,7 +271,6 @@ async def test_aiterable_decorated_method_async() -> None:
             @async_iterable_wrap
             async def decorated(self) -> AsyncIterator[int]:
                 yield 0
-
 
 
 def test_aiterator_decorated_method_sync(
@@ -354,7 +355,6 @@ def test_async_iterable_iter_method(
     ait = ASyncIterable(async_generator())
     iterator = iter(ait)
     assert isinstance(iterator, Iterator)
-
 
 
 def test_async_iterator_iter_method(
