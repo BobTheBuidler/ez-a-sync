@@ -1,8 +1,8 @@
 # cython: profile=False
 # cython: linetrace=False
 import asyncio
-import inspect
 import functools
+import inspect
 import time
 from logging import DEBUG, Logger, getLogger
 from typing import AsyncIterator, Callable, NoReturn, TypeVar
@@ -10,8 +10,8 @@ from typing import AsyncIterator, Callable, NoReturn, TypeVar
 from typing_extensions import Concatenate, ParamSpec
 
 from a_sync.a_sync.base import ASyncGenericBase
-from a_sync.iter cimport _ASyncGeneratorFunction
 
+from a_sync.iter cimport _ASyncGeneratorFunction
 
 __P = ParamSpec("__P")
 __T = TypeVar("__T")

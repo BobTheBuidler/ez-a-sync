@@ -1,6 +1,6 @@
 import pytest
-from tests.fixtures import TestLimiter, increment
 
+from tests.fixtures import TestLimiter, increment
 
 # ISSUES
 # - We are unable to pass in an existing semaphore object, it attaches to a different loop.

@@ -6,14 +6,17 @@ These primitives manage synchronization of tasks that must wait for an internal 
 
 from asyncio import sleep
 from heapq import heapify, heappop, heappush
+
+from libc.stdlib cimport free, malloc
 from libc.string cimport strcpy
-from libc.stdlib cimport malloc, free
 from libc.time cimport time
+
 from typing import Iterable
 
 from a_sync.asyncio cimport cigather
 from a_sync.primitives._debug cimport _DebugDaemonMixin
 from a_sync.primitives.locks.event cimport CythonEvent as Event
+
 
 cdef extern from "time.h":
     ctypedef long time_t

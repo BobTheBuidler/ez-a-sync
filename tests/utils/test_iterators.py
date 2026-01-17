@@ -1,4 +1,5 @@
 import asyncio
+
 import pytest
 
 from a_sync.utils.iterators import as_yielded

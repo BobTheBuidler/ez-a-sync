@@ -1,11 +1,9 @@
-import pytest
 import asyncio
-from a_sync.primitives.queue import (
-    PriorityProcessingQueue,
-    ProcessingQueue,
-    Queue,
-    SmartProcessingQueue,
-)
+
+import pytest
+
+from a_sync.primitives.queue import (PriorityProcessingQueue, ProcessingQueue,
+                                     Queue, SmartProcessingQueue)
 
 
 @pytest.mark.asyncio_cooperative

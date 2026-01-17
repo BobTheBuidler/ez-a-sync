@@ -1,8 +1,8 @@
 import asyncio
 
-import a_sync
 import pytest
 
+import a_sync
 from tests.fixtures import sample_exc, sample_task, timeout_task
 
 

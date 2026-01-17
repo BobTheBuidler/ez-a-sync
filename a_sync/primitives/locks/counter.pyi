@@ -1,7 +1,9 @@
+from typing import Iterable, Optional
+
 from _typeshed import Incomplete
+
 from a_sync.primitives._debug import _DebugDaemonMixin
 from a_sync.primitives.locks import Event
-from typing import Iterable, Optional
 
 class CounterLock(_DebugDaemonMixin):
     """

@@ -15,7 +15,8 @@ See Also:
 
 import asyncio
 import sys
-from asyncio import AbstractEventLoop, Future, InvalidStateError, QueueEmpty, Task
+from asyncio import (AbstractEventLoop, Future, InvalidStateError, QueueEmpty,
+                     Task)
 from asyncio.events import _get_running_loop
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
@@ -24,7 +25,8 @@ from weakref import WeakValueDictionary, proxy, ref
 
 from a_sync._smart import SmartFuture
 from a_sync._smart import _Key as _SmartKey
-from a_sync._typing import Any, Awaitable, Callable, Concatenate, Generic, List, Literal, NoReturn, Optional, P, T, Tuple, V
+from a_sync._typing import (Any, Awaitable, Callable, Concatenate, Generic,
+                            List, Literal, NoReturn, Optional, P, T, Tuple, V)
 from a_sync.asyncio import create_task, igather
 from a_sync.functools import cached_property_unsafe
 

@@ -1,9 +1,9 @@
+import asyncio.format_helpers as format_helpers
 import contextvars
 import sys
 import typing
-
-import asyncio.format_helpers as format_helpers
 from asyncio.events import AbstractEventLoop
+
 
 # cdef contextvars
 cdef object copy_context = contextvars.copy_context

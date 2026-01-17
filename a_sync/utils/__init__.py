@@ -5,8 +5,8 @@ iterators and implementing asynchronous versions of the built-in any and all fun
 
 from asyncio import as_completed, ensure_future
 
-from a_sync.utils.iterators import as_yielded, exhaust_iterator, exhaust_iterators
-
+from a_sync.utils.iterators import (as_yielded, exhaust_iterator,
+                                    exhaust_iterators)
 
 __all__ = [
     # "all",

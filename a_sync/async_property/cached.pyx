@@ -4,9 +4,12 @@ import functools
 import typing
 
 from a_sync._smart cimport shield
+
 from a_sync.async_property.proxy import AwaitableProxy
+
 from a_sync.async_property.proxy cimport AwaitableOnly
 from a_sync.functools cimport update_wrapper
+
 
 # cdef asyncio
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
