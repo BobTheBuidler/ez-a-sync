@@ -4,12 +4,8 @@ from typing import Any, TypeVar, cast, override
 
 import pytest
 
-from a_sync.primitives.queue import (
-    PriorityProcessingQueue,
-    ProcessingQueue,
-    Queue,
-    SmartProcessingQueue,
-)
+from a_sync.primitives.queue import (PriorityProcessingQueue, ProcessingQueue, Queue,
+                                     SmartProcessingQueue)
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)
