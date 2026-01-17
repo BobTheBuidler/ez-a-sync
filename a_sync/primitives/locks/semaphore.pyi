@@ -227,7 +227,6 @@ class ThreadsafeSemaphore(Semaphore):
 
     @override
     async def __aenter__(self) -> None: ...
-
     @override
     async def __aexit__(
         self,

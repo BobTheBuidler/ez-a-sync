@@ -9,6 +9,7 @@ from a_sync.primitives import CounterLock
 _F = TypeVar("_F", bound=Callable[..., Any])
 asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)
 
+
 @asyncio_cooperative
 async def test_counter_lock() -> None:
     counter = CounterLock()

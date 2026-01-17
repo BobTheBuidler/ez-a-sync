@@ -9,6 +9,7 @@ from a_sync import PrioritySemaphore
 _F = TypeVar("_F", bound=Callable[..., Any])
 asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)
 
+
 def test_prio_semaphore_init() -> None:
     assert PrioritySemaphore(1)._value == 1
     with_name = PrioritySemaphore(10, name="test")
