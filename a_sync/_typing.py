@@ -70,42 +70,23 @@ from decimal import Decimal
 from typing import (
     TYPE_CHECKING,
     Any,
-    DefaultDict,
-    Deque,
-    Dict,
-    Generic,
-    List,
     Literal,
-    NoReturn,
     Optional,
     Protocol,
-    Set,
-    Tuple,
-    Type,
     TypedDict,
     TypeVar,
     Union,
-    overload,
     runtime_checkable,
 )
 from collections.abc import (
-    AsyncGenerator,
     AsyncIterable,
-    AsyncIterator,
     Awaitable,
     Callable,
     Coroutine,
-    Generator,
-    ItemsView,
     Iterable,
-    Iterator,
-    KeysView,
-    Mapping,
-    ValuesView,
 )
 
-from typing_extensions import ParamSpec, Self, Unpack
-from typing import Concatenate
+from typing_extensions import ParamSpec
 
 if TYPE_CHECKING:
     from a_sync import ASyncGenericBase

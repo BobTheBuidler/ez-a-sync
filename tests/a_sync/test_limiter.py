@@ -1,5 +1,4 @@
 import pytest
-from time import time
 from tests.fixtures import TestLimiter, increment
 
 

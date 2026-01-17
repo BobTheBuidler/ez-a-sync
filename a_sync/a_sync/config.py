@@ -48,7 +48,7 @@ import os
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from concurrent.futures._base import Executor
 
-from a_sync._typing import *
+from a_sync._typing import CacheType, DefaultMode, ModifierKwargs
 
 EXECUTOR_TYPE = os.environ.get("A_SYNC_EXECUTOR_TYPE", "threads")
 """Specifies the type of executor to use.
