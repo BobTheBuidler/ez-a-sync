@@ -33,10 +33,7 @@ from inspect import isawaitable
 from typing import (
     TYPE_CHECKING,
     Any,
-    Awaitable,
-    Callable,
     Dict,
-    Generator,
     Generic,
     List,
     Optional,
@@ -46,6 +43,7 @@ from typing import (
     final,
     overload,
 )
+from collections.abc import Awaitable, Callable, Generator
 
 from typing_extensions import Self, Unpack
 
@@ -93,7 +91,7 @@ def future(
     return _ASyncFutureWrappedFn(callable, **kwargs)
 
 
-async def _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> List[T]:
+async def _gather_check_and_materialize(*things: Unpack[MaybeAwaitable[T]]) -> list[T]:
     """
     Gathers and materializes a list of awaitable or non-awaitable items.
 
@@ -215,7 +213,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     __slots__ = "__awaitable__", "__dependencies", "__dependants", "__task"
 
     def __init__(
-        self, awaitable: Awaitable[T], dependencies: List["ASyncFuture"] = []
+        self, awaitable: Awaitable[T], dependencies: list["ASyncFuture"] = []
     ) -> None:  # sourcery skip: default-mutable-arg
         """
         Initializes an `ASyncFuture` with an awaitable and optional dependencies.
@@ -242,7 +240,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             assert isinstance(dependency, ASyncFuture)
             dependency.__dependants.append(self)
 
-        self.__dependants: List[ASyncFuture] = []
+        self.__dependants: list[ASyncFuture] = []
         """A list of dependants."""
 
         self.__task = None
@@ -265,7 +263,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             )
         return f"{string}>"
 
-    def __list_dependencies(self, other) -> List["ASyncFuture"]:
+    def __list_dependencies(self, other) -> list["ASyncFuture"]:
         """
         Lists dependencies for the `ASyncFuture`.
 
@@ -278,7 +276,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         return [self, other] if isinstance(other, ASyncFuture) else [self]
 
     @property
-    def result(self) -> Union[Callable[[], T], Any]:
+    def result(self) -> Callable[[], T] | Any:
         # sourcery skip: assign-if-exp, reintroduce-else
         """
         If this future is not done, it will work like `cf.Future.result`. It will block, await the awaitable, and return the result when ready.
@@ -1298,7 +1296,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     # WIP internals
 
     @property
-    def __dependants__(self) -> Set["ASyncFuture"]:
+    def __dependants__(self) -> set["ASyncFuture"]:
         """
         Returns the set of dependants for this `ASyncFuture`, including nested dependants.
 
@@ -1316,7 +1314,7 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         return dependants
 
     @property
-    def __dependencies__(self) -> Set["ASyncFuture"]:
+    def __dependencies__(self) -> set["ASyncFuture"]:
         """
         Returns the set of dependencies for this `ASyncFuture`, including nested dependencies.
 
@@ -1400,7 +1398,7 @@ class _ASyncFutureWrappedFn(Callable[P, ASyncFuture[T]]):
         return f"<{self.__class__.__name__} {self.callable}>"
 
     def __get__(
-        self, instance: I, owner: Type[I]
+        self, instance: I, owner: type[I]
     ) -> Union[Self, "_ASyncFutureInstanceMethod[I, P, T]"]:
         return self if owner is None else _ASyncFutureInstanceMethod(self, instance)
 
@@ -1438,10 +1436,10 @@ class _ASyncFutureInstanceMethod(Generic[I, P, T]):
     __qualname__: str
     """The qualified name of the wrapper."""
 
-    __doc__: Optional[str]
+    __doc__: str | None
     """The docstring of the wrapper."""
 
-    __annotations__: Dict[str, Any]
+    __annotations__: dict[str, Any]
     """The annotations of the wrapper."""
 
     __instance: I
