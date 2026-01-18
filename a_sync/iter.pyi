@@ -1,8 +1,14 @@
 import weakref
 from abc import ABCMeta
 from asyncio import TimerHandle
-from collections.abc import (AsyncGenerator, AsyncIterable, AsyncIterator, Callable, Coroutine,
-                             Generator)
+from collections.abc import (
+    AsyncGenerator,
+    AsyncIterable,
+    AsyncIterator,
+    Callable,
+    Coroutine,
+    Generator,
+)
 from typing import Any, Generic, Iterable, Iterator, TypeAlias, TypeVar, final, override
 
 from typing_extensions import ParamSpec, Self
