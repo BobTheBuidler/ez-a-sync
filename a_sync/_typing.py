@@ -200,20 +200,52 @@ SemaphoreSpec = asyncio.Semaphore | int | None
 "Type alias for semaphore specifications."
 
 
-class ModifierKwargs(TypedDict, total=False):
+class _ModifierKwargsBase(TypedDict, total=False):
     """
-    TypedDict for keyword arguments that modify the behavior of asynchronous operations.
+    TypedDict for keyword arguments that modify the behavior of asynchronous operations,
+    excluding the default mode and executor.
     """
 
-    default: DefaultMode
     cache_type: CacheType
     cache_typed: bool
     ram_cache_maxsize: int | None
     ram_cache_ttl: Numeric | None
     runs_per_minute: int | None
     semaphore: SemaphoreSpec
+
+
+class _ModifierKwargsNoDefault(_ModifierKwargsBase, total=False):
+    """
+    TypedDict for keyword arguments that modify the behavior of asynchronous operations,
+    excluding the default mode.
+    """
+
     # sync modifiers
     executor: Executor
+
+
+class _ModifierKwargsNoExecutor(_ModifierKwargsBase, total=False):
+    """
+    TypedDict for keyword arguments that modify the behavior of asynchronous operations,
+    excluding the executor.
+    """
+
+    default: DefaultMode
+
+
+class _ModifierKwargsNoDefaultExecutor(_ModifierKwargsBase, total=False):
+    """
+    TypedDict for keyword arguments that modify the behavior of asynchronous operations,
+    excluding the default mode and executor.
+    """
+
+
+class ModifierKwargs(_ModifierKwargsNoDefault, total=False):
+    """
+    TypedDict for keyword arguments that modify the behavior of asynchronous operations.
+    """
+
+    default: DefaultMode
 
 
 AnyIterable = AsyncIterable[K] | Iterable[K]
