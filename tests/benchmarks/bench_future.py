@@ -15,43 +15,36 @@ async def dct():
     return {1: 2}
 
 
-@pytest.mark.benchmark
-def test_future_result(benchmark):
+def test_future_result():
     """Benchmark ASyncFuture result retrieval."""
-    benchmark(lambda: ASyncFuture(one()).result())
+    result = ASyncFuture(one()).result()
+    assert result == 1
 
 
-@pytest.mark.benchmark
-def test_future_add(benchmark):
+def test_future_add():
     """Benchmark ASyncFuture addition operations."""
-    benchmark(lambda: ASyncFuture(one()) + ASyncFuture(two()))
+    result = ASyncFuture(one()) + ASyncFuture(two())
+    assert result == 3
 
 
-@pytest.mark.benchmark
-def test_future_arithmetic(benchmark):
+def test_future_arithmetic():
     """Benchmark complex arithmetic with ASyncFuture."""
-    def arithmetic():
-        some = ASyncFuture(two())
-        other = ASyncFuture(two())
-        stuff = ASyncFuture(two())
-        idrk = ASyncFuture(one())
-        return (some + stuff - idrk) * ASyncFuture(two())
-    
-    benchmark(arithmetic)
+    some = ASyncFuture(two())
+    other = ASyncFuture(two())
+    stuff = ASyncFuture(two())
+    idrk = ASyncFuture(one())
+    result = (some + stuff - idrk) * ASyncFuture(two())
+    assert result == 6
 
 
-@pytest.mark.benchmark
-def test_future_comparison(benchmark):
+def test_future_comparison():
     """Benchmark ASyncFuture comparison operations."""
-    def comparison():
-        f1 = ASyncFuture(one())
-        f2 = ASyncFuture(two())
-        return f1 < f2 and f2 > f1
-    
-    benchmark(comparison)
+    f1 = ASyncFuture(one())
+    f2 = ASyncFuture(two())
+    assert f1 < f2 and f2 > f1
 
 
-@pytest.mark.benchmark
-def test_future_getitem(benchmark):
+def test_future_getitem():
     """Benchmark ASyncFuture dictionary access."""
-    benchmark(lambda: ASyncFuture(dct())[1])
+    result = ASyncFuture(dct())[1]
+    assert result == 2

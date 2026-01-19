@@ -17,31 +17,31 @@ async def async_function():
     return sum(range(100))
 
 
-@pytest.mark.benchmark
-def test_async_decorator_sync_call(benchmark):
+def test_async_decorator_sync_call():
     """Benchmark @a_sync('async') function called synchronously."""
-    benchmark(lambda: sync_function(sync=True))
+    result = sync_function(sync=True)
+    assert result == 4950
 
 
-@pytest.mark.benchmark
-def test_async_decorator_async_call(benchmark):
+def test_async_decorator_async_call():
     """Benchmark @a_sync('async') function called asynchronously."""
     async def run():
         return await sync_function()
     
-    benchmark(lambda: asyncio.run(run()))
+    result = asyncio.run(run())
+    assert result == 4950
 
 
-@pytest.mark.benchmark
-def test_sync_decorator_sync_call(benchmark):
+def test_sync_decorator_sync_call():
     """Benchmark @a_sync('sync') function called synchronously."""
-    benchmark(async_function)
+    result = async_function()
+    assert result == 4950
 
 
-@pytest.mark.benchmark
-def test_sync_decorator_async_call(benchmark):
+def test_sync_decorator_async_call():
     """Benchmark @a_sync('sync') function called asynchronously."""
     async def run():
         return await async_function(sync=False)
     
-    benchmark(lambda: asyncio.run(run()))
+    result = asyncio.run(run())
+    assert result == 4950

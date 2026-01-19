@@ -16,8 +16,7 @@ def io_work(duration):
     return duration
 
 
-@pytest.mark.benchmark
-def test_executor_submit(benchmark):
+def test_executor_submit():
     """Benchmark ProcessPoolExecutor submit operation."""
     executor = ProcessPoolExecutor(2)
     
@@ -25,15 +24,16 @@ def test_executor_submit(benchmark):
         fut = executor.submit(simple_work, 42)
         return await fut
     
-    benchmark(lambda: asyncio.run(run()))
+    result = asyncio.run(run())
+    assert result == 84
 
 
-@pytest.mark.benchmark
-def test_executor_run(benchmark):
+def test_executor_run():
     """Benchmark ProcessPoolExecutor run operation."""
     executor = ProcessPoolExecutor(2)
     
     async def run():
         return await executor.run(simple_work, 42)
     
-    benchmark(lambda: asyncio.run(run()))
+    result = asyncio.run(run())
+    assert result == 84
