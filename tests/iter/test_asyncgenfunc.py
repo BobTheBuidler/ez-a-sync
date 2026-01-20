@@ -1,5 +1,6 @@
 # mypy: disable-error-code=no-untyped-def
 from asyncio import TimerHandle
+from typing import Any, cast
 
 import pytest
 
@@ -71,7 +72,7 @@ def test_a_sync_generator_method_call_iter():
             yield 2
 
     instance = MyClass()
-    retval = instance.test()
+    retval = cast(Any, instance.test)()
     assert isinstance(retval, ASyncIterator)
     assert list(retval) == [1, 2]
 
@@ -97,7 +98,7 @@ async def test_a_sync_generator_method_call_aiter():
             yield 2
 
     instance = MyClass()
-    retval = instance.test()
+    retval = cast(Any, instance.test)()
     assert isinstance(retval, ASyncIterator)
     assert [x async for x in retval] == [1, 2]
 
@@ -123,6 +124,6 @@ async def test_a_sync_generator_method_call_await():
             yield 2
 
     instance = MyClass()
-    retval = instance.test()
+    retval = cast(Any, instance.test)()
     assert isinstance(retval, ASyncIterator)
     assert await retval == [1, 2]
