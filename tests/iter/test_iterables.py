@@ -1,3 +1,4 @@
+# mypy: disable-error-code=no-untyped-def
 import re
 from collections.abc import AsyncIterator, Iterator
 from typing import TypeVar
