@@ -1,4 +1,4 @@
-# mypy: disable-error-code=no-untyped-def
+# mypy: disable-error-code="no-untyped-def,no-untyped-call,attr-defined"
 import asyncio
 
 import pytest
