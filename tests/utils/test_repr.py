@@ -1,3 +1,4 @@
+# mypy: disable-error-code=no-untyped-def
 from a_sync.utils.repr import repr_trunc
 
 
