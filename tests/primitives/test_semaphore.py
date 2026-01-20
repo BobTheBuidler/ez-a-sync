@@ -1,6 +1,8 @@
 import asyncio
 import sys
+from collections.abc import Callable
 from time import time
+from typing import Any, TypeVar, cast
 
 import pytest
 
@@ -12,18 +14,21 @@ from tests.fixtures import TestSemaphore, increment
 #   Maybe a problem with test suite interaction?
 # - semaphore modifier works fine with integer inputs
 
+_F = TypeVar("_F", bound=Callable[..., Any])
+asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)
+increment = cast(Callable[[_F], _F], increment)
 
 instance = TestSemaphore(1, sync=False)
 
 
-def test_semaphore_init():
+def test_semaphore_init() -> None:
     assert Semaphore(1)._value == Semaphore()._value == 1
     repr(Semaphore(1))
 
 
 @increment
-@pytest.mark.asyncio_cooperative
-async def test_semaphore(i: int):
+@asyncio_cooperative
+async def test_semaphore(i: int) -> None:
     start = time()
     assert await instance.test_fn() == 1
     duration = time() - start
@@ -32,8 +37,8 @@ async def test_semaphore(i: int):
 
 
 @increment
-@pytest.mark.asyncio_cooperative
-async def test_semaphore_property(i: int):
+@asyncio_cooperative
+async def test_semaphore_property(i: int) -> None:
     start = time()
     assert await instance.test_property == 2
     duration = time() - start
@@ -42,8 +47,8 @@ async def test_semaphore_property(i: int):
 
 
 @increment
-@pytest.mark.asyncio_cooperative
-async def test_semaphore_cached_property(i: int):
+@asyncio_cooperative
+async def test_semaphore_cached_property(i: int) -> None:
     start = time()
     assert await instance.test_cached_property == 3
     duration = time() - start
@@ -54,8 +59,8 @@ async def test_semaphore_cached_property(i: int):
     assert i == 1 or duration < 1.4
 
 
-@pytest.mark.asyncio_cooperative
-async def test_semaphore_acquire_release():
+@asyncio_cooperative
+async def test_semaphore_acquire_release() -> None:
     semaphore = Semaphore(2)
     await semaphore.acquire()
     assert semaphore._value == 1
@@ -63,11 +68,11 @@ async def test_semaphore_acquire_release():
     assert semaphore._value == 2
 
 
-@pytest.mark.asyncio_cooperative
-async def test_semaphore_blocking():
+@asyncio_cooperative
+async def test_semaphore_blocking() -> None:
     semaphore = Semaphore(1)
 
-    async def task():
+    async def task() -> None:
         await semaphore.acquire()
         await asyncio.sleep(0.1)
         semaphore.release()
@@ -80,12 +85,12 @@ async def test_semaphore_blocking():
     await task1
 
 
-@pytest.mark.asyncio_cooperative
-async def test_semaphore_multiple_tasks():
+@asyncio_cooperative
+async def test_semaphore_multiple_tasks() -> None:
     semaphore = Semaphore(2)
-    results = []
+    results: list[int] = []
 
-    async def task(index):
+    async def task(index: int) -> None:
         await semaphore.acquire()
         results.append(index)
         await asyncio.sleep(0.1)
@@ -96,11 +101,11 @@ async def test_semaphore_multiple_tasks():
     assert results == [0, 1, 2, 3]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_semaphore_with_zero_initial_value():
+@asyncio_cooperative
+async def test_semaphore_with_zero_initial_value() -> None:
     semaphore = Semaphore(0)
 
-    async def task():
+    async def task() -> str:
         await semaphore.acquire()
         return "done"
 
@@ -112,17 +117,17 @@ async def test_semaphore_with_zero_initial_value():
     assert result == "done"
 
 
-def test_semaphore_negative_initial_value():
+def test_semaphore_negative_initial_value() -> None:
     with pytest.raises(ValueError):
         Semaphore(-1)
     with pytest.raises(TypeError):
-        Semaphore(None)
+        Semaphore(None)  # type: ignore[arg-type]
     with pytest.raises(TypeError):
-        Semaphore("None")
+        Semaphore("None")  # type: ignore[arg-type]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_semaphore_releasing_without_acquiring():
+@asyncio_cooperative
+async def test_semaphore_releasing_without_acquiring() -> None:
     semaphore = Semaphore(1)
     semaphore.release()
     assert semaphore._value == 2
@@ -147,12 +152,12 @@ async def test_semaphore_with_custom_loop():
 """
 
 
-@pytest.mark.asyncio_cooperative
-async def test_concurrent_acquire_release():
+@asyncio_cooperative
+async def test_concurrent_acquire_release() -> None:
     semaphore = Semaphore(2)
-    results = []
+    results: list[int] = []
 
-    async def task(index):
+    async def task(index: int) -> None:
         await semaphore.acquire()
         results.append(index)
         await asyncio.sleep(0.1)
@@ -163,8 +168,8 @@ async def test_concurrent_acquire_release():
     assert sorted(results) == list(range(10))
 
 
-@pytest.mark.asyncio_cooperative
-async def test_semaphore_max_integer_value():
+@asyncio_cooperative
+async def test_semaphore_max_integer_value() -> None:
     semaphore = Semaphore(sys.maxsize)
     await semaphore.acquire()
     assert semaphore._value == sys.maxsize - 1
@@ -172,11 +177,11 @@ async def test_semaphore_max_integer_value():
     assert semaphore._value == sys.maxsize
 
 
-@pytest.mark.asyncio_cooperative
-async def test_rapid_acquire_release():
+@asyncio_cooperative
+async def test_rapid_acquire_release() -> None:
     semaphore = Semaphore(1)
 
-    async def task():
+    async def task() -> None:
         for _ in range(100):
             await semaphore.acquire()
             semaphore.release()
@@ -184,11 +189,11 @@ async def test_rapid_acquire_release():
     await asyncio.gather(*(task() for _ in range(10)))
 
 
-@pytest.mark.asyncio_cooperative
-async def test_exception_handling_during_acquire():
+@asyncio_cooperative
+async def test_exception_handling_during_acquire() -> None:
     semaphore = Semaphore(1)
 
-    async def task():
+    async def task() -> None:
         try:
             await semaphore.acquire()
             raise ValueError("Intentional error")
@@ -199,11 +204,11 @@ async def test_exception_handling_during_acquire():
     assert semaphore._value == 1
 
 
-@pytest.mark.asyncio_cooperative
-async def test_cancelled_acquire():
+@asyncio_cooperative
+async def test_cancelled_acquire() -> None:
     semaphore = Semaphore(1)
 
-    async def task():
+    async def task() -> None:
         await semaphore.acquire()
         await asyncio.sleep(0.5)
         semaphore.release()
@@ -211,7 +216,7 @@ async def test_cancelled_acquire():
     task1 = asyncio.create_task(task())
     await asyncio.sleep(0.1)
 
-    async def waiting_task():
+    async def waiting_task() -> None:
         await semaphore.acquire()
 
     waiting_task1 = asyncio.create_task(waiting_task())
@@ -220,11 +225,11 @@ async def test_cancelled_acquire():
     await task1
 
 
-@pytest.mark.asyncio_cooperative
-async def test_delayed_release():
+@asyncio_cooperative
+async def test_delayed_release() -> None:
     semaphore = Semaphore(1)
 
-    async def task():
+    async def task() -> None:
         await semaphore.acquire()
         await asyncio.sleep(1)
         semaphore.release()
@@ -235,19 +240,19 @@ async def test_delayed_release():
     await task1
 
 
-@pytest.mark.asyncio_cooperative
-async def test_invalid_release():
+@asyncio_cooperative
+async def test_invalid_release() -> None:
     semaphore = Semaphore(1)
     semaphore.release()
     semaphore.release()
     assert semaphore._value == 3
 
 
-@pytest.mark.asyncio_cooperative
-async def test_custom_error_handling():
+@asyncio_cooperative
+async def test_custom_error_handling() -> None:
     semaphore = Semaphore(1)
 
-    async def task():
+    async def task() -> None:
         try:
             await semaphore.acquire()
             raise RuntimeError("Custom error")
@@ -258,8 +263,8 @@ async def test_custom_error_handling():
     assert semaphore._value == 1
 
 
-@pytest.mark.asyncio_cooperative
-async def test_dynamic_resizing():
+@asyncio_cooperative
+async def test_dynamic_resizing() -> None:
     semaphore = Semaphore(2)
     semaphore._value = 5
     await semaphore.acquire()
@@ -268,11 +273,11 @@ async def test_dynamic_resizing():
     assert semaphore._value == 5
 
 
-@pytest.mark.asyncio_cooperative
-async def test_high_frequency_operations():
+@asyncio_cooperative
+async def test_high_frequency_operations() -> None:
     semaphore = Semaphore(1)
 
-    async def task():
+    async def task() -> None:
         for _ in range(1000):
             await semaphore.acquire()
             semaphore.release()
@@ -280,11 +285,11 @@ async def test_high_frequency_operations():
     await asyncio.gather(*(task() for _ in range(10)))
 
 
-@pytest.mark.asyncio_cooperative
-async def test_semaphore_as_context_manager():
+@asyncio_cooperative
+async def test_semaphore_as_context_manager() -> None:
     semaphore = Semaphore(1)
 
-    async def task():
+    async def task() -> None:
         async with semaphore:
             assert semaphore._value == 0
 
@@ -292,11 +297,11 @@ async def test_semaphore_as_context_manager():
     assert semaphore._value == 1
 
 
-@pytest.mark.asyncio_cooperative
-async def test_exception_in_release():
+@asyncio_cooperative
+async def test_exception_in_release() -> None:
     semaphore = Semaphore(1)
 
-    async def task():
+    async def task() -> None:
         await semaphore.acquire()
         try:
             raise RuntimeError("Error during release")

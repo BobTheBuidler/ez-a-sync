@@ -2,7 +2,8 @@ import asyncio
 import functools
 from logging import Logger
 from threading import Thread
-from typing import DefaultDict, Literal
+from types import TracebackType
+from typing import Any, DefaultDict, Literal, override
 
 from typing_extensions import Never
 
@@ -48,7 +49,13 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     name: str
     """An optional name for the counter, used in debug logs. Defaults to an empty string."""
 
-    def __init__(self, value: int, name: str = "", **kwargs) -> None:
+    def __init__(
+        self,
+        value: int = 1,
+        name: str = "",
+        loop: asyncio.AbstractEventLoop | None = ...,
+        **kwargs: Any,
+    ) -> None:
         """
         Initialize the semaphore with a given value and optional name for debugging.
 
@@ -84,6 +91,7 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
                 return 1
         """
 
+    @override
     async def acquire(self) -> Literal[True]:
         """
         Acquire the semaphore, ensuring that debug logging is enabled if there are waiters.
@@ -94,7 +102,14 @@ class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
             True when the semaphore is successfully acquired.
         """
 
-    async def _debug_daemon(self) -> None:
+    @override
+    async def _debug_daemon(
+        self,
+        fut: asyncio.Future[Any],
+        fn: Any,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         """
         Daemon coroutine (runs in a background task) which will emit a debug log every minute while the semaphore has waiters.
 
@@ -133,16 +148,25 @@ class DummySemaphore(asyncio.Semaphore):
             name (optional): An optional name for the dummy semaphore.
         """
 
+    @override
     async def acquire(self) -> Literal[True]:
         """Acquire the dummy semaphore, which is a no-op."""
 
+    @override
     def release(self) -> None:
         """No-op release method."""
 
-    async def __aenter__(self):
+    @override
+    async def __aenter__(self) -> None:
         """No-op context manager entry."""
 
-    async def __aexit__(self, *args) -> None:
+    @override
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
         """No-op context manager exit."""
 
 class ThreadsafeSemaphore(Semaphore):
@@ -175,6 +199,7 @@ class ThreadsafeSemaphore(Semaphore):
             name (optional): An optional name for the semaphore.
         """
 
+    @override
     def __len__(self) -> int: ...
     @functools.cached_property
     def use_dummy(self) -> bool:
@@ -200,5 +225,12 @@ class ThreadsafeSemaphore(Semaphore):
                     return 1
         """
 
+    @override
     async def __aenter__(self) -> None: ...
-    async def __aexit__(self, *args) -> None: ...
+    @override
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None: ...

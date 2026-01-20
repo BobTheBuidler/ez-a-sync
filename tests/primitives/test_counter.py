@@ -1,12 +1,17 @@
 import asyncio
+from collections.abc import Callable
+from typing import Any, TypeVar, cast
 
 import pytest
 
 from a_sync.primitives import CounterLock
 
+_F = TypeVar("_F", bound=Callable[..., Any])
+asyncio_cooperative = cast(Callable[[_F], _F], pytest.mark.asyncio_cooperative)
 
-@pytest.mark.asyncio_cooperative
-async def test_counter_lock():
+
+@asyncio_cooperative
+async def test_counter_lock() -> None:
     counter = CounterLock()
     assert counter._name == ""
     assert repr(counter) == "<CounterLock value=0 waiters={}>"
@@ -20,8 +25,8 @@ async def test_counter_lock():
     assert repr(counter) == "<CounterLock value=1 waiters={}>"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_counter_lock_with_name():
+@asyncio_cooperative
+async def test_counter_lock_with_name() -> None:
     counter = CounterLock(name="test")
     assert counter._name == "test"
     assert repr(counter) == "<CounterLock name=test value=0 waiters={}>"
@@ -35,24 +40,24 @@ async def test_counter_lock_with_name():
     assert repr(counter) == "<CounterLock name=test value=1 waiters={}>"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_counterlock_initialization():
+@asyncio_cooperative
+async def test_counterlock_initialization() -> None:
     counter = CounterLock(start_value=5)
     assert counter.value == 5
 
 
-@pytest.mark.asyncio_cooperative
-async def test_counterlock_set():
+@asyncio_cooperative
+async def test_counterlock_set() -> None:
     counter = CounterLock(start_value=0)
     counter.set(10)
     assert counter.value == 10
 
 
-@pytest.mark.asyncio_cooperative
-async def test_counterlock_wait_for():
+@asyncio_cooperative
+async def test_counterlock_wait_for() -> None:
     counter = CounterLock(start_value=0)
 
-    async def waiter():
+    async def waiter() -> str:
         await counter.wait_for(5)
         return "done"
 
@@ -63,12 +68,12 @@ async def test_counterlock_wait_for():
     assert result == "done"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_counterlock_concurrent_waiters():
+@asyncio_cooperative
+async def test_counterlock_concurrent_waiters() -> None:
     counter = CounterLock(start_value=0)
-    results = []
+    results: list[int] = []
 
-    async def waiter(index):
+    async def waiter(index: int) -> None:
         await counter.wait_for(5)
         results.append(index)
 
@@ -79,32 +84,32 @@ async def test_counterlock_concurrent_waiters():
     assert results == [0, 1, 2]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_counterlock_increment_only():
+@asyncio_cooperative
+async def test_counterlock_increment_only() -> None:
     counter = CounterLock(start_value=5)
     with pytest.raises(ValueError):
         counter.set(3)
 
 
-@pytest.mark.asyncio_cooperative
-async def test_counterlock_large_value():
+@asyncio_cooperative
+async def test_counterlock_large_value() -> None:
     counter = CounterLock(start_value=0)
     large_value = 10**6
     counter.set(large_value)
     assert counter.value == large_value
 
 
-@pytest.mark.asyncio_cooperative
-async def test_counterlock_zero_value():
+@asyncio_cooperative
+async def test_counterlock_zero_value() -> None:
     counter = CounterLock(start_value=0)
     assert counter.value == 0
 
 
-@pytest.mark.asyncio_cooperative
-async def test_counterlock_exception_handling():
+@asyncio_cooperative
+async def test_counterlock_exception_handling() -> None:
     counter = CounterLock(start_value=0)
 
-    async def waiter():
+    async def waiter() -> str:
         try:
             await counter.wait_for(5)
             raise ValueError("Intentional error")
@@ -116,12 +121,12 @@ async def test_counterlock_exception_handling():
     assert result == "Intentional error"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_simultaneous_set_and_wait():
+@asyncio_cooperative
+async def test_simultaneous_set_and_wait() -> None:
     counter = CounterLock(start_value=0)
-    results = []
+    results: list[int] = []
 
-    async def waiter(index):
+    async def waiter(index: int) -> None:
         await counter.wait_for(5)
         results.append(index)
 
@@ -131,35 +136,35 @@ async def test_simultaneous_set_and_wait():
     assert results == [0, 1, 2, 3, 4]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_reentrant_set():
+@asyncio_cooperative
+async def test_reentrant_set() -> None:
     counter = CounterLock(start_value=0)
     counter.set(5)
     counter.set(10)  # Reentrant set
     assert counter.value == 10
 
 
-def test_counterlock_invalid_start_value():
+def test_counterlock_invalid_start_value() -> None:
     with pytest.raises(TypeError):
         CounterLock(None)
 
 
-@pytest.mark.asyncio_cooperative
-async def test_immediate_set_and_wait():
+@asyncio_cooperative
+async def test_immediate_set_and_wait() -> None:
     counter = CounterLock(start_value=5)
 
-    async def waiter():
-        return await counter.wait_for(5)
+    async def waiter() -> bool:
+        return bool(await counter.wait_for(5))
 
     result = await waiter()
     assert result is True
 
 
-@pytest.mark.asyncio_cooperative
-async def test_delayed_set():
+@asyncio_cooperative
+async def test_delayed_set() -> None:
     counter = CounterLock(start_value=0)
 
-    async def waiter():
+    async def waiter() -> str:
         await counter.wait_for(5)
         return "done"
 
@@ -170,12 +175,12 @@ async def test_delayed_set():
     assert result == "done"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_multiple_sets():
+@asyncio_cooperative
+async def test_multiple_sets() -> None:
     counter = CounterLock(start_value=0)
-    results = []
+    results: list[int] = []
 
-    async def waiter(index):
+    async def waiter(index: int) -> None:
         await counter.wait_for(10)
         results.append(index)
 
@@ -186,11 +191,11 @@ async def test_multiple_sets():
     assert results == [0, 1, 2]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_custom_error_handling():
+@asyncio_cooperative
+async def test_custom_error_handling() -> None:
     counter = CounterLock(start_value=0)
 
-    async def waiter():
+    async def waiter() -> str:
         try:
             await counter.wait_for(5)
             raise RuntimeError("Custom error")
@@ -202,11 +207,11 @@ async def test_custom_error_handling():
     assert result == "Custom error"
 
 
-@pytest.mark.asyncio_cooperative
-async def test_external_interruptions():
+@asyncio_cooperative
+async def test_external_interruptions() -> None:
     counter = CounterLock(start_value=0)
 
-    async def waiter():
+    async def waiter() -> str:
         await counter.wait_for(5)
         return "done"
 

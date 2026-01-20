@@ -5,11 +5,12 @@ The mixin provides a framework for managing a debug daemon task, which can be us
 """
 
 from asyncio import AbstractEventLoop, Future
+from typing import Any
 
 from a_sync.primitives._loggable import _LoggerMixin
 
 class _LoopBoundMixin(_LoggerMixin):
-    def __init__(self, *, loop=None): ...
+    def __init__(self, *, loop: AbstractEventLoop | None = ...) -> None: ...
     @property
     def _loop(self) -> AbstractEventLoop: ...
     def _get_loop(self) -> AbstractEventLoop: ...
@@ -24,7 +25,13 @@ class _DebugDaemonMixin(_LoopBoundMixin):
         :class:`_LoggerMixin` for logging capabilities.
     """
 
-    async def _debug_daemon(self, fut: Future, fn, *args, **kwargs) -> None:
+    async def _debug_daemon(
+        self,
+        fut: Future[Any],
+        fn: Any,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         """
         Abstract method to define the debug daemon's behavior.
 
