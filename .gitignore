@@ -2,7 +2,7 @@ env/
 .hypothesis/
 .mypy_cache/
 .pytest_cache/
-.worktrees
+.worktrees/
 __pycache__/
 build/
 dist/
