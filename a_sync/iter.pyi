@@ -1,7 +1,9 @@
 import weakref
+from abc import ABCMeta
+from asyncio import TimerHandle
 from collections.abc import (AsyncGenerator, AsyncIterable, AsyncIterator, Callable, Coroutine,
                              Generator)
-from typing import Any, Generic, Iterable, Iterator, TypeVar, final
+from typing import Any, Generic, Iterable, Iterator, TypeAlias, TypeVar, final, override
 
 from typing_extensions import ParamSpec, Self
 
@@ -19,11 +21,11 @@ T = TypeVar("T")
 V = TypeVar("V")
 P = ParamSpec("P")
 
-SortKey = SyncFn[[T], bool]
-ViewFn = AnyFn[[T], bool]
+SortKey: TypeAlias = SyncFn[[T], bool]
+ViewFn: TypeAlias = AnyFn[[T], bool]
 AsyncGenFunc = Callable[P, AsyncGenerator[T, None] | AsyncIterator[T]]
 
-class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
+class _AwaitableAsyncIterableMixin(AsyncIterable[T], metaclass=ABCMeta):
     """
     A mixin class defining logic for making an AsyncIterable awaitable.
 
@@ -43,6 +45,8 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
     """
 
     __wrapped__: AsyncIterable[T]
+    @override
+    def __aiter__(self) -> AsyncIterator[T]: ...
     def __await__(self) -> Generator[Any, Any, list[T]]:
         """
         Asynchronously iterate through the {cls} and return all {obj}.
@@ -60,7 +64,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
             A list of the {obj} yielded by the {cls}.
         """
 
-    def sort(self, *, key: SortKey[T] = None, reverse: bool = False) -> ASyncSorter[T]:
+    def sort(self, *, key: SortKey[T] | None = None, reverse: bool = False) -> ASyncSorter[T]:
         """
         Sort the {obj} yielded by the {cls}.
 
@@ -83,7 +87,8 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
             An instance of :class:`~ASyncFilter` that yields the filtered {obj} from the {cls}.
         """
 
-    def __init_subclass__(cls, **kwargs) -> None: ...
+    @override
+    def __init_subclass__(cls, **kwargs: Any) -> None: ...
 
 class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
     """
@@ -130,11 +135,13 @@ class ASyncIterable(_AwaitableAsyncIterableMixin[T], Iterable[T]):
             async_iterable: The async iterable to wrap.
         """
 
+    @override
     def __aiter__(self) -> AsyncIterator[T]:
         """
         Return an async iterator that yields {obj} from the {cls}.
         """
 
+    @override
     def __iter__(self) -> Iterator[T]:
         """
         Return an iterator that yields {obj} from the {cls}.
@@ -169,6 +176,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
         - :class:`ASyncSorter`
     """
 
+    @override
     def __next__(self) -> T:
         """
         Synchronously fetch the next item from the {cls}.
@@ -186,7 +194,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
             SyncModeInAsyncContextError: If the event loop is already running.
 
         """
-    __wrapped__: AsyncIterator[T]
+    __wrapped__: AsyncIterable[T]
     def __init__(self, async_iterator: AsyncIterator[T]) -> None:
         """
         Initializes the ASyncIterator with an async iterator.
@@ -203,6 +211,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
             :class:`StopAsyncIteration`: Once all {obj} have been fetched from the {cls}.
         """
 
+    @override
     def __iter__(self) -> Self:
         """
         Return the {cls} for iteration.
@@ -216,6 +225,7 @@ class ASyncIterator(_AwaitableAsyncIterableMixin[T], Iterator[T]):
             and should consider asynchronous iteration using :meth:`__aiter__` and :meth:`__anext__` instead.
         """
 
+    @override
     def __aiter__(self) -> Self:
         """Return the {cls} for aiteration."""
 
@@ -240,9 +250,10 @@ class ASyncGeneratorFunction(Generic[P, T]):
         - :class:`ASyncIterable`
     """
 
-    __weakself__: weakref.ref[object]
+    __weakself__: weakref.ref[object] | None
     field_name: str
     __wrapped__: AsyncGenFunc[P, T]
+    _cache_handle: TimerHandle | None
     def __init__(self, async_gen_func: AsyncGenFunc[P, T], instance: Any = None) -> None:
         """
         Initializes the ASyncGeneratorFunction with the given async generator function and optionally an instance.
@@ -306,6 +317,7 @@ class ASyncFilter(_ASyncView[T]):
         - :class:`ASyncSorter`
     """
 
+    @override
     async def __anext__(self) -> T: ...
 
 @final
@@ -330,7 +342,7 @@ class ASyncSorter(_ASyncView[T]):
 
     reversed: bool
     def __init__(
-        self, iterable: AsyncIterable[T], *, key: SortKey[T] = None, reverse: bool = False
+        self, iterable: AsyncIterable[T], *, key: SortKey[T] | None = None, reverse: bool = False
     ) -> None:
         """
         Initializes the ASyncSorter with an iterable and an optional sorting configuration (key function, and reverse flag).
@@ -341,7 +353,8 @@ class ASyncSorter(_ASyncView[T]):
             reverse (optional): If True, the list elements will be sorted in reverse order. Defaults to False.
         """
 
-    def __aiter__(self) -> AsyncIterator[T]:
+    @override
+    def __aiter__(self) -> Self:
         """
         Return an async iterator for the {cls}.
 
@@ -352,4 +365,5 @@ class ASyncSorter(_ASyncView[T]):
             An async iterator that will yield the sorted {obj}.
         """
 
-    def __anext__(self) -> T: ...
+    @override
+    async def __anext__(self) -> T: ...
