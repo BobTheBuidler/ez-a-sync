@@ -1,29 +1,29 @@
 from a_sync.utils.repr import repr_trunc
 
 
-def test_repr_trunc_list():
+def test_repr_trunc_list() -> None:
     assert repr_trunc(list(range(10))) == "[0, 1, 2, 3, 4, ...]"
 
 
-def test_repr_trunc_tuple():
+def test_repr_trunc_tuple() -> None:
     assert repr_trunc(tuple(range(10))) == "(0, 1, 2, 3, 4, ...)"
 
 
-def test_repr_trunc_dict():
+def test_repr_trunc_dict() -> None:
     d = {i: i for i in range(10)}
     assert repr_trunc(d) == "{0: 0, 1: 1, 2: 2, 3: 3, 4: 4, ...}"
 
 
-def test_repr_trunc_dict_keys():
+def test_repr_trunc_dict_keys() -> None:
     d = {i: i for i in range(10)}
     assert repr_trunc(d.keys()) == "dict_keys([0, 1, 2, 3, 4, ...])"
 
 
-def test_repr_trunc_dict_values():
+def test_repr_trunc_dict_values() -> None:
     d = {i: i for i in range(10)}
     assert repr_trunc(d.values()) == "dict_values([0, 1, 2, 3, 4, ...])"
 
 
-def test_repr_trunc_dict_items():
+def test_repr_trunc_dict_items() -> None:
     d = {i: i for i in range(10)}
     assert repr_trunc(d.items()) == "dict_items([(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), ...])"
