@@ -1,11 +1,12 @@
 # mypy: disable-error-code=valid-type
-# mypy: disable-error-code=misc
 from concurrent.futures import Executor
 from typing import Literal, Union, overload
 
 from typing_extensions import Unpack
 
-from a_sync._typing import AnyFn, CoroFn, DefaultMode, ModifierKwargs, P, SyncFn, T
+from a_sync._typing import (AnyFn, CoroFn, DefaultMode, ModifierKwargs,
+                            _ModifierKwargsNoDefault, _ModifierKwargsNoDefaultExecutor,
+                            _ModifierKwargsNoExecutor, P, SyncFn, T)
 from a_sync.a_sync import config
 from a_sync.a_sync.function import (ASyncDecorator, ASyncDecoratorAsyncDefault,
                                     ASyncDecoratorSyncDefault, ASyncFunction,
@@ -28,7 +29,7 @@ from a_sync.a_sync.function import (ASyncDecorator, ASyncDecoratorAsyncDefault,
 def a_sync(
     default: Literal["async"],
     executor: Executor,
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefaultExecutor],
 ) -> ASyncDecoratorAsyncDefault:
     """
     Creates an asynchronous default decorator to run a sync function in an executor.
@@ -57,7 +58,7 @@ def a_sync(
 @overload
 def a_sync(
     default: Literal["async"],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> ASyncDecoratorAsyncDefault:
     """
     Creates an asynchronous default decorator.
@@ -86,7 +87,7 @@ def a_sync(
 def a_sync(
     default: Literal["sync"],
     executor: Executor,
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefaultExecutor],
 ) -> ASyncDecoratorSyncDefault:
     """
     Creates a synchronous default decorator to run a sync function in an executor when called asynchronously.
@@ -115,7 +116,7 @@ def a_sync(
 @overload
 def a_sync(
     default: Literal["sync"],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> ASyncDecoratorSyncDefault:
     """
     Creates a synchronous default decorator.
@@ -143,7 +144,7 @@ def a_sync(
 @overload
 def a_sync(
     executor: Executor,
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoExecutor],
 ) -> ASyncDecoratorSyncDefault:
     """
     Creates a synchronous default decorator to run a sync function in an executor when called asynchronously.
@@ -198,7 +199,7 @@ def a_sync(
 def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal[None] = None,
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> "ASyncFunctionAsyncDefault[P, T]":
     """
     Decorates an asynchronous function with no default execution mode specified.
@@ -228,7 +229,7 @@ def a_sync(
 def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal[None] = None,
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> "ASyncFunctionSyncDefault[P, T]":
     """
     Decorates a synchronous function with no default execution mode specified.
@@ -258,7 +259,7 @@ def a_sync(
 def a_sync(
     coro_fn: Literal[None],
     default: Literal["async"],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> ASyncDecoratorAsyncDefault:
     """
     Creates an asynchronous default decorator with no function specified.
@@ -288,7 +289,7 @@ def a_sync(
 def a_sync(
     coro_fn: Literal["async"],
     default: Literal[None],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> ASyncDecoratorAsyncDefault:
     """
     Creates an asynchronous default decorator with no default execution mode specified.
@@ -318,7 +319,7 @@ def a_sync(
 def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal["async"],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> "ASyncFunctionAsyncDefault[P, T]":
     """
     Decorates an asynchronous function with an asynchronous default execution mode.
@@ -348,7 +349,7 @@ def a_sync(
 def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal["async"],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> "ASyncFunctionAsyncDefault[P, T]":
     """
     Decorates a synchronous function with an asynchronous default execution mode.
@@ -378,7 +379,7 @@ def a_sync(
 def a_sync(
     coro_fn: CoroFn[P, T],
     default: Literal["sync"],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> ASyncFunctionSyncDefault:
     """
     Decorates an asynchronous function with a synchronous default execution mode.
@@ -408,7 +409,7 @@ def a_sync(
 def a_sync(
     coro_fn: SyncFn[P, T],
     default: Literal["sync"],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> ASyncFunctionSyncDefault:
     """
     Decorates a synchronous function with a synchronous default execution mode.
@@ -438,7 +439,7 @@ def a_sync(
 def a_sync(
     coro_fn: Literal[None],
     default: Literal["sync"],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> ASyncDecoratorSyncDefault:
     """
     Creates a synchronous default decorator with no function specified.
@@ -468,7 +469,7 @@ def a_sync(
 def a_sync(
     coro_fn: Literal["sync"],
     default: Literal[None] = None,
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> ASyncDecoratorSyncDefault:
     """
     Creates a synchronous default decorator with no default execution mode specified.
@@ -498,7 +499,7 @@ def a_sync(
 def a_sync(
     coro_fn: Literal["sync"],
     default: Literal[None],
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> ASyncDecoratorSyncDefault:
     """
     Creates a synchronous default decorator with no default execution mode specified.
@@ -529,7 +530,7 @@ def a_sync(
     coro_fn: AnyFn[P, T] | None = None,
     default: DefaultMode = config.DEFAULT_MODE,
     # default values are set by passing these kwargs into a ModifierManager object.
-    **modifiers: Unpack[ModifierKwargs],
+    **modifiers: Unpack[_ModifierKwargsNoDefault],
 ) -> Union[ASyncDecorator, "ASyncFunction[P, T]"]:
     """
     A versatile decorator that enables both synchronous and asynchronous execution of functions.
