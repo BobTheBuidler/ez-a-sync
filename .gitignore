@@ -2,6 +2,7 @@ env/
 .hypothesis/
 .mypy_cache/
 .pytest_cache/
+.worktrees/
 __pycache__/
 build/
 dist/
@@ -13,4 +14,3 @@ mypy_plugin_tests/mypy
 mypy_plugin_tests/venv
 *.c
 *.so
-.worktrees/
