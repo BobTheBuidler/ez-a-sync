@@ -1,4 +1,5 @@
 import asyncio
+from typing import Any
 
 import pytest
 
@@ -8,7 +9,7 @@ from a_sync.task import (TaskMapping, TaskMappingItems, TaskMappingKeys, TaskMap
 views = [TaskMappingKeys, TaskMappingValues, TaskMappingItems]
 
 
-async def sample_task(key):
+async def sample_task(key: str) -> str:
     await asyncio.sleep(0.1)
     return f"result for {key}"
 
@@ -21,7 +22,7 @@ async def sample_task(key):
         (TaskMappingItems, [("key1", "result for key1"), ("key2", "result for key2")]),
     ],
 )
-def test_taskmapping_views_sync(view_class, expected):
+def test_taskmapping_views_sync(view_class: type[Any], expected: list[Any]) -> None:
     tasks = TaskMapping(sample_task, ["key1", "key2"])
     view = view_class(expected, tasks)
     results = list(view)
@@ -37,7 +38,9 @@ def test_taskmapping_views_sync(view_class, expected):
         (TaskMappingItems, [("key1", "result for key1"), ("key2", "result for key2")]),
     ],
 )
-async def test_taskmapping_views_async(view_class, expected):
+async def test_taskmapping_views_async(
+    view_class: type[Any], expected: list[Any]
+) -> None:
     tasks = TaskMapping(sample_task, ["key1", "key2"])
     view = view_class(expected, tasks)
     results = [item async for item in view]
@@ -45,7 +48,7 @@ async def test_taskmapping_views_async(view_class, expected):
 
 
 @pytest.mark.parametrize("view_class", [TaskMappingKeys, TaskMappingValues, TaskMappingItems])
-def test_empty_taskmapping_views_sync(view_class):
+def test_empty_taskmapping_views_sync(view_class: type[Any]) -> None:
     # sourcery skip: simplify-empty-collection-comparison
     tasks = TaskMapping(sample_task)
     view = view_class([], tasks)
@@ -55,7 +58,7 @@ def test_empty_taskmapping_views_sync(view_class):
 
 @pytest.mark.asyncio_cooperative
 @pytest.mark.parametrize("view_class", [TaskMappingKeys, TaskMappingValues, TaskMappingItems])
-async def test_empty_taskmapping_views_async(view_class):
+async def test_empty_taskmapping_views_async(view_class: type[Any]) -> None:
     # sourcery skip: simplify-empty-collection-comparison
     tasks = TaskMapping(sample_task)
     view = view_class([], tasks)
@@ -74,7 +77,7 @@ def test_empty_taskmapping_views_broken_mapping_sync(view_class):
 
 @pytest.mark.asyncio_cooperative
 @pytest.mark.parametrize("view_class", views)
-async def test_empty_taskmapping_views_broken_mapping_async(view_class):
+async def test_empty_taskmapping_views_broken_mapping_async(view_class: type[Any]) -> None:
     tasks = TaskMapping(sample_task, [])
     view = view_class([], tasks)
     with pytest.raises(_EmptySequenceError, match=r"\[\]"):
@@ -89,7 +92,7 @@ async def test_empty_taskmapping_views_broken_mapping_async(view_class):
         (TaskMappingItems, [("key1", "result for key1")]),
     ],
 )
-def test_single_item_taskmapping_views_sync(view_class, expected):
+def test_single_item_taskmapping_views_sync(view_class: type[Any], expected: list[Any]) -> None:
     tasks = TaskMapping(sample_task, ["key1"])
     view = view_class(expected, tasks)
     results = list(view)
@@ -105,7 +108,9 @@ def test_single_item_taskmapping_views_sync(view_class, expected):
         (TaskMappingItems, [("key1", "result for key1")]),
     ],
 )
-async def test_single_item_taskmapping_views_async(view_class, expected):
+async def test_single_item_taskmapping_views_async(
+    view_class: type[Any], expected: list[Any]
+) -> None:
     tasks = TaskMapping(sample_task, ["key1"])
     view = view_class(expected, tasks)
     results = [item async for item in view]

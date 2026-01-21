@@ -1,6 +1,6 @@
 import re
-from collections.abc import AsyncIterator, Iterator
-from typing import TypeVar
+from collections.abc import AsyncIterator, Callable, Iterator
+from typing import Any, TypeVar
 
 import pytest
 
@@ -8,24 +8,29 @@ from a_sync import ASyncIterable, ASyncIterator
 from a_sync.exceptions import SyncModeInAsyncContextError
 from a_sync.iter import ASyncFilter, ASyncSorter
 
-test_both = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator])
-test_all = pytest.mark.parametrize(
+TestFunc = Callable[..., object]
+Decorator = Callable[[TestFunc], TestFunc]
+
+fixture: Decorator = pytest.fixture
+asyncio_cooperative: Decorator = pytest.mark.asyncio_cooperative
+test_both: Decorator = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator])
+test_all: Decorator = pytest.mark.parametrize(
     "cls_to_test", [ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter]
 )
 
 
-@pytest.fixture
-def async_generator():
-    async def async_gen(i: int = 3):
+@fixture
+def async_generator() -> Iterator[Callable[..., AsyncIterator[int]]]:
+    async def async_gen(i: int = 3) -> AsyncIterator[int]:
         for i in range(i):
             yield i
 
     yield async_gen
 
 
-@pytest.fixture
-def async_generator_empty():
-    async def async_gen_empty():
+@fixture
+def async_generator_empty() -> Iterator[Callable[..., AsyncIterator[None]]]:
+    async def async_gen_empty() -> AsyncIterator[None]:
         if True:
             return
         yield
@@ -33,24 +38,26 @@ def async_generator_empty():
     yield async_gen_empty
 
 
-@pytest.fixture
-def async_error_generator():
-    async def async_err_gen():
+@fixture
+def async_error_generator() -> Iterator[Callable[..., AsyncIterator[int]]]:
+    async def async_err_gen() -> AsyncIterator[int]:
         yield 0
         yield 1
         raise ValueError("Simulated error")
 
-    return async_err_gen
+    yield async_err_gen
 
 
 @test_both
-def test_wrap_types(cls_to_test, async_generator):
+def test_wrap_types(
+    cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     assert isinstance(cls_to_test(async_generator()), cls_to_test)
     assert isinstance(cls_to_test.wrap(async_generator()), cls_to_test)
 
 
 @test_both
-def test_sync(cls_to_test, async_generator):
+def test_sync(cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]) -> None:
     # sourcery skip: identity-comprehension, list-comprehension
     # comprehension
     assert [i for i in cls_to_test(async_generator())] == [0, 1, 2]
@@ -71,8 +78,10 @@ def test_sync(cls_to_test, async_generator):
 
 
 @test_both
-@pytest.mark.asyncio_cooperative
-async def test_async(cls_to_test, async_generator):
+@asyncio_cooperative
+async def test_async(
+    cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     ait = cls_to_test(async_generator())
 
     # comprehension
@@ -104,13 +113,17 @@ async def test_async(cls_to_test, async_generator):
 
 
 @test_both
-def test_sync_empty(cls_to_test, async_generator_empty):
+def test_sync_empty(
+    cls_to_test: Any, async_generator_empty: Callable[[], AsyncIterator[None]]
+) -> None:
     assert not list(cls_to_test(async_generator_empty()))
 
 
 @test_both
-@pytest.mark.asyncio_cooperative
-async def test_async_empty(cls_to_test, async_generator_empty):
+@asyncio_cooperative
+async def test_async_empty(
+    cls_to_test: Any, async_generator_empty: Callable[[], AsyncIterator[None]]
+) -> None:
     ait = cls_to_test(async_generator_empty())
     with pytest.raises(
         SyncModeInAsyncContextError,
@@ -121,7 +134,9 @@ async def test_async_empty(cls_to_test, async_generator_empty):
 
 
 @test_both
-def test_sync_partial(cls_to_test, async_generator):
+def test_sync_partial(
+    cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     iterator = cls_to_test(async_generator(5))
     results = []
     for item in iterator:
@@ -136,8 +151,10 @@ def test_sync_partial(cls_to_test, async_generator):
 
 
 @test_both
-@pytest.mark.asyncio_cooperative
-async def test_async_partial(cls_to_test, async_generator):
+@asyncio_cooperative
+async def test_async_partial(
+    cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     iterator = cls_to_test(async_generator(5))
     results = []
     async for item in iterator:
@@ -152,7 +169,9 @@ async def test_async_partial(cls_to_test, async_generator):
 
 
 @test_both
-def test_stop_iteration_sync(cls_to_test, async_generator):
+def test_stop_iteration_sync(
+    cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     it = cls_to_test(async_generator())
     if cls_to_test is ASyncIterable:
         it = it.__iter__()
@@ -165,8 +184,10 @@ def test_stop_iteration_sync(cls_to_test, async_generator):
 
 
 @test_both
-@pytest.mark.asyncio_cooperative
-async def test_stop_iteration_async(cls_to_test, async_generator):
+@asyncio_cooperative
+async def test_stop_iteration_async(
+    cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     ait = cls_to_test(async_generator())
     if cls_to_test is ASyncIterable:
         ait = ait.__aiter__()
@@ -181,26 +202,30 @@ async def test_stop_iteration_async(cls_to_test, async_generator):
 # Test decorator
 
 
-def test_aiterable_decorated_func_sync():
+def test_aiterable_decorated_func_sync() -> None:
     with pytest.raises(TypeError, match="`async_iterable` must be an AsyncIterable. You passed "):
 
-        @ASyncIterable.wrap
-        async def decorated():
+        @ASyncIterable.wrap  # type: ignore[arg-type]
+        async def decorated() -> AsyncIterator[int]:
             yield 0
 
 
-@pytest.mark.asyncio_cooperative
-async def test_aiterable_decorated_func_async(async_generator):
+@asyncio_cooperative
+async def test_aiterable_decorated_func_async(
+    async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     with pytest.raises(TypeError, match="`async_iterable` must be an AsyncIterable. You passed "):
 
-        @ASyncIterable.wrap
-        async def decorated():
+        @ASyncIterable.wrap  # type: ignore[arg-type]
+        async def decorated() -> AsyncIterator[int]:
             yield 0
 
 
-def test_aiterator_decorated_func_sync(async_generator):
-    @ASyncIterator.wrap
-    async def decorated():
+def test_aiterator_decorated_func_sync(
+    async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
+    @ASyncIterator.wrap  # type: ignore[attr-defined,untyped-decorator]
+    async def decorated() -> AsyncIterator[int]:
         async for i in async_generator():
             yield i
 
@@ -209,10 +234,12 @@ def test_aiterator_decorated_func_sync(async_generator):
     assert list(retval) == [0, 1, 2]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_aiterator_decorated_func_async(async_generator):
-    @ASyncIterator.wrap
-    async def decorated():
+@asyncio_cooperative
+async def test_aiterator_decorated_func_async(
+    async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
+    @ASyncIterator.wrap  # type: ignore[attr-defined,untyped-decorator]
+    async def decorated() -> AsyncIterator[int]:
         async for i in async_generator():
             yield i
 
@@ -221,29 +248,31 @@ async def test_aiterator_decorated_func_async(async_generator):
     assert await retval == [0, 1, 2]
 
 
-def test_aiterable_decorated_method_sync():
+def test_aiterable_decorated_method_sync() -> None:
     with pytest.raises(TypeError, match=""):
 
         class Test:
-            @ASyncIterable.wrap
-            async def decorated(self):
+            @ASyncIterable.wrap  # type: ignore[arg-type]
+            async def decorated(self) -> AsyncIterator[int]:
                 yield 0
 
 
-@pytest.mark.asyncio_cooperative
-async def test_aiterable_decorated_method_async():
+@asyncio_cooperative
+async def test_aiterable_decorated_method_async() -> None:
     with pytest.raises(TypeError, match=""):
 
         class Test:
-            @ASyncIterable.wrap
-            async def decorated(self):
+            @ASyncIterable.wrap  # type: ignore[arg-type]
+            async def decorated(self) -> AsyncIterator[int]:
                 yield 0
 
 
-def test_aiterator_decorated_method_sync(async_generator):
+def test_aiterator_decorated_method_sync(
+    async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     class Test:
-        @ASyncIterator.wrap
-        async def decorated(self):
+        @ASyncIterator.wrap  # type: ignore[attr-defined,untyped-decorator]
+        async def decorated(self) -> AsyncIterator[int]:
             async for i in async_generator():
                 yield i
 
@@ -252,11 +281,13 @@ def test_aiterator_decorated_method_sync(async_generator):
     assert list(retval) == [0, 1, 2]
 
 
-@pytest.mark.asyncio_cooperative
-async def test_aiterator_decorated_method_async(async_generator):
+@asyncio_cooperative
+async def test_aiterator_decorated_method_async(
+    async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     class Test:
-        @ASyncIterator.wrap
-        async def decorated(self):
+        @ASyncIterator.wrap  # type: ignore[attr-defined,untyped-decorator]
+        async def decorated(self) -> AsyncIterator[int]:
             async for i in async_generator():
                 yield i
 
@@ -266,7 +297,9 @@ async def test_aiterator_decorated_method_async(async_generator):
 
 
 @test_both
-def test_sync_error_handling(cls_to_test, async_error_generator):
+def test_sync_error_handling(
+    cls_to_test: Any, async_error_generator: Callable[[], AsyncIterator[int]]
+) -> None:
     ait = cls_to_test(async_error_generator())
     results = []
     with pytest.raises(ValueError, match="Simulated error"):
@@ -276,8 +309,10 @@ def test_sync_error_handling(cls_to_test, async_error_generator):
 
 
 @test_both
-@pytest.mark.asyncio_cooperative
-async def test_async_error_handling(cls_to_test, async_error_generator):
+@asyncio_cooperative
+async def test_async_error_handling(
+    cls_to_test: Any, async_error_generator: Callable[[], AsyncIterator[int]]
+) -> None:
     ait = cls_to_test(async_error_generator())
     results = []
     with pytest.raises(ValueError, match="Simulated error"):
@@ -291,14 +326,14 @@ async def test_async_error_handling(cls_to_test, async_error_generator):
 
 
 @test_both
-def test_sync_with_iterable(cls_to_test):
+def test_sync_with_iterable(cls_to_test: Any) -> None:
     with pytest.raises(TypeError):
         cls_to_test([0, 1, 2])
 
 
 @test_both
-@pytest.mark.asyncio_cooperative
-async def test_async_with_iterable(cls_to_test):
+@asyncio_cooperative
+async def test_async_with_iterable(cls_to_test: Any) -> None:
     with pytest.raises(TypeError):
         cls_to_test([0, 1, 2])
 
@@ -306,39 +341,48 @@ async def test_async_with_iterable(cls_to_test):
 # Type check dunder methods
 
 
-def test_async_iterable_iter_method(async_generator):
+def test_async_iterable_iter_method(
+    async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     ait = ASyncIterable(async_generator())
     iterator = iter(ait)
     assert isinstance(iterator, Iterator)
 
 
-def test_async_iterator_iter_method(async_generator):
+def test_async_iterator_iter_method(
+    async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     ait = ASyncIterator(async_generator())
     iterator = iter(ait)
     assert iterator is ait  # Should return self
 
 
-@pytest.mark.asyncio_cooperative
-async def test_async_aiter_method(async_generator):
+@asyncio_cooperative
+async def test_async_aiter_method(
+    async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     ait = ASyncIterable(async_generator())
     async_iterator = ait.__aiter__()
     assert isinstance(async_iterator, AsyncIterator)
 
 
-@pytest.mark.asyncio_cooperative
-async def test_async_iterator_aiter_method(async_generator):
+@asyncio_cooperative
+async def test_async_iterator_aiter_method(
+    async_generator: Callable[..., AsyncIterator[int]]
+) -> None:
     ait = ASyncIterator(async_generator())
     async_iterator = ait.__aiter__()
     assert async_iterator is ait  # Should return self
 
 
 @test_all
-def test_class_docstring_empty(cls_to_test):
+def test_class_docstring_empty(cls_to_test: Any) -> None:
     """Test if the class with no docstring was correctly assigned a docstring."""
 
-    class SampleClassNoDocstring(cls_to_test[int]): ...
+    class SampleClassNoDocstring(cls_to_test[int]): ...  # type: ignore[misc]
 
-    assert SampleClassNoDocstring.__doc__ == (
+    doc = SampleClassNoDocstring.__doc__ or ""
+    assert doc == (
         "When awaited, a list of all :class:`~builtins.int` will be returned.\n"
         "\n"
         "Example:\n"
@@ -352,12 +396,12 @@ def test_class_docstring_empty(cls_to_test):
 
 
 @test_all
-def test_class_docstring_append(cls_to_test):
+def test_class_docstring_append(cls_to_test: Any) -> None:
     """
     Test if the class docstring suffix is correctly formatted and appended using regular expressions.
     """
 
-    class SampleClassWithDocstring(cls_to_test[int]):
+    class SampleClassWithDocstring(cls_to_test[int]):  # type: ignore[misc]
         """Sample class with a docstring."""
 
     expected_pattern = (
@@ -369,68 +413,73 @@ def test_class_docstring_append(cls_to_test):
         r" {4}>>> isinstance\(all_contents\[0\], int\)\n"
         r" {4}True\n"
     )
+    doc = SampleClassWithDocstring.__doc__ or ""
     assert re.search(
-        expected_pattern, SampleClassWithDocstring.__doc__
-    ), f"Docstring does not match expected pattern. \nDocstring: {SampleClassWithDocstring.__doc__}"
+        expected_pattern, doc
+    ), f"Docstring does not match expected pattern. \nDocstring: {doc}"
 
 
 @test_all
-def test_method_docstring_replacement(cls_to_test):
+def test_method_docstring_replacement(cls_to_test: Any) -> None:
     """Test if the method docstring is correctly formatted."""
 
-    class SampleClass(cls_to_test[str]):
-        def sample_method(self):
+    class SampleClass(cls_to_test[str]):  # type: ignore[misc]
+        def sample_method(self) -> None:
             """This method processes {obj}."""
 
-    assert ":class:`~builtins.str`" in SampleClass.sample_method.__doc__
+    doc = SampleClass.sample_method.__doc__ or ""
+    assert ":class:`~builtins.str`" in doc
 
 
 @test_all
-def test_typevar_default(cls_to_test):
+def test_typevar_default(cls_to_test: Any) -> None:
     """Ensure that when T is unspecified, 'objects' is used."""
 
-    class UnspecifiedTypeClass(cls_to_test):
+    class UnspecifiedTypeClass(cls_to_test):  # type: ignore[misc]
         """Class dealing with {obj}."""
 
-        def sample_method(self):
+        def sample_method(self) -> None:
             """This works with {obj}."""
 
-    assert "objects" in UnspecifiedTypeClass.sample_method.__doc__
+    doc = UnspecifiedTypeClass.sample_method.__doc__ or ""
+    assert "objects" in doc
 
 
 @test_all
-def test_typevar_specified(cls_to_test):
+def test_typevar_specified(cls_to_test: Any) -> None:
     """Ensure the typevar T reflects the specific type used."""
 
-    class IntClass(cls_to_test[int]):
+    class IntClass(cls_to_test[int]):  # type: ignore[misc]
         """Collection of {obj}."""
 
-        def sample_method(self):
+        def sample_method(self) -> None:
             """Yield {obj}."""
 
-    assert "int" in IntClass.sample_method.__doc__
+    doc = IntClass.sample_method.__doc__ or ""
+    assert "int" in doc
 
 
 @test_all
-def test_typevar_default(cls_to_test):
+def test_typevar_default_obj(cls_to_test: Any) -> None:
     """Ensure that when T is unspecified, ':obj:`T` objects' is used."""
 
-    class UnspecifiedTypeClass(cls_to_test):
+    class UnspecifiedTypeClass(cls_to_test):  # type: ignore[misc]
         """Class dealing with {obj}."""
 
-        def sample_method(self):
+        def sample_method(self) -> None:
             """This works with {obj}."""
 
-    assert ":obj:`T` objects" in UnspecifiedTypeClass.sample_method.__doc__
+    doc = UnspecifiedTypeClass.sample_method.__doc__ or ""
+    assert ":obj:`T` objects" in doc
 
 
 @test_all
-def test_init_subclass_with_typevar(cls_to_test):
+def test_init_subclass_with_typevar(cls_to_test: Any) -> None:
     _T = TypeVar("_T")
 
-    class MySubclass(cls_to_test[_T]): ...
+    class MySubclass(cls_to_test[_T]): ...  # type: ignore[misc]
 
 
 @test_all
-def test_init_subclass_with_generic_alias(cls_to_test):
-    class MySubclass(cls_to_test[tuple[int, str, bool]]): ...
+def test_init_subclass_with_generic_alias(cls_to_test: Any) -> None:
+    class MySubclass(cls_to_test[tuple[int, str, bool]]): ...  # type: ignore[misc]
