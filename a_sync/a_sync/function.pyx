@@ -3,7 +3,8 @@ import inspect
 import sys
 import typing
 from collections.abc import Callable, Coroutine
-from logging import getLogger
+from contextlib import contextmanager
+from logging import ERROR, getLogger
 
 from libc.stdint cimport uintptr_t
 
@@ -1381,6 +1382,26 @@ cdef class ASyncDecoratorAsyncDefault(ASyncDecorator):
 cdef inline void _import_TaskMapping():
     global TaskMapping
     from a_sync import TaskMapping
+
+
+@contextmanager
+def im_a_fuckin_pro_dont_worry() -> typing.Iterator[None]:
+    """
+    This context manager allows you to confirm to ez-a-sync that you know what you are doing, 
+    to prevent the emission of the following logs:
+
+    ```
+    WARNING:a_sync.a_sync.function:inspect.getfullargspec does not support <your_lib.your_cls object at 0x7f93130c8180>
+    WARNING:a_sync.a_sync.function:we will allow you to proceed but cannot guarantee things will work
+    WARNING:a_sync.a_sync.function:hopefully you know what you're doing...
+    ```
+    """
+    original_level = logger.level
+    logger.setLevel(ERROR)
+    try:
+        yield
+    finally:
+        logger.setLevel(original_level)
 
 
 del Callable, Coroutine
