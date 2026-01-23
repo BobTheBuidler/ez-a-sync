@@ -12,10 +12,10 @@ cdef class CythonEvent(_DebugDaemonMixin):
     diagnosing and debugging potential deadlocks.
     """
 
-    cdef readonly bint _value
-    cdef readonly list _waiters
-    cdef readonly uint16_t _debug_daemon_interval
+    cdef bint _value
+    cdef list _waiters
     cdef char* __name
+    cdef uint16_t _debug_daemon_interval
     cpdef bint is_set(self)
     cpdef void set(self)
     cpdef void clear(self)

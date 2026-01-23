@@ -11,7 +11,6 @@ asynchronously based on various conditions and configurations.
 import asyncio
 import inspect
 import typing
-from collections.abc import Coroutine
 
 from cpython.object cimport PyObject
 from cpython.ref cimport Py_DECREF, Py_INCREF
@@ -21,7 +20,8 @@ from logging import getLogger
 
 import typing_extensions
 
-from a_sync._typing import AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs, P, T
+from a_sync._typing import (AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs,
+                            P, T)
 from a_sync.a_sync import _descriptor, function
 
 from a_sync.a_sync._helpers cimport _await, get_event_loop
@@ -54,8 +54,12 @@ cdef object isawaitable = inspect.isawaitable
 
 # cdef typing
 cdef object Any = typing.Any
+cdef object Coroutine = typing.Coroutine
 cdef object Generic = typing.Generic
 cdef object Literal = typing.Literal
+cdef object Optional = typing.Optional
+cdef object Type = typing.Type
+cdef object Union = typing.Union
 cdef object overload = typing.overload
 
 # cdef typing_extensions
@@ -147,12 +151,12 @@ class ASyncMethodDescriptor(ASyncDescriptor[I, P, T]):
         return await self.__get__(instance, None)(*args, **kwargs)
 
     @overload
-    def __get__(self, instance: None, owner: type[I]) -> Self: ...
+    def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
-    def __get__(self, instance: I, owner: type[I]) -> "ASyncBoundMethod[I, P, T]": ...
+    def __get__(self, instance: I, owner: Type[I]) -> "ASyncBoundMethod[I, P, T]": ...
     def __get__(
-        _ModifiedMixin self, instance: I | None, owner: type[I]
-    ) -> "Self | ASyncBoundMethod[I, P, T]":
+        _ModifiedMixin self, instance: Optional[I], owner: Type[I]
+    ) -> Union[Self, "ASyncBoundMethod[I, P, T]"]:
         """
         Get the bound method or the descriptor itself.
 
@@ -340,15 +344,17 @@ class ASyncMethodDescriptorSyncDefault(ASyncMethodDescriptor[I, P, T]):
 
     @overload
     def __get__(
-        self, instance: None, owner: type[I]
+        self, instance: None, owner: Type[I]
     ) -> "ASyncMethodDescriptorSyncDefault[I, P, T]": ...
     @overload
     def __get__(
-        self, instance: I, owner: type[I]
+        self, instance: I, owner: Type[I]
     ) -> "ASyncBoundMethodSyncDefault[I, P, T]": ...
     def __get__(
-        _ModifiedMixin self, instance: I | None, owner: type[I]
-    ) -> "ASyncMethodDescriptorSyncDefault | ASyncBoundMethodSyncDefault[I, P, T]":
+        _ModifiedMixin self, instance: Optional[I], owner: Type[I]
+    ) -> (
+        "Union[ASyncMethodDescriptorSyncDefault, ASyncBoundMethodSyncDefault[I, P, T]]"
+    ):
         """
         Get the bound method or the descriptor itself.
 
@@ -425,15 +431,15 @@ class ASyncMethodDescriptorAsyncDefault(ASyncMethodDescriptor[I, P, T]):
 
     @overload
     def __get__(
-        self, instance: None, owner: type[I]
+        self, instance: None, owner: Type[I]
     ) -> "ASyncMethodDescriptorAsyncDefault[I, P, T]": ...
     @overload
     def __get__(
-        self, instance: I, owner: type[I]
+        self, instance: I, owner: Type[I]
     ) -> "ASyncBoundMethodAsyncDefault[I, P, T]": ...
     def __get__(
-        _ModifiedMixin self, instance: I | None, owner: type[I]
-    ) -> "ASyncMethodDescriptorAsyncDefault | ASyncBoundMethodAsyncDefault[I, P, T]":
+        _ModifiedMixin self, instance: Optional[I], owner: Type[I]
+    ) -> "Union[ASyncMethodDescriptorAsyncDefault, ASyncBoundMethodAsyncDefault[I, P, T]]":
         """
         Get the bound method or the descriptor itself.
 
@@ -681,7 +687,7 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
     def map(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs,
     ) -> "TaskMapping[I, T]":
@@ -715,7 +721,7 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
     async def any(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs,
     ) -> bool:
@@ -737,7 +743,7 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
     async def all(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs,
     ) -> bool:
@@ -759,7 +765,7 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
     async def min(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs,
     ) -> T:
@@ -781,7 +787,7 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
     async def max(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs,
     ) -> T:
@@ -803,7 +809,7 @@ cdef class _ASyncBoundMethod(_ASyncFunction):
     async def sum(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs,
     ) -> T:
@@ -1018,4 +1024,3 @@ cdef inline void _import_TaskMapping():
 
 del asyncio, inspect, typing, typing_extensions
 del _descriptor, function
-del Coroutine

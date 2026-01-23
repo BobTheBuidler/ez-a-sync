@@ -3,10 +3,8 @@ This module defines custom exceptions for the a_sync library.
 """
 
 from asyncio import Task
-from typing import TYPE_CHECKING, Any
 
-from a_sync._typing import E
-
+from a_sync._typing import *
 from a_sync.a_sync.flags cimport VIABLE_FLAGS
 
 if TYPE_CHECKING:
@@ -132,7 +130,7 @@ class InvalidFlag(ASyncFlagException):
         - :const:`VIABLE_FLAGS`
     """
 
-    def __init__(self, flag: str | None):
+    def __init__(self, flag: Optional[str]):
         """
         Initializes the InvalidFlag exception.
 
@@ -188,7 +186,7 @@ class FlagNotDefined(ASyncFlagException):
         <class '__main__.SomeClass'> flag some_flag is not defined.
     """
 
-    def __init__(self, obj: type, flag: str):
+    def __init__(self, obj: Type, flag: str):
         """
         Initializes the FlagNotDefined exception.
 
@@ -446,6 +444,3 @@ class EmptySequenceError(ValueError):
         ...     print(e)
         Sequence is empty
     """
-
-
-del TYPE_CHECKING, Any, Task

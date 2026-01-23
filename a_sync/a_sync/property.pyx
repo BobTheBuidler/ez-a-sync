@@ -1,23 +1,25 @@
 import asyncio
 import functools
 import typing
-from collections.abc import Awaitable, Callable
 from copy import copy as _copy
 from logging import getLogger
-from typing import Any, Generator
+from typing import (Any, Awaitable, Callable, Generator, Optional, Tuple, Type,
+                    Union)
 
 import async_property as ap  # type: ignore [import]
 from typing_extensions import Concatenate, Self, Unpack
 
 from a_sync._smart cimport shield
 
-from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable, AsyncGetterFunction, DefaultMode,
-                            I, ModifierKwargs, P, T)
+from a_sync._typing import (AnyFn, AnyGetterFunction, AnyIterable,
+                            AsyncGetterFunction, DefaultMode, I,
+                            ModifierKwargs, P, T)
 from a_sync.a_sync import _descriptor, config, function, method
 
 from a_sync.a_sync._helpers cimport _asyncify, _await, get_event_loop
 from a_sync.a_sync.function cimport _ModifiedMixin
-from a_sync.a_sync.method cimport _ASyncBoundMethod, _is_a_sync_instance, _update_cache_timer
+from a_sync.a_sync.method cimport (_ASyncBoundMethod, _is_a_sync_instance,
+                                   _update_cache_timer)
 
 from a_sync.async_property import cached
 
@@ -34,7 +36,6 @@ else:
 
 
 # cdef asyncio
-cdef object CancelledError = asyncio.CancelledError
 cdef object iscoroutinefunction = asyncio.iscoroutinefunction
 cdef object Lock = asyncio.Lock
 cdef object Task = asyncio.Task
@@ -79,7 +80,7 @@ cdef object ASyncMethodDescriptorAsyncDefault = method.ASyncMethodDescriptorAsyn
 del method
 
 
-class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, tuple[()], T]):
+class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, Tuple[()], T]):
     """Base class for creating asynchronous properties.
 
     This class provides the foundation for defining properties that can be accessed
@@ -113,7 +114,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, tuple[()], T]):
     def __init__(
         _ModifiedMixin self,
         _fget: AsyncGetterFunction[I, T],
-        field_name: str | None = None,
+        field_name: Optional[str] = None,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
         """Initializes the _ASyncPropertyDescriptorBase.
@@ -137,12 +138,12 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, tuple[()], T]):
             self._fget = _asyncify(self.__wrapped__, self.modifiers.executor)
 
     @overload
-    def __get__(self, instance: None, owner: type[I]) -> Self: ...
+    def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
-    def __get__(self, instance: I, owner: type[I]) -> Awaitable[T]: ...
+    def __get__(self, instance: I, owner: Type[I]) -> Awaitable[T]: ...
     def __get__(
-        self, instance: I | None, owner: type[I]
-    ) -> Self | Awaitable[T]:
+        self, instance: Optional[I], owner: Type[I]
+    ) -> Union[Self, Awaitable[T]]:
         """Retrieves the property value, either synchronously or asynchronously.
 
         Args:
@@ -189,7 +190,7 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, tuple[()], T]):
 
         return retval
 
-    async def get(self, instance: I, owner: type[I] | None = None) -> T:
+    async def get(self, instance: I, owner: Optional[Type[I]] = None) -> T:
         """Asynchronously retrieves the property value.
 
         Args:
@@ -205,8 +206,8 @@ class _ASyncPropertyDescriptorBase(ASyncDescriptor[I, tuple[()], T]):
     def map(
         self,
         instances: AnyIterable[I],
-        owner: type[I] | None = None,
-        concurrency: int | None = None,
+        owner: Optional[Type[I]] = None,
+        concurrency: Optional[int] = None,
         name: str = "",
     ) -> "TaskMapping[I, T]":
         """Maps the property across multiple instances.
@@ -259,9 +260,9 @@ class ASyncPropertyDescriptorSyncDefault(ASyncPropertyDescriptor[I, T]):
     sum: ASyncFunctionSyncDefault[AnyIterable[I], T]
 
     @overload
-    def __get__(self, instance: None, owner: type[I]) -> Self: ...
+    def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
-    def __get__(self, instance: I, owner: type[I]) -> T: ...
+    def __get__(self, instance: I, owner: Type[I]) -> T: ...
 
     __get__ = _ASyncPropertyDescriptorBase.__get__
     """Retrieves the property value, either synchronously or asynchronously.
@@ -388,16 +389,16 @@ def a_sync_property(  # type: ignore [misc]
 
 
 def a_sync_property(  # type: ignore [misc]
-    func: AnyGetterFunction[I, T] | DefaultMode = None,
+    func: Union[AnyGetterFunction[I, T], DefaultMode] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> (
-    ASyncPropertyDescriptor[I, T]
-    | ASyncPropertyDescriptorSyncDefault[I, T]
-    | ASyncPropertyDescriptorAsyncDefault[I, T]
-    | ASyncPropertyDecorator[I, T]
-    | ASyncPropertyDecoratorSyncDefault[I, T]
-    | ASyncPropertyDecoratorAsyncDefault[I, T]
-):
+) -> Union[
+    ASyncPropertyDescriptor[I, T],
+    ASyncPropertyDescriptorSyncDefault[I, T],
+    ASyncPropertyDescriptorAsyncDefault[I, T],
+    ASyncPropertyDecorator[I, T],
+    ASyncPropertyDecoratorSyncDefault[I, T],
+    ASyncPropertyDecoratorAsyncDefault[I, T],
+]:
     """Decorator for creating properties that can be accessed both synchronously and asynchronously.
 
     Args:
@@ -493,44 +494,27 @@ class ASyncCachedPropertyDescriptor(
             async def loader(instance):
                 cdef AsyncCachedPropertyInstanceState cache_state
                 cache_state = self.get_instance_state(instance)
-                
-                cdef dict cache = cache_state.cache
 
-                if field_name in cache:
-                    return cache[field_name]
+                inner_task = cache_state.locks[field_name]
+                if isinstance(inner_task, Lock):
+                    # default behavior uses lock but we want to use a Task so all waiters wake up together
+                    inner_task = ccreate_task_simple(self._fget(instance))
+                    cache_state.locks[field_name] = inner_task
 
-                cdef dict tasks = cache_state.tasks
-                locks = cache_state.locks
-
-                async with locks[field_name]:
-                    if field_name in cache:
-                        return cache[field_name]
-                    
-                    if field_name in tasks:
-                        inner_task = tasks[field_name]
-                    else:
-                        inner_task = tasks[field_name] = ccreate_task_simple(self._fget(instance))
-
-                    try:
-                        value = await shield(inner_task)
-                    except CancelledError:
-                        # The CancelledError *can* come from inside the shielded task
-                        if inner_task.done():
-                            tasks.pop(field_name)
-                        raise
-                    except Exception as e:
-                        tasks.pop(field_name)
-                        copied_exc = copy(e)
-                        instance_context = {"property": self, "instance": instance}
-                        copied_exc.args = copied_exc.args, instance_context
-                        raise copied_exc.with_traceback(e.__traceback__)
+                try:
+                    value = await shield(inner_task)
+                except Exception as e:
+                    instance_context = {"property": self, "instance": instance}
+                    if e.args and e.args[-1] != instance_context:
+                        e.args = *e.args, instance_context
+                    raise copy(e).with_traceback(e.__traceback__)
                 
                 if self._fset is not None:
                     self._fset(instance, value)
                 
-                cache[field_name] = value
-                tasks.pop(field_name)
-                locks.pop(field_name)
+                if field_name not in cache_state.cache:
+                    cache_state.cache[field_name] = value
+                    cache_state.locks.pop(field_name)
                 
                 return value
 
@@ -553,9 +537,9 @@ class ASyncCachedPropertyDescriptorSyncDefault(ASyncCachedPropertyDescriptor[I, 
     default: Literal["sync"]
 
     @overload
-    def __get__(self, instance: None, owner: type[I]) -> Self: ...
+    def __get__(self, instance: None, owner: Type[I]) -> Self: ...
     @overload
-    def __get__(self, instance: I, owner: type[I]) -> T: ...
+    def __get__(self, instance: I, owner: Type[I]) -> T: ...
 
     __get__ = _ASyncPropertyDescriptorBase.__get__
     """Retrieves the cached property value, either synchronously or asynchronously.
@@ -671,16 +655,16 @@ def a_sync_cached_property(  # type: ignore [misc]
 
 
 def a_sync_cached_property(  # type: ignore [misc]
-    func: AnyGetterFunction[I, T] | None = None,
+    func: Optional[AnyGetterFunction[I, T]] = None,
     **modifiers: Unpack[ModifierKwargs],
-) -> (
-    ASyncCachedPropertyDescriptor[I, T]
-    | ASyncCachedPropertyDescriptorSyncDefault[I, T]
-    | ASyncCachedPropertyDescriptorAsyncDefault[I, T]
-    | ASyncCachedPropertyDecorator[I, T]
-    | ASyncCachedPropertyDecoratorSyncDefault[I, T]
-    | ASyncCachedPropertyDecoratorAsyncDefault[I, T]
-):
+) -> Union[
+    ASyncCachedPropertyDescriptor[I, T],
+    ASyncCachedPropertyDescriptorSyncDefault[I, T],
+    ASyncCachedPropertyDescriptorAsyncDefault[I, T],
+    ASyncCachedPropertyDecorator[I, T],
+    ASyncCachedPropertyDecoratorSyncDefault[I, T],
+    ASyncCachedPropertyDecoratorAsyncDefault[I, T],
+]:
     """Decorator for creating cached properties that can be accessed both synchronously and asynchronously.
 
     Args:
@@ -702,7 +686,7 @@ def a_sync_cached_property(  # type: ignore [misc]
     return decorator if func is None else decorator(func)
 
 
-class HiddenMethod(ASyncBoundMethodAsyncDefault[I, tuple[()], T]):
+class HiddenMethod(ASyncBoundMethodAsyncDefault[I, Tuple[()], T]):
     """Represents a hidden method for asynchronous properties.
 
     This class is used internally to manage hidden getter methods associated with a/sync properties.
@@ -752,7 +736,7 @@ class HiddenMethod(ASyncBoundMethodAsyncDefault[I, tuple[()], T]):
         return self.get_fn()(self.__c_self__(), sync=False).__await__()
 
 
-class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, tuple[()], T]):
+class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, Tuple[()], T]):
     """Descriptor for hidden methods associated with asynchronous properties.
 
     This class is used internally to manage hidden getter methods associated with a/sync properties.
@@ -764,7 +748,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, tuple[()], T])
     def __init__(
         self,
         _fget: AnyFn[Concatenate[I, P], Awaitable[T]],
-        field_name: str | None = None,
+        field_name: Optional[str] = None,
         **modifiers: Unpack[ModifierKwargs],
     ) -> None:
         """
@@ -786,7 +770,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, tuple[()], T])
         if self.__wrapped__.__doc__:
             self.__doc__ += f"\n\nThe original docstring for :meth:`~{self.__wrapped__.__qualname__}` is shown below:\n\n{self.__wrapped__.__doc__}"
 
-    def __get__(_ModifiedMixin self, instance: I, owner: type[I]) -> HiddenMethod[I, T]:
+    def __get__(_ModifiedMixin self, instance: I, owner: Type[I]) -> HiddenMethod[I, T]:
         """Retrieves the hidden method for the property.
 
         Args:
@@ -817,7 +801,7 @@ class HiddenMethodDescriptor(ASyncMethodDescriptorAsyncDefault[I, tuple[()], T])
 
 
 cdef object _parse_args(
-    func: None | DefaultMode | AsyncGetterFunction[I, T],
+    func: Union[None, DefaultMode, AsyncGetterFunction[I, T]], 
     dict modifiers,
 ):
     """Parses the arguments for the property decorators.
@@ -827,7 +811,7 @@ cdef object _parse_args(
         modifiers: Additional modifier arguments.
 
     Returns:
-        tuple[AsyncGetterFunction[I, T] | None, ModifierKwargs] A tuple containing the parsed function and modifiers.
+        Tuple[Optional[AsyncGetterFunction[I, T]], ModifierKwargs] A tuple containing the parsed function and modifiers.
     """
     if func in ("sync", "async"):
         modifiers["default"] = func

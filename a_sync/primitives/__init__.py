@@ -39,7 +39,8 @@ See Also:
 """
 
 from a_sync.primitives.locks import *
-from a_sync.primitives.queue import ProcessingQueue, Queue, SmartProcessingQueue
+from a_sync.primitives.queue import (ProcessingQueue, Queue,
+                                     SmartProcessingQueue)
 
 __all__ = [
     "Semaphore",

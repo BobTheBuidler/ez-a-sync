@@ -9,7 +9,7 @@ import asyncio
 import collections
 import heapq
 from logging import getLogger
-from typing import Literal, Protocol, TypeVar
+from typing import List, Literal, Optional, Protocol, Set, Type, TypeVar
 
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 
@@ -69,11 +69,11 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
     
     def __init__(
         self, 
-        context_manager_class: type[_AbstractPrioritySemaphoreContextManager],
+        context_manager_class: Type[_AbstractPrioritySemaphoreContextManager],
         top_priority: object,
         value: int = 1, 
         *, 
-        name: str | None = None, 
+        name: Optional[str] = None, 
     ) -> None:
         """Initializes the priority semaphore.
 
@@ -136,7 +136,7 @@ cdef class _AbstractPrioritySemaphore(Semaphore):
         return self._top_priority_manager.acquire()
 
     def __getitem__(
-        self, priority: PT | None
+        self, priority: Optional[PT]
     ) -> "_AbstractPrioritySemaphoreContextManager[PT]":
         """Gets the context manager for a given priority.
 
@@ -338,7 +338,7 @@ cdef class _AbstractPrioritySemaphoreContextManager(Semaphore):
         self,
         parent: _AbstractPrioritySemaphore,
         priority: PT,
-        name: str | None = None,
+        name: Optional[str] = None,
     ) -> None:
         """Initializes the context manager for a specific priority.
 
@@ -474,7 +474,7 @@ cdef class _PrioritySemaphoreContextManager(_AbstractPrioritySemaphoreContextMan
         self._priority_name = "priority"
         # Semaphore.__cinit__(self)
         self._Semaphore__waiters = deque()
-        self._decorated: set[str] = set()
+        self._decorated: Set[str] = set()
 
     def __richcmp__(self, _PrioritySemaphoreContextManager other, int op) -> bint:
         """Rich comparison special method. Compares this context manager with another based on priority.
@@ -555,13 +555,13 @@ cdef class PrioritySemaphore(_AbstractPrioritySemaphore):
         self, 
         value: int = 1, 
         *, 
-        name: str | None = None, 
+        name: Optional[str] = None, 
     ) -> None:
         # context manager class is some temporary hacky shit, just ignore this
         _AbstractPrioritySemaphore.__init__(self, _PrioritySemaphoreContextManager, -1, value, name=name)
 
     def __getitem__(
-        self, priority: PT | None
+        self, priority: Optional[PT]
     ) -> "_PrioritySemaphoreContextManager[PT]":
         """Gets the context manager for a given priority.
 

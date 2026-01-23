@@ -6,8 +6,7 @@ manage task lifecycle, and enhance error handling.
 import asyncio
 import asyncio.tasks as aiotasks
 import logging
-from collections.abc import Awaitable
-from typing import Any
+import typing
 
 from cpython.unicode cimport PyUnicode_CompareWithASCIIString
 from cpython.version cimport PY_VERSION_HEX
@@ -29,6 +28,13 @@ del asyncio, aiotasks
 # cdef logging
 cdef public object logger = logging.getLogger(__name__)
 del logging
+
+# cdef typing
+cdef object Awaitable = typing.Awaitable
+cdef object Optional = typing.Optional
+cdef object Tuple = typing.Tuple
+cdef object Set = typing.Set
+del typing
 
 # cdef _smart
 cdef object SmartTask = _smart.SmartTask
@@ -230,7 +236,7 @@ cdef object _get_exception(fut: Future):
     raise InvalidStateError('Exception is not set.')
 
 
-cdef inline bint _exc_exists(tup: tuple[Future[Any], Exception | None]):
+cdef inline bint _exc_exists(tup: Tuple[Future, Optional[Exception]]):
     return tup[1] is not None
 
 
@@ -260,8 +266,6 @@ __all__ = ["create_task"]
 
 # For testing purposes only
 
-def _get_persisted_tasks() -> set[Task]:
+def _get_persisted_tasks() -> Set[Task]:
     # we can't import this directly to the .py test file
     return _persisted_tasks
-
-del Any, Awaitable, T

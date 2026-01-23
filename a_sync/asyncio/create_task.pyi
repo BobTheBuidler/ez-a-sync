@@ -4,16 +4,15 @@ manage task lifecycle, and enhance error handling.
 """
 
 import asyncio
-from typing import Awaitable
 
-from a_sync._typing import T
+from a_sync._typing import *
 
 __all__ = ["create_task"]
 
 def create_task(
     coro: Awaitable[T],
     *,
-    name: str = "",
+    name: Optional[str] = None,
     skip_gc_until_done: bool = False,
     log_destroy_pending: bool = True
 ) -> asyncio.Task[T]:

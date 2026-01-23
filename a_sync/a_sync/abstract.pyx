@@ -11,7 +11,9 @@ is intended for more custom implementations if necessary.
 
 from abc import abstractmethod
 from logging import getLogger
-from typing import Any
+from typing import Any, Dict, Tuple
+
+from a_sync._typing import *
 
 from a_sync.a_sync._flags cimport validate_and_negate_if_necessary
 from a_sync.a_sync._kwargs cimport get_flag_name, is_sync
@@ -78,7 +80,7 @@ class ASyncABC(metaclass=ASyncMeta):
     # Concrete Methods (overridable) #
     ##################################
 
-    def __a_sync_should_await__(self, dict[str, Any] kwargs) -> bint:
+    def __a_sync_should_await__(self, Dict[str, Any] kwargs) -> bint:
         """Determines if methods should be called asynchronously.
 
         This method first checks the provided keyword arguments for flags
@@ -149,7 +151,7 @@ class ASyncABC(metaclass=ASyncMeta):
         return cache.value
 
     @classmethod
-    def __a_sync_instance_will_be_sync__(cls, tuple[Any, ...] args, dict[str, Any] kwargs) -> bint:
+    def __a_sync_instance_will_be_sync__(cls, Tuple[Any, ...] args, Dict[str, Any] kwargs) -> bint:
         """Determines if a new instance will be synchronous.
 
         This method checks the constructor's signature against provided

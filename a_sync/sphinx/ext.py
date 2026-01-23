@@ -144,8 +144,10 @@ class _ASyncFunctionDirective(_ASyncDirective, PyFunction):
     """Directive for ASyncFunction instances."""
 
 
+
 class _ASyncMethodDirective(_ASyncDirective, PyMethod):
     """Directive for ASyncMethod instances."""
+
 
 
 class ASyncFunctionDocumenter(_ASyncFunctionDocumenter):

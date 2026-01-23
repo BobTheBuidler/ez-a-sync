@@ -13,7 +13,9 @@ You can use any of the provided flags, whichever makes the most sense for your u
 :obj:`VIABLE_FLAGS`: Set of all valid flags, combining both synchronous and asynchronous indicators.
 """
 
-AFFIRMATIVE_FLAGS: set[str]
+from typing import Set
+
+AFFIRMATIVE_FLAGS: Set[str]
 """Set of flags indicating synchronous behavior.
 
 This set currently contains only the flag "sync", which is used to denote
@@ -31,7 +33,7 @@ See Also:
     :data:`VIABLE_FLAGS`: All valid flags, combining both sync and async indicators.
 """
 
-NEGATIVE_FLAGS: set[str]
+NEGATIVE_FLAGS: Set[str]
 """Set of flags indicating asynchronous behavior.
 
 This set currently contains only the flag "asynchronous", which is used to denote
@@ -49,7 +51,7 @@ See Also:
     :data:`VIABLE_FLAGS`: All valid flags, combining both sync and async indicators.
 """
 
-VIABLE_FLAGS: set[str]
+VIABLE_FLAGS: Set[str]
 """Set of all valid flags, combining both synchronous and asynchronous indicators.
 
 The ez-a-sync library uses these flags to indicate whether objects or function

@@ -3,8 +3,9 @@ This module extends Python's :func:`asyncio.as_completed` with additional functi
 """
 
 import asyncio
-from collections.abc import AsyncIterator, Awaitable, Coroutine, Iterable, Iterator, Mapping
-from typing import Any, Literal, overload
+from typing import (Any, AsyncIterator, Awaitable, Coroutine, Iterable,
+                    Iterator, Literal, Mapping, Optional, Tuple, Union,
+                    overload)
 
 from a_sync import iter
 from a_sync._typing import K, T, V
@@ -35,7 +36,7 @@ cdef object ASyncIterator = iter.ASyncIterator
 def as_completed(
     fs: Iterable[Awaitable[T]],
     *,
-    timeout: float | None = None,
+    timeout: Optional[float] = None,
     return_exceptions: bool = False,
     aiter: Literal[False] = False,
     tqdm: bool = False,
@@ -45,7 +46,7 @@ def as_completed(
 def as_completed(
     fs: Iterable[Awaitable[T]],
     *,
-    timeout: float | None = None,
+    timeout: Optional[float] = None,
     return_exceptions: bool = False,
     aiter: Literal[True] = True,
     tqdm: bool = False,
@@ -55,26 +56,26 @@ def as_completed(
 def as_completed(
     fs: Mapping[K, Awaitable[V]],
     *,
-    timeout: float | None = None,
+    timeout: Optional[float] = None,
     return_exceptions: bool = False,
     aiter: Literal[False] = False,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> Iterator[Coroutine[Any, Any, tuple[K, V]]]: ...
+) -> Iterator[Coroutine[Any, Any, Tuple[K, V]]]: ...
 @overload
 def as_completed(
     fs: Mapping[K, Awaitable[V]],
     *,
-    timeout: float | None = None,
+    timeout: Optional[float] = None,
     return_exceptions: bool = False,
     aiter: Literal[True] = True,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> ASyncIterator[tuple[K, V]]: ...
+) -> ASyncIterator[Tuple[K, V]]: ...
 def as_completed(
     fs,
     *,
-    timeout: float | None = None,
+    timeout: Optional[float] = None,
     return_exceptions: bool = False,
     aiter: bool = False,
     tqdm: bool = False,
@@ -197,7 +198,7 @@ cdef object as_completed_mapping(
     )
 
 
-async def _exc_wrap(awaitable: Awaitable[T]) -> T | Exception:
+async def _exc_wrap(awaitable: Awaitable[T]) -> Union[T, Exception]:
     """Wraps an awaitable to catch exceptions and return them instead of raising.
 
     Args:
@@ -215,7 +216,7 @@ async def _exc_wrap(awaitable: Awaitable[T]) -> T | Exception:
 async def __yield_as_completed(
     futs: Iterable[Awaitable[T]],
     *,
-    timeout: float | None = None,
+    timeout: Optional[float] = None,
     return_exceptions: bool = False,
     tqdm: bool = False,
     **tqdm_kwargs: Any
@@ -242,14 +243,14 @@ async def __yield_as_completed(
 @overload
 async def __mapping_wrap(
     k: K, v: Awaitable[V], return_exceptions: Literal[True] = True
-) -> V | Exception: ...
+) -> Union[V, Exception]: ...
 @overload
 async def __mapping_wrap(
     k: K, v: Awaitable[V], return_exceptions: Literal[False] = False
 ) -> V: ...
 async def __mapping_wrap(
     k: K, v: Awaitable[V], return_exceptions: bool = False
-) -> V | Exception:
+) -> Union[V, Exception]:
     """Wraps a key-value pair of awaitable to catch exceptions and return them with the key.
 
     Args:

@@ -1,4 +1,6 @@
-from typing import Any, Callable, Generic, TypeVar
+from typing import Callable, Generic, Optional, Type, TypeVar
+
+from _typeshed import Incomplete as Incomplete
 
 I = TypeVar("I")
 T = TypeVar("T")
@@ -8,11 +10,11 @@ class cached_property_unsafe(Generic[I, T]):
 
     func: Callable[[I], T]
     attrname: str
-    __doc__: str | None
+    __doc__: Optional[str]
     def __init__(self, func: Callable[[I], T]) -> None: ...
-    def __set_name__(self, owner: type[I], name: str) -> None: ...
-    def __get__(self, instance: I, owner: type[I] | None = None) -> T: ...
-    def __class_getitem__(cls, item: object) -> type[cached_property_unsafe[Any, Any]]: ...
+    def __set_name__(self, owner: Type[I], name: str) -> None: ...
+    def __get__(self, instance: I, owner: Optional[Type[I]] = None) -> T: ...
+    __class_getitem__: Incomplete
 
 def update_wrapper(wrapper: Callable, wrapped: Callable) -> None:
     """Update a wrapper function to look like the wrapped function
